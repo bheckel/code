@@ -1,0 +1,16 @@
+<!-- Place, prefill, current date in an inputbox. -->
+<HTML>
+<HEAD>
+  <SCRIPT Language = "JavaScript">
+  function DateFillBox() { 
+    rightnow = new Date();
+    document.f.timestamp.value = rightnow;
+  } 
+</SCRIPT>
+</HEAD> 
+<BODY onLoad = "DateFillBox()">
+  <FORM NAME = "f">
+    <INPUT TYPE="text" NAME="timestamp">
+  </FORM>
+</BODY>
+</HTML> 

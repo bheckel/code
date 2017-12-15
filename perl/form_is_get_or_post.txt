@@ -1,0 +1,41 @@
+
+There are two basic methods of sending information to your script. Those
+methods mentioned were the GET and the POST methods.  Depending on which
+method used, your script will parse the information differently. While this
+difference is small, it can create havoc if your script doesn't parse the
+information coming from the visitor correctly.
+
+Listing 25.1 checks which method is being used and parses the information
+coming from the visitor based on the method used.
+
+Listing 25.1 Perl Script that Parses the Information Coming in Depending on
+the Method Used
+
+#! /usr/bin/perl
+if ($ENV{'REQUEST_METHOD'} eq 'POST') {
+  read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
+  @pairs = split(/&/, $buffer);
+  foreach $pair (@pairs) {
+    ($name, $value) = split(/=/, $pair);
+    $value =~ tr/+/ /;
+    $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
+    $contents{$name} = $value;
+  }
+}
+
+if ($ENV{'REQUEST_METHOD'} eq 'GET') {
+  @pairs = split(/&/, $ENV{'QUERY_STRING'});
+  foreach $pair (@pairs) {
+    ($name, $value) = split(/=/, $pair);
+    $value =~ tr/+/ /;
+    $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
+    $contents{$name} = $value;
+  }
+}
+
+ 
+Using this basic header to all your CGI scripts written in Perl will save you
+a lot of headaches. The information is parsed, and split automatically, with
+each item sent by the visitor placed into the array, @contents. Each
+individual item in the array can be called by using $contents{name}, where
+the name is the name assigned to the variable when you created your form.

@@ -1,0 +1,172 @@
+//BQH0KS01 JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,REGION=0M             
+//STEP1    EXEC SAS,TIME=100,OPTIONS='MSGCASE,MEMSIZE=0'                        
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)                                     
+//OUT      DD DISP=(NEW,CATLG,DELETE),UNIT=NCHS,                                
+//            DSN=BQH0.KSRESI01.XLS,                               
+//            DCB=(LRECL=80,RECFM=FB),                                         
+//            SPACE=(CYL,(10,2),RLSE)                                           
+//SYSIN    DD *  
+
+options nocenter;
+
+%include 'BQH0.PGM.LIB(TABDELIM)';
+
+%let Y = 2001;
+%let YR = %eval(&Y + 0);
+
+ /* From TBE2.FINAL.BF19.DATASET */
+FILENAME AK2001 'BF19.AKX0119.MORMER' DISP=SHR;
+FILENAME AL2001 'BF19.ALX0134.MORMER' DISP=SHR;
+FILENAME AR2001 'BF19.ARX0150.MORMER' DISP=SHR;
+FILENAME AS2001 'BF19.ASX0101.MORMER' DISP=SHR;
+FILENAME AZ2001 'BF19.AZX0185.MORMER' DISP=SHR;
+FILENAME CA2001 'BF19.CAX0118.MORMER' DISP=SHR;
+FILENAME CO2001 'BF19.COX0133.MORMER1' DISP=SHR;
+FILENAME CT2001 'BF19.CTX0117.MORMER' DISP=SHR;
+FILENAME DC2001 'BF19.DCX0131.MORMER' DISP=SHR;
+FILENAME DE2001 'BF19.DEX0135.MORMER' DISP=SHR;
+FILENAME FL2001 'BF19.FLX0127.MORMER' DISP=SHR;
+FILENAME GA2001 'BF19.GAX01100.MORMER' DISP=SHR;
+FILENAME GU2001 'BF19.GUX0107.MORMER' DISP=SHR;
+FILENAME HI2001 'BF19.HIX0130.MORMER' DISP=SHR;
+FILENAME IA2001 'BF19.IAX0124.MORMER' DISP=SHR;
+FILENAME ID2001 'BF19.IDX0116.MORMER' DISP=SHR;
+FILENAME IL2001 'BF19.ILX0117.MORMER1' DISP=SHR;
+FILENAME IN2001 'BF19.INX0129.MORMER' DISP=SHR;
+FILENAME KS2001 'BF19.KSX0173.MORMER' DISP=SHR;
+FILENAME KY2001 'BF19.KYX0122.MORMER' DISP=SHR;
+FILENAME LA2001 'BF19.LAX0173.MORMER1' DISP=SHR;
+FILENAME MA2001 'BF19.MAX0127.MORMER' DISP=SHR;
+FILENAME MD2001 'BF19.MDX0144.MORMER' DISP=SHR;
+FILENAME ME2001 'BF19.MEX0108.MORMER' DISP=SHR;
+FILENAME MI2001 'BF19.MIX0132.MORMER' DISP=SHR;
+FILENAME MN2001 'BF19.MNX0118.MORMER' DISP=SHR;
+FILENAME MO2001 'BF19.MOX0177.MORMER' DISP=SHR;
+FILENAME MP2001 'BF19.MPX0102.MORMER' DISP=SHR;
+FILENAME MS2001 'BF19.MSX0117.MORMER' DISP=SHR;
+FILENAME MT2001 'BF19.MTX0113.MORMER' DISP=SHR;
+FILENAME NC2001 'BF19.NCX0133.MORMER1' DISP=SHR;
+FILENAME ND2001 'BF19.NDX0121.MORMER' DISP=SHR;
+FILENAME NE2001 'BF19.NEX0120.MORMER' DISP=SHR;
+FILENAME NH2001 'BF19.NHX0145.MORMER' DISP=SHR;
+FILENAME NJ2001 'BF19.NJX0131.MORMER' DISP=SHR;
+FILENAME NM2001 'BF19.NMX0123.MORMER' DISP=SHR;
+FILENAME NV2001 'BF19.NVX0114.MORMER' DISP=SHR;
+FILENAME NY2001 'BF19.NYX0159.MORMER' DISP=SHR;
+FILENAME OH2001 'BF19.OHX0132.MORMER1' DISP=SHR;
+FILENAME OK2001 'BF19.OKX0118.MORMER1' DISP=SHR;
+FILENAME OR2001 'BF19.ORX0117.MORMER' DISP=SHR;
+FILENAME PA2001 'BF19.PAX0116.MORMER' DISP=SHR;
+FILENAME PR2001 'BF19.PRX0110.MORMER' DISP=SHR;
+FILENAME RI2001 'BF19.RIX0128.MORMER' DISP=SHR;
+FILENAME SC2001 'BF19.SCX0122.MORMER' DISP=SHR;
+FILENAME SD2001 'BF19.SDX0168.MORMER' DISP=SHR;
+FILENAME TN2001 'BF19.TNX0135.MORMER' DISP=SHR;
+FILENAME TX2001 'BF19.TXX0158.MORMER1' DISP=SHR;
+FILENAME UT2001 'BF19.UTX0123.MORMER' DISP=SHR;
+FILENAME VA2001 'BF19.VAX0127.MORMER' DISP=SHR;
+FILENAME VI2001 'BF19.VIX0111.MORMER' DISP=SHR;
+FILENAME VT2001 'BF19.VTX0128.MORMER' DISP=SHR;
+FILENAME WA2001 'BF19.WAX0114.MORMER' DISP=SHR;
+FILENAME WI2001 'BF19.WIX0127.MORMER1' DISP=SHR;
+FILENAME WV2001 'BF19.WVX0162.MORMER' DISP=SHR;
+FILENAME WY2001 'BF19.WYX0132.MORMER' DISP=SHR;
+FILENAME YC2001 'BF19.YCX0120.MORMER' DISP=SHR;
+
+%let ST1  = AL;                                                                  
+%let ST2  = AK;                                                                  
+%let ST3  = AZ;                                                                  
+%let ST4  = AR;                                                                  
+%let ST5  = CA;                                                                  
+%let ST6  = CO;                                                                  
+%let ST7  = CT;                                                                  
+%let ST8  = DE;                                                                  
+%let ST9  = DC;                                                                  
+%let ST10 = FL;                                                                  
+%let ST11 = GA;                                                                  
+%let ST12 = HI;                                                                  
+%let ST13 = ID;                                                                  
+%let ST14 = IL;                                                                  
+%let ST15 = IN;                                                                  
+%let ST16 = IA;                                                                  
+%let ST17 = KS;                                                                  
+%let ST18 = KY;                                                                  
+%let ST19 = LA;                                                                  
+%let ST20 = ME;                                                                  
+%let ST21 = MD;                                                                  
+%let ST22 = MA;                                                                  
+%let ST23 = MI;                                                                  
+%let ST24 = MN;                                                                  
+%let ST25 = MS;                                                                  
+%let ST26 = MO;                                                                  
+%let ST27 = MT;                                                                  
+%let ST28 = NE;                                                                  
+%let ST29 = NV;                                                                  
+%let ST30 = NH;                                                                  
+%let ST31 = NJ;                                                                  
+%let ST32 = NM;                                                                  
+%let ST33 = NY;                                                                  
+%let ST34 = NC;                                                                  
+%let ST35 = ND;                                                                  
+%let ST36 = OH;                                                                  
+%let ST37 = OK;                                                                  
+%let ST38 = OR;                                                                  
+%let ST39 = PA;                                                                  
+%let ST40 = RI;                                                                  
+%let ST41 = SC;                                                                  
+%let ST42 = SD;                                                                  
+%let ST43 = TN;                                                                  
+%let ST44 = TX;                                                                  
+%let ST45 = UT;                                                                  
+%let ST46 = VT;                                                                  
+%let ST47 = VA;                                                                  
+%let ST48 = WA;                                                                  
+%let ST49 = WV;                                                                  
+%let ST50 = WI;                                                                  
+%let ST51 = WY;                                                                  
+%let ST52 = PR;                                                                 
+%let ST53 = VI;                                                                 
+%let ST54 = GU;                                                                 
+%let ST55 = YC;                                                                 
+%let ST56 = AS;                                                                  
+%let ST57 = MP;                                                                  
+%let TOTST =57;                                                                  
+
+                                                                                
+%macro Combine;
+  %do J=1 %to &TOTST;
+    %let S = &&ST&J;
+    data IN&J&Y;
+      infile &S&Y;
+      input alias 47  stres 89-90  stocc 77-78  cert $ 5-10
+            dod 135-138
+            ;
+    run;
+  %end;
+
+  data work.all57;
+    set IN1&Y IN2&Y IN3&Y IN4&Y IN5&Y IN6&Y IN7&Y IN8&Y IN9&Y
+        IN10&Y IN11&Y IN12&Y IN13&Y IN14&Y IN15&Y IN16&Y IN17&Y
+        IN18&Y IN19&Y IN20&Y IN21&Y IN22&Y IN23&Y IN24&Y IN25&Y
+        IN26&Y IN27&Y IN28&Y IN29&Y IN30&Y IN31&Y IN32&Y IN33&Y
+        IN34&Y IN35&Y IN36&Y IN37&Y IN38&Y IN39&Y IN40&Y IN41&Y
+        IN42&Y IN43&Y IN44&Y IN45&Y IN46&Y IN47&Y IN48&Y IN49&Y
+        IN50&Y IN51&Y IN52&Y IN53&Y IN54&Y IN55&Y IN56&Y
+        IN57&Y;
+  run;                                                                         
+%mend Combine;
+%Combine
+                                                                                
+
+data work.kansas (drop= alias dod);
+  set work.all57;
+  if alias = 1 then
+    delete;
+  if dod ^= &YR then
+    delete;
+  if stres = 17;
+run;
+
+
+proc print; run;
+%Tabdelim(work.kansas, 'BQH0.KSRESI01.XLS');

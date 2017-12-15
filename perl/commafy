@@ -1,0 +1,53 @@
+#!/usr/bin/perl -w
+
+# Adapted: Mon, 03 Jul 2000 15:58:52 (Bob Heckel -- from Repair Shop Red Flags
+# part II www.perl.com)
+
+print commafy($ARGV[0]), "\n";
+
+# FAQ solution (and it handles floating pt):
+sub commafy {
+  my $input = shift;
+  $input = reverse $input;
+  $input =~ s<(\d\d\d)(?=\d)(?!\d*\.)><$1,>g;
+
+  return scalar reverse $input;
+}
+
+
+# Slightly better--
+# TODO doesn't work for floating point nums.
+###sub commafy {
+###  my $number = shift;
+###  my @result;
+###
+###  while ( $number ) {
+###    push @result, ($number % 1000) , ',';
+###    $number = int($number / 1000);
+###  }
+###  pop @result;      # Remove trailing comma
+###  return reverse @result;
+###}
+
+# Not so good--
+###sub commafy 
+###{ 
+###  my ($number) = @_;
+###  my $size = length($number);
+###  my $remain = $size % 3;
+###  my @con = ();
+###
+###  if ($remain > 0)
+###  {
+###     push @con, substr($number, 0, $remain), ',';
+###  }
+###
+###  while ($remain < $size)
+###  {
+###     push @con, substr($number, $remain, 3), ',';
+###     $remain += 3;
+###  }
+###
+###  pop @con;
+###  return @con;
+###}

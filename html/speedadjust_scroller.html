@@ -1,0 +1,94 @@
+<html>
+<HEAD>
+<TITLE>netsoft</TITLE>
+<SCRIPT LANGUAGE="JavaScript">
+function setVariables(){
+if (navigator.appName == "Netscape") h=".left=",v=".top=",dS="document.",sD="";
+else	h=".pixelLeft=",v=".pixelTop=",dS="",sD=".style";
+}
+k=2
+objectX="object"
+y=225,x=155
+sUid="off"
+sDid="off"
+
+function scrollUp(){
+
+clearTimeout(sDid)
+y-=(k);eval(dS + objectX + sD + v + y);
+if (y>-550) sUid=setTimeout ("scrollUp()",100)
+
+}
+
+function scrollDown(){
+clearTimeout(sUid)
+y+=k;eval(dS + objectX + sD + v + y);
+if (y<800)sDid=setTimeout ("scrollDown()",100)
+
+}
+
+
+
+function pause(){
+clearTimeout(sUid)
+clearTimeout(sDid)
+}
+
+
+function faster(){
+k+=1
+if (k==0) k=1
+}
+function slower(){
+k-=1
+if (k==0) k=1
+}
+
+</SCRIPT>
+</HEAD>
+
+<BODY onload="setVariables(),scrollUp()">
+
+<table border=1 bgcolor=ffffff><tr><td>
+
+<CENTER>
+<table><td>
+<B>Scroll Control:</B>
+</td></table>
+</CENTER>
+
+</td></tr><tr><td>
+
+<table border=1 cellpadding=5><tr>
+<td><a href="javascript:scrollUp()"><FONT COLOR="#000000"><CENTER>up</CENTER></FONT></a></td>
+<td><a href="javascript:scrollDown()"><FONT COLOR="#000000"><CENTER>down</CENTER></FONT></a></td>
+<td><a href="javascript:pause()"><FONT COLOR="#000000"><CENTER>pause</CENTER></FONT></a></td>
+</tr></table>
+
+</td></tr><tr><td>
+
+<table cellpadding=11 border=1><tr>
+<td><a href="javascript:faster()"><FONT COLOR="#000000"><CENTER>faster</CENTER></FONT></a></td>
+<td><a href="javascript:slower()"><FONT COLOR="#000000"><CENTER>slower</CENTER></FONT></a></td>
+</tr></table>
+
+</td></tr></table>
+
+
+<div id="object" style="position:absolute; visibility:show; left:155px; top:225px; z-index:1">
+<B><br><table border=0 width=150 height=200>
+<td><b>Scrolling Text
+<br><br>
+
+Press the scroll control buttons to speed up.....<br><br>
+slow down......<br><br> or pause this article<br><br>
+The text here really doesn't say anything....<br><br>
+so if you continue reading.....<br> <br>
+you are wasting your time....:-)
+<br><br>fell free to take the script,<br> regards
+<br>Randy Bennett</B></td></table>
+</div>
+
+</BODY>
+</HTML>
+

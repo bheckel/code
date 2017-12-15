@@ -1,0 +1,159 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Basic DOM functionality demo --> 
+<!-- Adapted: Mon Apr 27 12:48:25 2009 (Bob Heckel - "JavaScript for Programmers"-Deitel) -->
+<html xmlns = "http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Basic DOM Functionality</title>
+  <style type = "text/css">
+     h1, h3       { text-align: center;
+                    font-family: tahoma, geneva, sans-serif
+                  }
+     p            { margin-left: 5%;
+                    margin-right: 5%;
+                    font-family: arial, helvetica, sans-serif
+                  }
+     ul           { margin-left: 10% }
+     a            { text-decoration: none }
+     a:hover      { text-decoration: underline }
+     .nav         { width: 100%;
+                    border-top: 3px dashed blue;
+                    padding-top: 10px
+                   }
+     .highlighted  { background-color: yellow }
+     .submit       { width: 120px }
+  </style>
+
+  <script type = "text/javascript">
+     <!--
+     var currentNode; // stores the currently highlighted node 
+     var idcount = 0; // used to assign a unique id to new elements 
+
+     // get and highlight an element by its id attribute 
+     function byId() {
+       var id = document.getElementById("gbi").value;
+       var target = document.getElementById(id);
+
+       if ( target )
+         switchTo(target);
+     }
+
+     // insert a paragraph element before the current element
+     function insert() {
+       // 1st create...
+       var newNode = createNewNode(document.getElementById("ins").value );
+       // ...then insert
+       currentNode.parentNode.insertBefore(newNode, currentNode);
+       switchTo(newNode);
+     }
+
+     // append a paragraph node as the child of the current node
+     function appendNode() {
+       var newNode = createNewNode(document.getElementById("append").value);
+       currentNode.appendChild( newNode );
+       switchTo( newNode );
+    }
+
+    // replace the currently selected node with a paragraph node
+    function replaceCurrent() {
+      var newNode = createNewNode(document.getElementById("replace").value);
+      currentNode.parentNode.replaceChild(newNode, currentNode);
+      switchTo(newNode);
+    }
+
+    // remove the current node 
+    function remove() {
+       if ( currentNode.parentNode == document.body )
+          alert("Can't remove a top-level element.");
+       else {
+         var oldNode = currentNode;
+         switchTo(oldNode.parentNode);
+         currentNode.removeChild(oldNode);
+       }
+    }
+
+    // get and highlight the parent of the current node 
+    function parent() {
+      var target = currentNode.parentNode;
+
+       if ( target != document.body )
+         switchTo(target);
+       else
+         alert("No parent.");
+    }
+
+    // helper function that returns a new paragraph node containing a unique id
+    // and the given text 
+    function createNewNode(text) {
+      var newNode = document.createElement("p");
+      nodeId = "new" + idcount;
+      ++idcount;
+      newNode.id = nodeId;
+      text = "[" + nodeId + "] " + text;
+      newNode.appendChild(document.createTextNode(text));
+      return newNode;
+    }
+
+    // helper function that switches to a new currentNode 
+    function switchTo(newNode) {
+      currentNode.className = "";  // remove old highlighting (in <h1> at first)
+      currentNode = newNode;
+      currentNode.className = "highlighted";  // highlight new node 
+      document.getElementById("gbi").value = currentNode.id;
+    }
+    // -->
+   </script>
+</head>
+
+<body onload = "currentNode = document.getElementById('bigheading')">
+<!------------------- BASIC XHTML ELEMENTS AND CONTENT START ------------------->
+   <h1 id = "bigheading" class = "highlighted"> [bigheading] DHTML Object Model</h1>
+   <h3 id = "smallheading">[smallheading] Element Functionality</h3>
+   <p id = "para1">[para1] The Document Object Model (DOM) allows for
+      quick, dynamic access to all elements in an XHTML document for
+      manipulation with JavaScript.</p>
+   <p id = "para2">[para2] For more information, check out the
+      "JavaScript and the DOM" section of Deitel's
+      <a id = "link" href = "http://www.deitel.com/javascript"> [link] JavaScript Resource Center.</a></p>
+   <p id = "para3">[para3] The buttons below demonstrate:(list)</p>
+   <ul id = "list">
+      <li id = "item1">[item1] getElementById and parentNode</li>
+      <li id = "item2">[item2] insertBefore and appendChild</li>
+      <li id = "item3">[item3] replaceChild and removeChild </li>
+   </ul>
+<!-------------------- BASIC XHTML ELEMENTS AND CONTENT END -------------------->
+   <div id = "nav" class = "nav">
+      <!--          don't reload page, not submitting to a server          -->
+      <!--              _____________ ___________                          -->
+      <form onsubmit = "return false" action = "">
+         <table>
+            <tr>
+               <td><input type = "text" id = "gbi" value = "bigheading" /></td>
+               <td><input type = "submit" value = "Get By id" onclick = "byId()" class = "submit" /></td>
+             </tr>
+             <tr>
+                  <td><input type = "text" id = "ins" /></td>
+                  <td><input type = "submit" value = "Insert Before" onclick = "insert()" class = "submit" /></td>
+             </tr>
+             <tr>
+                  <td><input type = "text" id = "append" /></td>
+                  <td><input type = "submit" value = "Append Child" onclick = "appendNode()" class = "submit" /></td>
+             </tr>
+             <tr>
+                  <td><input type = "text" id = "replace" /></td>
+                  <td><input type = "submit" value = "Replace Current" onclick = "replaceCurrent()" class = "submit" /></td>
+             </tr>
+             <tr><td />
+                  <td><input type = "submit" value = "Remove Current" onclick = "remove()" class = "submit" /></td>
+             </tr>
+             <tr><td />
+                  <td><input type = "submit" value = "Get Parent" onclick = "parent()" class = "submit" /></td>
+             </tr>
+         </table>
+      </form>
+   </div>
+</body>
+
+</html>

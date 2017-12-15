@@ -1,0 +1,46 @@
+<SCRIPT LANGUAGE="JavaScript">
+  // Adapted: Mon 09 Apr 2001 15:32:48 (Bob Heckel from Mark Hewett)
+  // Determine which input box(es) has (have) been modified a.k.a. made dirty.
+  // Assumes a hidden INPUT named 'dirty' and that INPUTs of interest begin 
+  // with 'data:'
+  // Modified: Tue 29 May 2001 15:17:35 (Bob Heckel)
+  function makeDirty(textwidget) {
+    // Rets 0 if true (i.e. found name starting with 'data:').
+    if ( (s = textwidget.name.indexOf("data:")) == 0 ) {
+      dirtyField = textwidget.name.substring(5, textwidget.name.length);
+      // DEBUG
+      alert("just changed " + dirtyField 
+                            + '[ '
+                            + document.myform.dirty.value.indexOf(dirtyField)
+                            + ' ]');
+      // If a field has been dirtied.
+      if (document.myform.dirty.value.indexOf(dirtyField) == -1) {
+        // Use semicolon delimited dirtied INPUT(s) text.
+        sep = (document.myform.dirty.value != "") ? ";" : "";
+        // Append it to other changed values, if any.
+        document.myform.dirty.value += sep+dirtyField;
+        // DEBUG
+        ///alert(document.myform.dirty.value);
+      }
+    }
+  }
+
+
+  function report() {
+    alert(document.myform.dirty.value);
+    ///document.write(document.myform.dirty.value);
+  }
+</SCRIPT>
+
+
+Make changes, they're cumulative.
+<FORM NAME="myform" onSubmit="report()">
+  <!--   Required as dirty flag. -->
+  <INPUT TYPE="hidden" NAME="dirty" VALUE="">
+  one<INPUT NAME="data:one" TYPE="text" VALUE="not tested for dirtiness">
+  two<INPUT NAME="data:two" TYPE="text" VALUE="change this" 
+                                                  ONCHANGE="makeDirty(this)">
+  three<INPUT NAME="data:three" TYPE="text" VALUE="change this also" 
+                                                  ONCHANGE="makeDirty(this)">
+  <INPUT TYPE="submit" VALUE='what changed'> 
+</FORM>

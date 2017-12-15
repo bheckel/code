@@ -1,0 +1,1141 @@
+<html>
+<head>
+<title>C++ quick-reference </title>
+</head>
+<body>
+<center><h1>C++ quick-reference </h1></center>
+C++ is an imperative language with built in support for object oriented
+programming.
+<p>
+Many of the features of the language are illustrated below, 
+but it is mostly description by example - there isn't much text.
+
+<ul>
+<li><a href="#layout"> Program layout </a>
+<li><a href="#types"> Data types and conversions </a>
+<li><a href="#scope"> Variables, constants, and scope </a>
+<li><a href="#func"> Functions and parameters </a>
+<li><a href="#arith"> Arithmetic, logic, and precedence </a>
+<li><a href="#io"> Input and output </a>
+<li><a href="#fileio"> File I/O </a>
+<li><a href="#if"> If, switch statements </a>
+<li><a href="#loops"> For, while, do-while loops </a>
+<li><a href="#array"> Arrays and strings</a>
+<li><a href="#struct"> Structs </a>
+<li><a href="#enum"> Enumerated types </a>
+<li><a href="#library"> Other library functions </a>
+<li><a href="#random"> Random number generator </a>
+<li><a href="#pointers"> Pointers </a>
+<li><a href="#classes"> C++ Classes </a>
+<li><a href="#dynamic"> Dynamic memory allocation </a>
+<li><a href="#command"> Command line arguments and system calls</a>
+<li><a href="#compilation"> Separate compilation/makefiles </a>
+</ul>
+<hr><center><h2><a name="layout">Program layout (recommended)</a></h2></center>
+Following the layout shown below eliminates many potential problems - 
+mostly with respect to using identifiers (for constants, variables,
+types, or functions) before the relevant construct has been declared.
+<ol>
+<p><li> Pre-processor statements (e.g. #include statements)
+<p><li> Constant definitions
+<p><li> Type definitions
+<p><li> Function declarations
+<p><li> Main function 
+<ol>
+<li> main header
+<li> variable declarations
+<li> statements
+</ol>
+<p><li> Function bodies
+<ol>
+<li> function header 
+<li> variable declarations
+<li> statements
+</ol>
+The key feature is that variables, constants, types, and subroutines
+must be declared somewhere "above" their first actual use in the program.
+<p>
+Note that most statements are terminated with a semicolon,
+and that // is the comment symbol - everything to the right of the
+double slash is ignored by the compiler
+<b>Example:</b>
+<pre>
+// include the io library
+#include &lt;iostream.h>
+
+// declare a constant size to be used for arrays
+const int SIZE = 20;
+
+// declare floatarray as a type describing arrays
+//   of "SIZE" floating point elements
+typedef float floatarray[SIZE];
+
+// declare a subroutine, printarray, which takes a
+//    floatarray as a parameter 
+void printarray(floatarray arr);
+
+// provide the main body of the program
+void main()
+{
+   floatarray myarray;
+   for (int index = 0; index < SIZE; index++) {
+       myarray[index] = index * 1.5;
+   }
+   printarray(myarray);
+}
+
+// provide the body of the printarray subroutine
+//    declared earlier
+void printarray(floatarray arr)
+{
+   for (int index = 0; index < SIZE; index++) {
+       cout << arr[index] << endl;
+   }
+}
+</pre>
+</ol>
+
+<hr><center><h2><a name="types">Data types and conversions</a></h2></center>
+<ul>
+<p><li> There are several simple data types built into C++: 
+<ul>
+<li> char: for characters, character literals are placed within single quotes,
+e.g. 'c' represents the lowercase character c.
+<li> short: for short integers (usually 8 or 16 bits)
+<li> int: for integers (usually 16 or 32 bits)
+<li> long: for long integers (usually 32 or 64 bits)
+<li> float: for floating point values
+<li> double: for large or high precision floating point values
+</ul>
+<p><li> variables are declared to be of a specific type by
+placing first the type name then the variable name, e.g.:
+<ul>
+float mydata;
+</ul>
+<P><li> variables can be initialized with a value when first declared, e.g.:
+<pre>
+float myfloat = 3.7;
+int   myint = 29;
+char  mychar = 'c';
+</pre>
+
+<p><li> Data can be converted from one type to another using the
+target type name and brackets, e.g.:
+<pre>
+mychar = char(myint);
+myint = int(myfloat);
+</pre>
+float to int conversion is done by rounding down (truncating)
+<p> char to int conversion (and int to char) is done using
+the ascii tables for matching character values to integers
+</ul>
+
+<hr><center><h2><a name="scope">Variables, constants, and scope</a></h2></center>
+<ul>
+<p><li> Constants: are declared with the "const" keyword, a type, their name,
+and an assignment of their constant value.  This value must match the declared
+type, and is fixed for the duration of the program.
+<pre>
+const int DaysInYear = 365;
+const float Pi = 3.14;
+const char Blank = ' ';
+</pre>
+<p><li> Variables: 
+<ul>
+<li> are declared with a type and name, and optionally initialized
+by the assignment of a literal value, e.g.:
+<ul>
+int  uninitialized_variable;
+int  initialized_to_zero = 0;
+</ul>
+<li> if multiple variables of the same type are going to be declared
+they can be written as a comma-delimited list after the type, e.g.:
+<ul>
+char firstinitial, middleinitial;
+</ul>
+<li> if declared outside functions, variables have global scope 
+(i.e. can be referenced from anywhere in the program)
+<li> if declared inside a function, variables have local scope - i.e.
+can be referenced only from within that function
+<li> local variables declared as <code>static</code> retain their values across
+function calls
+<li> variables which are declared in separately compiled file X must be declared as <code>extern</code>
+in all files except X
+<pre>
+int myint, anotherint, andanotherint;
+float fees = 0.0;
+static char initial = 'D';
+extern Boolean quit;
+</pre>
+<p><li> Scope rules: 
+<ul>
+<p><li> you cannot have two identifiers with the same scope and the same name
+<p><li> when scopes of like-named identifiers overlap the local scope is used
+</ul>
+<p>NOTE: some versions of C++ treat each block of code (demarcated with { and } )
+as a possible scope: a variable declared within a block is regarded as local
+to that block.  This is not recognized by all C++ compilers, however,
+so we recommend that variables either be declared with global scope -
+immediately after the global type declarations - or as local to a function,
+at the very start of the function body.
+</ul>
+
+<hr><center><h2><a name="func">Functions and parameters</a></h2></center>
+<ul>
+<p><li> The typical function layout is
+<pre>
+return-type functionname(list of parameters)
+{
+  local variable declarations
+  body of the function
+  return statement
+}
+</pre>
+Where the value returned by the return statement must match
+the return type.  (If the function never returns a value you may
+leave out the return statement, and use a return type of void.)
+<p>
+Example:
+<pre>
+int sumandtruncatefloats(float f, float g)
+{
+   // takes two floating point values,
+   // adds them together,
+   // truncates the decimal portion,
+   // stores the value in an integer variable named result,
+   // and returns this result
+   int result;
+   result = int(f+g);
+   return( result );
+}
+</pre>
+<p> The corresponding function declarations and calls in the rest
+of the program might look like
+<pre>
+#include &lt;iostream.h>
+
+int sumandtruncatefloats(float f, float g);
+
+void main()
+{
+   float y = 2.914;
+   int x;
+   x = truncatefloat(3.7 + y);
+   cout << x << endl;
+}
+</pre>
+<p><li> By default, parameters are called pass-by-value, or value parameters
+(this means the function only gets a copy of the passed value)
+<p> Pass-by-reference, or reference parameters, allows the function
+to alter the value of a variable passed to it.  Pass-by-reference is 
+achieved by placing an ampersand before the parameter identifier
+in the function header, e.g.:
+<pre>
+void validswap(int &x, int &y)
+{
+   int temp;
+   temp = x;
+   x = y;
+   y = temp;
+}
+</pre>
+The call <code>validswap(var1, var2);</code> would then swap the values
+of variables var1 and var2.
+<p>
+Arrays and structs are automatically passed by reference.
+If you wish to prevent this (to prevent the function from altering the
+array or struct contents) prefix them with const in the parameter list, e.g.:
+<pre>
+void foo(const char str[], int length);
+...
+foo(mystring, SIZE);
+</pre>
+</ul>
+
+<hr><center><h2><a name="arith">Arithmetic, logic, and precedence</a></h2></center>
+<ul>
+<p><li> The available operators and precedence levels for evaluating expressions are as follows:
+<ol>
+<li> ::
+<li> .  ->  []  ()  x++  x--
+<li> ++x --x ! *(deref) &(addr) +(unary) -(unary) new delete sizeof
+<li> * / %
+<li> + -
+<li> << >> (i/o in C++, bitshifts in C)
+<li> < &lt;= > >= 
+<li> bitwise operators: ^ ~ & |
+<li> == !=
+<li> &&
+<li> ||
+<li> = += -= *= /= %=
+</ol>
+brackets are evaluated from the inside out, 
+when dealing with multiple operators of the same level level evaluate from left to right
+</ul>
+
+<hr><center><h2><a name="io">Input and output</a></h2></center>
+<ul>
+<p><li> Input and output require the inclusion of the
+iostream.h library
+<p><li> Output of simple data types and strings can be
+carried out using cout and the << symbol, e.g.:
+<pre>
+int X = 0;       float y = 3.7;
+char c = 'a';    char myarray[4] = "xyz\0";
+
+cout << "X has value " << X << endl << "y has value " << y << endl;
+cout << "c has value " << c << endl << "myarray has value " << myarray << endl;
+</pre>
+This would print out
+<pre>
+X has value 0
+y has value 3.7
+c has value a
+myarray has value xyz
+</pre>
+Note that <code>endl</code> is the keyword for the end-of-line symbol,
+and '\0' is the end-of-string character.
+<p><li> Output of complex types (array elements, struct fields)
+must be done one part at a time (i.e. you must use an output statement
+for each array element, each field of the struct, etc)
+<p><li> Most special formatting (see setw etc below) requires the
+inclusion of the iomanip.h library
+<p><li> setting the width of output to N characters
+can be done using setw(N), e.g.:
+<pre>
+cout << setw(3) << x;
+</pre>
+This would print the value of x as a 3-character field
+<p><li> setting the precision of floating point output requires two functions,
+setiosflags and setprecision, e.g.:
+<pre>
+cout << setiosflags(ios::fixed) << setprecision(N) << x;
+</pre>
+<p><li> Input of simple data types and strings can be carried out using cin
+<pre>
+int X; float y; char c; char myarray[4];
+cin >> X >> y >> c >> myarray;
+</pre>
+<p><li> cin does not take effect until the user hits enter (or return)
+and regards all fields as being separated by whitespace
+<p><li> to read the next character, regardless of whether it is whitespace or not, use
+<pre>
+cin.get(c);  // where c is a char variable
+</pre>
+<p><li> to read in an entire string of text, regardless of whether it contains
+whitespace of not, use
+<pre>
+cin.getline(mystring, Size-1);  
+// where mystring is an array of Size chars
+</pre>
+</ul>
+
+<hr><center><h2><a name="fileio">File I/O</a></h2></center>
+File I/O can be conducted very similarly to "regular" I/O, using cin and cout,
+but we need a way to identify what file is to be used as the source or
+destination for data.
+<p>
+This is achieved by creating a variable which acts as a pointer into
+the file, and opening the file as part of an input stream or as part
+of an output stream.
+<p>
+The example below shows typical file input and output
+<pre>
+// include the necessary i/o libraries
+#include &lt;iostream.h>            
+#include &lt;fstream.h>            
+
+// declare outfile as a pointer into a file to be used
+//   as the destination for an output stream
+ofstream outfile;                 
+
+// declare infile as a pointer into a file to be used
+//    as the source for an input stream
+ifstream infile;
+
+void main()
+{
+   // declare character arrays to hold the names of our input
+   //   and output files
+   char infilename[SIZE];
+   char outfilename[SIZE];
+
+   // declare a character array to hold a single word of text
+   // (a word is a block of text containing no whitespace)
+   char nextword[SIZE];
+
+   // declare a character array to hold lines of text for input or output
+   char wholeline[SIZE];
+
+   // declare a character to hold single characters of text for input or output
+   char c;
+
+   cout << "Please enter the name of the input file" << endl;
+   cin >> infilename;
+
+   cout << "Please enter the name of the output file" << endl;
+   cin >> outfilename;
+
+   // open the input file, and check to make sure it opened successfully
+   //      exit if it failed to open (e.g. the file doesn't exist,
+   //      or is read-protected)
+   infile.open(infilename);
+   if (infile.fail()) exit(1);
+
+   // open the output file, and check to make sure it opened successfully
+   //      exit if it failed to open (e.g. is write-protected)
+   outfile.open(outfilename);
+   if (outfile.fail()) exit(2);
+
+   // read the next line of text, up to SIZE characters, from 
+   //    the input file into the wholeline array
+   infile.getline(wholeline, SIZE);
+
+   // go through the input file until you hit the end of file
+   // on each pass through the while loop, the following takes place:
+   //    read the next word of text (i.e. everything up to the next whitespace)
+   //         into the nextword array
+   //    read the next character into the variable c,
+   //         after double-checking to make sure the last read
+   //         didn't take us to the end-of-file
+   //    write the first word in the nextword array into the output file
+   //    write the character in variable c into the output file    
+   while (!infile.eof()) {
+      infile >> nextword;  
+      if (!infile.eof()) infile.get(c);
+      outfile << nextword;
+      outfile << c;
+   }
+
+   // close the input file and close the output file
+   infile.close();
+   outfile.close();
+}
+</pre>
+
+<hr><center><h2><a name="if">If, switch statements</a></h2></center>
+<ul>
+<p><li> the basic syntax for a complete if-else statement is
+<pre>
+if (&lt;Boolean expression) {
+   // statements if expression is true
+} else {
+   // statements if expression is false
+}
+</pre> 
+The "else" portion of the statement is optional.
+<p><li> To test for a series of values of a variable you can use
+a structure like:
+<pre>
+if (x == 3) {
+   // statements for x == 3
+} else if (x == 7) {
+   // statements for x == 7
+} else if (x < 0) {
+  // statements for x is negative
+} else {
+  // statements for all other values of x
+}
+</pre>
+<p><li> Similar results can be obtained with the switch statement,
+except that the <, >, &lt;=, >= operators cannot be used directly
+(have to put them in the default code):
+<pre>
+switch (x) {
+   case 3: // statements for x == 3
+           break;
+   case 7: // statements for x == 7
+           break;
+   default: if (x < 0) {
+               // statements for x is negative
+            } else {
+               // statements for all other values
+            }
+}
+</pre>
+Leaving out the break statements can allow us to group
+values for which we want similar behaviour, e.g.:
+<pre>
+switch (c) {
+    case 'q':
+    case 'Q': // statements for letter q
+              break;
+    case 'c':
+    case 'C': // statements for letter c
+              break;
+    default:  // statements for all other letters
+}
+</pre>
+</ul>
+
+<hr><center><h2><a name="loops">For, while, do-while loops</a></h2></center>
+<ul>
+<p><li> The syntax for a for loop is:
+<pre>
+for (&lt;initialisation>; &lt;continuance test>; &lt;update> ) {
+    &lt;executable statements>
+}
+</pre>
+Example: consider all even integers from 0 through 98
+<pre>
+for (int x = 0; x < 100; x += 2) {
+    // statements to be executed
+}
+</pre>
+<p><li> The syntax for a while loop is:
+<pre>
+while (&lt;Boolean expression) {
+    // statements to be executed
+}
+</pre>
+Meaning: as long as the Boolean expression evaluates
+to true, carry out the body of the loop.
+<p>
+Example: repeat until the user enters Q
+<pre>
+char c = 'C';
+while (c != 'Q') {
+    // executable statements
+    cout << "Enter Q to quit, C to continue" << endl;
+    cin >> c;
+}
+</pre>
+<p><li> The syntax for a do-while loop is:
+<pre>
+do {
+   // statements to be executed
+} while (&lt;Boolean expression>);
+</pre>
+<p>
+Example: repeat until the user enters a positive value:
+<pre>
+do {
+   cout << "Enter a postive integer" << endl;
+   cin >> x;
+} while (x &lt;= 0);
+</pre>
+</ul>
+
+<hr><center><h2><a name="array">Arrays and strings</a></h2></center>
+<ul>
+<p><li> An array is an ordered collection of elements of identical
+data types (e.g. 30 integers, or 24 characters, etc)
+<p><li> An array of characters is often treated as a string,
+although some C++ versions include a library with a specific string class
+<p><li> Arrays are best declared using a const for the size of the array
+and a typedef for the array type, e.g.:
+<pre>
+// declare a type of array to hold 50 floats
+const int Size = 50;
+typedef float floatarray[Size];
+
+// declare an actual array variable 
+floatarray  myfloats;
+</pre>
+<p><li> To use position i of the array like a variable of
+the appropriate type use <code>arrayname[i]</code>, e.g.:
+<pre>
+myfloats[3] = 17.4;
+myfloats[2] = myfloats[3] + 4.1;
+x = sqrt(myfloats[2]);
+</pre>
+<p><li> <b>NOTE:</b> <code>myarray[i]</code> is functionally identical
+to <code> *(myarray + i) </code>
+<p><li> To pass arrays as reference parameters (function can modify them)
+follow this example:
+<pre>
+void fillarray(floatarray arr, int arrsize);
+
+void main()
+{
+   floatarray myfloats;
+   fillarray(myfloats, Size);
+}
+
+void fillarray(floatarray arr, int arrsize)
+{
+   cout << "Enter " << arrsize << " floats" << endl;
+   for (int i = 0; i < arrsize; i++) {
+       cin >> arr[i];
+   }
+}
+</pre>
+To pass arrays as value parameters prefix them with <code>const</code>
+in the parameter list, e.g. <code>void viewarray(const floatarr arr, int arrsize);</code>
+<p><li> Multidimensional arrays can be thought of as 2-D or 3-D collections
+of storage locations rather than just 1-D, example of declaration:
+<p> They are stored in row-major order
+<pre>
+const int Rows = 10;
+const int Columns = 16;
+typdef char grid[Rows][Columns];
+
+void main()
+{
+   grid  Mygrid;
+   for (int r = 0; r < Rows; r++) {
+       for (int c = 0; c < Columns; c++) {
+           Mygrid[r][c] = ' ';
+       }
+   }
+}
+</pre>
+To pass multidimensional arrays as parameters you must declare (in the parameter list)
+the size of all dimensions except the first, e.g.:
+<pre>
+int matrix[20][30];
+
+void initmatrix(int m[][30], int rows);
+</pre>
+<p><li> Strings are arrays of characters, can be input with cin, output with cout
+<p><li> The string.h library contains commands to manipulate strings:
+<ul>
+<li> strcpy(string str1, string str2)
+<li> strncpy(string str1, string str2, int N)
+<li> int strlen(string str)
+<li> int strcmp(string str1, string str2)
+<li> int strncmp(string str1, string str2, int N)
+<li> int strchr(string str1, char c) - returns position of first occurance of c
+</ul>
+</ul>
+
+<hr><center><h2><a name="struct">Structs</a></h2></center>
+<ul>
+<p><li> A struct is used to store a group of data elements which
+might not all be of the same data type.
+<p><li> We define fields for the struct - each field is given a unique
+name (within the struct) and has a specific
+data type and can store one of the desired data elements
+<p><li> The recommended method for declaring a struct is a typedef,
+with syntax as follows:
+<pre>
+typedef struct {
+    &lt;type> field1;
+    &lt;type> field2;
+    ...
+    &lt;type> fieldN;
+} &lt;typename>;
+</pre>
+The syntax for accessing a field value is <code>&lt;varname>.&lt;fieldname></code>
+<p>
+Example: employee record
+<pre>
+typedef struct {
+   string  surname;
+   string  givenname;
+   float   hourlywage;
+} EmployeeRec;
+
+void main()
+{
+   EmployeeRec  employee1;
+   strcpy(employee1.surname, "Wessels");
+   strcpy(employee1.givenname, "Dave");
+   employee1.hourlywage = 0.01;
+}
+</pre>
+<p><li> You can have structs and arrays as fields within structs,
+and can create arrays of structs also
+<pre>
+typedef struct {
+   string bossname;
+   int numemployees;
+   EmployeeRec staff[Size];
+} StaffList;
+
+void main()
+{
+   StaffList Meagresoft;
+
+   strcpy(Meagresoft.bossname, "Gill,Bates");
+   int numemployees = Zillion;
+   for (int slave = 0; slave < Size; slave++) {
+       strcpy(Meagresoft.staff[slave].surname, " ");
+       strcpy(Meagresoft.staff[slave].givenname, " ");
+       Meagresoft.staff[slave].hourlywage = 35.0;
+   }
+}
+</pre>
+<p><li> Structs can be passed as (reference) parameters,
+just as with arrays:
+<pre>
+void initcomp(StaffList company);
+
+void main()
+{
+   StaffList Meagresoft;
+   initcomp(Meagresoft);
+   ...
+}
+</pre>
+<p><li> If X is a struct and Y is a field of X, then access Y via X.Y,
+but if X is a pointer to a struct then access Y via X->Y
+</ul>
+
+<hr><center><h2><a name="enum">Enumerated types</a></h2></center>
+<ul>
+<p><li> enumerated types list all the possible values a type can take,
+either as a set of strings or as a range of values
+<pre>
+enum booleflag { false, true };
+booleflag = true;
+</pre>
+<p><li> the types are matched internally to a sequence of integers:
+0..N-1 where N is the number of types in the list
+<p><li> thus the type names can be used the same as array indices
+where the name matches the position number in the list (going left-to-right,
+0, 1, ...)
+</ul>
+
+<hr><center><h2><a name="classes">C++ Classes</a></h2></center>
+<ul>
+<p><li> C++ classes are the complete encapsulation of an abstract data type.
+<p><li> They allow you to declare multiple data fields, as per a struct,
+but they also allow you to associate a set of operations (functions) which
+may be performed on those data fields
+<p><li> The data and operations can be divided into public and private:
+public data and operations can be accessed by any external routines
+(they represent the interface between the class and the rest of the world)
+while private data and operations can only be used by the operations inside
+the class itself
+<p><li> Classes include a constructor - to initialize an object when it
+is first created - and a destructor - to "clean up" when the object is 
+no longer required
+<p><li> The example below illustrates a simple class
+</ul>
+
+<pre>
+// declare the class, listing public and private operations and data variables
+class Myclass {
+public:
+         // constructor
+         Myclass();
+
+         // destructor
+         ~Myclass();
+
+         // inline functions
+         int returndata() { return(mydata); }
+         void setdata(int x) { mydata = x; }
+
+         // general functions
+         void dosomework();
+
+private:
+         // private functions
+         void adjustdata() { mydata++; }
+
+         // private data
+         int mydata;
+         Myclass *classptr;
+}
+
+// declare the bodies for the constructor and destructors
+Myclass::Myclass()
+{
+  mydata = 0;
+}
+
+Myclass::~Myclass()
+{
+  delete classptr;
+}
+
+// declare the bodies for the other general and private functions
+
+void Myclass::dosomework()
+{
+   classptr = new Myclass;
+   classptr->setdata(mydata + 1);
+}
+
+// example of using a variable of type "Myclass" from within the main routine
+void main()
+{
+   // declare a Myclass variable
+   Myclass classvar;
+
+   // call the "dosomework" operation to work on that particular variable
+   classvar->dosomework();
+}
+</pre>
+
+<hr><center><h2><a name="library">Other library functions</a></h2></center>
+This section covers some of the library functions not mentioned elsewhere
+<ul>
+<p><li> stdlib.h: 
+<ul>
+<li> atoi(str), atof(str): convert strings to integers, doubles (return 0 if fails)
+<li> abs(i), labs(l): calculate absolute values for ints, longs
+</ul>
+<p><li> math.h: may need to include -lm flag as last token in compilation command
+<ul>
+<li> fabs(d): absolute value for doubles
+<li> pow(d, d), exp(d): power, exponentiation
+<li> log(d), log10(d): natural log, log base 10
+<li> floor(d), ceil(d): rounding down and up
+<li> cos(d), sin(d), tan(d): cosine, sine, tangent
+</ul>
+<p><li> ctype.h:
+<ul>
+<li> toupper(c), tolower(c): change case of char
+<li> isalphanum(c), isalpha(c), isdigit(c), ispunct(c), isspace(c), iscntrl(c), islower(c),
+isupper(c): boolean checks on type of char
+</ul>
+</ul>
+
+<hr><center><h2><a name="random">Random number generator</a></h2></center>
+It is often handy to have a random number generator in experiments, games,
+ and simulations, so here is code for one simple generator
+<pre>
+#include &lt;iostream.h>
+#include &lt;stdlib.h>
+#include &lt;time.h>
+
+// C++ random number generator,
+// user enters values X and Y and the program
+// generates a random value in that range
+
+void main()
+{
+   int X, Y, result;
+
+   // initialize the random number generator
+   srand((unsigned int)(time(NULL)));
+
+   // get the bounds
+   cout << "Enter the lower bound for the generated numbers" << endl;
+   cin >> X;
+   cout << "Enter the upper bound for the generated numbers" << endl;
+   cin >> Y;
+
+   // generate the random value in the correct range
+   result = (rand() % (top + 1 - bottom)) + bottom;
+
+   // print out the random number
+   cout << result << endl;
+}
+</pre>
+
+<hr><center><h2><a name="excep">Exception handling</a></h2></center>
+C++ provides build in support for exception handling:
+<ul>
+<p><li> when there is a block of code you want to check for exceptions,
+enclose it in a "try" block (see below)
+<p><li> insert appropriate tests for exceptions, and if the test is 
+positive (exception detected) then use the "throw" command to generate
+an exception, passing whatever parameters are going to be necessary to
+deal with the exception
+<p><li> after the try block, you can create one or more "catch" blocks
+to handle exceptions.  If the parameter types for a catch block match
+the "thrown" exception, then the exception handler is invoked
+<p><li> if you end the catch block with an extra throw command it
+passes along any unhandled exceptions (hopefully to be processed by
+some later catch block)
+</ul>
+<pre>
+#include &lt;iostream.h>
+#include &lt;math.h>
+
+// compile using g++ progname.cpp -o progname -fhandle-exceptions -lm
+
+void main()
+{
+   float x, y;
+
+   cout << "Enter a numerator and denominator" << endl;
+   cin >> y >> x;
+
+   // a try block contains exception handling
+   // exceptions are invoked with throw()
+   try {
+      if (x == 0) throw("Divide by zero\0");
+      if ((y/x) < 0) throw("Sqrt of negative\0");
+      cout << "sqrt(" << y << "/" << x;
+      cout << ") is " << sqrt(y / x) << endl;
+   }
+   // exceptions are handled with catch()
+   catch(char str[]) {
+     cout << str << endl;
+     throw; // re-throws any unhandled errors
+   }
+}
+</pre>
+
+<hr><center><h2><a name="pointers">Pointers</a></h2></center>
+Pointers are a way of referring to storage locations by their memory
+address rather than by a variable name.
+<p>
+The asterisk (*) is used to denote a pointer, while the ampersand (&)
+is used to determine the address of a variable.
+<p>
+Some of the basic uses of pointers are illustrated in the examples below
+<pre>
+int x;      // x is an integer
+int *x_ptr; // x_ptr is a pointer to an integer
+
+x_ptr = &x; // make x_ptr point to x
+x = 3;
+cout << x << " " << *x_ptr;  // print out 3 3
+</pre>
+Pointers to functions:
+<pre>
+int foo(float x);
+
+int (*f_ptr) ();   // f_ptr can point to any function
+                   // which returns an int
+
+f_ptr = foo;       // f_ptr points to function foo
+y = (*f_ptr)(3.7); // equivalent to y = foo(3.7);
+</pre>
+<b>Passing functions as parameters to functions:</b> this can be achieved
+by specifying the parameter types for the referenced function, e.g.:
+<pre>
+#include &lt;iostream.h>
+
+char foo(int x, double y)
+{
+   cout << x << " " << y << endl;
+   return('!');
+}
+
+void callsfoo(int (*fptr)(int, double))
+// specifies one parameter, which will be a pointer to a function,
+//     that function takes as parameters an int and a double
+{
+   // called the passed function with values 3 and 4.5
+   cout << (*fptr)(3,4.5) << endl;
+}
+
+void main()
+{
+   // pass a pointer to function foo as a parameter
+   callsfoo(foo);
+}
+</pre>
+
+<hr><center><h2><a name="dynamic">Dynamic allocation</a></h2></center>
+You can dynamically allocate memory for storage as follows:
+<ul>
+<li> you need to know the size of the block of memory you wish to allocate,
+which can be calculated using the sizeof function
+<pre>
+// we want an array of 10 student records, s_ptr will point
+//    to the start of the array
+StudentRec *s_ptr;
+
+// use sizeof to calculate the size of one student record,
+//     pass the number of records we want (10) and the size
+//     to the calloc routine, which allocates memory and returns
+//        a pointer to the allocated block
+//     then convert the address to a pointer to a student record
+//        and store it in s_ptr
+s_ptr = (StudentRec *)calloc(10, sizeof(StudentRec));
+// or alternatively use malloc, where we calculate the whole size
+//    (for all 10 records) and pass that as the parameter
+// s_ptr = (StudentRec *)malloc(10 * sizeof(StudentRec));
+</pre>
+</ul>
+
+<hr><center><h2><a name="command">Command line arguments and system calls</a></h2></center>
+When running a C++ program in Unix, or in MSDOS mode on Windows, you can
+provide extra arguments when you enter the command name.
+<p>
+The extra arguments are passed as parameters to the main routine,
+where they can be accessed using argc (which tells you how many arguments
+were passed) and argv (which is effectively an array of pointers to 
+the arguments).
+<p>
+Each argument is passed as a seperate character array,
+so argv[1] points to the first argument text, argv[2] points to the 
+second argument text, etc.  (argv[0] gives you the name of the executable
+file for the program itself)
+<pre>
+#include &lt;stdlib.h>
+
+void main(int argc, char *argv[])
+{
+    cout << "You called program " << argv[0] << " with arguments " << endl;
+    for (int i = 1; i < argc; i++) {
+        cout << argv[i] << " ";
+    }
+    cout << endl;
+}
+</pre>
+If the user typed in "myprog foo blah x" then the output from this
+program would be
+<pre>
+You called program myprog with arguments 
+foo blah x
+</pre>
+<b>Making Unix system calls</b>
+<p> You can make Unix system calls (e.g. to run other Unix commands or programs)
+from within a C++ program by creating a string containing the command
+you wish to run then invoking the <code>system</code> routine:
+<pre>
+char commandline[256];
+cout << "Please enter a filename" << endl;
+cin >> filename;
+strcpy(commandline, "cat ");
+strcat(commandline, filename);
+strcat(commandline, " | wc >> ");
+strcat(commandline, filename);
+strcat(commandline, ".out");
+system(commandline);
+</pre>
+If the user entered filename "mydata" this program would
+execute the Unix command "cat mydata | wc >> mydata.out",
+which would cout the words in file "mydata" and write the tally
+into the file "mydata.out".
+
+<hr><center><h2><a name="compilation">Separate compilation/makefiles</a></h2></center>
+The text below shows example header files and make files
+for separate compilation in Unix:
+<ul>
+<li> there are four modules: mainprog, first, second, boolean
+<li> boolean only has a header file (i.e. contains some relevant
+declarations, but no functions)
+<li> mainprog, first, and second each have a program file (i.e. with
+a .cpp suffic, and containing the bodies of subroutines) and a header file
+(containing declarations)
+<li> the routines in mainprog use information from each of the other
+files
+<li> note the global variable <code>myglobal</code> is declared in first.cpp
+and used in main.cpp
+<li> the routines in first and second need information from boolean
+<li> boolean needs no information from other files
+<li> using the makefile at the end, the user can type 
+<code>make mainprog</code>, and the system will automatically 
+compile exactly those files which have been altered since the
+last time make was run
+</ul>
+<pre>
+
+       Dependencies:
+
+          mainprog
+        /     |    \
+       /      |     \
+     first.h  |      second.h
+       \      |      /
+        \     |     /
+          boolean.h
+
+//--------------------------------------------------------------------
+// File boolean.h: gets included from several .h files 
+//                 and the main program
+//--------------------------------------------------------------------
+
+#ifndef BOOLE
+
+#undef TRUE
+#undef FALSE
+
+typedef int Boolean;
+
+const int TRUE = 1;
+const int FALSE = 0;
+
+#define BOOLE
+#endif
+
+//--------------------------------------------------------------------
+// File first.h: gets included from main, 
+//               is header for first.cpp routines
+//--------------------------------------------------------------------
+
+#ifndef FIRST
+
+#include "boolean.h"
+
+int foo(char c);
+
+#define FIRST
+#endif
+
+//--------------------------------------------------------------------
+// File first.cpp: body of routines from first.h
+//--------------------------------------------------------------------
+
+#include <iostream.h>
+#include "first.h"
+
+int myglobal;
+int foo(char c)
+{
+   cout << "C is " << c << endl;
+   return( int(c) );
+}
+
+//--------------------------------------------------------------------
+// File second.h: gets included from main, 
+//                is header for second.cpp routines
+//--------------------------------------------------------------------
+
+#ifndef SECOND
+
+#include "boolean.h"
+
+char blah(int x);
+
+#define SECOND
+#endif
+
+//--------------------------------------------------------------------
+// File second.cpp: body of routines from second.h
+//--------------------------------------------------------------------
+
+#include <iostream.h>
+#include "second.h"
+
+char blah(int x)
+{
+   cout << "X is " << x << endl;
+   return( char(x) );
+}
+
+//--------------------------------------------------------------------
+// File mainprog.cpp: main program, uses seperately compiled files
+//                    first.o and second.o
+//--------------------------------------------------------------------
+
+#include <iostream.h>
+#include "first.h"
+#include "second.h"
+#include "boolean.h"
+
+extern int myglobal;
+
+void main()
+{
+   int mynum; 
+   char mychar;
+
+   mynum = foo('Z');
+   mychar = blah(mynum);  
+}
+
+
+//--------------------------------------------------------------------
+// File makefile: make mainprog - brings mainprog up to date,
+//                                updates other files only if needed
+//                make clean    - gets rid of .o files 
+//--------------------------------------------------------------------
+
+mainprog:	first.o second.o mainprog.cpp
+	g++ first.o second.o mainprog.cpp -o mainprog
+
+first.o:	first.cpp
+	g++ -c first.cpp
+
+second.o:	second.cpp
+	g++ -c second.cpp
+
+clean:
+	rm -f *.o
+
+</pre>
+
+<hr size=3 noshade> Copyright &copy; 1997, David M. Wessels. Revised 2000. All rights reserved.</body>
+</body>
+</html>

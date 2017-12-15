@@ -1,0 +1,11 @@
+#fOrTyTwO
+$hz=1000;
+$XS_VERSION='DProf 20000000.00_00';
+# All values are given in HZ
+$over_utime=30; $over_stime=20; $over_rtime=50;
+$over_tests=10000;
+$rrun_utime=0; $rrun_stime=10; $rrun_rtime=10;
+$total_marks=0                                                                                                                                                                                   
+
+PART2
+@ 0 10 10

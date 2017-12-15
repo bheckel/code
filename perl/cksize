@@ -1,0 +1,28 @@
+#!/usr/pkg/bin/perl -w
+##############################################################################
+#     Name: cksize.pl
+#
+#  Summary: Check for large files, emailing if they hit a threshold.  
+#           Assuming that this usually runs under cron.
+#
+#  Created: Fri 30 Apr 2004 21:24:25 (Bob Heckel)
+# Modified: Sat 16 Sep 2006 13:24:07 (Bob Heckel)
+##############################################################################
+use strict;
+
+###my $f = "$ENV{HOME}/Mail/mbox";
+my $f = '/mail/bheckel';
+my $s = (stat($f))[7];
+
+if ( $s > 1000000 ) {
+  my $MAIL = 'mailx -s "[cron] /mail/bheckel size gt 1MB"';
+
+  open MH, "|$MAIL" || die "Can't fork for mailx: $!";
+
+  print MH <<"EOT";
+Time to read the mail
+  $f is $s
+EOT
+
+  close MH;
+}

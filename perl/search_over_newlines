@@ -1,0 +1,19 @@
+From My Life with Spam ( Dominus ) Sat, 18 Mar 2000 17:36:25 (Bob Heckel)
+
+A Simpler Way to Deal with the Continuation Lines
+This is a general pattern that you can apply to any problem that involves
+continuations or escape sequences. It's fairly simple, but it turns out that
+in Perl there's an even simpler way to write the same thing, if we're willing
+to use a little regex magic: 
+
+
+        @logical_lines = split /\n(?!\s)/, $header;
+
+What's going on here? It says that the delimiters between header lines
+aren't \n characters; just an \n by itself isn't enough. (?!foo) says that in
+order to match, perl must not see foo coming up at that position in the
+string. (?!\s) says that the next character after the \n must not be a
+whitespace character. So where /\n/ will match any newline character,
+/\n(?!\s)/ will only match the newline characters that are not immediately
+followed by whitespace. These are precisely the ones that are at the ends of
+logical lines. 

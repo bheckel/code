@@ -1,0 +1,45 @@
+//BQH0CART JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,REGION=0M                                                                   
+//STEP1    EXEC SAS,OPTIONS='MSGCASE,MEMSIZE=0'                           
+//WORK     DD SPACE=(CYL,(500,50),,,ROUND)                                          
+//IN       DD DISP=SHR,DSN=BF19.CAX0210.NATMER
+//OUT      DD DISP=(NEW,CATLG,DELETE),                                              
+//         DSN=DWJ2.CA2002.NAT.D13JUN02,                                       
+//         DCB=(LRECL=255,RECFM=FB),                                             
+//         SPACE=(CYL,(40,4),RLSE)                                               
+//SYSIN    DD *                                                                
+
+ /*********************************************************************
+  *     NAME: CALRCPT
+  *  SUMMARY: CORRECT THE RECEIPT DATE ON A CALIFORNIA NATALITY 
+  *           FILE.  OUTPUT A 255 BYTE NCHS FORMATTED FILE.
+  *  CREATED: THU JUN 13 11:11:50 2002 (BOB HECKEL)
+  *********************************************************************
+  */
+OPTIONS LS=133 CAPS NOTES SOURCE ERRORABEND NODATE;                             
+                                                                                
+DATA CA;                                                                        
+  INFILE IN;                                                                     
+  INPUT @3 CERTNO 6.  @16 STATEBIRTH $CHAR2.  
+        @224 YEARBIRTH $CHAR4.
+        ;                                
+RUN;
+                                                                                
+DATA _NULL_;                                                                    
+  SET CA;                                                                        
+  FILE OUT;                                                                      
+  * RANGES SPECIFIED BY SUSAN MCBROOM;
+  IF ( CERTNO > 126244 AND CERTNO < 148201 ) THEN
+    DO;
+      PUT @3 CERTNO 6.  @16 STATEBIRTH $CHAR2.  
+          @224 YEARBIRTH $CHAR4.  @241 '5202'
+          ;                        
+    END;
+  IF ( CERTNO > 148200 AND CERTNO < 177618 ) THEN
+    DO;
+      PUT @3 CERTNO 6.  @16 STATEBIRTH $CHAR2.  
+          @224 YEARBIRTH $CHAR4.  @241 '6032'
+          ;                        
+    END;
+RUN;
+
+//                                                                              

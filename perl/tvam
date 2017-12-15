@@ -1,0 +1,27 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: tvam
+#
+#      Summary: Return pmt, based on FV, r, n
+#               Usage: tvaf
+#
+#      Created: Tue, 10 Aug 1999 19:05:01 (Bob Heckel)
+##############################################################################
+
+print "Program returns pmt, based on FV, r, n\n";
+
+print "Enter FV\n";
+$fv = <STDIN>;
+print "Enter rate e.g 10%:\n";
+$rate = <STDIN>;
+$frac = ($rate / 100);
+print "Enter n:\n";
+$n = <STDIN>;
+
+$x = (1 + $frac)**$n;
+$y = $x - 1; 
+
+$retme = ($fv / ($y / $frac));
+
+print "$retme is the payment.\n";
+

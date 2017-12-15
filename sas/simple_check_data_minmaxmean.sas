@@ -1,0 +1,10 @@
+data t;
+  set allmeths(rename=(recorded_text=nresult));
+  result = input(nresult, ?? F8.);
+run;
+proc sort; by lims_id1; run;
+proc summary data=t;
+  class long_test_name short_test_name_level1;
+  output min(result)=min max(result)=max mean(result)=mean;
+run;
+proc print data=_LAST_(obs=max where=(_TYPE_ in (0,3))) width=minimum NOobs; run;

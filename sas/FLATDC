@@ -1,0 +1,44 @@
+//BQH0FLDC JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,REGION=0M                                                                   
+//STEP1    EXEC SAS,OPTIONS='MEMSIZE=0'                                
+//WORK     DD SPACE=(CYL,(500,50),,,ROUND)                                          
+//IN       DD DISP=SHR,DSN=BQH0.NCHS01.TXT                                         
+//OUT      DD DISP=(NEW,CATLG,DELETE),UNIT=NCHS,                                               
+//            DSN=DWJ2.DCINFANT.D20JUN02,                                            
+//            DCB=(LRECL=420,RECFM=FB),                                              
+//            SPACE=(CYL,(10,2),RLSE)                                                
+//SYSIN  DD *                                                                
+ /*                                                                             
+  *  CREATED: KRYN KRAUTHEIM FLATCA2 06 JUL 2001                                        
+  *  ADAPTED: BOB HECKEL 06 MAY 2002                                           
+  *  SUMMARY: READ A TEXTFILE OF DISTRICT OF COLUMBIA DATA            
+  *           FROM WHICH A SPECIAL DC NEEDS TO BE CREATED 
+  *           FOR PAM TO MAKE UPDATES TO AND REMERGE WITH THE
+  *           PRIMARY FILE.                             
+  */
+OPTIONS LS=133 CAPS NOTES SOURCE ERRORABEND;                                    
+                                                                                
+DATA WORK.CERTLIST;                                                             
+  INFILE IN;                                                                    
+  INPUT @1 DCERTNO $CHAR5.  @6 BCERTNO $CHAR6.  @12 LYOB $CHAR4.                  
+        @16 LBSTATE $CHAR2.  @18 YOD $CHAR4.;                                    
+RUN;                                                                            
+                                                                                
+PROC SORT DATA=WORK.CERTLIST;                                                   
+  BY DCERTNO;                                                                   
+RUN;                                                                            
+                                                                                
+DATA _NULL_;                                                                    
+  SET CERTLIST;                                                                 
+  FILE OUT;                                                                     
+  PUT @5 '0'  @6 DCERTNO $CHAR5.  @77 '09'  @123 BCERTNO $CHAR6.                   
+      @129 LYOB $CHAR4.  @133 LBSTATE $CHAR2.  @135 YOD $CHAR4.;                 
+RUN;                                                                            
+
+ /* SAMPLE INFANT DEATH LINKAGE INPUT */
+ /***
+ 004010002202001092001
+ 004970086562000092001
+ 005240138132000092001
+ ***/
+
+/*                                                                              

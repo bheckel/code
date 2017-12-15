@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+  <TITLE>http://localhost/~bheckel/age-calc.html</TITLE>
+  <!--   Also works this way: -->
+  <!--   http://localhost:80/~bheckel/cgi-bin/age-calc.html -->
+  <META NAME="author" CONTENT="Robert S. Heckel Jr.">
+</HEAD>
+
+<BODY>
+  <!--   Assumes age-calc.cgi is in ~bheckel/public_html/cgi-bin/ and
+         ScriptAlias /cgi exists in httpd.conf 
+   -->
+  <FORM ACTION="/cgi/age-calc.cgi" METHOD="POST">
+    <INPUT NAME="birthdate" TYPE="text" VALUE="1998-05">
+    <!--     The Submit button causes the browser to do the following: -->
+    <!--     1. Separate the data into name/value pairs. -->
+    <!--     2. URI encode the data. -->
+    <!--     3. Send the data to the server. -->
+    <INPUT NAME="thesubmit" TYPE="submit">
+  </FORM>
+</BODY>
+</HTML>

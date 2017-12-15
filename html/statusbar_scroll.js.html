@@ -1,0 +1,29 @@
+<html>
+<head>
+  <!-- <link rel=stylesheet type="text/css" href="http://triweb/CustSvcFin/finance.css"> -->
+  <script language="JavaScript">
+    var myMsg = "Results updated as of 6/17/99.       More results now available.  Testing....";
+    var i = 0;
+    var scrollCounter = 0;
+
+    function scrollMsg(){
+      var frontPart = myMsg.substring(i,myMsg.length)
+      var backPart = myMsg.substring(0,i)
+      window.status = frontPart + backPart
+      if (i < myMsg.length) {
+        i++
+      }
+      else{
+        i = 0
+        scrollCounter++
+      }
+      if (scrollCounter < 999){
+        setTimeout ("scrollMsg()",100)
+      }
+    }
+  </script>
+</head>
+<body onload="scrollMsg()" background-color="red">
+  <h1>Please select a menu item to begin.</h1>
+</body>
+</html>

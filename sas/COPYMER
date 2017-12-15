@@ -1,0 +1,36 @@
+//BQH0CPMR JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,REGION=0M             
+//STEP1    EXEC SAS,OPTIONS='MEMSIZE=0'                                         
+//WORK     DD SPACE=(CYL,(500,50),,,ROUND)                                      
+//IN       DD DISP=SHR,DSN=BF19.FLX0221.MORMER                                  
+//OUT      DD DISP=(NEW,CATLG,DELETE),                                          
+//         DSN=BQH0.FLX0221.MORMER,                                             
+//         DCB=(LRECL=142,RECFM=FB),                                            
+//         SPACE=(CYL,(40,4),RLSE)                                              
+//SYSIN    DD *                                                                 
+
+options nosource;
+ /*---------------------------------------------------------------------
+  *     Name: COPYMER
+  *
+  *  Summary: Copy a complete MORMED file for testing 2003 mortality
+  *           modifications.
+  *
+  *  Created: Fri 17 Jan 2003 09:17:22 (Bob Heckel)
+  *---------------------------------------------------------------------
+  */
+options source;
+
+data work.big;                                                                       
+  infile IN;                                                                    
+  ***input @1 block1 $char142.;                                                                       
+  input @1 block1 $char134.  @135 yr $char4.  @139 block2 $char4.;                                                                       
+run;                                                                            
+                                                                                
+data _NULL_;                                                                     
+  set work.big;                                               
+  file OUT;                                                                     
+                                                                                
+  ***put @1 block1;                      
+  /* Simulate a 2003 file using 2002's data. */
+  put @1 block1  @135 '2003'  @139 block2;                      
+run;                                                                            

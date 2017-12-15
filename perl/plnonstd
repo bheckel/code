@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+# Adapted: Sat, 20 May 2000 13:19:23 (Bob Heckel -- TPJ #17)
+# TODO reorder so that the line MODULE: Perl version 5.00503 is first.
+
+use strict;
+
+use Getopt::Std;
+use ExtUtils::Installed;
+
+use vars qw($opt_l $opt_h);
+&getopts('lh');              # $opt_l is set to 1 or 0
+
+if ( $opt_h ) {
+  die "$0:  list all installed (nonstandard) modules\n",
+      "  Usage: plnonstd     list just the module names\n",
+      "         plnonstd -l  list each module and all its directories\n",
+      "         plnonstd -h  this help info\n";
+}
+
+my $inst  = ExtUtils::Installed->new();
+
+foreach my $mod ( $inst->modules() ) {
+  my $ver = $inst->version($mod);        # version number of the module
+     $ver = ($ver) ? $ver : '<none>';
+  print "MODULE: $mod version $ver\n";
+  map { print "  $_\n" } $inst->directories($mod) if($opt_l);
+}
+

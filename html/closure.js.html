@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Javascript Closures</title>
+  </head>
+  <body>
+    <h3>Slow count</h3>
+    <script>
+
+      // Adapted from http://learn.jquery.com/javascript-101/closures/
+
+      // Each function executed within the loop will reference the last value
+      // stored in i (i.e. 5).  This won't behave as we want it to - every 2
+      // seconds, the number 5 will alert
+///    for ( var i=0; i<5; i++ ) {
+///      setTimeout(function() {
+///        alert(i);
+///      }, i * 2000 );
+///    }
+
+      // Using a closure to create a new private scope
+      // fix: 'close' the value of i inside createFunction, so it won't change
+      var createFunction = function(i) {
+        return function() {
+          alert(i);
+        };
+      };
+
+      for ( var i=0; i<5; i++ ) {
+        setTimeout( createFunction(i), i * 2000 );
+      }
+
+    </script>
+  </body>
+</html>

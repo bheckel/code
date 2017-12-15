@@ -1,0 +1,218 @@
+<html>
+<head>
+  <title>CSS Font and Text Style Wizard</title>
+  <meta author="http://www.somacon.com/p334.php">
+  <link rel="stylesheet" href="p996.foo" type="text/css">
+  <script type="text/javascript" src="p997.foo"></script>
+  <script type="text/javascript">
+  // Toggle a button to simulate radio type buttons
+  function toggleButton(elementObj, idRegex) {
+    var arraySpans = document.body.getElementsByTagName("SPAN");
+    
+    for(var i = 0; i < arraySpans.length; i++)
+    {
+      if(arraySpans[i].id.match(idRegex))
+      {
+	arraySpans[i].className = 'raised';
+      }
+    }
+    elementObj.className = 'depressed';
+  }
+
+  // Change the given style property of the given selector to the new style
+  // value
+  function changeStyle(selectorRegex, styleProperty, newStyle)
+  {
+    var numRules, sheetIndex;
+
+    if(document.styleSheets == undefined) {
+      return;
+    }
+
+    sheetIndex = 1;
+    numRules = getRulesObject(sheetIndex).length;
+
+    for(var i = 0; i < numRules; i++)
+    {
+      if(getRulesObject(sheetIndex)[i].selectorText.match(selectorRegex))
+      {
+	if(eval("getRulesObject(sheetIndex)[i].style."+styleProperty) != undefined)
+	{
+	  eval("getRulesObject(sheetIndex)[i].style."+styleProperty+" = '"+newStyle+"'");
+	}
+      }
+    }
+  }
+
+  // Get the style property of the given selector
+  function getStyle(selectorRegex, styleProperty)
+  {
+    var numRules, sheetIndex;
+
+    if(document.styleSheets == undefined) {
+      return;
+    }
+    sheetIndex = 1;
+    numRules = getRulesObject(sheetIndex).length;
+
+    for(var i = 0; i < numRules; i++)
+    {
+      if(getRulesObject(sheetIndex)[i].selectorText.match(selectorRegex))
+      {
+	if(eval("getRulesObject(sheetIndex)[i].style."+styleProperty) != undefined)
+	{
+	  return eval("getRulesObject(sheetIndex)[i].style."+styleProperty);
+	}
+      }
+    }
+    return "";
+  }
+
+  // This is a cross-browser function to return the rules object
+  // of the style sheet identified by the integer index.
+  // The styleSheets object exists in IE 4, NN 6, and DOM2 browsers,
+  function getRulesObject(sheetIndex)
+  {
+    if(document.styleSheets)
+    {
+      if(document.styleSheets[sheetIndex].cssRules)
+	return document.styleSheets[sheetIndex].cssRules;
+      else if (document.styleSheets[sheetIndex].rules)
+	return document.styleSheets[sheetIndex].rules;
+    }
+  }
+  </script>
+
+
+  <style type="text/css">
+  p.sample {
+    font-family: serif;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    font-size: medium;
+    line-height: 100%;
+    word-spacing: normal;
+    letter-spacing: normal;
+    text-decoration: none;
+    text-transform: none;
+    text-align: left;
+    text-indent: 0ex;
+  }
+  img.sample { vertical-align: baseline; }
+  span.sample { vertical-align: baseline; font-size: smaller; text-transform: capitalize; }span.depressed {
+    border-style: inset;
+    border-width: 1px;
+    border-color: #CCCCCC;
+    color: black;
+    background-color: #E4E3DC;
+    -moz-border-radius: 5px;
+    padding: 1px 4px 1px 4px;
+    line-height: 1.4em;
+  }
+  span.raised {
+    border-style: outset;
+    border-width: 1px;
+    border-color: #CCCCCC;
+    color: black;
+    background-color: #F3F3EE;
+    -moz-border-radius: 5px;
+    padding: 1px 4px 1px 4px;
+    line-height: 1.4em;
+  }
+  span.depressed:hover {
+    cursor: pointer;
+    cursor: hand;
+    background-color: #FFFF00;
+  }
+  span.raised:hover {
+    cursor: pointer;
+    cursor: hand;
+    background-color: #FFFF00;
+  }
+
+  </style>
+</head>
+
+<form method="get" action="table_display.foo" onsubmit="return false;" name="stylechangeform">
+<table>
+<tbody><tr>
+  <th colspan="2" bgcolor="#cccccc">Font</th>
+</tr>
+<tr>
+  <td>font-family</td>
+  <td>
+   <span id="paragraphFontFamily0" class="raised" onclick="toggleButton(this, /paragraphFontFamily/i);changeStyle(/p.sample/i, 'fontFamily', 'serif');">serif</span> <span id="paragraphFontFamily1" class="raised" onclick="toggleButton(this, /paragraphFontFamily/i);changeStyle(/p.sample/i, 'fontFamily', 'sans-serif');">sans-serif</span> <span id="paragraphFontFamily2" class="raised" onclick="toggleButton(this, /paragraphFontFamily/i);changeStyle(/p.sample/i, 'fontFamily', 'cursive');">cursive</span> <span id="paragraphFontFamily3" class="raised" onclick="toggleButton(this, /paragraphFontFamily/i);changeStyle(/p.sample/i, 'fontFamily', 'fantasy');">fantasy</span> <span id="paragraphFontFamily4" class="raised" onclick="toggleButton(this, /paragraphFontFamily/i);changeStyle(/p.sample/i, 'fontFamily', 'monospace');">monospace</span> <span id="paragraphFontFamily5" class="depressed" onclick="toggleButton(this, /paragraphFontFamily/i);changeStyle(/p.sample/i, 'fontFamily', ''+document.forms[0].paragraphFontFamilyCustom.value+'');">custom:</span>  <input name="paragraphFontFamilyCustom" size="17" maxlength="17" type="text">
+  </td>
+</tr>
+<tr>
+  <td>font-style
+  </td><td>
+   <span id="paragraphFontStyle0" class="depressed" onclick="toggleButton(this, /paragraphFontStyle/i);changeStyle(/p.sample/i, 'fontStyle', 'normal');">normal</span> <span id="paragraphFontStyle1" class="raised" onclick="toggleButton(this, /paragraphFontStyle/i);changeStyle(/p.sample/i, 'fontStyle', 'italic');">italic</span> <span id="paragraphFontStyle2" class="raised" onclick="toggleButton(this, /paragraphFontStyle/i);changeStyle(/p.sample/i, 'fontStyle', 'oblique');">oblique</span>  </td>
+</tr>
+<tr>
+  <td>font-variant</td>
+  <td>
+   <span id="paragraphFontVariant0" class="depressed" onclick="toggleButton(this, /paragraphFontVariant/i);changeStyle(/p.sample/i, 'fontVariant', 'normal');">normal</span> <span id="paragraphFontVariant1" class="raised" onclick="toggleButton(this, /paragraphFontVariant/i);changeStyle(/p.sample/i, 'fontVariant', 'small-caps');">small-caps</span>  </td>
+</tr>
+<tr>
+  <td>font-weight</td>
+  <td>
+   <span id="paragraphFontWeight0" class="depressed" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', 'normal');">normal</span> <span id="paragraphFontWeight1" class="raised" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', 'bold');">bold</span> <span id="paragraphFontWeight2" class="raised" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', 'bolder');">bolder</span> <span id="paragraphFontWeight3" class="raised" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', 'lighter');">lighter</span> <span id="paragraphFontWeight4" class="raised" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', '100');">100</span> <span id="paragraphFontWeight5" class="raised" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', '200');">200</span> <span id="paragraphFontWeight6" class="raised" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', '500');">500</span> <span id="paragraphFontWeight7" class="raised" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', '600');">600</span> <span id="paragraphFontWeight8" class="raised" onclick="toggleButton(this, /paragraphFontWeight/i);changeStyle(/p.sample/i, 'fontWeight', '900');">900</span>  </td>
+</tr>
+<tr>
+  <td>font-size</td>
+  <td>
+   <span id="paragraphFontSize0" class="depressed" onclick="toggleButton(this, /paragraphFontSize/i);changeStyle(/p.sample/i, 'fontSize', 'medium');">medium</span> <span id="paragraphFontSize1" class="raised" onclick="toggleButton(this, /paragraphFontSize/i);changeStyle(/p.sample/i, 'fontSize', 'small');">small</span> <span id="paragraphFontSize2" class="raised" onclick="toggleButton(this, /paragraphFontSize/i);changeStyle(/p.sample/i, 'fontSize', 'large');">large</span> <span id="paragraphFontSize3" class="raised" onclick="toggleButton(this, /paragraphFontSize/i);changeStyle(/p.sample/i, 'fontSize', 'smaller');">smaller</span> <span id="paragraphFontSize4" class="raised" onclick="toggleButton(this, /paragraphFontSize/i);changeStyle(/p.sample/i, 'fontSize', 'larger');">larger</span> <span id="paragraphFontSize5" class="raised" onclick="toggleButton(this, /paragraphFontSize/i);changeStyle(/p.sample/i, 'fontSize', ''+document.forms[0].paragraphFontSizeCustom.value+'');">custom:</span>  <input name="paragraphFontSizeCustom" size="17" maxlength="17" type="text">
+  </td>
+</tr>
+<tr>
+  <th colspan="2" bgcolor="#cccccc">Text</th>
+</tr>
+<tr>
+  <td>line-height</td>
+  <td>
+   <span id="paragraphLineHeight0" class="depressed" onclick="toggleButton(this, /paragraphLineHeight/i);changeStyle(/p.sample/i, 'lineHeight', '100%');">100%</span> <span id="paragraphLineHeight1" class="raised" onclick="toggleButton(this, /paragraphLineHeight/i);changeStyle(/p.sample/i, 'lineHeight', '200%');">200%</span> <span id="paragraphLineHeight2" class="raised" onclick="toggleButton(this, /paragraphLineHeight/i);changeStyle(/p.sample/i, 'lineHeight', '80%');">80%</span> <span id="paragraphLineHeight3" class="raised" onclick="toggleButton(this, /paragraphLineHeight/i);changeStyle(/p.sample/i, 'lineHeight', '2em');">2em</span> <span id="paragraphLineHeight4" class="raised" onclick="toggleButton(this, /paragraphLineHeight/i);changeStyle(/p.sample/i, 'lineHeight', '1em');">1em</span> <span id="paragraphLineHeight5" class="raised" onclick="toggleButton(this, /paragraphLineHeight/i);changeStyle(/p.sample/i, 'lineHeight', '0.8em');">0.8em</span> <span id="paragraphLineHeight6" class="raised" onclick="toggleButton(this, /paragraphLineHeight/i);changeStyle(/p.sample/i, 'lineHeight', ''+document.forms[0].paragraphLineHeightCustom.value+'');">custom:</span>  <input name="paragraphLineHeightCustom" size="17" maxlength="17" type="text">
+  </td>
+</tr>
+<tr>
+  <td>word-spacing</td>
+  <td>
+   <span id="paragraphWordSpacing0" class="raised" onclick="toggleButton(this, /paragraphWordSpacing/i);changeStyle(/p.sample/i, 'wordSpacing', 'normal');">normal</span> <span id="paragraphWordSpacing1" class="depressed" onclick="toggleButton(this, /paragraphWordSpacing/i);changeStyle(/p.sample/i, 'wordSpacing', '1ex');">1ex</span> <span id="paragraphWordSpacing2" class="raised" onclick="toggleButton(this, /paragraphWordSpacing/i);changeStyle(/p.sample/i, 'wordSpacing', '1.5ex');">1.5ex</span> <span id="paragraphWordSpacing3" class="raised" onclick="toggleButton(this, /paragraphWordSpacing/i);changeStyle(/p.sample/i, 'wordSpacing', '2ex');">2ex</span> <span id="paragraphWordSpacing4" class="raised" onclick="toggleButton(this, /paragraphWordSpacing/i);changeStyle(/p.sample/i, 'wordSpacing', '5ex');">5ex</span>  </td>
+</tr>
+<tr>
+  <td>letter-spacing</td>
+  <td>
+   <span id="paragraphLetterSpacing0" class="depressed" onclick="toggleButton(this, /paragraphLetterSpacing/i);changeStyle(/p.sample/i, 'letterSpacing', 'normal');">normal</span> <span id="paragraphLetterSpacing1" class="raised" onclick="toggleButton(this, /paragraphLetterSpacing/i);changeStyle(/p.sample/i, 'letterSpacing', '0.1ex');">0.1ex</span> <span id="paragraphLetterSpacing2" class="raised" onclick="toggleButton(this, /paragraphLetterSpacing/i);changeStyle(/p.sample/i, 'letterSpacing', '0.3ex');">0.3ex</span> <span id="paragraphLetterSpacing3" class="raised" onclick="toggleButton(this, /paragraphLetterSpacing/i);changeStyle(/p.sample/i, 'letterSpacing', '0.75ex');">0.75ex</span> <span id="paragraphLetterSpacing4" class="raised" onclick="toggleButton(this, /paragraphLetterSpacing/i);changeStyle(/p.sample/i, 'letterSpacing', '1ex');">1ex</span>  </td>
+</tr>
+<tr>
+  <td>text-decoration</td>
+  <td>
+   <span id="paragraphTextDecoration0" class="depressed" onclick="toggleButton(this, /paragraphTextDecoration/i);changeStyle(/p.sample/i, 'textDecoration', 'none');">none</span> <span id="paragraphTextDecoration1" class="raised" onclick="toggleButton(this, /paragraphTextDecoration/i);changeStyle(/p.sample/i, 'textDecoration', 'underline');">underline</span> <span id="paragraphTextDecoration2" class="raised" onclick="toggleButton(this, /paragraphTextDecoration/i);changeStyle(/p.sample/i, 'textDecoration', 'overline');">overline</span> <span id="paragraphTextDecoration3" class="raised" onclick="toggleButton(this, /paragraphTextDecoration/i);changeStyle(/p.sample/i, 'textDecoration', 'line-through');">line-through</span> <span id="paragraphTextDecoration4" class="raised" onclick="toggleButton(this, /paragraphTextDecoration/i);changeStyle(/p.sample/i, 'textDecoration', 'blink');">blink</span>  </td>
+</tr>
+<tr>
+  <td>text-transform</td>
+  <td>
+   <span id="paragraphTextTransform0" class="raised" onclick="toggleButton(this, /paragraphTextTransform/i);changeStyle(/p.sample/i, 'textTransform', 'none');">none</span> <span id="paragraphTextTransform1" class="raised" onclick="toggleButton(this, /paragraphTextTransform/i);changeStyle(/p.sample/i, 'textTransform', 'capitalize');">capitalize</span> <span id="paragraphTextTransform2" class="raised" onclick="toggleButton(this, /paragraphTextTransform/i);changeStyle(/p.sample/i, 'textTransform', 'uppercase');">uppercase</span> <span id="paragraphTextTransform3" class="depressed" onclick="toggleButton(this, /paragraphTextTransform/i);changeStyle(/p.sample/i, 'textTransform', 'lowercase');">lowercase</span>  </td>
+</tr>
+<tr>
+  <td>text-align</td>
+  <td>
+   <span id="paragraphTextAlign0" class="depressed" onclick="toggleButton(this, /paragraphTextAlign/i);changeStyle(/p.sample/i, 'textAlign', 'left');">left</span> <span id="paragraphTextAlign1" class="raised" onclick="toggleButton(this, /paragraphTextAlign/i);changeStyle(/p.sample/i, 'textAlign', 'right');">right</span> <span id="paragraphTextAlign2" class="raised" onclick="toggleButton(this, /paragraphTextAlign/i);changeStyle(/p.sample/i, 'textAlign', 'center');">center</span> <span id="paragraphTextAlign3" class="raised" onclick="toggleButton(this, /paragraphTextAlign/i);changeStyle(/p.sample/i, 'textAlign', 'justify');">justify</span>  </td>
+</tr>
+<tr>
+  <td>text-indent</td>
+  <td>
+   <span id="paragraphTextIndent0" class="raised" onclick="toggleButton(this, /paragraphTextIndent/i);changeStyle(/p.sample/i, 'textIndent', '0ex');">0ex</span> <span id="paragraphTextIndent1" class="depressed" onclick="toggleButton(this, /paragraphTextIndent/i);changeStyle(/p.sample/i, 'textIndent', '1ex');">1ex</span> <span id="paragraphTextIndent2" class="raised" onclick="toggleButton(this, /paragraphTextIndent/i);changeStyle(/p.sample/i, 'textIndent', '2ex');">2ex</span> <span id="paragraphTextIndent3" class="raised" onclick="toggleButton(this, /paragraphTextIndent/i);changeStyle(/p.sample/i, 'textIndent', '5ex');">5ex</span> <span id="paragraphTextIndent4" class="raised" onclick="toggleButton(this, /paragraphTextIndent/i);changeStyle(/p.sample/i, 'textIndent', '10ex');">10ex</span> <span id="paragraphTextIndent5" class="raised" onclick="toggleButton(this, /paragraphTextIndent/i);changeStyle(/p.sample/i, 'textIndent', '10%');">10%</span> <span id="paragraphTextIndent6" class="raised" onclick="toggleButton(this, /paragraphTextIndent/i);changeStyle(/p.sample/i, 'textIndent', '20%');">20%</span>  </td>
+</tr>
+<tr>
+<td colspan="2">
+<p class="sample">"You are old, Father William," the young man said,
+  <br>"And your hair has become very white;
+  <br>And yet you incessantly stand on your head--
+  <br>Do you think, at your age, it is right?"</p>
+</td>
+</tr>
+<tr>
+</tbody>
+</table>

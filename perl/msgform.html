@@ -1,0 +1,35 @@
+<!-- See email_the_form.pl (used by this code) -->
+<HTML>
+<HEAD>
+  <TITLE>http://47.143.212.20/bheckel/msgform.html</TITLE>
+  <META NAME="author" CONTENT="Robert S. Heckel Jr.">
+  <STYLE TYPE="text/css">
+    .sectheaders {
+      color: #005500;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+  </STYLE>
+</HEAD>
+
+<BODY BGCOLOR="FFFFEA">
+  <FORM ACTION="http://47.143.212.20/bheckel/cgi-bin/email_the_form.pl" METHOD="POST">
+    <CENTER>
+    <H2>Send a message to Bob Heckel</H2>
+    <BR>
+    <P CLASS=sectheaders>Name</P>
+    <INPUT NAME="name" TYPE="text" VALUE="">
+    <BR>
+    <P CLASS=sectheaders>Message</P>
+    <TEXTAREA NAME="message" rows=20 cols=40></TEXTAREA>
+    <BR>
+    <BR>
+    <!--     The Submit button causes the browser to do the following: -->
+    <!--     1. Separate the data into name/value pairs. -->
+    <!--     2. URI encode the data. -->
+    <!--     3. Send the data to the server. -->
+    <INPUT NAME="thesubmit" TYPE="submit" VALUE="Send">
+    </CENTER>
+  </FORM>
+</BODY>
+</HTML>

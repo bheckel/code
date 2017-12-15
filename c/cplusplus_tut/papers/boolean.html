@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<TITLE>Boolean logic</TITLE>
+<meta name="description" content="Explains the basic boolean logic operations than can be performed in C++ (AND, OR, XOR and NOT)" >
+<meta name="keywords" content="c++, boolean, logic, and, or, xor, not" >
+</HEAD>
+<body bgcolor="white" >
+
+<!--cap-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=5><B> Boolean logic</B></FONT><BR>
+ <FONT SIZE=4>Operations AND, OR, XOR and NOT </FONT>
+</TD><TD VALIGN="bottom">
+ <a href="http://www.cplusplus.com" ><IMG SRC="/img/mini.gif" ALT="cplusplus.com" BORDER=0></A>
+</TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/cap-->
+<P>
+A bit is the minimum amount of information that we can imagine, since it only stores
+either value 1 or 0, that represents YES or NOT, activated or deactivated, true or false,
+etc... that is: two possible states each one opposite to the other, without possibility
+of shades.
+<P>
+Several operations can be performed with bits, either in conjunction with other bits or
+themselves alone.  These operations receive the name of <B>boolean operations</B>,
+a word that come from the name of one of the mathematicians who more contributed to
+this field: George Boole (1815-1864).
+<P>
+All these operations have a predetermined behavior and all of them can be applied to any
+bit being anyone the value contained in it (<TT><B>0</B></TT> or <TT><B>1</B></TT>).
+Next you have a list of the basic boolean operations and a table with the behaviour
+of that operation with every possible combination of bits.
+<P>
+<DL>
+
+<DT><B>AND</B><BR>
+<DD>this operation is performed between two different bits
+(<tt><B>a</B></TT> and <TT><B>b</B></TT>). The result is <TT><B>1</B></TT> if both
+<TT><B>a</B></TT> and <TT><B>b</B></TT> are equal to <TT><B>1</B></TT>, if anyone of them
+is equal to <TT><B>0</B></TT> the result is <TT><B>0</B></TT>
+<blockquote ><B>AND (<TT>&amp;</TT>)</B>
+<TABLE BORDER=1 CELLSPACING=0>
+<TR><TD BGCOLOR="#8080FF" WIDTH=50 ALIGN="center"><TT><B>a</B></TT></TD><TD BGCOLOR="#8080FF" WIDTH=50 ALIGN="center"><B><TT>b</TT></B></TD><TD BGCOLOR="#8030FF" WIDTH=50 ALIGN="center"><B><TT>a&amp;b</TT></B></TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="silver" ALIGN="center">0</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="silver" ALIGN="center">0</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="silver" ALIGN="center">0</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="silver" ALIGN="center">1</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+
+<DT><B>OR</B><BR>
+<DD>this operation is performed between two different bits
+(<tt><B>a</B></TT> and <TT><B>b</B></TT>). The result is <TT><B>1</B></TT>
+if any of them <TT><B>a</B></TT> or <TT><B>b</B></TT> is <TT><B>1</B></TT>.
+If noone is equal to <TT><B>1</B></TT> the result is <TT><B>0</B></TT>
+<blockquote ><B>OR (<TT>|</TT>)</B>
+<TABLE BORDER=1 CELLSPACING=0>
+<TR><TD BGCOLOR="#8080FF" WIDTH=50 ALIGN="center"><TT><B>a</B></TT></TD><TD BGCOLOR="#8080FF" WIDTH=50 ALIGN="center"><B><TT>b</TT></B></TD><TD BGCOLOR="#8030FF" WIDTH=50 ALIGN="center"><B><TT>a|b</TT></B></TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="silver" ALIGN="center">0</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="silver" ALIGN="center">1</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="silver" ALIGN="center">1</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="silver" ALIGN="center">1</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+
+<DT><B>XOR</B> (Exclusive Or)<BR>
+<DD>this operation is performed between two different bits
+(<tt><B>a</B></TT> and <TT><B>b</B></TT>). The result is <TT><B>1</B></TT>
+if any of them <TT><B>a</B></TT> or <TT><B>b</B></TT> is <TT><B>1</B></TT>
+except if both they are it. If neither or both are equal to <TT><B>1</B></TT> the result
+is <TT><B>0</B></TT>
+<blockquote ><B>XOR (<TT>^</TT>)</B>
+<TABLE BORDER=1 CELLSPACING=0>
+<TR><TD BGCOLOR="#8080FF" WIDTH=50 ALIGN="center"><TT><B>a</B></TT></TD><TD BGCOLOR="#8080FF" WIDTH=50 ALIGN="center"><B><TT>b</TT></B></TD><TD BGCOLOR="#8030FF" WIDTH=50 ALIGN="center"><B><TT>a^b</TT></B></TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="silver" ALIGN="center">0</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="silver" ALIGN="center">1</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="silver" ALIGN="center">1</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="silver" ALIGN="center">0</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+
+<DT><B>NOT</B><BR>
+<DD>This operation is performed on a single bit.
+Its result is the inversion of the present value of the bit:  if it
+contained <TT><B>1</B></TT> passes to contain
+<TT><B>0</B></TT> and if it contained <TT><B>0</B></TT> it passes to contain
+<TT><B>1</B></TT>:
+<blockquote ><B>NOT (<TT>~</TT>)</B>
+<TABLE BORDER=1 CELLSPACING=0>
+<TR><TD BGCOLOR="#8080FF" WIDTH=50 ALIGN="center"><TT><B>a</B></TT></TD><TD BGCOLOR="#8030FF" WIDTH=50 ALIGN="center"><B><TT>~a</TT></B></TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">0</TD><TD BGCOLOR="silver" ALIGN="center">1</TD></TR>
+<TR><TD BGCOLOR="white" ALIGN="center">1</TD><TD BGCOLOR="silver" ALIGN="center">0</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+
+</DL>
+
+<P>
+These are the 4 basic boolean operations (AND, OR, XOR and NOT). Combining these operations
+any desired result can be obtained.
+<P>
+In C++, these operators can be used between two variables of any integer data type; 
+the logic operation is made between the bits of the two variables.
+For example, suposing two variables: <TT><B>a</B></TT> and <TT><B>b</B></TT>,
+both of type <TT><B>char</B></TT>, <TT><B>a</B></TT> contains <TT><B>195</B></TT>
+(<TT><B>11000011</B></TT> in binary) and <TT><B>b</B></TT> contains <TT><B>87</B></TT>
+(or <TT><B>01010111</B></TT> in binary).  If we write the following code:
+<blockquote ><TT>
+char a=195;<BR>
+char b=87;<BR>
+char c;<BR>
+c=a&b;
+</TT></BLOCKQUOTE>
+That means, that we conducted a bitwise <TT><B>AND</B></TT> operation between
+<TT><B>a</B></TT> and <TT><B>b</B></TT>. The result (the content of <TT><B>c</B></TT>)
+would be the following one:
+<blockquote ><IMG SRC="boolean1.gif"></BLOCKQUOTE>
+<TT><B>01000011</B></TT>, that is <TT><B>67</B></TT>.
+
+<!--cua-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy;The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+ <TR><TD ALIGN="center">
+<TABLE CELLPADDING=0 CELLSPACING=0>
+     <TR><TD>Return <a href="javascript:history.go(-1)" >back</A></TD></TR>
+     <TR><TD>Return to <a href="../index.html">Documents section</A></TD></TR></TABLE>
+ </TD></TR>
+</TABLE></CENTER>
+<!--/cua-->
+
+</BODY>
+</HTML>

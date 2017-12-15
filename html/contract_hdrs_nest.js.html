@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+  <SCRIPT LANGUAGE="JavaScript1.2">
+    var head = "display:''"
+
+    function doit(header) {
+      var head = header.style
+
+      if ( head.display == "none" )
+        head.display = ""
+      else
+        head.display = "none"
+    }
+  </SCRIPT>
+</HEAD>
+
+<BODY>
+  DHTML testing
+  <H3 style="cursor:hand" onClick="doit(document.all[this.sourceIndex+1])">
+    Header 1</H3>
+  <SPAN STYLE="display:none" style=&{head};>
+    <!--   start item 1 normal text                 -->
+    &nbsp;&nbsp;&nbsp;This is content under Header 1.
+    <!--   end item 1 normal text                   -->
+    <!--   start item 2 happens to be another span  -->
+    <H3 style="cursor:hand" onClick="doit(document.all[this.sourceIndex+1])">
+     &nbsp;&nbsp;&nbsp;Header nested1</H3>
+    <SPAN STYLE="display:none" style=&{head};>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is nested content under Header nested1.
+    </SPAN>
+    <!--   end item 2 happens to be another span    -->
+  </SPAN>
+
+  <H3 STYLE="cursor:hand" onClick="doit(document.all[this.sourceIndex+1])">
+    Header 2</H3>
+  <SPAN STYLE="display:none" style=&{head};>
+    This is content under Header 2.
+  </SPAN>
+</BODY>
+</HTML>

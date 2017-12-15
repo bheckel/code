@@ -1,0 +1,77 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: tv
+#
+#  Summary: Calculate various time value of money problems.
+#
+#  Created: Tue, 29 Feb 2000 16:30:45 (Bob Heckel)
+# Modified: Wed, 01 Mar 2000 09:20:00 (Bob Heckel)
+##############################################################################
+
+###if ( defined($ARGV[0]) =~ /-+h.*/ ) {
+if ( defined($ARGV[0]) ) {
+  print "Usage: tva type payment rate (e.g. 0.07) periods\n";
+  exit;
+}
+
+# TODO test against a webbased calculator to verify when done.
+
+print<<HERE;
+Select one:
+1) Future Value of an Annuity, based on pmt, r, n
+2) Payment, based on fv, r, n
+3) Periods, based on pmt, r, fv
+4) Future Value, based on pv, r, n
+5) Periods based on pv, r, fv
+6) Present Value, based on fv, r, n
+7) Rate, based on fv, pv, n
+HERE
+
+%op_table = (
+  # Return Future Value of an Annuity, based on pmt, r, n
+  #        0       1     2
+  # type payment rate periods
+  1 => sub { ($_[0] *(((1 + $_[1])**$_[2]) -1)) / $_[1]; },
+
+  # Return Payment, based on fv, r, n
+  #       0   1    2
+  # type fv rate periods
+  2 => sub { $_[0] / (( ( ( ((1 + $_[1])**$_[2]) )- 1) ) / $_[1] ); },
+
+  # Return Periods, based on pmt, r, fv
+  #        0       1   2
+  # type payment rate fv
+  3 => sub { (log( (($_[2] / $_[0]) * $_[1]) + 1) )  /  (log($_[1] + 1) ); },
+
+  # Return Future Value, based on pv, r, n
+  #       0   1     2
+  # type pv rate periods
+  4 => sub { ((1 + $_[1])**$_[2]) * $_[0]; },
+
+  # Return Periods based on pv, r, fv.
+  #       0  1   2
+  # type fv pv rate
+  5 => sub { (log($_[0] / $_[1]))  /  (log($_[2] + 1)); },
+
+  # Return Present Value, based on fv, r, n
+  #       0 1 2
+  # type fv r n
+  6 => sub { (1 / (1 + $_[1])**$_[2]) * $_[0]; },
+
+  # Return Rate, based on fv, pv, n
+  #      0  1  2
+  # type fv pv n
+  7 => sub { (($_[0] / $_[1])**(1 / $_[2]))- 1; }
+);
+
+###print "Enter type (see menu above), payment, rate (e.g. 0.07), periods\n";
+$_ = <STDIN>;
+###($type, $pmt, $rate, $n) = split;
+($type, $one, $two, $three) = split;
+$sub_ref = $op_table{$type};
+###$retme = &$sub_ref($pmt, $rate, $n);
+$retme = &$sub_ref($one, $two, $three);
+
+# TODO customize verbiage for different types.
+printf("%.2f is the result", $retme);
+

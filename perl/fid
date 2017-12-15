@@ -1,0 +1,80 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: fid
+#
+#  Summary: Give number of files in directory.
+#           TODO 1 files s/b 1 file
+#           TODO doesn't work for files not in pwd (or recursively).
+#
+#
+#           This is better:
+#           $ ls -l|wc -l
+#
+#
+#  Created: Fri Apr 30 1999 13:45:06 (Bob Heckel)
+# Modified: Wed 04 Dec 2002 10:49:06 (Bob Heckel)
+##############################################################################
+
+# Ck for some path passed to pgm.
+if ( @ARGV ) {
+  $dirpath = $ARGV[0]
+} else {
+  print STDERR "usage:  $0 YOURDIR\n";
+  print STDERR "        Does not recurse\n";
+  print STDERR '        To recurse, must use  $ find . -type f  | wc -l', "\n";
+  exit(__LINE__);
+}
+
+opendir(MYDIR, $dirpath) or die "Can't open $dirpath: $!\n";
+
+@files = readdir(MYDIR);
+
+foreach $file ( @files ) {
+  if ( -d $file ) {
+    unless ( $file eq '.' || $file eq '..' ){ ++$num_of_dirs; }
+  } elsif ( -e $file ) {
+    ++$num_of_files;
+  }
+}
+
+# For some reason, counting current directory in addition to . and ..
+# TODO why is this fix required??
+if ( defined($num_of_dirs) > 1 ) { $num_of_dirs-- };
+
+closedir(MYDIR);
+
+# How many files found.  Subtract current dir, . and .. from the total.
+###$num_of_dirs -= 3;
+###$num_of_dirs -= 2;
+if ( $dirpath eq '.' ) { $dirpath = $ENV{'PWD'} };
+
+# Fix previous fix of dirs.
+if ( defined($num_of_dirs) < 0 ) {
+  $num_of_dirs = 0;
+}
+
+if ( defined($num_of_dirs) == 1 ) {   # defined() is mandatory
+  $singularplural = 'directory';
+} else {
+  $singularplural = 'directories';
+}
+
+# Both files and dirs:
+if ( $num_of_files && $num_of_dirs ) {
+  print "$num_of_files files in $dirpath\n$num_of_dirs $singularplural excluding . and ..\n";
+}
+
+# Files, no dirs:
+if ( $num_of_files && ! $num_of_dirs ) {
+  print "$num_of_files files in $dirpath\n0 directories excluding . and ..\n";
+}
+
+# Dirs, no files:
+if ( ! $num_of_files && $num_of_dirs ) {
+  print "0 files in $dirpath\n$num_of_dirs $singularplural excluding . and ..\n";
+}
+
+# No files, no dirs:
+if ( ! $num_of_files && ! $num_of_dirs ) {
+  print "0 files in $dirpath\n0 directories excluding . and ..\n";
+}

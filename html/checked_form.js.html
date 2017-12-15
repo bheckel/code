@@ -1,0 +1,44 @@
+<!-- Adapted: Thu, 08 Feb 2001 17:08:47 (Bob Heckel - Webmonkey http://hotwired.lycos.com/webmonkey/98/04/index3a_page7.html?tw=programming) -->
+
+<!-- Checkboxes hold the string 'on' if checked -->
+
+<SCRIPT LANGUAGE="JavaScript">
+function switchLight() {
+  var the_box = window.document.form_2.check_1;
+
+  if ( the_box.checked == false ) {
+    alert("Boom boom out go the lights");      
+    document.bgColor='black';
+  } else {
+    alert("Thanks!");
+    document.bgColor='white';
+  }
+}
+</SCRIPT>
+
+
+<form name="form_1">
+  <input type="checkbox" name="check_1">Checkbox 1<br>
+</form>
+
+<!-- The 'return false' in the href stops the page from bouncing around when 
+     you click on a link 
+-->
+<a href="#" onClick="window.document.form_1.check_1.checked=true; return 
+  false;">Click to check Checkbox 1</a>
+<br>
+<a href="#" onClick="window.document.form_1.check_1.checked=false; return 
+  false;">Click to uncheck Checkbox 1</a>
+<br>
+<a href="#" onClick="alert(window.document.form_1.check_1.checked); return 
+  false;">Click to see the value of Checkbox 1</a>
+
+
+<!-- When someone clicks on the checkbox, the onClick handler gets triggered
+and executes the switchLight() function.
+-->
+<form name="form_2">
+  <input type="checkbox" CHECKED name ="check_1" onClick="switchLight();">
+  The Light Switch
+</form>
+

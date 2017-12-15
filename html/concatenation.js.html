@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+  <SCRIPT Language="JavaScript">
+    function init() {
+      var foo  = "";
+      var foo2 = "";
+
+      for (var i=0; i<3; i++) {
+        foo = i + "concatenated";
+        ///foo2 = foo2 + foo;
+        foo2 += foo;
+      }
+
+      document.write("<CENTER><H1>Concatenation demo</H1></CENTER>");
+      document.write("here" + foo2);
+    }
+  </SCRIPT>
+</HEAD>
+<BODY ONLOAD="init()">
+</BODY>

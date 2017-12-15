@@ -1,0 +1,67 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Iterate DOM collections
+Available collections from window.document:
+anchors
+applets
+forms
+images
+links
+-->
+<!-- DOM collections are stored in objects which have only one property and two methods the length property, the item method and the namedItem method. -->
+<!-- Adapted: Mon 27 Apr 2009 13:39:32 (Bob Heckel - "Javascript for Programmers") -->
+<!-- Fig. 10.3: collections.html -->
+<html xmlns = "http://www.w3.org/1999/xhtml">
+   <head>
+      <title>Using Links Collection</title>
+      <style type = "text/css">
+         body          { font-family: arial, helvetica, sans-serif }
+         h1            { font-family: tahoma, geneva, sans-serif;
+                         text-align: center }
+         p             { margin: 5% }
+         p a           { color: #aa0000 }
+         .xlinks        { font-size: 10px;
+                         text-align: justify;
+                         margin-left: 10%;
+                         margin-right: 10% }
+         .linkz a       { text-decoration: none }
+         .linkz a:hover { text-decoration: underline }
+      </style>
+      <script type = "text/javascript">
+          <!--
+         function iteratelinks() {
+            var linkslist = document.links; // get the document's links
+            var contents = "Links in this page:\n<br />| ";
+
+            // concatenate each link to contents
+            for ( var i =  0; i < linkslist.length; i++ ) {
+               var currentLink = linkslist[ i ];
+               contents +=  "<span class = 'linkz'>" + currentLink.innerHTML.link(currentLink.href) + "</span> | ";
+            }
+
+            document.getElementById("mylinks").innerHTML = contents;
+         }
+         // -->
+      </script>
+   </head>
+   <body onload = "iteratelinks()">
+      <h1>Deitel Resource Centers</h1>
+      <p><a href = "http://www.deitel.com/">Deitel's website</a> contains
+         a rapidly growing
+         <a href = "http://www.deitel.com/ResourceCenters.html">list of
+         Resource Centers</a> on a wide range of topics. Many Resource
+         centers related to topics covered in this book,
+         <a href = "http://www.deitel.com/iw3htp4">Internet and World Wide
+         Web How to Program, 4th Edition</a>. We have Resouce Centers on
+         <a href = "http://www.deitel.com/Web2.0">Web 2.0</a>,
+         <a href = "http://www.deitel.com/Firefox">Firefox</a> and
+         <a href = "http://www.deitel.com/IE7">Internet Explorer 7</a>,
+         <a href = "http://www.deitel.com/XHTML">XHTML</a>, and
+         <a href = "http://www.deitel.com/JavaScript">JavaScript</a>.
+         Watch the list of Deitel Resource Centers for related new
+         Resource Centers.</p>
+      <div id = "mylinks" class = "xlinks"></div>
+   </body>
+</html>
+

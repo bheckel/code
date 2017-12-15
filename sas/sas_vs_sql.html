@@ -1,0 +1,275 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 10">
+<link rel=File-List href="sas_vs_sql_files/filelist.xml">
+<link rel=Edit-Time-Data href="sas_vs_sql_files/editdata.mso">
+<link rel=OLE-Object-Data href="sas_vs_sql_files/oledata.mso">
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Adapted: Mon Jun 14 12:59:31 2004 (Bob Heckel - SUGI 269-29)</o:Author>
+  <o:LastAuthor>bqh0</o:LastAuthor>
+  <o:Created>2004-06-14T16:49:02Z</o:Created>
+  <o:LastSaved>2004-06-14T16:53:23Z</o:LastSaved>
+  <o:Company>NCHS</o:Company>
+  <o:Version>10.6626</o:Version>
+ </o:DocumentProperties>
+ <o:OfficeDocumentSettings>
+  <o:DownloadComponents/>
+  <o:LocationOfComponents HRef="file:///\\"/>
+ </o:OfficeDocumentSettings>
+</xml><![endif]-->
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\.";
+	mso-displayed-thousand-separator:"\,";}
+@page
+	{margin:1.0in .75in 1.0in .75in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;}
+tr
+	{mso-height-source:auto;}
+col
+	{mso-width-source:auto;}
+br
+	{mso-data-placement:same-cell;}
+.style0
+	{mso-number-format:General;
+	text-align:general;
+	vertical-align:bottom;
+	white-space:nowrap;
+	mso-rotate:0;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	color:windowtext;
+	font-size:10.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Arial;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	border:none;
+	mso-protection:locked visible;
+	mso-style-name:Normal;
+	mso-style-id:0;}
+td
+	{mso-style-parent:style0;
+	padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:windowtext;
+	font-size:10.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Arial;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-number-format:General;
+	text-align:general;
+	vertical-align:bottom;
+	border:none;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	mso-protection:locked visible;
+	white-space:nowrap;
+	mso-rotate:0;}
+.xl24
+	{mso-style-parent:style0;
+	font-weight:700;
+	font-family:Arial, sans-serif;
+	mso-font-charset:0;}
+.xl25
+	{mso-style-parent:style0;
+	font-weight:700;
+	font-family:Arial, sans-serif;
+	mso-font-charset:0;
+	white-space:normal;}
+.xl26
+	{mso-style-parent:style0;
+	white-space:normal;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <x:ExcelWorkbook>
+  <x:ExcelWorksheets>
+   <x:ExcelWorksheet>
+    <x:Name>Sheet1</x:Name>
+    <x:WorksheetOptions>
+     <x:Print>
+      <x:ValidPrinterInfo/>
+      <x:HorizontalResolution>600</x:HorizontalResolution>
+      <x:VerticalResolution>600</x:VerticalResolution>
+     </x:Print>
+     <x:Selected/>
+     <x:ProtectContents>False</x:ProtectContents>
+     <x:ProtectObjects>False</x:ProtectObjects>
+     <x:ProtectScenarios>False</x:ProtectScenarios>
+    </x:WorksheetOptions>
+   </x:ExcelWorksheet>
+   <x:ExcelWorksheet>
+    <x:Name>Sheet2</x:Name>
+    <x:WorksheetOptions>
+     <x:ProtectContents>False</x:ProtectContents>
+     <x:ProtectObjects>False</x:ProtectObjects>
+     <x:ProtectScenarios>False</x:ProtectScenarios>
+    </x:WorksheetOptions>
+   </x:ExcelWorksheet>
+   <x:ExcelWorksheet>
+    <x:Name>Sheet3</x:Name>
+    <x:WorksheetOptions>
+     <x:ProtectContents>False</x:ProtectContents>
+     <x:ProtectObjects>False</x:ProtectObjects>
+     <x:ProtectScenarios>False</x:ProtectScenarios>
+    </x:WorksheetOptions>
+   </x:ExcelWorksheet>
+  </x:ExcelWorksheets>
+  <x:WindowHeight>12780</x:WindowHeight>
+  <x:WindowWidth>18540</x:WindowWidth>
+  <x:WindowTopX>600</x:WindowTopX>
+  <x:WindowTopY>450</x:WindowTopY>
+  <x:ProtectStructure>False</x:ProtectStructure>
+  <x:ProtectWindows>False</x:ProtectWindows>
+ </x:ExcelWorkbook>
+</xml><![endif]-->
+  <title>SAS vs. SQL</title>
+</head>
+
+<body link=blue vlink=purple>
+
+<table x:str border=1 cellpadding=0 cellspacing=0 width=867 style='border-collapse:
+ collapse;table-layout:fixed;width:651pt'>
+ <col class=xl26 width=240 style='mso-width-source:userset;mso-width-alt:8777;
+ width:180pt'>
+ <col width=277 style='mso-width-source:userset;mso-width-alt:10130;width:208pt'>
+ <col width=350 style='mso-width-source:userset;mso-width-alt:12800;width:263pt'>
+ <tr class=xl24 height=17 style='height:12.75pt'>
+  <td height=17 class=xl25 width=240 style='height:12.75pt;width:180pt'
+  x:str="Function ">Function<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl24 width=277 style='width:208pt'
+  x:str="Base SAS Statement / OPTION ">Base SAS Statement /
+  OPTION<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl24 width=350 style='width:263pt'
+  x:str="PROC SQL Statement / CLAUSE ">PROC SQL Statement / CLAUSE<span
+  style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Create a table ">Create a table<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="DATA ">DATA<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="CREATE TABLE ">CREATE TABLE<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Create a table from raw data ">Create a table from raw data<span
+  style='mso-spacerun:yes'> </span></td>
+  <td x:str="INPUT ">INPUT<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="INSERT ">INSERT<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Add columns ">Add columns<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="Assignment statement ">Assignment statement<span
+  style='mso-spacerun:yes'> </span></td>
+  <td x:str="SELECT … AS … ">SELECT … AS …<span
+  style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Drop columns ">Drop columns<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="DROP KEEP ">DROP KEEP<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="SELECT ">SELECT<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Add rows ">Add rows<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="OUTPUT ">OUTPUT<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="INSERT INTO ">INSERT INTO<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Delete rows ">Delete rows<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="WHERE IF/THEN DELETE ">WHERE IF/THEN DELETE<span
+  style='mso-spacerun:yes'> </span></td>
+  <td x:str="DELETE FROM ">DELETE FROM<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Sorting ">Sorting<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="PROC SORT ">PROC SORT<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="ORDER BY ">ORDER BY<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="De-dupe records ">De-dupe records<span
+  style='mso-spacerun:yes'> </span></td>
+  <td x:str="NODUPLICATE ">NODUPLICATE<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="DISTINCT ">DISTINCT<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Establish a connection with a RDBMS ">Establish a connection with a
+  RDBMS<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="LIBNAME ">LIBNAME<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="CONNECT DISCONNECT ">CONNECT DISCONNECT<span
+  style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl26 width=240 style='height:25.5pt;width:180pt'
+  x:str="Send a RDBMS-specific non-query SQL statement to a RDBMS ">Send a
+  RDBMS-specific non-query SQL statement to a RDBMS<span
+  style='mso-spacerun:yes'> </span></td>
+  <td></td>
+  <td x:str="CONNECTION TO ">CONNECTION TO<span
+  style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'>Concatenating</td>
+  <td x:str="SET ">SET<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="OUTER JOIN ">OUTER JOIN<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Match merging ">Match merging<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="MERGE / SET BY IF in1 IF in2 IF in1 &amp; in2 ">MERGE / SET BY IF
+  in1 IF in2 IF in1 &amp; in2<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="FROM LEFT JOIN RIGHT JOIN FULL JOIN WHERE / ON ">FROM LEFT JOIN
+  RIGHT JOIN FULL JOIN WHERE / ON<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Rename column ">Rename column<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="RENAME ">RENAME<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="AS ">AS<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Displaying resultant table ">Displaying resultant table<span
+  style='mso-spacerun:yes'> </span></td>
+  <td x:str="PROC PRINT ">PROC PRINT<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="SELECT ">SELECT<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl26 width=240 style='height:12.75pt;width:180pt'
+  x:str="Summarizing ">Summarizing<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="PROC [MEANS, FREQ] / BY ">PROC [MEANS, FREQ] / BY<span style='mso-spacerun:yes'> </span></td>
+  <td x:str="GROUP BY ">GROUP BY<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=240 style='width:180pt'></td>
+  <td width=277 style='width:208pt'></td>
+  <td width=350 style='width:263pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</body>
+
+</html>

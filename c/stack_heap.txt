@@ -1,0 +1,30 @@
+
+C compilers, on whatever platform, manage the memory associated to a program
+(the place where variables values are stored) in three main parts. 
+
+First, there is a place where global and static vars are stored; these never
+cease to exist for all of the program's execution, and thus this memory is
+simply allocated and never disposed of. 
+
+Second, there is the place where automatic variables (that is, variables that
+are local to functions) are stored; this is called a stack. The essence of a
+stack is that you always add new items on top and always remove items
+beginning from the top, so there is never a "hole" within the stack. When a
+function is called, its automatic variables are allocated on the top of the
+stack; when it ends, its variables are deallocated (and the stack becomes
+smaller). Whatever your program is like, the function that terminates at any
+given time is always the last that was called; so you have a stack (always
+remove from it the last thing you put in it). 
+
+Third, there is a place for variables that are created with malloc and
+disposed of with free. As the order in which these are created/destroyed is
+totally under the control of the programmer, you can have no guarantee that
+the first var to be destroyed is the last that was created. Hence you can have
+holes. This makes this area more "confused" and it is thus called a "heap".
+Usually, heap and stack begin at the opposite ends of the program's memory so
+that either can grow independently, until they eventually collide (and you get
+a memory overflow error). Consider this function:
+
+void f(void) { int a; f(); }
+
+as soon as you call it, you get a stack overflow. Guess why?

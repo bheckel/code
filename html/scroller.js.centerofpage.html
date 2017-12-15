@@ -1,0 +1,60 @@
+<html>
+  <head>
+  <title>Scroller</title>
+    <script language="JavaScript">
+    <!-- Original:  Randy Bennett (rbennett@thezone.net) -->
+    <!-- Adapted by: Bob Heckel Tue Jun 01 1999 11:24:20 -->
+    <!-- Modified: Fri, 24 Dec 1999 12:19:31 (Bob Heckel) -->
+
+    function setVariables() {
+      howmany = 3;
+      // Where FIRST line starts under black box.  It adjust time between items.
+      // Must be same as y in scrollUp()'s else statement.
+      y = 300;
+      ob = 1;
+      if (navigator.appName == "Netscape") v=".top=",dS="document.",sD="";
+      else v=".pixelTop=",dS="",sD=".style";
+      scrollUp();
+    }
+
+    function scrollUp() {
+      if (ob == howmany + 1) ob = 1;
+      if (ob < howmany + 1){
+        objectX = "object"+ob;
+        // y determines speed.
+        y -= 2;
+        eval(dS + objectX + sD + v + y);
+        // y is distance from top of screen where garbage is collected.
+        if (y > 190) setTimeout ("scrollUp()",50)
+        // y is point where new line starts moving upward.
+        else y = 300, ob += 1, setTimeout("scrollUp()",50)
+      }
+    }
+    //  End -->
+    </script>
+</head>
+
+<!-- This bgcolor that surrounds the Box must be same as scrolling text. -->
+<body onLoad="setVariables()" bgcolor="FFFFFF">
+  <H5>Testing</H5>
+  <BR>
+  <!-- Color of scrolling text. S/b white but use other color for instruction. -->
+  <div id="object1" style="position:absolute; visibility:show; left:30px; top:-250px; z-index:5">
+  <B><FONT COLOR="#FF00FF">Early in the 21st Century, THE TYRELL</B>
+  </div>
+
+  <div id="object2" style="position:absolute; visibility:show; left:30px; top:-250px; z-index:5">
+  <B><FONT COLOR="#FF11FF">CORPORATION advanced Robot evolution<br></A></FONT><br></B>
+  </div>
+
+  <div id="object3" style="position:absolute; visibility:show; left:30px; top:-250px; z-index:5">
+  <B><FONT COLOR="#FF99FF">This just in...<br>finance results.</FONT></B>
+  </div>
+
+  <!-- Increase 'top: 245px' to lower the shaded block.  Must then adjust scrolling text. -->
+  <div id="block" style="position:absolute; visibility:show; left:20px; top:245px; z-index:4">
+  <!-- bgcolor determines color of block that text scrolls visibly thru. -->
+  <!-- Font color required or the placeholding period shows in window. -->
+  <table width=100% height=80 border=0 bgcolor="0000A0"><td><font color="000000">.</font></td></table></div>
+</body>
+</html>

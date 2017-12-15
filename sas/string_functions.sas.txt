@@ -1,0 +1,25 @@
+07-Oct-15 v9+
+
+Functions That Change the Case of Characters UPCASE LOWCASE PROPCASE
+
+Functions That Remove Characters from Strings COMPBL COMPRESS
+
+Functions That Search for Characters ANYALNUM NOTUPPER ANYALPHA FIND ANYDIGIT FINDC ANYPUNCT INDEX ANYSPACE INDEXC NOTALNUM INDEXW NOTALPHA VERIFY NOTDIGIT
+
+Functions That Extract Parts of Strings SUBSTR SUBSTRN
+
+Functions That Join Two or More Strings Together CALL CATS CATS CALL CATT CATT CALL CATX CATX CAT
+
+Functions That Remove Blanks from Strings LEFT TRIMN RIGHT STRIP TRIM
+
+Functions That Compare Strings (Exact and "Fuzzy" Comparisons) COMPARE COMPLEV CALL COMPCOST SOUNDEX COMPGED SPEDIS
+
+Functions That Divide Strings into "Words" SCAN SCANQ CALL SCAN CALL SCANQ
+
+Functions That Substitute Letters or Words in Strings TRANSLATE TRANWRD
+
+Functions That Compute the Length of Strings LENGTH LENGTHC LENGTHM LENGTHN
+
+Functions That Count the Number of Letters or Substrings in a String COUNT COUNTC
+
+Miscellaneous String Functions MISSING RANK REPEAT REVERSE

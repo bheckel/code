@@ -1,0 +1,30 @@
+
+<script language="JavaScript">
+  <!--
+  // Activate Cloaking
+  function searchAltaVista() {
+  var orig;
+  orig = document.searchForm.q.value;
+  document.searchForm.q.value = "+url:http://47.192.6.254/CustSvcFin/ +text:" +
+  orig;
+  }
+  // --> Cloaking off
+</script>
+
+
+
+<form name="searchForm" action="http://47.128.11.114/cgi-bin/query" method="get" onSubmit="searchAltaVista()">
+  <TABLE border="0" width=100% cellspacing="0">
+    <TR>
+      <TD valign="top" align="center">
+      <b>Search Triweb</b></td>
+    </TR>
+    <TR>
+      <TD align="left"><input type="hidden" name="pg" value="q">
+      <input type="hidden" name="fmt" value="c">
+      <input name="q" size="30" maxlength="200" value="">
+      <input type="submit" value="Search"><br><br>
+      </TD>
+    </TR>
+  </TABLE>
+</form>

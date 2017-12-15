@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--==========================================================================
+    *                       MODULE HEADER
+    * ============================================================================
+    *    PROGRAM NAME:  Datapost_Explorer.html
+    *
+    *    CREATED BY:    Bob Heckel
+    *
+    *    DATE CREATED:  17-Oct-14
+    *
+    *    PURPOSE:       Present DataPost_Results.html in an iframe for cosmetic
+    *                   purposes.  Emulates www.gskbrandhub.com were possible.
+    *
+    *    INPUT:         N/A
+    *
+    *    PROCESSING:    N/A
+    *
+    *    OUTPUT:        HTML user interface with an embedded DP Explorer.
+    *                   Works identically in IE9 and Firefox 33.
+    * ============================================================================
+    *                      HISTORY OF CHANGE
+    * ============================================================================
+    *    Date     | Version | Modification By | Modification
+    * ============================================================================
+    *  20-Oct-14  | 1.0     | Bob Heckel      | Original Version. 
+    * ============================================================================-->
+    <title>Datapost's Data Explorer</title>
+  </head>
+  <style>
+    html {
+      height: 100%;
+    }
+    body {
+      height: 100%;
+    }
+    a:link {
+      text-decoration: none;
+      color: white;
+    }
+    a:visited {
+      text-decoration: none;
+      color: white;
+    }
+    a:hover {
+      color: #ff6617;
+      text-decoration: underline;
+    }
+    #logo {
+      top: 0px;
+      left: 0px;
+    }
+    #menubox {
+      background-color: red;
+      box-shadow: 20px 50px 10px 20px #888888;
+      border-collapse: separate;
+      border-spacing:0;
+    }
+    #headrowleft {
+      background-color: #675c52;
+      /*background-color: blue;*/
+      text-decoration: none;
+      position: absolute;
+      top: 100px;
+      left: 0px;
+      /* IE 9 bug prevents using this */
+      /*width: 100%;*/
+      width: 1500px;
+      text-align: left;
+      height: 30px;
+      padding: 10px 10px;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+    #headrowcenter {
+      /*background-color: green;*/
+      position: absolute;
+      top: 100px;
+      left: 440px;
+      height: 30px;
+      padding: 10px 10px;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+    #headrowright {
+      /*background-color: red;*/
+      position: absolute;
+      top: 100px;
+      right: 0px;
+      text-align: right;
+      height: 30px;
+      padding: 10px 10px;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+    #ifrm {
+      background-color: #ff6617;
+      position: relative;
+      border: double;
+      top: 75px;
+      right: 0px;
+      text-align: center;
+      width: 98%;
+      height: 75%;
+    }
+  </style>
+
+  <body bgcolor="white">
+    <div id="logo"><img src="GSK_L_3D_CMYK_MY3.png"></div>
+    <div id="menubox">
+      <div id="headrowleft"><a href="https://connect.gsk.com/sites/gms_zebulon/GMSITSystemsZebulon/datapost/Pages/Welcome.aspx">&#171; Back to Datapost Teamsite</a></div>
+      <div id="headrowcenter">GMS - Zebulon</div>
+      <div id="headrowright"><a href="https://connect.gsk.com/sites/gms_zebulon/GMSITSystemsZebulon/datapost/Pages/help.aspx">Help</a></div>
+    </div>
+    <div id="ifrm">
+      <iframe src="https://zdatapostd.gsk.com/datapostDEMO/DataPost_Results.html" width="98%" height="99%">
+        <p>Unfortunately, your browser does not support iframes.</p>
+      </iframe>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<TITLE>Numeral radixes</TITLE>
+<meta name="description" content="Explain los numbers expressed in radix-8, radix-10 y radix-16 (octal and hexadecimal)" >
+<meta name="keywords" content="c++ console radix radixes numerals octal hexadecimal" >
+</HEAD>
+<body bgcolor="white" >
+
+<!--cap-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=5><B> Numeral radixes</B></FONT><BR>
+ <FONT SIZE=4>Decimal, Hexadecimal and Octal </FONT>
+</TD><TD VALIGN="bottom">
+ <a href="http://www.cplusplus.com" ><IMG SRC="/img/mini.gif" ALT="cplusplus.com" BORDER=0></A>
+</TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/cap-->
+
+<P>
+<H2>Numeral radixes</H2>
+All of us we are accustomed since youngs to use decimal numbers to express quantities.
+This nomenclature that seems so logical to us may not seems it to a Roman of the classic
+Rome.  For them each symbol that they put to express a number always represented the same
+value:
+<blockquote ><TT><PRE>
+I     <B> 1</B>
+II    <B> 2</B>
+III   <B> 3</B>
+IV    <B> 4</B>
+V     <B> 5</B>
+</PRE></TT></BLOCKQUOTE>
+If one pays attention all the <TT><B>I</B></TT> signs always represents the value
+<TT><B>1</B></TT> (one) wherever they be placed, like the <TT><B>V</B></TT> sign always 
+represents our <TT><B>5</B></TT> (five).  Nevertheless that does not take place in our
+decimal system.  When we write the decimal symbol <TT><B>1</B></TT> we are not always
+talking about value 1 (<TT><B>I</B></TT> in Roman numbers).  For example:
+<blockquote ><TT><PRE>
+<B>  1</B>    I
+<B> 10</B>    X
+<B>100</B>    C
+</PRE></TT></BLOCKQUOTE>
+In these cases our symbol <TT><B>1</B></TT> does not always has a value of 1
+(<TT><B>I</B></TT> in Roman numbers). For example, in the second case, the symbol
+<TT><B>1</B></TT> represents the value 10 (ten, <TT><B>X</B></TT> in Roman) and in
+the third one, <TT><B>1</B></TT> represents the value 100 (one hundred, <TT><B>C</B></TT>).
+<P>
+Another example:
+<blockquote ><TT>
+<B>275</B>
+</TT></BLOCKQUOTE>
+is not equivalent to <TT>2+7+5</TT>, rather could be decomposed as <TT>200+70+5</TT>:
+<BLOCKQUOTE><TT><PRE>
+ 200
++ 70
+   5
+ ---
+ 275
+</PRE></TT></BLOCKQUOTE>
+therefore, the first sign <TT><B>2</B></TT> is equivalent to 200 (2 x 100), the second
+sign, <TT><B>7</B></TT> is equivalent to 70 (7 x 10) whereas the last sign corresponds
+to value 5 (5 x 1).
+<P>
+All the previous can be mathematically represented in a very simple way. For example,
+to represent the value 182736 we can assume that each digit is the product of itself
+multiplied by 10 powered to its place as exponent, beginning from the right with
+10<SUP><SMALL>0</SMALL></SUP>, following with 10<SUP><SMALL>1</SMALL></SUP>,
+10<SUP><SMALL>2</SMALL></SUP>, and so on:
+<BLOCKQUOTE><IMG SRC="hex1.gif"></BLOCKQUOTE>
+
+<P>
+<H2>Octal numbers (radix 8)</H2>
+Like our "normal" numbers are radix 10 because we have 10 different digits
+(from the 0 to the 9):
+<BLOCKQUOTE><TT>0123456789</TT></BLOCKQUOTE>
+the octals numbers include only the signs from the 0 to the 7:
+<BLOCKQUOTE><TT>01234567</TT></BLOCKQUOTE>
+and, therefore, its mathematical radix is 8. In C++ octal numbers have the peculiarity
+that they always they begin by a <TT><B>0</B></TT> digit. Let us see how we would write
+the first numbers in octal:
+<BLOCKQUOTE><TT><PRE>
+octal  decimal
+-----  -------
+<B>  0</B>       0   <I>(zero)</I>
+<B> 01</B>       1   <I>(one)</I>
+<B> 02</B>       2   <I>(two)</I>
+<B> 03</B>       3   <I>(three)</I>
+<B> 04</B>       4   <I>(four)</I>
+<B> 05</B>       5   <I>(five)</I>
+<B> 06</B>       6   <I>(six)</I>
+<B> 07</B>       7   <I>(seven)</I>
+<B>010</B>       8   <I>(eight)</I>
+<B>011</B>       9   <I>(nine)</I>
+<B>012</B>      10   <I>(ten)</I>
+<B>013</B>      11   <I>(eleven)</I>
+<B>014</B>      12   <I>(twelve)</I>
+<B>015</B>      13   <I>(thirteen)</I>
+<B>016</B>      14   <I>(fourteen)</I>
+<B>017</B>      15   <I>(fifteen)</I>
+<B>020</B>      16   <I>(sixteen)</I>
+<B>021</B>      17   <I>(seventeen)</I>
+</PRE></TT></BLOCKQUOTE>
+Thus, for example, number 17 (seventeen, or <TT>XVII</TT> in Romans) it is expressed
+<TT><B>021</B></TT> as an octal number.
+<P>
+We can apply the scheme that we saw previously with the decimal numbers to the octal
+numbers simply by considering that its radix is 8.  For example, taking
+the octal number 071263:
+<BLOCKQUOTE><IMG SRC="hex2.gif"></BLOCKQUOTE>
+therefore the octal numbers <TT><B>071263</B></TT> it is expressed as
+<TT><B>29363</B></TT> in decimal numbers.
+
+<P>
+<H2>Hexadecimal numbers (radix 16)</H2>
+Like decimal numbers have 10 different digits to be represented (<TT>0123456789</TT>) 
+and octal numbers have 8 (<TT>01234567</TT>), hexadecimal numbers have 16: numbers
+from <TT>0</TT> to <TT>9</TT> and letters
+<TT>A, B, C, D, E</TT> and <TT>F</TT> that together they serve us to represent
+the 16 different symbols that we need:
+<BLOCKQUOTE><TT><PRE>
+hexadecimal  decimal
+-----------  -------
+   <B>   0</B>         0   <I>(zero)</I>
+   <B> 0x1</B>         1   <I>(one)</I>
+   <B> 0x2</B>         2   <I>(two)</I>
+   <B> 0x3</B>         3   <I>(three)</I>
+   <B> 0x4</B>         4   <I>(four)</I>
+   <B> 0x5</B>         5   <I>(five)</I>
+   <B> 0x6</B>         6   <I>(six)</I>
+   <B> 0x7</B>         7   <I>(seven)</I>
+   <B> 0x8</B>         8   <I>(eight)</I>
+   <B> 0x9</B>         9   <I>(nine)</I>
+   <B> 0xA</B>        10   <I>(ten)</I>
+   <B> 0xB</B>        11   <I>(eleven)</I>
+   <B> 0xC</B>        12   <I>(twelve)</I>
+   <B> 0xD</B>        13   <I>(thirteen)</I>
+   <B> 0xE</B>        14   <I>(fourteen)</I>
+   <B> 0xF</B>        15   <I>(fifteen)</I>
+   <B>0x10</B>        16   <I>(sixteen)</I>
+   <B>0x11</B>        17   <I>(seventeen)</I>
+</PRE></TT></BLOCKQUOTE>
+Once again we can use the same method to translate a number from a base to another one:
+<BLOCKQUOTE><IMG SRC="hex3.gif"></BLOCKQUOTE>
+
+<P>
+<H2>Binary representations</H2>
+Octal and hexadecimal numbers have a considerable advantage over our decimal numbers
+in the world of bits, and is that their bases (<TT><B>8</B></TT> and <TT><B>16</B></TT>)
+are perfect multiples of 2 (<TT><B>2<SUP><SMALL>3</SMALL></SUP></B></TT> and
+<TT><B>2<SUP><SMALL>4</SMALL></SUP></B></TT>) which allows us to make easier conversions
+to binary than with decimal numbers (whose base is <TT><B>2x5</B></TT>).  For example,
+suppose that we want to pass the following binary sequence to numbers of other bases:
+<BLOCKQUOTE><TT>110011111010010100</TT></BLOCKQUOTE>
+In order to pass it to decimal we would need to conduct a mathematical operation similar
+to the one we have used previously to convert from hexadecimal or octal, which would give
+us the decimal number <TT><B>212628</B></TT>.
+<P>
+Nevertheless to pass this sequence to octal it will only take to us some seconds and we
+can do it just seeing it:  Since 8 is <TT><B>2<SUP><SMALL>3</SMALL></SUP></B></TT>,
+we will separate the binary value in groups of 3 numbers:
+<BLOCKQUOTE><TT>110 011 111 010 010 100</TT></BLOCKQUOTE>
+and now we just have to translate to octal numberal radix each group separately:
+<BLOCKQUOTE><TT><PRE>
+110 011 111 010 010 100
+ 6   3   7   2   2   4
+</PRE></TT></BLOCKQUOTE>
+giving the number <TT>637224</TT> as result. This same process can be inversely performed
+to pass from octal to binary. 
+<P>
+In order to
+conduct the operation with hexadecimal numbers we only have to perform the same process
+but separating the binary value in groups of 4 numbers
+(<TT><B>16 = 2<SUP><SMALL>4</SMALL></SUP></B></TT>):
+<BLOCKQUOTE><TT><PRE>
+11 0011 1110 1001 0100
+3    3    E    9    4
+</PRE></TT></BLOCKQUOTE>
+Therefore, the binary expression <TT>110011111010010100</TT> can be represented in C++
+as <TT><B>212628</B></TT> (decimal), as <TT><B>0637224</B></TT> (octal) or as
+<TT><B>0x33e94</B></TT> (hexadecimal).<P>
+The hexadecimal code is specially interesting in computer science since nowadays
+computers are based on bytes composed of 8 binary bits and therefore each byte
+matches with the rank that 2 hexadecimal numbers can represent. For that reason is the
+most used type when representing values translated from binary.
+
+<!--cua-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy;The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+ <TR><TD ALIGN="center">
+<TABLE CELLPADDING=0 CELLSPACING=0>
+     <TR><TD>Return <a href="javascript:history.go(-1)" >back</A></TD></TR>
+     <TR><TD>Return to <a href="../index.html">Documents section</A></TD></TR></TABLE>
+ </TD></TR>
+</TABLE></CENTER>
+<!--/cua-->
+
+</BODY>
+</HTML>

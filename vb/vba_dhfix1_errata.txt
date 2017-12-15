@@ -1,0 +1,199 @@
+
+In VBA Developer's Handbook, in Chapter 12, the dhDelTree procedure has a serious issue if you call it passing a path referring to a drive other than the current drive. In that case, it deletes files from the current drive, not the specified drive. This can lead to serious data loss. 
+
+The following replacement function switches drive and directory to the specified location, so that it correctly deletes files from the specified path. Do not use the dhDelTree function in the book -- make sure you replace all copies of that function with this one, to avoid possible data loss.
+
+' Add this at the top of the module.
+Private Declare Function SetCurrentDirectory _
+ Lib "kernel32" Alias "SetCurrentDirectoryA" _
+ (ByVal lpPathName As String) As Long
+
+Function dhDelTree(ByVal Directory As String, _
+ Optional RemoveRoot As Boolean = True, _
+ Optional ByVal Level As Integer = 1) As Boolean
+
+    ' Deletes an entire directory tree (including all
+    ' files and subdirectories). Calls itself recursively.
+
+    ' From "VBA Developer's Handbook"
+    ' by Ken Getz and Mike Gilbert
+    ' Copyright 1997; Sybex, Inc. All rights reserved.
+
+    ' In:
+    '   Directory
+    '       Directory to delete.
+    '   RemoveRoot
+    '       True if you want to remove the top-level folder.
+    '       False if you want to remove contents, but leave
+    '         the top-level folder intact.
+    '   Level
+    '       Used by the procedure. Do not specify a value.
+    
+    ' Out:
+    '   Return Value:
+    '       True if successful, False if not.
+    ' Example:
+    '   Call dhDelTree("C:\")   ' Ha! Ha! Just kidding
+    '   Call dhDelTree("C:\DATA\MYDIR")
+
+    On Error GoTo HandleErrors
+
+    Dim strFilename As String
+    Dim strDirectory As String
+
+    strDirectory = dhFixPath(Directory)
+    
+    ' Check to make sure the directory actually exists.
+    ' If not, we don't have to do a thing.
+    If Len(Dir(strDirectory, vbDirectory)) = 0 Then
+        GoTo ExitHere
+    End If
+    
+    If dhFixPath(CurDir) = strDirectory Then
+        MsgBox "Unable to delete the current directory. " & _
+         "Move to a different directory, and try again."
+        GoTo ExitHere
+    End If
+    
+    ' Delete all the files in the current directory
+    strFilename = Dir(strDirectory & "*.*")
+    Do Until strFilename = ""
+        Kill strDirectory & strFilename
+        strFilename = Dir
+    Loop
+    
+    ' Now build a list of subdirectories
+    Do
+        strFilename = Dir(strDirectory & "*.*", vbDirectory)
+        
+        ' Skip "." and ".."
+        Do While strFilename = "." Or strFilename = ".."
+            strFilename = Dir
+        Loop
+    
+        ' If there are no more files, exit the loop.
+        ' Otherwise call dhDelTree again to wipe
+        ' out the subdirectory.
+        If strFilename = "" Then
+            Exit Do
+        Else
+            ' Call dhDelTree recursively. Pass True for RemoveRoot,
+            ' because you'll always want to remove subfolders.
+            ' Indicate the level by passing Level + 1.
+            If Not dhDelTree(strDirectory & strFilename, True, Level + 1) Then
+                GoTo ExitHere
+            End If
+        End If
+    Loop
+    
+    ' Finally, remove the target directory
+    ' The following expression returns True unless
+    ' the first factor is True and the
+    ' second factor is False -- that is,
+    ' it always removes the folder unless
+    ' you're at level 1 (the root level) and you've
+    ' been told not to remove the root.
+    If Level = 1 Imp RemoveRoot Then
+        RmDir strDirectory
+    End If
+    
+    dhDelTree = True
+    
+ExitHere:
+    Exit Function
+    
+HandleErrors:
+    Select Case Err.Number
+        Case 75 ' Path or file access
+            ' If a file or folder can't be deleted,
+            ' just keep going.
+            Resume Next
+        Case Else
+            dhDelTree = False
+            MsgBox Err.Description, vbExclamation, _
+             "Error " & Err.Number & " in dhDelTree"
+            Resume ExitHere
+    End Select
+End Function
+
+
+=============================
+
+In VBA Developer's Handbook, in Chapter 12, if you use the dhDir function to visit folders, the function doesn't correctly release a resource referring to that folder, and you won't be able to delete the folder without shutting down VBA (by quitting the host application). The following replacement for dhDir solves the problem. 
+
+Function dhDir(Optional ByVal strPath As String = "", _
+ Optional lngAttributes As Long = vbNormal, _
+ Optional fExclusive As Boolean = True) As String
+
+    ' Replacement for the VBA Dir function which lets you
+    ' specify file attributes for a restrictive search.
+
+    ' From "VBA Developer's Handbook"
+    ' by Ken Getz and Mike Gilbert
+    ' Copyright 1997; Sybex, Inc. All rights reserved.
+
+    ' In:
+    '   strPath (Optional, default = "")
+    '       Path and/or file specification to search.
+    '   lngAttributes (Optional, default = vbNormal)
+    '       File attributes.
+    '   fExclusive (Optional, default = True)
+    '       If True, only those files with the matching
+    '       file attributes are returned.
+    ' Out:
+    '   Return Value:
+    '       If called with a file specification, the first
+    '       matching filename is returned. If called without
+    '       a file specification, the next matching filename
+    '       is returned. When no additional matching filenames
+    '       are found, an empty string is returned.
+    ' Example:
+    '   Dim strDir As String
+    '
+    '   strDir = dhDir("C:\", vbDirectory)
+    '   Do Until strDir = ""
+    '       Debug.Print strDir
+    '       strDir = dhDir()
+    '   Loop
+      
+    Dim fd As WIN32_FIND_DATA
+    Static hFind As Long
+    Static lngAttr As Long
+    Static fEx As Boolean
+    Dim strOut As String
+    
+    ' If no path was passed, try to find the next file
+    If strPath = "" Then
+        If hFind > 0 Then
+            If CBool(FindNextFile(hFind, fd)) Then
+                strOut = dhFindByAttr(hFind, fd, lngAttr, fEx)
+            End If
+        End If
+        
+    ' Otherwise, start a new search
+    Else
+        ' Store the attributes and exclusive settings
+        lngAttr = lngAttributes
+        fEx = fExclusive
+        
+        ' If the path ends in a backslash, assume
+        ' all files and append "*.*"
+        If Right(strPath, 1) = "\" Then
+            strPath = strPath & "*.*"
+        End If
+        
+        ' Find the first file
+        hFind = FindFirstFile(strPath, fd)
+        If hFind > 0 Then
+            strOut = dhFindByAttr(hFind, fd, lngAttr, fEx)
+        End If
+    End If
+    
+    ' If the search failed, close the Find handle.
+    If Len(strOut) = 0 Then
+        If hFind > 0 Then
+            Call FindClose(hFind)
+        End If
+    End If
+    dhDir = strOut
+End Function

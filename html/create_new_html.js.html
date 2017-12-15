@@ -1,0 +1,18 @@
+<!-- From Emily's website -- spawns new page for each picture: -->
+  <script language="JavaScript">
+    function openwindow(jpgname) {
+      // Empty string indicates new window, not an existing page.
+      picturewin= open("", "displayWindow", "width=500, height=400, status=yes, toolbar=no, menubar=no");
+      // Open document for further output
+      picturewin.document.open();
+      // Create document.
+      picturewin.document.write("<html><head><title>Emily Photos</title></head>");
+      picturewin.document.write("<body background='blues_FriendsBkg.gif'>");
+      picturewin.document.write("<br><br><br>");
+      picturewin.document.write("<center><img src=" + jpgname + "></center>");
+      picturewin.document.write("</body></html>");
+      // Close the document - not the window!
+      picturewin.document.close();
+    }
+  </script>
+  <td align="center"><input type="button" value="Micro-Emily" onClick="openwindow('erh02.jpg')"></td>

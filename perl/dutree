@@ -1,0 +1,99 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: dutree
+#
+#  Summary: Print sorted indented rendition of du output.  Each number is in
+#           thousands of bytes and indicates total bytes of all files in that
+#           directory.
+#
+#           E.g.
+#
+#           61333 ./                   <---same as du -sk .
+#               |  54938 ./            <---top minus the subdirs
+#               |   5365 iando/
+#               |    912 cliotest/
+#               |     12 xhome/
+#               |      |      0 RMVfoozdir/
+#               |      |      0 three/
+#               |      |      |      0 four/
+#               |     10 dirjunk/
+#               |      1 essential/
+#
+#  Adapted: Tue 26 Nov 2002 11:20:55 (Bob Heckel -- unknown)
+# Modified: Fri 05 Mar 2004 14:53:21 (Bob Heckel)
+##############################################################################
+use strict;
+
+my %DIRSIZE;
+my %SUBDIR;
+
+die "Usage: dutree DIRECTORY\nSorted, directory only, tree-view " .
+    "of du utility.\nNumbers are displayed in kilobytes.\n" .
+    "Recursion is one level only.  Might want to use d -T instead\n" 
+    if $#ARGV != 0;
+
+Getdots(my $topdir = input());
+Output($topdir);
+
+# Run du, read in input, save sizes and kids return last directory (file?)
+# read.
+sub input { 
+  my ($size, $name, $parent);
+
+  ###@ARGV = ("du @ARGV |");         # prep the arguments
+  # Better
+  open PIPE, "du @ARGV |" or die "Error: $0: $!";
+  while ( <PIPE> ) {
+    ($size, $name) = split;
+    $DIRSIZE{$name} = $size;
+    ($parent = $name) =~ s#/[^/]+$##;   # dirname
+    push @{ $SUBDIR{$parent} }, $name unless eof;
+  } 
+
+  return $name;
+}
+
+# Recursively figure out how much is taken up in each directory that isn't
+# stored in subdirectories.  Add a new fake kid called "." containing that
+# much.
+sub Getdots {
+  my $root = $_[0];
+
+  my ($size, $cursize);
+  $size = $cursize = $DIRSIZE{$root};
+
+  if ( $SUBDIR{$root} ) {
+    for my $kid (@{ $SUBDIR{$root} }) { 
+      $cursize -= $DIRSIZE{$kid};
+      Getdots($kid);
+    }
+  } 
+  if ( $size != $cursize ) {
+    my $dot = "$root/$ARGV[0]";
+    $DIRSIZE{$dot} = $cursize;
+    push @{ $SUBDIR{$root} }, $dot;
+  } 
+} 
+
+# Recursively output everything, passing padding and number width in as well
+# on recursive calls.
+sub Output {
+  my ($root, $prefix, $width) = (shift, shift || '', shift || 0);
+
+  my $path;
+  ($path = $root) =~ s#.*/##;     # basename
+  my $size = $DIRSIZE{$root};
+  my $line = sprintf("%${width}d %s/", $size, $path);
+  print $prefix, $line, "\n";
+  for ( $prefix .= $line ) {      # build up more output
+    s/\d /| /;
+    s/[^|]/ /g;
+  }
+  if ( $SUBDIR{$root} ) {         # not a bachelor node
+    my @kids = @{ $SUBDIR{$root} };
+    @kids = sort { $DIRSIZE{$b} <=> $DIRSIZE{$a} } @kids;
+    $DIRSIZE{$kids[0]} =~ /(\d+)/;
+    my $width = length $1;
+    for my $kid (@kids) { Output($kid, $prefix, $width) }
+  }
+} 

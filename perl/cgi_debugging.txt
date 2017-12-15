@@ -1,0 +1,41 @@
+Adapted from PerlMonth 11
+Wed, 26 Apr 2000 14:35:42 (Bob Heckel)
+
+Debugging Perl scripts with nothing more than an FTP client and a browser.
+First, we have to make some alterations to your script: 
+
+use CGI qw(:standard);
+use CGI::Carp qw(fatalsToBrowser);
+BEGIN {
+  print CGI::header();
+  open(STDERR, '>~/perlerrors.log');
+}
+
+Of course, if your script produces a header other than Content-type (say, a
+cookie, or a redirection), that header will be ignored, pushed down into the
+document by our BEGIN block header. Again, we'll remove the BEGIN's header at
+some point when we're convinced the bugs are all dead. 
+
+Use 0/0; to raise an error.
+
+
+
+# Alternate, approach (TODO not working 2002-09-06)
+BEGIN {
+  print "Content-type: text/html\n\n";
+  open(STDERR, ">&" . STDOUT) or die "Cannot Redirect STDERR: $!";
+}
+# Rest of the script...
+
+
+
+# Or
+use CGI::Carp qw(fatalsToBrowser set_message);
+BEGIN {
+  sub handle_errors {
+    my $msg = shift;
+    print "<h1>Don't Panic.</h1>";
+    print "Omigosh: $msg<BR>";
+  }
+  set_message(\&handle_errors);
+}

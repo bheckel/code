@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+$dbname = $ARGV[0];
+
+if ( ! $dbname ) {
+	print "Usage: dbm_dump database-name\n";
+	exit 1;
+}
+
+dbmopen(%DB, $dbname, undef) || die "$0: cannot open database $dbname\n";
+
+while ( ($key, $value) = each %DB ) { 
+  print "$key = $value\n"; 
+}
+
+dbmclose %DB;

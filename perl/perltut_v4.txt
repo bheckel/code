@@ -1,0 +1,922 @@
+                             December 1, 1994
+                                     
+                              A perl Tutorial
+
+                by: Will Morse
+                      BHP Petroleum
+
+Copyright 1994 Will Morse.  Permission is given to freely copy and
+distribute this paper as long as there is no charge except real and
+actual mechanical copying costs and as long as this notice is kept
+with each copy so others may copy it as well.
+
+WHAT IS PERL?
+
+     perl stands for practical extraction and reporting language. 
+     perl is a high level programming language combining elements
+     of C-shell, awk, and many other programming languages and
+     utilities. 
+
+     perl is better than shell script programming and awk or sed
+     programming because:
+
+     *    It does not have all the shell initiation overhead, which
+          makes it faster.
+
+     *    It can read and write binary data files.
+
+     *    It can have many files for input or output at one time.
+
+     *    It has a report writer.
+
+     *    It has extended regular expressions.
+
+     *    It has both linear and associative arrays.
+
+     *    It has powerful defaults that simplify programming.
+
+     *    It can process very large files without record size
+          limits.
+
+     perl is better than C, C++, or Fortran programming (for
+     sysadmin and data admin tasks) because:
+
+     *    It does not have visible compile or link stages.  The
+          program is kept in a source module, like a shell script.
+
+     *    There is a very rich set of character string manipulation
+          and array handling commands.
+
+     *    It has a more forgiving and easier to use syntax.
+
+     *    It has both linear and associative arrays.
+
+     *    It has a report writer.
+
+     *    Some versions of perl include X-windows features, tkperl,
+          or access to Oracle databases, oraperl.
+
+     In fairness, perl has some down points.
+
+     *    perl programs typically take 1.7 times as long to execute
+          as an equivalent C program.  This is okay for utility
+          programs, but would be a problem for a program like
+          SeisWorks.
+
+     *    There are a number of "gotcha's" that are pretty typical
+          Unix characteristics, but would confuse non-programmers. 
+          For instance, a number starting with 0 is assumed to be
+          octal.
+
+                    $num = 010;
+                    print "The number is $num. \n";
+
+          will print
+
+                    The number is 8.
+
+     *    Mostly of interest to professional programmers, perl does
+          not have a CASE construct.  It does not have pointers or
+          let you take the address of anything (until perl 5).
+
+     *    perl has a dozen different ways to do anything.  Some
+          people don't like this, others do.
+
+     *    perl has a lot of capabilities to do things most
+          sysadmins and data admins will not understand.  Don't
+          worry about it, just use what you need.  You don't have
+          to know everything about a computer language to make good
+          use of it.
+
+     perl does not come on the standard SunOS 4.x distribution, but
+     it is a very standard language.  perl is listed in the job
+     descriptions compiled by the Systems Administrators Guild
+     (SAGE) of Usenix, the Unix User's Group.  There are currently
+     negotiations to include perl in the Solaris 2.5 release.
+
+WHAT DOES A SIMPLE PERL PROGRAM LOOK LIKE?
+
+     This simple program copies records from a file and prefixes
+     each line with a sequential number.  The italic numbers are
+     not in the program, they just help the explanation.
+        
+                                                         
+                1   #! /usr/local/bin/perl               
+                2   while (<>)                           
+                3   {                                    
+                4        print STDOUT ++$i, $_;          
+                5   }                                    
+                                                         
+                                                         
+     Explanation:
+
+      1   #! is the Unix method for specifying a shell program.
+
+          /usr/local/bin/perl is the standard place to put perl.
+
+      2   while () {} creates a loop that continues while the
+          statement in the () is true.  The statements in the loop
+          are enclosed in {}.
+
+          <> is a special default.  It tells perl to look at the
+          calling command line to see if any files are specified. 
+          If they are, read each file in turn.  If no files are
+          specified, read from standard input.  In either case, put
+          the characters read into the special variable $_.  When
+          <> reaches end-of-file, it returns false, which
+          terminates the while loop.
+
+      4   print is a simple, unformatted, printing method.
+
+          STDOUT is the standard filehandle for Standard Output. 
+          Filehandles are specified in all caps in perl.
+
+          ++$i says to increment the value of $i and make that
+          value available to the print statement.  All scaler
+          values (anything but a command, linear array, associative
+          array, filehandle, or procedure name) starts with $.
+
+          $_ is the default operand of any command.  In this case,
+          $_ contains the last record read by the <> statement.
+
+          ; terminates each command in perl.
+
+A BRIEF OVERVIEW OF PERL SYNTAX:
+
+     In perl, as in Unix generally, character case is significant. 
+     X and x are not the same character.  It is common to name
+     variables and other items in mixed case:
+
+               $thisIsMixedCase
+
+     It is also permissible to use underscores: 
+
+               $variable_with_underscores.
+
+     Do not use names that start with a number, as these are often
+     perl special symbols, $1, $2, etc.
+
+     All perl commands end with a semicolon, ;.
+
+Variables:
+
+     perl identifies each type of variable - or data name - with a
+     prefix character or identifying style.  These characters are:
+
+          $    scalar              a single number (integer or
+                                   real) or character string
+
+          @    linear array        an array referenced by an index
+                                   number
+
+          %    associative array   an array referenced by a
+                                   textual key
+
+          UC   file-handle         a file handle is uppercase
+
+          &    procedure           a subroutine
+
+          xx:  label               object of goto, or marker for
+                                   escape from a loop.
+
+     "Subscripts" enclosed in [] apply to linear arrays. 
+
+          @items         refers to the entire array items.
+
+          $items[1]      refers to the scaler value which is the
+                         second item in the array items.  Linear
+                         arrays start with the index 0.
+
+          $#items        is the number of items in @items starting
+                         from 0.
+
+     Subscripts enclosed in {} apply to associative arrays.
+
+          %items         refers to the entire associative array
+                         items.
+
+          $items{"x"}    refers to the scalar value matching the
+                         key "x"
+
+     Values enclosed in () are lists.  Lists are often used as
+     arguments to a subroutine or built-in function call.  It is
+     not necessary to enclose arguments in () if there is only one
+     argument or the program knows the limit of the list.
+
+     There can be completely separate and unrelated variables $x,
+     @x. %x, and &x, not to mention $X, @X, %X and &X.
+
+     There are special variables, the most important of which are
+     $_, @_,and @ARGV.  
+
+          $_ is the default scaler value.  If you do not specify a
+          variable name in a function where a scaler variable goes,
+          the variable $_ will be used.   This is a very heavily
+          used feature of perl.
+
+          @_ is the list of arguments to a subroutine.
+
+          @ARGV is the list of arguments specified on the command
+          line when the program is executed.
+
+
+Basic Commands and Control:
+
+     Braces, {}, are used to contain a block of program statements. 
+     It is possible to have local variables within a block.  Blocks
+     are used for the objects of most control commands.
+
+     Simple Assignment:
+
+          Simple, scaler, assignment is what you might expect:
+
+               $var = 1;
+               $str = "This is a string.";
+
+          One can also assign lists of scalars in one statement:
+
+               ($rock, $jock, $crock) = 
+                    ("Plymouth", "Warren Moon", "Solaris 2.x");
+
+          One can assign a list to an array:
+
+               @items = (1, 2, "Cambodia", 4);
+
+          or an array to a list:
+
+               ($a, $b, $c, $d) = @items;
+
+          Associative arrays need a key, but otherwise work as you
+          would expect:
+
+               $aa{"able"} = "x";
+
+               %aa = ("able", "x", "baker", "y", "aardvark", "z");
+
+          Assigning an ARRAY to a SCALER will give the number of
+          items in the ARRAY.
+
+               @items = (10, 20, 30);
+               $i = @items;
+               print "$i";
+
+          will print "3".
+
+     Arithmetic Operations:
+
+          perl has the usual operations, and many more:
+
+               $c = $a + $b      addition
+               $c = $a - $b      subtraction
+               $c = $a * $b      multiplication
+               $c = $a / $b      division
+               $c = $a % $b      remainder
+               $c = $a ** $b     exponentiation
+               $c = $a . $b      concatenation
+
+               ++$a, $a++        increment by 1
+               --$a, $a--        decrement by 1
+
+               $a += $b          increment by $b
+               $a -= $b          decrement by $b
+               $a .= $b          append $b to $a
+               $c = "*" x $b     make $b *'s
+
+          Of course, there are many more.
+
+          There are also modifiers like these:
+
+               $a = "Big And Little";
+               $c = \l$a;
+               print $c;
+
+          prints "big and little".
+
+               \l        convert to lower case
+               \u        convert to upper case
+               \L        lowercase until \E
+               \U        uppercase until \E
+               \E        end case modification
+
+          There are functions for math including:
+
+               log($x)
+               exp($x)
+               sqrt($x)
+               sin($x)
+               cos($x)
+               atan2($y,$x)
+
+          The only trig functions are sin, cos, and atan2, however,
+          these can easily be used to compute the others.  The
+          ERUUG Unix Cookbook (see page 21) has a list of the
+          formulas for the conversions.
+
+     If-Then-Else:
+
+          The basic if-then-else command is fairly typical of all
+          computer languages.
+
+               if ( condition ) 
+               {
+                    true branch
+               }
+               else
+               {
+                    false branch
+               }
+
+          There is also
+
+               if    (condition) {commands}
+               elsif (condition) {commands}
+               elsif (condition) {commands}
+
+          which simplifies a lot of complex nested if statements. 
+          Note that it is elsif, not elseif or else if.
+
+          Both the true and false branches may contain any number
+          of nested if statements. 
+
+          There is also another form of if statement:
+
+               unless (condition)
+               {
+                    true branch
+               }
+
+          The condition has a wide range of comparison operators. 
+          It is important to observe the distinction between
+          numeric comparisons and string comparisons.
+
+                                                           
+               numeric   string        meaning             
+               ==        eq        equals                  
+               !=        ne        not equal               
+               >         gt        greater than            
+               <         lt        less than               
+                                                           
+
+          Strings that do not consist of numbers have a value of
+          zero.
+
+               if ("abc" == "def")  
+
+          is TRUE, because the strings are numerically zeros.  To
+          make this work right you have to have 
+
+               if ("abc" eq "def")
+
+          perl has file test operators like shell scripts.  perl
+          has an extended set to tests such as:
+
+                                                         
+                       -T     true if file is text       
+                       -B     true if file is binary     
+                       -M     days since file modified   
+                       -A     days since file accessed   
+                       -C     days since file created    
+                                                         
+          
+          Other forms of the if-command are not common in other
+          computer languages, but can be quite useful.  A good
+          example is the postfix if.
+
+               next if $var == 1;
+
+          A useful form of logic uses || or && in a command:
+
+               open (IN,"<file") || die "no file $! \n";
+
+          This is a Unix-ism, not just a perl-ism, and it is worth
+          explaining in some detail.  This works in shell scripts,
+          and is a handy way of writing sh/csh independent scripts.
+
+               The || is an "OR".  perl needs to find out if
+               either of the statements are "TRUE".
+
+               If the open command succeeds, it will be TRUE. 
+               Since it is TRUE, the OR will automatically be true
+               and  perl does not execute the second command to
+               see if it is TRUE or not.  
+
+               If the open fails, it returns FALSE, and perl has
+               to see if the second command is true or false.  The
+               result doesn't matter.
+
+
+
+
+
+     Loops:
+
+          The most common loop statements are for and while.  for
+          and foreach are synonymous, you can use either word in
+          either command format.
+
+               for ($i = 0; $i < 10; $i++) 
+               {
+                    commands
+               }
+
+               foreach $i (@items)
+               {
+                    commands
+               }
+
+               foreach $i (1 .. 100) 
+               {
+                    commands
+               }
+
+               while (condition)
+               {
+                    commands
+               }
+
+               until (condition)
+               {
+                    commands
+               }
+
+          The foreach (1 .. 100) in the second foreach form is a
+          range.  It is equivalent to for ($i = 1; $i < 100; $i++). 
+          If no index is specified, the index will be in $_.
+
+               for ($first .. $last)
+               {
+                    print STDOUT "This is line $_\n";
+               }
+
+          The commands next, last, redo, and continue are used to
+          escape from inside a loop.
+
+               while (condition)
+               {
+                    next if $count++ = 1;
+                    last if $record =~ /^END/;
+                    commands
+               }
+
+
+     Input/Output:
+
+          Open:
+
+          As in Unix generally, the first three filehandles are
+          automatically opened, in perl these file handles are
+          called STDIN, STDOUT, and STDERR.
+
+          Other files must be opened explicitly.  The form of an
+          open command is:
+
+               open (FILEHANDLE,XFY);
+
+               where X and Y are optional characters:
+
+                    X = <     to open file F for input only.
+                    X = >     to open file F for write only.
+                    X = >>    to append to file F.
+                    X = |     to WRITE to a pipe to PROGRAM F.
+                    Y = |     to READ from a pipe from PROGRAM F.
+
+               If only the filename is provided, the file is
+               opened for read and write.
+
+          Reading:
+
+          The most basic reading mechanism is to enclose the
+          filehandle in <>, like this
+
+               $record = <FILEHANDLE>;
+
+          A special case of this goes like this:
+
+               $record = <>;
+
+          This special case looks for filenames on the program
+          command line and reads any files it finds, one after the
+          other.  If it finds no filenames on the program command
+          line, the program will assign <> to STDIN.
+
+          It is important NOT to use the array form:
+
+               @record = <FILEHANDLE>;
+
+          as this will read the entire file into the array @record,
+          which may take up an awful lot of memory.
+
+          Reading is often done using a while loop, like this:
+
+               while (<FILEHANDLE>)
+               {
+                    commands
+               }
+
+          When the last record is read, the <FILEHANDLE> returns
+          the value FALSE, which terminates the while loop.  Since
+          a scaler variable has not been supplied for the record,
+          the record is stored in $_.
+
+          Writing:
+
+          Most writing is done using the print or the printf
+          commands.  These commands are used to write to files even
+          if the results are never actually printed on a hardcopy
+          device.
+
+          print writes a line with default line spacing.  It is
+          used when the output has no particular column spacing to
+          comply with:
+
+               print STDOUT "The X is $x and Y is $y\n";
+
+          printf is just like the printf in C and other similar
+          languages.  It is a formatted print.  The first variable
+          or string contains the format.
+
+               $fmt = " X =  %8.2f  Y = %8.2f  Flag = %s\n";
+               printf STDOUT ($fmt, $x, $y, $flag);
+
+          The \n is the new line character.  The % indicates the
+          beginning of a format character, the f is the format for
+          floating point numbers.  The 8.2 indicates the number is
+          8 characters long with a decimal point in the sixth
+          character, and two decimal places in the seventh and
+          eighth characters.  The %s is a character string with no
+          length specified.
+
+          Closing:
+
+          perl will automatically close any open files when it
+          exits.  There are some occasions where it is useful to
+          close a file before perl exits, so the there is an
+          explicit close.
+
+               close FILEHANDLE;
+
+Other Important Functions:
+
+     Error Messages:
+
+          die is used to print an error message and then exit.
+
+          warn is used to print an error message, but continue.
+
+     String Handling:
+
+          split is used to split tokens (fields) from a character
+          string into an array.
+
+          If you have a line:
+
+               $line = "Now is the time for all good men";
+
+          you can put each word into an array with the command:
+
+               @token = split(/\s+/,$line);
+
+          sort sorts a list or array.
+
+          study, an instruction I issue many times to my 12-year-
+          old, optimizes string operations.
+
+     Binary Encoding:
+
+          pack      packs values into a string using a template.
+
+                         $pi = pack("f",3.1415926); 
+
+                    puts pi into a floating point number.
+
+          unpack    extracts values from a string using a
+                    template.
+
+                         $pi2 = unpack("f",$pi);
+
+          There is a long list of templates you can use.  You can
+          use more than one template at a time to build up or
+          extract binary data from a record.
+
+                    l    long      32 bit signed integer
+                    L    long      32 bit unsigned integer
+                    s    short     16 bit signed integer
+                    S    short     16 bit unsigned integer
+                    f    float     32 bit floating point
+                    d    double    64 bit floating point
+                    A    ASCII     ASCII string
+                    c    char      a single byte (character)
+
+     System:
+
+          There are many system oriented functions including:
+
+          chmod     change file permissions
+
+          fcntl     sets file control options
+
+          fork      creates an independent sub-process.
+
+          mkdir     make a directory
+
+
+Regular Expressions:
+
+     Regular expressions and pattern matching are an important part
+     of all Unix programming.  perl adds a set of extended regular
+     expression characters to the standard set.
+
+     There are two ways regular expressions are used:
+
+     Match          m/regexp/      
+                    m is optional, you can use /regexp/
+
+               next if m/^\s*$/;  will skip blank lines.
+
+     Substitute     s/regexp/new/
+                    If the regexp matches, replace it with new.
+                              
+               s/\s*$//;  will trim trailing spaces from a line.
+
+                                                               
+                    Standard Set (not complete)                   
+                                                               
+                                                               
+               a         match a                               
+               a*        match zero or more character a's      
+               .         match any character                   
+               .*        match zero or more of .                
+               [a-m]     match characters a through m only     
+               [^n-z]    do not match letters n to z           
+               [a-m]*    match zero or more letters a to m     
+               ^         match the beginning of the line       
+               $         match the end of the line             
+               \t        matches a tab character               
+                                                               
+                                                               
+
+                                                               
+                    perl extensions (not complete)             
+                                                               
+               \d        same as [0-9]                         
+               \D        same as [^0-9]                        
+               \s        matches white space (space or tab)    
+               \S        matches anything but white space      
+               \w        same as [0-9a-zA-Z] characters)       
+               \W        same as [^0-9a-zA-Z]                  
+               .+        same as ..*                           
+               [a-m]+    match one or more letters a to m      
+               a{n,m}    at least n a's, not more than m a's   
+               a?        zero or one a, not more than one      
+               \cD       matches control-D                     
+                                                               
+
+     An important use of regular expressions is the use of () to
+     select subsets of the regular expression.  This is actually a
+     standard part of regular expressions and can be used in vi,
+     awk, sed, and anywhere regular expressions are found.  perl
+     makes it especially easy to use the ()
+
+     For instance, if you had the character string:
+
+          <tab>"SeisWorks 3D"  <tab> "s3d 2> /dev/null"
+
+     as is found in launcher.dat, you could use the regular
+     expression:
+
+                                                               
+          <LAUNCHER>;                                          
+          if ( m/^\t"(.+)"\s*"(\S+)\s+2>\s*(.+)$/ )            
+          {                                                    
+               ($title, $program, $errorFile) = ($1, $2, $3);  
+          }                                                    
+                                                               
+     to extract the title, program name, and the error file name.
+
+     The way this works is:
+
+          <LAUNCHER>;    reads a record.  Since it doesn't say
+                         where to pu the record, it is stored in
+                         $_.
+
+          m/.../         matches a regular expression.  Since it
+                         doesn't say what variable to use, it uses
+                         $_.
+
+          ^              matches the beginning of the line
+          \t             matches the initial tab.
+          "              matches the first "
+          (              starts the first extracted string
+          .+             matches one or more of any character
+          )              closes the first extraction, placing it
+                         in $1
+          "              matches the second "
+          \s*            matches zero or more spaces or tabs
+          "              matches the third "
+          (              starts the second extraction
+          \S+            matches any characters but space or tab
+          )              closes the second extraction, placing it
+                         in $2
+          \s+            matches one or more spaces or tabs.
+          2              matches 2
+          >              matches >
+          \s*            matches zero or more spaces or tabs
+          (              starts the third extraction
+          .+             matches one or more characters
+          )              closes the third extraction, placing it
+                         in $3
+          "              matches the fourth "
+          $              matches the end of the line
+
+          $title = $1;   puts the value from $1 into $title.
+
+Report Writer:
+
+     The report writer feature lets you define how your page should
+     look and do all the necessary assignments with a single
+     command.  The report writer takes care of page breaks, page
+     numbers, and other issues for you.
+
+                                                                
+          format STDOUT_TOP =                                   
+                    Projects Using Too Much Disk     page @##   
+              Project      Owner     Last Used       Cost       
+          --------------  --------  ------------- -----------   
+          $%                                                    
+          .                                                     
+          format STDOUT =                                       
+          @<<<<<<<<<<<<<  @<<<<<<<  @>>>>>>>>>>>> @#######.##   
+          $project,       $owner,   $lastUsed,    $cost         
+          .                                                     
+                                                                
+          while (<>)                                            
+          {                                                     
+               ($project, $owner, $lastUsed, $cost) = split;    
+               write;                                           
+          }                                                     
+                                                                
+
+     _TOP      indicates a heading
+     .         ends a format description
+     $%        is the page number
+     @<<<<     is a left justified field
+     @>>>>     is a right justified field
+     @###.##   is a right justified, two decimal number
+
+
+Debugger:
+
+     perl has a built-in debugging system.
+
+     To use the debugger, all you have to do is add a -d to the
+     first line of the program.
+
+          #! /usr/local/bin/perl -d
+          commands
+
+     When you run the program, it will start in debug mode.  You
+     then have many debugging commands you can use including:
+
+          h         help on debugger
+          s         step
+          c         continue to next break
+          c <line>  continue until line <line>
+          n         next (does not step into subroutines)
+          l <range> list program statements in the <range>
+          b <line>  sets a breakpoint at line <line>
+          p <expr>  prints <expr> which is usually a variable
+
+AN EXAMPLE USING AN EXPORTED HORIZON FILE:
+
+Background:
+
+     A typical exported horizon file from Seisworks is in the form:
+
+          Line    Trace    X    Y    Z 
+
+     where  Z is often the time, but in this example, we are going
+     to export the amplitude as Z.
+
+     What we want to do in this example is to clip the amplitudes
+     to some specific range of values.  Anything below the range
+     will be set to the lowest value in the range, anything above
+     will be clipped back to the highest value in the range.
+
+     This can also be done using bcm.  We chose this example
+     because it is easy to follow and can be extended to do things
+     bcm cannot do.  This simplified example is taken from a
+     program used by BHP Petroleum (Americas) to suppress tuning
+     effects resulting from a formation thickness being close to
+     the size of a seismic wave length.
+
+     This example is also kept simple.  An experienced perl
+     programmer would use more sophisticated programming to write
+     a shorter, faster, program.
+
+
+Usage:
+
+     Before using this program the first time, you must use
+
+          chmod +x horizonClip
+
+     to make it an executable file.  There is no compile step or
+     link step as in C, Fortran or other languages.
+
+     You have to extract the file using the data export feature of
+     SeisWorks.
+
+     The program is called by typing:
+
+          horizonClip   low   high  filein  fileout
+
+     You can then re-import the horizon using the data import
+     feature of SeisWorks.
+
+Program:
+
+     Note:  The line numbers do not appear in the file or in the
+     program, they are just used in this paper to help you follow
+     the program:
+
+                                                                 
+         1   #! /usr/local/bin/perl                              
+         2   die "Usage: horizonClip low high in out\n"          
+         3         if $#ARGV !=3;                                
+         4   $low  = $ARGV[0];                                   
+         5   $high = $ARGV[1];                                   
+         6   if ($low > $high)                                   
+         7   {                                                   
+         8        $tmp = $low;                                   
+         9        $low = $high;                                  
+        10        $high = $tmp;                                  
+        11   }                                                   
+        12   $filein  = $ARGV[2];                                
+        13   $fileout = $ARGV[3];                                
+        14   if ($filein eq "-")                                 
+        15   {                                                   
+        16        open (IN,"<&STDIN");                           
+        17   }                                                   
+        18   else                                                
+        19   {                                                   
+        20         open (IN,<$filein)                            
+        21             || die "No file $filein $!\n";            
+        22   }                                                   
+        23   if ($fileout eq "-")                                
+        24   {                                                   
+        25        open (OUT,">&STDOUT");                         
+        26   }                                                   
+        27   else                                                
+        28   {                                                   
+        29        open (OUT,>$fileout)                           
+        30            || die "Cannot make $fileout $! \n";       
+        31   }                                                   
+        32   while (<IN>)                                        
+        33   {                                                   
+        34        ($line, $trace, $x, $y, $z) = split(\s+);      
+        35        if ($z < $low)  {$z = $low;}                   
+        36        if ($z > $high) {$z = $high;}                  
+        37        printf OUT ("%20s %12s %12 %12s %12.2f",       
+        38              $line, $trace, $x, $y, $z);              
+        39        $count++;                                      
+        40   }                                                   
+        41   print STDOUT "Processed $count records";            
+                                                                 
+
+Details:
+
+      1        The first line of all perl programs (on Unix
+               platforms).
+
+      2 -  3   Post-fix if.  There are four arguments.  $#ARGV is
+               3 because $ARGV starts at 0.
+
+      4 -  5   We could have as easily said:
+
+               ($low, $high, $filein, $fileout) = @ARGV;
+
+     16 - 25   We can assign filehandles to other filehandles
+               (merge the output of the filehandles) using the
+               open statement and the &.
+
+     20 - 29   These are more standard opens.
+
+     32 - 40   The while loop continues until <IN> becomes false.
+
+     39        $count++ adds one to the value of $count.
+
+
+PERL 5:
+
+     perl 5 was released just as this report was being prepared. 
+     These are a few new features we expect to see in perl 5.
+
+     *    awk-like BEGIN and END sections.
+
+     *    Better access to system function calls.
+
+     *    Pointers and structures
+
+     *    Object-oriented programming features
+
+     *    Additional regular expression features.

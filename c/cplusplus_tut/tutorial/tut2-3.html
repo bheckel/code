@@ -1,0 +1,448 @@
+<html>
+<head>
+<title>C++ Tutorial: 2.3, Functions (II).</title>
+<META NAME="description" CONTENT="Passing parameters by reference and by value to functions. Default values. Overloaded, inline and recursive functions. Prototyping functions.">
+<META NAME="keywords" CONTENT="argument &">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 2.3 </FONT><BR>
+ <FONT SIZE=5><B> Functions (II). </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<p>
+<h2>Arguments passed <i>by value</i> and <i>by reference</i>.</h2>
+Until now, in all the functions we have seen, the parameters passed to the
+functions have been passed <i>by value</i>. This means that when calling to a function
+with parameters, what we have passed to the function were <u>values</u> but
+never the specified variables themselves. For example, suppose that we called
+to our first function <tt><b>addition</b></tt> using the following code :
+<blockquote><tt>
+int x=5, y=3, z;<br>
+z = addition ( x , y );
+</tt></blockquote>
+What we did in this case was to call function <tt><b>addition</b></tt> passing
+the <u>values</u> of <tt><b>x</b></tt> and <tt><b>y</b></tt>, that means
+<tt><b>5</b></tt> and <tt><b>3</b></tt> respectively, not the variables themselves.
+<blockquote>
+<img src="imgfunc4.gif">
+</blockquote>
+<p>
+This way, when function <tt><b>addition</b></tt> is being called the value of its variables
+<tt><b>a</b></tt> and <tt><b>b</b></tt> become <tt><b>5</b></tt> and <tt><b>3</b></tt>
+respectively, but any modification of <tt><b>a</b></tt> or <tt><b>b</b></tt> within the
+function <tt><b>addition</b></tt> will not affect the values of <tt><b>x</b></tt> and
+<tt><b>y</b></tt> outside it, because variables <TT><B>x</B></TT> and <TT><B>y</B></TT>
+were not passed themselves to the the function, only their <U>values</U>.
+<p>
+But there might be some cases where you need to manipulate from inside a function the value of
+an external variable. For that purpose we have to use <i>arguments passed by reference</i>,
+as in the function <tt><b>duplicate</b></tt> of the following example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// passing parameters by reference</I>
+#include &lt;iostream.h&gt;
+
+void duplicate (int& a, int& b, int& c)
+{
+  a*=2;
+  b*=2;
+  c*=2;
+}
+
+int main ()
+{
+  int x=1, y=3, z=7;
+  duplicate (x, y, z);
+  cout &lt;&lt; "x=" &lt;&lt; x &lt;&lt; ", y=" &lt;&lt; y &lt;&lt; ", z=" &lt;&lt; z;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>x=2, y=6, z=14</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+The first thing that should call your attention is that in the declaration of
+<tt><b>duplicate</b></tt> the type of each argument went followed by an <i>ampersand</i>
+sign (<tt><b>&amp;</b></tt>), that indeed serves to specify that the variable has to
+be passed <i>by reference</i> instead of <i>by value</i>, as usual.
+<p>
+When passing a variable <i>by reference</i> we are passing the variable itself and any
+modification that we do to that parameter within the function will have effect in the
+passed variable outside it.
+<p>
+<img src="imgfunc3.gif">
+<p>
+To express it somehow, we have associated <tt><b>a</b></tt>,
+<tt><b>b</b></tt> and <tt><b>c</b></tt> with the parameters used when calling the function
+(<tt><b>x</b></tt>, <tt><b>y</b></tt> and <tt><b>z</b></tt>) and any change that we do
+on <tt><b>a</b></tt> within the function will affect the value of <tt><b>x</b></tt>
+outside.  Any change that we do on <tt><b>b</b></tt> will affect <tt><b>y</b></tt>,
+and the same with <tt><b>c</b></tt> and <tt><b>z</b></tt>.
+<p>
+That is why our program's output, that shows the values stored in <tt><b>x</b></tt>,
+<tt><b>y</b></tt> and <tt><b>z</b></tt> after the call to <tt><b>duplicate</b></tt>,
+shown the values of the three variables of <tt><b>main</b></tt> duplicated.
+<p>
+If when declaring the following function:<br>
+<blockquote>
+<tt><b>void duplicate (int&amp; a, int&amp; b, int&amp; c)</b></tt><br>
+</blockquote>
+we had declared it thus:<br>
+<blockquote>
+<tt><b>void duplicate (int a, int b, int c)</b></tt><br>
+</blockquote>
+that is, without the <i>ampersand</i> (<tt><b>&amp;</b></tt>) signs, we would have not
+passed the variables <i>by reference</i>, but their values, and therefore, the output on
+screen for our program would have been the values of <tt><b>x</b></tt>,
+<tt><b>y</b></tt> and <tt><b>z</b></tt> without having been modified.
+<p>
+<table><tr><td bgcolor="#BFFFBF">
+<img src="icoc-cpp.gif" align="left">
+This type of declaration "<i>by reference</i>" using the
+<i>ampersand</i> (<tt><b>&amp;</b></tt>) sign is exclusive of C++. In C language we had to
+use pointers to do something equivalent.
+</td></tr></table>
+
+<P>
+Passing by reference is an effective way to allow a function to return more than
+one single value. For example, here is a function that returns the previous and next
+numbers of the first parameter passed.
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// more than one returning value</I>
+#include &lt;iostream.h&gt;
+
+void prevnext (int x, int& prev, int& next)
+{
+  prev = x-1;
+  next = x+1;
+}
+
+int main ()
+{
+  int x=100, y, z;
+  prevnext (x, y, z);
+  cout &lt;&lt; "Previous=" &lt;&lt; y &lt;&lt; ", Next=" &lt;&lt; z;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>Previous=99, Next=101</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+
+
+<p>
+<h2>Default values in arguments.</h2>
+When declaring a function we can specify a default value for each parameter.
+This value will be used if that parameter is left blank when calling to the function.
+To do that we simply have to assign a value to the arguments in the function declaration.
+If a value for that parameter is not passed when the function is called, the default
+value is used, but if a value is specified this default value is stepped on and the passed
+value is used.
+For example:
+
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// default values in functions</I>
+#include &lt;iostream.h&gt;
+
+int divide (int a, int b=2)
+{
+  int r;
+  r=a/b;
+  return (r);
+}
+
+int main ()
+{
+  cout &lt;&lt; divide (12);
+  cout &lt;&lt; endl;
+  cout &lt;&lt; divide (20,4);
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>6<BR>5</TT></B>
+</TD></TR></TABLE>
+<P>
+As we can see in the body of the program there are two calls to the function
+<tt><B>divide</B></tt>. In the first one:<br>
+<blockquote><tt><b>divide (12)</b></tt><br></blockquote>
+we have only specified one argument, but the function <tt><b>divide</b></tt>
+allows up to two. So the function <tt><b>divide</b></tt> has assumed
+that the second parameter is <tt><b>2</b></tt> since that is what we have specified to
+happen if this parameter lacks (notice the function declaration, which finishes by
+<tt><b>int b=2</b></tt>).  Therefore the result of this function call is <b>6</b>
+(<tt><b>12/2</b></tt>).
+<p>
+In the second call:<br>
+<blockquote>
+<tt><b>divide (20,4)</b></tt><br>
+</blockquote>
+there are two parameters, so the default assignation (<tt>int b=2</tt>) is being stepped on
+by the passed parameter, that is <tt><b>4</b></tt>.  Being the result equal to <b>5</b>
+(<tt><b>20/4</b></tt>).
+
+<p>
+<h2>Overloaded functions.</h2>
+Two different functions can have the same name if the prototype of their arguments are different,
+that means that you can put the same name to more than one function if they have either a
+different number of arguments or different types in their arguments. For example,
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// overloaded function</I>
+#include &lt;iostream.h&gt;
+
+int divide (int a, int b)
+{
+  return (a/b);
+}
+
+float divide (float a, float b)
+{
+  return (a/b);
+}
+
+int main ()
+{
+  int x=5,y=2;
+  float n=5.0,m=2.0;
+  cout &lt;&lt; divide (x,y);
+  cout &lt;&lt; "\n";
+  cout &lt;&lt; divide (n,m);
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>2<BR>2.5</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+In this case we have defined two functions with the same name, but one of them accepts
+two arguments of type <tt><b>int</b></tt> and the other accepts them of type
+<tt><b>float</b></tt>. The compiler knows which to call in each case examining the
+types when the function is called, if it is called with two <tt><b>int</b></tt>s as
+arguments it calls to the function that has two <tt><b>int</b></tt> arguments in the
+prototype and if it is called with two <tt><b>float</b></tt>s it will call to the one
+which has two <tt><b>float</b></tt>s in its prototype.
+
+<p>
+ For simplicity I have included the same code within both functions, but this is not
+compulsory. You can make two function with the same name but completely
+different behaviors.
+
+<p>
+<h2><i>inline</i> functions.</h2>
+The <i>inline</i> directive can be included before a function declaration to specify
+that the function must be compiled as code in the same point where it is called. This is
+equivalent to declare a macro, and its advantage is only appreciated in very short
+functions, in which the resulting code from compiling the program may be faster
+if the overhead of calling a function (stacking of arguments) is avoided.
+<p>
+The format for its declaration is:<br>
+<tt><b>inline <i>type name</i> ( <i>arguments ...</i> ) { <i>instructions ...</i> }</b></tt><br>
+and the call is just like the call to any other function.  It is not necessary to
+include the <tt><i>inline</i></tt> keyword before each call, only in the declaration.
+
+<p>
+<h2>Recursivity.</h2>
+Recursivity is the property that functions have to be called by themselves.  It is useful
+for some tasks like for example some sorting methods or to calculate the factorial of
+a number.  For example, to obtain the factorial of a number (n) its mathematical formula
+is:<br>
+<blockquote>
+<tt><i>n</i>!  = <i>n</i> * (<i>n</i>-1) * (<i>n</i>-2) * (<i>n</i>-3) ... * 1</tt><br>
+</blockquote>
+more concretely, 5! (factorial of 5) would be:<br>
+<blockquote><tt>5! =  5 * 4 * 3 * 2 * 1 = 120</tt><br></blockquote>
+and a recursive function to do that could be this:<br>
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// factorial calculator</I>
+#include &lt;iostream.h&gt;
+
+long factorial (long a)
+{
+  if (a > 1)
+   return (a * factorial (a-1));
+  else
+   return (1);
+}
+
+int main ()
+{
+  long l;
+  cout &lt;&lt; "Type a number: ";
+  cin >> l;
+  cout &lt;&lt; "!" &lt;&lt; l &lt;&lt " = " &lt;&lt; factorial (l);
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>Type a number:</B> 9<BR>
+<B>!9 = 362880</B></TT>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+Notice how in function <tt><b>factorial</b></tt> we included a call to itself,
+but only if the argument is greater than <tt><b>1</b></tt>,
+since otherwise the function would perform
+<i>an infinite recursive loop</i> in which once it arrived to <tt><b>0</b></tt>
+it would continue multiplying by all the negative numbers (probably provoking a
+stack overflow error on runtime).
+<P>
+This function has a limitation because of the <i>data type</i> used in its design (<tt>long</tt>) 
+for more simplicity. In a standard system, the type <TT><B>long</B></TT>
+would not allow to store factorials greater than <tt><b>12!</b></tt>.
+
+<p>
+<h2>Prototyping functions.</h2>
+Until now, we have defined the functions before the
+first appearance of a call to it, that generally was in
+<tt><b>main</b></tt>, leaving the function <tt><b>main</b></tt> for the end.
+If you try to repeat some of the examples of functions described until now but placing
+the function <tt><b>main</b></tt> before any other function that is called from within
+it, you will most likely obtain an error. The reason is that to be able to call to a
+function this one must have been declared previously (it must be known), like we have done
+in all our examples.
+<p>
+But there is an alternative way to avoid to write all the code of all functions before
+they can be used in <tt><b>main</b></tt> or in another function. It is by <i>prototyping
+functions</i>. This consists in making a previous shorter declaration of the complete
+definition but quite significant so that the compiler can know the arguments and the
+return type needed.
+<p>
+Its form is:
+<blockquote>
+<tt><b><i>type name</i> ( <i>argument_type1</i>, <i>argument_type2</i>, ...);</b></tt><br>
+</blockquote>
+It is identical to the header of a function definition, except:
+<ul>
+<li>It does not include a <tt><i>statement</i></tt> for the function.
+That means that it does not include the body with all the instructions that are usually
+enclose within curly brackets <tt>{ }</tt>.
+<li>It ends with a semicolon sign (<tt>;</tt>).
+<li>In the argument enumeration it is enough to put the type of each argument.
+The inclusion of a name for each argument as in the definition of a standard function 
+is optional, although recommendable.
+</ul>
+For example:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// prototyping</I>
+#include &lt;iostream.h&gt;
+
+void odd (int a);
+void even (int a);
+
+int main ()
+{
+  int i;
+  do {
+    cout &lt;&lt; "Type a number: (0 to exit)";
+    cin >> i;
+    odd (i);
+  } while (i!=0);
+  return 0;
+}
+
+void odd (int a)
+{
+  if ((a%2)!=0) cout &lt;&lt; "Number is odd.\n";
+  else even (a);
+}
+
+void even (int a)
+{
+  if ((a%2)==0) cout &lt;&lt; "Number is even.\n";
+  else odd (a);
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>Type a number (0 to exit):</B> 9<BR>
+<B>Number is odd.</B><BR>
+<B>Type a number (0 to exit):</B> 6<BR>
+<B>Number is even.</B><BR>
+<B>Type a number (0 to exit):</B> 1030<BR>
+<B>Number is even.</B><BR>
+<B>Type a number (0 to exit):</B> 0<BR>
+<B>Number is even.</B><BR>
+</TT>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+This example is indeed not an example of effectiveness, I am sure that at this point
+you can already make a program with the same result using only the half of code lines.
+But this example ilustrates how protyping works. Moreover, in this concrete case the prototyping
+of -at least- one of the two functions is necessary.
+<p>
+The first things that we see are the prototypes of functions <tt><b>odd</b></tt> and
+<tt><b>even</b></tt>:
+<blockquote><tt>
+void odd (int a);<br>
+void even (int a);
+</tt></blockquote>
+that allows these functions to be used before they are completely defined, for example,
+in <tt><b>main</b></tt>, which now is located in a more logical place: the beginning of
+the program's code.
+<P>
+Nevertheless, the specific reason why this program needs that at
+least one of the functions to be prototyped, is because in <tt><b>odd</b></tt> there is
+a call to <tt><b>even</b></tt> and in <tt><b>even</b></tt> there is a call to
+<tt><b>odd</b></tt>, reason why if none of the two functions had been previously
+declared, an error would have happened, since either <tt><b>odd</b></tt>
+would not be visible from <tt><b>even</b></tt> (because it has not still been declared),
+or <tt><b>even</b></tt> would not be visible from <tt><b>odd</b></tt>.
+<p>
+Many programmers recommend that <U>all</U> functions be prototyped.
+It is also my recommendation, mainly in case that there are many functions or
+in the case that these are very long, since, having the prototype of all the functions
+in the same place can spare us some time when consulting how to call it or even ease 
+the creation of a header file.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut2-2.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>2-2. Functions (I).</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut3-1.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>3-1. Arrays. String of characters.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

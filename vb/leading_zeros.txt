@@ -1,0 +1,95 @@
+Heckel, Robert [GWRTP:7020:EXCH]
+From:	zdtips@zdtips.com
+Sent:	Thursday, April 29, 1999 5:38 PM
+To:	ivbtips@zdtips.com
+Subject:	Visual Basic Tips, 04/29/99
+ZD Tips, your #1 source for software tips and techniques, brings you
+another useful Visual Basic tip.
+
+*******************************************************************
+A WORD FROM OUR SPONSOR
+
+Career Central for Developers offers:
+* Free confidential job matching service for programmers
+* Free job market watching, with descriptions that you specify
+http://www.careercentral.com/dev/default.asp?FromAd=DE9049901
+
+*******************************************************************
+AND NOW ON WITH THE TIP
+
+Set your leading zeros or round to a decimal point
+
+Here's a quick tip that allows you to set the number of leading
+zeros, or to round to a certain decimal point. Let's say you want
+to print '1.234000' in '001.234' format. To do this, use
+
+format(1.234000,"000.######")
+
+Submitted by Shabu
+shabu@nls.ernet.inshabu
+
+*******************************************************************
+CONFERENCE CORNER
+
+Unleash tomorrow's technologies...today!!! We invite you to attend
+the premier technical education event for Microsoft and third party
+products, Microsoft Tech·Ed 99, May 21-28 in Dallas, TX. Eight days
+of in-depth courses discussing the integrated Windows (R) platform.
+Join us to learn how Windows DNA-based applications are making it
+easy to develop, manage and deploy distributed applications today-
+through rich, built in services- with the Internet technology
+you'll need for tomorrow. Register TODAY, by visiting our website at
+http://events.microsoft.com/events/teched
+
+*******************************************************************
+TRY US FREE!
+
+If you like this tip, you'll love ZD Journal's Inside Visual Basic.
+
+For a FREE issue of Inside Visual Basic go to
+http://www.zdjournals.com/forms/ivb/cuvw79.htm
+
+Each issue of Inside Visual Basic offers a constant flow of fresh
+ideas, shortcuts, and advice from software experts who explore
+every aspect of Visual Basic for Windows. Discover timesaving
+strategies and practical solutions to all of your computing
+questions through in-depth articles covering complex techniques
+and valuable quick tips.
+
+*******************************************************************
+NEED TO KNOW MORE?
+
+Visit http://www.zdjournals.com/ivb to see what's new in this
+month's issue of Inside Visual Basic.
+
+*******************************************************************
+LEARN MORE, LEARN NOW
+
+Learn online at your convenience by visiting http://www.zdu.com
+Choose from a wide selection of cutting-edge computing courses,
+including several Visual Basic classes. As a student you can log in
+any time, from any computer! Register today!
+
+*******************************************************************
+GOT A TIP? SUBMIT IT!
+
+Do you have a shortcut or technique that's tip worthy? If so, send
+it to ivb_tips@zdjournals.com.
+
+If we use your submission, we'll include your name and email or Web
+address, along with the tip.
+
+*******************************************************************
+TIP SUBSCRIPTION SERVICES
+
+You can unsubscribe from a particular tip (or tips) list at
+http://www.zdtips.com/unsub
+
+This weekly tip is delivered to you as a free service from ZD Tips.
+http://www.zdtips.com
+
+*******************************************************************
+ZD Tips (TM) is a trademark of Ziff-Davis Inc. Copyright (C) 1999
+Ziff-Davis Inc. All rights reserved. Reproduction in whole or in part,
+in any form or medium, without express written permission of Ziff-Davis
+is prohibited.

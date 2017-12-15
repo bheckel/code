@@ -1,0 +1,160 @@
+Expression 6 & 3
+The result for a bit position is 1 only if both corresponding bits in the
+operands are 1. 
+The first number is a binary notation of 6. The second is 3. The result is 2:
+
+    00110
+  & 00011
+  = 00010
+
+---
+
+Bitwise operators are used to change individual bits in an operand. A single
+byte of computer memory - when viewed as a 8 bits - can signify the true/false
+status of 8 flags because each bit can be used as a boolean variable that can
+hold one of two values: true or false. A flag variable is typically use to
+indicate the status of something. For instance, computer files can be marked
+as read-only. So you might have a $fReadOnly variable who job would be to hold
+the read-only status of a file. This variable is called a flag variable
+because when $fReadOnly has a true value it's equivalent to a football umpire
+throwing a flag. The variable says, "Whoa!, don't modify this file."
+
+When you have more than one flag variable, if might be more efficient to use a
+single variable to indicate the value of more than one flag. The next example
+shows you how to do this.
+
+Example: Using the &, |, and ^ Operators
+
+The first step to using bitwise operators to indicate more than one flag in a
+single variable is to define the meaning of the bits that you'd like to use.
+
+If you assume that $textAttr is used control text attributes, then you
+could set the italic attribute by setting $textAttr equal to 128 like this.
+
+$textAttr = 128;
+
+because the bit pattern of 128 is 10000000. The bit that is turned on
+corresponds to the italic position in $textAttr.
+
+Now let's set both the italic *and* underline attributes on at the same time.
+The underline value is 16, which has a bit pattern of 00010000. You already
+know the value for italic is 128. So we call on the OR operator to combine the
+two values.
+
+$textAttr = 128 | 16;
+
+or using the bit patterns (this is just an example - you can't do this in
+Perl)
+
+$textAttr = 10000000 | 00010000;
+
+$textAttr gets assigned a value of 144 (or 10010000 as a bit pattern). This
+will set both italic and underline attributes to 'on'.
+
+The next step might be to turn the italic attribute off. This is done with the
+EXLUSIVE-OR operator, like so:
+
+$textAttr = $textAttr ^ 128;
+
+
+-----
+Using the >> and << Operators
+
+The bitwise shift operators are used to move all of the bits in the operand
+left or right a given number of times. They come in quite handy when you need
+to divide or multiply integer values.
+
+This example will divide by 4 using the >> operator.
+
+Pseudocode - Assign a value of 128 to the $firstVar variable.
+
+Shift the bits inside $firstVar two places to the right and assign the new
+value to $secondVar.
+
+Print the $secondVar variable.
+
+
+$firstVar = 128;
+
+$secondVar = $firstVar >> 2;
+
+print("$secondVar\n");
+
+The program produces the following output:
+
+32
+
+Let's look at the bit patterns of the variables before and after the shift
+operation. First, $firstVar is assigned 128 or 1000000.  Then the value in
+$firstVar is shifted left by 2 places. So the new value is 00100000 or 32
+which is assigned to $secondVar.
+
+The right-most bit of a value is lost when the bits are shifted right. You can
+see this in the next example.
+
+This example will divide by 8 using the >> operator.
+
+Pseudocode - Assign a value of 129 - a bit pattern of 10000001 - to $firstVar.
+Every odd value has the right-most bit set.
+
+Shift the bits inside $firstVar three places to the right and assign the new
+value to $secondVar.
+
+Print the $secondVar variable.
+
+
+$firstVar = 129;
+
+$secondVar = $firstVar >> 3;
+
+print("$secondVar\n");
+
+The program produces the following output:
+
+16
+
+Since the bit value of 16 is 00010000, you can tell that the right-most bit
+has disappeared.
+
+Here's a quick example using the << operator. We'll multiply 128 by 8 (i.e.
+2^3 so we use 3 for the shifting).
+
+Pseudocode Assign a value of 128 to the $firstVar variable.
+
+Shift the bits inside $firstVar two places to the left and assign the new
+value to $secondVar.
+
+Print the $secondVar variable.
+
+
+$firstVar = 128;
+
+$secondVar = $firstVar << 3;
+
+print $secondVar;
+
+The program produces the following output:
+
+1024
+
+The value of 1024 is beyond the bounds of the 8 bits that the other examples
+used. This was done to show you that the number of bits available for your use
+is not limited to one byte. You are really limited by however many bytes Perl
+uses for one scalar variable - probably 4. You'll need to read the Perl
+documentation that came with the interpreter to determine how many bytes your
+scalar variables use.
+
+
+====
+bobh 
+
+        num of 2's (see << 3 e.g. above)
+        ___
+So 65 >> 1 = 32
+b/c 65 = 01000001
+>> (mnemonic _D_ivision by 2) 1      (<< would be multiplication by 2)
+so shifted right it looks like 00100000 or decimal 32.
+
+01000001  65
+------>>
+00100000  32

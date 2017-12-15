@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Trends>
+  <Trend>
+    <TrendID>ods_0201g</TrendID>
+    <ExtractID>ods_0001e</ExtractID>
+    <TransformID>ods_0001t</TransformID>
+    <TrendComment>Trend dummy comment</TrendComment>
+    <TrendDescription>Advair Diskus 100/50 CI</TrendDescription>
+    <TrendReport>IndRunChart</TrendReport>
+    <ExecuteMacro>lift_0001g</ExecuteMacro>
+    <LinesInfo>
+      <Line>
+        <MaterialIDVar>PRODUCT</MaterialIDVar>
+        <MaterialID>Advair Diskus 100/50</MaterialID>
+        <TestIDVar>TEST_METHOD_DESCRIPTION</TestIDVar>
+        <TestID>Cas. Impaction</TestID>
+        <ComponentIDVar>TEST_METHOD_DESCRIPTION</ComponentIDVar>
+        <ComponentID>FLUTICASONE</ComponentID>
+        <StageIDVar>TEST_METHOD_DESCRIPTION</StageIDVar>
+        <StageID>TP0</StageID>
+      </Line>
+      <Line>
+        <MaterialIDVar>PRODUCT</MaterialIDVar>
+        <MaterialID>xAdvair Diskus 100/50</MaterialID>
+        <TestIDVar>xTEST_METHOD_DESCRIPTION</TestIDVar>
+        <TestID>xCas. Impaction</TestID>
+        <ComponentIDVar>TEST_METHOD_DESCRIPTION</ComponentIDVar>
+        <ComponentID>FLUTICASONE</ComponentID>
+        <StageIDVar>TEST_METHOD_DESCRIPTION</StageIDVar>
+        <StageID>TP0</StageID>
+      </Line>
+    </LinesInfo>
+    <InputDir>E:\DataPost\data\GSK\Zebulon\MDPI\AdvairDiskus</InputDir>
+    <OutputSvr>\\zdatapostd.gsk.com/DataPost/</OutputSvr>
+    <OutputDir>data\GSK\Zebulon\MDPI\AdvairDiskus</OutputDir>
+    <OutputFile>AdvairDiskus_CI_FP_TP0_100_50</OutputFile>
+    <ExecuteFrequency>weekdays</ExecuteFrequency>
+    <SASInternetURL>//zdatapostd.gsk.com/sasweb/cgi-bin/broker.exe?_service=default&amp;_program=links.LRQUERY.sas&amp;rpttype=ST&amp;UID=aas41896&amp;UserRole=LevelA&amp;Submit=+Product+Stability+Analysis+</SASInternetURL>
+    <TrendEnabled>1</TrendEnabled>
+  </Trend>
+  <Trend>
+    <TrendID>yods_0201g</TrendID>
+    <ExtractID>ods_0001e</ExtractID>
+    <TransformID>ods_0001t</TransformID>
+    <TrendComment>Trend dummy comment</TrendComment>
+    <TrendDescription>Advair Diskus 100/50 CI</TrendDescription>
+    <TrendReport>IndRunChart</TrendReport>
+    <ExecuteMacro>lift_0001g</ExecuteMacro>
+    <LinesInfo>
+      <Line>
+        <MaterialIDVar>PRODUCT</MaterialIDVar>
+        <MaterialID>Advair Diskus 100/50</MaterialID>
+        <TestIDVar>TEST_METHOD_DESCRIPTION</TestIDVar>
+        <TestID>Cas. Impaction</TestID>
+        <ComponentIDVar>TEST_METHOD_DESCRIPTION</ComponentIDVar>
+        <ComponentID>FLUTICASONE</ComponentID>
+        <StageIDVar>TEST_METHOD_DESCRIPTION</StageIDVar>
+        <StageID>TP0</StageID>
+      </Line>
+      <Line>
+        <MaterialIDVar>PRODUCT</MaterialIDVar>
+        <MaterialID>xAdvair Diskus 100/50</MaterialID>
+        <TestIDVar>xTEST_METHOD_DESCRIPTION</TestIDVar>
+        <TestID>xCas. Impaction</TestID>
+        <ComponentIDVar>TEST_METHOD_DESCRIPTION</ComponentIDVar>
+        <ComponentID>FLUTICASONE</ComponentID>
+        <StageIDVar>TEST_METHOD_DESCRIPTION</StageIDVar>
+        <StageID>TP0</StageID>
+      </Line>
+    </LinesInfo>
+    <InputDir>E:\DataPost\data\GSK\Zebulon\MDPI\AdvairDiskus</InputDir>
+    <OutputSvr>\\zdatapostd.gsk.com/DataPost/</OutputSvr>
+    <OutputDir>data\GSK\Zebulon\MDPI\AdvairDiskus</OutputDir>
+    <OutputFile>AdvairDiskus_CI_FP_TP0_100_50</OutputFile>
+    <ExecuteFrequency>weekdays</ExecuteFrequency>
+    <SASInternetURL>//zdatapostd.gsk.com/sasweb/cgi-bin/broker.exe?_service=default&amp;_program=links.LRQUERY.sas&amp;rpttype=ST&amp;UID=aas41896&amp;UserRole=LevelA&amp;Submit=+Product+Stability+Analysis+</SASInternetURL>
+    <TrendEnabled>1</TrendEnabled>
+  </Trend>
+</Trends>

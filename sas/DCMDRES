@@ -1,0 +1,51 @@
+//BQH0DCMD JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,REGION=0M             
+//STEP1    EXEC SAS,TIME=100,OPTIONS='MSGCASE,MEMSIZE=0'
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)
+//IN       DD DISP=SHR,DSN=BF19.DCX0222.MORMER
+//OUT      DD DISP=(NEW,CATLG,DELETE),UNIT=NCHS,
+//            DSN=DWJ2.DC02.MOR.NCHSFMT.D02JUN03,
+//            DCB=(LRECL=142,RECFM=FB),
+//            SPACE=(CYL,(10,2),RLSE)
+//SYSIN    DD *
+
+options nosource;
+ /*---------------------------------------------------------------------
+  *     Name: DCMDRES
+  *
+  *  Summary: Create NCHS formatted file of MD residents dying in DC, 
+  *           blanking out specific fields per David J.
+  *
+  *  Created: Thu 29 May 2003 11:28:58 (Bob Heckel)
+  *---------------------------------------------------------------------
+  */
+options source;
+
+data tmp;
+  infile IN;
+  input @1 block $char142.  @47 alias $char1.  @89 stres $char2.;
+  if alias eq '1' then
+    delete;
+run;
+
+data tmp;
+  set tmp;
+  if stres eq '21';
+
+  file OUT;
+
+  put @1 block @@;
+
+  put @1    1* ' ' @@;
+  put @2    2* ' ' @@;
+  put @4    1* ' ' @@;
+  put @11  20* ' ' @@;
+  put @31  15* ' ' @@;
+  put @46   1* ' ' @@;
+  put @55   9* ' ' @@;
+  put @98  19* ' ' @@;
+  put @118  4* ' ' @@;
+  put @122  1* ' '   ;
+run;
+
+
+  /* vim: set tw=72 ft=sas: */ 

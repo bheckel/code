@@ -1,0 +1,592 @@
+<html>
+<head>
+<title>C++ Tutorial: 3.3, Pointers.</title>
+<META NAME="description" CONTENT="Address and reference operators. Declaration, initialization and use of Pointers and arrays. Arithmetic of pointers. Pointers to pointers. void pointers. Pointers to functions.">
+<META NAME="keywords" CONTENT="void indirection dereference ++ -- * & int*">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 3.3 </FONT><BR>
+ <FONT SIZE=5><B> Pointers </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<p>
+We have already seen how variables are memory cells that we can access by an identifier.
+But these variables are stored in concrete places of the computer memory.
+For our programs, the computer memory is only a succession of 1 <I>byte</I> cells
+(the minimum size for a datum), each one with a unique address.
+<p>
+A good simile for the computer memory can be a street in a city. On a street all houses
+are consecutively numbered with an unique identifier so if we talk about 27th
+of Sesame Street we will be able to find that place without loss,  since there must be
+only one house with that number and, in addition, we know that that house will be between
+houses 26 and 28.
+<p>
+In the same way in which houses in a street are numbered, the operating system
+organizes the memory with unique and consecutive numbers, so if we talk about
+location 1776 in the memory, we know that there is only one location with that address
+and also that is between addresses 1775 and 1777.
+<p>
+<h2>Address (dereference) operator (<tt>&amp;</tt>).</h2>
+At the moment in which we declare a variable this one must be stored in a concrete
+location in this succession of cells (the memory).  We generally do not decide where the
+variable is to be placed - fortunately that is something automatically done by the compiler
+and the operating system on runtime, but once the operating system has assigned an address
+there are some cases in which we may be interested in knowing where the variable is stored.
+
+<p>
+This can be done by preceding the variable identifier by an <i>ampersand sign</i>
+(<tt>&amp;</tt>), which literally means <i><b>"address of"</b></i>. For example:
+<blockquote><tt>ted = &andy;</b></tt></blockquote>
+would assign to variable <tt><b>ted</b></tt> the address of variable <tt><b>andy</b></tt>,
+since when preceding the name of the variable <tt><b>andy</b></tt> with the
+<i>ampersand</i> (<tt>&amp;</tt>) character we are no longer talking about the content
+of the variable, but about its address in memory.
+<p>
+We are going to suppose that <tt><b>andy</b></tt> has been placed in the memory
+address <tt><b>1776</b></tt> and that we write the following:
+<blockquote><tt>
+andy = 25;<br>
+fred = andy;<br>
+ted = &andy;
+</tt></blockquote>
+the result will be the one shown in the following diagram:
+<blockquote><img src="imgpoin1.gif"></blockquote>
+We have assigned to <tt><b>fred</b></tt> the content of variable <tt><b>andy</b></tt>
+as we have done in many other occasions in previous sections of this tutorial, but to
+<tt><b>ted</b></tt> we have assigned <u>the address in memory</u> where the operating
+system stores the value of <tt><b>andy</b></tt>, that we have imagined that it was
+<tt><b>1776</b></tt> (it can be any address, I have just invented this one).
+The reason is that in the allocation of <tt><b>ted</b></tt> we have
+preceded <tt><b>andy</b></tt> with an <i>ampersand</i> (<tt>&amp;</tt>) character.
+<p>
+The variable that stores the address of another variable (like <tt><b>ted</b></tt>
+in the previous example) is what we call a <b>pointer</b>.  In C++ pointers have
+certain virtues and they are used very often. More ahead we will see how this type
+of variables are declared.
+<p>
+<h2>Reference operator (<tt>*</tt>)</h2>
+
+Using a pointer we can access directly to the value stored in the variable pointed by it
+just by preceding the pointer identifier with the reference operator
+<i>asterisk</i> (<tt>*</tt>), that can be literally translated to
+<i><b>"value pointed by"</b></i>. Thus, following with the values of the previous example,
+if we write:
+<blockquote><tt>
+beth = *ted;
+</tt></blockquote>
+(that we could read as:  "beth equal to <U>value pointed by</U> ted")
+<tt><b>beth</b></tt> would take the value <tt><b>25</b></tt>, since
+<tt><b>ted</b></tt> is
+<tt><b>1776</b></tt>, and <i>the value pointed by</i> <tt><b>1776</b></tt>
+is <tt><b>25</b></tt>.
+
+<blockquote><img src="imgpoin2.gif"></blockquote>
+
+You must clearly differenciate that <tt><b>ted</b></tt> stores <tt><b>1776</b></tt>,
+but <tt><b>*ted</b></tt> (with an asterisk <tt>*</tt> before) refers to
+the value stored in the address <TT><B>1776</B></TT>, that is <tt><b>25</b></tt>.
+Notice the difference to include or not the reference asterisk
+(I have included an explanatory commentary of how each expression could be read):
+<p>
+<blockquote><tt><PRE>
+<b>beth = ted;</b>   <FONT COLOR="green"><i>// beth equal to ted ( 1776 )</i></FONT>
+<b>beth = *ted;</b>  <FONT COLOR="green"><i>// beth equal to <b>value pointed by</b> ted ( 25 )</i></FONT>
+</pre></tt></blockquote>
+
+<p><table cellpadding="5"><tr><td bgcolor="#BFBFFF">
+<b>Operator of address or dereference (<tt>&amp;</tt>)</b><br>
+It is used as a variable prefix and can be translated as <b>"address of"</b>, thus:
+<tt> &amp;variable1</tt> can be read as <i>"address of <tt>variable1</tt>"</i>
+<p>
+<b>Operator of reference (<tt>*</tt>)</b><br>
+It indicates that what has to be evaluated is the content pointed by the
+expression considered as an address.  It can be translated by <b>"value pointed by"</b>.<br>
+<tt>* mypointer</tt> can be read as <I>"value pointed by <tt>mypointer</tt>"</i>.
+</td></tr></table>
+
+<p>
+At this point, and following with the same example initiated above where:<br>
+<blockquote><tt>
+ andy = 25;<br>
+ ted = &andy;<br>
+</tt></blockquote>
+
+you should be able to clearly see that all the following expressions are true:
+<BLOCKQUOTE>
+<PRE><TT><FONT COLOR="blue">andy == 25
+&andy == 1776
+ted == 1776
+*ted == 25</FONT></TT></PRE>
+</BLOCKQUOTE>
+The first expression is quite clear considering that its assignation was
+<tt><b>andy=25;</b></tt>. The second one uses the address (or derefence) operator
+(<tt>&amp;</tt>) that returns the address of the variable <tt><b>andy</b></tt>,
+that we imagined to be <tt><b>1776</b></tt>. The third one is quite obvious since the second was true
+and the assignation of <tt><b>ted</b></tt> was <tt><b>ted = &andy;</b></tt>.
+The fourth expression uses the reference operator (<tt>*</tt>) that, as we have just seen,
+is equivalent to the value contained in the address pointed by <tt><b>ted</b></tt>,
+that is <tt><b>25</b></tt>.
+<p>
+So, after all that, you may also infer that while the address pointed by <TT><B>ted</B></TT>
+remains unchanged the following expression will also be true:
+<blockquote><tt><font color="blue">*ted == andy</font></tt></blockquote>
+
+<p>
+<h2>Declaring variables of type pointer</h2>
+Due to the ability of pointers to reference directly to the value where they point to
+it becomes necessary to specify which data type a pointer points to when declaring it,
+since it is not the same to point to a <tt><b>char</b></tt> than to an <tt><b>int</b></tt> or
+a <tt><b>float</b></tt> type.
+<p>
+Thus, the declaration of pointers follow this form:
+<blockquote>
+<tt><b><i>type * pointer_name</i>;</b></tt>
+</blockquote>
+where <tt><b><i>type</i></b></tt> is the type of data pointed, <u>not</u> the type of
+the pointer itself.  For example:<br>
+<blockquote><tt>
+int * number;<br>
+char * character;<br>
+float * greatnumber;<br>
+</tt></blockquote>
+they are three declarations of pointers. Each one of them points to a different data type,
+but the three are pointers and in fact the three occupy the same amount of space in memory
+(the size of a pointer depends on the operating system), but the data to which they point
+do not occupy the same nor are of the same type, one is <tt><b>int</b></tt>, another
+one is <tt><b>char</b></tt> and the other one <tt><b>float</b></tt>.
+<p>
+I emphasize that this asterisk (<tt>*</tt>) that we put when declaring
+a pointer means only that: <i>that it is a pointer</i>, and does not have to be confused
+with the reference operator that we have seen a bit earlier and that is also written
+with an asterisk (<tt>*</tt>). They are simply two different tasks represented with
+the same sign.
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// my first pointer</I>
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  int value1 = 5, value2 = 15;
+  int * mypointer;
+
+  mypointer = &value1;
+  *mypointer = 10;
+  mypointer = &value2;
+  *mypointer = 20;
+  cout &lt;&lt; "value1==" &lt;&lt; value1 &lt;&lt; "/ value2==" &lt;&lt; value2;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>value1==10 / value2==20</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+Notice how the values of <tt><b>value1</b></tt>
+and <tt><b>value2</b></tt> have changed indirectly.  First we have assigned to
+<tt><b>mypointer</b></tt> the address of
+<tt><b>value1</b></tt> using the deference ampersand sign (<tt>&amp;</tt>)
+and then we have assigned
+<tt><b>10</b></tt> to the value pointed by <tt><b>mypointer</b></tt>,
+that it is pointing to the address of <tt><b>value1</b></tt>, so
+we have modified <TT><B>value1</B></TT> indirectly.
+
+<p>
+In order that you can see that a pointer may take several different values during the same
+program we have repeated the process with <tt><b>value2</b></tt> and <u>the same</u>
+pointer.
+<p>
+Here is an example a bit more complicated:
+
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// more pointers</I>
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  int value1 = 5, value2 = 15;
+  int *p1, *p2;
+
+  p1 = &value1;     <I>// p1 = address of value1</I>
+  p2 = &value2;     <I>// p2 = address of value2</I>
+  *p1 = 10;         <I>// value pointed by p1 = 10</I>
+  *p2 = *p1;        <I>// value pointed by p2 = value pointed by p1</I>
+  p1 = p2;          <I>// p1 = p2 (pointer assignation)</I>
+  *p1 = 20;         <I>// value pointed by p1 = 20</I>
+  
+  cout &lt;&lt; "value1==" &lt;&lt; value1 &lt;&lt; "/ value2==" &lt;&lt; value2;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>value1==10 / value2==20</TT></B>
+</TD></TR></TABLE>
+<P>
+I have included as comments on each line how the code can be read:
+ampersand (<tt>&amp;</tt>) as "address of" and asterisk (<tt>*</tt>)
+as "value pointed by".  Notice that there are expressions with pointers
+<tt><b>p1</b></tt> and <tt><b>p2</b></tt> with and without asterisk.
+The meaning of putting or not a reference asterisk is very different:
+An asterisk (<tt>*</tt>) followed by the pointer refers to the place pointed by the
+pointer, whereas a pointer without an asterisk (<tt>*</tt>) refers to the value of
+the pointer itself, that is, the address where it is pointing to.
+<p>
+Another thing that can call your attention is the line:
+<blockquote><tt>int *p1, *p2;</tt></blockquote>
+
+that declares the two pointers of the previous example putting an asterisk (<tt>*</tt>)
+for each pointer.  The reason is that the type for all the declarations of the same line
+is <tt><b>int</b></tt> (and not <TT><B>int*</B></TT>). The explanation is because of the
+level of precedence of the reference operator asterisk (<tt>*</tt>) that is the same one
+that the declaration of types, therefore, because they are associative operators from the
+right, the asterisk are evaluated first than the type. We have talked about this
+in <A HREF="tut1-3.html">section 1.3: Operators</A>, although it is enough that you know
+clearly that -unless you include parenthesis- you will have to put an asterisk (<tt>*</tt>)
+before each pointer you declare.
+
+<p>
+<h2>Pointers and arrays</h2>
+The concept of array goes very bound to the one of pointer. In fact, the identifier of an
+array is equivalent to the address of its first element, like a pointer is equivalent to the
+address of the first element that it points to, so in fact they are the same thing.
+For example, supposing these two declarations:<br>
+<blockquote><tt>
+int numbers [20];<br>
+int * p;<br>
+</tt></blockquote>
+the following allocation would be valid:
+<blockquote><tt>
+p = numbers;
+</tt></blockquote>
+At this point <tt><b>p</b></tt> and <tt><b>numbers</b></tt> are equivalent and they have
+the same properties, with the only difference that 
+we could assign another value to the pointer <tt><b>p</b></tt> whereas
+<tt><b>numbers</b></tt> will always point to the first of the 20 integer numbers of
+type <tt>int</tt> with which it was defined. So, unlike
+<tt><b>p</b></tt>, that is an ordinary <i>variable pointer</i>,
+<tt><b>numbers</b></tt> is a <i>constant pointer</i> (indeed that is an Array: a constant
+pointer).
+Therefore, although the previous expression was valid, the following allocation is not:
+<blockquote><tt><font color="red">
+numbers = p;<br>
+</font></tt></blockquote>
+because <TT><B>numbers</B></TT> is an array (constant pointer), and no values can be
+assigned to constant identifiers.
+<P>
+Due to its character of <i>variables</i> all the expressions that include pointers
+in the following example are perfectly valid:<br>
+
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// more pointers</I>
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  int numbers[5];
+  int * p;
+  p = numbers;  *p = 10;
+  p++;  *p = 20;
+  p = &numbers[2];  *p = 30;
+  p = numbers + 3;  *p = 40;
+  p = numbers;  *(p+4) = 50;
+  for (int n=0; n<5; n++)
+    cout << numbers[n] << ", ";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>10, 20, 30, 40, 50,</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+
+<p>
+In chapter "<i>Arrays</i>" we used several times barcket signs <tt>[]</tt>
+in order to specify the index of the element from the Array that we wanted to refer.
+Well, the bracket signs operator <tt>[]</tt> are known as <i>offset</i> operators
+and they are equivalent to add the number within brackets to the address of a pointer.
+For example, both following expressions:
+<blockquote><tt><pre>
+a[5] = 0;       <i><font color="green">// a [offset of 5] = 0</font></i>
+*(a+5) = 0;     <i><font color="green">// pointed by (a+5) = 0</font></i>
+</pre></tt></blockquote>
+are equivalent and valid either if <tt><b>a</b></tt> is a pointer or if it is an array.
+
+<p>
+<h2>Pointer initialization</h2>
+When declaring pointers we may want to explicitly specify to which variable we want
+they to point to,
+<blockquote><tt>
+ int number;<br>
+ int *tommy = &number;<br>
+</tt></blockquote>
+this is equivalent to:
+<blockquote><tt>
+ int number;<br>
+ int *tommy;<br>
+ tommy = &number;<br>
+</tt></blockquote>
+When a pointer assignation takes place we are always assigning the address where it points
+to, never the value pointed. You must consider that at the moment of declaring a pointer,
+the asterisk (<tt>*</tt>) indicates only that it is a pointer, in no case
+indicates a reference operator asterisk (<tt>*</tt>). Remember, they are two different
+operators, although they are written with the same sign. Thus, we must take care of not
+confusing the previous with:
+<blockquote><tt><font color="red">
+ int number;<br>
+ int *tommy;<br>
+ *tommy = &number;<br>
+</font></tt></blockquote>
+that anyway would not have much sense in this case.
+<p>
+Like in the case of arrays, the compiler allows the special case that we want to
+initialize the content at which the pointer points with constants at the same moment
+of declaring the variable pointer:<br>
+<blockquote><tt>
+char * terry = "hello";
+</tt></blockquote>
+in this case static storage is reserved for containing <tt>"hello"</tt> and a pointer
+to the first <TT><B>char</B></TT> of this memory block (that corresponds to 'h') is
+assigned to <tt><b>terry</b></tt>. If we imagine that <tt>"hello"</tt> is stored at
+addresses 1702 and following, the previous declaration could be outlined thus:
+ <blockquote><img src="imgpoin3.gif"></blockquote>
+it is important to indicate that <tt><b>terry</b></tt> contains value
+<tt><b>1702</b></tt> and <u>not</u> <tt><b>'h'</b></tt> nor <tt><b>"hello"</b></tt>,
+although <tt><b>1702</b></tt> points to these last ones.
+<p>
+The pointer <tt><b>terry</b></tt> points to a string of characters and can be used
+exactly as if it was an Array (remember that an array is just <i>a constant
+pointer</i>). For example, if our temper changed and we wanted to replace
+ the <tt><b>'o'</b></tt> by a <tt><b>'!'</b></tt> sign
+in the content pointed by <tt><b>terry</b></tt>, we could do it
+by any of the following two ways:<br>
+<blockquote><tt>
+terry[4] = '!';<br>
+*(terry+4) = '!';<br>
+</tt></blockquote>
+remember that to write <tt><b>terry[4]</b></tt> is just the same as to write
+<tt><b>*(terry+4)</b></tt>, although the most usual expression is the first one.
+With any of those two expressions would happen something like this:
+<blockquote><img src="imgpoin4.gif"></blockquote>
+
+<p>
+<h2>Arithmetic of pointers</h2>
+To conduct arithmetical operations on pointers is a little different than to conduct them on
+other integer data types. To begin, only addition and subtraction operations are allowed to be
+conducted, the others make no sense in the world of pointers.
+But both addition and subtraction have a different behavior with pointers according
+to the <u>size</u> of the data type to which they point to.
+<p>
+When we saw the different data types that exist, we saw that some occupy
+more or less space than others in the memory.  For example, in the case of integer numbers,
+<i>char</i> occupies 1 byte, <i>short</i> occupies 2 bytes and <i>long</i> occupies 4.
+<p>
+Let's suppose that we have 3 pointers:
+<blockquote><tt>
+char *mychar;<br>
+short *myshort;<br>
+long *mylong;<br>
+</tt></blockquote>
+and that we know that they point to memory locations <tt><b>1000</b></tt>,
+<tt><b>2000</b></tt> and <tt><b>3000</b></tt> respectively.
+<p>
+So if we write:
+<blockquote><tt>
+mychar++;<br>
+myshort++;<br>
+mylong++;<br>
+</tt></blockquote>
+<tt>mychar</tt>, as you may expect, would contain the value <tt>1001</tt>. 
+Nevertheless, <tt>myshort</tt> would contain the value <tt>2002</tt>,
+and <tt>mylong</tt> would contain <tt>3004</tt>. 
+The reason is that when adding <TT>1</TT> to a pointer we are making it to point
+to the following element of the same type with which it has been defined,
+and therefore the size in <i>bytes</i> of the <i>type</i> pointed is added to the pointer.
+
+<blockquote><img src="imgpoin5.gif"></blockquote>
+
+This is applicable both when adding and subtracting any number to a pointer.
+It would happen exactly the same if we write:
+<blockquote><tt>
+mychar = mychar + 1;<br>
+myshort = myshort + 1;<br>
+mylong = mylong + 1;<br>
+</tt></blockquote>
+It may result important to warn you that both increase (<tt>++</tt>) and
+decrease (<tt>--</tt>) operators have a greater priority than the reference operator
+asterisk (<tt>*</tt>), therefore the following expressions may lead to confussion:
+<blockquote><tt>
+*p++;<br>
+*p++ = *q++;
+</tt></blockquote>
+The first one is equivalent to <tt>*(p++)</tt> and what it does is to increase
+<tt><b>p</b></tt> (the address where it points to - not the value that contains).<br>
+The second, because both increase operators (<tt>++</tt>) are after the expressions
+to be evaluated and not before, first the value of <tt>*q</tt> is assigned to <tt>*p</tt>
+and then they are both <tt>q</tt> and <tt>p</tt> increased by one. It is equivalent to:
+<blockquote><tt>
+*p = *q;<br>
+p++;<br>
+q++;<br>
+</tt></blockquote>
+Like always, I recommend you the use of parenthesis <tt><b>()</b></tt>
+in order to avoid unexpected results.
+<p>
+<h2>Pointers to pointers</h2>
+C++ allows the use of pointers that point to pointers, that these, on its turn, point to data.
+In order to do that we only need to add an asterisk (<tt>*</tt>) for each level of reference:
+<blockquote><tt>
+char a;<br>
+char * b;<br>
+char ** c;<br>
+a = 'z';<br>
+b = &a;<br>
+c = &b;<br>
+</tt></blockquote>
+this, supposing the randomly chosen memory locations of <TT><B>7230</B></TT>, <TT><B>8092</B></TT> and
+<TT><B>10502</B></TT>, could be described thus:
+<blockquote><img src="imgpoin6.gif"></blockquote>
+(inside the cells there is the content of the variable; under the cells its location)<P>
+The new thing in this example is variable <tt><b>c</b></tt>, which
+we can talk about in three different ways, each one of them would correspond to a different
+value:
+<blockquote><tt><font color="blue">
+<B>c</B> is a variable of type (char **) with a value of 8092<br>
+<B>*c</B> is a variable of type (char*) with a value of 7230<br>
+<B>**c</B> is a variable of type (char) with a value of'z'<br>
+</font></tt></blockquote>
+
+<p>
+<h2><i>void</i> pointers</h2>
+The type of pointer <i>void</i> is a special type of pointer.  <i>void</i> pointers
+can point to any data type, from an integer value or a float to a string of characters.
+Its sole limitation is that the pointed data cannot be referenced directly (we can not use
+reference asterisk <TT>*</TT> operator on them), since its
+length is always undetermined, and for that reason we will always have to resort
+to <i>type casting</i> or assignations to turn our <i>void</i> pointer to a pointer
+of a concrete data type that we can refer.
+<p>
+One of its utilities may be for passing generic parameters to a function:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// integer increaser</I>
+#include &lt;iostream.h&gt;
+
+void increase (void* data, int type)
+{
+  switch (type)
+  {
+    case sizeof(char) : (*((char*)data))++; break;
+    case sizeof(short): (*((short*)data))++; break;
+    case sizeof(long) : (*((long*)data))++; break;
+  }
+}
+
+int main ()
+{
+  char a = 5;
+  short b = 9;
+  long c = 12;
+  increase (&a,sizeof(a));
+  increase (&b,sizeof(b));
+  increase (&c,sizeof(c));
+  cout &lt;&lt; (int) a &lt;&lt; ", " &lt;&lt; b &lt;&lt; ", " &lt;&lt; c;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>6, 10, 13</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+
+<tt><b>sizeof</b></tt> is an operator integrated in the C++ language that returns a constant
+value with the size in bytes of its parameter, so, for example,
+<tt><b>sizeof(char)</b></tt> is <tt><b>1</b></tt>, because <TT><B>char</B></TT> type is
+1 byte long.
+
+<p>
+<h2>Pointers to functions</h2>
+C++ allows to operate with pointers to functions. The greater utility of that is for
+passing a function as a parameter to another function, since these cannot be passed
+dereferenced. In order to declare a pointer to a function we must declare it like the
+prototype of the function but enclosing between parenthesis <tt>()</tt>
+the name of the function and inserting a pointer asterisk (<tt>*</tt>) before.
+It might not be a very handsome syntax, but it is how it is done in C++:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// pointer to functions</I>
+#include &lt;iostream.h&gt;
+
+int addition (int a, int b)
+{ return (a+b); }
+
+int subtraction (int a, int b)
+{ return (a-b); }
+
+int (*minus)(int,int) = subtraction;
+
+int operation (int x, int y, int (*functocall)(int,int))
+{
+  int g;
+  g = (*functocall)(x,y);
+  return (g);
+}
+
+int main ()
+{
+  int m,n;
+  m = operation (7, 5, &addition);
+  n = operation (20, m, minus);
+  cout &lt;&lt;n;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>8</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+
+In the example, <tt><b>minus</b></tt> is a global pointer to a function that has two
+parameters of type <tt><b>int</b></tt>, this one is immediately assigned to point to
+the function <tt><b>subtraction</b></tt>, all in a single line:
+<blockquote><tt>int (* minus)(int,int) = subtraction;</tt></blockquote>
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut3-2.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>3-2. Strings of characters.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut3-4.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>3-4. Dynamic memory.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

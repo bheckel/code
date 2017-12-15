@@ -1,0 +1,319 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: timesheet.tk.pl
+#
+#  Summary: Track hours worked in a week.
+#
+#           TODO warn before clear
+#           TODO msgbox warn if not saved 
+#           TODO make save & clear more obvious to avoid bad click
+#           TODO place In Out labels above inputboxes
+#
+#           Tk Demos:
+#           /usr/lib/perl5/site_perl/5.6.1/cygwin-multi/Tk/demos/widget_lib
+#
+#  Created: Wed 17 Jul 2002 10:52:20 (Bob Heckel)
+# Modified: Fri 16 Aug 2002 17:40:24 (Bob Heckel)
+##############################################################################
+use strict;
+use Tk;
+
+my $CHANGEDFLAG = 0;  # user has not yet made changes
+
+# Read tab delimited input file into an array of arrays.
+open FILEREAD, "/var/tmp/timesheet.dat" || die "$0: can't open file: $!\n";
+my @clockhrs = ();  # global!
+while ( <FILEREAD> ) {
+  chomp;  # the newline at end of each week's hours
+  push(@clockhrs, [split '\t']);
+}
+close FILEREAD;
+
+
+my $mw = MainWindow->new;
+$mw->title('Timesheet');
+$mw->Label(-text => 'Hours (military format)',
+          )->pack;
+# Make numbers change on any key release.
+$mw->bind('Tk::Entry', '<KeyRelease>' => sub{do_calc()});
+
+# Packing list.  Make each day have its own row.
+my @pl = qw/-side left/;
+
+# TODO create a loop (or function) for this mess using this format
+# Sunday is [0][0-6] 
+my $sunframe = $mw->Frame()->pack();
+$sunframe->Label(-text => 'Sunday',
+                 - width => 10,
+                )->pack(@pl);
+my $suntot = $clockhrs[0][1] - $clockhrs[0][0] + $clockhrs[0][3] - 
+                                                            $clockhrs[0][2];
+$sunframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[0][0],
+                )->pack(@pl);
+$sunframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[0][1],
+                )->pack(@pl);
+$sunframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[0][2],
+                )->pack(@pl);
+$sunframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[0][3],
+                )->pack(@pl);
+$sunframe->Label(-width => 6,
+                 -textvariable => \$suntot
+                )->pack(@pl);
+$sunframe->Button(-text => 'Fill',
+            -command => sub{do_fill(0)}
+            )->pack(@pl);
+
+# Monday is [1][0-6] 
+my $monframe = $mw->Frame()->pack();
+$monframe->Label(-text => 'Monday',
+                 - width => 10,
+                )->pack(@pl);
+my $montot = $clockhrs[1][1] - $clockhrs[1][0] + $clockhrs[1][3] - 
+                                                            $clockhrs[1][2];
+$monframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[1][0],
+                )->pack(@pl);
+$monframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[1][1],
+                )->pack(@pl);
+$monframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[1][2],
+                )->pack(@pl);
+$monframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[1][3],
+                )->pack(@pl);
+$monframe->Label(-width => 6,
+                 -textvariable => \$montot
+                )->pack(@pl);
+$monframe->Button(-text => 'Fill',
+            -command => sub{do_fill(1)}
+            )->pack(@pl);
+
+my $tueframe = $mw->Frame()->pack();
+$tueframe->Label(-text => 'Tuesday',
+                 - width => 10,
+                )->pack(@pl);
+my $tuetot = $clockhrs[2][1] - $clockhrs[2][0] + $clockhrs[2][3] - 
+                                                            $clockhrs[2][2];
+$tueframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[2][0],
+                )->pack(@pl);
+$tueframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[2][1],
+                )->pack(@pl);
+$tueframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[2][2],
+                )->pack(@pl);
+$tueframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[2][3],
+                )->pack(@pl);
+$tueframe->Label(-width => 6,
+                 -textvariable => \$tuetot
+                )->pack(@pl);
+$tueframe->Button(-text => 'Fill',
+            -command => sub{do_fill(2)}
+            )->pack(@pl);
+
+my $wedframe = $mw->Frame()->pack();
+$wedframe->Label(-text => 'Wednesday',
+                 - width => 10,
+                )->pack(@pl);
+my $wedtot = $clockhrs[3][1] - $clockhrs[3][0] + $clockhrs[3][3] - 
+                                                            $clockhrs[3][2];
+$wedframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[3][0],
+                )->pack(@pl);
+$wedframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[3][1],
+                )->pack(@pl);
+$wedframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[3][2],
+                )->pack(@pl);
+$wedframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[3][3],
+                )->pack(@pl);
+$wedframe->Label(-width => 6,
+                 -textvariable => \$wedtot
+                )->pack(@pl);
+$wedframe->Button(-text => 'Fill',
+            -command => sub{do_fill(3)}
+            )->pack(@pl);
+
+my $thuframe = $mw->Frame()->pack();
+$thuframe->Label(-text => 'Thursday',
+                 - width => 10,
+                )->pack(@pl);
+my $thutot = $clockhrs[4][1] - $clockhrs[4][0] + $clockhrs[4][3] - 
+                                                            $clockhrs[4][2];
+$thuframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[4][0],
+                )->pack(@pl);
+$thuframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[4][1],
+                )->pack(@pl);
+$thuframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[4][2],
+                )->pack(@pl);
+$thuframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[4][3],
+                )->pack(@pl);
+$thuframe->Label(-width => 6,
+                 -textvariable => \$thutot
+                )->pack(@pl);
+$thuframe->Button(-text => 'Fill',
+            -command => sub{do_fill(4)}
+            )->pack(@pl);
+
+my $friframe = $mw->Frame()->pack();
+$friframe->Label(-text => 'Friday',
+                 - width => 10,
+                )->pack(@pl);
+my $fritot = $clockhrs[5][1] - $clockhrs[5][0] + $clockhrs[5][3] - 
+                                                            $clockhrs[5][2];
+$friframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[5][0],
+                )->pack(@pl);
+$friframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[5][1],
+                )->pack(@pl);
+$friframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[5][2],
+                )->pack(@pl);
+$friframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[5][3],
+                )->pack(@pl);
+$friframe->Label(-width => 6,
+                 -textvariable => \$fritot
+                )->pack(@pl);
+$friframe->Button(-text => 'Fill',
+            -command => sub{do_fill(5)}
+            )->pack(@pl);
+
+my $satframe = $mw->Frame()->pack();
+$satframe->Label(-text => 'Saturday',
+                 - width => 10,
+                )->pack(@pl);
+my $sattot = $clockhrs[6][1] - $clockhrs[6][0] + $clockhrs[6][3] - 
+                                                            $clockhrs[6][2];
+$satframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[6][0],
+                )->pack(@pl);
+$satframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[6][1],
+                )->pack(@pl);
+$satframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[6][2],
+                )->pack(@pl);
+$satframe->Entry(-width => 5,
+                 -textvariable => \$clockhrs[6][3],
+                )->pack(@pl);
+$satframe->Label(-width => 6,
+                 -textvariable => \$sattot
+                )->pack(@pl);
+$satframe->Button(-text => 'Fill',
+            -command => sub{do_fill(6)}
+            )->pack(@pl);
+
+my $totframe = $mw->Frame()->pack();
+my $grandtot = $suntot + $montot + $tuetot + $wedtot + $thutot + $fritot + $sattot;
+$totframe->Label(-width => 6,
+                 -textvariable => \$grandtot,
+                )->pack(@pl);
+
+$mw->Button(-text => 'Clear',
+            -command => sub{do_clear()}
+            )->pack(qw/-pady .15c -padx .15c/);
+$mw->Button(-text => 'Save',
+            -command => sub{do_save()}
+            )->pack(qw/-pady .15c -padx .15c/);
+
+MainLoop;
+
+
+sub do_save {
+  # Overwrite old with changed hours.
+  open FILEWRITE, ">/var/tmp/timesheet.dat" || die "$0: can't open file: $!\n";
+  # Write changes.
+  for my $i ( 0 .. $#clockhrs ) {
+    my $aref = $clockhrs[$i];
+    my $n = @$aref - 1;
+    for my $j ( 0 .. $n ) {
+      print FILEWRITE "$clockhrs[$i][$j]\t";
+    }
+    print FILEWRITE "\n"; # replace the newline between weeks (chomped earlier)
+  }
+  print "Saved.\n";
+  close FILEWRITE;
+}
+
+
+# Refresh the total.
+# TODO use loop, control scope
+sub do_calc {
+  $suntot = $clockhrs[0][1] - $clockhrs[0][0] + $clockhrs[0][3] - 
+                                                           $clockhrs[0][2];
+  $montot = $clockhrs[1][1] - $clockhrs[1][0] + $clockhrs[1][3] - 
+                                                           $clockhrs[1][2];
+  $tuetot = $clockhrs[2][1] - $clockhrs[2][0] + $clockhrs[2][3] - 
+                                                           $clockhrs[2][2];
+  $wedtot = $clockhrs[3][1] - $clockhrs[3][0] + $clockhrs[3][3] - 
+                                                           $clockhrs[3][2];
+  $thutot = $clockhrs[4][1] - $clockhrs[4][0] + $clockhrs[4][3] - 
+                                                           $clockhrs[4][2];
+  $fritot = $clockhrs[5][1] - $clockhrs[5][0] + $clockhrs[5][3] - 
+                                                           $clockhrs[5][2];
+  $sattot = $clockhrs[6][1] - $clockhrs[6][0] + $clockhrs[6][3] - 
+                                                           $clockhrs[6][2];
+  $grandtot = $suntot + $montot + $tuetot + $wedtot + $thutot + $fritot + $sattot;
+
+  print "Data has changed.\n" unless $CHANGEDFLAG;
+  $CHANGEDFLAG = 1;
+}
+
+
+# TODO use loop
+sub do_clear {
+  # TODO popup rushure
+  ###  my $mw2 = MainWindow->new;
+  ###  my $label = $mw2->Label(-text => 'Cleared');
+  ###  $label->pack;
+  ###  $label->bind('<Button-1>' => sub {$mw2->destroy});
+
+  for my $i ( 0 .. $#clockhrs ) {
+    # handle 0 [0][1]
+    for my $j ( 0 .. $#clockhrs ) {
+      # handle 1 [0][1]
+      $clockhrs[$i][$j] = 0;
+    }
+  } 
+  do_calc();
+  print "Data cleared.  Click Save to commit.\n";
+}
+
+
+# TODO use loop
+sub do_fill {
+  my($day) = @_;
+
+  $clockhrs[$day][0] = 8;
+  $clockhrs[$day][1] = 11.5;
+  $clockhrs[$day][2] = 12;
+  $clockhrs[$day][3] = 16.5;
+  do_calc();
+}
+
+
+__END__
+Sample timesheet.dat:
+0	0	0	0	0	0	0	
+8	11.5	12	18	0	0	0	
+8	11.5	12	18	0	0	0	
+8	11.5	12	17.75	0	0	0	
+8	11.5	12	16.5	0	0	0	
+8	11.5	12	17.5	0	0	0	
+0	0	0	0	0	0	0	
+

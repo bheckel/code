@@ -1,0 +1,232 @@
+  237* DATE OF DEATH--MONTH* 2                                                  
+     F* 01* JANUARY (01)                                                        
+     F* 02* FEBRUARY (02)                                                       
+     F* 03* MARCH (03)                                                          
+     F* 04* APRIL (04)                                                          
+     F* 05* MAY (05)                                                            
+     F* 06* JUNE (06)                                                           
+     F* 07* JULY (07)                                                           
+     F* 08* AUGUST (08)                                                         
+     F* 09* SEPTEMBER (09)                                                      
+     F* 10* OCTOBER (10)                                                        
+     F* 11* NOVEMBER (11)                                                       
+     F* 12* DECEMBER (12)                                                       
+     F* 99* NOT CLASSIFIABLE (99)                                               
+  239* DATE OF DEATH--DAY* 2                                                    
+     F* 01-06* 01-06                                                            
+     F* 07* 07                                                                  
+     F* 08-14* 08-14                                                            
+     F* 15* 15                                                                  
+     F* 16-23* 16-23                                                            
+     F* 24* 24                                                                  
+     F* 25-30* 25-30                                                            
+     F* 31* 31                                                                  
+     F* 99* NOT CLASSIFIABLE (99)                                               
+  241* TIME OF DEATH* 4                                                         
+     F* 0000* MIDNIGHT (0000)                                                   
+     F* 0001-1159* AM (0001-1159)                                               
+     F* 1200* NOON (1200)                                                       
+     F* 1201-2359* PM (1201-2359)                                               
+     F* 9999* NOT CLASSIFIABLE (9999)                                           
+  189* SEX* 1                                                                   
+     F* M * MALE (M)                                                            
+     F* F * FEMALE (F)                                                          
+     F* U * UNKNOWN (U)                                                         
+  190* SEX--EDIT FLAG* 1                                                        
+     F* 0 * EDIT PASSED (0)                                                     
+     F* 1 * EDIT FAILED, DATA QUERIED AND VERIFIED (1)                          
+  200* DECEDENT'S AGE--TYPE* 1                                                  
+     F* 1 * YEARS (1)                                                           
+     F* 2 * MONTHS (2)                                                          
+     F* 4 * DAYS (4)                                                            
+     F* 5 * HOURS (5)                                                           
+     F* 6 * MINUTES (6)                                                         
+     F* 9 * UNKNOWN (NOT CLASSIFIABLE)                                          
+  200* DECEDENT'S AGE--UNITS* 4                                                 
+     F* 1120-1135 * YR 120+                                                     
+     F* 1110-1119 * YR 110-119                                                  
+     F* 1100-1109 * YR 100-109                                                  
+     F* 1095-1099 * YR 095-099                                                  
+     F* 1090-1094 * YR 090-094                                                  
+     F* 1085-1089 * YR 085-089                                                  
+     F* 1080-1084 * YR 080-084                                                  
+     F* 1075-1079 * YR 075-079                                                  
+     F* 1070-1074 * YR 070-074                                                  
+     F* 1065-1069 * YR 065-069                                                  
+     F* 1060-1064 * YR 060-064                                                  
+     F* 1055-1059 * YR 055-059                                                  
+     F* 1050-1054 * YR 050-054                                                  
+     F* 1045-1049 * YR 045-049                                                  
+     F* 1040-1044 * YR 040-044                                                  
+     F* 1035-1039 * YR 035-039                                                  
+     F* 1030-1034 * YR 030-034                                                  
+     F* 1025-1029 * YR 025-029                                                  
+     F* 1020-1024 * YR 020-024                                                  
+     F* 1015-1019 * YR 015-019                                                  
+     F* 1010-1014 * YR 010-014                                                  
+     F* 1005-1009 * YR 005-009                                                  
+     F* 1001-1004 * YR 001-004                                                  
+     F* 2000 * MO 00                                                            
+     F* 2001-2011 * MO 00-11                                                    
+     F* 2012-2023 * MO 12-23                                                    
+     F* 2024-2998 * MO 24+(COND. EDIT)                                          
+     F* 2999 * MO UNKNOWN                                                       
+     F* 4000 * DY 00                                                            
+     F* 4001-4027 * DY 01-27                                                    
+     F* 4028-4060 * DY 28-60                                                    
+     F* 4061-4998 * DY 61+(COND. EDIT)                                          
+     F* 4999 * DY UNKNOWN                                                       
+     F* 5000 * HR 00                                                            
+     F* 5001-5023 * HR 01-23                                                    
+     F* 5024-5072 * HR 24-72                                                    
+     F* 5073-5998 * HR 73+(COND. EDIT)                                          
+     F* 5999 * HR UNKNOWN                                                       
+     F* 6000 * MN 00                                                            
+     F* 6001-6059 *MN 01-59                                                     
+     F* 6060-6095 *MN 60-95                                                     
+     F* 6096-6998 * MN 96+(COND. EDIT)                                          
+     F* 6999 * MN UNKNOWN                                                       
+     F* 9999 * UNKNOWN (NOT CLASS)                                              
+  204* DECEDENT'S AGE--EDIT FLAG* 1                                             
+     F* 0 * EDIT PASSED (0)                                                     
+     F* 1 * EDIT FAILED, DATA QUERIED AND VERIFIED (1)                          
+  205* DATE OF BIRTH--CENTURY* 4                                                
+     F* 1000-1900 * <1900                                                       
+     F* 1900 * =1900                                                            
+     F* 1901-1999 * 1901-1999                                                   
+     F* 2000-3000 * >=2000                                                      
+     F* 9999* NOT CLASSIFIABLE (9999)                                           
+  209* DATE OF BIRTH--MONTH* 2                                                  
+     F* 01* JANUARY (01)                                                        
+     F* 02* FEBRUARY (02)                                                       
+     F* 03* MARCH (03)                                                          
+     F* 04* APRIL (04)                                                          
+     F* 05* MAY (05)                                                            
+     F* 06* JUNE (06)                                                           
+     F* 07* JULY (07)                                                           
+     F* 08* AUGUST (08)                                                         
+     F* 09* SEPTEMBER (09)                                                      
+     F* 10* OCTOBER (10)                                                        
+     F* 11* NOVEMBER (11)                                                       
+     F* 12* DECEMBER (12)                                                       
+     F* 99* NOT CLASSIFIABLE (99)                                               
+  211* DATE OF BIRTH--DAY* 2                                                    
+     F* 01-06* 01-06                                                            
+     F* 07* 07                                                                  
+     F* 08-14* 08-14                                                            
+     F* 15* 15                                                                  
+     F* 16-23* 16-23                                                            
+     F* 24* 24                                                                  
+     F* 25-30* 25-30                                                            
+     F* 31* 31                                                                  
+     F* 99* NOT CLASSIFIABLE (99)                                               
+  229* RESIDENCE OF DECEDENT--INSIDE CITY LIMITS* 1                             
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+     F* U * UNKNOWN (U)                                                         
+  230* MARITAL STATUS* 1                                                        
+     F* M * MARRIED (M)                                                         
+     F* A * MARRIED BUT SEPARATED (A)                                           
+     F* W * WIDOWED (AND NOT REMARRIED) (W)                                     
+     F* D * DIVORCED (AND NOT REMARRIED) (D)                                    
+     F* S * NEVER MARRIED (S)                                                   
+     F* U * NOT CLASSIFIABLE (U)                                                
+  231* MARITAL STATUS--EDIT FLAG* 1                                             
+     F* 0 * EDIT PASSED (0)                                                     
+     F* 1 * EDIT FAILED, DATA QUERIED AND VERIFIED (1)                          
+     F* 2 * EDIT FAILED, DATA QUERIED BUT NOT VERIFIED (2)                      
+     F* 4 * EDIT FAILED, QUERY NEEDED (3)                                       
+  232* PLACE OF DEATH* 1                                                        
+     F* 1 * INPATIENT (1)                                                       
+     F* 2 * EMERGENCY ROOM/OUTPATIENT (2)                                       
+     F* 3 * DEAD ON ARRIVAL (3)                                                 
+     F* 4 * DECEDENT'S HOME (4)                                                 
+     F* 5 * HOSPICE FACILITY (5)                                                
+     F* 6 * NURSING HOME/LONG TERM CARE FACILITY (6)                            
+     F* 7 * OTHER (7)                                                           
+     F* 9 * UNKNOWN (9)                                                         
+  236* METHOD OF DISPOSITION* 1                                                 
+     F* B * BURIAL (B)                                                          
+     F* C * CREAMATION (C)                                                      
+     F* D * DONATION (D)                                                        
+     F* E * ENTOMBMENT (E)                                                      
+     F* R * REMOVAL FROM SITE (R)                                               
+     F* O * OTHER (O)                                                           
+     F* U * UNKNOWN (U)                                                         
+  245* DECEDENT'S EDUCATION* 1                                                  
+     F* 1 * 8TH GRADE OR LESS (1)                                               
+     F* 2 * 9TH THROUGH 12TH GRADE, NO DIPLOMA (2)                              
+     F* 3 * HIGH SCHOOL GRADUATE OR GED COMPLETED (3)                           
+     F* 4 * SOME COLLEGE CREDIT, BUT NO DEGREE (4)                              
+     F* 5 * ASSOCIATE DEGREE (5)                                                
+     F* 6 * BACHELOR'S DEGREE (6)                                               
+     F* 7 * MASTER'S DEGREE (7)                                                 
+     F* 8 * DOCTORATE DEGREE OR PROFESSIONAL DEGREE (8)                         
+     F* 9 * UNKNOWN (9)                                                         
+  246* DECEDENT'S EDUCATION--EDIT FLAG* 1                                       
+     F* 0 * EDIT PASSED (0)                                                     
+     F* 1 * EDIT FAILED, DATA QUERIED AND VERIFIED (1)                          
+     F* 2 * EDIT FAILED, DATA QUERIED BUT NOT VERIFIED (2)                      
+     F* 3 * EDIT FAILED, REVIEW NEEDED (3)                                      
+     F* 4 * EDIT FAILED, QUERY NEEDED (4)                                       
+  247* DECEDENT OF HISPANIC ORIGIN?--MEXICAN* 1                                 
+     F* H * YES (H)                                                             
+     F* N * NO (N)                                                              
+     F* U * UNKNOWN (U)                                                         
+  248* DECEDENT OF HISPANIC ORIGIN?--PUERTO RICAN* 1                            
+     F* H * YES (H)                                                             
+     F* N * NO (N)                                                              
+     F* U * UNKNOWN (U)                                                         
+  249* DECEDENT OF HISPANIC ORIGIN?--CUBAN* 1                                   
+     F* H * YES (H)                                                             
+     F* N * NO (N)                                                              
+     F* U * UNKNOWN (U)                                                         
+  250* DECEDENT OF HISPANIC ORIGIN?--OTHER* 1                                   
+     F* H * YES (H)                                                             
+     F* N * NO (N)                                                              
+     F* U * UNKNOWN (U)                                                         
+  271* DECEDENT'S RACE--WHITE* 1                                                
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  272* DECEDENT'S RACE--BLACK OR AFRICAN AMERICAN* 1                            
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  273* DECEDENT'S RACE--AMERICAN INDIAN OR ALASKA NATIVE* 1                     
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  274* DECEDENT'S RACE--ASIAN INDIAN* 1                                         
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  275* DECEDENT'S RACE--CHINESE* 1                                              
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  276* DECEDENT'S RACE--FILIPINO* 1                                             
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  277* DECEDENT'S RACE--JAPANESE* 1                                             
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  278* DECEDENT'S RACE--KOREAN* 1                                               
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  279* DECEDENT'S RACE--VIETNAMESE* 1                                           
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  280* DECEDENT'S RACE--OTHER ASIAN* 1                                          
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  281* DECEDENT'S RACE--NATIVE HAWAIIAN* 1                                      
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  282* DECEDENT'S RACE--GUAMANIAN OR CHAMORRO* 1                                
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  283* DECEDENT'S RACE--SAMOAN* 1                                               
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  284* DECEDENT'S RACE--OTHER PACIFIC ISLANDER* 1                               
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              
+  285* DECEDENT'S RACE--OTHER* 1                                                
+     F* Y * YES (Y)                                                             
+     F* N * NO (N)                                                              

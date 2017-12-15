@@ -1,0 +1,19 @@
+<script language="JavaScript">
+// This simple method rounds a number to two decimal places.
+// From JavaScript the Definitive Guide
+// Adapted: Thu, 14 Oct 1999 15:28:30 (Bob Heckel)
+
+function myround(x) {
+  ////return Math.round(x*100)/100;
+  var rounded = Math.round(x*100)/100;
+  alert(rounded);
+}
+</script>
+
+<body>  
+  <form name="debuggingform">
+    mytext_label1 <input type=text name="mytext1" value="enter floating point number" width="45"><br>
+    <input type="button" value="Round The Textbox Number" onClick="myround(debuggingform.mytext1.value)">
+  </form>
+</body>
+

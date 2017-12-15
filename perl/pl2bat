@@ -1,0 +1,3 @@
+#!/usr/bin/perl -w
+
+print "Use ActiveState instead of this.\n  \$ st cmd\n  C:> pl2bat.bat foo.pl\n";

@@ -1,0 +1,10 @@
+
+routine GetTempPathA
+  minarg=2
+  maxarg=2
+  stackpop=called
+  returns=long
+  ;
+
+arg 1 input byvalue format=pib4.;
+arg 2 update        format=$cstr200.;

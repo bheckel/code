@@ -1,0 +1,46 @@
+<html>
+<head>
+  <script language="JavaScript">
+    // Modified: Mon, 12 Feb 2001 16:57:39 (Bob Heckel)
+    // Iterate over array.
+    function iterate_array() {
+      var test = [3,4,5];
+
+      for ( var i = 0; i < test.length; i++ )
+        alert(test[i]);
+        document.write("Here is type of " + window.document.forms[0].name + 
+                       ": " + bobform.x.type);
+    }
+
+    function iterate_object() {
+      // TODO still don't know how to do this:
+      ///for ( obj in window.document.arrayform.elements) {
+      ///for ( obj in window.document.arrayform.Checkbox) {
+      fooa = new Array();
+      for ( var i=0; i<window.document.arrayform.length; i++ ) {
+        if ( window.document.arrayform.elements[i].checked ) { 
+          fooa.push(window.document.arrayform.elements[i].name);
+        }
+      }
+      document.write("These are checked: " + fooa);
+      return fooa;
+    }
+  </script>
+</head>
+
+<body>
+  Form 1
+  <form onClick="iterate_array()" name="bobform">
+    <input name="x" type="submit" value="start iterating array">
+  </form>
+  <BR>
+  Form 2
+  <FORM NAME="arrayform">
+    <INPUT NAME="mycheckbox1" TYPE="checkbox" CHECKED>
+    <INPUT NAME="mycheckbox2" TYPE="checkbox">
+    <INPUT NAME="mycheckbox3" TYPE="checkbox" CHECKED>
+    <INPUT NAME="mysubmit" TYPE="submit" onClick="iterate_object()";return false>
+  </FORM>
+</body>
+</html>
+

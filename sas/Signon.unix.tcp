@@ -1,0 +1,25 @@
+echo on;                                                                        
+trace on;                                                                       
+if signoff then goto signoff;                                                   
+type LF;                                                                        
+type 'bqh0' LF ;                                                                
+waitfor 'Password', 30 seconds  ;                                               
+type 'Aadtiis0' LF ;                                                            
+type '/opt/sas8.2/sas -dmr -comamid tcp -device grlink';                        
+type '-noterminal -nosyntaxcheck' LF;                                           
+waitfor 'SESSION ESTABLISHED', 90 seconds : nosas;                              
+log 'NOTE: SAS/CONNECT conversation established.';                              
+stop;                                                                           
+nosas:                                                                          
+   log 'ERROR: Did not get SAS software startup messages.';                     
+   abort;                                                                       
+signoff:                                                                        
+  waitfor '$'                                                                   
+         , '>'                /*-- another common prompt character --*/         
+         , '%'                /*-- another common prompt character --*/         
+         , '}'                /*-- another common prompt character --*/         
+         , 10 seconds                                                           
+         ;                                                                      
+   type    'logout' LF;                                                         
+   log 'NOTE: SAS/CONNECT conversation terminated.';                            
+   stop;                                                                        

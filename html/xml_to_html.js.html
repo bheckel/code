@@ -1,0 +1,51 @@
+<!-- http://www.w3schools.com/xsl/xsl_client.asp -->
+<!-- See also http://www.w3schools.com/xml/xml_to_html.asp -->
+
+<!-- XSLT on the Client.  For non XSLT aware browsers, otherwise use the
+     simpler hello.xml and an .xsl file.
+  -->
+<html>
+<head>
+<script>
+  function loadXMLDoc(fname) {
+    var xmlDoc;
+
+    // code for IE
+    if (window.ActiveXObject) {
+      xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+    }
+    // code for Mozilla, Firefox, Opera, etc.
+    else if (document.implementation && document.implementation.createDocument) {
+      xmlDoc=document.implementation.createDocument("","",null);
+    } else {
+      alert('Your puny browser cannot even handle this script');
+    }
+
+    xmlDoc.async=false;
+    xmlDoc.load(fname);
+
+    return(xmlDoc);
+  }
+
+  function displayResult() {
+    // Must not have the href="foreach.xsl" that hello.xml has
+    xml=loadXMLDoc("hello_nonXSL.xml");
+    xsl=loadXMLDoc("foreach.xsl");
+    // code for IE
+    if (window.ActiveXObject) {
+        ex=xml.transformNode(xsl);
+        document.getElementById("example").innerHTML=ex;
+    }
+    // code for Mozilla, Firefox, Opera, etc.
+    else if (document.implementation && document.implementation.createDocument) {
+      xsltProcessor=new XSLTProcessor();
+      xsltProcessor.importStylesheet(xsl);
+      resultDocument = xsltProcessor.transformToFragment(xml,document);
+      document.getElementById("example").appendChild(resultDocument);
+    }
+  }
+</script>
+</head>
+<body id="example" onLoad="displayResult()">
+</body>
+</html> 

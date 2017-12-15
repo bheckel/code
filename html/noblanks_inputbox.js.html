@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+  <SCRIPT Language="JavaScript">
+  function noBlanksAllowed(anyval) {
+     if ( anyval == "" ) {
+       alert("Please don't leave the question blank!") ;
+       document.ask.q.focus();
+       return false;
+     }
+  }
+  </SCRIPT>
+</HEAD>
+<BODY>
+  <FORM NAME="ask">
+    Question:<BR>
+    <TEXTAREA NAME="q" ROWS=4 COLS=25 onChange="noBlanksAllowed(this.value);"></TEXTAREA>
+    <P>
+    Your Name:
+    <INPUT NAME="n">
+    <P>
+    <INPUT TYPE="button" onClick="return noBlanksAllowed(document.ask.q.value);">
+  </FORM>
+</BODY>
+</HTML> 

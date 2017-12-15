@@ -1,0 +1,47 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: keepalive
+#
+#  Summary: Poll a file transfer for stalls, restarting the connection if the
+#           stall is N number of seconds.
+#
+#  Created: Thu 26 Jun 2003 21:00:43 (Bob Heckel)
+# Modified: Sat 26 Jul 2003 20:53:59 (Bob Heckel)
+##############################################################################
+
+# TODO avoid the warnings without having to ditch -w
+BEGIN {
+  $| = 1; 
+  $f = $ARGV[0]; 
+  $s = (stat $f)[7]; 
+  $t = time;
+  $oldsz = undef;
+  $dead = 0;
+};
+
+if ( $ARGV[0] =~ /-+h.*/ || !$f ) {
+  print STDERR "Usage: $0 FILENAME \nKeep transfer of FILENAME alive.\n";
+  exit -1;
+}
+
+while ( sleep 5 ) {
+  printf("\r$f %s bytes at %.2f Kb per second\n", 
+                            $_ = (stat $f)[7],($_ - $s) / 1024/(time - $t));
+
+  if ( $oldsz ) {
+    $diff = $_ - $oldsz;
+  }
+
+  if ( $diff == 0 ) {
+    $dead++;
+    print "dead $dead\n";
+    system 'beep';
+    # Try to jumpstart.
+    system 'ping yahoo.com';
+  } else {
+    $dead = 0;
+  }
+  print "diff $diff\n";
+
+  $oldsz = $_;
+}

@@ -1,0 +1,239 @@
+<html>
+<head>
+<title>CGI Programming Class: Lesson 3
+</title>
+</head>
+<body bgcolor=#ffffff text=#000000 link=#0000ff>
+
+
+<h2>Lesson 3</h2>
+
+This lesson assumes that you already know how to create HTML forms.  If
+not, please read the
+<a href="http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/fill-out-forms/overview.html">Mosaic Forms Tutorial</a> first.<p>
+
+<h3>Processing FORM data</h3>
+
+For any CGI that must process a form using the POST method, you'll have to
+read the input from the form, and translate special characters back into
+what the person actually typed in.  For example, any blank spaces in
+a form field are passed along the input string as a plus sign ("+").<p>
+
+You may have used something like cgi-lib.pl in the past to handle unparsing
+your forms, but all you ever need is this bite of code right here: (special
+thanks to <a href="mailto:reuven@the-tech.mit.edu">Reuven M. Lerner</a>, from
+whose form-mail.pl script this was taken)<p>
+<h4>form parse code</h4>
+<blockquote><pre>
+read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
+@pairs = split(/&/, $buffer);
+
+foreach $pair (@pairs)
+{
+    ($name, $value) = split(/=/, $pair);
+
+    # Un-Webify plus signs and %-encoding
+    $value =~ tr/+/ /;
+    $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
+
+    # Stop people from using subshells to execute commands
+    # Not a big deal when using sendmail, but very important
+    # when using UCB mail (aka mailx).
+    $value =~ s/~!/ ~!/g;
+
+    $FORM{$name} = $value;
+}
+</pre></blockquote>
+
+Now, after your cgi gets through the above block of code, you'll have
+an associative array called %FORM that contains all the values that were
+entered into the form.  The keys of the %FORM array are the variable
+names themselves.  So, for example, if you have
+three text fields in the form - called name, email-address, and age,
+you could refer to them in your script by using <b>$FORM{'name'}</b>,
+<b>$FORM{'email-address'}</b>, and <b>$FORM{'age'}</B>.<p>
+
+Now, let's write a generic form-processor script, using the above code,
+plus a bit more.  Create a new file called form1.cgi, and enter this code.
+This is the above form-handler code, plus a loop that prints out each
+variable.<p>
+<blockquote><pre>
+#!/usr/bin/perl
+
+print "Content-type:text/html\n\n";
+
+read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
+@pairs = split(/&/, $buffer);
+foreach $pair (@pairs)
+{
+    ($name, $value) = split(/=/, $pair);
+    $value =~ tr/+/ /;
+    $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
+    $value =~ s/~!/ ~!/g;
+    $FORM{$name} = $value;
+}
+
+print "&lt;html&gt;&lt;head&gt;&lt;title&gt;Form Output&lt;/title&gt;&lt;/head&gt;&lt;body&gt;";
+print "&lt;h2&gt;Results from FORM post&lt;/h2&gt;\n";
+foreach $key (keys(%FORM)) {
+   print "$key = $FORM{$key}&lt;br&gt;";
+}
+print "&lt;/body&gt;&lt;/html&gt;";
+
+</pre></blockquote>
+This code can be used to handle ANY form.  Whatever variables you have
+in your form, this cgi will print them out, along with the data the
+person has entered.<p>
+
+Let's test it.  Enter some stuff into the fields below, and press
+"send" when finished.  The output will be the variable names of these text
+boxes plus the actual data you type into each field.  (view the
+<a href="l3src.txt">source</a> for this form)<p>
+<hr noshade width=75%>
+<form action="http://www.io.com/~kira/form1.cgi" method="POST">
+<center><pre>
+       Your Name: <input type="text" name="name">
+   Email Address: <input type="text" name="email">
+             Age: <input type="text" name="age">
+  Favorite Color: <input type="text" name="favorite_color">
+
+</pre>
+<input type="submit"><input type="reset">
+</form>
+</center>
+<hr noshade width=75%>
+<p>
+
+<blockquote><font color=#993300>
+Tip: If you've ever built a form, and had trouble getting the boxes to
+align, try putting &lt;pre&gt; tags around the input fields.  Then you
+can line them up with your text editor, and the result is a much neater
+looking form.  The reason for this is that most web browsers use a fixed-width
+font for preformatted text, so aligning forms and other data is much easier
+in a preformatted text block than in regular HTML.<p>
+</blockquote></font>
+
+
+There are a few special cases to note here with forms.  First, if you
+have a textarea field (such as for comments), you'll need to add this
+line right after the form parse code:<p>
+<blockquote><pre>
+$FORM{'comments'} =~ s/\r/\n/;
+</pre></blockquote>
+All this does is replace raw linefeeds with a regular carriage return.<p>
+Also, in the event of things like checkboxes and radio buttons, you'll
+want to use significant variable names in your HTML form itself, so that
+the data will be meaningful to you.<p>
+
+Let's take this one step further.  Most people using forms want the data
+emailed back to them, so, let's write a form-to-mail cgi.  First you'll
+need to figure out where the <b>sendmail</b> program lives on the system
+you're on.  (For IO, it's in <b>/usr/sbin/sendmail</b>.  If you're not
+sure where yours is, try doing <b>which sendmail</b> or <b>whereis
+sendmail</b>; usually one of these two commands will yield the location
+of the sendmail program.)<p>
+
+Copy your form1.cgi to a new file named form2.cgi.  Now the only change will
+be to the <b>foreach</b> loop.  Instead of printing to standard output
+(the HTML page the person sees after clicking submit),
+we want to print the values of the variables to a mail message.  So, first,
+we must open input to the sendmail program.  You also need to specify
+the recipient of the email.<p>
+<font color=#993300>
+Note: perl will complain if you use an "@" sign inside a regular string
+(a string delimited by "double quotes") or a print &lt;&lt;EndHTML block.
+You can safely put an @-sign inside a single-quote string, like
+'kira@metronet.com', or you can escape the @-sign in other strings
+by using a backslash.  For example, "kira\@metronet.com".<p>
+</font>
+<blockquote><pre>
+#!/usr/bin/perl
+
+print "Content-type:text/html\n\n";
+
+read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
+@pairs = split(/&/, $buffer);
+foreach $pair (@pairs)
+{
+    ($name, $value) = split(/=/, $pair);
+    $value =~ tr/+/ /;
+    $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
+    $value =~ s/~!/ ~!/g;
+    $FORM{$name} = $value;
+}
+
+$mailprog = '/usr/sbin/sendmail';
+
+# change the email address to your own (so you get the mail and not me) :)
+$recipient = 'kira@metronet.com';
+
+# this opens an output stream and pipes it directly to the sendmail
+# program.
+open (MAIL, "|$mailprog $recipient") || die "Can't open $mailprog!\n";
+
+# here we're printing out the header info for the mail message.  The
+# reply-to can be set to the email address of the sender, assuming you
+# have actually defined a field in your form called 'email'.
+print MAIL "Reply-to: $FORM{'email'} ($FORM{'name'})\n";
+
+# print out a subject line so you know it's from your form cgi.
+# The two \n\n's end the header section of the message.  anything
+# you print after this point will be part of the body of the mail.
+print MAIL "Subject: Form Data\n\n";
+
+# here you're just printing out all the variables and values, just like
+# before in the previous script, only the output is to the mail message
+# rather than the followup HTML page.
+foreach $key (keys(%FORM)) {
+  print MAIL "$key = $FORM{$key}\n";
+}
+
+# when you finish writing to the mail message, be sure to close the
+# input stream so it actually gets mailed.
+close(MAIL);
+
+# now print something to the HTML page, usually thanking the person
+# for filling out the form, and giving them a link back to your homepage
+print &lt;&lt;EndHTML;
+&lt;h2&gt;Thank You&lt;/h2&gt;
+Thank you for writing.  Your mail has been delivered.&lt;p&gt;
+Return to the &lt;a href="http://www59.metronet.com/dev/class/"&gt;CGI Class&lt;/a&gt;&lt;p&gt;
+&lt;/body&gt;&lt;/html&gt;
+EndHTML
+
+</pre></blockquote>
+<p>
+You don't need to include the comments in the above code; they are just
+there to show you what's happening.<p>
+
+Now let's test it again.  Here's the form again, only the action this
+time points to form2.cgi.<p>
+<hr noshade width=75%>
+<form action="http://www.io.com/~kira/form2.cgi" method="POST">
+<center><pre>
+       Your Name: <input type="text" name="name">
+   Email Address: <input type="text" name="email">
+             Age: <input type="text" name="age">
+  Favorite_Color: <input type="text" name="favorite_color">
+
+</pre>
+<input type="submit"><input type="reset">
+</form>
+</center>
+<hr noshade width=75%>
+<p>
+And that's all there is to it.  If you have problems with the script,
+check to be sure you're using the correct path for sendmail.  Also remember
+the trick of running the script from the Unix shell - this may point
+out errors you might have missed before.<p>
+
+<b>Lesson 4</b> will cover some more advanced form processing topics.<p>
+<p><hr>
+<b>Copyright &copy; 1997 by Jacqueline D. Hamilton.
+All Rights Reserved.</b><p>
+<hr>
+
+
+<br>
+</body>
+</html>

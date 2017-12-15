@@ -1,0 +1,191 @@
+<acc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="acc_hierarchical.xsd">
+	<study>
+		<study_ID>AB101</study_ID>
+		<participant>
+			<site_ID>AC101</site_ID>
+			<participant_ID>1</participant_ID>
+			<participant_Init>MBT</participant_Init>
+			<visit>
+				<collection_date>2002-06-13</collection_date>
+				<collection_time>12:30:00</collection_time>
+				<visit_num>0</visit_num>
+				<specimen>
+					<barcode_ID_9>106001</barcode_ID_9>
+					<tube_type>05 ml SST</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+				<specimen>
+					<barcode_ID_9>106001</barcode_ID_9>
+					<tube_type>07 ml EDTA</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+			</visit>
+			<visit>
+				<collection_date>2002-06-22</collection_date>
+				<collection_time>10:15:00</collection_time>
+				<visit_num>6</visit_num>
+				<specimen>
+					<barcode_ID_9>106155</barcode_ID_9>
+					<tube_type>02 ml EDTA</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>2</num_tubes>
+				</specimen>
+			</visit>
+			<visit>
+				<collection_date>2002-06-24</collection_date>
+				<collection_time>10:15:00</collection_time>
+				<visit_num>9</visit_num>
+				<specimen>
+					<barcode_ID_9>106951</barcode_ID_9>
+					<tube_type>02.5 ml SST</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+			</visit>
+		</participant>
+		<participant>
+			<site_ID>AC101</site_ID>
+			<participant_ID>2</participant_ID>
+			<participant_Init>GHB</participant_Init>
+			<visit>
+				<collection_date>2002-06-25</collection_date>
+				<collection_time>13:00:00</collection_time>
+				<visit_num>0</visit_num>
+				<specimen>
+					<barcode_ID_9>106051</barcode_ID_9>
+					<tube_type>05 ml SST</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+				<specimen>
+					<barcode_ID_9>106051</barcode_ID_9>
+					<tube_type>07 ml EDTA</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+			</visit>
+			<visit>
+				<collection_date>2002-06-28</collection_date>
+				<collection_time>09:30:00</collection_time>
+				<visit_num>6</visit_num>
+				<specimen>
+					<barcode_ID_9>106150</barcode_ID_9>
+					<tube_type>02 ml EDTA</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>2</num_tubes>
+				</specimen>
+			</visit>
+			<visit>
+				<collection_date>2002-07-01</collection_date>
+				<collection_time>09:15:00</collection_time>
+				<visit_num>9</visit_num>
+				<specimen>
+					<barcode_ID_9>106962</barcode_ID_9>
+					<tube_type>02.5 ml SST</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+			</visit>
+		</participant>
+		<participant>
+			<site_ID>AC101</site_ID>
+			<participant_ID>3</participant_ID>
+			<participant_Init>NEC</participant_Init>
+			<visit>
+				<collection_date>2002-07-02</collection_date>
+				<collection_time>09:15:00</collection_time>
+				<visit_num>0</visit_num>
+				<specimen>
+					<barcode_ID_9>106023</barcode_ID_9>
+					<tube_type>05 ml SST</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+				<specimen>
+					<barcode_ID_9>106023</barcode_ID_9>
+					<tube_type>07 ml EDTA</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+			</visit>
+			<visit>
+				<collection_date>2002-07-07</collection_date>
+				<collection_time>10:30:00</collection_time>
+				<visit_num>6</visit_num>
+				<specimen>
+					<barcode_ID_9>106160</barcode_ID_9>
+					<tube_type>02 ml EDTA</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>2</num_tubes>
+				</specimen>
+			</visit>
+		</participant>
+		<participant>
+			<site_ID>BD001</site_ID>
+			<participant_ID>1</participant_ID>
+			<participant_Init>CMB</participant_Init>
+			<visit>
+				<collection_date>2002-07-01</collection_date>
+				<collection_time>09:15:00</collection_time>
+				<visit_num>0</visit_num>
+				<specimen>
+					<barcode_ID_9>106163</barcode_ID_9>
+					<tube_type>02 ml EDTA</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>2</num_tubes>
+				</specimen>
+			</visit>
+			<visit>
+				<collection_date>2002-07-14</collection_date>
+				<collection_time>11:05:00</collection_time>
+				<visit_num>9</visit_num>
+				<specimen>
+					<barcode_ID_9>106932</barcode_ID_9>
+					<tube_type>02.5 ml SST</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+			</visit>
+		</participant>
+		<participant>
+			<site_ID>BD001</site_ID>
+			<participant_ID>3</participant_ID>
+			<participant_Init>DMS</participant_Init>
+			<visit>
+				<collection_date>2002-08-15</collection_date>
+				<collection_time>09:15:00</collection_time>
+				<visit_num>0</visit_num>
+				<specimen>
+					<barcode_ID_9>106016</barcode_ID_9>
+					<tube_type>05 ml SST</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+			</visit>
+			<visit>
+				<collection_date>2002-08-21</collection_date>
+				<collection_time>09:30:00</collection_time>
+				<visit_num>6</visit_num>
+				<specimen>
+					<barcode_ID_9>106173</barcode_ID_9>
+					<tube_type>02 ml EDTA</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>2</num_tubes>
+				</specimen>
+			</visit>
+			<visit>
+				<collection_date>2002-07-24</collection_date>
+				<collection_time>08:15:00</collection_time>
+				<visit_num>9</visit_num>
+				<specimen>
+					<barcode_ID_9>106917</barcode_ID_9>
+					<tube_type>02.5 ml SST</tube_type>
+					<specimen_type>whole blood</specimen_type>
+					<num_tubes>1</num_tubes>
+				</specimen>
+			</visit>
+		</participant>
+	</study>
+</acc>

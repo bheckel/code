@@ -1,0 +1,110 @@
+<!-- http://www.onlamp.com/pub/a/onlamp/2007/07/05/writing-advanced-javascript.html?submit=Show+Message -->
+<!-- Create a pop up menu that goes away when focus leaves it -->
+</html>
+<head>
+<script>
+function getElementAbsPosX(el)
+{
+    var dx = 0;
+    if (el.offsetParent) {
+        dx = el.offsetLeft + 8;
+        while (el = el.offsetParent) {
+            dx += el.offsetLeft;
+        }
+    }
+    return dx;
+}
+
+function getElementAbsPosY(el)
+{
+    var dy = 0;
+    if (el.offsetParent) {
+        dy = el.offsetTop + el.offsetHeight / 2;
+        while (el = el.offsetParent) {
+            dy += el.offsetTop;
+        }
+    }
+    return dy;
+}
+
+function GetAbsWindowBottom()
+{
+    // Compute the bottom of the popup window and the bottom of
+    // the browser window, in absolute co-ordinates - different
+    // on all browsers but the below should be accurate usually!
+ 
+    var abswindowbottom = 0;
+    if (typeof(window.innerHeight) == 'number')
+        abswindowbottom = window.innerHeight;
+    else if (document.documentElement && document.documentElement.clientHeight)
+        abswindowbottom = document.documentElement.clientHeight;
+    else if (document.body && document.body.clientHeight)
+        abswindowbottom = document.body.clientHeight;
+ 
+    if (typeof(window.pageYOffset) == 'number')
+        abswindowbottom = abswindowbottom + window.pageYOffset;
+    else if (document.body && document.body.scrollTop)
+        abswindowbottom = abswindowbottom + document.body.scrollTop;
+    else if (document.documentElement && document.documentElement.scrollTop)
+        abswindowbottom = abswindowbottom + document.documentElement.scrollTop;
+    return abswindowbottom;
+}
+
+function PopupMenu(name, vis)
+{
+    var el = name + 'menu';
+    var tag = name + 'menuroot';
+    if (!document.getElementById(el))  // menu object not found
+        return;
+    if (vis == 0) {  // hide the menu
+        document.getElementById(el).style.visibility = 'hidden';
+        return;
+    }
+
+    // Get menuroot position
+    var pos = document.getElementById(tag);
+    var dx = getElementAbsPosX(pos);
+    var dy = getElementAbsPosY(pos);
+
+    // Compare bottom of menu to bottom of window
+    var abspopupbottom = dy + document.getElementById(el).clientHeight + 10;
+    var abswindowbottom = GetAbsWindowBottom();
+
+    // If menu goes below bottom of window, move it up!
+    if (abspopupbottom > abswindowbottom)
+        dy = dy - (abspopupbottom - abswindowbottom);
+
+    // Set final menu position and make it appear
+    document.getElementById(el).style.left = dx + 'px';
+    document.getElementById(el).style.top = dy + 'px';
+    if (vis > 0)
+        document.getElementById(el).style.visibility = 'visible';
+}
+
+
+</script>
+</head>
+<body>
+testing
+<div id="testmenu" style="position: absolute; visibility: hidden; color: #aaaaaa; font-style: italic; border: solid thin #888;
+ background-color: #afafaf; padding: 4px;" onmouseover="clearTimeout(tout);" onmouseout="tout=setTimeout('PopupMenu(\'test\', 0);', 1300);">
+ <table>
+  <tr>
+   <td><span style="cursor:pointer; color:blue;" onclick="PopupMenu('test', 0);"><a href="http://gsk.com">Menu Item #1</a></span></td>
+  </tr>
+  <tr>
+   <td><span style="cursor:pointer; color:blue;" onclick="PopupMenu('test', 0);">Menu Item #2</span></td>
+  </tr>
+  <tr>
+   <td><span style="cursor:pointer; color:blue;" onclick="PopupMenu('test', 0);">Menu Item #3</span></td>
+  </tr>
+ </table>
+</div>
+one two three
+<span id="testmenuroot" 
+ style="cursor:pointer; color:blue; background:white; font-style:italic; 
+        border:2px solid black" 
+ onclick="PopupMenu('test',1);tout=setTimeout('PopupMenu(\'test\',0);',1300);">click for menu</span>
+</body>
+four five six<BR>
+</html>

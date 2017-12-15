@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xpath-example.xsl"?>
+<network>
+    <description name="Boston">
+        This is the configuration of our network in the Boston office.
+    </description>
+    <host name="agatha" type="server" os="linux">
+        <interface name="eth0" type="Ethernet">
+            <arec>agatha.example.edu</arec>
+
+            <cname>mail.example.edu</cname>
+            <addr>192.168.0.4</addr>
+        </interface>
+        <service>SMTP</service>
+
+        <service>POP3</service>
+        <service>IMAP4</service>
+    </host>
+    <host name="gil" type="server" os="linux">
+        <interface name="eth0" type="Ethernet">
+
+            <arec>gil.example.edu</arec>
+            <cname>www.example.edu</cname>
+            <addr>192.168.0.5</addr>
+        </interface>
+
+        <service>HTTP</service>
+        <service>HTTPS</service>
+    </host>
+    <host name="baron" type="server" os="linux">
+        <interface name="eth0" type="Ethernet">
+
+            <arec>baron.example.edu</arec>
+            <cname>dns.example.edu</cname>
+            <cname>ntp.example.edu</cname>
+            <cname>ldap.example.edu</cname>
+
+            <addr>192.168.0.6</addr>
+        </interface>
+        <service>DNS</service>
+        <service>NTP</service>
+
+        <service>LDAP</service>
+        <service>LDAPS</service>
+    </host>
+    <host name="mr-tock" type="server" os="openbsd">
+        <interface name="fxp0" type="Ethernet">
+
+            <arec>mr-tock.example.edu</arec>
+            <cname>fw.example.edu</cname>
+            <addr>192.168.0.1</addr>
+        </interface>
+
+        <service>firewall</service>
+    </host>
+    <host name="krosp" type="client" os="osx">
+        <interface name="en0" type="Ethernet">
+            <arec>krosp.example.edu</arec>
+
+            <addr>192.168.0.100</addr>
+        </interface>
+        <interface name="en1" type="AirPort">
+            <arec>krosp.wireless.example.edu</arec>
+            <addr>192.168.100.100</addr>
+
+        </interface>
+    </host>
+    <host name="zeetha" type="client" os="osx">
+        <interface name="en0" type="Ethernet">
+            <arec>zeetha.example.edu</arec>
+
+            <addr>192.168.0.101</addr>
+        </interface>
+        <interface name="en1" type="AirPort">
+            <arec>zeetha.wireless.example.edu</arec>
+            <addr>192.168.100.101</addr>
+
+        </interface>
+    </host>
+</network>

@@ -1,0 +1,167 @@
+//BQH0KSAD JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=20,CLASS=V,REGION=0M             
+//STEP1    EXEC SAS,TIME=100,OPTIONS='MEMSIZE=0'                        
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)                                     
+//OUT      DD DISP=(NEW,CATLG,DELETE),UNIT=NCHS,                                
+//            DSN=DWJ2.KS02.NAT.ADOPTIVE,                               
+//            DCB=(LRECL=255,RECFM=FB),                                         
+//            SPACE=(CYL,(10,2),RLSE)                                           
+//SYSIN    DD *                                                                 
+
+options nosource;
+ /*---------------------------------------------------------------------
+  *     Name: KSADOPT
+  *
+  *  Summary: Using several merged files, find the first record from 
+  *           the first (i.e. lowest shipment number) possible merged
+  *           file, using a given list of certificate numbers. Write the
+  *           matches to a new file.
+  *
+  *  Created: Mon 24 Feb 2003 12:53:03 (Bob Heckel)
+  *---------------------------------------------------------------------
+  */
+options source obs=max;
+
+ /* DEBUG */
+***filename OUT 'junk';
+
+  /* Highest shipment number for KS in 2002 as of today. */
+%global TOPSHIPMENT;
+%let TOPSHIPMENT=52;
+
+ /* Need a placeholder ds to use for gaps in the medmer file shipment
+  * numbers so that iteration will still work.
+  * E.g. the series runs 'BF19.KSX0201.NATMER' 'BF19.KSX0202.NATMER'
+  * 'BF19.KSX0206.NATMER' ...
+  */
+%macro Placeholder;
+  data work.placehold;
+    ph=0;
+  run;
+%mend Placeholder;
+%Placeholder
+
+
+ /* Merged file shipment numbers use zero pads, this allows the DO loops
+  * to use non-padded numbers while the filenames get their 01, 02... 
+  */
+%macro Zeropad(numb);
+  %global num;
+  %if &numb < 10 %then
+    %do;
+      %let num=0&numb;
+    %end;
+  %else
+    %let num=&numb;
+%mend Zeropad;
+
+
+ /* Create a ds for each file in the known range of KS merged files. */
+%macro Iterate;
+  %local i;
+  %do i=1 %to &TOPSHIPMENT;
+    /* Set &num */
+    %Zeropad(&i);
+    %if %sysfunc(fileexist(BF19.KSX02&num..NATMER)) %then
+      %do;
+        filename IN "BF19.KSX02&num..NATMER" LRECL=255;
+        data work.tmp&num;
+          length fname $ 55  myname $ 55;
+          infile IN FILENAME=fname TRUNCOVER;
+          input @3 certno $char6.  @;
+          /* DEBUG */
+          /***
+          if certno in('000022', '23', '000024', '000025',
+                       '000030', '000222', '000323', '000121');
+          ***/
+          if certno in('004341', '007281', '007491', '007521',
+                       '007528', '007529', '007853', '007950',
+                       '008190', '008300', '008587', '008680',
+                       '008739', '008920', '009451', '009502',
+                       '009665', '009796', '010091', '010495',
+                       '010542', '010610', '010907', '011222',
+                       '011594', '011624', '011640', '011867',
+                       '011882', '012636', '012852', '013016',
+                       '013017', '013239', '014061', '014180',
+                       '014193', '014337', '014507', '014812',
+                       '014845', '014891', '014935', '015649',
+                       '015734', '015750', '015866', '016404',
+                       '016479', '016617', '017280', '017309',
+                       '017748', '017857', '017939', '018046',
+                       '018068', '018269', '018532', '019288',
+                       '019810', '020066', '020067', '020226',
+                       '020497', '020705', '020893', '021129',
+                       '021164', '021490', '021491', '021518',
+                       '021535', '021553', '021581', '021645',
+                       '021805', '021835', '022099', '022198',
+                       '022445', '022474', '022796', '022838',
+                       '022993', '023014', '023126', '023282',
+                       '023327', '023333', '023853', '024296',
+                       '024525', '024955', '025371', '025388',
+                       '025692', '025744', '025788', '025906',
+                       '026234', '026240', '026646', '027272',
+                       '027455', '027706', '027711', '027776',
+                       '028008', '028293', '028603', '028688',
+                       '028811', '028962', '029964', '030029',
+                       '030529', '030664', '031000', '031435',
+                       '031584', '031651', '031654', '032049',
+                       '032123', '032386', '032466', '032487',
+                       '032597', '033064', '033231', '033336',
+                       '033871', '033899', '034364', '034395',
+                       '034491', '034512', '034755', '035875',
+                       '036085'
+                      );
+          input @1 block $char255.;
+          myname=fname;
+        run;
+      %end;
+    %else
+      %do;
+        /* The merged file for the current number doesn't exist. */
+        data work.tmp&num; 
+          set work.placehold; 
+        run;
+      %end;
+  %end;
+%mend Iterate;
+%Iterate
+
+
+ /* Create one ds from all &TOPSHIPMENT ds created above. */
+%macro Concatenate;
+  %local j dsnames;
+  %do j=1 %to &TOPSHIPMENT; 
+    %Zeropad(&j);
+    /* Build the set statement's parameters. */
+    %let dsnames=&dsnames work.tmp&num;
+  %end;
+
+  data work.all;
+    set &dsnames;
+  run;
+%mend Concatenate;
+%Concatenate
+
+
+proc sort data=work.all;
+ by certno;
+run;
+
+
+data work.firstonly (keep= block);
+  set work.all;
+
+  by certno;
+  /* Get rid of placeholder data. */
+  if ph eq 0 then delete;
+  if first.certno then
+    output;
+run;
+
+
+data _NULL_;
+  set work.firstonly;
+
+  file OUT;
+  /* Leading spaces exist, must use $char255 to keep MF happy. */
+  put @1 block $char255.;
+run;

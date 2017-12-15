@@ -1,0 +1,61 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: subdirclr
+#
+#  Summary: Clean out, i.e. delete, the files (but not directories) in a tree.
+#
+#           TODO can't 'use strict' very easily.
+#
+#  Created: Fri 12 Jul 2002 15:06:36 (Bob Heckel)
+# Modified: Thu 23 Sep 2004 16:40:06 (Bob Heckel)
+##############################################################################
+
+if ( $#ARGV ) {
+  print STDERR "Usage: $0 directorytoclear\n";
+  exit 1;
+}
+
+$n = 0;
+
+print "Caution!  This will delete all files (but not directories) " .
+      "in\n$ARGV[0]\nContinue? y/[n] ";
+chomp($y_or_n = <STDIN>); 
+if ( $y_or_n =~ /n/i || ! $y_or_n ) { 
+  exit 1;
+}
+
+@f = Traverse($ARGV[0]);
+
+for ( @f ) {
+  ###print "deleted file: $_\n" if -f;
+  $n++ if -f;
+  # TODO use -v to display what will be whacked
+  print "$_\n";
+  unlink $_;
+}
+
+print "\n\n$n file(s) deleted\n";
+
+# DEBUG 
+###system("ls -R $ARGV[0]");
+
+
+sub Traverse {
+  my $dir = shift;
+
+  opendir($dir, $dir) || die "Cannot open $dir: $!";
+  
+  while ( $dirent = readdir($dir) ) {
+    # Throw out '.' and '..'
+    next if (($dirent eq ".") || ($dirent eq ".."));
+
+    $path = $dir."/".$dirent;
+    push(@path, $path);
+    
+    # Recurse for directories.
+    Traverse($path) if (-d $path);
+  }
+  closedir($dir);
+  
+  return @path;
+}

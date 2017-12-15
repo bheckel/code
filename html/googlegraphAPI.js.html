@@ -1,0 +1,26 @@
+<html>
+<script>
+  var simpleEncoding = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+ 
+  function simpleEncode(values,maxValue) {
+    var chartData = ['s:'];
+    for (var i = 0; i < values.length; i++) {
+      var currentValue = values[i];
+      if (!isNaN(currentValue) && currentValue >= 0) {
+        chartData.push(simpleEncoding.charAt(Math.round((simpleEncoding.length-1) * currentValue / maxValue)));
+      } else {
+        chartData.push('_');
+      }
+    }
+    grph = "<img src='http://chart.apis.google.com/chart?chs=200x125&amp;chd=" + chartData.join('') + "&amp;cht=lc&amp;chxt=x,y&amp;' alt='Sample chart'/>";
+    ///document.getElementById('mytxt').innerHTML=chartData.join('');
+    document.getElementById('mytxt').innerHTML=grph;
+  }
+</script>
+
+<body onLoad="simpleEncode(simpleEncoding,5)">
+  foo
+  <h4 id="mytxt">placeholder where graph will go</h4>
+  bar
+</body>
+</html>

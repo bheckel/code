@@ -1,0 +1,830 @@
+<HTML>
+<HEAD>
+<TITLE>
+Linux Magazine | February 2001 | COMPILE TIME | Programming with Threads
+</TITLE>
+</HEAD>
+<BODY BGCOLOR="#EFEFEF" LINK="#0000FF" ALINK="#0000FF" VLINK="#0000FF">
+<p><b><font face="Arial, Helvetica, Sans-Serif" size="-1">Copyright Linux Magazine &copy;2001</p></b></font>
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+
+
+<DIV CLASS ="SECTION"><FONT FACE="Arial,Helvetica,sans-serif"><B> COMPILE TIME </B></FONT></DIV>
+
+
+<DIV CLASS ="TITLE"><FONT SIZE="5" COLOR="#DC143C"> Programming with Threads </FONT></DIV>
+
+
+<DIV CLASS ="AUTHOR"><FONT SIZE="2" FACE="Arial,Helvetica,sans-serif">by  Benjamin Chelf </FONT></DIV>
+<BLOCKQUOTE>
+
+<P CLASS ="LEADPARA">Last month we looked at using pipes and FIFOs to communicate between concurrently running processes. However, there are occasions when you might want to run two pieces of code concurrently without the limitations of communicating through pipes. Perhaps you have two (or more) pieces of code that need to share a set of data or are constantly updating shared data structures. Pipes and FIFOs are not well-suited to handle this kind of situation because they would require each process to keep its own copy of the data and to communicate with all other processes when that data changes. Such an arrangement would cause a great deal of problems and would be very difficult to debug.</P>
+
+ <P>Fortunately, Linux provides us with "threads," a programming tool for handling situations like these. Threads allow two or more pieces of code that are running concurrently to share the same set of resources. In this article I will introduce threads and the basic functions of the <I>pthreads</I> library that are necessary to create multiple threads of execution in your applications.</P>
+
+ <P>Threads (sometimes referred to as "threads of execution") differ from simultaneously running processes because they share the same pool of memory. Even if you have never explicitly programmed with threads before, all the programs you've written have implicitly contained a single thread (the thread that calls your <TT>main()</TT> function at the beginning of the program and exits when the code in <TT>main()</TT> is finished). </P>
+
+ <P>You can think of each new thread that you create as another <TT>main()</TT> function that is called when it is created. For each thread that is created, its <TT>main()</TT> function is run in parallel with all other currently running threads. It is up to the operating system to make sure that all of these threads get a specific amount of time to run. This is transparent to the programmer, and the program behaves as if the threads are actually running at the same time (on multi-processor systems, it is possible for two or more threads to actually be executing instructions simultaneously).</P>
+
+ <P>There are many situations where threads are the appropriate tools to use in your applications. Threads are useful when you need responsiveness in your main application while other tasks need to be completed at the same time. For example, a Web server may detect requests for pages and, once a request comes in, create a new thread to handle the request while continuing to check for new requests. This way, the server can be responsive to incoming requests even while another thread continues to handle the request that has come in. Threads are also useful when your program contains multiple agents that need to act in parallel. Later in this column, we'll look at a sample program that uses threads to set up a simple ticket agency with one thread for each person selling tickets.</P>
+
+<P CLASS ="SUBHEAD"><B>Some pthread Functions</B></P>
+
+
+ <P>If you have programmed with threads before, feel free to skip the rest of this paragraph. For the rest of you, a warning -- programming with threads is hard. If you've never used threads before and have only written sequential programs (programs that have a single "thread" of execution that starts at the beginning of the <TT>main()</TT> function and continues until the end of the function), you will soon discover that having multiple functions in your program executing at the same time adds a level of complexity that almost everyone underestimates. It's a good idea to make sure that threads are absolutely necessary before using them. If a solution exists without threads, it will almost certainly be easier to debug than its counterpart solution with threads. That being said...</P>
+
+ <P>In this article we'll look at the three most basic functions used in threads programming. In future articles we'll look at some more advanced functions that you can use to write effective threaded applications.</P>
+
+ <P>To create a thread, use the <TT>pthread_create()</TT> function. Its prototype, as defined in <I>pthread.h,</I> can be found in <I>Figure One </I>.</P>
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" CELLSPACING ="2" BORDER ="1" CLASS ="LISTING" CELLPADDING ="4"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>Figure One: Prototype of the pthread_create () Function</I></FONT></P></DIV><DIV>
+<PRE>int pthread_create (pthread_t* thread, pthread_attr_t* attr, 
+                   void* (*start_routine)(void* data), void* data);
+</PRE></DIV></TD></TR></TABLE>
+
+ <P>This function returns 0 on success, and the new thread is immediately started and run concurrently with the function that called <TT>pthread_create()</TT>. On failure, the function returns a non-zero value. See the man page of the function for more details about failure codes.</P>
+
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+
+
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+<!-- HTML, 2 -->
+
+<!-- HEAD, 2 -->
+
+<!-- BODY, 2 -->
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+<!--#include virtual="/ssi/leftbar.ssi"-->
+
+		<TD>
+<center><!--#include virtual="/cgi-bin/randomize"--></center>
+
+<P></P>
+<!-- END TOP TREENAV -->
+<P></P>
+
+
+
+
+<BLOCKQUOTE>
+
+ <P>Let's now discuss the parameters you must pass to the <TT>pthread_create()</TT> function. The first argument, <TT>thread</TT>, is a pointer to a thread structure (of type <TT>pthread_t</TT>) that represents the newly created thread. The <TT>pthread_create()</TT> function fills in the necessary data in the structure so that you can use it to reference the new thread in subsequent calls to other thread functions. The second argument, <TT>attr</TT>, represents the attributes that you wish to give the thread you are creating. I will discuss different thread attributes in a later article. For now, you can just pass NULL for this argument. The next argument, <TT>start_routine</TT>, is the function that you wish to run in your new thread. This function must have prototype:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>void* thread_function (void* data);
+</PRE></P></DIV>
+
+ <P>Finally, the fourth parameter, <TT>data</TT>, is the parameter that is passed to the thread function, <TT>start_routine</TT>, when it is called. For an example of a simple program that uses <TT>pthread_create</TT>, take the following:</P>
+
+ <P>Imagine that we run a ticket sales agency. We have 100 tickets to sell to anyone who wants them and also have a number of ticket agents (more than 1) selling the tickets for us. The ticket agents sit at their computers, taking phone calls and registering the tickets they sell. We could model the ticket selling process with the C code:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>int num_tickets_left = 100;
+
+void* ticket_agent (void* not_used)
+{
+   /* While there are still tickets left to 
+      be sold, attempt to sell a ticket. */
+   while (num_tickets_left > 0)
+      {
+         int sold_ticket_p = answer_phone ();
+         /* If the person bought a ticket,
+          update the number of remaining 
+          tickets. */
+            if (sold_ticket_p)
+         num_tickets_left--;
+      }
+
+   return NULL;
+}
+</PRE></P></DIV>
+
+ <P>To create threads to sell tickets with five ticket agents, our main program would look something like <I>Figure Two.</I></P>
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" CELLSPACING ="2" BORDER ="1" CLASS ="LISTING" CELLPADDING ="4"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>Figure Two: Creating Threads to Run ticket_agent ()</I></FONT></P></DIV><DIV>
+<PRE>#include &lt;pthread.h>
+
+#define NUM_AGENTS 5
+int main (int argc, char** argv)
+{
+   pthread_t agents[NUM_AGENTS];
+   int i;
+  
+   /* Create NUM_AGENTS threads, one for each agent. */
+   for (i = 0; i &lt; NUM_AGENTS; i++)
+      if (pthread_create (&agents[i], NULL, ticket_agent, NULL) != 0)
+         fprintf (stderr, "Could not create thread %d\n", i);
+}
+</PRE></DIV></TD></TR></TABLE>
+
+
+ <P>This program will create five threads, each one running the <TT>ticket_agent()</TT> function defined above. Immediately after each thread is created it starts executing, so the first ticket agent will start before the second ticket agent. Once <TT>main()</TT> creates all five threads, there will be a total of six threads executing: main itself and each of the five ticket agents. However, this program does not work exactly the way we'd like it to. Like any other program, once the <TT>main()</TT> function exits, the process stops, regardless of any threads that may still be running. After <TT>main()</TT> creates the five threads, there are no more instructions to be executed, so it exits. This is clearly no good, since we would like to exit only after all the threads have finished selling tickets.</P>
+
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+
+
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+<!-- HTML, 3 -->
+
+<!-- HEAD, 3 -->
+
+<!-- BODY, 3 -->
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+<!--#include virtual="/ssi/leftbar.ssi"-->
+
+		<TD>
+<center><!--#include virtual="/cgi-bin/randomize"--></center>
+
+<P></P>
+<!-- END TOP TREENAV -->
+<P></P>
+
+
+
+
+<BLOCKQUOTE>
+
+ <P>The <TT>pthread_join()</TT> function solves the problem of <TT>main()</TT> exiting before the created threads do the work that we want them to. This function allows any thread to wait on another thread. Once the <TT>pthread_join()</TT> function is called on a thread, the caller is "joined" to that thread. This means its execution will be suspended until that thread has finished executing. The prototype for the <TT>pthread_join()</TT> function is:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>int pthread_join (pthread_t th, void** thread_return);
+</PRE></P></DIV>
+
+ <P>It returns 0 on success and non-zero on failure. See the man page for a list of different error codes that <TT>pthread_ join()</TT> can return. This function takes two arguments -- the thread with which to join (<TT>th</TT>) and a pointer to the return value (<TT>thread_return</TT>). The return value of the joined thread will be placed in this parameter as a method of communicating information. Note that only one thread may join any given thread. Also, a thread may not join itself. To augment our <TT>main()</TT> function to sell tickets instead of instantly exiting after creating the ticket agents, we simply add the code to join on all the ticket agents. The result is contained below:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>int main (int argc, char** argv)
+{
+   pthread_t agents[NUM_AGENTS];
+   void* return_values[NUM_AGENTS];
+   int i;
+   /* Create NUM_AGENTS threads, one for each agent. */
+   for (i = 0; i &lt; NUM_AGENTS; i++)
+      pthread_create (&agents[i], NULL, ticket_agent, NULL);
+   /* Join on all the threads to wait for them to finish. */
+   for (i = 0; i &lt; NUM_AGENTS; i++);
+      pthread_join (agents[i], &return_values[i]);
+}
+</PRE></P></DIV>
+
+ <P>This program will create five ticket agent threads and wait to exit until they are all finished selling tickets. Go ahead and try this simple threads program. You'll need to write a function to simulate the ticket agent taking a phone call. You may wish to have the ticket agent simulate a phone call by sleeping for a random amount of time. Also, if you make each agent print out a message when it sells a ticket, you'll be able to track how many tickets are being sold. You might even want to pass each thread a number when you create it so you can distinguish between the threads selling the tickets.</P>
+
+ <P>The final function I wish to discuss is the very simple function <TT>pthread_exit</TT>. Its prototype is:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>void pthread_exit (void* retval);
+</PRE></P></DIV>
+
+ <P>This function simply causes the thread that calls it to immediately exit. This is equivalent to the following statement:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>return retval;
+</PRE></P></DIV>
+
+ <P>which is in the function that is passed to <TT>pthread_ create</TT>. While in this function, there is no difference between using <TT>return</TT> and <TT>pthread_exit</TT>. However, <TT>pthread_exit</TT> is useful when you wish the thread to finish instantly, even when you are not in the original thread function.</P>
+
+ <P>Now that we've looked at the thread functions, let's return to the complexity involved in programming with threads and concurrent programming in general. If you try to run the above ticket agent program, you might notice that sometimes more than 100 tickets are sold. The <TT>ticket_agent()</TT> function is a simple one and will successfully sell 100 tickets if only one agent is running this function. However, if more than one ticket agent runs this function at the same time, there's a serious bug in the code! </P>
+
+ <P>Imagine there are two ticket agents in our agency. Each one runs the <TT>ticket_agent()</TT> function, happily selling tickets to the people that request them. After a while, the number of tickets left creeps down to one. Each ticket agent checks to see if the number of tickets left is greater than 0. Each ticket agent sees that it is and then answers the phone. Since the value of <TT>num_tickets_left</TT> is 1 and both agents can decrease this value by 1, a ticket can be sold that doesn't exist! If we had 10 ticket agents, nine extra tickets could be sold. Clearly, this is a bug in our program (unless we work for an airline!) and demonstrates one of the difficulties inherent in programming with multiple threads of execution.</P>
+
+ <P>As I mentioned before, programming with threads can make things much more complicated, and they should be used only when necessary. That said, threads are very useful and are required in many applications. Hopefully this article has whet your appetite for the more advanced threads programming features we'll be looking at in future columns. Next time, we'll look at how to avoid the aforementioned ticket selling problem as well as several other problems that exist in concurrent programming. In the meantime, happy hacking!</P>
+
+<P><HR></HR></P>
+
+<P>
+ <I>Benjamin Chelf is an author and engineer at CodeSourcery, LLC. He can be reached at <a href="mailto:chelf@codesourcery.com">chelf@codesourcery.com</a>.</I>
+</P>
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+ 
+<HTML>
+<HEAD>
+<TITLE>
+Linux Magazine | March 2001 | COMPILE TIME | Threads and Mutexes: Part II
+</TITLE>
+</HEAD>
+<BODY BGCOLOR="#EFEFEF" LINK="#0000FF" ALINK="#0000FF" VLINK="#0000FF">
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+
+<DIV CLASS ="SECTION"><FONT FACE="Arial,Helvetica,sans-serif"><B> COMPILE TIME </B></FONT></DIV>
+
+
+<DIV CLASS ="TITLE"><FONT SIZE="5" COLOR="#DC143C"> Threads and Mutexes: Part II </FONT></DIV>
+
+
+<DIV CLASS ="AUTHOR"><FONT SIZE="2" FACE="Arial,Helvetica,sans-serif">by  Benjamin Chelf </FONT></DIV>
+
+
+<BLOCKQUOTE>
+
+<P CLASS ="LEADPARA">Welcome to the second part of our look at programming with threads. In last month's column we talked about the functions that allow you to create and wait on threads. This month we're going to dive deeper into the problems that often arise when using threads to write concurrent programs. Before we begin that however, we'll return to the ticket agent example we looked at last month and discuss the solution to the problem of over-selling of tickets.</P>
+
+ <P>One quick note before we proceed: If you're writing applications that use the <I>pthreads</I> libraries for Linux, you must include the option <TT>-lpthread</TT> as a flag to the compiler on the command line. This will tell the compiler and linker to look for the necessary functions in the <I>pthreads</I> library and link them into your application.</P>
+
+
+<P CLASS ="SUBHEAD"><B>The Ticket Agency</B></P>
+
+
+ <P>As we saw last month, using threads allows you to have multiple pieces of code that share and operate on a common set of data. However, threads introduce additional complexity and create code that is often difficult to debug. Let's return to our ticket agency example. Each ticket agent may be thought of as one thread. There is common data between the ticket agents -- the number of tickets to be sold. Our goal is to sell all the tickets without selling too many. Each ticket agent can be modeled with the C function: </P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>void* ticket_agent (void* foo)
+   {
+      while (total_sold &lt; NUM_TICKETS)
+         {
+            if (sold_ticket ())
+               total_sold++;
+         }
+      return NULL;
+   }
+</PRE></P></DIV>
+
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" CELLSPACING ="2" BORDER ="1" CLASS ="LISTING" CELLPADDING ="4"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>Figure One: The ticket_agent() Function</I></FONT></P></DIV><DIV>
+<PRE>int main ()
+{
+   pthread_t agents[NUM_AGENTS];
+   void* return_val;
+   int i;
+   srand (time (0));
+   for (i = 0; i &lt; NUM_AGENTS; i++)
+      pthread_create (&agents[i], NULL, ticket_agent, NULL);
+   for (i = 0; i &lt; NUM_AGENTS; i++)
+      pthread_join (agents[i], &return_val);
+   printf ("%d\n", total_sold);
+   return 0;
+}
+</PRE></DIV></TD></TR></TABLE>
+
+ <P>Then ticket agents can be created as threads in the <TT>main()</TT> function, as shown in <I>Figure One.</I> This program seems simple. Ticket agents should sell tickets until they're all gone. Then, the <TT>main()</TT> function prints out the total number of tickets sold. However, if we actually run this program, we get some disturbing results. We need to add a few global variables:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>#define NUM_TICKETS 10000000
+#define NUM_AGENTS 4
+int total_sold = 0;
+</PRE></P></DIV>
+
+
+
+</BLOCKQUOTE>
+
+<BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+
+
+
+
+
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+<!-- HTML, 2 -->
+
+<!-- HEAD, 2 -->
+
+<!-- BODY, 2 -->
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+<!--#include virtual="/ssi/leftbar.ssi"-->
+
+		<TD>
+<center><!--#include virtual="/cgi-bin/randomize"--></center>
+
+<P></P>
+<!-- END TOP TREENAV -->
+<P></P>
+
+
+
+
+<BLOCKQUOTE>
+
+ <P>If we run the program ten times, we will get the following:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>mordack:~> ./a.out
+10000001
+mordack:~> ./a.out
+10000002
+mordack:~> ./a.out
+10000001
+mordack:~> ./a.out
+10000001
+mordack:~> ./a.out
+10000000
+mordack:~> ./a.out
+10000000
+mordack:~> ./a.out
+10000001
+mordack:~> ./a.out
+10000001
+mordack:~> ./a.out
+10000001
+mordack:~> ./a.out
+10000001
+mordack:~>
+</PRE></P></DIV>
+
+ <P>Notice that the program sold too many tickets eight out of the ten times! In fact, one of those times it sold two extra tickets. Automating this process and running the program 10,000 times yielded the following results:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>mordack:~> ./a.pl
+Over sold 0 exactly 3924 times.
+Over sold 1 exactly 4735 times.
+Over sold 2 exactly 1341 times.
+Over sold 3 exactly 0 times.
+</PRE></P></DIV>
+
+ <P>This tells us that the program is only working correctly about 40 percent of the time. The rest of the time we are over-selling the number of tickets we have. Why?</P>
+
+ <P>Imagine, near the end of the program, when all but one of the tickets have been sold. One ticket agent, Bob, checks the value of the <TT>total_sold</TT> variable to make sure he can still sell a ticket. At that instant, the operating system's thread scheduler decides it's time for Bob to stop running and time for Sally to run for a while. Before Bob has had a chance to update the value of <TT>total_sold</TT>, Sally checks to make sure she can sell a ticket. Hence, both Bob and Sally can increase the value of <TT>total_sold</TT> when it is only one shy of the total number of tickets.</P>
+
+
+<P CLASS ="SUBHEAD"><B>Race Conditions</B></P>
+
+
+ <P>Computer scientists refer to this problem as a "race condition." The problem exists because multiple threads are racing to update the values of variables based on previous values of those variables. A race condition exists any time the speed of execution of a thread, or the way threads are scheduled, can alter the outcome of the application. Race conditions are amongst the most common and most difficult problems to track down.</P>
+
+ <P>In our ticket agent program, the race condition exists because each ticket agent assumes that once the value of <TT>total_sold</TT> in the <TT>while()</TT> loop has been checked, that value will remain unchanged throughout the body of the loop. However, since the thread scheduler may stop the currently running thread and allow another thread to execute during that time, this is not a valid assumption.</P>
+
+ <P>Fortunately, the <I>pthreads</I> library provides a mechanism for avoiding this problem -- the "mutex," which is an abbreviation for "mutual exclusion." A mutex allows one thread to "lock" a given piece of code so that no other thread may execute until the piece of code holding the lock is finished. In the case of our ticket agency, Bob wanted to make sure that once he read the value of <TT>total_ sold</TT>, he could sell one ticket and know that he wasn't selling a ticket that no longer existed. In other words, he wanted all of the code in his <TT>while()</TT> loop to be executed without the possibility of some other thread executing. Bob could guarantee that the value of <TT>total_sold</TT> would not change if a mutex were used.</P>
+
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+
+
+
+
+
+
+
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+<!-- HTML, 3 -->
+
+<!-- HEAD, 3 -->
+
+<!-- BODY, 3 -->
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+<!--#include virtual="/ssi/leftbar.ssi"-->
+
+		<TD>
+<center><!--#include virtual="/cgi-bin/randomize"--></center>
+
+<P></P>
+<!-- END TOP TREENAV -->
+<P></P>
+
+
+
+
+<BLOCKQUOTE>
+
+ <P>First, let's look at the <I>pthreads</I> library functions that enable you to use mutexes:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>int pthread_mutex_lock(pthread_mutex_t* mutex);
+
+intpthread_mutex_unlock(pthread_mutex_t*mutex);
+</PRE></P></DIV>
+
+ <P>These functions both return 0 on success and an error value on failure; see the manual page for more details. A thread obtains a mutex by calling the <TT>pthread_mutex_ lock()</TT> function. When one thread has the mutex, any other thread that calls the <TT>pthread_mutex_lock()</TT> function will be put into a temporary state of suspended animation. Threads that are put into a state of suspended animation are referred to as "blocked." </P>
+
+ <P>Once the original thread calls the <TT>pthread_mutex_ unlock()</TT> function, <TT>pthread_mutex_lock()</TT> will return in one of the suspended threads that called it, and that thread will gain access to the mutex. By using the <TT>pthread_ mutex_lock()</TT> and <TT>pthread_mutex_unlock()</TT> functions around a given piece of code, you can guarantee that only one thread will be able to execute that code at any given time. </P>
+
+ <P>To create a mutex in Linux, simply declare it and assign it (in the declaration) as follows:</P>
+
+
+ <P><TT>pthread_mutex_tmy_mutex= PTHREAD_MUTEX_INITIALIZER;</TT></P>
+
+ <P>There also exists a function:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>int pthread_mutex_init
+pthread_mutex_t* mutex,const thread_mutexattr_t* mutexattr; 
+</PRE></P></DIV>
+
+ <P>you can use to initialize locks (with more information as to the type of lock and how it behaves).  For our example, however, <TT>PTHREAD_ MUTEX_INITIALIZER()</TT> is quite sufficient.</P>
+
+ <P>By placing a lock around the read and write of the <TT>total_ sold()</TT> variable, each ticket agent can make sure that no other ticket agent is editing that variable. This eliminates the race condition from the program. Let's take a look at the new <TT>ticket_agent()</TT> function in <I>Figure Two</I>.</P>
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" CELLSPACING ="2" BORDER ="1" CLASS ="LISTING" CELLPADDING ="4"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>Figure Two: The ticket_agent() Function with mutex</I></FONT></P></DIV><DIV>
+<PRE>pthread_mutex_t tickets_sold_lock = PTHREAD_MUTEX_INITIALIZER;
+
+void* ticket_agent (void* foo)
+{
+   int not_done = 1;
+   while (not_done)
+      {
+         pthread_mutex_lock (&tickets_sold_lock);
+         if (total_sold &lt; NUM_TICKETS)
+            {
+               if (sold_ticket ())
+                  total_sold++;
+            }
+         else
+            not_done = 0;
+         pthread_mutex_unlock (&tickets_sold_lock);
+      }
+   return NULL;
+}
+</PRE></DIV></TD></TR></TABLE>
+
+
+
+ <P>First of all, notice the calls to <TT>ptrhread_mutex_lock()</TT> and <TT>ptrhread_ mutex_unlock()</TT>. We needed to put these calls around the code that checks the value of <TT>total_sold</TT> and writes to the value of <TT>total_sold</TT> -- and we needed to put them inside the <TT>while()</TT> loop. </P>
+
+ <P>If we had placed the call to <TT>pthread_mutex_lock()</TT> before the <TT>while()</TT> loop and the call to <TT>ptrhread_mutex_unlock()</TT>  after the <TT>while()</TT> loop body, only one thread would have been able to sell tickets. It would acquire the lock before entering the <TT>while()</TT> loop, therefore causing all the other threads to block before entering their <TT>while()</TT> loops. It would only release the lock once it had exited the loop, after all the tickets had been sold. Therefore, in the modified version, we created our own local variable (<TT>not_done</TT>) to track when the <TT>while()</TT> loop should exit, and we moved the code to lock and unlock inside the loop. This way every thread gets a chance to sell tickets.</P>
+
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+
+
+
+
+
+
+
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+<!-- HTML, 4 -->
+
+<!-- HEAD, 4 -->
+
+<!-- BODY, 4 -->
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+<!--#include virtual="/ssi/leftbar.ssi"-->
+
+		<TD>
+<center><!--#include virtual="/cgi-bin/randomize"--></center>
+
+<P></P>
+<!-- END TOP TREENAV -->
+<P></P>
+
+
+
+
+<BLOCKQUOTE>
+
+ <P>After running this program 1,000 times, we got the following results:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>mordack:~> ./a.pl
+Over sold 0 exactly 10000 times.
+Over sold 1 exactly 0 times.
+Over sold 2 exactly 0 times.
+Over sold 3 exactly 0 times.
+</PRE></P></DIV>
+
+ <P>Note that we did not over-sell a ticket once in the 10,000 trial runs of the program. Although this does not guarantee that we do not have a race condition in our program, the results after the modification are much better than our original attempt.</P>
+
+
+<P CLASS ="SUBHEAD"><B>The Dining Philosophers</B></P>
+
+
+ <P>Now that we've illustrated the usefulness of mutexes, let's examine a program that requires their careful usage. A famous example in concurrent programming is the Dining Philosophers program. Imagine a group of philosophers sitting around a circular table. Philosophers only do two things -- think and eat. When a philosopher thinks, he has no effect on the other philosophers. When he eats however, he can potentially create a problem for the philosophers on his left and right.</P>
+
+ <P>You see, there is only one plate of rice in the middle of the table and only one chopstick between each philosopher. Everyone can eat the rice, but in order to do that, a philosopher must be able to pick up his two adjacent chopsticks. Therefore, if one of the philosophers is eating, the philosophers to his right and left can't eat until he puts down his chopsticks.</P>
+
+ <P>We can model this problem with a program that uses threads to represent the philosophers and an array of mutexes to represent the chopsticks. When a thread holds the lock for a chopstick it is equivalent to a philosopher using that chopstick to eat. The code for the program is shown in <I>Figure Three </I>.</P>
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" CELLSPACING ="2" BORDER ="1" CLASS ="LISTING" CELLPADDING ="4"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>Figure Three: Dining Philosophers -- Part I</I></FONT></P></DIV>
+
+<DIV>
+<PRE>#include &lt;pthread.h>
+#include &lt;stdio.h>
+
+#define NUM_PHILOSOPHERS 5
+
+pthread_mutex_t chopsticks[NUM_PHILOSOPHERS];
+
+void think ()
+{
+   /* Intentionally left blank. Simulate thinking. */
+}
+
+void eat ()
+{
+   /* Intentionally left blank. Simulate eating. */
+}
+
+void* philosopher (void* number)
+{
+   int my_num = *((int*)number);
+   while (1)
+      {
+         /* First we think. */
+         think ();
+
+         /* Grab the chopsticks to my left and to my right */
+         pthread_mutex_lock (&chopsticks[my_num]);
+          pthread_mutex_lock (&chopsticks[(my_num + 1) % 
+                             NUM_PHILOSOPHERS]);
+
+         /* Eat */
+         printf ("Philosopher %d eating!\n", my_num);
+         eat ();
+         printf ("Philosopher %d done!\n", my_num);
+
+         /* Put the chopsticks down. */
+          pthread_mutex_unlock (&chopsticks[(my_num + 1) %
+                               NUM_PHILOSOPHERS]);
+         pthread_mutex_unlock (&chopsticks[my_num]);
+      }
+   return NULL;
+}
+
+int main ()
+{
+   int i;
+   pthread_t phils[NUM_PHILOSOPHERS];
+   void* return_val;
+
+   for (i = 0; i &lt; NUM_PHILOSOPHERS; i++)
+      pthread_mutex_init (&chopsticks[i], NULL);
+
+   for (i = 0; i &lt; NUM_PHILOSOPHERS; i++)
+      pthread_create (&phils[i], NULL, philosopher, &i);
+
+   for (i = 0; i &lt; NUM_PHILOSOPHERS; i++)
+      pthread_join (phils[i], &return_val);
+
+   return 0;
+}
+</PRE></DIV>
+
+</TD></TR></TABLE>
+
+
+ <P>The <TT>main()</TT> function of this program creates all the philosopher threads and passes them a number, 0 through NUM_ PHILOSOPHERS - 1, so that the philosopher threads know which chopsticks to grab. This program seems simple enough, but there is a serious problem. If we run it we'll see that a lot of philosophers eat, but at some point the program will hang. It will hang at a different point each time we run it. </P>
+
+
+</BLOCKQUOTE>
+<BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD></TR></TABLE>
+
+
+
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+<!-- HTML, 5 -->
+
+<!-- HEAD, 5 -->
+
+<!-- BODY, 5 -->
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+<!--#include virtual="/ssi/leftbar.ssi"-->
+
+		<TD>
+<center><!--#include virtual="/cgi-bin/randomize"--></center>
+
+<P></P>
+<!-- END TOP TREENAV -->
+<P></P>
+
+
+
+
+<BLOCKQUOTE>
+
+<P CLASS ="SUBHEAD"><B>Deadlock</B></P>
+
+
+ <P>Consider the situation where every philosopher decides to eat at the same time. Because of the way we wrote this program, every philosopher will grab the chopstick to his right and then grab the chopstick to his left. However, imagine this scheduling of threads: Philosopher 0 grabs chopstick 0 and then gets swapped out, Philosopher 1 grabs chopstick 1 and then gets swapped out, and so on. Each philosopher will grab one chopstick and then wait to get the other one. However, since all the philosophers are waiting, and none are eating, they will continue to wait like that forever. This problem is called deadlock.</P>
+
+ <P>There is no blanket way to solve deadlock. However, there are two possible ways to eliminate the deadlock problem that exists in the Dining Philosophers program. (Why else would computer scientists like it so much?) The first solution involves using another mutex. You might have observed that the problem causing the deadlock was that a philosopher was able to grab one chopstick but then gets swapped out while another thread runs. This could be considered a race condition on the chopsticks. Each philosopher is racing to grab a second chopstick, assuming that after grabbing one chopstick, they will eventually be able to grab the other. As in the ticket agent problem, if we create a lock to make sure that only one philosopher attempts to grab chopsticks at a time, we can be sure that the philosopher will eventually get two chopsticks. The new code for the philosopher function is listed in <I>Figure Four.</I></P>
+
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" CELLSPACING ="2" BORDER ="1" CLASS ="LISTING" CELLPADDING ="4"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>Figure Four: Dining Philosophers -- Part II</I></FONT></P></DIV><DIV>
+<PRE>pthread_mutex_t chopstick_lock = PTHREAD_MUTEX_INITIALIZER;
+
+void* philosopher (void* number)
+{
+   int my_num = *((int*)number);
+   while (1)
+      {
+         /* First we think */
+         think ();
+
+         /* First get the lock on grabbing chopsticks.
+            Then, grab the chopstick to my left and to my right */
+         pthread_mutex_lock (&chopstick_lock);
+
+         pthread_mutex_lock (&chopsticks[my_num]);
+         pthread_mutex_lock (&chopsticks[(my_num + 1) % 
+                            NUM_PHILOSOPHERS]);
+
+         /* Release the chopstick grabbing lock. */
+         pthread_mutex_unlock (&chopstick_lock);
+
+         /* Eat */
+         printf ("Philosopher %d eating!\n", my_num);
+         eat ();
+         printf ("Philosopher %d done!\n", my_num);
+
+         /* Put the chopsticks down */
+          pthread_mutex_unlock (&chopsticks[(my_num + 1) % 
+                               NUM_PHILOSOPHERS]);
+         pthread_mutex_unlock (&chopsticks[my_num]);
+      }
+   return NULL;
+}
+</PRE></DIV></TD></TR></TABLE>
+
+ <P>Now that we've guaranteed that only one philosopher can grab chopsticks at any given time, we know that the philosopher will eventually get two of them. Since he is the only one in that section, the others must be either eating or thinking. </P>
+
+</BLOCKQUOTE>
+<BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD></TR></TABLE>
+
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+<!-- HTML, 6 -->
+
+<!-- HEAD, 6 -->
+
+<!-- BODY, 6 -->
+<!--#include virtual="/ssi/navbar.ssi"-->
+
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+<!--#include virtual="/ssi/leftbar.ssi"-->
+
+		<TD>
+<center><!--#include virtual="/cgi-bin/randomize"--></center>
+
+<P></P>
+<!-- END TOP TREENAV -->
+<P></P>
+
+
+
+
+<BLOCKQUOTE>
+ <P>The other solution to the problem is a bit more subtle. You might have realized that the problem with the philosophers in the original program was that they each tried to get the chopstick on the right first. If even one of the philosophers were to try to get the chopstick on the left first, the circularity that was causing the deadlock would be broken. For this solution, we simply make half of the philosophers grab the chopstick on their right first and the other half grab the chopstick on their left first. The code for this is shown in <I>Figure Five.</I></P>
+
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" CELLSPACING ="2" BORDER ="1" CLASS ="LISTING" CELLPADDING ="4"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>Figure Five: Dining Philosophers -- Part III</I></FONT></P></DIV><DIV>
+<PRE>void* philosopher (void* number)
+{
+   int my_num = *((int*)number);
+   while (1)
+      {
+         /* First we think. */
+         think ();
+
+         /* If I'm an even philosopher, grab chopsticks one way. */
+         if (my_num % 2)
+         {
+            pthread_mutex_lock (&chopsticks[my_num]);
+             pthread_mutex_lock (&chopsticks[(my_num + 1) % NUM_PHILOSOPHERS]);
+         }
+         /* Otherwise, grab them the other way. */
+         else
+         {
+             pthread_mutex_lock (&chopsticks[(my_num + 1) % NUM_PHILOSOPHERS]);
+            pthread_mutex_lock (&chopsticks[my_num]);
+         }
+
+         /* Eat */
+         printf ("Philosopher %d eating!\n", my_num);
+         eat ();
+         printf ("Philosopher %d done!\n", my_num);
+
+         /* Put the chopsticks down */
+          pthread_mutex_unlock (&chopsticks[(my_num + 1) % NUM_PHILOSOPHERS]);
+         pthread_mutex_unlock (&chopsticks[my_num]);
+      }
+   return NULL;
+}
+</PRE></DIV></TD></TR></TABLE>
+
+<P CLASS ="SUBHEAD"><B>No Easy Answers</B></P>
+
+
+ <P>As we said last month, writing bug-free programs with threads is difficult. Much care must be taken to insure correct behavior. There really are no easy fixes. The use of mutexes allows you to avoid race conditions, but unfortunately, as you can see in the case of the dining philosophers, mutexes introduce the possibility of creating a deadlock in your program. Unlike race conditions, which usually cause incorrect results, deadlocks cause the program to hang entirely, which makes them absolutely no fun to debug. You now hopefully have a better understanding of the issues involved in programming with threads and the tools necessary for writing effective applications with them. </P>
+
+<P><HR></HR></P>
+
+<P>
+ <I>Benjamin Chelf is an author and engineer at CodeSourcery, LLC. He can be reached at <a href="mailto:chelf@codesourcery.com">chelf@codesourcery.com</a>.</I>
+</P>
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+</BODY></HTML>

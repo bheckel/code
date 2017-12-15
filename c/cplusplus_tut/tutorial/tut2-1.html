@@ -1,0 +1,513 @@
+<html>
+<head>
+<title>C++ Tutorial: 2.1, Control Structures.</title>
+<META NAME="description" CONTENT="Conditional, repetitive and selective structures: if-else, while, do-while, for, switch. Loops, bifurcation and jumps: break, continue, goto, exit">
+<META NAME="keywords" CONTENT="conditions loops">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 2.1 </FONT><BR>
+ <FONT SIZE=5><B> Control Structures. </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<p>
+A program is usually not limited to a linear sequence of instructions. During its
+process it may bifurcate, repeat code or take decisions. For that purpose, C++ provides
+control structures that serve to specify what and how has to perform our program.
+
+<p>
+With the introduction of control sequences we are going to have to introduce
+a new concept:
+the <b><i>block of instructions</i></b>. A block of instructions is a group of instructions
+separated by semicolons (<tt>;</tt>) <U>but</U> grouped in a block delimited by
+curly bracket signs: <b><tt>{</tt></b> and <b><tt>}</tt></b>.
+
+<p>
+Most of the control structures that we will see in this section allow a generic
+<tt><b><i>statement</i></b></tt> as parameter, this refers to either a single instruction
+or a <U>block of instructions</U>, as we want. If we want the statement to be
+a single instruction we do not need to enclose it between curly-brackets
+(<TT><B>{}</B></TT>). If we want the
+statement to be more than a single instruction we must enclose them
+between curly brackets (<TT><B>{}</B></TT>) forming a block of instructions.
+
+<p>
+<h2>Conditional structure: <i>if</i> and <i>else</i></h2>
+It is used to execute an instruction or block of instructions only if a
+condition is fulfilled.  Its form is:<br>
+<blockquote><tt><b>if (</b><i>condition</i><b>) </b><i>statement</i></tt><br></blockquote>
+where <tt><i>condition</i></tt> is the expression that is being evaluated.
+If this condition is <TT><B>true</B></TT>, <TT><B><I>statement</I></B></TT> is executed.
+If it is false, <tt><i>statement</i></tt> is ignored (not executed) and the program
+continues on the next instruction after the conditional structure.
+<p>
+For example, the following code fragment prints out <tt><b>x is 100</b></tt> only
+if the value stored in variable <TT><B>x</B></TT> is indeed 100:<br>
+<blockquote>
+<tt>if (x == 100)<br>&nbsp; cout &lt;&lt; "x is 100";</tt><br>
+</blockquote>
+If we want more than a single instruction to be executed in case that
+<tt><i>condition</i></tt> is <TT><B>true</B></TT> we can specify a
+<i>block of instructions</i> using curly brackets <tt>{ }</tt>:
+<blockquote>
+<tt>if (x == 100)<br>&nbsp;{<br>&nbsp; cout &lt;&lt; "x is ";<br>
+&nbsp; cout &lt;&lt; x;<br>&nbsp;}</tt><br>
+</blockquote>
+
+<p>
+We can additionally specify what we want that happens if the condition
+is not fulfilled by using the keyword <i>else</i>. Its form used in conjunction
+with <TT><B>if</B></TT> is:<br>
+<blockquote>
+<tt><b>if (</b><i>condition</i><b>) </b><i>statement1</i><b> else </b><i>statement2</i></tt><br>
+</blockquote>
+For example:<br>
+<blockquote>
+<tt>if (x == 100)<br>&nbsp; cout &lt;&lt; "x is 100";<br>else<br>&nbsp; cout &lt;&lt; "x is not 100";</tt><br>
+</blockquote>
+prints out on the screen <tt><b>x is 100</b></tt> if indeed x is worth 100, but if it is
+not -and only if not- it prints out <tt><b>x is not 100</b></tt>.
+
+<p>
+The <i>if</i> + <i>else</i> structures can be concatenated with the intention of verifying
+a range of values. The following example shows its use telling if the present value
+stored in <b><tt>x</tt></b> is positive, negative or none of the previous, that is to say,
+equal to zero.<br>
+<blockquote>
+<tt>if (x &gt; 0)<br>&nbsp; cout &lt;&lt; "x is positive";<br>
+else if (x < 0)<br>&nbsp; cout &lt;&lt; "x is negative";<br>
+else<br>&nbsp; cout &lt;&lt; "x is 0";</tt><br>
+</blockquote>
+Remember that in case we want that more than a single instruction is executed we must
+group them in a <i>block of instructions</i> by using curly brackets <tt><B>{ }</B></tt>.
+
+<p>
+<h2>Repetitive structures or loops</h2><br>
+<i>Loops</i> have as objective to repeat a <I>statement</I> a certain number of times
+or while a condition is fulfilled.
+
+<dl>
+<p>
+<dt><b>The <i>while</i> loop.</b><br>
+<dd>
+Its format is:<br>
+<blockquote>
+<tt><b> while (</b><i>expression</i><b>) </b><i>statement</i></tt><br>
+</blockquote>
+and its function is simply to repeat <tt><i>statement</i></tt> while
+<tt><i>expression</i></tt> is true.
+<p>
+For example, we are going to make a program to count down using a <I>while</I> loop:<br>
+<P><CENTER>
+<TABLE WIDTH=90% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// custom countdown using while</I>
+#include &lt;iostream.h&gt;
+int main ()
+{
+  int n;
+  cout &lt;&lt; "Enter the starting number &gt; ";
+  cin &gt;&gt; n;
+  while (n&gt;0) {
+    cout &lt;&lt; n &lt;&lt; ", ";
+    --n;
+  }
+  cout &lt;&lt; "FIRE!";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Enter the starting number &gt; </B>8<BR>
+<B><TT>8, 7, 6, 5, 4, 3, 2, 1, FIRE!</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+When the program starts the user is prompted to insert a starting number for the countdown.
+Then the <tt><i>while</i></tt> loop begins, if the value entered by the user
+fulfills the condition <TT><B>n&gt;0</B></TT> (that <tt><b>n</b></tt> be greater than
+<tt><b>0</b></tt> ),
+the block of instructions that follows will execute indefinite times while the condition
+<tt><b>(n&gt;0)</b></tt> remains being true.
+<p>
+ All the process in the program above can be interpreted according to the following script:
+beginning in <tt><b>main</b></tt>:
+<ul>
+<li><b>1.</b> User assigns a value to <tt><b>n</b></tt>.
+<li><b>2.</b> The while instruction checks if <tt><b>(n&gt;0)</b></tt>. At this point
+there are two possibilities: 
+<ul><li><b>true:</b> execute <i>statement</i> (step <b>3,</b>)
+<li><b>false:</b> jump <i>statement</i>.  The program follows in step <tt><b>5.</b></tt>.</ul>
+<li><b>3.</b> Execute <i>statement</i>:<br>
+ <tt> cout &lt;&lt; n &lt;&lt; ", ";<br> --n;</tt><br>
+ (prints out <tt><b>n</b></tt> on screen and decreases <TT><B>n</B></TT> by 1).
+<li><b>4.</b> End of block. Return Automatically to step <b>2.</b>
+<li><b>5.</b> Continue the program after the block: print out <tt><b>FIRE!</b></tt> and end of program.
+</ul>
+<p>
+We must consider that the loop has to end at some point, therefore, within the block
+of instructions (loop's <tt><i>statement</i></tt>) we must provide some method that
+forces <tt><i>condition</i></tt> to become false at some moment, otherwise the loop will
+continue looping forever.
+In this case we have included <tt><b>--n;</b></tt> that causes the <TT><I>condition</I></TT>
+to become <TT><B>false</B></TT> after some loop repetitions: when <TT><B>n</B></TT> becomes
+<TT><B>0</B></TT>, that is where our countdown ends.
+<p>
+Of course this is a so simple action for our computer that the whole countdown is
+performed instantly without practical delay between numbers.
+<P>
+<dt><b>The <i>do-while</i> loop.</b><br>
+<dd>
+Format:<br>
+<blockquote>
+<tt><b>do </b><i>statement</i><b> while (</b><i>condition</i><b>);</b></tt><br>
+</blockquote>
+Its functionality is exactly the same as the <i>while</i> loop except that
+<tt><i>condition</i></tt> in the <I>do-while</I> is evaluated <U>after</U> the execution
+of <tt><i>statement</i></tt> instead of before, granting at least one execution of
+<tt><i>statement</i></tt> even if <tt><i>condition</i></tt> is never
+fulfilled. For example, the following program echoes any number you enter until
+you enter 0.
+<P><CENTER>
+<TABLE WIDTH=90% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// number echoer</I>
+#include &lt;iostream.h&gt;
+int main ()
+{
+  unsigned long n;
+  do {
+    cout &lt;&lt; "Enter number (0 to end): ";
+    cin &gt;&gt; n;
+    cout &lt;&lt; "You entered: " &lt;&lt; n &lt;&lt; "\n";
+  } while (n != 0);
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Enter number (0 to end): </B>12345<BR>
+<B>You entered: 12345</B><BR>
+<B>Enter number (0 to end): </B>160277<BR>
+<B>You entered: 160277</B><BR>
+<B>Enter number (0 to end): </B>0<BR>
+<B>You entered: 0</B><BR>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+The <I>do-while</I> loop is usually used when the condition that has to determine its end
+is determined within the loop statement, like in the previous case, where the user input
+within the block of intructions is what determines the end of the loop. If you never enter
+the <TT><B>0</B></TT> value in the previous example the loop will never end.
+
+<p>
+<dt><b>The <I>for</I> loop.</b><br>
+<dd>
+Its format is:<br>
+<blockquote>
+<tt><b>for (</b><i>initialization</i><b>; </b><i>condition</i><b>; </b><i>increase</i><b>) </b><i>statement</i>;</tt><br>
+</blockquote>
+and its main function is to repeat <tt><i>statement</i></tt> while
+<tt><i>condition</i></tt> remains true, like the <I>while</I> loop. But in addition,
+<TT><B>for</B></TT> provides places to specify an <TT><I>initialization</I></TT> instruction
+and an <TT><I>increase</I></TT> instruction. So this loop is specially designed to
+perform a repetitive action with a counter.
+<p>
+It works the following way:<br>
+<blockquote>
+1,  <TT><I>initialization</I></TT> is executed. Generally it is a initial value setting for a counter varible. This is executed only <U>once</U>.<br>
+2,  <tt><i>condition</i></tt> is checked, if it is <TT><B>true</B></TT> the loop continues, otherwise the loop finishes and <TT><I>statement</I></TT> is skipped.<br>
+3,  <tt><i>statement</i></tt> is executed. As usual, it can be either a single instruction or a block of instructions enclosed within curly brackets <tt><b>{ }</b></tt>.<br>
+4,  finally, whatever is specified in the <tt><i>increase</i></tt> field is executed and the loop gets back to step 2.<br>
+</blockquote>
+Here is an example of countdown using a <I>for</I> loop.
+<P><CENTER>
+<TABLE WIDTH=90% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// countdown using a for loop</I>
+#include &lt;iostream.h&gt;
+int main ()
+{
+  for (int n=10; n&gt;0; n--) {
+    cout &lt;&lt; n &lt;&lt; ", ";
+  }
+  cout &lt;&lt; "FIRE!";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>10, 9, 8, 7, 6, 5, 4, 3, 2, 1, FIRE! </TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+The <tt><i>initialization</i></tt> and <tt><i>increase</i></tt> fields
+are optional. They can be avoided but not the semicolon signs among them. Thus, for example
+we could write: <b><tt>for (;n&lt;10;)</tt></b> if we want to specify no
+<TT><I>initialization</I></TT> neither <TT><I>increase</I></TT>; or
+<b><tt>for (;n&lt;10;n++)</tt></b>
+if we want to include an <TT><I>increase</I></TT> field but not an <TT><I>initialization</I></TT>.
+
+<P>
+Optionally, using the comma operator (<TT><B>,</B></TT>) we can specify more than one
+instruction in any of the fields included in a <TT><B>for</B></TT> loop, like in
+<TT><I>initialization</I></TT>, for example. The comma operator (<TT><B>,</B></TT>) is an
+instruction separator, it serves to separate more than one instruction where only
+one instruction is generally expected. For example, suppose that we wanted to intialize
+more than one variable in our loop:
+<BLOCKQUOTE><TT><PRE>
+for ( n=0, i=100 ; n!=i ; n++, i-- )
+{
+  <FONT COLOR="green"><I>// whatever here...</I></FONT>
+}
+</PRE></TT></BLOCKQUOTE>
+This loop will execute 50 times if neither <TT><B>n</B></TT> nor <TT><B>i</B></TT> are
+modified within the loop:
+<BLOCKQUOTE><IMG SRC="imgloop1.gif"></BLOCKQUOTE>
+<TT><B>n</B></TT> starts with <TT><B>0</B></TT> and <TT><B>i</B></TT> with
+<TT><B>100</B></TT>, the condition is <TT><B>(n!=i)</B></TT>
+(that <TT><B>n</B></TT> be not equal to <TT><B>i</B></TT>). Beacuse <TT><B>n</B></TT>
+is increased by one and <TT><B>i</B></TT> decreased, the loop's condition will become
+<TT>false</TT> after the 50th loop, when both <TT><B>n</B></TT> and <TT><B>i</B></TT>
+will be equal to 50.
+</dl>
+
+<p>
+<h2>Bifurcation of control and jumps.</h2>
+<dl>
+<dt><b>The <i>break</i> instruction.</b><br>
+<dd>
+Using <i>break</i> we can leave a loop even if the condition for its end is not fulfilled.
+It can be used to end an infinite loop, or to force it to end before its natural end.
+For example, we are going to stop the count down before it naturally finishes
+(an engine failure maybe):
+<P><CENTER>
+<TABLE WIDTH=90% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// break loop example</I>
+#include &lt;iostream.h&gt;
+int main ()
+{
+  int n;
+  for (n=10; n&gt;0; n--) {
+    cout &lt;&lt; n &lt;&lt; ", ";
+    if (n==3)
+    {
+      cout &lt;&lt; "countdown aborted!";
+      break;
+    }
+  }
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>10, 9, 8, 7, 6, 5, 4, countdown aborted! </TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+
+<dt><b>The <i>continue</i> instruction.</b><br>
+<dd>
+The <i>continue</i> instruction causes the program to skip the rest of the loop
+in the present iteration as if the end of the <TT><I>statement</I></TT> block would
+have been reached, causing it to jump to the following iteration. For example, we are going
+to skip the number 5 in our countdown:
+<P><CENTER>
+<TABLE WIDTH=90% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// break loop example</I>
+#include &lt;iostream.h&gt;
+int main ()
+{
+  for (int n=10; n&gt;0; n--) {
+    if (n==5) continue;
+    cout &lt;&lt; n &lt;&lt; ", ";
+  }
+  cout &lt;&lt; "FIRE!";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>10, 9, 8, 7, 6, 4, 3, 2, 1, FIRE!</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+
+<p>
+<dt><b>The <i>goto</i> instruction.</b><br>
+<dd>
+It allows to make an absolute jump to another point in the program. You should use this
+feature carefully since its execution ignores any type of nesting limitation.
+<P>
+The destination point is identified by a label, which is then used as argument
+for the goto instruction. A label is made of a valid identifier followed by a
+colon (<TT><B>:</B></TT>)
+
+<p>
+This instruction does not have a concrete utility in structured or object oriented
+programming aside from those that low-level programming fans may find to it.
+For example, here is our countdown loop using
+<tt><b>goto</b></tt>:
+
+<P><CENTER>
+<TABLE WIDTH=90% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// goto loop example</I>
+#include &lt;iostream.h&gt;
+int main ()
+{
+  int n=10;
+  loop:
+  cout &lt;&lt; n &lt;&lt; ", ";
+  n--;
+  if (n>0) goto loop;
+  cout &lt;&lt; "FIRE!";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>10, 9, 8, 7, 6, 5, 4, 3, 2, 1, FIRE!</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+
+<p>
+<dt><b>The <i>exit</i> function.</b><br>
+<dd>
+<i>exit</i> is a function defined in 
+<A HREF="/ref/cstdlib"><B><TT>cstdlib</TT></B></A> (stdlib.h) library.
+<p> The purpose of <i>exit</i> is to terminate the running program with an
+specific exit code. Its prototype is:<br>
+<blockquote><tt>
+<b>void exit (int </b><i>exit code</i><b>);</b>
+</tt></blockquote>
+The <TT><I>exit code</I></TT> is used by some operating systems and may be used by calling
+programs. By convention, an <TT><I>exit code</I></TT> of 0 means that the
+program finished normally and any other value means an error happened.
+</dl>
+
+<p>
+<h2>The selective Structure: <i>switch</i>.</h2>
+The syntax of the <I>switch</I> instruction is a bit peculiar.
+Its objective is to check several possible constant values for an expression, something
+similar to what we did at the beginning of this section with the linking of several
+<i>if</i> and <i>else if</i> sentences.  Its form is the following:<br>
+<blockquote>
+<tt><b>switch (</b><i>expression</i><b>) {<br>
+&nbsp; case </b><i>constant1</i><b>:<br>
+</b><i>&nbsp; &nbsp; block of instructions 1</i><b><br>
+&nbsp; &nbsp; break;<br>
+&nbsp; case </b><i>constant2</i><b>:<br>
+</b><i>&nbsp; &nbsp; block of instructions 2</i><b><br>
+&nbsp; &nbsp; break;<br>
+&nbsp; .<br>
+&nbsp; .<br>
+&nbsp; .<br>
+&nbsp; default:<br>
+</b><i>&nbsp; &nbsp; default block of instructions</i><b><br>
+&nbsp; }</b></tt><br>
+</blockquote>
+It works in the following way: <b>switch</b> evaluates <tt><i>expression</i></tt> and
+checks if it is equivalent to
+<tt><i>constant1</i></tt>, if it is, it executes <tt><i>block of instructions 1</i></tt>
+until it finds the <b>break</b> keyword, moment at which the program will
+jump to the end of the <I>switch</I> selective structure.<br>
+If <TT><I>expression</I></TT> was not equal to <TT><I>constant1</I></TT>
+it will check if <tt><i>expression</i></tt> is equivalent to <tt><i>constant2</i></tt>.
+If it is, it will execute <tt><i>block of instructions 2</i></tt> until it
+finds the <b>break</b> keyword.<br>
+Finally, if the value of <tt><i>expression</i></tt> has not matched any of the
+previously specified constants (you may specify as many <B>case</B> sentences as
+values you want to check), the program will execute the instructions included in the
+<b>default:</b> section, if this one exists, since it is optional.
+
+</blockquote>
+<p>
+Both following code fragments are equivalent:
+<P><CENTER>
+<TABLE WIDTH=90% CELLSPACING=5 CELLPADDING=5>
+<TR><TD ALIGN="center" WIDTH=50% ><B><U><I>switch</I> example</U></B></TD>
+<TD ALIGN="center" WIDTH=50%><B><U><I>if-else</I> equivalent</U></B></TD></TR>
+<TR><TD VALIGN="top" WIDTH=50% BGCOLOR="#FFFFBF">
+<TT><PRE>switch (x) {
+  case 1:
+    cout &lt;&lt; "x is 1";
+    break;
+  case 2:
+    cout &lt;&lt; "x is 2";
+    break;
+  default:
+    cout &lt;&lt; "value of x unknown";
+  }
+</PRE></TT>
+</TD>
+<TD VALIGN="top" WIDTH=50% BGCOLOR="#FFFFBF">
+<TT><PRE>if (x == 1) {
+  cout &lt;&lt; "x is 1";
+  }
+else if (x == 2) {
+  cout &lt;&lt; "x is 2";
+  }
+else {
+  cout &lt;&lt; "value of x unknown";
+  }
+</PRE></TT>
+</TD></TR></TABLE></CENTER>
+
+<p>
+I have commented before that the syntax of the <b><I>switch</I></b> instruction is a
+bit peculiar. Notice the inclusion of the <b>break</b> instructions at the end of each
+block.  This is necessary because if for example we did not include it after
+<tt><i>block of instructions 1</i></tt> the program would not jump to the end of the
+switch selective block (<b><tt>}</tt></b>) and it would follow executing the rest of
+blocks of instructions until the first appearing of the <b>break</b> instruction or
+the end of the switch selective block.  This makes unnecessary to include
+curly brackets <b><tt>{ }</tt></b> in each of the cases, and can also be useful to
+execute one same block of instructions for different possible values for the expression
+evaluated, for example:
+
+<BLOCKQUOTE><TABLE CELLPADDING=5><TR><TD BGCOLOR="#FFFFBF">
+<TT><PRE>switch (x) {
+  case 1:
+  case 2:
+  case 3:
+    cout &lt;&lt; "x is 1, 2 or 3";
+    break;
+  default:
+    cout &lt;&lt; "x is not 1, 2 nor 3";
+  }
+</PRE></TT>
+</TD></TR></TABLE></BLOCKQUOTE>
+
+Notice that <TT><B>switch</B></TT> can only be used to compare an
+expression with different <U>constants</U>.
+Thus we cannot put variables (<b><tt>case (n*2):</tt></b>) or
+ranges (<B><TT>case (1..3):</TT></B>) because they are not valid constants.
+<p>
+If you need to check ranges or values that are not constants use a concatenation
+of <tt><b>if</b></tt> and <tt><b>else if</b></tt> sentences.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut1-4.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>1-4. Comunication throgh console.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut2-2.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>2-2. Functions.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+
+According to Damian Conway, you should consider using OO:
+
+    * When the system is large or likely to become so
+
+    * When the data is aggregated in obvious structures that will become
+      objects
+
+    * When the types of data form a natural hierarchy that can make use of
+      inheritance
+
+    * When operations on data vary according to data type (making polymorphic
+      invocation of methods feasible)
+
+    * When it is likely that new data types may be later introduced into the
+      system, and will need to be handled by existing code
+
+    * When interactions between data are best represented by overloaded
+      operators
+
+    * When the implementation of system components is likely to change over
+      time (and hence should be encapsulated)
+
+    * When the system design is itself object-oriented
+
+    * When large amounts of client code will use the software (and should be
+      insulated from changes in its implementation)
+
+    * When many separate operations will need to be applied to the same set of
+      data

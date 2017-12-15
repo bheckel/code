@@ -1,0 +1,1631 @@
+ /* Runs ok 2003-07-02 */
+ /* 1-wrap Connect code (optional options)
+  * 2-%let TMPF='SASAF';
+  * 3-%let LO=000000;
+  * 4-%s/IN/'BF19.NJX0213.MORMER'/  <---s/b 1 substitution
+  */
+options ls=max ps=100;
+%include "&HOME/code/sas/connect_setup.sas";
+signon cdcjes2;
+rsubmit;
+
+%let TMPF='SASAF';
+%let LO=000000;
+
+OPTIONS MAUTOSOURCE SASAUTOS='DWJ2.MACROS.LIB';
+OPTIONS LS=133 CAPS NOTES SOURCE FILEMSGS;
+
+* PROGRAM LAST COPIED 10 JUL 2002;
+
+* PROGRAM NAME  MFCRPT02;
+
+* THIS PROGRAM WILL PRODUCE A MORTALITY FORECASTING REPORT;
+
+* UPDATE LOG;
+*   09/06/97  ADDED THE DISPLAY OF INFANT DEATHS TO THE REPORT;
+*   12/17/97  MODIFIED FORMAT OF COMPYR FROM 120-198 TO 120-998;
+*   01/08/98  ADDED CODE TO CHECK THE COMPYR AND IF IT IS LESS THAN;
+*             ZERO SET IT TO 999 (DISCOVERED IN SOME CASES;
+*             BDATE LT DDATE;
+*             ADDED CODE TO WEIGHT THE DATA AFTER THE PUT STATEMENT;
+*             SO IT IS READ CORRECTLY BY PROC FORECAST;
+*   07/22/98  MODIFIED CODE TO CORRECTLY CAPTURE INJURY AT WORK EQUAL;
+*             BLANK VALUES;
+*             REDEFINED THE FORMAT USED BY THE REPORTED AGE ITEM;
+*             AS SPECIFIED BY DWJ;
+*             REDEFINED THE FORMAT USED BY THE COMPUTED AGE ITEM;
+*             AS SPECIFIED BY DWJ;
+*             RECOMPUTED THE INFANT DEATH CATEGORY TO BASE IT UPON THE;
+*             ENTIRE AGE FIELD AND NOT JUST THE INFANT DEATHS;
+* 02/01/99    MODIFIED CODE TO ACCEPT CHANGES FROM A TWO DIGIT YEAR;
+*             FORMAT TO A FOUR DIGIT YEAR FORMAT;
+* 09/28/99    ADDED TITLE LINE TO INCLUDE DATASET NAME;
+* 01/19/00    CREATED THIS PROG FOR DATA YEAR 2000;
+* 03/03/00    TED7 ADDED WAIT STMT;
+* 08/29/00    BHB6 ADDED MACRO CHKMP TO CORRECTLY PROCESS THE;
+*             AS AND MP FILES;
+* 09/14/00    BHB6 MODIFIED PROC FORMAT - BIRTHPL AND PROC COMPUTAB;
+*             TO ADD AMERICAN SAMOAN AND NORTHERN MARIANAS;
+* 10/10/2000  (TLL) ADDED THE FORMAT VALUE OF CENTURY EQUALS TO 200;
+*             TO THE PROCEDURE COMPUTAB;
+* 10/19/2000  ZQQ8 MODIFY THIS PROGRAM TO INCLUDED 1999;
+*             US TOTAL DATA;
+* 12/11/2000  MODIFY PROGRAM  TO READ YEAR 2001 DATA;
+* 08/17/2001  BHB6 MODIFIED THE COMP AGE IN MOS AND DYS;
+*             I TOOK THE COMMENTS OUT OF 24 PLUS AND CANNOT COMPUTE;
+*             FOR MOS AND I TOOK THE COMMENTS OUT FOR 61 PLUS;
+*             AND CANNOT COMPUTE FOR DAYS RIGHT NOW NO ONE;
+*             REMEMBERS WHY THEY WERE THERE BUT SO IT CAN MATCH;
+*             2020ND 2020 (NEW) AND DAVID REQUESTED IT I PUT THEM;
+*             BACK IN BUT I CHANGED THE FORMAT SO THAT IF IT IS;
+*             OTHER IT WILL GO TO 99 IN THE PAST 99 WAS EQ 99;
+*             IN PROC FORMAT BUT THAT WAS NEVER TRUE;
+*  11/28/2001(ZQQ8)MODIFIED PROGRAM FOR DATA YEAR 2002;
+* 10 JUL 2002 (KJK) ADDED OPTION TO LIMIT REPORT TO RANGE OF;
+*                   CERTIFICATE NUMBERS;
+* 02 JAN 2003 (BQH0) MODIFIED FOR MORTALITY YEAR-END CLOSEOUT 2001;
+***************************************************************;
+%GLOBAL ENDYR STNAME T N S LAST6 PREVYR BYR TMPF DNAME LO HI;
+
+DATA STCODE;
+ LENGTH STCODE $2 NAME $25;
+ ***INFILE 'BF19.NJX0213.MORMER' FILENAME=NAME;
+ ***INFILE 'BF19.ORX0215.MORMER' FILENAME=NAME;
+ INFILE 'BF19.ASX0201.MORMER' FILENAME=NAME;
+ INPUT YEAR 135-138 STATE 77-78;
+ STCODE=STATE;
+ YR=YEAR;
+ CALL SYMPUT('N',STCODE);
+ CALL SYMPUT('DNAME',NAME);
+ CALL SYMPUT('BYR',YR);
+ CNT+1;
+ IF CNT GT 1 THEN STOP;
+RUN;
+
+*%LET T=08;
+*%LET S=GA;
+%LET A=1989;   * BEGINNING YEAR;
+%LET Y=2001;   * US TOTAL YEAR;
+%LET ENDYR = &BYR;
+%LET T= %EVAL(&ENDYR-1988);
+%LET PREVYR  = %EVAL(&ENDYR-1);
+%LET LAST6   = %EVAL(&ENDYR-5);
+
+PROC FORMAT;
+ VALUE $SEX            1 = '1'
+                       2 = '2'
+                       9 = '9'
+                   OTHER = '0';
+ VALUE $DMONTH        01 = '01'
+                      02 = '02'
+                      03 = '03'
+                      04 = '04'
+                      05 = '05'
+                      06 = '06'
+                      07 = '07'
+                      08 = '08'
+                      09 = '09'
+                      10 = '10'
+                      11 = '11'
+                      12 = '12'
+                      99 = '99'
+                   OTHER = '98';
+ VALUE $DDAY       01-06 = '06'
+                      07 = '07'
+                   08-14 = '14'
+                      15 = '15'
+                   16-23 = '23'
+                      24 = '24'
+                   25-30 = '30'
+                      31 = '31'
+                      99 = '99'
+                   OTHER = '00';
+ VALUE $YEARD         99 = '99'
+                   OTHER = '00';
+ VALUE $BMO           01 = '01'
+                      02 = '02'
+                      03 = '03'
+                      04 = '04'
+                      05 = '05'
+                      06 = '06'
+                      07 = '07'
+                      08 = '08'
+                      09 = '09'
+                      10 = '10'
+                      11 = '11'
+                      12 = '12'
+                      99 = '99'
+                   OTHER = '98';
+ VALUE $BDAY       01-06 = '06'
+                      07 = '07'
+                   08-14 = '14'
+                      15 = '15'
+                   16-23 = '23'
+                      24 = '24'
+                   25-30 = '30'
+                      31 = '31'
+                      99 = '99'
+                   OTHER = '00';
+ VALUE $BYR           99 = '99'
+                   OTHER = '00';
+ VALUE $CENTURY  800-899 = '800'
+                     900 = '900'
+                     901 = '901'
+                     200 = '200'
+                     999 = '999'
+                   OTHER = '000';
+ VALUE $AGE      120-198 = '100'
+                 110-119 = '101'
+                 100-109 = '102'
+                 095-099 = '103'
+                 090-094 = '104'
+                 085-089 = '105'
+                 080-084 = '106'
+                 075-079 = '107'
+                 070-074 = '108'
+                 065-069 = '109'
+                 060-064 = '110'
+                 055-059 = '111'
+                 050-054 = '112'
+                 045-049 = '113'
+                 040-044 = '114'
+                 035-039 = '115'
+                 030-034 = '116'
+                 025-029 = '117'
+                 020-024 = '118'
+                 015-019 = '119'
+                 010-014 = '120'
+                 005-009 = '121'
+                 001-004 = '122'
+                     000 = '123'
+                     200 = '200'
+                 201-211 = '201'
+                 212-223 = '202'
+                 224-298 = '203'
+                     299 = '204'
+                     300 = '300'
+                 301-304 = '301'
+                 305-352 = '302'
+                 353-398 = '303'
+                     399 = '304'
+                     400 = '400'
+                 401-427 = '401'
+                 428-460 = '402'
+                 461-498 = '403'
+                     499 = '404'
+                     500 = '500'
+                 501-523 = '501'
+                 524-572 = '502'
+                 573-598 = '503'
+                     599 = '504'
+                     600 = '600'
+                 601-659 = '601'
+                 660-695 = '602'
+                 696-698 = '603'
+                     699 = '604'
+                     999 = '999'
+                   OTHER = '888';
+ VALUE COMPYR    120-998 = '120'
+                 110-119 = '119'
+                 100-109 = '109'
+                 095-099 = '99'
+                 090-094 = '94'
+                 085-089 = '89'
+                 080-084 = '84'
+                 075-079 = '79'
+                 070-074 = '74'
+                 065-069 = '69'
+                 060-064 = '64'
+                 055-059 = '59'
+                 050-054 = '54'
+                 045-049 = '49'
+                 040-044 = '44'
+                 035-039 = '39'
+                 030-034 = '34'
+                 025-029 = '29'
+                 020-024 = '24'
+                 015-019 = '19'
+                 010-014 = '14'
+                 005-009 = '9'
+                 001-004 = '4'
+                -999-000 = '0'
+                     999 = '999'
+                   OTHER = '888';
+ VALUE COMPMO       1-11 = '11'
+                   12-23 = '23'
+                   24-98 = '24'
+                   OTHER = '99';
+ VALUE COMPDY          0 = '9'
+                    1-27 = '27'
+                   28-60 = '60'
+                   61-97 = '61'
+                   OTHER = '99';
+ VALUE $BIRTHPL       01 = '01'
+                      02 = '02'
+                      03 = '03'
+                      04 = '04'
+                      05 = '05'
+                      06 = '06'
+                      07 = '07'
+                      08 = '08'
+                      09 = '09'
+                      10 = '10'
+                      11 = '11'
+                      12 = '12'
+                      13 = '13'
+                      14 = '14'
+                      15 = '15'
+                      16 = '16'
+                      17 = '17'
+                      18 = '18'
+                      19 = '19'
+                      20 = '20'
+                      21 = '21'
+                      22 = '22'
+                      23 = '23'
+                      24 = '24'
+                      25 = '25'
+                      26 = '26'
+                      27 = '27'
+                      28 = '28'
+                      29 = '29'
+                      30 = '30'
+                      31 = '31'
+                      32 = '32'
+                      33 = '33'
+                      34 = '34'
+                      35 = '35'
+                      36 = '36'
+                      37 = '37'
+                      38 = '38'
+                      39 = '39'
+                      40 = '40'
+                      41 = '41'
+                      42 = '42'
+                      43 = '43'
+                      44 = '44'
+                      45 = '45'
+                      46 = '46'
+                      47 = '47'
+                      48 = '48'
+                      49 = '49'
+                      50 = '50'
+                      51 = '51'
+                      52 = '52'
+                      53 = '53'
+                      54 = '54'
+                      55 = '55'
+                      56 = '56'
+                      57 = '57'
+                      59 = '59'
+                      61 = '61'
+                      62 = '62'
+                      99 = '99'
+                   OTHER = '98';
+ VALUE $TYPLC          1 = '1'
+                       2 = '2'
+                       3 = '3'
+                       4 = '4'
+                       5 = '5'
+                       6 = '6'
+                       7 = '7'
+                       9 = '9'
+                   OTHER = '0';
+ VALUE $MARSTAT        1 = '1'
+                       2 = '2'
+                       3 = '3'
+                       4 = '4'
+                       9 = '9'
+                   OTHER = '0';
+ VALUE $HISP           0 = '0'
+                       1 = '1'
+                       2 = '2'
+                       3 = '3'
+                       4 = '4'
+                       5 = '5'
+                       9 = '9'
+                   OTHER = '8';
+ VALUE $RACE           0 = '0'
+                       1 = '1'
+                       2 = '2'
+                       3 = '3'
+                       4 = '4'
+                       5 = '5'
+                       6 = '6'
+                       7 = '7'
+                       8 = '8'
+                       9 = '9'
+                      10 = '10'
+                      11 = '11'
+                      12 = '12'
+                      13 = '13'
+                      14 = '14'
+                      15 = '15'
+                   OTHER = '98';
+ VALUE $EDUC          00 = '00'
+                      01 = '01'
+                      02 = '02'
+                      03 = '03'
+                      04 = '04'
+                      05 = '05'
+                      06 = '06'
+                      07 = '07'
+                      08 = '08'
+                      09 = '09'
+                      10 = '10'
+                      11 = '11'
+                      12 = '12'
+                      13 = '13'
+                      14 = '14'
+                      15 = '15'
+                      16 = '16'
+                      17 = '17'
+                      99 = '99'
+                   OTHER = '98';
+ VALUE $AUTO           1 = '1'
+                       2 = '2'
+                       9 = '9'
+                   OTHER = '8';
+ VALUE $INJURY         0 = '0'
+                       1 = '1'
+                       2 = '2'
+                       9 = '9'
+                   OTHER = '8';
+RUN;
+
+%LET FITEM1  = $SEX.;
+%LET FITEM2  = $DMONTH.;
+%LET FITEM3  = $DDAY.;
+%LET FITEM4  = $YEARD.;
+%LET FITEM5  = $BMO.;
+%LET FITEM6  = $BDAY.;
+%LET FITEM7  = $BYR.;
+%LET FITEM8  = $CENTURY.;
+%LET FITEM9  = $AGE.;
+%LET FITEM10 = COMPYR.;
+%LET FITEM11 = COMPMO.;
+%LET FITEM12 = COMPDY.;
+%LET FITEM13 = $BIRTHPL.;
+%LET FITEM14 = $TYPLC.;
+%LET FITEM15 = $MARSTAT.;
+%LET FITEM16 = $HISP.;
+%LET FITEM17 = $RACE.;
+%LET FITEM18 = $EDUC.;
+%LET FITEM19 = $AUTO.;
+%LET FITEM20 = $INJURY.;
+%LET ITEM1  = SEX;
+%LET ITEM2  = MONTH;
+%LET ITEM3  = DAY;
+%LET ITEM4  = YEARD;
+%LET ITEM5  = BIRTHMO;
+%LET ITEM6  = BIRTHDY;
+%LET ITEM7  = BIRTHYR;
+%LET ITEM8  = CENTURY;
+%LET ITEM9  = AGE;
+%LET ITEM10 = COMPYR;
+%LET ITEM11 = COMPMO;
+%LET ITEM12 = COMPDY;
+%LET ITEM13 = BIRTHPLC;
+%LET ITEM14 = TYP_PLAC;
+%LET ITEM15 = MARITAL;
+%LET ITEM16 = HISPANIC;
+%LET ITEM17 = RACE;
+%LET ITEM18 = EDUC;
+%LET ITEM19 = AUTOPSY;
+%LET ITEM20 = INJURY;
+%LET ITEM21 = UNIT;
+%LET ITEM22 = AGEGT5;
+%LET ITEM23 = AGEERR;
+%LET ITEM24 = MARNE2;
+%LET ITEM25 = EDUCERR;
+%LET TOTITEMS = 25;
+
+* THE FOLLOWING MACRO WILL ASSIGN THE STATE ABBREV AND FULL STATE;
+* NAME;
+* INPUT VAR IS THE NUMERIC STATE CODE OBTAINED FROM THE BF19 FILE;
+
+%STATES
+
+%PUT &S;
+
+*THIS MACRO WILL CHECK IF THE STATE ABBREVIATION IS MP OR AS;
+*IF SO THEN SET THE FOLLOWING VARIABLES;
+%MACRO CHKMP;
+  %IF &S = MP %THEN
+   %DO;
+     %LET A=1998;
+     %LET T= %EVAL(&ENDYR-1997);
+     %LET PREVYR = %EVAL(&ENDYR-1);
+     %LET LAST6  = 1998;
+   %END;
+  %IF &S = AS %THEN
+   %DO;
+     %LET A=1997;
+     %LET T= %EVAL(&ENDYR-1997);
+     %LET PREVYR = %EVAL(&ENDYR-1);
+     %LET LAST6  = 1997;
+   %END;
+%MEND CHKMP;
+%CHKMP
+
+* THE FOLLOWING FILE CONTAINS THE US TOTAL FREQUENCY FOR;
+* THE YEAR REQUESTED BY THE USER;
+* AT THIS MOMENT LIBNAME IS COMMENTED OUT;
+ LIBNAME US&Y "DWJ2.MORT&Y..FREQ.US" DISP=SHR WAIT=250;
+
+*CREATE LIBNAME STATEMENTS FOR ALL OF THE INPUT DATASET;
+%MACRO CTRLIB;
+   %DO I=&A %TO &ENDYR;
+      LIBNAME MOR&I "DWJ2.MOR&I..LIBRARY" DISP=SHR WAIT=250;
+   %END;
+%MEND CTRLIB;
+
+%CTRLIB
+
+%MACRO DATASET;
+ %IF &TMPF = 'SASAF' %THEN
+  %DO;
+  LIBNAME MOR&ENDYR "DWJ2.MOR&ENDYR..LIBRARY.TEMP" DISP=SHR WAIT=250;
+  %END;
+%MEND DATASET;
+
+%DATASET
+
+%MACRO TITLEIV;
+ %IF &TMPF = 'SASAF' %THEN
+  %DO;
+    %IF &LO NE 000000 %THEN %DO;
+     TITLE4
+     "*** REPORT RESTRICTED TO CERTIFICATE NUMBERS &LO THROUGH &HI ***";
+    %END;
+  %END;
+%MEND TITLEIV;
+
+%MACRO TITLEV;
+ %IF &TMPF = 'SASAF' %THEN
+  %DO;
+    %IF &LO NE 000000 %THEN %DO;
+     TITLE5
+     "*** REPORT RESTRICTED TO CERTIFICATE NUMBERS &LO THROUGH &HI ***";
+    %END;
+  %END;
+%MEND TITLEV;
+
+%MACRO MERG;
+  %DO I=&A %TO &ENDYR;
+      %DO K=1 %TO &TOTITEMS;
+         DATA MO&K&I;
+           SET MOR&I..&S&I;
+           IF ITEMID NE &K THEN DELETE;
+* AFTER ALL OF THE FILES WERE CREATED DISCOVERED THAT IN SOME CASES THE;
+* DATE OF BIRTH IS GT THE DATE OF DEATH AND THIS CAUSES THE COMPDY TO;
+* BE LESS THAN ZERO THE FOLLOWING IF STATEMENT WILL SET IT TO ZERO;
+           IF ITEMID = 12 THEN
+              DO;
+                IF COMPDY NE . THEN
+                   DO;
+                     IF COMPDY LT 0 THEN COMPDY = 0;
+                   END;
+              END;
+           YEAR=&I;
+           DATE = MDY(12,31,YEAR);
+           FORMAT DATE MMDDYY10.;
+           CNT&I=COUNT;
+           PCNT&I=PERCENT;
+         RUN;
+* IF INJURY EQUAL BLANK THEN SET IT TO ZERO;
+         %IF &K = 20 %THEN
+             %DO;
+                DATA MO&K&I;
+                 SET MO&K&I;
+* IF INJURY IS ALREADY 0 WHICH IS INVALID THEN CHANGE IT TO 7 SO;
+* THAT IT IS NOT COUNTED WITH THE BLANK INJURY CODES WHICH WILL;
+* BE ASSIGNED AS ZERO IN THE NEXT TWO LINES OF CODE;
+                 IF INJURY = '0' THEN INJURY = '7';
+                 IF INJURY = ' ' THEN INJURY ='0';
+                RUN;
+             %END;
+* IF UNIT IS NOT AN INFANT THEN DELETE THE RECORD;
+         %IF &K = 21 %THEN
+             %DO;
+* DAVID WANTED THE PERCENTAGE FOR THE INFANT DEATH CATEGORY BE A;
+* REFLECTION OF THE ENTIRE REPORTED AGE FIELD SO BY SETTING THE UNIT;
+* TO ZERO IF IT IS NOT AN INFANT, PERFORMING A PROC FREQ AND THEN
+* DELETING ALL UNIT EQ ZERO VALUES SHOULD PROVIDE THE PERCENTAGE;
+                DATA MO&K&I;
+                 SET MO&K&I;
+                 IF UNIT = '' THEN DELETE;
+                 IF UNIT LT 2 THEN UNIT=0;
+                 ELSE IF UNIT GT 6 THEN UNIT=0;
+                 ELSE UNIT = 2;
+                RUN;
+                PROC FREQ DATA=MO&K&I;
+                 TABLES UNIT*ITEMID / MISSING NOPRINT OUT=MO&K&I;
+                 WEIGHT COUNT;
+                RUN;
+                DATA MO&K&I;
+                 SET MO&K&I;
+                 IF UNIT = 0 THEN DELETE;
+                 IF ITEMID NE &K THEN DELETE;
+                 YEAR=&I;
+                 DATE = MDY(12,31,YEAR);
+                 FORMAT DATE MMDDYY10.;
+                 CNT&I=COUNT;
+                 PCNT&I=PERCENT;
+                RUN;
+             %END;
+     %END;
+  %END;
+%MEND MERG;
+
+%MERG
+
+* THIS MACRO WILL WEIGHT THE APPLICABLE ITEMS;
+%MACRO WGTITEM;
+ %DO I=&A %TO &ENDYR;
+   %DO K=1 %TO 20;
+      DATA MO&K&I;
+        SET MO&K&I;
+        &&ITEM&K = PUT(&&ITEM&K,&&FITEM&K);
+      RUN;
+      PROC FREQ DATA=MO&K&I;
+       TABLES &&ITEM&K*ITEMID / NOPRINT OUT=MO&K&I;
+       WEIGHT COUNT;
+      RUN;
+      DATA MO&K&I;
+        SET MO&K&I;
+        YEAR=&I;
+        DATE = MDY(12,31,YEAR);
+        FORMAT DATE MMDDYY10.;
+        CNT&I=COUNT;
+        PCNT&I=PERCENT;
+      RUN;
+      PROC SORT DATA=MO&K&I;
+       BY &&ITEM&K;
+      RUN;
+   %END;
+ %END;
+%MEND WGTITEM;
+
+%WGTITEM
+
+* THE FOLLOWING DATA STEP WILL CONVERT THE FILE CONTAINING THE;
+* US TOTALS INTO THE SAME FORMAT AS ESTABLISHED IN ADDATE;
+* AND IT WILL CREATE A SEPARATE FILE FOR EACH ITEM SO THAT THEY CAN;
+* BE MERGED WITH THE OTHER FILES;
+%MACRO USTOT;
+ %DO I=1 %TO &TOTITEMS;
+    DATA USTO&I;
+      SET US&Y..DATA;
+      IF &&ITEM&I = '' THEN DELETE;
+     RUN;
+* IF UNIT IS NOT AN INFANT THEN DELETE THE RECORD;
+         %IF &I = 21 %THEN
+             %DO;
+* DAVID WANTED THE PERCENTAGE FOR THE INFANT DEATH CATEGORY BE A;
+* REFLECTION OF THE ENTIRE REPORTED AGE FIELD SO BY SETTING THE UNIT;
+* TO ZERO IF IT IS NOT AN INFANT, PERFORMING A PROC FREQ AND THEN
+* DELETING ALL UNIT EQ ZERO VALUES SHOULD PROVIDE THE PERCENTAGE;
+               DATA UST&I;
+                 SET US&Y..DATA;
+                 IF UNIT = '' THEN DELETE;
+                 IF UNIT LT 2 THEN UNIT=0;
+                 ELSE IF UNIT GT 6 THEN UNIT=0;
+                 ELSE UNIT = 2;
+                RUN;
+                PROC FREQ DATA=UST&I;
+                 TABLES UNIT*ITEMID / MISSING NOPRINT OUT=USTO&I;
+                 WEIGHT COUNT;
+                RUN;
+                DATA USTO&I;
+                 SET USTO&I;
+                 IF UNIT = 0 THEN DELETE;
+                 IF ITEMID NE &I THEN DELETE;
+                RUN;
+             %END;
+ %END;
+%MEND USTOT;
+
+%USTOT
+
+* THIS MACRO WILL WEIGHT THE ITEMS IN THE US TOTAL FILE;
+* 02/07/2000 CHANGED VALUE OF I IN DO LOOPS B/C ITEMS 21;
+* THRU 25 DID NOT HAVE FORMATS SO PUT STMT WOULDN'T WORK;
+%MACRO USTOTW;
+ %DO I=1 %TO 20;
+    DATA USTO&I;
+     SET USTO&I;
+     &&ITEM&I = PUT(&&ITEM&I,&&FITEM&I);
+    RUN;
+    PROC FREQ DATA=USTO&I;
+     TABLES &&ITEM&I*ITEMID / NOPRINT OUT=USTO&I;
+     WEIGHT COUNT;
+    RUN;
+    DATA USTO&I (DROP=COUNT PERCENT);
+      SET USTO&I;
+      USTOT = PERCENT;
+     RUN;
+     PROC SORT DATA=USTO&I;
+      BY &&ITEM&I;
+     RUN;
+%END;
+%DO I=21 %TO &TOTITEMS;
+    DATA USTO&I (DROP=COUNT PERCENT);
+      SET USTO&I;
+      USTOT = PERCENT;
+    RUN;
+%END;
+%MEND USTOTW;
+
+%USTOTW
+
+* THE FOLLOWING THREE MACROS WILL PRODUCE A DATASET FOR EACH YEAR;
+* EACH FILE WILL CONTAIN THE ITEM, COUNT AND PERCENT ONLY;
+* LATER THESE FILES WILL BE MERGED WITH THE FORECASTED FILES;
+%MACRO CNTS;
+  %DO J=&A %TO &ENDYR;
+      CNT&J
+  %END;
+%MEND CNTS;
+
+%MACRO PCNTS;
+  %DO K=&A %TO &ENDYR;
+      PCNT&K
+   %END;
+%MEND PCNTS;
+
+* THE FOLLOWING TWO MACROS WILL COMBINE THE FILE THAT CONTAIN;
+* THE RECORD COUNT AND PERCENTAGE FOR EACH STATE FOR EACH YEAR;
+* INTO ONE FILE (FOR EACH ITEM);
+%MACRO COMBIN1;
+  %DO P=&A %TO &ENDYR;
+     MO&I&P
+  %END;
+%MEND COMBIN1;
+
+%MACRO COMBINE;
+ %DO I=1 %TO &TOTITEMS;
+    DATA ITEM&I;
+     MERGE %COMBIN1;
+     BY &&ITEM&I;
+    RUN;
+ %END;
+%MEND COMBINE;
+
+%COMBINE
+
+* THE FOLLOWING TWO MACROS WILL COMBINE THE SAS FILES THAT WERE;
+* MERGED BY THE CARDS INPUT FILE AND THE SAS FREQ FILE FOR EACH YEAR;
+* INTO ONE FILE FOR EACH YEAR FOR EACH ITEM AND THIS FILE WILL BE;
+* USED AS INPUT TO THE PROC FORECAST PROCEDURE;
+* 07/11/97 MODIFED CODE THE USE ENDYR MINUS 1;
+%MACRO COMBIN2;
+  %DO K=&A %TO (&ENDYR-1);
+     MO&I&K
+  %END;
+%MEND COMBIN2;
+
+%MACRO COMBINE;
+ %DO I=1 %TO &TOTITEMS;
+    DATA ALLF&I;
+     SET %COMBIN2;
+     BY &&ITEM&I;
+    RUN;
+    PROC SORT DATA=ALLF&I;
+     BY &&ITEM&I;
+    RUN;
+ %END;
+%MEND COMBINE;
+
+%COMBINE
+
+* MACRO FCAST WILL FORECAST ALL OF THE MORTALITY ITEMS USING;
+* THE CONSTANT(1) AND LINEAR(2) TRENDS;
+%MACRO FCAST;
+ %IF &T LE 4 %THEN
+     %DO;
+        %LET NLAG = 0;
+        %LET FCSTART = %EVAL(&T-1);
+     %END;
+ %IF &T GT 4 %THEN
+     %DO;
+        %LET NLAG = 1;
+        %LET FCSTART = %EVAL(&T-1);
+     %END;
+
+
+
+ %DO I=1 %TO &TOTITEMS;
+    PROC FORECAST DATA=ALLF&I TREND=1 INTERVAL=YEAR
+      NLAGS=&NLAG LEAD=1 START=&FCSTART OUT=CONST&I OUTACTUAL OUTLIMIT;
+    ID DATE;
+    VAR PERCENT;
+    BY &&ITEM&I;
+    RUN;
+    PROC FORECAST DATA=ALLF&I TREND=2 INTERVAL=YEAR
+      NLAGS=&NLAG LEAD=1 START=&FCSTART OUT=LINR&I OUTACTUAL OUTLIMIT;
+    ID DATE;
+    VAR PERCENT;
+    BY &&ITEM&I;
+    RUN;
+ %END;
+%MEND FCAST;
+
+%FCAST
+
+* MACRO RNAME WILL READ THE FILES CREATED FROM PROC FORECAST;
+* AND INSTEAD OF HAVING THE 4 PERCENT VALUES(ACTUAL,FCAST,L95,U95);
+* ON 4 DIFFERENT RECORDS IT COMBINES THEM ONTO ONE RECORD;
+%MACRO RNAME;
+  %DO I=1 %TO &TOTITEMS;
+      DATA CONST&I (KEEP=&&ITEM&I ACTUALC FCASTC LOWC HIGHC ACTCNT);
+        SET CONST&I;
+        RETAIN ACTUALC FCASTC LOWC HIGHC ACTCNT;
+        IF _TYPE_ = 'U95' THEN
+           DO;
+             HIGHC=PERCENT;
+             OUTPUT;
+             ACTCNT = .;
+           END;
+
+        IF _TYPE_='ACTUAL' THEN
+            DO;
+              ACTUALC=PERCENT;
+              ACTCNT + 1;
+            END;
+        IF _TYPE_='FORECAST' THEN FCASTC=PERCENT;
+        IF _TYPE_='L95' THEN LOWC=PERCENT;
+      RUN;
+      DATA LINR&I (KEEP=&&ITEM&I ACTUALL FCASTL LOWL HIGHL ACTCNT);
+        SET LINR&I;
+        RETAIN ACTUALL FCASTL LOWL HIGHL ACTCNT;
+        IF _TYPE_ = 'U95' THEN
+           DO;
+             HIGHL=PERCENT;
+             OUTPUT;
+             ACTCNT = .;
+           END;
+
+        IF _TYPE_='ACTUAL' THEN
+            DO;
+              ACTUALL=PERCENT;
+              ACTCNT + 1;
+            END;
+        IF _TYPE_='FORECAST' THEN FCASTL=PERCENT;
+        IF _TYPE_='L95' THEN LOWL=PERCENT;
+      RUN;
+  %END;
+%MEND RNAME;
+
+%RNAME
+
+* 07/11/97 THE FOLLOWING MACRO WILL MAKE SURE ONLY THE ITEMS;
+* THAT HAVE AT LEAST FOUR YEARS WORTH OF DATA ARE FLAGGED;
+%MACRO CHKCNT;
+  %DO I=1 %TO &TOTITEMS;
+      DATA CONST&I (DROP=ACTCNT);
+        SET CONST&I;
+        IF ACTCNT LT 4 THEN DELETE;
+      DATA LINR&I (DROP=ACTCNT);
+        SET LINR&I;
+        IF ACTCNT LT 4 THEN DELETE;
+  %END;
+%MEND CHKCNT;
+
+%CHKCNT
+
+* 07/11/97 THE FOLLOWING MACRO WILL COMBINE THE CONSTANT AND;
+* LINEAR FILES WITH THE DATA FILE;
+%MACRO JOINF;
+  %DO I=1 %TO &TOTITEMS;
+     DATA FCAST&I;
+       MERGE CONST&I LINR&I ITEM&I;
+       BY &&ITEM&I;
+     RUN;
+  %END;
+%MEND JOINF;
+
+%JOINF
+
+* 07/11/97 THE FOLLOWING MACRO WILL DETERMINE THE CONSTANT AND;
+* LINEAR FLAG FOR EACH ITEM;
+%MACRO FLAG;
+  %DO I=1 %TO &TOTITEMS;
+     DATA FCAST&I
+(DROP=LOWL LOWC HIGHL HIGHC ACTUALC ACTUALL FCASTC FCASTL);
+       SET FCAST&I;
+       IF LOWC NE . THEN
+          DO;
+            IF PCNT&ENDYR LT LOWC THEN CONST=1;
+          END;
+       IF HIGHC NE . THEN
+          DO;
+            IF PCNT&ENDYR GT HIGHC THEN CONST=1;
+          END;
+       IF LOWL NE . THEN
+          DO;
+            IF PCNT&ENDYR LT LOWL THEN LINR=1;
+          END;
+       IF HIGHL NE . THEN
+          DO;
+            IF PCNT&ENDYR GT HIGHL THEN LINR=1;
+          END;
+       IF CONST = 1 AND LINR = 1 THEN FLAG = '***';
+       IF CONST = 1 AND LINR = . THEN FLAG = '*';
+       IF CONST = . AND LINR = 1 THEN FLAG = '**';
+     RUN;
+  %END;
+%MEND FLAG;
+
+%FLAG
+
+* MACRO JOINED WILL COMBINED THE CONSTANT FORECASTED RESULTS;
+* THE FILE CONTAINING THE FLAGS AND THE FILE THAT CONTAINS THE;
+* REPORTED PERCENTAGE AND THE COUNTS INTO ONE;
+%MACRO JOINED;
+  %DO I=1 %TO &TOTITEMS;
+     DATA JOIN&I (DROP=COUNT PERCENT);
+       MERGE FCAST&I USTO&I;
+       BY &&ITEM&I;
+     RUN;
+  %END;
+%MEND JOINED;
+
+%JOINED
+
+DATA JOIN;
+SET JOIN1 JOIN2 JOIN3 JOIN4 JOIN5 JOIN6 JOIN7 JOIN8 JOIN9 JOIN10
+    JOIN11 JOIN12 JOIN13 JOIN14 JOIN15 JOIN16 JOIN17 JOIN18
+    JOIN19 JOIN20 JOIN21 JOIN22 JOIN23 JOIN24 JOIN25;
+RUN;
+
+* MACRO SHOW WILL DISPLAY THE COLUMN FOR THE RECORD COUNTS;
+* AND PERCENTAGES WE HAVE TWO DO LOOPS BECAUSE THE 1ST TWO;
+* COLUMNS DISPLAYED ARE ALWAYS THE LAST YEAR REQUESTED BY THE USER;
+* AND THE PERCENT VALUE IS TAKEN FROM THE FORECASTED FIELD CALLED;
+* ACTUAL.  I WAS UNABLE TO COMPUTE THE DIFF VALUE WHICH USES;
+* THE ACTUAL AMOUNT WITHOUT DISPLAYING THE ACTUAL AMOUNT IN THE;
+* TABLE;
+%MACRO SHOW;
+ %DO I=&ENDYR %TO &LAST6 %BY -1;
+    COL PCNT&I / MTITLE="&I"
+                 MTITLE='RPTD'
+                 MTITLE='%' FORMAT=5.2;
+ %END;
+ %DO I=&ENDYR %TO &LAST6 %BY -1;
+    COL CNT&I  / MTITLE="&I"
+                 MTITLE='REC'
+                 MTITLE='CNT' FORMAT=6.;
+ %END;
+%MEND SHOW;
+
+PROC COMPUTAB DATA=JOIN NOTRANS CWIDTH=10;
+TITLE1 "&STNAME &ENDYR MORTALITY TIME SERIES ANALYSIS";
+TITLE2 '(USING ANNUAL PERCENTAGES)';
+TITLE3 "DATASET NAME:  &DNAME";
+%TITLEIV
+FOOTNOTE
+'LEGEND:  * - CONSTANT      ** - LINEAR      *** - CONSTANT AND LINEAR';
+
+ROW MALE       / ' '
+                 'SEX'
+                 'MALE(1)';
+ROW FEMALE     / 'FEMALE(2)';
+ROW NOTCLAS1   / 'NOTCLASS(9)';
+ROW OTHSX      / 'OTHER';
+ROW SUBTOT1    / 'TOTAL' OL;
+ROW JAN        / ' '
+                 'MO OF DEATH'
+                 'JANUARY(01)';
+ROW FEB        / 'FEBRUARY(02)';
+ROW MAR        / 'MARCH(03)';
+ROW APRIL      / 'APRIL(04)';
+ROW MAY        / 'MAY(05)';
+ROW JUNE       / 'JUNE(06)';
+ROW JULY       / 'JULY(07)';
+ROW AUG        / 'AUGUST(08)';
+ROW SEPT       / 'SEPTEMBER(09)';
+ROW OCT        / 'OCTOBER(10)';
+ROW NOV        / 'NOVEMBER(11)';
+ROW DEC        / 'DECEMBER(12)';
+ROW NOTCLAS2   / 'NOTCLASS(99)';
+ROW OTHMO      / 'OTHER';
+ROW SUBTOT2    / 'TOTAL' OL;
+ROW DY1        / ' '
+                 'DAY OF DEATH'
+                 '01-06';
+ROW DY7        / '07';
+ROW DY14       / '08-14';
+ROW DY15       / '15';
+ROW DY23       / '16-23';
+ROW DY24       / '24';
+ROW DY30       / '25-30';
+ROW DY31       / '31';
+ROW NOTCLAS3   / 'NOTCLASS(99)';
+ROW OTHDY      / 'OTHER';
+ROW SUBTOT3    / 'TOTAL' OL;
+ROW JANB       / ' '
+                 'MO OF BIRTH'
+                 'JANUARY(01)';
+ROW FEBB       / 'FEBRUARY(02)';
+ROW MARB       / 'MARCH(03)';
+ROW APRILB     / 'APRIL(04)';
+ROW MAYB       / 'MAY(05)';
+ROW JUNEB      / 'JUNE(06)';
+ROW JULYB      / 'JULY(07)';
+ROW AUGB       / 'AUGUST(08)';
+ROW SEPTB      / 'SEPTEMBER(09)';
+ROW OCTB       / 'OCTOBER(10)';
+ROW NOVB       / 'NOVEMBER(11)';
+ROW DECB       / 'DECEMBER(12)';
+ROW NOTCLAS4   / 'NOTCLASS(99)';
+ROW OTHMOB     / 'OTHER';
+ROW SUBTOT4    / 'TOTAL' OL;
+ROW DY1B       / ' '
+                 'DAY OF BIRTH'
+                 '01-06';
+ROW DY7B       / '07';
+ROW DY14B      / '08-14';
+ROW DY15B      / '15';
+ROW DY23B      / '16-23';
+ROW DY24B      / '24';
+ROW DY30B      / '25-30';
+ROW DY31B      / '31';
+ROW NOTCLAS5   / 'NOTCLASS(99)';
+ROW OTHDYB     / 'OTHER';
+ROW SUBTOT5    / 'TOTAL' OL;
+*ROW YRB1       / ' '
+*                 'YEAR OF BIRTH'
+*                 'SAME AS YR OF DEATH';
+*ROW YRB2       / '99';
+*ROW SUBTOT6    / 'TOTAL' OL;
+ROW CENT1      / ' '
+                 'CENTURY'
+                 '<1900';
+ROW CENT2      / '=1900';
+ROW CENT3      / '1901-1999';
+ROW CENT4      / '>=2000';
+ROW CENT5      / 'NOTCLASS(9999)';
+ROW OTHCEN     / 'OTHER';
+ROW SUBTOT7    / 'TOTAL' OL;
+ROW RANGE1     / ' '
+                 'REPORTED AGE'
+                 'YR 120+(COND. EDIT)';
+ROW RANGE2     / 'YR 110-119';
+ROW RANGE3     / 'YR 100-109';
+ROW RANGE4     / 'YR 95-99';
+ROW RANGE5     / 'YR 90-94';
+ROW RANGE6     / 'YR 85-89';
+ROW RANGE7     / 'YR 80-84';
+ROW RANGE8     / 'YR 75-79';
+ROW RANGE9     / 'YR 70-74';
+ROW RANGE10    / 'YR 65-69';
+ROW RANGE11    / 'YR 60-64';
+ROW RANGE12    / 'YR 55-59';
+ROW RANGE13    / 'YR 50-54';
+ROW RANGE14    / 'YR 45-49';
+ROW RANGE15    / 'YR 40-44';
+ROW RANGE16    / 'YR 35-39';
+ROW RANGE17    / 'YR 30-34';
+ROW RANGE18    / 'YR 25-29';
+ROW RANGE19    / 'YR 20-24';
+ROW RANGE20    / 'YR 15-19';
+ROW RANGE21    / 'YR 10-14';
+ROW RANGE22    / 'YR 5-9';
+ROW RANGE23    / 'YR 1-4';
+ROW RANGE24    / 'YR 00';
+ROW RANGE25    / 'MO 00';
+ROW RANGE26    / 'MO 00-11';
+ROW RANGE27    / 'MO 12-23';
+ROW RANGE28    / 'MO 24+(COND. EDIT)';
+ROW RANGE29    / 'MO UNKNOWN';
+ROW RANGE30    / 'WK 00';
+ROW RANGE31    / 'WK 01-04';
+ROW RANGE32    / 'WK 05-52';
+ROW RANGE33    / 'WK 53+(COND. EDIT)';
+ROW RANGE34    / 'WK UNKNOWN';
+ROW RANGE35    / 'DY 00';
+ROW RANGE36    / 'DY 01-27';
+ROW RANGE37    / 'DY 28-60';
+ROW RANGE38    / 'DY 61+(COND. EDIT)';
+ROW RANGE39    / 'DY UNKNOWN';
+ROW RANGE40    / 'HR 00';
+ROW RANGE41    / 'HR 01-23';
+ROW RANGE42    / 'HR 24-72';
+ROW RANGE43    / 'HR 73+(COND. EDIT)';
+ROW RANGE44    / 'HR UNKNOWN';
+ROW RANGE45    / 'MN 00';
+ROW RANGE46    / 'MN 00-59';
+ROW RANGE47    / 'MN 60-95';
+ROW RANGE48    / 'MN 95+(COND. EDIT)';
+ROW RANGE49    / 'MN UNKNOWN';
+ROW RANGE50    / 'NOT CLASS';
+ROW OTHRNG     / 'OTHER';
+ROW AGE5       / 'ABS EDT:REP/CMP DIF>5';
+ROW AGEEDT     / 'ABS EDT:INF DOB/AGE';
+ROW SUBTOT8    / 'TOTAL' OL;
+ROW UNIT1      /' '
+                'INFANT DEATHS'
+                '< 1 YEAR';
+ROW COMPY1     / ' '
+                 'COMP AGE IN YRS'
+                 '120+(COND. EDIT)';
+ROW COMPY2     / '110-119';
+ROW COMPY3     / '100-109';
+ROW COMPY4     / '95-99';
+ROW COMPY5     / '90-94';
+ROW COMPY6     / '85-89';
+ROW COMPY7     / '80-84';
+ROW COMPY8     / '75-79';
+ROW COMPY9     / '70-74';
+ROW COMPY10    / '65-69';
+ROW COMPY11    / '60-64';
+ROW COMPY12    / '55-59';
+ROW COMPY13    / '50-54';
+ROW COMPY14    / '45-49';
+ROW COMPY15    / '40-44';
+ROW COMPY16    / '35-39';
+ROW COMPY17    / '30-34';
+ROW COMPY18    / '25-29';
+ROW COMPY19    / '20-24';
+ROW COMPY20    / '15-19';
+ROW COMPY21    / '10-14';
+ROW COMPY22    / '5-9';
+ROW COMPY23    / '1-4';
+ROW COMPY24    / 'LT 1YR';
+ROW COMPY25    / 'CAN NOT COMP';
+ROW SUBTOT9    / 'TOTAL' OL;
+ROW COMPM1     / ' '
+                 'COMP AGE IN MOS'
+                 '01-11';
+ROW COMPM2     / '12-23';
+ROW COMPM3     / '24+(COND. EDIT)';
+ROW COMPM4     / 'CAN NOT COMP';
+ROW SUBTOT10   / 'TOTAL' OL;
+ROW COMPD1     / ' '
+                 'COMP AGE IN DYS'
+                 'LESS THAN 1 DAY';
+ROW COMPD2     / '01-27';
+ROW COMPD3     / '28-60';
+ROW COMPD4     / '61+(COND. EDIT)';
+ROW COMPD5     / 'CAN NOT COMP';
+ROW SUBTOT11   / 'TOTAL' OL;
+ROW BPLC1      / ' '
+                 'BIRTHPLACE'
+                 'AL(01)';
+ROW BPLC2      / 'AK(02)';
+ROW BPLC3      / 'AZ(03)';
+ROW BPLC4      / 'AR(04)';
+ROW BPLC5      / 'CA(05)';
+ROW BPLC6      / 'CO(06)';
+ROW BPLC7      / 'CT(07)';
+ROW BPLC8      / 'DE(08)';
+ROW BPLC9      / 'DC(09)';
+ROW BPLC10     / 'FL(10)';
+ROW BPLC11     / 'GA(11)';
+ROW BPLC12     / 'HI(12)';
+ROW BPLC13     / 'ID(13)';
+ROW BPLC14     / 'IL(14)';
+ROW BPLC15     / 'IN(15)';
+ROW BPLC16     / 'IA(16)';
+ROW BPLC17     / 'KS(17)';
+ROW BPLC18     / 'KY(18)';
+ROW BPLC19     / 'LA(19)';
+ROW BPLC20     / 'ME(20)';
+ROW BPLC21     / 'MD(21)';
+ROW BPLC22     / 'MA(22)';
+ROW BPLC23     / 'MI(23)';
+ROW BPLC24     / 'MN(24)';
+ROW BPLC25     / 'MS(25)';
+ROW BPLC26     / 'MO(26)';
+ROW BPLC27     / 'MT(27)';
+ROW BPLC28     / 'NE(28)';
+ROW BPLC29     / 'NV(29)';
+ROW BPLC30     / 'NH(30)';
+ROW BPLC31     / 'NJ(31)';
+ROW BPLC32     / 'NM(32)';
+ROW BPLC33     / 'NY(33)';
+ROW BPLC34     / 'NC(34)';
+ROW BPLC35     / 'ND(35)';
+ROW BPLC36     / 'OH(36)';
+ROW BPLC37     / 'OK(37)';
+ROW BPLC38     / 'OR(38)';
+ROW BPLC39     / 'PA(39)';
+ROW BPLC40     / 'RI(40)';
+ROW BPLC41     / 'SC(41)';
+ROW BPLC42     / 'SD(42)';
+ROW BPLC43     / 'TN(43)';
+ROW BPLC44     / 'TX(44)';
+ROW BPLC45     / 'UT(45)';
+ROW BPLC46     / 'VT(46)';
+ROW BPLC47     / 'VA(47)';
+ROW BPLC48     / 'WA(48)';
+ROW BPLC49     / 'WV(49)';
+ROW BPLC50     / 'WI(50)';
+ROW BPLC51     / 'WY(51)';
+ROW BPLC52     / 'PR(52)';
+ROW BPLC53     / 'VI(53)';
+ROW BPLC54     / 'GU(54)';
+ROW BPLC55     / 'CN(55)';
+ROW BPLC56     / 'CB(56)';
+ROW BPLC57     / 'MX(57)';
+ROW BPLC59     / 'RW(59)';
+ROW BPLC61     / 'AS(61)';
+ROW BPLC62     / 'MP(62)';
+ROW BPLC99     / 'NOT CLASS(99)';
+ROW OTHBPL     / 'OTHER';
+ROW SUBTOT12   / 'TOTAL' OL;
+ROW TPLC1      /' '
+                'TYPE PLACE OF DEATH'
+                'HOSP-INPATIENT(1)';
+ROW TPLC2      /'HOSP-OUTPAT OR ER(2)';
+ROW TPLC3      /'HOSP-DOA(3)';
+ROW TPLC4      /'HOSP-NOT CLASS(4)';
+ROW TPLC5      /'NURSING HOME(5)';
+ROW TPLC6      /'RESIDENCE(6)';
+ROW TPLC7      /'OTH ENTRIES(7)';
+ROW TPLC9      /'NOT CLASS(9)';
+ROW OTHTPL     / 'OTHER';
+ROW SUBTOT13   / 'TOTAL' OL;
+ROW MAR1       /' '
+                'MARITAL STATUS'
+                'MARRIED(1)';
+ROW MAR2       /'NEVER MARRIED(2)';
+ROW MAR3       /'WIDOWED(3)';
+ROW MAR4       /'DIVORCED(4)';
+ROW MAR9       /'NOT CLASS(9)';
+ROW OTHMAR     / 'OTHER';
+ROW MNE2       /'CON EDT:AGE<12/MS NE2';
+ROW SUBTOT14   / 'TOTAL' OL;
+ROW HISP0      /' '
+                'HISPANIC ORIGIN'
+                'NON HISPANIC(0)';
+ROW HISP1      /'MEXICAN(1)';
+ROW HISP2      /'PUERTO RICAN(2)';
+ROW HISP3      /'CUBAN(3)';
+ROW HISP4      /'C. OR S. AMERICAN(4)';
+ROW HISP5      /'OTH AND UNK HISP(5)';
+ROW HISP9      /'NOT CLASS(9)';
+ROW OTHHIS     / 'OTHER';
+ROW SUBTOT15   / 'TOTAL' OL;
+ROW RACEA      /' '
+                'RACE'
+                'ASIAN INDIAN(A)';
+ROW RACEB      /'KOREAN(B)';
+ROW RACEC      /'SAMOAN(C)';
+ROW RACED      /'VIETNAMESE(D)';
+ROW RACEE      /'GUAMIAN(E)';
+ROW RACEF      /'MULTI-RACIAL(F)';
+ROW RACE0      /'OTHERS(0)';
+ROW RACE1      /'WHITE(1)';
+ROW RACE2      /'BLACK(2)';
+ROW RACE3      /'INDIAN(3)';
+ROW RACE4      /'CHINESE(4)';
+ROW RACE5      /'JAPANESE(5)';
+ROW RACE6      /'HAWAIIAN(6)';
+ROW RACE7      /'FILIPINO(7)';
+ROW RACE8      /'OTH ASIAN/PAC ISL(8)';
+ROW RACE9      /'NOT CLASS(9)';
+ROW OTHRAC     / 'OTHER';
+ROW SUBTOT16   / 'TOTAL' OL;
+ROW EDUC0      /' '
+                'EDUCATION'
+                '00 YEARS';
+ROW EDUC1      /'01 YEAR';
+ROW EDUC2      /'02 YEARS';
+ROW EDUC3      /'03 YEARS';
+ROW EDUC4      /'04 YEARS';
+ROW EDUC5      /'05 YEARS';
+ROW EDUC6      /'06 YEARS';
+ROW EDUC7      /'07 YEARS';
+ROW EDUC8      /'08 YEARS';
+ROW EDUC9      /'09 YEARS';
+ROW EDUC10     /'10 YEARS';
+ROW EDUC11     /'11 YEARS';
+ROW EDUC12     /'12 YEARS';
+ROW EDUC13     /'13 YEARS';
+ROW EDUC14     /'14 YEARS';
+ROW EDUC15     /'15 YEARS';
+ROW EDUC16     /'16 YEARS';
+ROW EDUC17     /'17+ YEARS';
+ROW EDUC99     /'NOT CLASS(99)';
+ROW OTHEDU     / 'OTHER';
+ROW EDERR      /'CON EDIT: AGE/EDUC';
+ROW SUBTOT17   / 'TOTAL' OL;
+*ROW AUTOP1     /' '
+*                'AUTOPSY(DROP-1995)'
+*                'YES(1)';
+*ROW AUTOP2     /'NO(2)';
+*ROW AUTOP9     /'NOT CLASS(9)';
+ROW INJ0       /' '
+                'INJ AT WORK(ADD-1993)'
+                'BLANK';
+ROW INJ1       /'YES(1)';
+ROW INJ2       /'NO(2)';
+ROW INJ9       /'NOT CLASS(9)';
+ROW OTHINJ     / 'OTHER';
+ROW SUBTOT18   / 'TOTAL' OL;
+
+COLUMN FLAG  / MTITLE='FLAG' CHAR FORMAT=$3.;
+COLUMN USTOT / MTITLE="&Y US"
+               MTITLE='TOTAL' FORMAT=5.2;
+COLUMN DIFF  / MTITLE='%'
+               MTITLE='DIFF'
+               MTITLE="&ENDYR/"
+               MTITLE="&PREVYR" FORMAT=5.;
+%SHOW;
+
+     MALE=SEX=1;
+     FEMALE=SEX=2;
+     NOTCLAS1=SEX=9;
+     OTHSX=SEX=0;
+     JAN=MONTH=01;
+     FEB=MONTH=02;
+     MAR=MONTH=03;
+     APRIL=MONTH=04;
+     MAY=MONTH=05;
+     JUNE=MONTH=06;
+     JULY=MONTH=07;
+     AUG=MONTH=08;
+     SEPT=MONTH=09;
+     OCT=MONTH=10;
+     NOV=MONTH=11;
+     DEC=MONTH=12;
+     NOTCLAS2=MONTH=99;
+     OTHMO=MONTH=98;
+DY1=DAY=06;
+DY7=DAY=07;
+DY14=DAY=14;
+DY15=DAY=15;
+DY23=DAY=23;
+DY24=DAY=24;
+DY30=DAY=30;
+DY31=DAY=31;
+NOTCLAS3=DAY=99;
+OTHDY=DAY=00;
+JANB=BIRTHMO=01;
+FEBB=BIRTHMO=02;
+MARB=BIRTHMO=03;
+APRILB=BIRTHMO=04;
+MAYB=BIRTHMO=05;
+JUNEB=BIRTHMO=06;
+JULYB=BIRTHMO=07;
+AUGB=BIRTHMO=08;
+SEPTB=BIRTHMO=09;
+OCTB=BIRTHMO=10;
+NOVB=BIRTHMO=11;
+DECB=BIRTHMO=12;
+NOTCLAS4=BIRTHMO=99;
+OTHMOB=BIRTHMO=98;
+DY1B=BIRTHDY=06;
+DY7B=BIRTHDY=07;
+DY14B=BIRTHDY=14;
+DY15B=BIRTHDY=15;
+DY23B=BIRTHDY=23;
+DY24B=BIRTHDY=24;
+DY30B=BIRTHDY=30;
+DY31B=BIRTHDY=31;
+NOTCLAS5=BIRTHDY=99;
+OTHDYB=BIRTHDY=00;
+*YRB1=BIRTHYR=88;
+*YRB2=BIRTHYR=99;
+*SUBTOT6=YRB1+YRB2;
+CENT1=CENTURY=800;
+CENT2=CENTURY=900;
+CENT3=CENTURY=901;
+CENT4=CENTURY=200;
+CENT5=CENTURY=999;
+OTHCEN=CENTURY=000;
+RANGE1=AGE=100;
+RANGE2=AGE=101;
+RANGE3=AGE=102;
+RANGE4=AGE=103;
+RANGE5=AGE=104;
+RANGE6=AGE=105;
+RANGE7=AGE=106;
+RANGE8=AGE=107;
+RANGE9=AGE=108;
+RANGE10=AGE=109;
+RANGE11=AGE=110;
+RANGE12=AGE=111;
+RANGE13=AGE=112;
+RANGE14=AGE=113;
+RANGE15=AGE=114;
+RANGE16=AGE=115;
+RANGE17=AGE=116;
+RANGE18=AGE=117;
+RANGE19=AGE=118;
+RANGE20=AGE=119;
+RANGE21=AGE=120;
+RANGE22=AGE=121;
+RANGE23=AGE=122;
+RANGE24=AGE=123;
+RANGE25=AGE=200;
+RANGE26=AGE=201;
+RANGE27=AGE=202;
+RANGE28=AGE=203;
+RANGE29=AGE=204;
+RANGE30=AGE=300;
+RANGE31=AGE=301;
+RANGE32=AGE=302;
+RANGE33=AGE=303;
+RANGE34=AGE=304;
+RANGE35=AGE=400;
+RANGE36=AGE=401;
+RANGE37=AGE=402;
+RANGE38=AGE=403;
+RANGE39=AGE=404;
+RANGE40=AGE=500;
+RANGE41=AGE=501;
+RANGE42=AGE=502;
+RANGE43=AGE=503;
+RANGE44=AGE=504;
+RANGE45=AGE=600;
+RANGE46=AGE=601;
+RANGE47=AGE=602;
+RANGE48=AGE=603;
+RANGE49=AGE=604;
+RANGE50=AGE=999;
+OTHRNG=AGE=888;
+AGE5=AGEGT5=1;
+AGEEDT=AGEERR=1;
+UNIT1=UNIT=2;
+COMPY1=COMPYR=120;
+COMPY2=COMPYR=119;
+COMPY3=COMPYR=109;
+COMPY4=COMPYR=99;
+COMPY5=COMPYR=94;
+COMPY6=COMPYR=89;
+COMPY7=COMPYR=84;
+COMPY8=COMPYR=79;
+COMPY9=COMPYR=74;
+COMPY10=COMPYR=69;
+COMPY11=COMPYR=64;
+COMPY12=COMPYR=59;
+COMPY13=COMPYR=54;
+COMPY14=COMPYR=49;
+COMPY15=COMPYR=44;
+COMPY16=COMPYR=39;
+COMPY17=COMPYR=34;
+COMPY18=COMPYR=29;
+COMPY19=COMPYR=24;
+COMPY20=COMPYR=19;
+COMPY21=COMPYR=14;
+COMPY22=COMPYR=9;
+COMPY23=COMPYR=4;
+COMPY24=COMPYR=0;
+COMPY25=COMPYR=999;
+COMPM1=COMPMO=11;
+COMPM2=COMPMO=23;
+*COMPM3=COMPMO=23;
+*COMPM4=COMPMO=99;
+COMPD1=COMPDY=9;
+COMPD2=COMPDY=27;
+COMPD3=COMPDY=60;
+*COMPD4=COMPDY=61;
+*COMPD5=COMPDY=99;
+BPLC1=BIRTHPLC=01;
+BPLC2=BIRTHPLC=02;
+BPLC3=BIRTHPLC=03;
+BPLC4=BIRTHPLC=04;
+BPLC5=BIRTHPLC=05;
+BPLC6=BIRTHPLC=06;
+BPLC7=BIRTHPLC=07;
+BPLC8=BIRTHPLC=08;
+BPLC9=BIRTHPLC=09;
+BPLC10=BIRTHPLC=10;
+BPLC11=BIRTHPLC=11;
+BPLC12=BIRTHPLC=12;
+BPLC13=BIRTHPLC=13;
+BPLC14=BIRTHPLC=14;
+BPLC15=BIRTHPLC=15;
+BPLC16=BIRTHPLC=16;
+BPLC17=BIRTHPLC=17;
+BPLC18=BIRTHPLC=18;
+BPLC19=BIRTHPLC=19;
+BPLC20=BIRTHPLC=20;
+BPLC21=BIRTHPLC=21;
+BPLC22=BIRTHPLC=22;
+BPLC23=BIRTHPLC=23;
+BPLC24=BIRTHPLC=24;
+BPLC25=BIRTHPLC=25;
+BPLC26=BIRTHPLC=26;
+BPLC27=BIRTHPLC=27;
+BPLC28=BIRTHPLC=28;
+BPLC29=BIRTHPLC=29;
+BPLC30=BIRTHPLC=30;
+BPLC31=BIRTHPLC=31;
+BPLC32=BIRTHPLC=32;
+BPLC33=BIRTHPLC=33;
+BPLC34=BIRTHPLC=34;
+BPLC35=BIRTHPLC=35;
+BPLC36=BIRTHPLC=36;
+BPLC37=BIRTHPLC=37;
+BPLC38=BIRTHPLC=38;
+BPLC39=BIRTHPLC=39;
+BPLC40=BIRTHPLC=40;
+BPLC41=BIRTHPLC=41;
+BPLC42=BIRTHPLC=42;
+BPLC43=BIRTHPLC=43;
+BPLC44=BIRTHPLC=44;
+BPLC45=BIRTHPLC=45;
+BPLC46=BIRTHPLC=46;
+BPLC47=BIRTHPLC=47;
+BPLC48=BIRTHPLC=48;
+BPLC49=BIRTHPLC=49;
+BPLC50=BIRTHPLC=50;
+BPLC51=BIRTHPLC=51;
+BPLC52=BIRTHPLC=52;
+BPLC53=BIRTHPLC=53;
+BPLC54=BIRTHPLC=54;
+BPLC55=BIRTHPLC=55;
+BPLC56=BIRTHPLC=56;
+BPLC57=BIRTHPLC=57;
+BPLC59=BIRTHPLC=59;
+BPLC61=BIRTHPLC=61;
+BPLC62=BIRTHPLC=62;
+BPLC99=BIRTHPLC=99;
+OTHBPL=BIRTHPLC=98;
+TPLC1=TYP_PLAC=1;
+TPLC2=TYP_PLAC=2;
+TPLC3=TYP_PLAC=3;
+TPLC4=TYP_PLAC=4;
+TPLC5=TYP_PLAC=5;
+TPLC6=TYP_PLAC=6;
+TPLC7=TYP_PLAC=7;
+TPLC9=TYP_PLAC=9;
+OTHTPL=TYP_PLAC=0;
+MAR1=MARITAL=1;
+MAR2=MARITAL=2;
+MAR3=MARITAL=3;
+MAR4=MARITAL=4;
+MAR9=MARITAL=9;
+OTHMAR=MARITAL=0;
+MNE2=MARNE2=9;
+HISP0=HISPANIC=0;
+HISP1=HISPANIC=1;
+HISP2=HISPANIC=2;
+HISP3=HISPANIC=3;
+HISP4=HISPANIC=4;
+HISP5=HISPANIC=5;
+HISP9=HISPANIC=9;
+OTHHIS=HISPANIC=8;
+RACEA=RACE=10;
+RACEB=RACE=11;
+RACEC=RACE=12;
+RACED=RACE=13;
+RACEE=RACE=14;
+RACEF=RACE=15;
+RACE0=RACE=0;
+RACE1=RACE=1;
+RACE2=RACE=2;
+RACE3=RACE=3;
+RACE4=RACE=4;
+RACE5=RACE=5;
+RACE6=RACE=6;
+RACE7=RACE=7;
+RACE8=RACE=8;
+RACE9=RACE=9;
+OTHRAC=RACE=98;
+EDUC0=EDUC=00;
+EDUC1=EDUC=01;
+EDUC2=EDUC=02;
+EDUC3=EDUC=03;
+EDUC4=EDUC=04;
+EDUC5=EDUC=05;
+EDUC6=EDUC=06;
+EDUC7=EDUC=07;
+EDUC8=EDUC=08;
+EDUC9=EDUC=09;
+EDUC10=EDUC=10;
+EDUC11=EDUC=11;
+EDUC12=EDUC=12;
+EDUC13=EDUC=13;
+EDUC14=EDUC=14;
+EDUC15=EDUC=15;
+EDUC16=EDUC=16;
+EDUC17=EDUC=17;
+OTHEDU=EDUC=98;
+EDUC99=EDUC=99;
+EDERR=EDUCERR=1;
+*AUTOP1=AUTOPSY=1;
+*AUTOP2=AUTOPSY=2;
+*AUTOP9=AUTOPSY=9;
+INJ0=INJURY=0;
+INJ1=INJURY=1;
+INJ2=INJURY=2;
+INJ9=INJURY=9;
+OTHINJ=INJURY=8;
+ROWBLK:
+SUBTOT1=MALE+FEMALE+NOTCLAS1+OTHSX;
+SUBTOT2=
+JAN+FEB+MAR+APRIL+MAY+JUNE+JULY+AUG+SEPT+OCT+NOV+DEC+NOTCLAS2+OTHMO;
+SUBTOT3=DY1+DY7+DY14+DY15+DY23+DY24+DY30+DY31+NOTCLAS3+OTHDY;
+SUBTOT4=JANB+FEBB+MARB+APRILB+MAYB+JUNEB+JULYB+AUGB+SEPTB+OCTB+NOVB+
+DECB+NOTCLAS4+OTHMOB;
+SUBTOT5=DY1B+DY7B+DY14B+DY15B+DY23B+DY24B+DY30B+DY31B+NOTCLAS5+OTHDYB;
+SUBTOT7=CENT1+CENT2+CENT3+CENT4+CENT5+OTHCEN;
+SUBTOT8=RANGE1+RANGE2+RANGE3+RANGE4+RANGE5+RANGE6+RANGE7+RANGE8+
+RANGE9+RANGE10+RANGE11+RANGE12+RANGE13+RANGE14+RANGE15+RANGE16+
+RANGE17+RANGE18+RANGE19+RANGE20+RANGE21+RANGE22+RANGE23+RANGE24+
+RANGE25+RANGE26+RANGE27+RANGE28+RANGE29+RANGE30+RANGE31+RANGE32+
+RANGE33+RANGE34+RANGE35+RANGE36+RANGE37+RANGE38+RANGE39+RANGE40+
+RANGE41+RANGE42+RANGE43+RANGE44+RANGE45+RANGE46+RANGE47+RANGE48+
+RANGE49+RANGE50+OTHRNG;
+SUBTOT9=COMPY1+COMPY2+COMPY3+COMPY4+COMPY5+COMPY6+COMPY7+COMPY8+COMPY9+
+COMPY10+COMPY11+COMPY12+COMPY13+COMPY14+COMPY15+COMPY16+COMPY17+COMPY18+
+COMPY19+COMPY20+COMPY21+COMPY22+COMPY23+COMPY24+COMPY25;
+SUBTOT10=COMPM1+COMPM2;
+SUBTOT11=COMPD1+COMPD2+COMPD3;
+SUBTOT12=BPLC1+BPLC2+BPLC3+BPLC4+BPLC5+BPLC6+BPLC7+BPLC8+BPLC9+BPLC10+
+BPLC11+BPLC12+BPLC13+BPLC14+BPLC15+BPLC16+BPLC17+BPLC18+BPLC19+BPLC20+
+BPLC21+BPLC22+BPLC23+BPLC24+BPLC25+BPLC26+BPLC27+BPLC28+BPLC29+BPLC30+
+BPLC31+BPLC32+BPLC33+BPLC34+BPLC35+BPLC36+BPLC37+BPLC38+BPLC39+BPLC40+
+BPLC41+BPLC42+BPLC43+BPLC44+BPLC45+BPLC46+BPLC47+BPLC48+BPLC49+BPLC50+
+BPLC51+BPLC52+BPLC53+BPLC54+BPLC55+BPLC56+BPLC57+BPLC59+BPLC61+BPLC62+
+BPLC99+OTHBPL;
+SUBTOT13=TPLC1+TPLC2+TPLC3+TPLC4+TPLC5+TPLC6+TPLC7+TPLC9+OTHTPL;
+SUBTOT14=MAR1+MAR2+MAR3+MAR4+MAR9+OTHMAR;
+SUBTOT15=HISP0+HISP1+HISP2+HISP3+HISP4+HISP5+HISP9+OTHHIS;
+SUBTOT16=RACEA+RACEB+RACEC+RACED+RACEE+RACEF+RACE0+RACE1+RACE2+RACE3+
+         RACE4+RACE5+RACE6+RACE7+RACE8+RACE9+OTHRAC;
+SUBTOT17=EDUC0+EDUC1+EDUC2+EDUC3+EDUC4+EDUC5+EDUC6+EDUC7+EDUC8+EDUC9+
+EDUC10+EDUC11+EDUC12+EDUC13+EDUC14+EDUC15+EDUC16+EDUC17+OTHEDU+EDUC99;
+SUBTOT18=INJ0+INJ1+INJ2+INJ9+OTHINJ;
+COLDIFF:
+IF PCNT&PREVYR = 0.00 THEN DIFF = 0.00;
+ELSE
+    DIFF=((PCNT&ENDYR-PCNT&PREVYR)/PCNT&PREVYR) * 100;
+RUN;
+
+%MACRO SUMRY;
+ %DO I=&A %TO &ENDYR;
+     PROC SUMMARY DATA=MO1&I;
+       VAR COUNT;
+       OUTPUT OUT=SUMR&I SUM=;
+     RUN;
+ %END;
+%MEND SUMRY;
+
+%SUMRY
+%MACRO SUM2;
+ %DO I=&A %TO &ENDYR;
+     DATA SUM&I (KEEP=COUNT YEAR);
+       SET SUMR&I;
+       YEAR=&I;
+     RUN;
+ %END;
+%MEND SUM2;
+
+%SUM2
+
+%MACRO COMBINE;
+ %DO K=&A %TO &ENDYR;
+     SUM&K
+ %END;
+%MEND COMBINE;
+
+%MACRO ALLSM;
+ DATA ALLSM;
+  SET %COMBINE;
+  BY YEAR;
+ RUN;
+%MEND ALLSM;
+
+%ALLSM
+
+PROC PRINT DATA=ALLSM NOOBS;
+TITLE1 "&STNAME &ENDYR MORTALITY";
+TITLE2 'TIME SERIES ANALYSIS REPORT';
+TITLE3 'TOTAL RECORD COUNTS ';
+TITLE4 "DATASET NAME:  &DNAME";
+%TITLEV
+FOOTNOTE '';
+FORMAT COUNT COMMA10.0;
+VAR YEAR COUNT;
+RUN;
+
+
+  /* vim: set tw=72 ft=sas ff=unix: */ 
+endrsubmit;
+signoff cdcjes2;

@@ -1,0 +1,26 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: dlstatus
+#
+#  Summary: See progress of a file in process of being downloaded.
+#
+#  Adapted: Thu, 03 Aug 2000 09:09:19 (Bob Heckel TPJ Spring 2000)
+# Modified: Wed 29 Aug 2001 10:25:52 (Bob Heckel)
+##############################################################################
+
+BEGIN {
+  $| = 1; 
+  $f = $ARGV[0]; 
+  $s = (stat $f)[7]; 
+  $t = time
+};
+
+if ( $ARGV[0] =~ /-+h.*/ || !$f ) {
+  print STDERR "Usage: $0 FILENAME \nTracks d/l progress of FILENAME.\n";
+  exit(-1);
+}
+
+while ( sleep 1 ) {
+  printf("\r$f %s bytes at %.2f Kb per second", 
+                            $_ = (stat $f)[7],($_ - $s) / 1024/(time - $t));
+}

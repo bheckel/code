@@ -1,0 +1,355 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 4.4, Polymorphism</TITLE>
+<META NAME="description" CONTENT="pointers to base classes. Virtual members. Abstract base classes.">
+<META NAME="keywords" CONTENT="this virtual class">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 4.4 </FONT><BR>
+ <FONT SIZE=5><B>Polymorphism</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<P>
+<CENTER>
+<TABLE BORDER=1 CELLPADDING=5 WIDTH=90%><TR><TD>
+For a suitable understanding of this section you should clearly know how to use 
+<B>pointers</B> and <B>inheritance between classes</B>. I recommend that if some
+of these expressions seems strange to you, you review the indicated sections:
+<TT><PRE>
+  int a::b(c) {};    <FONT COLOR="green"><I>// Classes (<A HREF="tut4-1.html#c">Section 4.1</A>)</I></FONT>
+  a->b               <FONT COLOR="green"><I>// pointers and objects (<A HREF="tut4-2.html#a">Section 4.2</A>)</I></FONT>
+  class a: public b; <FONT COLOR="green"><I>// Relationships between classes (<A HREF="tut4-3.html#c">Section 4.3</A>)</I></FONT>
+</PRE></TT>
+</TD></TR></TABLE></CENTER>
+<P>
+<H2>Pointers to base class</H2>
+One of the greater advantages of deriving classes is that <B><U>a pointer to a derived
+class is type-compatible with a pointer to its base class</U></B>. 
+This section is fully dedicated to taking advantage of this powerful C++ feature.
+For example, we are going to
+rewrite our program about the rectangle and the triangle of the previous section
+considering this property:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// pointers to base class</I>
+#include &lt;iostream.h&gt;
+
+class CPolygon {
+  protected:
+    int width, height;
+  public:
+    void set_values (int a, int b)
+      { width=a; height=b; }
+  };
+
+class CRectangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height); }
+  };
+
+class CTriangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height / 2); }
+  };
+
+int main () {
+  CRectangle rect;
+  CTriangle trgl;
+  CPolygon * ppoly1 = &rect;
+  CPolygon * ppoly2 = &trgl;
+  ppoly1-&gt;set_values (4,5);
+  ppoly2-&gt;set_values (4,5);
+  cout &lt;&lt; rect.area() &lt;&lt; endl;
+  cout &lt;&lt; sqre.area() &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>20<BR>10</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+The function <TT><B>main</B></TT> creates two pointers that point to objects of class
+<TT><B>CPolygon</B></TT>, that are <TT><B>*ppoly1</B></TT> and <TT><B>*ppoly2</B></TT>.
+These are assigned to the addresses of <TT><B>rect</B></TT> and <TT><B>trgl</B></TT>,
+and because they are objects of classes derived from <TT><B>CPolygon</B></TT>
+they are valid assignations.
+<P>
+The only limitation of using <TT><B>*ppoly1</B></TT> and <TT><B>*ppoly2</B></TT>
+instead of <TT><B>rect</B></TT> and <TT><B>trgl</B></TT>
+is that both <TT><B>*ppoly1</B></TT> and <TT><B>*ppoly2</B></TT> are of type
+<TT><B>CPolygon*</B></TT> and therefore we can only refer the members that
+<TT><B>CRectangle</B></TT> and <TT><B>CTriangle</B></TT> inherit from
+<TT><B>CPolygon</B></TT>. For that reason when calling to the <TT><B>area()</B></TT>
+members we have not been able to use them (<TT><B>*ppoly1</B></TT> and
+<TT><B>*ppoly2</B></TT>).
+<P>
+To make it possible for the pointers to class <TT><B>CPolygon</B><TT> admit
+<TT><B>area()</B></TT> as a valid member, this should also have been declared in the base class and
+not only in its derived ones. (see the following section).
+
+<P>
+<H2>Virtual members</H2>
+In order to declare an element of a class which we are going to redefine in derived
+classes we must precede it with the keyword <TT><B>virtual</B></TT> so that the use
+of pointers to objects of that class can be suitable.
+<P>Take a look at the following example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// virtual members</I>
+#include &lt;iostream.h&gt;
+
+class CPolygon {
+  protected:
+    int width, height;
+  public:
+    void set_values (int a, int b)
+      { width=a; height=b; }
+    virtual int area (void)
+      { return (0); }
+  };
+
+class CRectangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height); }
+  };
+
+class CTriangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height / 2); }
+  };
+
+int main () {
+  CRectangle rect;
+  CTriangle trgl;
+  CPolygon poly;
+  CPolygon * ppoly1 = &rect;
+  CPolygon * ppoly2 = &trgl;
+  CPolygon * ppoly3 = &poly;
+  ppoly1-&gt;set_values (4,5);
+  ppoly2-&gt;set_values (4,5);
+  ppoly3-&gt;set_values (4,5);
+  cout &lt;&lt; ppoly1-&gt;area() &lt;&lt; endl;
+  cout &lt;&lt; ppoly2-&gt;area() &lt;&lt; endl;
+  cout &lt;&lt; ppoly3-&gt;area() &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>20<BR>10<BR>0</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+Now the three classes (<TT><B>CPolygon</B></TT>, <TT><B>CRectangle</B></TT> and
+ <TT><B>CTriangle</B></TT>) have the same members: <TT><B>width</B></TT>,
+<TT><B>height</B></TT>, <TT><B>set_values()</B></TT> and <TT><B>area()</B></TT>.
+<P>
+<TT><B>area()</B></TT> has been defined as <TT><B>virtual</B></TT> because it is later
+redefined in derived classes. You can verify if you want that if you remove this word
+(<TT><B>virtual</B></TT>) from the code and then you execute the program
+the result will be <TT><B>0</B></TT> for the three polygons
+instead of <TT><B>20,10,0</B></TT>. That would be because instead of calling to the
+corresponding <TT><B>area()</B></TT> function for each object
+(<TT><B>CRectangle::area()</B></TT>, <TT><B>CTriangle::area()</B></TT>
+and <TT><B>CPolygon::area()</B></TT>, respectively), <TT><B>CPolygon::area()</B></TT> will
+be called for all of them since the calls are via a pointer to <TT><B>CPolygon</B></TT>.
+<P>
+Therefore what the word <TT><B>virtual</B></TT> does is to allow that the member of a
+derived class with the same name that one of the base class is suitably called when a
+pointer to it is used.  In fact what happens is that that base class member
+is placed virtually in it, since in derived classes can be replaced, as it is the case
+in our example.
+<P>
+Note that in spite of its virtuality we have also been able to declare an object of type
+<TT><B>CPolygon</B></TT> and to call to its <TT><B>area()</B></TT> function, that anyway
+always returns <TT><B>0</B></TT> as result.
+
+<P>
+<H2>Abstract base classes</H2>
+Basic abstract classes are something very similar to the class <TT><B>CPolygon</B></TT>
+of our previous example.  The only difference is that in our previous example we have
+defined a valid <TT><B>area()</B></TT> function for objects that were of class
+<TT><B>CPolygon</B></TT> (like object <TT><B>poly</B></TT>), whereas in an
+<I>abstract base class</I> we could have simply left without defining this function
+by appending <TT><B>=0</B></TT> (equal to zero) to the function declaration.
+<P>
+The class <TT><B>CPolygon</B></TT> could have been thus:
+<BLOCKQUOTE><TT><PRE>
+<I>// abstract class CPoligon</I>
+class CPolygon {
+  protected:
+    int width, height;
+  public:
+    void set_values (int a, int b)
+      { width=a; height=b; }
+    virtual int area (void) =0;
+  };
+</PRE></TT></BLOCKQUOTE>
+Notice how we have appended <TT><B>=0</B></TT> to <TT><B>virtual int area (void)</B></TT>
+instead of specifying an implementation for the function. This type of function receives
+the name of <I>pure virtual function</I>, and all classes that contains any
+<I>pure virtual function</I> are considered <I>abstract base classes</I>.
+<P>
+The greater difference of an abstract base class is that there cannot be created
+instances (objects) of it. But we can create pointers to them. Therefore a declaration like:
+<blockquote ><TT><FONT COLOR="red">CPolygon poly;</FONT></TT></BLOCKQUOTE>
+would be incorrect for the abstract base class declared above.  Nevertheless the pointers:
+<blockquote ><TT>CPolygon * ppoly1;<BR>CPolygon * ppoly2</TT></BLOCKQUOTE>
+are be perfectly valid.  This is because the <I>pure virtual function</I> that it
+includes is not defined and it is impossible to create an object if it does not have
+all its members defined. Nevertheless a pointer that points to an object of a derived
+class where this function has been defined is perfectly valid.
+<P>
+Here you have the complete example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// virtual members</I>
+#include &lt;iostream.h&gt;
+
+class CPolygon {
+  protected:
+    int width, height;
+  public:
+    void set_values (int a, int b)
+      { width=a; height=b; }
+    virtual int area (void) =0;
+  };
+
+class CRectangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height); }
+  };
+
+class CTriangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height / 2); }
+  };
+
+int main () {
+  CRectangle rect;
+  CTriangle trgl;
+  CPolygon * ppoly1 = &rect;
+  CPolygon * ppoly2 = &trgl;
+  ppoly1-&gt;set_values (4,5);
+  ppoly2-&gt;set_values (4,5);
+  cout &lt;&lt; ppoly1-&gt;area() &lt;&lt; endl;
+  cout &lt;&lt; ppoly2-&gt;area() &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>20<BR>10</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+If you review the program you will notice that we can refer to objects of different
+classes using a unique type of pointer (<TT><B>CPolygon*</B></TT>). This can be
+tremendously useful. Imagine, now we can create a function member of
+<TT><B>CPolygon</B></TT> that is able to print on screen the result of the
+<TT><B>area()</B></TT> function independently of which of the derived classes is.
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// ejemplo miembros virtuales</I>
+#include &lt;iostream.h&gt;
+
+class CPolygon {
+  protected:
+    int width, height;
+  public:
+    void set_values (int a, int b)
+      { width=a; height=b; }
+    virtual int area (void) =0;
+    void printarea (void)
+      { cout &lt;&lt; this-&gt;area() &lt;&lt; endl; }
+  };
+
+class CRectangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height); }
+  };
+
+class CTriangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height / 2); }
+  };
+
+int main () {
+  CRectangle rect;
+  CTriangle trgl;
+  CPolygon * ppoly1 = &rect;
+  CPolygon * ppoly2 = &trgl;
+  ppoly1-&gt;set_values (4,5);
+  ppoly2-&gt;set_values (4,5);
+  ppoly1->printarea();
+  ppoly2->printarea();
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>20<BR>10</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+Remember that <TT><B>this</B></TT> represents a pointer to the object
+whose code is being executed.
+<P>
+Abstract classes and virtual members grant to C++ the polymorphic characteristics
+that make object-oriented programming a so useful instrument.  Of course we have
+seen the simplest way to use these features, but imagine these features applied to
+arrays of objects or objects assigned through dynamic memory.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut4-3.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>4-3. Relationships between classes.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut5-1.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>5-1. Templates.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</BODY>
+</HTML>

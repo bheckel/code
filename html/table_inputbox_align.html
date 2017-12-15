@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+  <TITLE>Batch Query</TITLE>
+</HEAD>
+<BODY bgcolor="white">
+  <BR>
+  <hr>
+  <H4><FONT FACE="Arial">Generate current query data:</FONT></H4>
+  <BR>
+  <!-- <FORM ACTION="http://localhost/cgi-sas/broker" METHOD="POST" NAME="the_form"> -->
+<!--   <FORM ACTION="http://localhost/cgi-sas/broker" METHOD="GET" NAME="the_form"> -->
+<!--   <FORM ACTION="http://rtpsawn321/sasweb/cgi-bin/broker.exe" METHOD="POST" NAME="the_form"> -->
+  <FORM ACTION="http://rtpsawn321/sasweb/cgi-bin/broker.exe" METHOD="POST" NAME="the_form">
+<!--   <FORM ACTION="http://zebwl10d43164/cgi-bin/broker" METHOD="POST" NAME="the_form"> -->
+  <!-- <FORM ACTION="http://mainframe.cdc.gov/sasweb/cgi-bin/broker" METHOD="GET" NAME="the_form"> -->
+    <INPUT TYPE="hidden" NAME="_DEBUG" VALUE="131">
+    <INPUT TYPE="hidden" NAME="_SERVICE" VALUE="default">
+    <INPUT TYPE="hidden" NAME="_PROGRAM" VALUE="DEMO.t.sas">
+    <INPUT TYPE="hidden" NAME="the_env" VALUE="development">
+
+    <table border=0>
+    <tr>
+    <td><INPUT NAME="the_batch" TYPE="text" SIZE=12 VALUE="9ZM6298" onClick="javascript:value=''; return false"><td>Batch number
+    <tr>
+    <td align="right"><INPUT NAME="the_starthrs" TYPE="text" SIZE=4 VALUE="4" STYLE="text-align:right" onClick="javascript:value=''; return false"><td>Hours from batch start (for IP21 pull)
+    </table>
+
+    <BR>
+    <font size="-1">Save output<INPUT NAME="the_saveout" TYPE="checkbox"></font>
+    <BR>
+    <BR>
+
+    <INPUT NAME="the_submit" TYPE="submit">
+    <br>
+    <br>
+    <br>
+    <hr>
+    <h4>Report data will include:</h4>
+    <menu>
+    <li>DISY
+    <ul>
+    <li>Start date/time and Material number
+    </ul>
+
+    <li>ChemLMS Methods
+    <ul>
+    <li>TDC
+    <li>CI
+    <li>Dose
+    </ul>
+    
+    <li>IP21 Tags (from requested batch start time)
+    <ul>
+    <li>tag 23034794.Vessel.Pres.PV
+    <li>tag 23034794.Prod.Temp.PV
+    <li>tag 23034794.Recir.Pres.PV
+    <li>tag 23034794.Fill.Rm.Hum.PV
+    </ul>
+    
+    </menu>
+  </FORM>
+</BODY>
+</HTML>

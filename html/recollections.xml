@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="The Five Daily Recollections" 
+               directory_title="The Five Daily Recollections" 
+               title_url="http://bobheckel.googlepages.com/recollections.html"
+               description="A randomly rotating text string of Buddhist '5 Daily Recollections'"
+               author="Bob Heckel"
+               author_email="recollections.20.bheckel@xoxy.net"
+               author_link="http://bheckel.multics.org/quotes_bobh.txt"
+               author_quote="Then graphics games came along and the computer using portion of the human race forgot all about 500,000 years of language evolution and went straight back to the electronic equivalent of banging rocks together - Douglas Adams"
+               screenshot="http://bobheckel.googlepages.com/recollections_gadget.jpg"
+               thumbnail="http://bobheckel.googlepages.com/recollections_gadget_thumb.jpg"
+               height="50"
+               >
+    <Require feature="dynamic-height"/>
+    <Require feature="analytics"/>
+  </ModulePrefs>
+
+  <!--
+   * recollections.xml - a Buddhist Google Gadget
+   * Copyright (C) 2006 Bob Heckel recollections.20.bheckel@xoxy.net
+   *
+   * This program is free software; you can redistribute it and/or
+   * modify it under the terms of the GNU General Public License as
+   * published by the Free Software Foundation; either version 2 of the
+   * License, or (at your option) any later version.
+   *
+   * This program is distributed in the hope that it will be useful, but
+   * WITHOUT ANY WARRANTY; without even the implied warranty of
+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   * General Public License for more details.
+   *
+   * You may have received a copy of the GNU General Public License
+   * along with this program; if not, write to the Free Software
+   * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   * 02111-1307, USA.
+  -->
+  <UserPref name="myfont" display_name="Font" default_value="Arial" datatype="enum" >
+     <EnumValue value="Arial" />
+     <EnumValue value="Arial Narrow" />
+     <EnumValue value="Book Antiqua" />
+     <EnumValue value="Calisto MT" />
+     <EnumValue value="Courier" />
+     <EnumValue value="Courier New" />
+     <EnumValue value="Garamond" />
+     <EnumValue value="Lucida Console" />
+     <EnumValue value="Pristina" />
+     <EnumValue value="Tahoma" />
+     <EnumValue value="Times New Roman" />
+     <EnumValue value="Trebuchet MS" />
+     <EnumValue value="Verdana" />
+  </UserPref> 
+
+  <UserPref name="myweight" display_name="Bold" datatype="bool" 
+   default_value="false" />
+
+  <UserPref name="mysize" display_name="Size Multiplier" default_value="2" datatype="enum" >
+     <EnumValue value="1" />
+     <EnumValue value="2" />
+     <EnumValue value="3" />
+     <EnumValue value="4" />
+     <EnumValue value="5" />
+     <EnumValue value="6" />
+  </UserPref> 
+
+
+  <UserPref name="mycase" display_name="Case" default_value="normal" datatype="enum" >
+     <EnumValue value="upper" />
+     <EnumValue value="lower" />
+     <EnumValue value="normal" />
+  </UserPref> 
+
+  <Content type="html">
+     <![CDATA[
+     <script>
+       // TODO move out of separate tags
+       // Track this gadget using Google Analytics
+       _IG_Analytics("UA-1669067-1", "/recogadget");
+     </script>
+
+     <script type="text/javascript">
+
+       function resizeGadget() {
+         _IG_AdjustIFrameHeight();
+       }
+
+       var prefs = new _IG_Prefs(__MODULE_ID__);
+       var someStringPref = prefs.getString("myfont");
+       var someWeightPref = prefs.getBool("myweight");
+       var someSizePref = prefs.getInt("mysize");
+       var someCasePref = prefs.getString("mycase");
+
+       lowest = 1
+       highest = 5 
+       retval = 0
+
+       while ( (retval < lowest) || (retval > highest) ) {
+         now = new Date()
+         retval = Math.abs(Math.sin(now.getTime())) 
+         retval = parseInt(retval * (highest+1)) 
+       }
+
+       if ( retval == 1 ) {
+         str="I am of the nature to be diseased.  I have not gone beyond disease."
+       } else if ( retval == 2 ) {
+         str="I am of the nature to die.  I have not gone beyond death."
+       } else if ( retval == 3 ) {
+         str="All that is mine, dear and delightful, will change and vanish."
+       } else if ( retval == 4 ) {
+         str="I am the owner of my kamma.  I am heir to my kamma.  I am born of my kamma.  I am related to my kamma.  whatever kamma I create, whether good or evil, that I shall inherit."
+       } else if ( retval == 5 ) {
+         str="I am of the nature to decay.  I have not gone beyond decay."
+       } else {
+         str="error i.e. much dukkha"
+       }
+
+       document.write('<FONT FACE="')
+       document.write(someStringPref)
+       document.write('" SIZE="')
+       document.write(someSizePref)
+       document.write('">')
+
+       if ( prefs.getBool("myweight") == true ) {
+         document.write('<b>')
+       }
+
+       if ( someCasePref == 'upper' ) {
+         document.write(str.toUpperCase())
+       } else if (someCasePref == 'lower') {
+         document.write(str.toLowerCase())
+       } else {
+         document.write(str)
+       }
+
+       document.write("</FONT>")
+
+       if ( prefs.getBool("myweight") == true ) {
+         document.write('</b>')
+       }
+       
+       resizeGadget();
+
+    </script>
+
+     ]]>
+  </Content>
+</Module>
+

@@ -1,0 +1,40 @@
+<!-- Adapted from http://www.javascriptkit.com/javatutors/oopjs.shtml -->
+
+<script language="javascript" type="text/javascript">
+<!--
+  // Traditional style:
+  person = new Object()
+  person.name = "Tim Scarfe"
+  person.height = "6Ft"
+
+  person.run = function() {
+	  this.state = "running"
+	  this.speed = "4ms^-1"
+  }
+
+
+  // Object Literal state (better but v1.2+):
+  timObject = {
+    property1 : "Hello",
+    property2 : "MmmMMm",
+    property3 : ["mmm", 2, 3, 6, "nnn"],
+    method1 : function(){alert("Method had been called " + this.property1)}
+  };
+
+  timObject.method1();
+  alert(timObject.property3[2]) // will yield 3
+
+
+  // Another object literal example:
+  var circle = { x : 0, y : 0, radius: 2 } 
+
+  // nesting is no problem.
+  var rectangle = { 
+	  upperLeft : { x : 2, y : 2 },
+	  lowerRight : { x : 4, y : 4}
+  }
+
+  alert(rectangle.upperLeft.x) // will yield 2
+
+//-->
+</script>

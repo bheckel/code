@@ -1,0 +1,22 @@
+
+body {
+  margin : 0px 0px 0px 0px;
+}
+#left {
+  position: absolute;
+  height:100%;
+  width:200px;
+  top:115px;
+}
+#main {
+  position: absolute;
+  top: 115px;
+  left: 215px;
+} 
+#bot {
+  position: absolute;
+  height: 100px;
+  width: 100%;
+  bottom:0px;
+  border:0px none;
+}

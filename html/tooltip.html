@@ -1,0 +1,87 @@
+<!-- See log2web.html for good demo that doesn't require visible hrefs -->
+<HTML>
+<HEAD>
+  <SCRIPT>
+    // Adapted: Tue Mar 16 10:24:32 2004 (Bob Heckel -- www.dynamicdrive.com) 
+    function ShowTip(current, e, text) {
+      // Usually IE
+      if ( document.all || document.getElementById ) {
+        thetitle=text.split('<br>')
+        if ( thetitle.length > 1 ) {
+          thetitles=''
+          for ( i=0;i<thetitle.length;i++ )
+          thetitles+=thetitle[i]
+          current.title=thetitles
+        }
+        else
+        current.title=text
+      }
+      // Usually Mozilla
+      else if ( document.layers ){
+        document.document.write('<layer bgColor="white" style="border:1px solid black;font-size:12px;">'+text+'</layer>')
+        document.document.close()
+        document.left=e.pageX+5
+        document.top=e.pageY+5
+        document.visibility="show"
+      }
+    }
+    // Probably don't need, seems to autohide.
+    function HideTip(){
+      if ( document.layers )
+        document.divid.visibility="hidden"
+    }
+  </SCRIPT>
+</HEAD>
+<BODY>
+  <CENTER>
+  <TABLE  cellspacing=1 cellpadding=1 rules=NONE frame=VOID border=0 width=100%>
+  <TR>
+   <TD ALIGN=CENTER><font  face="Verdana, Helvetica, Helv" size="2" color="#003399"><b><i><B><h3>FET 2004 Register -- Updated   2004-03-10 15.50</h3></B></i></b></font></TD>
+  </TR>
+  </TABLE>
+  <P>
+  <CENTER>
+  <TABLE  cellspacing=1 cellpadding=7 rules=GROUPS frame=BOX border=1>
+  <TR>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b>St Abb</b></font></TD>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b>St Code</b></font></TD>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b>St Name</b></font></TD>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b><a href=""onMouseover="ShowTip(this, event, 'mergefile')"onMouseout="HideTip()">Latest Merged File</a></b></font></TD>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b><a href=""onMouseover="ShowTip(this, event, 'status')"onMouseout="HideTip()">Status</a></b></font></TD>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b>Rec Cnt</b></font></TD>
+
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b>Stat</b></font></TD>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b>Spec</b></font></TD>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b>User</b></font></TD>
+   <TD ALIGN=CENTER bgcolor="#AAAAAA"><font  face="Verdana, Helvetica, Helv" size="2" color="#0033AA"><b>Updated</b></font></TD>
+  </TR>
+  <TR>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">AK</font></TD>
+
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">02</font></TD>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">ALASKA</font></TD>
+   <TD ALIGN=CENTER bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">&nbsp;</font></TD>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">OO</font></TD>
+   <TD ALIGN=RIGHT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">        0</font></TD>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">FDW0</font></TD>
+
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">PHY9</font></TD>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">BHB6</font></TD>
+   <TD ALIGN=RIGHT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">  2003-12-18 10.44</font></TD>
+  </TR>
+  <TR>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">AL</font></TD>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">01</font></TD>
+
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">ALABAMA</font></TD>
+   <TD ALIGN=CENTER bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">&nbsp;</font></TD>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">OO</font></TD>
+   <TD ALIGN=RIGHT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">        0</font></TD>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">VDJ2</font></TD>
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">PYH9</font></TD>
+
+   <TD ALIGN=LEFT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">BHB6</font></TD>
+   <TD ALIGN=RIGHT bgcolor="#CCCCCC"><font  face="Verdana, Helvetica, Helv" size="2" color="#000000">  2003-12-18 10.44</font></TD>
+  </TR>
+</BODY>
+</HTML>

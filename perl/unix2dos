@@ -1,0 +1,48 @@
+#!/usr/local/bin/perl
+#
+# Adapted: Tue, 05 Dec 2000 13:50:14 (Bob Heckel -- from Mark Hewett)
+# 
+# Symlinked to /opt/unix2dos
+#
+# this script can be invoked as either "unix2dos" or "dos2unix".
+# it converts text files from one format to the other, either adding
+# or stripping carriage returns as necessary.
+#
+# Don't use this tool on binary files, it will probably destroy them.
+
+$pgmname = $0;
+
+if ($pgmname =~ /dos2unix/) {
+    &convert(1, @ARGV);
+} elsif ($pgmname =~ /unix2dos/) {
+    &convert(0, @ARGV);
+} else {
+    die("Can't figure out which function to perform from the program name: $0\n");
+}
+
+sub convert {
+  local($tounix, @files) = @_;
+  local(@lines);
+
+  if ( $#files < 0 ) {
+    @lines = <STDIN>;
+    binmode(STDOUT) if ($tounix);
+    print @lines;
+  } else {
+    for ( @files ) {
+      if (!open(INPUT, "<$_")) {
+        print STDERR "Cannot open $_ for read: $!\n";
+        next;
+      }
+      @lines = <INPUT>;
+      close (INPUT);
+      if (!open (OUTPUT, ">$_")) {
+        print STDERR "Cannot open $_ for write: $!\n";
+        next;
+      }
+      binmode(OUTPUT) if ($tounix);
+      print OUTPUT @lines;
+      close(OUTPUT);
+    }
+  }
+}

@@ -1,0 +1,31 @@
+Adapted: Wed 09 May 2001 15:27:59 (Bob Heckel -- TPJ Summer 1999 What is Truth?)
+
+We already know that the sort function sorts a list of values in ASCII order
+("asciibetically"), where 1 comes before 010 in a STRING comparison, which is
+usually not what you want.
+
+  @sorted = sort @unsorted;
+
+Which is the same as the uglier and slower:
+
+  @sorted = sort { $a cmp $b } @unsorted;
+
+If we want to sort by some other means, for instance numerically, we have to
+give sort a code block (or a subroutine name) that compares two elements and
+returns -1, 0, or +1 to indicate how they should be sorted. This example uses
+the Perl operator <=> to sort an array of numbers NUMERICALLY from smallest to
+largest: 
+
+  @sorted = sort { $a <=> $b } @unsorted;  
+
+
+Because 0 is used to tell sort "these two elements sort to the same position",
+we can use the || operator to connect two sorts: 
+
+  @sorted = sort { -s $a <=> -s $b || $a cmp $b } @filenames;
+
+Here we're sorting filenames, so the block of code gets called with $a and $b
+as the two filenames to compare. We first use the -s operator to fetch the
+size of the files and compare those file sizes numerically. If they're the
+same size, <=> will return 0, and the || will instead use the value of the
+right-hand side, a string comparison of the filenames.

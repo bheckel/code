@@ -1,0 +1,988 @@
+ 
+<HTML>
+<!-- #BeginTemplate "/Templates/main_template.dwt" --> 
+<HEAD>
+<!-- #BeginEditable "doctitle" --> 
+<TITLE>Perlguy's Pages</TITLE>
+<!-- #EndEditable --> 
+</HEAD>
+<!-- <BODY BGCOLOR="#FFFFFF"> --> 
+<BODY BGCOLOR="#F1EDD3">
+<CENTER>
+  <img src="../simple/new_header.gif" width="475" height="74"> 
+</CENTER>
+<HR WIDTH=85% SIZE=1 noshade>
+<CENTER>
+  <TABLE BORDER=0 WIDTH=85%>
+      <TD><!-- #BeginEditable "Body" -->
+        <center>
+          <font size="7" face="Arial, Helvetica, sans-serif">Perl and SQL Databases</font> 
+          <hr width=25%>
+        </center>
+        <p> 
+        <font face="Arial, Helvetica, sans-serif" size="2">Perl has the ability 
+        to work directly with just about every, if not every, SQL database. Native 
+        Perl drivers have been developed for most databases, but if you can't 
+        find a driver, Perl also has an ODBC driver so it can talk to the database 
+        if it conforms to the ODBC standard. </font> 
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> To me, I think 
+          database integration is one of Perl's most valuable features. Combine 
+          this with Perl's excellent CGI capabilities and you now have yourself 
+          a powerful, <b><i>web enabled</i></b>, database system! </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> For this next section, 
+          I am going to walk you through a simple, web enabled, Perl SQL database. 
+          The database we are going to cover is a very simple one just for training 
+          purposes. If I had written this for a real site, it would have many 
+          more features and the code would be more consise and compact. But for 
+          learning purposes, it will work just fine. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> To begin using 
+          databases with Perl, you must first do a few things on the server. </font>
+        <p>
+        <ul>
+          <li><font size="2" face="Arial, Helvetica, sans-serif">Install and configure 
+            a SQL database so you have something to connect to. </font>
+          <li><font size="2" face="Arial, Helvetica, sans-serif">Load the DBI 
+            Modules for Perl. <br>
+            Check <a href="http://reference.perl.com/query.cgi?database">www.perl.com</a> 
+            or <a href="http://www.symbolstone.org/technology/perl/DBI/">www.symbolstone.org/technology/perl/DBI/</a> 
+            </font>
+        </ul>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> For those of you 
+          using Windows NT, <a href="http://www.activestate.com">ActiveState.com</a> 
+          has the drivers that you'll need. They can be obtained via their Perl 
+          Package Manager (PPM). </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Setting all of 
+          this up can be a bit tricky and it will take you some time. Be patient! 
+          Once it is all setup, you shouldn't have to set it up again and the 
+          benefits far outweight the cost (time) of getting it running. </font>
+        <p> 
+        <hr>
+        <p> 
+          <center>
+            <font size="2" face="Arial, Helvetica, sans-serif"><b>Common Subroutines</b></font> 
+          </center>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Any subroutines 
+          that I am going to use throughout the programs, I keep in a file called 
+          <b><i>common.sub</i></b> Doing this makes it easier to track bugs and 
+          makes your code cleaner because you aren't constantly repeating code. 
+          Plus, if you need to make a change to the code, you only have to make 
+          it in one place instead of all of your programs needing to be updated. 
+          </font>
+        <p> 
+        <hr width=50%>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b><i><font size="1">Create_DB_Connection</font></i></b><font size="1"> 
+          SQL Listing 1:</font></font><font size="4"><br>
+          </font>
+        <table bgcolor="#e0e0e0">
+          <td> 
+            <pre>
+##########################################
+## Create a connection to the database. ##
+##########################################
+1: sub Create_DB_Connection{
+2:   use DBI;
+3:   $DSN  = "DBI:mysql:$db_name";
+4:   $user = "username";
+5:   $pw   = "secret";
+6:   $dbh  = DBI->connect($DSN,$user,$pw)
+7:     || die "Cannot connect: $DBI::errstr\n" unless $dbh;
+8:   return;
+9: } # End of Create_DB_Connection subroutine.
+##########################################
+</pre>
+          </td>
+        </table>
+        <p><font size="4"> <font face="Arial, Helvetica, sans-serif" size="2">We 
+          call this subroutine in every program that needs to attach to our database. 
+          </font></font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 1:</b> 
+          Begins our subroutine. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 2:</b> 
+          Tells Perl to use the DBI module. This is the module that allows us 
+          to connect to databases. I put the <i>use</i> statement in this subroutine 
+          because otherwise I'd have to put it in <i>every</i> program that wanted 
+          to connect to the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 3:</b> 
+          Here we are creating a variable called <b>$DSN</b>. This is the <b>D</b>ata 
+          <b>S</b>ource <b>N</b>ame. In our example it also has the database we 
+          are connecting to. This may be slightly different on your system. The 
+          first part is <b>DBI:mysql</b> which tells Perl to use the <b><i>mysql</i></b> 
+          driver for this database. The second part is <b>:$db_name</b>, this 
+          tells Perl to use whatever database name that is stored in <b>$db_name</b>. 
+          You can connect to any database that you have permission to on your 
+          system. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 4:</b> 
+          The <b><i>username</i></b> that we are going to connect to the database 
+          as. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 5:</b> 
+          The <b><i>password</i></b> needed to gain access to the database. These 
+          values <b><i>are not</i></b> required to be <i>hard-coded</i> into your 
+          program, you could easily have these values as fields on your forms 
+          so that the user must enter a valid username and password to work with 
+          the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 6:</b> 
+          Is our call that actually connects us to the database. Our <b>Database 
+          Handle</b>, <b><i>$dbh</i></b>, is stored so that we can refer to it 
+          in our program. The database handle is a pointer to the database, similar 
+          to how a filehandle is a pointer to a file. These "pointers" are used 
+          by Perl to access the correct database or file... </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 7:</b> 
+          Is a continuation of line 6. It tells Perl to <i>die</i> with an error 
+          message if there was a problem connecting to the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 8:</b> 
+          Returns us back to the calling program. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 9:</b> 
+          Ends the subroutine.<br>
+          </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> These 9 lines enable 
+          us to easily make a connection to any database on our web server that 
+          we have rights to. </font>
+        <p> 
+        <hr width=50%>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b><i><font size="1">Do_SQL</font></i></b><font size="1"> 
+          SQL Listing 2:</font></font><font size="4"><br>
+          </font>
+        <table bgcolor="#e0e0e0">
+          <td> 
+            <pre>
+##########################################
+## Executes the SQL command and then    ##
+## returns to the calling area of the   ##
+## program.                             ##
+##########################################
+1:  sub Do_SQL{
+2:    eval{
+3:      $sth = $dbh->prepare($SQL);
+4:    }; # End of eval
+
+    # Check for errors.
+5:    if($@){
+6:      $dbh->disconnect;
+7:      print "Content-type: text/html\n\n";
+8:      print "An ERROR occurred! $@\n";
+9:      exit;
+10:  } else {
+11:    $sth->execute;
+12:  } # End of if..else
+13:  return ($sth);
+14:} # End of Do_SQL subroutine
+#################################################################
+</pre>
+          </td>
+        </table>
+        <p><font size="4"> <font size="2" face="Arial, Helvetica, sans-serif">This 
+          subroutine checks the SQL for us and then, if the SQL is OK, executes 
+          the SQL statement. If there was an error in the SQL statement, this 
+          subroutine <i>should</i> catch it and let us know. </font></font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 1:</b> 
+          Begins the subroutine. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 2:</b> 
+          <b><i>eval</i></b> is something we haven't seen before. <i>eval</i> 
+          executes the code inside the block as if it were a small Perl program, 
+          any errors that occur are stored in a variable called <b><code>$@</code></b>. 
+          </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Using the <i>eval</i> 
+          makes it easy for us to detect if an error occurred. If <b><code>$@</code></b> 
+          is undefined, we know that no error occurred. If <b><code>$@</code></b> 
+          contains any value, we know that we had an error and we need to do something 
+          about it. Eval is a very handy tool that allows us to catch errors <u><i>without</i></u> 
+          terminating the program. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> If the statement 
+          we <i>eval</i>-ed was successful, it will create a <i>statement handle</i> 
+          called <b><i>$sth</i></b> that we can access this SQL command through. 
+          </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 3:</b> 
+          Uses the DBI <b><i>prepare</i></b> command. This command checks the 
+          SQL to see if there are any problems with it. If there are problems, 
+          the error message gets stored in <b><code>$@</code></b>. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 4:</b> 
+          Ends our <b><i>eval</i></b> block. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 5:</b> 
+          Begins the <b><i>if</i></b> block that checks to <b><code>$@</code></b> 
+          to see if there were any errors. If there was an error, we go into the 
+          <i>if</i> block and execute the code there. If not, we drop down to 
+          the <b><i>else</i></b> on <b>line 10</b>, which is where we want to 
+          end up. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><i>Lines 6-9 are 
+          where the program goes if there was an error.</i><br>
+          <b>Line 6:</b> Disconnects us from the database. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Disconnecting from 
+          the database is very important because some databases will tie up system 
+          resources if a program does not disconnect from the database. This can 
+          be very bad because if the program is continually called, more and more 
+          resources will be tied up with each system call until the system runs 
+          out of resources! </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 7:</b> 
+          Prints out the HTML header. Chances are we already printed this out, 
+          but we print it out again here <i>just in case.</i> If we didn't do 
+          this, and forgot to in the program that called this function, we would 
+          end up with a server error here and then have something <i>else</i> 
+          to debug! </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 8:</b> 
+          Prints the error message along with <b><code>$@</code></b>. <b><code>$@</code></b> 
+          will actually contain the text of the message that Perl generated. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 9:</b> 
+          <b><i>exit</i></b>s the program. Since an error ocurred, we stop program 
+          execution right here. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 10:</b> 
+          Begins the <i>else</i> part of the <b>if..else</b>. We go here if there 
+          <b><i>was not</i></b> an error. This is where we normally want to be. 
+          </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 11:</b> 
+          This line executes the SQL contained in the <b><i>$sth</i></b> handle. 
+          </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><i>Please realize 
+          that just because the program got to this point, it does <b>not</b> 
+          mean that the SQL statement will execute flawlessly! Different databases 
+          each have different rules and requirements. What works on one database 
+          may not work on another. You may have to "tweak" your SQL statements 
+          so your database accepts them.</i> </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 12:</b> 
+          Ends the <i>if..else</i> block. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 13:</b> 
+          Returns the <b><i>$sth</i></b> handle back to the program. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 14:</b> 
+          Closes this subroutines code block. </font>
+        <p> 
+        <hr width=50%>
+        <p> <font size="4"><b><i><font face="Arial, Helvetica, sans-serif" size="1">Filter</font></i></b><font face="Arial, Helvetica, sans-serif" size="1"> 
+          SQL Listing 3:</font><br>
+          </font>
+        <table bgcolor="#e0e0e0">
+          <td> 
+            <pre>
+####################################
+### Filter - Gets rid of         ###
+### characters that screw up the ###
+### program.                     ###
+####################################
+1: sub filter{
+2:   $_[0]=~s/\'/<font color="#FF0000">\\</font><font color="#0000FF">\'</font>/g;
+3:   return $_[0];
+4: } # End of filter subroutine
+####################################
+</pre>
+          </td>
+        </table>
+        <p><font size="4"> <font face="Arial, Helvetica, sans-serif" size="2">This 
+          one is very short, but also very helpful. Different SQL databases have 
+          slightly different rules. A SQL statement on one database may work fine, 
+          but when you move it to another database it may cause the program to 
+          crash. </font></font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Many times this 
+          is caused by a character that the SQL database does not like. What I 
+          do is go through each character and make it part of a SQL statement 
+          to see if the database crashes. If it does, I add it to this filter 
+          program. The filter program then simply adds a backslash (\) in front 
+          of the character to escape it. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Here is how it 
+          works: </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 1:</b> 
+          Begins the subroutine. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 2:</b> 
+          Takes the <b>$_[0]</b> variable, which is the first value passed to 
+          the subroutine, and replaces all of the single quotes (<b>'</b>) with 
+          (<b>\'</b>). </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> I needed to use 
+          2 backslashes here because the backslash needs to be escaped in Perl 
+          too! I color coded the escaped backslash red and then the escaped quote 
+          blue. Normally you won't see these colors but I am hoping that this 
+          helps clear up the issue of <i>escaping</i>. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> For each character 
+          that you need to <i>"fix"</i>, you would add a line like this one - 
+          except you need to change the character you are filtering out. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 3:</b> 
+          This line simply returns the new value of <b>$_[0]</b>. We use <b>$_[0]</b> 
+          because if you recall, whenever you call a subroutine in Perl, the arguments 
+          that you pass it are stored in the array called <b>@_</b>. Therefore, 
+          the first element of the /B> array is referenced with <b>$_[0]</b>. 
+          </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> To call this subroutine, 
+          you would do this: </font>
+        <table bgcolor="#e0e0e0">
+          <td> <code>$val_to_check = &filter($val_to_check);</code> </td>
+        </table>
+        <p><font size="4"> <font face="Arial, Helvetica, sans-serif" size="2">This 
+          would pass the variable <b>$val_to_check</b> to the <i>filter</i> subroutine 
+          and store the results back into the <b>$val_to_check</b> variable. </font></font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 4:</b> 
+          Ends the subroutine. </font>
+        <p> 
+        <hr>
+        <p> <font size="4"><b> <font size="2" face="Arial, Helvetica, sans-serif">Live 
+          Example </font></b></font> 
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Ok, now I want 
+          to get into a live example. This example is simply a name, e-mail, phone number database. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Remember though, 
+          that with SQL databases, you can have complex data structures, joins, 
+          query multiple tables, etc... I am just keeping it simple as a teaching tool. </font>
+        <p> <font size="4" face="Arial, Helvetica, sans-serif"><a href="http://216.87.40.225/sql/index.html">Perl SQL Database Example</a> </font>
+        <p> 
+        <hr width=50%>
+        <p><font size="4"> <font face="Arial, Helvetica, sans-serif" size="2">On 
+          to the code... </font></font>
+        <p> <font size="4"><b><i><font face="Arial, Helvetica, sans-serif" size="1">search.cgi</font></i></b><font face="Arial, Helvetica, sans-serif" size="1"> 
+          SQL Listing 4:</font><br>
+          </font>
+        <table bgcolor="#e0e0e0">
+          <td> 
+            <pre>
+<font color="#0000FF">1: </font>#!/usr/bin/perl
+
+<font color="#0000FF">2: </font>###########################
+<font color="#0000FF">3: </font>## search.cgi            ##
+<font color="#0000FF">4: </font>## This program grabs    ##
+<font color="#0000FF">5: </font>## info from a phone     ##
+<font color="#0000FF">6: </font>## database and prints   ##
+<font color="#0000FF">7: </font>## if for the user.      ##
+<font color="#0000FF">8: </font>###########################
+
+<font color="#0000FF">9: </font>use CGI qw/:standard/;
+<font color="#0000FF">10: </font><font color="#FF0000">require "common.sub";</font>  # Contains the "snippets" that we discussed.
+
+<font color="#0000FF">11: </font>## Get the data from the web page.
+<font color="#0000FF">12: </font><font color="#FF0000">$search_for = param(search_for);</font>
+<font color="#0000FF">13: </font><font color="#FF0000">$field      = param(search_field);</font>
+<font color="#0000FF">14: </font><font color="#FF0000">$sort       = param(sort_on);</font>
+
+<font color="#0000FF">15: </font>## Print the standard HTML header.
+<font color="#0000FF">16: </font>print header;
+
+<font color="#0000FF">17: </font>## Do our stuff!
+<font color="#0000FF">18: </font><font color="#FF0000">&Create_DB_Connection;</font>
+<font color="#0000FF">19: </font>&get_info;
+<font color="#0000FF">20: </font>&print_results;
+
+<font color="#0000FF">21: </font># Disconnect from the database (DON'T FORGET THIS!)
+<font color="#0000FF">22: </font><font color="#FF0000">$dbh-&gt;disconnect;</font>
+
+<font color="#0000FF">23: </font>################ BEGIN GET INFO SUBROUTINE
+<font color="#0000FF">24: </font>sub get_info{
+
+<font color="#0000FF">25: </font>  ## This is our SQL statement that we want to execute.
+<font color="#0000FF">26: </font>  <font color="#FF0000">$SQL="SELECT * FROM phones WHERE <font color="#FF00FF">$field</font> like '%$search_for%' ORDER BY <font color="#FF00FF">$sort</font>";</font>
+<font color="#0000FF">27: </font>  <font color="#FF0000">&Do_SQL;</font>
+<font color="#0000FF">28: </font>}
+<font color="#0000FF">29: </font>################ END GET INFO SUBROUTINE
+
+
+<font color="#0000FF">30: </font>################ BEGIN PRINT RESULTS SUBROUTINE
+<font color="#0000FF">31: </font>sub print_results{
+<font color="#0000FF">32: </font>  print &lt;&lt;HTML;
+<font color="#0000FF">33: </font>   &lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Search Thing&lt;/TITLE&gt;&lt;/HEAD&gt;
+<font color="#0000FF">34: </font>   &lt;BODY BGCOLOR="#FFFFFF"&gt;
+<font color="#0000FF">35: </font>   &lt;CENTER&gt;&lt;FONT SIZE=6&gt;Search Results&lt;/FONT&gt;&lt;/CENTER&gt;
+<font color="#0000FF">36: </font>    &lt;HR WIDTH=80%&gt;
+<font color="#0000FF">37: </font>     &lt;P&gt;
+<font color="#0000FF">38: </font>     &lt;CENTER&gt;&lt;TABLE BORDER=1 CELLSPACING=0&gt;
+<font color="#0000FF">39: </font>      &lt;TR&gt;
+<font color="#0000FF">40: </font>       &lt;TD BGCOLOR="#c0c0c0" COLSPAN=6&gt;
+<font color="#0000FF">41: </font>        &lt;CENTER&gt;&lt;B&gt;MySQL/Perl Integration Example&lt;/B&gt;&lt;/CENTER&gt;
+<font color="#0000FF">42: </font>       &lt;/TD&gt;
+<font color="#0000FF">43: </font>      &lt;/TR&gt; 
+<font color="#0000FF">44: </font>    &lt;TR&gt;
+<font color="#0000FF">45: </font>     &lt;TD BGCOLOR="c0c0c0"&gt;
+<font color="#0000FF">46: </font>      &lt;FONT SIZE=2 FACE=ARIAL&gt;&lt;CENTER&gt;&lt;B&gt;Name&lt;/B&gt;&lt;/CENTER&gt;&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">47: </font>     &lt;TD BGCOLOR="c0c0c0"&gt;
+<font color="#0000FF">48: </font>      &lt;FONT SIZE=2 FACE=ARIAL&gt;&lt;CENTER&gt;&lt;B&gt;Phone&lt;/B&gt;&lt;/CENTER&gt;&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">49: </font>     &lt;TD BGCOLOR="c0c0c0"&gt;
+<font color="#0000FF">50: </font>      &lt;FONT SIZE=2 FACE=ARIAL&gt;&lt;CENTER&gt;&lt;B&gt;E-Mail&lt;/B&gt;&lt;/CENTER&gt;&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">51: </font>     &lt;TD BGCOLOR="c0c0c0"&gt;
+<font color="#0000FF">52: </font>      &lt;FONT SIZE=2 FACE=ARIAL&gt;&lt;CENTER&gt;&lt;B&gt;Notes&lt;/B&gt;&lt;/CENTER&gt;&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">53: </font>     &lt;TD BGCOLOR="c0c0c0"&gt;
+<font color="#0000FF">54: </font>      &lt;FONT SIZE=2 FACE=ARIAL&gt;&lt;CENTER&gt;&lt;B&gt;Modify&lt;/B&gt;&lt;/CENTER&gt;&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">55: </font>     &lt;TD BGCOLOR="c0c0c0"&gt;
+<font color="#0000FF">56: </font>      &lt;FONT SIZE=2 FACE=ARIAL&gt;&lt;CENTER&gt;&lt;B&gt;Delete&lt;/B&gt;&lt;/CENTER&gt;&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">57: </font>    &lt;/TR&gt;
+<font color="#0000FF">58: </font>HTML
+
+<font color="#0000FF">59: </font> ## fetchrow_hashref grabs the data returned from the SQL call
+<font color="#0000FF">60: </font> ## and stores them in a hash with the keys being the names
+<font color="#0000FF">61: </font> ## of the database fields.  This is how you access the data.
+<font color="#0000FF">62: </font>  <font color="#FF0000">while ($pointer = $sth-&gt;fetchrow_hashref){</font>
+<font color="#0000FF">63: </font>    <font color="#FF0000">$f_name = $pointer-&gt;{'first_name'};</font>
+<font color="#0000FF">64: </font>    <font color="#FF0000">$l_name = $pointer-&gt;{'last_name'};</font>
+<font color="#0000FF">65: </font>    <font color="#FF0000">$phone  = $pointer-&gt;{'phone'};</font>
+<font color="#0000FF">66: </font>    <font color="#FF0000">$email  = $pointer-&gt;{'email'};</font>
+<font color="#0000FF">67: </font>    <font color="#FF0000">$notes  = $pointer-&gt;{'notes'};</font>
+
+<font color="#0000FF">68: </font>   ## Make our HTML look better if no data.
+<font color="#0000FF">69: </font>    $f_name = "<font color="#FF0000">&amp;nbsp;</font>" if($f_name eq "");
+<font color="#0000FF">70: </font>    $l_name = "&amp;nbsp;" if($l_name eq "");
+<font color="#0000FF">71: </font>    $phone  = "&amp;nbsp;" if($phone  eq "");
+<font color="#0000FF">72: </font>    $email  = "&amp;nbsp;" if($email  eq "");
+<font color="#0000FF">73: </font>    $notes  = "&amp;nbsp;" if($notes  eq "");
+<font color="#FF0000">
+<font color="#0000FF">74: </font>   print &lt;&lt;HTML;
+<font color="#0000FF">75: </font>    &lt;TR BGCOLOR="e0e0e0"&gt;
+<font color="#0000FF">76: </font>     &lt;TD&gt;&lt;FONT SIZE=2 FACE=ARIAL&gt;$f_name $l_name&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">77: </font>     &lt;TD&gt;&lt;FONT SIZE=2 FACE=ARIAL&gt;$phone&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">78: </font>     &lt;TD&gt;&lt;FONT SIZE=2 FACE=ARIAL&gt;&lt;A HREF="mailto:$email"&gt;$email&lt;/A&gt;&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">79: </font>     &lt;TD&gt;&lt;FONT SIZE=2 FACE=ARIAL&gt;$notes&lt;/FONT&gt;&lt;/TD&gt;
+<font color="#0000FF">80: </font>     &lt;TD&gt;&lt;FONT SIZE=1 FACE=ARIAL&gt;
+<font color="#0000FF">81: </font>     [&lt;A HREF="/cgi-bin/sql/modify1.cgi?$email"&gt;Modify&lt;/A&gt;]
+<font color="#0000FF">82: </font>     &lt;/FONT&gt;&lt;TD&gt;
+<font color="#0000FF">83: </font>     &lt;TD&gt;&lt;FONT SIZE=1 FACE=ARIAL&gt;
+<font color="#0000FF">84: </font>     [&lt;A HREF="/cgi-bin/sql/delete.cgi?$email"&gt;Delete&lt;/A&gt;]
+<font color="#0000FF">85: </font>     &lt;/FONT&gt;&lt;TD&gt;
+<font color="#0000FF">86: </font>    &lt;/TR&gt;
+<font color="#0000FF">87: </font>HTML
+<font color="#0000FF">88: </font>  } # End of while.
+</font>
+<font color="#0000FF">89: </font>   print&lt;&lt;HTML;
+<font color="#0000FF">90: </font>    &lt;/TABLE&gt;&lt;/CENTER&gt;
+<font color="#0000FF">91: </font>    &lt;P&gt;
+<font color="#0000FF">92: </font>     &lt;HR WIDTH=80%&gt;
+<font color="#0000FF">93: </font>    &lt;P&gt;
+
+<font color="#0000FF">94: </font>    &lt;CENTER&gt;
+<font color="#0000FF">95: </font>     &lt;FONT SIZE=4&gt;
+<font color="#0000FF">96: </font>      &lt;A HREF="/sql/index.html"&gt;Main Page&lt;/A&gt;
+<font color="#0000FF">97: </font>     &lt;/FONT&gt;
+<font color="#0000FF">98: </font>    &lt;/CENTER&gt;
+<font color="#0000FF">99: </font>   &lt;/BODY&gt;&lt;/HTML&gt;
+<font color="#0000FF">100: </font>HTML
+<font color="#0000FF">101: </font>} # End of print_results subroutine
+<font color="#0000FF">102: </font>################ END PRINT RESULTS SUBROUTINE
+</pre>
+          </td>
+        </table>
+        <p> <font size="4"><b><i><font face="Arial, Helvetica, sans-serif" size="2">Explaination 
+          of the highlighted lines:</font></i></b> </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> I am only going 
+          to cover the <font color="#FF0000"><b>red</b></font> lines in detail. 
+          Most of the lines I am not going to cover are simple HTML or very simple 
+          Perl. If you have questions, ask. Otherwise there will eventually be 
+          more examples and explainations on my web site. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 10:</b> 
+          This line brings in our file called <b>common.sub</b>. It contains our 
+          <i>Create_DB_Connection</i>, <i>Do_SQL</i>, and <i>Filter</i> subroutines. 
+          </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> One important note: 
+          Whenever you <i>require</i> a library like this, it must return a value 
+          to Perl. The last line of all of your <i>subroutine</i> files should 
+          simply be: <b>1;</b> This causes a <b>1</b> to be returned to Perl and 
+          makes it happy. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Lines 12-14:</b> 
+          These lines get the data that was entered in the HTML form and stores 
+          the values into some easier to use variables. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 18:</b> 
+          Creates our database connection by calling the <i>Create_DB_Connection</i> 
+          subroutine in the <b>common.sub</b> file. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 22:</b> 
+          Disconnects us from the database, we are done already! Do not forget 
+          this line. At this point of the program, we have actually finished everything, 
+          the rest of the program contains the subroutines that we called in the 
+          lines above. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 26:</b> 
+          Creates a variable called <b>$SQL</b> which should contain a valid SQL 
+          statement. Notice that the variables we read in on lines 12-14 are included 
+          in our SQL statement. This is how we can pass values from the web and 
+          perform operations on the database. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> I made the 2 variables 
+          <font color="#FF00FF"><b>magenta</b></font> so they are easier to pick 
+          out of the line. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 27:</b> 
+          Calls the <b>Do_SQL</b> subroutine. This actually performs the SQL call 
+          on the database. The results are then stored in known variables so that 
+          we can access the data easily. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 62:</b> 
+          This is an important line. It shows you how to use the <b>fetchrow_hashref</b> 
+          method from the <i>statement handle</i> <b>($sth)</b>. There are several 
+          methods that you can use. I prefer the <i>hashref</i> one because hashes 
+          are great to work with. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>fetchrow_hashref</b> 
+          takes the data retreived from the SQL database and stores it in a hash. 
+          The <b>key</b> values of the hash are the database field names. A pointer 
+          to the hash is returned from this call, in our example we store it in 
+          <b>$pointer</b>. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> The <i>while</i> 
+          loop allows us to go through each item retrieved from the database, 
+          one record at a time. When we run out of records, the <i>while</i> loop 
+          will fail and we move on with the program. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Go to: <a href="http://mysql.turbolift.com/mysql/DBD_3.21.X.html">http://mysql.turbolift.com/mysql/DBD_3.21.X.html</a> 
+          to get some excellent documentation that lists the different methods 
+          available. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Lines 63-67:</b> 
+          These lines take the data from the hash and store it in easier to use 
+          variables. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 69:</b> 
+          I just wanted to point out that if the current field is blank, we replace 
+          it with <b>&amp;nbsp</b> so that our table will look nice. If we don't 
+          do this, our table comes out looking strange because the empty fields 
+          look different. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 74:</b> 
+          Begins a <i>here document</i> which handles printing out each of the 
+          HTML table <b>rows</b>. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Lines 75-86:</b> 
+          These lines handle the HTML for each row of data. Notice on line 81 
+          and line 84 that we are providing links to the <b>modify</b> and <b>delete</b> 
+          scripts for our database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 89:</b> 
+          This line simply ends the <i>here document</i>, which stops any more 
+          data from being printed. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 90:</b> 
+          Ends the <i>while loop</i>. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Ok, we have covered 
+          the <b>search</b> program, let's take a look at the <b>add</b> program. 
+          </font>
+        <p> 
+        <hr width=50%>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b><i><font size="1">add.cgi</font></i></b><font size="1"> 
+          SQL Listing 5:</font></font><font size="4"><br>
+          </font>
+        <table bgcolor="#e0e0e0">
+          <td> 
+            <pre>
+<font color="#0000FF">1: </font>#!/usr/bin/perl
+<font color="#0000FF">2: </font>### add.cgi
+
+<font color="#0000FF">3: </font>use CGI qw/:standard/;
+<font color="#0000FF">4: </font>require "common.sub";
+
+<font color="#0000FF">5: </font><font color="#FF0000">$f_name = &filter(param(first_name));</font>
+<font color="#0000FF">6: </font><font color="#FF0000">$l_name = &filter(param(last_name));</font>
+<font color="#0000FF">7: </font><font color="#FF0000">$phone  = &filter(param(phone));</font>
+<font color="#0000FF">8: </font><font color="#FF0000">$email  = &filter(param(email));</font>
+<font color="#0000FF">9: </font><font color="#FF0000">$notes  = &filter(param(notes));</font>
+
+<font color="#0000FF">10: </font>print header;
+
+<font color="#0000FF">11: </font><font color="#FF0000">&Create_DB_Connection;</font>
+<font color="#0000FF">12: </font>&write_data;
+<font color="#0000FF">13: </font>&print_output;
+
+<font color="#0000FF">14: </font># Disconnect from the database
+<font color="#0000FF">15: </font><font color="#FF0000">$dbh-&gt;disconnect;</font>
+
+<font color="#0000FF">16: </font>################  BEGIN WRITE DATA SUBROUTINE
+<font color="#0000FF">17: </font>sub write_data{
+<font color="#0000FF">18: </font>  <font color="#FF0000">$SQL = "INSERT INTO phones (first_name,last_name,phone,email,notes)</font> 
+<font color="#0000FF">19: </font>          <font color="#FF0000">VALUES ('$f_name','$l_name','$phone','$email','$notes')";</font>
+
+<font color="#0000FF">20: </font>  <font color="#FF0000">&Do_SQL;</font>
+<font color="#0000FF">21: </font>} # End of write_data
+<font color="#0000FF">22: </font>################  END WRITE DATA SUBROUTINE
+
+<font color="#0000FF">23: </font>################  BEGIN PRINT OUTPUT SUBROUTINE
+<font color="#0000FF">24: </font>sub print_output{
+<font color="#0000FF">25: </font>  print&lt;&lt;HTML;
+<font color="#0000FF">26: </font>   &lt;HTML&gt;&lt;BODY&gt;   
+<font color="#0000FF">27: </font>   &lt;CENTER&gt;&lt;FONT SIZE=5&gt;
+<font color="#0000FF">28: </font>    Record added to database
+<font color="#0000FF">29: </font>     &lt;P&gt;
+<font color="#0000FF">30: </font>    &lt;A HREF="/sql/index.html"&gt;Return to Main Page&lt;/A&gt;
+<font color="#0000FF">31: </font>     &lt;/P&gt;
+<font color="#0000FF">32: </font>   &lt;/FONT&gt;&lt;/CENTER&gt;
+<font color="#0000FF">33: </font>  &lt;/BODY&gt;&lt;/HTML&gt;
+<font color="#0000FF">34: </font>HTML
+
+<font color="#0000FF">35: </font>} # End of subroutine
+<font color="#0000FF">36: </font>################  END PRINT OUTPUT SUBROUTINE
+</pre>
+          </td>
+        </table>
+        <p> <font size="4"><b><i><font face="Arial, Helvetica, sans-serif" size="2">Explaination 
+          of the highlighted lines:</font></i></b> </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> The <b>add.cgi</b> 
+          program is very short and most of it is HTML. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Lines 5-9:</b> 
+          These lines take the input from the web page, pass it through the <b>filter</b> 
+          subroutine, and then store the results in the appropriate variables. 
+          </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> In Perl, it is 
+          perfectly legal to pass strings back from a function call. Here we are 
+          taking advantage of that by getting the filtered data passed back from 
+          the function. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 11:</b> 
+          Connects us to the database. This is exactly like we did in the <b>search.cgi</b> 
+          program. We will use this same subroutine any time we wish to connect 
+          to the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 15:</b> 
+          Disconnects us from the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Lines 18-19:</b> 
+          These are actually <b>one</b> statement, I just broke it onto 2 lines 
+          so that it looks better. This is simply a valid SQL statement that we 
+          are going to execute on the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 20:</b> 
+          Executes the SQL on the database. We are simply adding a record with 
+          this program. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> That is it for 
+          the <b>add.cgi</b> program, nothing to it - <i>right?</i> </font>
+        <p> 
+        <hr width=50%>
+        <p> <font size="4"><b><i><font face="Arial, Helvetica, sans-serif" size="1">delete.cgi</font></i></b><font face="Arial, Helvetica, sans-serif" size="1"> 
+          SQL Listing 6:</font><br>
+          </font>
+        <table bgcolor="#e0e0e0">
+          <td> 
+            <pre>
+<font color="#0000FF">1:  </font>#!/usr/bin/perl
+
+<font color="#0000FF">2:  </font>use CGI qw/:standard/;
+<font color="#0000FF">3:  </font>require "common.sub";
+<font color="#0000FF">4:  </font>print header;
+
+<font color="#0000FF">5:  </font><font color="#FF0000">$email = $ENV{QUERY_STRING};</font>
+
+<font color="#0000FF">6:  </font><font color="#FF0000">&Create_DB_Connection;</font>
+<font color="#0000FF">7:  </font>&delete_record;
+<font color="#0000FF">8: </font>&print_results;
+
+<font color="#0000FF">9: </font># Disconnect from the database
+<font color="#0000FF">10: </font><font color="#FF0000">$dbh-&gt;disconnect;</font>
+
+<font color="#0000FF">11: </font>################  BEGIN DELETE RECORD SUBROUTINE
+<font color="#0000FF">12: </font>sub delete_record{
+<font color="#0000FF">13: </font>  <font color="#FF0000">$SQL="DELETE FROM phones WHERE email = '$email'";</font> 
+<font color="#0000FF">14: </font>  <font color="#FF0000">&Do_SQL;</font>
+<font color="#0000FF">15: </font>}
+<font color="#0000FF">16: </font>################  END DELETE RECORD SUBROUTINE
+
+<font color="#0000FF">17: </font>################  BEGIN PRINT RESULTS SUBROUTINE
+<font color="#0000FF">18: </font>sub print_results{
+<font color="#0000FF">19: </font>  print &lt;&lt;HTML;
+<font color="#0000FF">20: </font>   &lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Delete Thing&lt;/TITLE&gt;&lt;/HEAD&gt;
+<font color="#0000FF">21: </font>   &lt;BODY BGCOLOR="#FFFFFF"&gt;
+<font color="#0000FF">22: </font>   &lt;CENTER&gt;&lt;FONT SIZE=6&gt;Delete Results&lt;/FONT&gt;&lt;/CENTER&gt;
+<font color="#0000FF">23: </font>    &lt;HR WIDTH=80%&gt;
+<font color="#0000FF">24: </font>     &lt;P&gt;
+<font color="#0000FF">25: </font>     &lt;CENTER&gt;
+<font color="#0000FF">26: </font>      &lt;FONT SIZE=6&gt;Record Deleted!&lt;/FONT&gt;
+<font color="#0000FF">27: </font>     &lt;/CENTER&gt;
+<font color="#0000FF">28: </font>    &lt;P&gt;
+<font color="#0000FF">29: </font>     &lt;HR WIDTH=80%&gt;
+<font color="#0000FF">30: </font>    &lt;P&gt;
+
+<font color="#0000FF">31: </font>    &lt;CENTER&gt;
+<font color="#0000FF">32: </font>     &lt;FONT SIZE=4&gt;
+<font color="#0000FF">33: </font>      &lt;A HREF="/sql/index.html"&gt;Main Page&lt;/A&gt;
+<font color="#0000FF">34: </font>     &lt;/FONT&gt;
+<font color="#0000FF">35: </font>    &lt;/CENTER&gt;
+<font color="#0000FF">36: </font>   &lt;/BODY&gt;&lt;/HTML&gt;
+<font color="#0000FF">37: </font>HTML
+
+<font color="#0000FF">38: </font>  # Release the statement handle resources
+<font color="#0000FF">39: </font>   <font color="#FF0000">$sth-&gt;finish;</font>
+ 
+<font color="#0000FF">40: </font>} # End of print_results subroutine
+<font color="#0000FF">41: </font>################  END PRINT RESULTS SUBROUTINE
+</pre>
+          </td>
+        </table>
+        <p> <font size="4"><b><i><font face="Arial, Helvetica, sans-serif" size="2">Explaination 
+          of the highlighted lines:</font></i></b> </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> The <b>delete.cgi</b> 
+          program is also pretty short. Let's go over the important parts: </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 5:</b> 
+          Reads the value passed on the URL and stores it in the variable <b>$email</b>. 
+          We use the email address as the database "key" because it should be 
+          unique. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Here is what the 
+          URL would look like... </font>
+        <p> 
+        <table bgcolor="#e0e0e0">
+          <td> <code>/cgi-bin/sql/delete.cgi?perlguy@technologist.com</code> </td>
+        </table>
+        <p> <font size="4"><b><font face="Arial, Helvetica, sans-serif" size="2">Line 
+          6:</font></b><font face="Arial, Helvetica, sans-serif" size="2"> Creates 
+          our connection to the database. </font></font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 10:</b> 
+          Disconnects us from the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 13:</b> 
+          Our SQL statement to delete the record. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 14:</b> 
+          This line executes the SQL statement on the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 39:</b> 
+          I threw this one in so that you could see it in action. <b>finish</b> 
+          simply releases the <i>statement handle</i> resources. Normally, you 
+          will want to do this as soon as you are done with this handle. Since 
+          we are disconnecting from the database soon, it is not necessary because 
+          disconnecting also frees up the resources. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> One thing to watch 
+          for, if you call the <i>finish</i> method, all of the matches from the 
+          SQL statement are lost. Make sure you don't call <i>finish</i> and <i>then</i> 
+          try to get the data, it won't be there! </font>
+        <p> 
+        <hr width=50%>
+        <p> <font size="4"><b><i><font face="Arial, Helvetica, sans-serif" size="1">modify1.cgi</font></i></b><font face="Arial, Helvetica, sans-serif" size="1"> 
+          SQL Listing 7:</font><br>
+          </font>
+        <table bgcolor="#e0e0e0">
+          <td> 
+              <pre>
+<font color="#0000FF">1: </font>#!/usr/bin/perl
+<font color="#0000FF">2: </font>### modify1.cgi
+
+<font color="#0000FF">3: </font>use CGI qw/:standard/;
+<font color="#0000FF">4: </font>require "common.sub";
+<font color="#0000FF">5: </font>print header;
+
+<font color="#0000FF">6: </font><font color="#FF0000">$email = $ENV{QUERY_STRING};</font>
+<font color="#0000FF">7: </font><font color="#FF0000">$saved  = $email;</font>
+
+<font color="#0000FF">8: </font>&Create_DB_Connection;
+<font color="#0000FF">9: </font>&get_data;
+<font color="#0000FF">10: </font>&print_output;
+
+<font color="#0000FF">11: </font># Disconnect from the database
+<font color="#0000FF">12: </font>$dbh-&gt;disconnect;
+
+<font color="#0000FF">13: </font>################ BEGIN GET DATA SUBROUTINE
+<font color="#0000FF">14: </font>sub get_data{
+<font color="#0000FF">15: </font>  <font color="#FF0000">$SQL="SELECT * FROM phones WHERE email = '$email'";</font>
+<font color="#0000FF">16: </font>  &Do_SQL;
+
+<font color="#0000FF">17: </font>  <font color="#FF0000">while ($pointer = $sth-&gt;fetchrow_hashref){</font>
+<font color="#0000FF">18: </font>    $f_name = $pointer-&gt;{'first_name'};
+<font color="#0000FF">19: </font>    $l_name = $pointer-&gt;{'last_name'};
+<font color="#0000FF">20: </font>    $phone  = $pointer-&gt;{'phone'};
+<font color="#0000FF">21: </font>    $email  = $pointer-&gt;{'email'};
+<font color="#0000FF">22: </font>    $notes  = $pointer-&gt;{'notes'};
+<font color="#0000FF">23: </font>  }
+<font color="#0000FF">24: </font>} # End of get_data subroutine.
+<font color="#0000FF">25: </font>################ END GET DATA SUBROUTINE
+  
+
+<font color="#0000FF">26: </font>################ BEGIN PRINT OUTPUT SUBROUTINE
+<font color="#0000FF">27: </font>sub print_output{
+<font color="#0000FF">28: </font> print&lt;&lt;HTML;
+<font color="#0000FF">29: </font> &lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;Add Thing&lt;/TITLE&gt;&lt;/HEAD&gt;
+<font color="#0000FF">30: </font>  &lt;BODY BGCOLOR="#FFFFFF"&gt;
+<font color="#0000FF">31: </font>   <font color="#FF0000">&lt;FORM ACTION="/cgi-bin/sql/modify2.cgi?$saved" METHOD="Post"&gt;</font>
+<font color="#0000FF">32: </font>   &lt;CENTER&gt;&lt;FONT SIZE=6&gt;Modify Record&lt;/FONT&gt;&lt;/CENTER&gt;
+<font color="#0000FF">33: </font>   &lt;HR WIDTH=80%&gt;
+<font color="#0000FF">34: </font>    &lt;P&gt;
+<font color="#0000FF">35: </font>   &lt;CENTER&gt;&lt;TABLE BORDER=1 CELLSPACING=0&gt;
+
+<font color="#0000FF">36: </font>    &lt;TR&gt;
+<font color="#0000FF">37: </font>     &lt;TD BGCOLOR="#c0c0c0" COLSPAN=2&gt;
+<font color="#0000FF">38: </font>      &lt;CENTER&gt;&lt;B&gt;MySQL/Perl Integration Example&lt;/B&gt;&lt;/CENTER&gt;
+<font color="#0000FF">39: </font>     &lt;/TD&gt;
+<font color="#0000FF">40: </font>    &lt;/TR&gt;
+<font color="#0000FF">41: </font>    &lt;TR&gt;
+<font color="#0000FF">42: </font>     &lt;TD BGCOLOR="#c0c0c0"&gt;&lt;B&gt;First Name:&lt;/B&gt;&lt;/TD&gt;
+<font color="#0000FF">43: </font>     &lt;TD&gt;&lt;INPUT TYPE=TEXT SIZE=32 NAME="first_name" VALUE=$f_name&gt;&lt;/TD&gt;
+<font color="#0000FF">44: </font>    &lt;/TR&gt;
+<font color="#0000FF">45: </font>    &lt;TR&gt;
+<font color="#0000FF">46: </font>     &lt;TD BGCOLOR="#c0c0c0"&gt;&lt;B&gt;Last Name:&lt;/B&gt;&lt;/TD&gt;
+<font color="#0000FF">47: </font>     &lt;TD&gt;&lt;INPUT TYPE=TEXT SIZE=32 NAME="last_name" VALUE=$l_name&gt;&lt;/TD&gt;
+<font color="#0000FF">48: </font>    &lt;/TR&gt;
+<font color="#0000FF">49: </font>    &lt;TR&gt;
+<font color="#0000FF">50: </font>     &lt;TD BGCOLOR="#c0c0c0"&gt;&lt;B&gt;Phone:&lt;/B&gt;&lt;/TD&gt;
+<font color="#0000FF">51: </font>     &lt;TD&gt;&lt;INPUT TYPE=TEXT SIZE=32 NAME="phone" VALUE="$phone"&gt;&lt;/TD&gt;
+<font color="#0000FF">52: </font>    &lt;/TR&gt;
+<font color="#0000FF">53: </font>    &lt;TR&gt;
+<font color="#0000FF">54: </font>     &lt;TD BGCOLOR="#c0c0c0"&gt;&lt;B&gt;E-mail:&lt;/B&gt;&lt;/TD&gt;
+<font color="#0000FF">55: </font>     &lt;TD&gt;&lt;INPUT TYPE=TEXT SIZE=32 NAME="email" VALUE="$email"&gt;&lt;/TD&gt;
+<font color="#0000FF">56: </font>    &lt;/TR&gt;
+<font color="#0000FF">57: </font>    &lt;TR&gt;
+<font color="#0000FF">58: </font>     &lt;TD BGCOLOR="#c0c0c0"&gt;&lt;B&gt;Notes:&lt;/B&gt;&lt;/TD&gt;
+<font color="#0000FF">59: </font>     &lt;TD&gt;&lt;TEXTAREA NAME=notes WRAP=PHYSICAL ROWS=3 COLS=30&gt;$notes&lt;/TEXTAREA&gt;&lt;/TD&gt;
+<font color="#0000FF">60: </font>    &lt;/TR&gt;
+<font color="#0000FF">61: </font>    &lt;TR&gt;
+<font color="#0000FF">62: </font>     &lt;TD BGCOLOR="#c0c0c0" COLSPAN=2&gt;
+           &lt;CENTER&gt;&lt;INPUT TYPE=SUBMIT VALUE="Modify Record"&gt;&lt;/CENTER&gt;&lt;/TD&gt;
+<font color="#0000FF">63: </font>    &lt;/TR&gt;
+<font color="#0000FF">64: </font>   &lt;/TABLE&gt;&lt;/CENTER&gt;
+<font color="#0000FF">65: </font>   &lt;P&gt;
+<font color="#0000FF">66: </font>   &lt;HR WIDTH=80%&gt;
+<font color="#0000FF">67: </font>   &lt;P&gt;
+
+<font color="#0000FF">68: </font>   &lt;CENTER&gt;
+<font color="#0000FF">69: </font>   &lt;FONT SIZE=4&gt;
+<font color="#0000FF">70: </font>    &lt;A HREF="/sql/index.html"&gt;Main Page&lt;/A&gt;
+<font color="#0000FF">71: </font>   &lt;/FONT&gt;
+<font color="#0000FF">72: </font>   &lt;/CENTER&gt;
+<font color="#0000FF">73: </font>   &lt;/FORM&gt;
+<font color="#0000FF">74: </font>   &lt;/BODY&gt;&lt;/HTML&gt;
+<font color="#0000FF">75: </font>HTML
+<font color="#0000FF">76: </font>} # End of subroutine.
+<font color="#0000FF">77: </font>################ END PRINT OUTPUT SUBROUTINE
+</pre>
+          </td>
+        </table>
+        <p><font size="4"> <font face="Arial, Helvetica, sans-serif" size="2">These 
+          programs all look more difficult than they actually are! This one is 
+          mostly HTML too! </font></font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> I split the modify 
+          function into two separate programs. I did this mainly for teaching 
+          purposes. If I was writing this program for myself, I would have combined 
+          them into a single program. The first modify program grabs the data 
+          and displays it in an HTML form for editing. The second modify program 
+          does the modifications to the database table. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 6:</b> 
+          This line does the same thing as the last program. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 7:</b> 
+          Notice that we did something defferent here. This creates a variable 
+          called <b>$saved</b> that stores the <b><i>previous</i></b> value for 
+          us. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> We do this because 
+          if the user modifies the data, and we try to update it based upon the 
+          <i><b>new</b></i> information, the database will not be able to find 
+          it because it does not exist in the database yet. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> For example: If 
+          my first name is <b>James</b> but I want to change it to <b>Brent</b> 
+          - and do so on the HTML form. Brent would get passed to the program, 
+          but if we search the database for <b><i>Brent</i></b> we won't find 
+          a match because it is currently <b><i>James</i></b> in the database. 
+          Saving the old data prevents this from happening because we use the 
+          old data to search the database. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 15:</b> 
+          Is our SQL statement. </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 17:</b> 
+          Our now familiar call to the <b><i>fetchrow_hashref</i></b> method. 
+          </font>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Line 31:</b> 
+          This is the <i>HTML form ACTION</i> line for our call to the <i>next</i> 
+          modify script. Notice that we pass the <b>$saved</b> variable on the 
+          URL. This is how the next program knows which record to delete. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> The rest of this 
+          one is HTML, let's move on to the final script. It is called <b>modify2.cgi</b> 
+          </font>
+        <p> 
+        <hr width=50%>
+        <p> <font size="4"><b><i><font face="Arial, Helvetica, sans-serif" size="1">modify2.cgi</font></i></b><font face="Arial, Helvetica, sans-serif" size="1"> 
+          SQL Listing 8:</font><br>
+          </font>
+        <table bgcolor="#e0e0e0">
+          <td> 
+            <pre>
+<font color="#0000FF">1:  </font>#!/usr/bin/perl
+<font color="#0000FF">2:  </font>### modify2.cgi
+
+<font color="#0000FF">3:  </font>use CGI qw/:standard/;
+<font color="#0000FF">4:  </font>require "common.sub";
+
+<font color="#0000FF">5:  </font>$old_email = $ENV{QUERY_STRING};
+
+<font color="#0000FF">6:  </font>$f_name = &filter(param(first_name));
+<font color="#0000FF">7:  </font>$l_name = &filter(param(last_name));
+<font color="#0000FF">8: </font>$phone  = &filter(param(phone));
+<font color="#0000FF">9: </font>$email  = &filter(param(email));
+<font color="#0000FF">10: </font>$notes  = &filter(param(notes));
+
+<font color="#0000FF">11: </font>print header;
+
+<font color="#0000FF">12: </font>&Create_DB_Connection;
+<font color="#0000FF">13: </font>&write_data;
+<font color="#0000FF">14: </font>&print_output;
+
+<font color="#0000FF">15: </font># Disconnect from the database
+<font color="#0000FF">16: </font>$dbh-&gt;disconnect;
+
+
+<font color="#0000FF">17: </font>################ BEGIN WRITE DATA SUBROUTINE
+<font color="#0000FF">18: </font>sub write_data{
+<font color="#0000FF">19: </font>  <font color="#FF0000">$SQL="UPDATE phones SET</font>
+<font color="#0000FF">20: </font>         <font color="#FF0000">first_name = '$f_name',</font>
+<font color="#0000FF">21: </font>         <font color="#FF0000">last_name  = '$l_name',</font>
+<font color="#0000FF">22: </font>         <font color="#FF0000">phone      = '$phone',</font>
+<font color="#0000FF">23: </font>         <font color="#FF0000">email      = '$email',</font>
+<font color="#0000FF">24: </font>         <font color="#FF0000">notes      = '$notes'</font>
+
+<font color="#0000FF">25: </font>        <font color="#FF0000">WHERE</font>
+<font color="#0000FF">26: </font>         <font color="#FF0000">email      = '$old_email'</font>
+<font color="#0000FF">27: </font>       ";  
+
+<font color="#0000FF">28: </font>  &Do_SQL;
+<font color="#0000FF">29: </font>} # End of write_data
+<font color="#0000FF">30: </font>################ END WRITE DATA SUBROUTINE
+
+
+<font color="#0000FF">31: </font>################ BEGIN PRINT OUTPUT SUBROUTINE
+<font color="#0000FF">32: </font>sub print_output{
+<font color="#0000FF">33: </font>  print&lt;&lt;HTML;
+<font color="#0000FF">34: </font>   &lt;HTML&gt;&lt;BODY&gt;   
+<font color="#0000FF">35: </font>   &lt;CENTER&gt;&lt;FONT SIZE=5&gt;
+<font color="#0000FF">36: </font>    Record modified in database
+<font color="#0000FF">37: </font>     &lt;P&gt;
+<font color="#0000FF">38: </font>    &lt;A HREF="/sql/index.html"&gt;Return to Main Page&lt;/A&gt;
+<font color="#0000FF">39: </font>     &lt;/P&gt;
+<font color="#0000FF">40: </font>   &lt;/FONT&gt;&lt;/CENTER&gt;
+<font color="#0000FF">41: </font>  &lt;/BODY&gt;&lt;/HTML&gt;
+<font color="#0000FF">42: </font>HTML
+
+<font color="#0000FF">43: </font>} # End of subroutine
+<font color="#0000FF">44: </font>################ END PRINT OUTPUT SUBROUTINE
+</pre>
+          </td>
+        </table>
+        <p><font size="4"> <font face="Arial, Helvetica, sans-serif" size="2">This 
+          last one really has nothing new in it! I highlighted the SQL statement 
+          that we pass to the database, but that is really the only thing of interest 
+          here. The SQL statement could have easily been placed on one line rather 
+          than several, but I am shooting for readability here... </font></font>
+        <p> 
+        <hr>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b> Finishing Up... 
+          </b></font> 
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> We now have the 
+          code for a fully functional database. It is not the most creative database 
+          in the world, but I 'll leave all of the creativity up to you. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Any changes or 
+          additions will be on my web page at: <a href="http://www.inlink.com/~perlguy/sql">http://www.inlink.com/~perlguy/sql</a>. 
+          Check there because I hope to continue documenting this process for 
+          beginners. </font>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> If you want the 
+          code for each piece, here are the links. <i>(I renamed the files with 
+          a .txt extension, remove the .txt when you are ready to use them.)</i> 
+          </font>
+        <p> 
+        <ul>
+          <li><font size="2" face="Arial, Helvetica, sans-serif"><a href="http://www.inlink.com/~perlguy/sql/add.cgi.txt">add.cgi</a> 
+            </font>
+          <li><font size="2" face="Arial, Helvetica, sans-serif"><a href="http://www.inlink.com/~perlguy/sql/common.sub.txt">common.sub</a> 
+            </font>
+          <li><font size="2" face="Arial, Helvetica, sans-serif"><a href="http://www.inlink.com/~perlguy/sql/delete.cgi.txt">delete.cgi</a> 
+            </font>
+          <li><font size="2" face="Arial, Helvetica, sans-serif"><a href="http://www.inlink.com/~perlguy/sql/modify1.cgi.txt">modify1.cgi</a> 
+            </font>
+          <li><font size="2" face="Arial, Helvetica, sans-serif"><a href="http://www.inlink.com/~perlguy/sql/modify2.cgi.txt">modify2.cgi</a> 
+            </font>
+          <li><font size="2" face="Arial, Helvetica, sans-serif"><a href="http://www.inlink.com/~perlguy/sql/search.cgi.txt">search.cgi</a> 
+            </font>
+        </ul>
+        <p><font size="2" face="Arial, Helvetica, sans-serif"> Don't let the simplicity 
+          of this example fool you. Using Perl with a SQL database is an extremely 
+          powerful combination. Add in tools like <b>mod_perl</b>, and you have 
+          a world-class web server combination ready to go! </font>
+        <p> 
+        <hr>
+        <p> <font size="2" face="Arial, Helvetica, sans-serif"><b>Useful Links</b></font> 
+        <p> 
+        <ul>
+          <li><font face="Arial, Helvetica, sans-serif" size="2"><b><a href="http://www.perl.com">Perl 
+            Home Page</a> </b></font>
+          <li><font face="Arial, Helvetica, sans-serif" size="2"><b><a href="http://webreview.com/wr/pub/Perl">Webreview's 
+            Perl Articles</a> </b></font>
+          <li><font face="Arial, Helvetica, sans-serif" size="2"><b><a href="http://www.w3.org/Security/Faq/www-security-faq.html">The 
+            WWW Security FAQ</a> </b></font>
+          <li><font face="Arial, Helvetica, sans-serif" size="2"><b><a href="http://www.geocities.com/ResearchTriangle/Node/9672/sqltut.html">An 
+            SQL Tutorial</a> </b></font>
+          <li><font face="Arial, Helvetica, sans-serif" size="2"><b><a href="http://reference.perl.com/query.cgi?database">Perl 
+            Database Reference</a> </b></font>
+          <li><font face="Arial, Helvetica, sans-serif" size="2"><b><a href="http://www.symbolstone.org/technology/perl/DBI/">DBI 
+            Database Interface Home Page</a> </b></font>
+          <li><font face="Arial, Helvetica, sans-serif" size="2"><b><a href="http://www.mysql.org/">MySQL</a> 
+            </b></font>
+          <li><font face="Arial, Helvetica, sans-serif" size="2"><b><a href="http://postgresql.nextpath.com/">PostgreSQL</a> 
+            </b></font>
+        </ul>
+        <!-- #EndEditable --></TD>
+    
+  </TABLE>
+</CENTER>
+<HR WIDTH=85% SIZE=1 noshade>
+<!-- This needs to be an SSI --> <FONT SIZE=1 FACE=ARIAL> 
+<CENTER>
+  [ <A HREF="/simple/index.html">Home</A> | <A HREF="/database/database.cgi">Flat-File 
+  Database</A> | <a href="/sql">SQL Database</a> | <A HREF="/articles.html">Articles</A> 
+  | <A HREF="/proto.html">Prototypes</A> | <A HREF="/useful_links.html">Useful 
+  Perl Links</A> <A HREF="../simple/index_old.html"> 
+  </A> | <A HREF="/services.html">My Programming Services</A> ] 
+</CENTER>
+</FONT> <!-- This needs to be an SSI --> 
+</BODY>
+<!-- #EndTemplate -->
+</HTML>

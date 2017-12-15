@@ -1,0 +1,15 @@
+<SCRIPT LANGUAGE="JavaScript">
+  function cleartxtbx(the_textbox) {
+    the_textbox.value = "";
+  }
+</SCRIPT>
+
+<FORM NAME="docnameform">
+  1. Specify your document collection name:
+  <INPUT TYPE="text" VALUE="Enter document name" 
+   onClick="cleartxtbx(this); return false">
+  <BR>
+  2. Simpler:
+  <INPUT TYPE="text" VALUE="Enter document name" 
+   onClick="javascript:value=''; return false">
+</FORM>

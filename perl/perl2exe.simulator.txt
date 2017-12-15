@@ -1,0 +1,19 @@
+# Simulate a Perl installer like Perl2Exe:
+# Add this to bottom of script to determine your dependencies:
+END { print join( $/, values %INC ), $/ }
+
+# Run script e.g. perla "runsascon.pl helloworld.sas 6" and remember any
+# required paths that are printed.
+
+# cp -R c:\Perl to a temp dir.
+# Delete most modules not mentioned by the above output. Try your script on
+# the copy. Recopy any parts that you shouldn't have deleted.  
+#
+# Put your script into the "bin" subdirectory. Put this into "run.bat" in the
+# main directory. Zip it up.
+bin\perl bin\runsascon.pl "%1" "%2"
+
+# Execute like this (assumes helloworld.sas in in the same dir and this script
+# takes 2 parameters):
+cd c:\foo\
+run helloworld.sas 6

@@ -1,0 +1,18 @@
+
+8          
+9          /* A data step that writes to the log. */
+10         data _null_;
+11           putlog 'I will disappear!';
+             ______
+             1
+WARNING 1-322: Assuming the symbol PUT was misspelled as putlog.
+
+12         run;
+
+I will disappear!
+
+13         
+14         /* Reset the log */
+15         proc printto;
+16         run;
+

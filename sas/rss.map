@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+
+<SXLEMAP version="1.2">
+   
+   <!-- TABLE (CHANNEL) -->
+   <!-- top level channel content description (TOC) -->
+   <TABLE name="CHANNEL">
+      <TABLE-PATH syntax="XPATH"> /rss/channel </TABLE-PATH>
+      <TABLE-END-PATH syntax="XPATH" beginend="BEGIN"> 
+         /rss/channel/item </TABLE-END-PATH>
+
+      <!-- title -->
+      <COLUMN name="title">
+         <PATH> /rss/channel/title </PATH>
+         <TYPE> character </TYPE>
+         <DATATYPE> string </DATATYPE>
+         <LENGTH> 200 </LENGTH>
+      </COLUMN>
+
+      <!-- link -->
+      <COLUMN name="link">
+         <PATH> /rss/channel/link </PATH>
+         <TYPE> character </TYPE>
+         <DATATYPE> string </DATATYPE>
+         <LENGTH> 200 </LENGTH>
+         <DESCRIPTION> Story link </DESCRIPTION>
+      </COLUMN>
+
+      <!-- description -->
+      <COLUMN name="description">
+         <PATH> /rss/channel/description </PATH>
+         <TYPE> character </TYPE>
+         <DATATYPE> string </DATATYPE>
+         <LENGTH> 1024 </LENGTH>
+      </COLUMN>
+
+      <!-- language -->
+      <COLUMN name="language">
+         <PATH> /rss/channel/language </PATH>
+         <TYPE> character </TYPE>
+         <DATATYPE> string </DATATYPE>
+         <LENGTH> 8 </LENGTH>
+      </COLUMN>
+
+      <!-- version -->
+      <COLUMN name="version">
+         <PATH> /rss@version </PATH>
+         <TYPE> character </TYPE>
+         <DATATYPE> string </DATATYPE>
+         <LENGTH> 8 </LENGTH>
+      </COLUMN>
+   </TABLE>
+
+   
+   <!-- TABLE (ITEMS) -->
+   <!-- individual news stories -->
+   <TABLE name="ITEMS">
+      <TABLE-PATH syntax="XPATH"> /rss/channel/item </TABLE-PATH>
+      <TABLE-DESCRIPTION> Individual news stories </TABLE-DESCRIPTION>
+
+      <!-- title -->
+      <COLUMN name="title">
+         <PATH> /rss/channel/item/title </PATH>
+         <TYPE> character </TYPE>
+         <DATATYPE> string </DATATYPE>
+         <LENGTH> 200 </LENGTH>
+      </COLUMN>
+
+      <!-- link -->
+      <!-- link is renamed to url, assigned a label and max length -->
+      <COLUMN name="URL">
+         <PATH> /rss/channel/item/link </PATH>
+         <TYPE> character </TYPE>
+         <DATATYPE> string </DATATYPE>
+         <LENGTH> 200 </LENGTH>
+         <DESCRIPTION> Story link </DESCRIPTION>
+      </COLUMN>
+
+      <!-- description -->
+      <COLUMN name="description">
+         <PATH> /rss/channel/item/description </PATH>
+         <TYPE> character </TYPE>
+         <DATATYPE> string </DATATYPE>
+         <LENGTH> 1024 </LENGTH>
+      </COLUMN>
+   </TABLE>
+
+</SXLEMAP>

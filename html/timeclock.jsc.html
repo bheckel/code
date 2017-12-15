@@ -1,0 +1,86 @@
+<HTML>
+  <title>Date/Time/Browser Type to HTML</title>
+  <!-- Cut-N-Paste JavaScript from ISN Toolbox 
+       Copyright 1996, Infohiway, Inc.  Restricted use is hereby
+       granted (commercial and personal OK) so long as this code
+       is not *directly* sold and the copyright notice is buried
+       somewhere deep in your HTML document.  A link to our site
+       http://www.infohiway.com is always appreciated of course,
+       but is absolutely and positively not necessary. ;-)   -->
+
+<SCRIPT LANGUAGE="JavaScript">
+  // Initialize populate an array with strings passed to it.
+  function initArray() {
+   for(i=0;i<initArray.arguments.length; i++)
+    this[i] = initArray.arguments[i];
+  }
+
+  var isnMonths=new initArray("January","February","March","April","May","June","July","August","September","October","November","December");
+  var isnDays= new initArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday");
+  today=new Date();
+  hrs=today.getHours();
+  min=today.getMinutes();
+  sec=today.getSeconds();
+  clckh=""+((hrs>12)?hrs-12:hrs); 
+  clckm=((min<10)?"0":"")+min;
+  clcks=((sec<10)?"0":"")+sec;
+  clck=(hrs>=12)?"p.m.":"a.m.";
+  var stnr="";
+  var ns="0123456789";
+  var a="";
+</SCRIPT>
+</HEAD>
+
+<BODY BGCOLOR="white" BACKGROUND="bg1.gif"><CENTER>
+  <TABLE BORDER=0 WIDTH=486>
+  <TR><TD COLSPAN=2><B><A HREF="http://www.infohiway.com/javascript/indexf.htm">Cut-N-Paste JavaScript Home</A> / Writing Date, Time, etc. to Screen</B>
+  <P>Although we've put up a number of clock and calendar scripts already, they've been directed to forms or other panes on screen.  Surprisingly, we've gotten a lot of email requesting simple prints to screen.
+  <P>Obsequiously eager to please, we've cobbled a bunch together for your edification on this page, along with a lot of straight system calls that you may wish to print to your HTML somewhere at your site.
+  <P>If you want an image swapping clock, one that actually ticks as time passes, check out the <a href="http://www.infohiway.com/javascript?clock">Verdana Image Swapping Real-Time Clock</a>.<br><hr noshade width=486>
+  </td></tr></table>
+
+  <SCRIPT LANGUAGE="JavaScript">
+  // fixes a Netscape 2 and 3 bug
+  function getFullYear(d) { // d is a date object
+    yr = d.getYear();
+    if (yr < 1000)
+     yr+=1900;
+    return yr;
+  }
+  document.write("<table width=486>"); // don't delete this line
+
+  document.write("<TR><TD VALIGN=TOP><P><B>Static Formatted Civilian Date only:<P></TD><TD VALIGN=TOP><B> "+isnDays[today.getDay()]
+  +", "+isnMonths[today.getMonth()]+" "+today.getDate()+", "
+  +getFullYear(today)+"</B><P>");
+
+  document.write("<TR><TD VALIGN=TOP><B>Static Formatted Civilian Time only:<P></TD><TD VALIGN=TOP><B>"+clckh+":"+clckm
+  +":"+clcks+" "+clck+"</B><P></TD></TR>");
+
+  document.write("<TR><TD VALIGN=TOP><B>Static Formatted Civilian Date and Time:<P></TD><TD VALIGN=TOP><B>"
+  +isnDays[today.getDay()]+", "+isnMonths[today.getMonth()]+" "
+  +today.getDate()+", "+getFullYear(today)+" "+clckh+":"+clckm+":"
+  +clcks+" "+clck+"</B><P></TD></TR>");
+
+  document.write("<TR><TD VALIGN=TOP><B>Unformatted Military date only:<P></TD><TD VALIGN=TOP><B>"
+  +(today.getMonth()+1)+"/"+today.getDate()+"/"
+  +(getFullYear(today)+"").substring(2,4)+"</B><P></TD></TR>");
+
+  document.write("<TR><TD VALIGN=TOP><B>Unformatted Military time only:<P></TD><TD VALIGN=TOP><B>"+hrs+":"+clckm+":"+clcks+"</B><P></TD></TR>");
+
+  document.write("<TR><TD VALIGN=TOP><B>Unformatted Military time and date:<P></TD><TD><B>"+today+"</B><P></TD></TR>");
+
+  document.write("<TR><TD VALIGN=TOP><B>User's Browser Name:<P></TD><TD><B>"+navigator.appName+"</B><P></TD></TR>");
+
+  document.write("<TR><TD VALIGN=TOP><B>User's Browser Version:<P></TD><TD VALIGN=TOP><B>"+navigator.appVersion+"</B><P></TD></TR>");
+
+  document.write("<TR><TD VALIGN=TOP><B>User referred from: "
+  +"<P></TD><TD VALIGN=TOP><B>"
+  +(document.referrer.length > 0 ? document.referrer:"<i>no referrer</i>")
+  +"</B></TD></TR>");
+
+  document.write("</table>"); // don't delete this line
+
+  </SCRIPT>
+
+</body>
+</html>

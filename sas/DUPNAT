@@ -1,0 +1,398 @@
+*********************************************************************;          
+* PROGRAM NAME     DUPNAT      KRYN KRAUTHEIM          16 APR 2001   *;          
+*                                                                    *;          
+* THIS PROGRAM LISTS PAIRS OF RECORDS THAT HAVE ALL OR ALL BUT ONE   *;          
+* VARIABLES IN COMMON AND INDICATES WHICH, IF ANY, VARIABLE IS       *;          
+* DIFFERENT, ALONG WITH THE VALUES FOR EACH RECORD IN THE PAIR.      *;          
+*                                                                    *;          
+* THE PROGRAM DOES NOT COMPARE EVERY POSSIBLE PAIR OF RECORDS        *;          
+* BECAUSE OF COMPUTATIONAL LIMITATIONS, BUT MAKES TWO SORTING PASSES *;          
+* THROUGH THE DATA AND EVALUATES CONSECUTIVE PAIRS OF RECORDS        *;          
+*                                                                    *;          
+* UPDATE LOG                                                         *;          
+* 30 APR 2001  KJK  ADDED NOWDEAD AND OTHTERM TO VARIABLES WHICH     *;          
+*                   ARE IGNORED IF CERTNOS ARE CONSECUTIVE           *;          
+* 30 APR 2001  KJK  DELETED APGAR1 AND FATHEDUC FROM VARIABLES TO    *;          
+*                   BE COMPARED                                      *;          
+* 11 JUN 2001  KJK  ADDED ID NUMBERS IN LEFT MARGIN TO IDENTIFY      *;          
+*                   EACH PAIR OF DUPLICATES                          *;          
+* 09 JAN 2003 BQH0  ENABLE USER TO OBTAIN A CSV DATA FILE INSTEAD OF *;
+*                   AUTOMATICALLY DUMPING TO PRINTER                 *;
+*********************************************************************;          
+OPTIONS SYMBOLGEN MLOGIC MPRINT LS=133 SASAUTOS='DWJ2.MACROS.LIB';                                                    
+                                                                                
+%GLOBAL I FNAME N BYR STNAME S;                                                 
+                                                                                
+* &DS AND &AFFILE COME FROM THE AF SCREEN, &AFFILE HOLDS THE WORD;
+* NONE IF USER LEAVES THE FIELD BLANK;
+
+FILENAME IN "&DS";
+
+* AN OUTPUT CSV FILE WAS REQUESTED BY THE USER IF THE FCAST INPUT;
+* LINE VARIABLE &AFFILENM IS NOT EMPTY;
+%MACRO FNAME_GIVEN;
+  %IF &AFFILE NE NONE %THEN
+    %DO;
+      FILENAME OUT "&AFFILE" DISP=NEW RECFM=FB LRECL=150 BLKSIZE=3000;
+    %END;
+%MEND FNAME_GIVEN;
+%FNAME_GIVEN
+                                                                                
+*****************************************;                                      
+* EACH ITEM TO BE COMPARED IS ASSIGNED   ;                                      
+* AN ITEM NUMBER                         ;                                      
+                                                                                
+ %LET ITEM1 = MONTH;                                                            
+ %LET ITEM2 = DAY;                                                              
+ %LET ITEM3 = YEAR;                                                             
+ %LET ITEM4 = SEX;                                                              
+ %LET ITEM5 = STATE;                                                            
+ %LET ITEM6 = COUNTY;                                                           
+ %LET ITEM7 = BIRTHPLC;                                                         
+ %LET ITEM8 = ATTEND;                                                           
+ %LET ITEM9 = MOTHMO;                                                           
+ %LET ITEM10= MOTHDAY;                                                          
+ %LET ITEM11= MOTHYR;                                                           
+ %LET ITEM12= MOTHPLC;                                                          
+ %LET ITEM13= STRES;                                                            
+ %LET ITEM14= RCOUNTY;                                                          
+ %LET ITEM15= FATHMO;                                                           
+ %LET ITEM16= FATHDAY;                                                          
+ %LET ITEM17= FATHYR;                                                           
+ %LET ITEM18= MOTHHISP;                                                         
+ %LET ITEM19= FATHHISP;                                                         
+ %LET ITEM20= MRACE;                                                            
+ %LET ITEM21= FRACE;                                                            
+ %LET ITEM22= MOTHEDUC;                                                         
+ %LET ITEM23= NOWLIVE;                                                          
+ %LET ITEM24= NOWDEAD;                                                          
+ %LET ITEM25= OTHTERM;                                                          
+ %LET ITEM26= MARSTAT;                                                          
+ %LET ITEM27= MENSEMO;                                                          
+ %LET ITEM28= MENSEDY;                                                          
+ %LET ITEM29= MENSEYR;                                                          
+ %LET ITEM30= CBEGMO;                                                           
+ %LET ITEM31= NBEGMO;                                                           
+ %LET ITEM32= TOTVISTS;                                                         
+ %LET ITEM33= WGT_UNIT;                                                         
+ %LET ITEM34= GEST_WKS;                                                         
+ %LET ITEM35= PLURAL;                                                           
+ %LET ITEM36= APGAR5;                                                           
+ %LET ITEM37= NO_RISK;                                                          
+ %LET ITEM38= ANEMIA;                                                           
+ %LET ITEM39= CARDIAC;                                                          
+ %LET ITEM40= LUNG;                                                             
+ %LET ITEM41= DIABETES;                                                         
+ %LET ITEM42= HERPES;                                                           
+ %LET ITEM43= HYDRAM;                                                           
+ %LET ITEM44= HEMOGLOB;                                                         
+ %LET ITEM45= HYPERTEN;                                                         
+ %LET ITEM46= PREGASC;                                                          
+ %LET ITEM47= ECLAMPS;                                                          
+ %LET ITEM48= CERVIX;                                                           
+ %LET ITEM49= INFGRAM;                                                          
+ %LET ITEM50= INFPRET;                                                          
+ %LET ITEM51= RENAL;                                                            
+ %LET ITEM52= RHSENSIT;                                                         
+ %LET ITEM53= UTERINE;                                                          
+ %LET ITEM54= OTH_RISK;                                                         
+ %LET ITEM55= TOB_DAY;                                                          
+ %LET ITEM56= ALC_DAY;                                                          
+ %LET ITEM57= WGT_GAIN;                                                         
+ %LET ITEM58= NO_OBST;                                                          
+ %LET ITEM59= AMNIO;                                                            
+ %LET ITEM60= ELEC_FET;                                                         
+ %LET ITEM61= IND_LAB;                                                          
+ %LET ITEM62= STIM_LAB;                                                         
+ %LET ITEM63= TOCO;                                                             
+ %LET ITEM64= ULTRA;                                                            
+ %LET ITEM65= OTH_OBS;                                                          
+ %LET ITEM66= NO_COMPL;                                                         
+ %LET ITEM67= FEBRIL;                                                           
+ %LET ITEM68= MECONIUM;                                                         
+ %LET ITEM69= MEMBRANE;                                                         
+ %LET ITEM70= ABRUPTIO;                                                         
+ %LET ITEM71= PREVIA;                                                           
+ %LET ITEM72= BLEED;                                                            
+ %LET ITEM73= SEIZ;                                                             
+ %LET ITEM74= PREC_LAB;                                                         
+ %LET ITEM75= PROB_LAB;                                                         
+ %LET ITEM76= DYSFUNC;                                                          
+ %LET ITEM77= BREECH;                                                           
+ %LET ITEM78= CEPHAL;                                                           
+ %LET ITEM79= CORD;                                                             
+ %LET ITEM80= ANESTHE;                                                          
+ %LET ITEM81= FETALDIS;                                                         
+ %LET ITEM82= OTH_COMP;                                                         
+ %LET ITEM83= NO_DELIV;                                                         
+ %LET ITEM84= VAGINA;                                                           
+ %LET ITEM85= AFTERC;                                                           
+ %LET ITEM86= PRIMC;                                                            
+ %LET ITEM87= REPEATC;                                                          
+ %LET ITEM88= FORCEPS;                                                          
+ %LET ITEM89= VACUUM;                                                           
+ %LET ITEM90= NO_ABNOR;                                                         
+ %LET ITEM91= ANEMIA2;                                                          
+ %LET ITEM92= INJURY;                                                           
+ %LET ITEM93= ALCO_SYN;                                                         
+ %LET ITEM94= MEM_DIS;                                                          
+ %LET ITEM95= MECONIU2;                                                         
+ %LET ITEM96= LT30MIN;                                                          
+ %LET ITEM97= GT30MIN;                                                          
+ %LET ITEM98= AB_SEIZ;                                                          
+ %LET ITEM99= OTHABNOR;                                                         
+ %LET ITEM100= NO_CONG;                                                         
+ %LET ITEM101= ANENCEP;                                                         
+ %LET ITEM102= MENING;                                                          
+ %LET ITEM103= HYDROC;                                                          
+ %LET ITEM104= MICROCEC;                                                        
+ %LET ITEM105= CENNERV;                                                         
+ %LET ITEM106= HEART;                                                           
+ %LET ITEM107= RESP;                                                            
+ %LET ITEM108= STENOSIS;                                                        
+ %LET ITEM109= ATRESIA;                                                         
+ %LET ITEM110= GASTROS;                                                         
+ %LET ITEM111= OTH_GAS;                                                         
+ %LET ITEM112= MALGENIT;                                                        
+ %LET ITEM113= AGENES;                                                          
+ %LET ITEM114= OTH_UROG;                                                        
+ %LET ITEM115= CLEFT;                                                           
+ %LET ITEM116= POLYDAC;                                                         
+ %LET ITEM117= CLUB;                                                            
+ %LET ITEM118= HERNIA;                                                          
+ %LET ITEM119= OTH_MUSC;                                                        
+ %LET ITEM120= DOWNS;                                                           
+ %LET ITEM121= OTHCHROM;                                                        
+ %LET ITEM122= OTH_CONG;                                                        
+ %LET ITEM123= MOTHAGE;                                                         
+ %LET ITEM124= FATHAGE;                                                         
+ %LET A=1;                                                                      
+ %LET B=2;                                                                      
+ %LET NUMITEMS=124;                                                             
+                                                                                
+*****************************************;                                      
+* READ IN NATMER FILE AND STORE STATE,   ;                                      
+* YEAR, AND FILENAME AS MACRO VARIABLES  ;                                      
+                                                                                
+DATA _NULL_;                                                                    
+ LENGTH STCODE $2 YR $4 NAME $25;                                               
+ INFILE IN FILENAME=NAME;                                                       
+ INPUT STATE 16-17 YEAR $ 224-227;                                              
+ STCODE=STATE;                                                                  
+ YR=YEAR;                                                                       
+ CALL SYMPUT('N',STCODE);                                                       
+ CALL SYMPUT('FNAME',NAME);                                                     
+ CALL SYMPUT('BYR',YR);                                                         
+ CNT+1;                                                                         
+ IF CNT GT 1 THEN STOP;                                                         
+RUN;                                                                            
+                                                                                
+%STATES                                                                         
+                                                                                
+*****************************************;                                      
+* THIS MACRO LISTS THE VARIABLES IN ORDER;                                      
+* FROM A GIVEN START POINT TO THE END OF ;                                      
+* THE LIST OF VARIABLES-USED IN PROC FREQ;                                      
+                                                                                
+%MACRO SORT(START);                                                             
+ %DO J = &START %TO &NUMITEMS;                                                  
+   &&ITEM&J&&B                                                                  
+ %END;                                                                          
+%MEND SORT;                                                                     
+                                                                                
+*****************************************;                                      
+* THIS MACRO READS IN THE NATMER FILE TWO;                                      
+* TIMES AND CREATES LIKE-NAMED VARIABLE  ;                                      
+* NAMES FOR EACH FILE                    ;                                      
+                                                                                
+%MACRO READIN;                                                                  
+ %DO I = 1 %TO 2;                                                                
+                                                                                 
+ DATA SET&I;                                                                     
+  INFILE IN;                                                                     
+    INPUT @3 CERT&I $6. @9 MONTH&I $2. @11 DAY&I $2. @224 YEAR&I $4.             
+          @15 SEX&I $1. @16 STATE&I $2. @18 COUNTY&I $3.                         
+          @21 BIRTHPLC&I $1. @22 ATTEND&I $1. @23 MOTHMO&I $2.                   
+          @25 MOTHDAY&I $2. @228 MOTHYR&I $4. @29 MOTHPLC&I $2.                  
+          @31 STRES&I $2. @33 RCOUNTY&I $3. @36 FATHMO&I $2.                     
+          @38 FATHDAY&I $2. @232 FATHYR&I $4. @42 MOTHHISP&I $1.                 
+          @43 FATHHISP&I $1. @44 MRACE&I $1. @45 FRACE&I $1.                     
+          @46 MOTHEDUC&I $2.                    @50 NOWLIVE&I $2.                
+          @52 NOWDEAD&I $2. @54 OTHTERM&I $2. @60 MARSTAT&I $1.                  
+          @61 MENSEMO&I $2. @63 MENSEDY&I $2. @236 MENSEYR&I $4.                 
+          @66 CBEGMO&I $1. @67 NBEGMO&I $2. @69 TOTVISTS&I $2.                   
+          @71 WGT_UNIT&I $5. @76 GEST_WKS&I $2. @78 PLURAL&I $1.                 
+                           @81 APGAR5&I $2. @83 NO_RISK&I $1.                    
+          @84 ANEMIA&I $1. @85 CARDIAC&I $1. @86 LUNG&I $1.                      
+          @87 DIABETES&I $1. @88 HERPES&I $1. @89 HYDRAM&I $1.                   
+          @90 HEMOGLOB&I $1. @91 HYPERTEN&I $1. @92 PREGASC&I $1.                
+          @93 ECLAMPS&I $1. @94 CERVIX&I $1. @95 INFGRAM&I $1.                   
+          @96 INFPRET&I $1. @97 RENAL&I $1. @98 RHSENSIT&I $1.                   
+          @99 UTERINE&I $1. @100 OTH_RISK&I $1. @117 TOB_DAY&I $3.               
+          @120 ALC_DAY&I $3. @123 WGT_GAIN&I $2. @125 NO_OBST&I $1.              
+          @126 AMNIO&I $1. @127 ELEC_FET&I $1. @128 IND_LAB&I $1.                
+          @129 STIM_LAB&I $1. @130 TOCO&I $1. @131 ULTRA&I $1.                   
+          @132 OTH_OBS&I $1. @139 NO_COMPL&I $1. @140 FEBRIL&I $1.               
+          @141 MECONIUM&I $1. @142 MEMBRANE&I $1. @143 ABRUPTIO&I $1.            
+          @144 PREVIA&I $1. @145 BLEED&I $1. @146 SEIZ&I $1.                     
+          @147 PREC_LAB&I $1. @148 PROB_LAB&I $1. @149 DYSFUNC&I $1.             
+          @150 BREECH&I $1. @151 CEPHAL&I $1. @152 CORD&I $1.                    
+          @153 ANESTHE&I $1. @154 FETALDIS&I $1. @155 OTH_COMP&I $1.             
+          @171 NO_DELIV&I $1. @172 VAGINA&I $1. @173 AFTERC&I $1.                
+          @174 PRIMC&I $1. @175 REPEATC&I $1. @176 FORCEPS&I $1.                 
+          @177 VACUUM&I $1. @183 NO_ABNOR&I $1. @184 ANEMIA2&I $1.               
+          @185 INJURY&I $1. @186 ALCO_SYN&I $1. @187 MEM_DIS&I $1.               
+          @188 MECONIU2&I $1. @189 LT30MIN&I $1. @190 GT30MIN&I $1.              
+          @191 AB_SEIZ&I $1. @192 OTHABNOR&I $1. @201 NO_CONG&I $1.              
+          @202 ANENCEP&I $1. @203 MENING&I $1. @204 HYDROC&I $1.                 
+          @205 MICROCEC&I $1. @206 CENNERV&I $1. @207 HEART&I $1.                
+          @208 RESP&I $1. @209 STENOSIS&I $1. @210 ATRESIA&I $1.                 
+          @211 GASTROS&I $1. @212 OTH_GAS&I $1. @213 MALGENIT&I $1.              
+          @214 AGENES&I $1. @215 OTH_UROG&I $1. @216 CLEFT&I $1.                 
+          @217 POLYDAC&I $1. @218 CLUB&I $1. @219 HERNIA&I $1.                   
+          @220 OTH_MUSC&I $1. @221 DOWNS&I $1. @222 OTHCHROM&I $1.               
+          @223 OTH_CONG&I $1. @245 MOTHAGE&I $2. @247 FATHAGE&I $2.;             
+                                                                                 
+ %END;                                                                           
+%MEND READIN;                                                                   
+                                                                                
+*****************************************;                                      
+* THIS MACRO SORTS THE FILES TWICE AND   ;                                      
+* THEN CREATES A LINKED FILE WHERE EACH  ;                                      
+* PAIR OF RECORDS IS WRITTEN AS A SINGLE ;                                      
+* RECORD.                                ;                                      
+                                                                                
+%MACRO CERT;                                                                    
+ %DO N = 1 %TO 2;                                                               
+                                                                                
+  DATA PASS&N.S2;                                                               
+   SET SET2;                                                                    
+                                                                                
+   PROC SORT;                                                                   
+    BY %SORT(&N);                                                               
+                                                                                
+  DATA PASS&N.S2;                                                               
+   SET PASS&N.S2;                                                               
+    CERT1=LAG(CERT2);                                                           
+    IF CERT1=. THEN DELETE;                                                     
+                                                                                
+   PROC SORT;                                                                   
+    BY CERT1;                                                                   
+                                                                                
+  DATA FINAL&N;                                                                 
+   MERGE SET1 PASS&N.S2;                                                        
+    BY CERT1;                                                                   
+                                                                                
+   EXACT=0;                                                                         
+                                                                                
+  %LOOP                                                                         
+                                                                                
+ %END;                                                                          
+%MEND CERT;                                                                     
+                                                                                
+*****************************************;                                      
+* THIS MACRO TAKES THE LINKED FILE AND   ;                                      
+* COMPARES EACH VARIABLE FROM THE TWO    ;                                      
+* CERTIFICATES AND INCREMENTS A COUNTER. ;                                      
+* THE MOST RECENT ITEM NOT THE SAME, AND ;                                      
+* ITS VALUES ON THE TWO CERTS ARE KEPT.  ;                                      
+* ONLY RECORDS WITH ONE OR LESS DIFFS ARE;                                      
+* RETAINED FOR PROCESSING.               ;                                      
+                                                                                
+%MACRO LOOP;                                                                    
+  LENGTH ITEMERR $ 12 VAL1 VAL2 $ 8;                                            
+                                                                                
+ %DO K = 1 %TO &NUMITEMS;                                                       
+  IF &&ITEM&K&&A NE &&ITEM&K&&B THEN DO;                                        
+   EXACT=EXACT+1;                                                                       
+   ITEMERR = "&&ITEM&K";                                                        
+   VAL1 = &&ITEM&K&&A;                                                          
+   VAL2 = &&ITEM&K&&B;                                                          
+  END;                                                                          
+ IF EXACT>1 THEN DELETE;                                                            
+ IF EXACT=0 THEN ITEMERR = '**EXACT**';                                             
+ %END;                                                                          
+%MEND LOOP;                                                                     
+                                                                                
+*****************************************;                                      
+* THIS IS THE MAIN PROCESSING OF THE     ;                                      
+* PROGRAM.  FILES ARE READ IN AND THEN   ;                                      
+* SORTED.  THE LINKED FILE IS CREATED AND;                                      
+* RECORDS WITH ONE OR FEWER DIFFERENCES  ;                                      
+* ARE RETAINED.  THE PROCESS IS DONE TWO ;                                      
+* TIMES.  THE FIRST TIME, THE RECORDS ARE;                                      
+* SORTED ON ALL VARIABLES.  THE SECOND,  ;                                      
+* THE RECORDS ARE SORTED ON ALL BUT THE  ;                                      
+* FIRST VARIABLE                         ;                                      
+                                                                                
+%READIN                                                                         
+                                                                                
+PROC SORT DATA=SET1;                                                            
+  BY CERT1;                                                                     
+                                                                                
+%CERT                                                                           
+                                                                                
+DATA FINAL;                                                                     
+ SET FINAL1 FINAL2;                                                             
+                                                                                
+*****************************************;                                      
+* IF CONSECUTIVE CERTS ARE DIFFEREING    ;                                      
+* ONLY IN CERTAIN SELECTED FIELDS, THE   ;                                      
+* RECORDS ARE ASSUMED TO BE MULTIPLE     ;                                      
+* BIRTHS AND ARE DELETED                 ;                                      
+                                                                                
+IF ITEMERR IN ('NOWLIVE','WGT_UNIT','NOWDEAD','OTHTERM')                        
+   AND ABS(CERT1-CERT2) = 1 THEN DELETE;                                        
+                                                                                
+*****************************************;                                      
+* EXACT DUPLICATES WILL SHOW UP IN BOTH  ;                                      
+* PASSES.  THIS SORT ELIMINATES THESE    ;                                      
+* REDUNDANT DUPLICATES                   ;                                      
+                                                                                
+PROC SORT NODUPKEY;                                                             
+ BY CERT1 CERT2;                                                                
+                                                                                
+*****************************************;                                      
+* EXACT DUPLICATES WILL SHOW UP IN BOTH  ;                                      
+* PASSES.  THIS SORT ELIMINATES THESE    ;                                      
+* DUPLICATE DUPLICATES                   ;                                      
+                                                                                
+TITLE1 "&STNAME &BYR POSSIBLE DUPLICATE NATALITY RECORDS";                      
+TITLE2 "DATASET NAME:  &FNAME";                                                 
+                                                                                
+PROC FORMAT;                                                                    
+ VALUE VA 0 = ' '                                                               
+      OTHER = 'CERT1 VALUE:  ';                                                 
+                                                                                
+ VALUE VB 0 = ' '                                                               
+      OTHER = 'CERT2 VALUE:  ';                                                 
+
+DATA _NULL_;                                                                    
+ SET FINAL;                                                                     
+ COUNT+1;
+ %MACRO FILE_OR_PRINT;
+  %IF &AFFILE EQ NONE %THEN
+    %DO;
+      /* USER INTENDS TO PRINTOUT ON PAPER. */
+      FILE PRINT HEADER=HEADER N=1;                                                   
+       PUT @4 _N_ @10 'CERT1:  ' CERT1 '   CERT2:  ' CERT2 '    ITEM:  '             
+           @55 ITEMERR @70 EXACT VA. VAL1 @95 EXACT VB. VAL2;                                
+          RETURN;                                                                    
+      HEADER: PUT;                                                                   
+    %END;
+  %ELSE
+    %DO;
+      /* USER INTENDS TO DOWNLOAD FILE TO PC. */
+      FILE OUT;                                                   
+      IF COUNT = 1 THEN
+        DO;
+          PUT @1 'NUM,CERT1,CERT2,ITEM,CERT1 VALUE,CERT2 VALUE';
+        END;
+      /* COMMA DELIMITED OUTPUT. */
+      PUT @4 _N_ +(-1)','  CERT1 +(-1)','  CERT2 +(-1)','  
+             ITEMERR +(-1)','  VAL1 +(-1)','  VAL2
+          ;
+    %END;
+ %MEND FILE_OR_PRINT;
+ %FILE_OR_PRINT
+RUN;                                                                            

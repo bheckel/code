@@ -1,0 +1,15 @@
+
+Input record separator is $/
+It can be anything, including multiple characters.
+Normally it's \n newline.
+
+# Want no IRS so whole file is one long record, newlines included.
+undefine $/;
+
+# idiom:
+{
+  # Saves previous value of $/, and substitutes it with undef, no need to
+  # restore it later.
+  local $/ = undef; 
+  $a = <FH>;        # slurp all of FH into $a
+}

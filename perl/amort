@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+##############################################################################
+#     Name: amort
+#
+#  Summary: Return pmt, based on loan required, r, n.  Maintains state across
+#           iterations.
+#           TODO gui version and perl2exe it
+#
+#  Created: Tue, 10 Aug 1999 19:05:01 (Bob Heckel)
+# Modified: Sun 16 Feb 2003 15:03:06 (Bob Heckel)
+##############################################################################
+use strict;
+
+if ( $ARGV[0] =~ /-+h.*/ ) {
+  print "Usage: $0 [-h --help]\n";
+  print "Program returns pmt, based on loan required, r, n.";
+  print "\n  Defaults are maintained across iterations and a";
+  print "\n  config file is written to $ENV{TMP} at the end of each"; 
+  print "session.\n  Ctrl-C to exit.\n";
+  exit(-1);
+}
+
+print "Ctrl-C to exit.\n";
+
+my ($userinfo, $loan, $lastloan, $rate, $lastrate, $years, 
+    $lastyears, $payment, $lastpayment, $divrate, $multyrs, @previousrun);
+
+# Try to read last iteration's datafile.
+if ( -e "$ENV{TMP}\/amort.dat" ) { 
+  open(READAMORTRC, "$ENV{TMP}\/amort.dat") || die "$0: can't open file: $!\n";
+  @previousrun = <READAMORTRC>;   # slurp b/c it's small.
+  close(READAMORTRC);
+  # Extract the desired numbers.  E.g. dataline is lastloan=10000
+  # chomp() won't work so use this:
+  #                 --------
+  map{ s/.*=// && s/[\r\n]+$// } @previousrun;
+
+  (undef, $lastloan, $lastrate, $lastyears) = @previousrun;
+}
+
+
+while ( 1 ) {
+  # -----Principle-----
+  # $lastloan will be empty on first iteration.
+  ($lastloan ||= $loan) ? ($userinfo = ' (' . $lastloan . ')') 
+                                  : ($userinfo = ''); 
+  print "Enter loan$userinfo:\n";
+  $loan = <STDIN>; chomp $loan;
+  $loan ||= $lastloan;
+  $lastloan = $loan;   # set for next iteration
+
+  # -----Rate-----
+  ($lastrate ||= $rate) ? ($userinfo = ' (' . $lastrate . '%)') 
+                        : ($userinfo = ''); 
+  print "Enter rate percent e.g. 1.2345%$userinfo:\n";
+  $rate = <STDIN>; chomp $rate;
+  # Strip any user supplied percent signs.
+  $rate =~ s/%//g;
+  # Use previous amount (protect against div by 0) if user presses enter to
+  # accept previous number.
+  $rate ||= $lastrate;       
+  $divrate = $rate / 1200;   # convert to monthly percentage
+  $divrate ||= ($lastrate / 1200);
+  $lastrate = $rate;   # set for next iteration
+
+  # -----Years-----
+  ($lastyears ||= $years) ? ($userinfo = ' (' . $lastyears . ')') 
+                          : ($userinfo = ''); 
+  print "Enter years$userinfo:\n";
+  $years = <STDIN>; chomp $years;
+  # Use previous amount if user presses enter to accept previous number.
+  $years ||= $lastyears;       
+  $multyrs   = $years * 12;
+  $lastyears = $years;    # set for next iteration
+
+  $payment = $loan * ($divrate / (1 - (1 + $divrate)** - $multyrs));
+
+  # Maintain state across invocations of this pgm.  TODO trap Ctrl-C signal to
+  # only write this once per session.
+  open(WRITEAMORTRC, ">$ENV{TMP}\/amort.dat") 
+                                     || warn "Can't save current data: $!\n";
+  print WRITEAMORTRC "This is a temporary file used by ~/bin/amort.  " .
+                     "OK to delete.\n";
+  print WRITEAMORTRC "lastloan=$lastloan\n";
+  print WRITEAMORTRC "lastrate=$lastrate\n";
+  print WRITEAMORTRC "lastyears=$lastyears\n";
+  close(WRITEAMORTRC);
+
+  printf("\$ %.2f is the payment.\n\n", $payment);
+}
+

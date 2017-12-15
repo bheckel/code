@@ -1,0 +1,315 @@
+ "Script Junkie: My 10 Favorite Scripts"
+by Al Williams
+Web Techniques, April 1999
+
+Web Techniques grants permission to use these listings (and code) for 
+private or commercial use provided that credit to Web Techniques and 
+the author is maintained within the comments of the source. For 
+questions, contact editors@web-techniques.com. 
+
+
+[LISTING ONE]
+
+//A form with a date picker, word censor, and validation
+<HTML>
+<HEAD>
+<TITLE>An Example Form</TITLE>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin
+// **** VALIDATION FUNCTION
+function validate() {
+// **** Make sure name is present
+var strng=document.aform.urname.value;
+if (strng.length<1) {
+  alert("Please enter your name.");
+  document.aform.urname.focus();
+  return false;
+}
+// **** Censor words
+var forbid="aol netscape microsoft ";  // be sure to add a space at the end
+var pos;
+var orig;
+strng=document.aform.comments.value;
+orig=strng;
+// convert to lower case
+strng=strng.toLowerCase();
+for (var i=0;i<3;i++){  // number of forbid words
+ pos=forbid.indexOf(" ");
+ var wrd=forbid.substring(0,pos);
+ wrdl=wrd.length
+ forbid=forbid.substring(pos+1,forbid.length);
+ while (strng.indexOf(wrd)>-1){
+   pos=strng.indexOf(wrd);
+   strng=strng.substring(0,pos)+"*"+strng.substring((pos+wrdl),strng.length);
+   orig=orig.substring(0,pos)+"*"+orig.substring((pos+wrdl),orig.length);
+   }
+}
+document.aform.comments.value=orig;
+
+// **** Validate age
+var agestr=document.aform.age.value;
+var age=parseInt(agestr);
+if (agestr.length<1 || isNaN(age)) {
+   alert("Please enter a number for your age");
+   document.aform.age.focus();
+   return false;
+   }
+if (age<2 || age>125) {
+  alert("Please enter your correct age");
+  document.aform.age.focus();
+  return false;
+  }
+document.aform.age.value=age;
+return true;
+}
+// End -->
+</SCRIPT>
+</HEAD>
+<BODY>
+
+<form name=aform ACTION=form.asp METHOD=POST>  
+Date: 
+<!-- a date picker -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var today = new Date();
+var cmonth = today.getMonth()+1;
+var cyear = today.getYear();
+var cday = today.getDate();
+montharray=new Array(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+maxdays=montharray[cmonth-1];
+if (cmonth==2) {
+  var ly=cyear/4==parseInt(cyear/4);
+  if (ly && cyear/100==parseInt(cyear/100) &&
+      cyear/400!=parseInt(cyear/100)) ly=false;
+  if (!ly) maxdays=28;
+}
+cmonth = "" + cmonth
+if (cmonth.length == 1) {
+cmonth = "0" + cmonth;
+}
+document.write("<select name=dates size=1>");
+for (var theday = 1; theday <= maxdays; theday++) {
+var theday = "" + theday;
+if (theday.length == 1) {
+theday = "0" + theday;
+}
+document.write("<option");
+if (theday == cday) document.write(" selected");
+document.write(">");
+document.write(cmonth + "-" + theday + "-" + cyear);
+}
+document.write("</select>");
+// End -->
+</SCRIPT>
+<BR>
+Your name: <INPUT TYPE="text" NAME="urname" SIZE=40 VALUE=""><BR>
+Enter your comments: (to prevent flames please do not mention AOL, 
+                      Microsoft, or Netscape)<BR>
+<INPUT TYPE="text" NAME="comments" SIZE=40 VALUE=""><BR>
+How old are you? <INPUT TYPE="text" NAME="age" SIZE=5 VALUE=""><BR>
+<INPUT TYPE="button" NAME="submitbtn" VALUE="Submit" 
+ onClick="if (validate()==true) aform.submit();">
+</form>
+</BODY>
+</HTML>
+
+
+
+[LISTING TWO] 
+
+//Setting preferences using cookies
+<H1 ALIGN=CENTER>Set your personal options</H1>
+<P ALIGN=CENTER>
+<FONT SIZE=1 COLOR=RED>Note: Your browser must be cookie-capable 
+                             and accept cookies for this to work!<P></FONT>
+<SCRIPT>
+<!--
+  var bgval;
+// this function will handle the form
+  function register(regform) {
+    var expdate=new Date();
+// expire cookie in 10 years
+   expdate.setTime(expdate.getTime()+10*365*24*60*60*1000);
+    SetCookie("YourName",regform.YourName.value,expdate);
+    if (bgval!=null) SetCookie("Background",bgval,expdate);
+    alert("Thanks "+regform.YourName.value);
+    history.back();
+    return false;
+    }
+//-->
+</SCRIPT>
+
+<FORM NAME="regform" 
+  onSubmit="register(regform); return false;">
+<CENTER>
+<SCRIPT>
+<!--
+document.write("Your First Name: <INPUT TYPE='text' 
+                NAME='YourName' SIZE=25 ");
+if (GetCookie("YourName")!=null)
+  document.write("VALUE='" + GetCookie("YourName")+"'");
+document.write(">");
+//-->
+</SCRIPT>
+<P>
+Select Your Background:
+<TABLE BORDER=2 RULES=NONE BGCOLOR=WHITE ALIGN=CENTER>
+<TR><TD>White <TD><INPUT TYPE='radio' NAME='Backg' VALUE='' 
+                   onClick='bgval="BGCOLOR=WHITE"'>
+<TR><TD BGCOLOR=LIME>Lime 
+    <TD><INPUT TYPE='radio' NAME='Backg' 
+     VALUE='' onClick='bgval="BGCOLOR=LIME"'>
+<TR><TD BGCOLOR=AQUA>Aqua 
+    <TD><INPUT TYPE='radio' NAME='Backg' 
+     VALUE='' onClick='bgval="BGCOLOR=AQUA"'>
+<TR><TD BGCOLOR=BLUE>Blue 
+    <TD><INPUT TYPE='radio' NAME='Backg' 
+     VALUE='' onClick='bgval="BGCOLOR=BLUE"'>
+<TR><TD BGCOLOR=SILVER>Silver 
+    <TD><INPUT TYPE='radio' NAME='Backg' 
+     VALUE='' onClick='bgval="BGCOLOR=SILVER"'>
+<TR><TD BGCOLOR=YELLOW>Yellow 
+    <TD><INPUT TYPE='radio' NAME='Backg' 
+     VALUE='' onClick='bgval="BGCOLOR=YELLOW"'>
+<TR><TD>None 
+    <TD><INPUT TYPE='radio' NAME='Backg' VALUE='' onClick='bgval=" "'>
+<TR><TD>Keep current
+    <TD><INPUT TYPE='radio' NAME='Backg' 
+     VALUE='' onClick='bgval=null' CHECKED>
+</TABLE>
+</CENTER>
+<CENTER>
+<P>
+<P>
+<INPUT TYPE='submit' VALUE='Register'>
+</CENTER>
+</FORM>
+
+
+
+[LISTING THREE]
+
+//Handling cookies with client-side JavaScript
+<script>
+<!-
+// this function used internally
+    function getCookieVal (offset) {
+      var endstr = document.cookie.indexOf (";", offset);
+      if (endstr == -1)
+        endstr = document.cookie.length;
+      return unescape(document.cookie.substring(offset, endstr));
+    }
+
+// Read a cookie's value
+    function GetCookie (name) {
+      var arg = name + "=";
+      var alen = arg.length;
+      var clen = document.cookie.length;
+      var i = 0;
+      while (i < clen) {
+        var j = i + alen;
+        if (document.cookie.substring(i, j) == arg)
+          return getCookieVal (j);
+        i = document.cookie.indexOf(" ", i) + 1;
+        if (i == 0) break;
+      }
+      return null;
+    }
+
+// Set a cookie's value (optional: expiration date)
+    function SetCookie (name, value) {
+      var argv = SetCookie.arguments;
+      var argc = SetCookie.arguments.length;
+      var expires = (argc > 2) ? argv[2] : null;
+      document.cookie = name + "=" + escape (value) +
+        ((expires == null) ? "" : ("; expires=" + 
+          expires.toGMTString())) +
+    }
+
+//-->
+
+</script>
+
+
+
+[LISTING FOUR]
+
+//Rotating Ads
+<script>
+<!-- The following is the ad rotation code 
+function rotatead() {
+rnd.today=new Date();
+rnd.seed=rnd.today.getTime();
+
+function rnd() {
+         rnd.seed = (rnd.seed*9301+49297) % 233280;
+         return rnd.seed/(233280.0);
+         };
+
+function rand(number) {
+         return Math.ceil(rnd()*number);
+         };
+
+ adnum=rand(3);  // number of ads: 3
+ document.write("<CENTER>");
+ if (adnum==1) {
+   document.write(
+  "<A HREF=\"http://www.al-williams.com/awc/bookdef.html\">
+   <IMG SRC=ad1.gif ALT=\"Visit our sponsor\" WIDTH=460 HEIGHT=60></A>");
+   }
+ if (adnum==2) {
+   document.write(
+  "<A target=_top HREF=\"http://www.webtechniques.com\">
+   <IMG SRC=ad2.gif ALT=\"Visit our sponsor\" WIDTH=460 HEIGHT=60></A>");
+   }
+ if (adnum==3) {
+   document.write(
+  "<A target=_top HREF=\"http://www.al-williams.com/awc/wd5gnr\">
+   <IMG SRC=ad3.gif ALT=\"Visit our sponsor\" WIDTH=460 HEIGHT=60></A>");
+   }
+ document.write("</CENTER>");
+
+}
+
+
+
+[[EXAMPLE 1]]
+
+<SCRIPT>
+<! --
+// get today's date
+var today = new Date();
+var cmonth = today.getMonth()+1;
+var cyear = today.getYear();
+var cday = today.getDate();
+montharray=new Array(31, 29, 31, 30, 31, 30, 31, 31, 30,   
+   31, 30, 31);
+maxdays=montharray[cmonth-1];
+// figure for leap years 
+if (cmonth==2) {
+  var ly=cyear/4==parseInt(cyear/4);
+  if (ly && cyear/100==parseInt(cyear/100) &&
+      cyear/400!=parseInt(cyear/100)) ly=false;
+  if (!ly) maxdays=28;
+}
+// convert to string
+cmonth = "" + cmonth
+if (cmonth.length == 1) {  // pad with 0's
+  cmonth = "0" + cmonth;
+}
+document.write("<select name=dates size=1>");
+for (var theday = 1; theday <= maxdays; theday++) {
+var theday = "" + theday;
+if (theday.length == 1) {
+theday = "0" + theday;
+}
+document.write("<option");
+if (theday == cday) document.write(" selected");
+document.write(">");
+document.write(cmonth + "-" + theday + "-" + cyear);
+}
+document.write("</select>");
+// End -->
+</SCRIPT>

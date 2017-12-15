@@ -1,0 +1,41 @@
+
+* th, td {font-family:arial;}
+
+/* Targets all th elements within the first child of the tr element that are descendants of thead and table */
+table thead tr:first-child th {
+  background-color:royalblue;
+  color:white;
+  border:2px solid black;
+}
+
+table thead th[name="Weight"], table thead th[name="Height"] {
+  font-family:Consolas;
+}
+
+/* Targets all td elements within even-numbered tr elements (rows) that are descendants of tbody and table. */
+/* Every other row is lightblue */
+table tbody tr:nth-child(even) td {
+  background-color:lightblue;
+  border:2px solid black;
+}
+
+/* Targets the 3rd and 4th th element that are descendants of tbody and table. */
+/* I.e. final (sum) row 3rd & 4th column cells are yellow */
+table tbody th:nth-of-type(3), th:nth-of-type(4) {
+  background-color:yellow;
+  color:green;
+  border:2px double black;
+}
+
+/* Targets the td element in the 4th position (column) that is a descendants of tbody and table. */
+table tbody td:nth-child(4) {
+  background-color:pink;
+  border:2px solid black;
+} 
+
+/* Targets the first td element (column) and every other td */
+/* element thereafter that are descendants of tbody and table. */
+table tbody td:nth-child(2n-1){
+  background-color:orange;
+  border:2px solid black;
+} 

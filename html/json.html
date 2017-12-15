@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <!-- Adapted: Thu 14 Mar 2013 13:57:33 (Bob Heckel-http://www.vogella.com/articles/JSON/article.html) -->
+  <!-- Modified: Thu 16 Feb 2017 15:41:42 (Bob Heckel) -->
+  <!--
+  Data is in name/value pairs
+  Data is separated by commas
+  Curly braces hold objects
+  Square brackets hold arrays
+  -->
+  <body>
+  <script type="text/javascript">
+  <!--Evaluate the object and assign to variables --> 
+  var user = {
+    "firstName":"Lars",
+    lastName:'Vogel',
+    address: {
+      street:'Examplestr.',
+      number: '31'
+    }
+  };
+  <!--Use the object--> 
+  alert(user.firstName + ' lives in street ' + user.address.street); 
+  document.writeln(user.firstName + ' ' +user.lastName);
+  </script>
+</body>
+</html> 

@@ -1,0 +1,70 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: clean_synch.pl
+#
+#  Summary: Clean up synchronizing directory placeholding markers and the 
+#           files they point to.
+#
+#           Assumptions:
+#           1 .bashrc's  rmv -s  is run against a file no longer wanted
+#           2 .bashrc's  arch  calls this code to rm the condemned
+#             file and its marker
+#
+#           TODO need a renaming device that doesn't risk deleting files like
+#           this does
+#
+#  Created: Tue 22 Oct 2002 15:29:47 (Bob Heckel)
+# Modified: Sun 21 May 2006 11:44:47 (Bob Heckel)
+##############################################################################
+use strict;
+
+# TODO temporary toggle hack for jumpy - use a cmdline switch
+###$ENV{HOME}='/cygdrive/g/cygwin/home/bheckel';
+###$ENV{TMP}='/cygdrive/g/cygwin/home/bheckel/tmp';
+
+# MUST agree with .bashrc's  rmv -s  environment variable.
+my $marker = 'REMOVETHIS__';
+
+# Assuming PWD is /home/bheckel or equivalent.
+my @processdirs = qw(
+                     code/c 
+                     code/html 
+                     code/misccode 
+                     code/perl 
+                     code/sas 
+                     code/vb 
+                     readme
+                    );
+
+if ( @ARGV && $ARGV[0] =~ /-+h.*/ ) {
+  print STDERR "Usage: $0 [-h]\n";
+  print STDERR "  Deletes files with a $marker prefix\n";
+  print STDERR "  in @processdirs\n";
+  exit(__LINE__);
+}
+
+my @tmp = ();
+# Holds filenames from all process directories.
+my @toberemoved = ();
+
+for my $d ( @processdirs ) {
+  opendir DIR, "$ENV{HOME}/$d" or die "can't open $ENV{HOME}/$d $!\n";
+  @tmp = grep /^$marker/o, readdir DIR;
+  for ( @tmp ) {
+    $_ = "$ENV{HOME}/$d/$_";
+  }
+  # Gather all found marker files from current dir.
+  push @toberemoved, @tmp;
+  closedir DIR;
+}
+
+foreach ( @toberemoved ) {
+  next if -d;
+  # Remove the marker file.
+  system "mv -v $_ $ENV{TMP}";
+  s/$marker//o;
+  # Remove the actual file.
+  # TODO quiet if file not found.  2>/dev/null doesn't work here
+  ###system "rm -v $_";
+  system "mv -v $_ $ENV{TMP}";
+}

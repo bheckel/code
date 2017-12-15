@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <script type="text/javascript" src="jquery-1.11.1.js"></script>
+  </head>
+  <body>
+    <div id="divArea" style="background-color: teal; width: 100px; height: 100px;">
+    </div>
+    <script type="text/javascript">
+    $("#divArea").bind("mousemove", function(event)
+    {
+      $(this).text(event.pageX + "," + event.pageY);
+    });
+    </script>
+  </body>
+</html>

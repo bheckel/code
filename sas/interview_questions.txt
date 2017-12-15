@@ -1,0 +1,74 @@
+How many years total SAS?
+
+Which operating systems have you worked on?
+
+Schedulers, cron?
+
+What types of data - text, size, databases?
+
+Which output formats have you produced?  ODS? SAS/Graph SG*?
+
+Which procs have you used most frequently?
+
+How have you used Macro?
+
+If you have a merge assignment do you tend to go for datastep or SQL?
+
+What is your debugging style?  Where do you go if you have programming question?
+
+Any experience with ambiguous projects?  How handled?
+
+What is your favorite editor?
+
+Describe ideal job
+
+
+What is the numeric value of Jan 1 60? 0
+
+What is difference between function & proc.  The MEAN function will SUM across the row and a procedure will SUM down a column.
+
+Why would you use data _null_?  Write output without creating ds, create mvars.
+
+What are the default statistics that PROC MEANS produce?  N, MIN, MAX, MEAN and STD DEV
+
+Other tools used that might help in this job?
+
+
+* Resume item detail
+
+
+---
+dsa - id fname lname
+dsb - id product date
+keep only records that are in both
+
+proc sort data=dsa;
+ by id;
+run;
+proc sort data=dsb;
+ by id;
+run;
+data both;
+  merge dsa(in=a) dsb(in=b);
+  by id;
+  if a and b;
+run;
+
+proc sql;
+  create table both as
+  select a.*, b.product, b.date
+  from dsa a, dsb b
+  where a.id=b.id
+  ;
+quit;
+---
+
+---
+Convert all existing area codes to 404 and store it as mvar NEW
+data _null_ ; 
+  phone = '(919)555-1212' ; 
+  substr(phone, 2, 3) = '404' ; 
+  call symput('NEW', phone);
+run ;
+%put _USER_;
+---

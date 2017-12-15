@@ -1,0 +1,10 @@
+
+wpage  {display: block; font-family:arial,sans-serif;}
+title  { font-size: 24pt; font-weight: bold;}
+para   { display: block; padding-top: 6pt; }
+list   { display: block; list-style-type: lower-roman; padding-top: 6pt;}
+item   { display: block; padding-top: 6pt;text-indent: 10pt;}
+update {
+  display: block; text-align: center;  font-style: italic;
+  border-top: 2pt solid black; padding-top: 6pt; padding-bottom: 6pt;
+}

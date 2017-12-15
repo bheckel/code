@@ -1,0 +1,18 @@
+<!-- Check user form input (drop down & input box) prior to searching Lycos
+-->
+
+<form action="http://www.lycos.com/cgi-bin/pursuit" method=GET NAME="lycosForm" 
+onSubmit="if (lycosForm.query.value == '') {
+                    alert('You must enter a keyword.');
+                    return(false); }
+                if (lycosForm.cat.value == 'null') {
+                    alert('You must choose a search type.');
+                    return(false); }">
+Search <SELECT NAME="cat">
+<OPTION value="null">Please Choose a Search Type</OPTION>
+<OPTION value="lycos">The Web</OPTION>
+<OPTION value="sounds">Sounds</OPTION>
+<OPTION value="graphics">Pictures</OPTION>
+<OPTION value="point">TOP 5%</OPTION>
+</SELECT> for:<INPUT TYPE="text" NAME="query" VALUE="" SIZE=22>
+<input type="submit" value="Go Get It"></form>

@@ -1,0 +1,15 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: tgtact
+#
+#      Summary: Gives percent complete based on input tgt & act
+#               Usage: tgtact 5 10
+#               TODO use printf
+#
+#      Created: Thu Apr 08 1999 12:13:39 (Bob Heckel)
+##############################################################################
+die "Usage: $0 target actual\n  Returns percent complete\n" unless $ARGV[0];
+$tgt = $ARGV[0];
+$act = $ARGV[1];
+$result = (($tgt - $act)/$tgt) * 100;
+print "$result percent complete.\n";

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<NHL>
+  <CONFERENCE> Eastern 
+    <DIVISION> Southeast  
+      <TEAM name="Thrashers"  abbrev="ATL" />  
+      <TEAM name="Hurricanes" abbrev="CAR" />  
+      <TEAM name="Panthers"   abbrev="FLA" />  
+      <TEAM name="Lightning"  abbrev="TB" />  
+      <TEAM name="Capitals"   abbrev="WSH" />  
+   </DIVISION>
+ </CONFERENCE> 
+
+ <CONFERENCE> Western
+   <DIVISION> Pacific  
+     <TEAM name="Stars"   abbrev="DAL" />  
+     <TEAM name="Kings"   abbrev="LA" />  
+     <TEAM name="Ducks"   abbrev="ANA" />  
+     <TEAM name="Coyotes" abbrev="PHX" />  
+     <TEAM name="Sharks"  abbrev="SJ" />  
+   </DIVISION>
+  </CONFERENCE> 
+</NHL>

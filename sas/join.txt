@@ -1,0 +1,297 @@
+15-Feb-13 intedeteminate usefulness
+
+         ------------------------------------------- 
+      TYPE OF 
+       JOIN      ---CODE--- 
+         ------------------------------------------- 
+         1)  Cartesian  ...FROM file1, file2 <,file3,..> 
+     
+         2a) INNER  ...FROM file1, file2 <,file3,..> 
+             WHERE key-field-condition 
+
+               Note: keywords like JOIN replace commas between table names
+               in 2b-5:
+     
+         2b) INNER  ...FROM file1 INNER JOIN file2 
+                       ON key-field-condition 
+     
+         2c) INNER  ...FROM file1 JOIN file2 
+                       ON key-field-condition 
+     
+         3)  LEFT   ...FROM file1 LEFT JOIN file2 
+             OUTER     ON key-field-condition 
+     
+         4)  FULL   ...FROM file1 FULL JOIN file2 
+             OUTER     ON key-field-condition 
+     
+         5)  RIGHT  ...FROM file1 RIGHT JOIN file2 
+             OUTER     ON key-field-condition 
+         ------------------------------------------- 
+
+We're assuming equi-joins for this file
+
+
+---
+
+Partially from http://www.dbasupport.com/oracle/ora9i/ansi_joins2.shtml
+
+
+Natural Joins - a risky equi-join assuming the join key is all the fields from 
+both datasets where both the name and the data type are the same.  You must
+drop or rename any fields that you do NOT want to be in the key.
+
+For example, if your STUDENT and CLASS table share a common STUDENT_NO column,
+you could NATURAL JOIN them thus;
+
+SELECT student_name, class_name
+FROM student NATURAL JOIN class
+
+However, it's ambiguous at best and leaves you open to problems if columns get
+added or renamed, no more than two tables can be joined using this method, and
+it gives you little control over the specifics of a join if columns join
+across the tables in an unusual way.
+
+Another example:
+
+SELECT region_id, r.region_name, c.country_id, c.country_name
+FROM countries c NATURAL JOIN regions r
+WHERE LOWER(c.country_name) LIKE '%united%
+
+Note that even though the table names are prefixed in both examples, REGION_ID
+cannot use the prefix; Oracle chooses the appropriate column in the
+naturally-joined table from which to gather data. If you get an ORA-25155:
+column used in NATURAL join cannot have qualifier error message, check over
+the columns named in the query - you may have inadvertently broken this rule.
+
+Better to use USING or JOIN queries to avoid 'no records found' surprises when
+e.g. supplier.name tries to match part.name b/c they both use 'name' and you
+didn't notice that.
+
+
+---
+
+JOIN ... USING. When you need to join tables that share more than one column
+naturally, the JOIN ... USING syntax needs to be used. A NATURAL join between
+the Employees and Departments tables, for example, could yield unexpected
+results because the tables share both the DEPARTMENT_ID and MANAGER_ID
+columns, so the JOIN...USING syntax can be used to alleviate this issue. These
+queries will display Department and Employee information for all employees
+hired after December 31, 1999:
+
+Example: JOIN...USING
+
+Traditional Oracle Syntax:
+
+SELECT
+   d.department_id || ' - ' || d.department_name "Department",
+   e.employee_id, 
+   e.last_name || ', ' || e.first_name "Name",
+   e.hire_date
+FROM employees e, departments d
+WHERE e.department_id=d.department_id AND e.hire_date > TO_DATE('12/31/1999', 'mm/dd/yyyy');
+
+
+ANSI Syntax:
+
+SELECT
+   department_id || ' - ' || d.department_name "Department",
+   employee_id, 
+   e.last_name || ', ' || e.first_name "Name",
+   e.hire_date
+FROM  employees e JOIN departments d USING (department_id)
+WHERE e.hire_date > TO_DATE('12/31/1999', 'mm/dd/yyyy');
+
+Again, note that as with the NATURAL JOIN syntax, it's improper to use the
+table prefix for the columns specified in the JOIN...USING statement (in this
+case, DEPARTMENT_ID).
+
+It's legal to use more than one column in the USING clause: e.g. 
+ USING (department_id, foo_id)
+instead of
+ ON a.department_id=b.department_id and a.foo_id=b.foo_id
+
+
+---
+
+JOIN ... ON. When you need to describe exactly how two or more tables should
+be joined together, the ANSI JOIN...ON syntax is ideal.  Also known as [INNER]
+JOIN in ANSI.
+
+Traditional Oracle Syntax:
+
+SELECT
+   employee_id, 
+   e.last_name || ', ' || e.first_name "Name",
+   job_id,
+   j.job_title,
+   jh.start_date,
+   jh.end_date
+FROM
+   employees e,
+   jobs j,
+   job_history jh
+WHERE e.job_id=j.job_id
+   AND e.job_id=jh.job_id
+   AND e.hire_date > TO_DATE('12/31/1999', 'mm/dd/yyyy');
+
+ANSI Syntax:
+
+SELECT
+   employee_id, 
+   e.last_name || ', ' || e.first_name "Name",
+   job_id,
+   j.job_title,
+   jh.start_date,
+   jh.end_date
+FROM  employees e 
+  JOIN jobs j ON (j.job_id=e.job_id)
+  JOIN job_history jh ON (jh.job_id=j.job_id)
+WHERE e.hire_date > TO_DATE('12/31/1999', 'mm/dd/yyyy'); 
+
+
+The INNER JOIN returns all rows from both tables where there is a match. If
+there are rows in Employees that do not have matches in Orders, those rows
+will not be listed.  
+
+Traditional:
+SELECT employees.name
+FROM employees, orders
+WHERE employees.employee_id=orders.employee_id
+
+ANSI:
+SELECT employees.name, orders.product
+FROM employees INNER JOIN orders ON employees.employee_id=orders.employee_id
+
+
+Yet another option:
+
+SELECT distinct a.*
+FROM goodclm a INNER JOIN bpmsoutliers b  ON a.id_number=b.id_number
+WHERE b.report = '11b' and a.source = 'p'
+
+-- Same, roughly the same speed
+SELECT distinct *
+FROM goodclm
+WHERE id_number in (select distinct id_number
+                    from bpmsoutliers
+                    where report = '11b') 
+      AND source = 'p'
+
+
+---
+
+
+Outer Joins. Outer joins are usually needed when all rows of one side of the
+join equation must be retrieved regardless of how many matches are found
+between the other side of the equation.
+
+Traditional Oracle Syntax:
+
+SELECT
+   d.department_id,
+   d.department_name,
+   COUNT(e.employee_id) "Employees"
+FROM
+   departments d,
+   employees e
+WHERE d.department_id = e.department_id (+) 
+GROUP BY d.department_id, d.department_name
+ORDER BY d.department_id, d.department_name;
+
+
+ANSI Syntax:
+
+SELECT
+   d.dept_id,
+   d.dept_name,
+   COUNT(e.employee_id) "Employees"
+FROM
+   depts d LEFT OUTER JOIN employees e ON d.dept_id=e.dept_id
+GROUP BY d.dept_id, d.dept_name
+ORDER BY d.dept_id, d.dept_name;
+
+
+The LEFT JOIN returns all the rows from the first table (Employees), even if
+there are no matches in the second table (Orders). If there are rows in
+Employees that do NOT have matches in Orders, those rows also WILL be listed.
+
+SELECT employees.name, orders.product
+FROM employees LEFT JOIN orders ON employees.employee_id=orders.employee_id
+
+
+---
+
+
+Full Outer Join. As its name implies, a full outer join returns results from
+both sides of the join equation. The only way to perform a full outer join in
+traditional syntax is via the UNION or UNION ALL operators. However, the ANSI
+syntax provides the FULL OUTER JOIN to accomplish this instead. As you can
+see, the FULL OUTER JOIN syntax results in a much more compact query:
+
+Traditional Oracle Syntax:
+
+SELECT
+      d.dept_id,
+      d.dept_name,
+      COUNT(e.employee_id) "Employees"
+FROM
+      depts d,
+      employees e
+WHERE d.dept_id = e.dept_id (+) 
+GROUP BY d.dept_id, d.dept_name
+-- The UNION set operator concatenates the query results that are produced 
+-- by the two SELECT clauses
+UNION
+SELECT
+      d.dept_id,
+      d.dept_name,
+      COUNT(e.employee_id) "Employees"
+FROM
+      depts d,
+      employees e
+WHERE d.dept_id (+) = e.dept_id
+GROUP BY d.dept_id, d.dept_name;
+
+
+ANSI Syntax:
+
+SELECT
+   d.dept_id,
+   d.dept_name,
+   COUNT(e.employee_id) "Employees"
+FROM
+   employees e FULL OUTER JOIN depts d 
+   ON d.dept_id = e.dept_id
+GROUP BY d.dept_id, d.dept_name
+ORDER BY d.dept_id, d.dept_name;
+
+
+---
+
+Self-Joins. The recursive join that results when a set of data is joined back
+to itself is also known as a self-join. This is typically encountered when a
+parent-child relationship in a hierarchy needs to be traversed. When using the
+ANSI syntax to accomplish this, only the JOIN...ON syntax will work, and the
+keyword INNER can be used for clarity. For example, these queries will return
+a list of Employees hired after December 31, 1999 and their current Managers:
+
+Traditional Oracle Syntax:
+
+SELECT
+   m.last_name || ', ' || m.first_name "Manager",
+   e.last_name || ', ' || e.first_name "Name",
+   e.hire_date
+FROM employees e, employees m
+WHERE e.manager_id = m.employee_id        
+   AND e.hire_date > TO_DATE('12/31/1999', 'mm/dd/yyyy');
+
+
+ANSI Syntax:
+
+SELECT
+   m.last_name || ', ' || m.first_name "Manager",
+   e.last_name || ', ' || e.first_name "Name",
+   e.hire_date
+FROM employees e INNER JOIN employees m ON (e.manager_id=m.employee_id)        
+WHERE e.hire_date > TO_DATE('12/31/1999', 'mm/dd/yyyy');
+

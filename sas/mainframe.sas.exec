@@ -1,0 +1,20 @@
+/* Modified stub from Steve Smith... */
+
+/*------------------------------------------------------------------*/
+/* LINK TO SAS DISK.                                                */
+/*------------------------------------------------------------------*/
+ 'GLOBAL LOADLIB'
+
+ 'EXEC PPDISK SAS'
+
+'SET STORECLR ENDSVC'
+/*------------------------------------------------------------------*/
+/* CALL SAS ROUTINE TO GENERATE MONTHLY STOCK PART COST REPORT      */
+/*------------------------------------------------------------------*/
+
+/***  'FILEDEF WORK DISK X     X     M ' ***/
+/* How does this work? */
+ 'FILEDEF WORK DISK SASTEST     SAS     A1 '
+
+/***  'SAS DCSPP22' ***/
+ 'SAS HELOWRLD'

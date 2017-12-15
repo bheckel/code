@@ -1,0 +1,399 @@
+//BQH0MORX JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=1,CLASS=F,REGION=0M             
+/*ROUTE    PRINT R341                                                           
+//PRINT    OUTPUT FORMDEF=A10111,PAGEDEF=V06683,CHARS=GT15,COPIES=4             
+//STEP1    EXEC SAS,TIME=100,OPTIONS='MEMSIZE=0'                                
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)                                     
+//*                  A TO AUTOPRINT OR 0 TO NOT AUTOPRINT                       
+//SASLIST  DD SYSOUT=A,OUTPUT=*.PRINT,RECFM=FBA,LRECL=132,BLKSIZE=132           
+//IN       DD DISP=SHR,DSN=BF19.NYX0320.MORMERZ                                 
+//SYSIN    DD *                                                                 
+                                                                                
+*******************************************************************;            
+** KRYN KRAUTHEIM          OCTOBER 2002                          **;            
+**                                                               **;            
+** PROGRAM NAME  MORTX03                                         **;            
+**                                                               **;            
+** THIS PROGRAM IS TO BE USED FOR CREATING FORECAST              **;            
+** TABLES FOR ANY EVENT.  CURRENTLY, THE PROGRAM IS SET UP TO    **;            
+** USE RAW DATA FILES, AND NOT SAS DATA SETS AS HAS BEEN DONE    **;            
+** PREVIOUSLY.  THERE ARE SOME KNOWN ISSUES OUTSTANDING, LISTED  **;            
+** BELOW:                                                        **;            
+**                                                               **;            
+** 1)  SEMICOLONS CANNOT BE USED IN STRUCTURE FILE--SINGLE       **;            
+** QUOTATION MARKS ARE OK                                        **;            
+**                                                               **;            
+** 2)  CENTERING TITLES OVER LEFT-JUSTIFIED REPORT               **;            
+**                                                               **;            
+** 3)  HOW TO DEAL WITH CALCULATED VARIABLES                     **;            
+**                                                               **;            
+** 4)  CAN OVERLINE ON TOTAL LINE ON REPORT BE DELETED?          **;            
+**                                                               **;            
+*******************************************************************;            
+** CHANGE LOG                                                    **;            
+** 2002-12-17 (BQH0) ADAPTED FOR MORTALITY                       **;            
+** 2003-02-21 (BQH0) MODIFICATIONS PER DWJ2                      **;            
+** 2003-06-05 (BQH0) PLACE CURRENT FILENAME IN HEADER            **;            
+** 2003-06-26 (BQH0) DELETE ALIAS RECORDS                        **;            
+** 2003-09-12 (BQH0) CHANGE INFILE STATEMENT IN2003 TO IN        **;            
+** 2003-09-26 (KJK4) MADE CORRECTIONS TO MACRO VARIABLE Y LOOP   **;            
+**                   THAT CAUSED PROBLEMS FOR NEXT JOB IN FCAST  **;            
+** 2003-10-22 (KJK4) ADDED CODE TO SCAN NUMERIC VARIABLE RANGES  **;            
+**                   FOR INVALID CHARACTERS WITHIN STRINGS       **;            
+** 2003-11-24 (BQH0) ADDED CODE TO DELETE VOIDED RECORDS         **;            
+*******************************************************************;            
+                                                                                
+ /**********                                                                    
+FORMAT RANGES THAT ARE NOT TO DEFAULT TO OTHER CAN BE                           
+ENTERED USING (|FMT.|) AS THE LABEL--FOR EXAMPLE,                               
+                                                                                
+F* 1990-2000* (|$4.|)                                                           
+ANY VALUE FROM 1990 TO 2000 WILL APPEAR ON THE REPORT AS ORIGINAL               
+VALUE.  ANY ELEMENT IN THIS RANGE WITH A 0 COUNT WILL NOT SHOW IN THE           
+REPORT, HOWEVER.  IF EACH ELEMENT IS TO BE LISTED IN REPORT, IT MUST            
+BE LISTED EXPLICITLY IN THE STRUCTURE FILE.                                     
+                                                                                
+INVALID APPEARS ONLY IF THERE IS INVALID DATA FOR A PARTICULAR ITEM             
+ **********/                                                                    
+                                                                                
+%GLOBAL NVAR NUMREC BYR CYR PYR Y FN;                                           
+                                                                                
+******************************************************************;             
+* PROGRAM IS CURRENTLY SET UP TO READ IN FLAT FILES.  WHICHEVER   ;             
+* YEARS FILES ARE TO BE USED SHOULD BE LISTED WITH FILEREF INYYYY ;             
+* WITH YYYY REPRESENTING DATA YEAR.  FILEREF LAYOUT REFERS TO     ;             
+* SPECIAL FILE THAT INCLUDES INFORMATION ON THE STRUCTURE OF THE  ;             
+* FLAT FILES, AND THE DESIRED FORMATTING VALUES FOR THE REPORT    ;             
+                                                                                
+FILENAME LAYOUT 'DWJ2.VSCPQC.LIB(MOR2003X)';                                    
+                                                                                
+******************************************************************;             
+* THESE CATALOG FILEREFS ARE REQUIRED FOR SAS TO AUTOMATICALLY    ;             
+* GENERATE FLEXIBLE CODE TO READ IN THE FLAT FILES AND CREATE THE ;             
+* NECESSARY FORMATS.  THEY ARE TEMPORARY AND WILL BE DELETED      ;             
+* AFTER THE PROGRAM COMPLETES                                     ;             
+                                                                                
+FILENAME FLEX CATALOG 'WORK.FLEX.SOURCE';                                       
+FILENAME FLEX2 CATALOG 'WORK.FLEX2.SOURCE';                                     
+FILENAME FLEX3 CATALOG 'WORK.FLEX3.SOURCE';                                     
+                                                                                
+******************************************************************;             
+* BYR SHOULD BE SET TO THE FIRST YEAR FOR THE REPORT, AND CYR     ;             
+* SHOULD BE SET TO THE LAST YEAR FOR THE REPORT                   ;             
+                                                                                
+%LET BYR = 2003;                                                                
+%LET CYR = 2003;                                                                
+%LET PYR = %EVAL(&CYR-1);                                                       
+                                                                                
+DATA _NULL_;                                                                    
+  LENGTH NAME $35;                                                              
+  INFILE IN FILENAME=NAME;                                                      
+  CALL SYMPUT('FN', LEFT(TRIM(NAME)));                                          
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THIS DATA STEP READS IN THE LAYOUT FILE, AND CREATES A STRUCTURE ;            
+* DATASET WHICH SAS WILL USE TO READ IN THE RAW FILE, AND A FORMAT ;            
+* DATASET WHICH SAS WILL USE TO GENERATE PROC FORMAT STATEMENTS    ;            
+*                                                                  ;            
+* SEE KJK4.PGM.LIB(FORMINFO) FOR DETAILS REGARDING THE LAYOUT FILE ;            
+*                                                                  ;            
+* THE STRUCTURE DATASET WILL CONTAIN ONE RECORD FOR EACH VARIABLE  ;            
+* TO BE READ IN, AND ARE NAMED SEQUENTIALLY, STARTING WITH VAR001  ;            
+*                                                                  ;            
+* THE FORMAT DATASET WILL CONTAIN ONE RECORD FOR EACH VALUE OF     ;            
+* EVERY VARIABLE THAT IS TO APPEAR IN THE REPORT                   ;            
+                                                                                
+DATA STRUCTURE(DROP=TYPE LAB VAL ID)                                            
+     FOREMAT(DROP=TYPE LEN START ID);                                           
+ INFILE LAYOUT DSD TRUNCOVER DELIMITER='*';                                     
+  LENGTH VAL $ 30 LAB NAME $ 70 START LEN ID SEQ 6 TYPE $ 4 VARID $ 6;          
+   RETAIN VARID NAME;                                                           
+    INPUT TYPE @;                                                               
+  IF TYPE = 'F' THEN DO;                                                        
+   SEQ+1;                                                                       
+   INPUT VAL LAB;                                                               
+   OUTPUT FOREMAT;                                                              
+   END;                                                                         
+  ELSE DO;                                                                      
+   ID+1;                                                                        
+   VARID = "VAR"||TRIM(LEFT(PUT(ID,Z3.)));                                      
+   START=TYPE;                                                                  
+      INPUT NAME LEN;                                                           
+   OUTPUT STRUCTURE;                                                            
+   END;                                                                         
+                                                                                
+PROC SORT DATA=FOREMAT;                                                         
+ BY VARID LAB;                                                                  
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THIS NULL DATA STEP USES THE FLEX CATALOG TO AUTOMATICALLY       ;            
+* GENERATE THE SAS CODE THAT WILL CREATE THE SAS FORMATS           ;            
+*                                                                  ;            
+* THE %INCLUDE LINE THEN RUNS THE GENERATED CODE                   ;            
+                                                                                
+DATA _NULL_;                                                                    
+ SET FOREMAT NOBS=NOBS;                                                         
+  BY VARID;                                                                     
+   FILE FLEX;                                                                   
+                                                                                
+   IF _N_ = 1 THEN PUT 'PROC FORMAT;';                                          
+                                                                                
+   INDEX = SUBSTR(VARID,4,LENGTH(VARID)-3);                                     
+   IF FIRST.VARID THEN PUT 'VALUE $V' INDEX +(-1)'F';                           
+                                                                                
+   IF NOT INDEXC(VAL,'-') THEN                                                  
+      PUT '"' VAL +(-1) '" = "' LAB +(-1) '"';                                  
+     ELSE DO;                                                                   
+      VAL1 = SCAN(VAL,1,'-');                                                   
+   VAL2 = SCAN(VAL,2,'-');                                                      
+   IF SUBSTR(LAB,1,2) = '(|' THEN                                               
+      PUT '"' VAL1 +(-1) '" - "' VAL2 +(-1) '" = ' LAB;                         
+     ELSE                                                                       
+         PUT '"' VAL1 +(-1) '" - "' VAL2 +(-1) '" = "' LAB +(-1) '"';           
+       END;                                                                     
+                                                                                
+ IF LAST.VARID THEN DO;                                                         
+  PUT 'OTHER = "***INVALID"';                                                   
+     PUT ';';                                                                   
+  END;                                                                          
+                                                                                
+ IF _N_ = NOBS THEN PUT 'RUN;';                                                 
+RUN;                                                                            
+                                                                                
+%INCLUDE FLEX / SOURCE2;                                                        
+  RUN;                                                                          
+                                                                                
+*******************************************************************;            
+* THIS NULL DATA STEP USES THE FLEX CATALOG TO AUTOMATICALLY       ;            
+* GENERATE THE SAS CODE THAT WILL READ IN THE FLAT FILES           ;            
+                                                                                
+DATA _NULL_;                                                                    
+ SET STRUCTURE NOBS=NOBS;                                                       
+ FILE FLEX2;                                                                    
+  PUT "@" START VARID " $" LEN +(-1)".";                                        
+                                                                                
+  IF _N_ = NOBS THEN DO;                                                        
+  PUT "@13 VOID $1.";                                                           
+  PUT ";";                                                                      
+     CALL SYMPUT ('NVAR',PUT(NOBS,Z3.));                                        
+  END;                                                                          
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THIS NULL DATA STEP USES THE FLEX CATALOG TO DETERMINE WHICH     ;            
+* NUMERIC VARIABLES HAVE RANGES AND THEREFORE MUST BE SCANNED FOR  ;            
+* NON-NUMERIC CHARACTERS WITHIN THE STRINGS                        ;            
+                                                                                
+DATA RANGES;                                                                    
+ SET FOREMAT;                                                                   
+                                                                                
+ IF INDEXC(VAL,'-') EQ 0 THEN DELETE;                                           
+                                                                                
+ PROC SORT NODUPKEY;                                                            
+  BY VARID;                                                                     
+RUN;                                                                            
+                                                                                
+DATA _NULL_;                                                                    
+ SET RANGES;                                                                    
+  FILE FLEX3;                                                                   
+                                                                                
+  PUT "IF VERIFY(" VARID +(-1) ",'0123456789') NE 0 THEN " VARID                
+      +(-1) " = '*';";                                                          
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THIS MACRO LOOPS ONCE FOR EACH YEAR TO BE INCLUDED, AND USES THE ;            
+* FLEXCODE GENERATED IN THE PREVIOUS DATA NULL TO READ IN THE FLAT ;            
+* FILE FOR EACH YEAR                                               ;            
+                                                                                
+%MACRO READIN;                                                                  
+%DO YR = &BYR %TO &CYR;                                                         
+DATA YR&YR (DROP= ALIAS);                                                       
+ INFILE IN;                                                                     
+  INPUT @138 ALIAS $CHAR1. @;                                                   
+  IF ALIAS THEN DELETE;                                                         
+  INPUT %INCLUDE FLEX2 / SOURCE2;                                               
+  %INCLUDE FLEX3 / SOURCE2;                                                     
+  IF VOID = '1' THEN DELETE;                                                    
+  COUNT = 1;                                                                    
+  CTR+1;                                                                        
+  CALL SYMPUT ('NUMREC',CTR);                                                   
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THIS NULL DATA STEP USES THE FLEX CATALOG TO AUTOMATICALLY       ;            
+* ASSIGN LABELS TO EACH VARIABLE IN THE DATASETS JUST READ IN      ;            
+                                                                                
+DATA _NULL_;                                                                    
+ SET STRUCTURE NOBS=NOBS;                                                       
+ FILE FLEX;                                                                     
+  IF _N_ = 1 THEN PUT 'ATTRIB';                                                 
+  PUT VARID 'LABEL="' NAME +(-1)'" LENGTH=$70.';                                
+  IF _N_ = NOBS THEN PUT ';';                                                   
+RUN;                                                                            
+                                                                                
+DATA YR&YR;                                                                     
+ %INCLUDE FLEX / SOURCE2;                                                       
+ SET YR&YR;                                                                     
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THIS MACRO FORMATS EACH VARIABLE ACCORDING TO THE FORMATS        ;            
+* CREATED EARLIER.  THE SYSFUNC STATEMENT IS REQUIRED TO CONVERT   ;            
+* THE LOOPING VARIABLE I INTO A THREE DIGIT NUMBER SO THAT THE     ;            
+* VARIABLES VAR001, VAR002, ETC ARE PROCESSED IN THE CORRECT ORDER ;            
+                                                                                
+%MACRO FMT;                                                                     
+ %DO I = 1 %TO &NVAR;                                                           
+  %LET J = %SYSFUNC(PUTN(&I,Z3.));                                              
+   VAR&J $V&J.F.                                                                
+ %END;                                                                          
+%MEND FMT;                                                                      
+                                                                                
+*******************************************************************;            
+* THIS PROC MEANS TABULATES THE DATA FOR EACH VARIABLE, AND PUTS   ;            
+* IT INTO THE REQUIRED CATEGORIES BASED ON THE FORMATS PREVIOUSLY  ;            
+* ASSIGNED.  BECAUSE THERE ARE SO MANY VARIABLES IN THIS PROC, THE ;            
+* AUTOMATIC VARIABLE _TYPE_ THAT IS GENERATED CONSISTS OF A STRING ;            
+* OF BOOLEAN IDENTIFIERS, SHOWING WHICH VARIABLE WAS SUMMARIZED    ;            
+* IN EACH RECORD OF THE OUTPUT FILE.  THIS INFORMATION IS USED IN  ;            
+* THE FOLLOWING MACRO                                              ;            
+                                                                                
+PROC MEANS DATA=YR&YR NOPRINT MISSING;                                          
+  CLASS VAR001-VAR&NVAR;                                                        
+  VAR COUNT;                                                                    
+  WAYS 1;                                                                       
+  FORMAT %FMT;                                                                  
+  OUTPUT OUT=FREQ&YR SUM=;                                                      
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THIS MACRO TAKES THE FREQUENCY FILE AND ATTACHES VARIABLE NAMES, ;            
+* ASSIGNS LABELS, CREATES COUNTS AND PERCENTS, AND USES THE _TYPE_ ;            
+* AUTOMATIC VARIABLE TO DETERMINE WHICH RECORD MATCHES WITH WHICH  ;            
+* VARIABLE.  ONLY ONE-WAY FREQUENCIES ARE NEEDED FOR FINAL REPORT  ;            
+                                                                                
+%MACRO COLLAPSE;                                                                
+ %DO J = 1 %TO &NVAR;                                                           
+   IF SUBSTR(_TYPE_,&J,1) = '1' THEN DO;                                        
+    %LET K = %SYSFUNC(PUTN(&J,Z3.));                                            
+    VARNAME = VLABEL(VAR&K);                                                    
+    VARID = "VAR&K";                                                            
+    LAB = PUT(VAR&K,$V&K.F.);                                                   
+    CNT&YR = _FREQ_;                                                            
+    PCNT&YR = (CNT&YR / &NUMREC)*100;                                           
+    OUTPUT;                                                                     
+   END;                                                                         
+ %END;                                                                          
+%MEND COLLAPSE;                                                                 
+                                                                                
+DATA RPT&YR (KEEP=VARNAME VARID LAB CNT&YR PCNT&YR);                            
+ LENGTH LAB VARNAME $ 70 VARID $ 6 CNT&YR PCNT&YR 8;                            
+ SET FREQ&YR;                                                                   
+ %COLLAPSE                                                                      
+RUN;                                                                            
+                                                                                
+PROC SORT DATA=RPT&YR;                                                          
+ BY VARID LAB;                                                                  
+RUN;                                                                            
+%END;                                                                           
+%MEND READIN;                                                                   
+                                                                                
+%READIN                                                                         
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THE FINAL REPORT NEEDS TO INCLUDE ALL FORMATS SPECIFIED IN THE   ;            
+* ORIGINAL LAYOUT FILE, EVEN IF THE COUNT FOR A PARTICULAR ENTRY   ;            
+* IS 0.  SINCE THESE ENTRIES WILL BE UNKNOWN TO SAS, SAS WILL SET  ;            
+* THEM TO MISSING.  THIS MACRO INITIALIZES ALL VALUES TO ZERO SO   ;            
+* THAT NO MISSING VALUES WILL APPEAR ON THE REPORT                 ;            
+                                                                                
+%MACRO INIT;                                                                    
+ %DO I = &BYR %TO &CYR;                                                         
+  IF CNT&I = . THEN CNT&I = 0;                                                  
+  IF PCNT&I = . THEN PCNT&I = 0;                                                
+ %END;                                                                          
+%MEND INIT;                                                                     
+                                                                                
+%MACRO RPT;                                                                     
+ %DO K = &BYR %TO &CYR;                                                         
+  RPT&K                                                                         
+ %END;                                                                          
+%MEND RPT;                                                                      
+                                                                                
+*******************************************************************;            
+* IN THIS DATASTEP, THE FREQUENCY COUNTS ARE MERGED WITH THE       ;            
+* FORMATS SO THAT ALL ENTRIES SPECIFIED IN THE ORIGINAL LAYOUT FILE;            
+* FILE WILL BE INCLUDED IN THE FINAL REPORT.  ANY VARIABLES WITH   ;            
+* RANGES NOT TO BE MODIFIED ARE DELETED, AND ANY INVALID VALUES    ;            
+* ARE ASSIGNED A HIGH SEQUENCE NUMBER, SO THAT THEY WILL BE SORTED ;            
+* TO THE END OF EACH LIST OF VALUES FOR EACH VARIABLE.  THE %DIFF  ;            
+* COLUMN IS ALSO CALCULATED HERE                                   ;            
+                                                                                
+DATA RPTFINAL (DROP=VAL VARNAME);                                               
+ MERGE %RPT FOREMAT;                                                            
+  BY VARID LAB;                                                                 
+                                                                                
+ IF SUBSTR(LAB,1,2) = '(|' THEN DELETE;                                         
+ %INIT                                                                          
+ IF SEQ = . THEN DO;                                                            
+  NAME = VARNAME;                                                               
+  IF SUBSTR(LAB,1,1) = '*' THEN SEQ = 9999;                                     
+   ELSE SEQ = 0;                                                                
+  END;                                                                          
+                                                                                
+  IF PCNT&PYR = 0 THEN DIFF = .X;                                               
+   ELSE DIFF = 100*((PCNT&CYR/PCNT&PYR)-1);                                     
+                                                                                
+PROC SORT;                                                                      
+ BY VARID SEQ;                                                                  
+RUN;                                                                            
+                                                                                
+*******************************************************************;            
+* THIS MACRO JUST GENERATES THE REQUIRED DEFINE COLUMNS FOR PROC   ;            
+* REPORT, CREATING TWO COLUMNS FOR EACH YEAR TO BE REPORTED.       ;            
+* THE %DIFF COLUMN IS INCLUDED ONLY IF THE REPORT IS FOR MORE THAN ;            
+* ONE YEAR                                                         ;            
+                                                                                
+%MACRO COLS;                                                                    
+ %IF &BYR NE &CYR %THEN %DO;                                                    
+ DEFINE DIFF        / DISPLAY WIDTH=6 "% DIFF!&CYR./!&PYR" F=4.;                
+ %END;                                                                          
+ %DO J = &BYR %TO &CYR;                                                         
+  DEFINE PCNT&J    / ANALYSIS WIDTH=6 "&J!RPTD!%" F=6.2;                        
+ %END;                                                                          
+ %DO K = &BYR %TO &CYR;                                                         
+  DEFINE CNT&K     / ANALYSIS WIDTH=6 "&K!REC!CNT" F=COMMA6.;                   
+ %END;                                                                          
+%MEND COLS;                                                                     
+                                                                                
+%MACRO DIFF;                                                                    
+ %IF &BYR NE &CYR %THEN %DO;                                                    
+ DIFF                                                                           
+ %END;                                                                          
+%MEND DIFF;                                                                     
+                                                                                
+*******************************************************************;            
+* THIS IS THE FINAL CODE THAT ACTUALLY GENERATES THE REPORT.  THE  ;            
+* COMPUTE AFTER NAME BLOCK IS REQUIRED TO FORCE SAS TO INCLUDE THE ;            
+* WORD TOTAL ON THE SUMMARY LINE FOR EACH VARIABLE                 ;            
+OPTIONS CENTER;                                                                 
+ TITLE1 "&CYR MORTALITY TIME SERIES ANALYSIS";                                  
+ TITLE2 "(USING ANNUAL PERCENTAGES)";                                           
+ TITLE3 "DATASET NAME: &FN";                                                    
+PROC REPORT DATA=RPTFINAL HEADSKIP NOWD NOCENTER SPLIT='!';                     
+ COLUMN VARID NAME LAB %DIFF PCNT&CYR-PCNT&BYR CNT&CYR-CNT&BYR;                 
+ DEFINE VARID       / NOPRINT ORDER " ";                                        
+ DEFINE NAME        / NOPRINT ORDER " ";                                        
+ DEFINE LAB         / DISPLAY WIDTH=45 " " FLOW;                                
+ %COLS                                                                          
+ BREAK AFTER NAME   / OL SUMMARIZE SKIP;                                        
+ COMPUTE AFTER NAME;                                                            
+  LAB='TOTAL';                                                                  
+  ENDCOMP;                                                                      
+ COMPUTE BEFORE NAME;                                                           
+  LINE @3 NAME $70.;                                                            
+  ENDCOMP;                                                                      
+RUN;                                                                            

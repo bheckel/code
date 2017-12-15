@@ -1,0 +1,205 @@
+From Perl For System Administrators (oreilly site) 08/22/00
+
+It is not uncommon for system administrators to have to drop whatever they are
+working on to deal with the security problem du jour. Some of these problems
+involve serious breaches of security. In these cases, the first question asked
+is often, "What has the intruder done?" In my recently released O'Reilly book,
+Perl for System Administration, I begin the chapter on security and network
+monitoring with a discussion of some of the available Perl tools that can help
+answer this question. Here's an excerpt from that chapter, which deals with
+finding changes made to a local filesystem: 
+
+Filesystems are an excellent place to begin our exploration into
+change-checking programs. We're going to explore ways to check if important
+files like operating system binaries and security-related files (e.g.,
+/etc/passwd or msgina.dll ) have changed. Changes to these files made without
+the knowledge of the administrator are often signs of an intruder. There are
+some relatively sophisticated cracker tool-kits available on the Net that do a
+very good job of installing Trojan versions of important files and covering up
+their tracks. That's the most malevolent kind of change we can detect. On the
+other end of the spectrum, sometimes it is just nice to know when important
+files have been changed (especially in environments where multiple people
+administer the same systems). The techniques we're about to explore will work
+equally well in both cases. 
+
+The easiest way to tell if a file has changed is to use the Perl functions
+stat() and lstat(). These functions take a filename or a filehandle and return
+an array with information about that file. The only difference between the two
+functions manifests itself on operating systems like Unix that support
+symbolic links. In these cases lstat() is used to return information about the
+target of a symbolic link instead of the link itself. On all other operating
+systems the information returned by lstat() should be the same as that
+returned by stat(). Using stat() or lstat() is easy: 
+
+@information = stat("filename"); As demonstrated in Chapter 3, "User
+Accounts," we can also use Tom Christiansen's File::Stat module to provide
+this information using an object-oriented syntax. The information returned by
+stat() orlstat() is operating-system dependent. stat() and lstat() began as
+Unix system calls, so the Perl documentation for these calls is skewed towards
+the return values for Unix systems. See Table 10-1 in Perl for System
+Administration for a comparison between the values returned by stat() under
+UNIX and those returned by stat() on Windows NT/2000 and MacOS.  In addition
+to stat() and lstat(), other non-Unix versions of Perl have special functions
+to return attributes of a file that are peculiar to that OS. See Chapter 2,
+"Filesystems," for discussions of functions like MacPerl::GetFileInfo() and
+Win32::FileSecurity::Get(). 
+
+Once you have queried the stat()ish values for a file, the next step is to
+compare the "interesting" values against a known set of values for that file.
+If the values changed, something about the file must have changed. Here's a
+program that both generates a string of lstat() values and checks files
+against a known set of those values. We intentionally exclude last access time
+from the comparison because it changes every time a file is read. This program
+takes either a -p filename argument to print lstat() values for a given file
+or a -c filename argument to check the lstat() values all of the files listed
+in filename. 
+
+use Getopt::Std; 
+
+# we use this for prettier output later in &printchanged()
+@statnames = qw(dev ino mode nlink uid gid rdev size mtime
+        ctime blksize blocks);
+getopt('p:c:');
+die "Usage: $0 [-p <filename>|-c <filename>]\n" unless ($opt_p or $opt_c);
+if ($opt_p){
+    die "Unable to stat file $opt_p:$!\n" unless (-e $opt_p);
+    print $opt_p,"|",join('|',(lstat($opt_p))[0..7,9..12]),"\n";
+    exit;
+} 
+
+if ($opt_c){
+    open(CFILE,$opt_c) or die "Unable to open check file $opt_c:$!\n";
+    while(<CFILE>){
+        chomp;
+        @savedstats = split('\|');
+        die "Wrong number of fields in line beginning with $savedstats[0]\n"
+            unless ($#savedstats == 12);
+        @currentstats = (lstat($savedstats[0]))[0..7,9..12];
+        # print the changed fields only if something has changed
+        &printchanged(\@savedstats,\ @currentstats)
+            if ("@savedstats[1..13]" ne "@currentstats");
+    }
+    close(CFILE);
+}
+# iterates through attributes lists and prints any changes between
+# the two
+sub printchanged{
+    my($saved,$current)= @_;
+    # print the name of the file after popping it off of the array read
+    # from the check file
+    print shift @{$saved},":\n";
+    for (my $i=0; $i < $#{$saved};$i++){
+        if ($saved->[$i] ne $current->[$i]){
+            print "\t".$statnames[$i]." is now ".$current->[$i];
+            print " (should be ".$saved->[$i].")\n";
+        }
+    }
+} 
+
+To use this program, we might type checkfile -p /etc/passwd>>checksumfile.
+checksumfile should then contain a line that looks like this: 
+
+/etc/passwd|1792|11427|33060|1|0|0|24959|607|921016509|921016509|8192|2 
+
+We would then repeat this step for each file we want to monitor. Then, running
+the script with checkfile -c checksumfile will show any changes. For instance,
+if I remove a character from /etc/passwd, this script will complain like this: 
+
+/etc/passwd:
+size is now 606 (should be 607)
+mtime is now 921020731 (should be 921016509)
+ctime is now 921020731 (should be 921016509) 
+There's one quick Perl trick in this code to mention before we move on. The following line demonstrates a quick-and-dirty way of comparing two lists for equality (or lack thereof): 
+if ("@savedstats[1..12]" ne "@currentstats"); 
+The contents of the two lists are automatically "stringified" by Perl by concatenating the list elements with a space between them, as if we typed: 
+join(" ",@savedstats[1..12])) 
+and then the resulting strings are compared. For short lists where the order and number of the list elements is important, this technique works well. In most other cases, you'll need an iterative or hash solution like those documented in the Perl FAQs. 
+Now that you have file attributes under your belt, I've got bad news for you. Checking to see that a file's attributes have not changed is a good first step, but it doesn't go far enough. It is not difficult to alter a file while keeping attributes like the access and modification times the same. Perl even has a function, utime(), for changing the access or modification times of a file. Time to pull out the power tools. 
+
+Detecting change in data is one of the fortes of a particular set of
+algorithms known as "message-digest algorithms." Here's how Ron Rivest
+describes a particular message-digest algorithm called the "RSA Data Security,
+Inc. MD5 Message-Digest Algorithm" in RFC1321: 
+
+The algorithm takes as input a message of arbitrary length and produces as
+output a 128-bit "fingerprint" or "message digest" of the input. It is
+conjectured that it is computationally infeasible to produce two messages
+having the same message digest, or to produce any message having a given
+pre-specified target message digest.  For our purposes this means that if we
+run MD5 on a file, we'll get a unique fingerprint. If the data in this file
+were to change in any way, no matter how small, the fingerprint for that file
+will change. The easiest way to harness this magic from Perl is through the
+Digest module family and its Digest::MD5 module.  The Digest::MD5 module is
+easy to use. You create a Digest::MD5 object, add the data to it using the
+add() or addfile() methods, and then ask the module to create a digest
+(fingerprint) for you. To compute the MD5 fingerprint for a password file on
+Unix, we could use something like this: 
+
+use Digest::MD5 qw(md5);
+$md5 = new Digest::MD5;
+open(PASSWD,"/etc/passwd") or die "Unable to open passwd:$!\n";
+$md5->addfile(PASSWD);
+close(PASSWD);
+print $md5->hexdigest."\n"; 
+The Digest::MD5 documentation demonstrates that we can string methods together to make the above program more compact: 
+use Digest::MD5 qw(md5);
+open(PASSWD,"/etc/passwd") or die "Unable to open passwd:$!\n";
+print Digest::MD5->new->addfile(PASSWD)->hexdigest,"\n";
+close(PASSWD); 
+Both of these code snippets print out: 
+a6f905e6b45a65a7e03d0809448b501c 
+If we make even the slightest change to that file, the output changes. Here's the output after I transpose just two characters in the password file: 
+335679c4c97a3815230a4331a06df3e7 
+Any change in the data now becomes obvious. Let's extend our previous attribute-checking program to include MD5: 
+use Getopt::Std;
+use Digest::MD5 qw(md5); 
+
+@statnames = qw(dev ino mode nlink uid gid rdev size mtime
+        ctime blksize blocks md5);
+getopt('p:c:');
+die "Usage: $0 [-p <filename>|-c <filename>]\n"
+    unless ($opt_p or $opt_c);
+if ($opt_p){
+    die "Unable to stat file $opt_p:$!\n" unless (-e $opt_p);
+    open(F,$opt_p) or die "Unable to open $opt_p:$!\n";
+    $digest = Digest::MD5->new->addfile(F)->hexdigest;
+    close(F);
+    print $opt_p,"|",join('|',(lstat($opt_p))[0..7,9..12]),"|$digest","\n";
+    exit;
+}
+if ($opt_c){
+    open(CFILE,$opt_c) or die "Unable to open check file $opt_c:$!\n";
+    while (<CFILE>){
+        chomp;
+        @savedstats = split('\|');
+        die "Wrong number of fields in \'$savedstats[0]\' line.\n"
+            unless ($#savedstats == 13); 
+
+        @currentstats = (lstat($savedstats[0]))[0..7,9..12];
+        open(F,$savedstats[0]) or die "Unable to open $opt_c:$!\n";
+        push(@currentstats,Digest::MD5-& gt;new->addfile(F)->hexdigest);
+        close(F);
+        &printchanged(\@savedstats,\ @currentstats)
+            if ("@savedstats[1..13]" ne "@currentstats");
+    }
+    close(CFILE);
+} 
+
+sub printchanged {
+    my($saved,$current)= @_;
+    print shift @{$saved},":\n";
+    for (my $i=0; $i <= $#{$saved};$i++){
+        if ($saved->[$i] ne $current->[$i]){
+            print " ".$statnames[$i]." is now ".$current->[$i];
+            print " (".$saved->[$i].")\n";
+        }
+    }
+} 
+
+Once you know how to use the Digest::MD5 module, the fun doesn't have to stop
+here. You can use MD5 for many situations where you need to know definitively
+if a fixed piece of data has changed. In Perl for System Administration I
+continue by demonstrating how MD5 can be used to check for changes in network
+services like DNS. But that's just one possible use, no doubt you'll find
+others. Enjoy. 
+

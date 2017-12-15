@@ -1,0 +1,68 @@
+<!-- Adapted: Fri Dec 12 10:48:44 2003 (Bob Heckel - usenet post ipRaptor Re:
+                                        How to export html content to CSV / 
+                                        Excel? ) 
+ -->
+<html>
+<head>
+  <title>HTML to CSV</title>
+  <script language="JavaScript">
+    // IE only!
+    function HTML2CSV(){
+      var r = 0;
+      csvout = window.document;
+      numofRows = gTable.rows.length-1;
+      numofCells =  gTable.rows[0].cells.length-1;
+      var rowcsv= [numofRows];
+      var cntrows = 0;
+      for ( r == 0; r <= numofRows; r++ ) {
+        var c = 0;
+        tempdata = "";
+        for ( c == 0; c<=numofCells; c++ ) {
+          if ( c != numofCells ) {
+            tempdata+= gTable.rows[r].cells[c].innerText + ",";
+          } else {
+            tempdata+= gTable.rows[r].cells[c].innerText + "<br>";
+          }
+        }
+        rowcsv[r] = tempdata
+      }
+      csvout.open("text/html");
+      var rowcnt = 0;
+      for ( rowcnt == 0; rowcnt<= rowcsv.length-1; rowcnt++ ) {
+        csvout.write(rowcsv[rowcnt]);
+      }
+      csvout.close();
+    }
+  </script>
+</head>
+<body>
+  <table id="gTable" border="1" cellspacing="1" width="100%">
+    <tr>
+      <td width="20%">A</td>
+      <td width="20%">B</td>
+      <td width="20%">C</td>
+      <td width="20%">D</td>
+      <td width="20%">E</td>
+    </tr>
+    <tr>
+      <td width="20%">F</td>
+      <td width="20%">G</td>
+      <td width="20%">H</td>
+      <td width="20%">I</td>
+      <td width="20%">J</td>
+    </tr>
+    <tr>
+      <td width="20%">Frank</td>
+      <td width="20%">George</td>
+      <td width="20%">Harry</td>
+      <td width="20%">Ivan</td>
+      <td width="20%">Jacob</td>
+    </tr>
+  </table>
+
+  <form>
+    <p align="center"><input type="button" value="Convert This Page to CSV"
+     name="B3" onClick="javascript:HTML2CSV()"></p>
+  </form>
+</body>
+</html>

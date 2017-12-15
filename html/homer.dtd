@@ -1,0 +1,8 @@
+<!DOCTYPE directory [
+<!ELEMENT directory (person)*>
+<!ELEMENT person (name, tel*, email*)>
+<!ELEMENT name (#PCDATA)>
+<!ATTLIST name ssn id #REQUIRED>
+<!ELEMENT tel (#PCDATA)>
+<!ELEMENT email (#PCDATA)>
+]>

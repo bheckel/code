@@ -1,0 +1,45 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: tgrep.pl 
+#
+#      Summary: Improves grep -- searches only textfiles for patterns.
+#               Sample call finds findme in curr dir. 
+#               tgrep findme *    or   tgrep findme *.txt
+#               then use Vim ,g macro to open
+# 
+#               Usage: tgrep <-l> 'findthistext' *
+#
+#               TODO need switch to chg case insensitive default.
+#               TODO need to be able to feed multiple directories.
+#
+#      Created: ? (Randall Schwartz; adapted by Bob Heckel)
+#     Modified: Wed Jan 27 1999 14:39:52 (Bob Heckel -- allow ,g )
+#     Modified: Thu Mar 25 1999 14:22:47 (Bob Heckel)
+#     Modified: Tue Mar 30 1999 17:03:17 (Bob Heckel-- use switch for case
+#                                         sensitivity)
+##############################################################################
+
+# Normal grep's -l indicates that want list of filenames only.
+$names++, shift if $ARGV[0] eq "-l";
+
+# The shift operator defaults to @ARGV.
+$search = shift;
+
+$showname = @ARGV > 1;
+@ARGV = "-" unless @ARGV;
+@ARGV = grep {-T or $_ eq "-"} @ARGV;
+exit 0 unless @ARGV;
+
+while (<>) {
+  next unless /$search/io;
+  if($names) {
+    # $ARGV is only coincidently named like the ARGV filehandle and the @ARGV
+    # array.
+    print "$ARGV\n";
+    close ARGV;
+  } else {
+    # Make sure space before ":" so that ,g will work in Vim.
+    print "$ARGV : " if $showname;
+    print;
+  }
+}

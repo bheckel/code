@@ -1,0 +1,36 @@
+# Modified: Tue 31 Jul 2001 14:59:03 (Bob Heckel)
+
+[rxvt]
+background=black
+foreground=white
+command=/opt/rxvt/bin/rxvt -cr 10 -pr 12 -sr -sk --backspacekey ^H --deletekey ^\?
+font=9x12
+bufferSize=1000
+
+[dtterm]
+background=black
+foreground=white
+###command=/usr/bin/X11/dtterm 
+font=9x12
+bufferSize=1000
+
+[bheckel.nis]
+method=rsh
+user=bheckel
+command=/usr/local/bin/xstart rxvt
+
+[bheckel.homer]
+base=bheckel.nis
+host=hpLfs01
+
+[homer]
+base=bheckel.nis
+host=hpLfs01
+
+[bheckel.lisa]
+base=bheckel.nis
+host=hpLdev01
+
+[lisa]
+base=bheckel.nis
+host=hpLdev01

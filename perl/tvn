@@ -1,0 +1,28 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: tvn
+#
+#      Summary: Return n, based on PV, r, FV
+#               Usage: tvn
+#
+#      Created: Sun, 08 Aug 1999 17:26:41 (Bob Heckel)
+##############################################################################
+
+print "Program returns n, given PV, r, FV\n";
+# Cygwin bug.
+$x = <STDIN>;
+print "Enter PV:\n";
+$pv = <STDIN>;
+print "Enter rate e.g 10%:\n";
+$rate = <STDIN>;
+print "Enter FV:\n";
+$fv = <STDIN>;
+
+$frac = ($rate / 100) + 1;
+$divide = $fv / $pv;
+$log_a = log($divide);
+$log_b = log($frac);
+$retme = $log_a / $log_b;
+
+print "$retme is the number of periods.\n";
+

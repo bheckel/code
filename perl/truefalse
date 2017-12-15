@@ -1,0 +1,12 @@
+As far as Perl is concerned, logically, true/false are scalar concepts.
+
+FALSE:
+======
+0       (zero, also 0.0 and "0")
+""      (empty string)  
+undef   (b/c it looks like 0 or "" to everything except the defined operator)
+
+
+TRUE:
+=====
+Everything else.

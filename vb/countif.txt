@@ -1,0 +1,70 @@
+Excel page Tip archives
+Cell Counting Techniques
+
+Excel provides many ways to count cells in a range that meet various criteria:
+
+      The DCOUNT function. The data must be set up in a table, and a separate
+      criterion range is required. 
+      The COUNT function. Simply counts the number of cells in a range that
+      contain a number. 
+      The COUNTA function. Counts the number of non-empy cells in a range. 
+      The COUNTBLANK function. Counts the number of empty cells in a range. 
+      The COUNTIF function. Very flexible, but often not quite flexible enough. 
+      An array formula. Useful when the other techniques won't work. 
+
+Formula Examples
+
+Listed below are some formula examples that demonstrate various counting
+techniques. These formula all use a range named data.
+To count the number of cells that contain a negative number:
+
+  =COUNTIF(data,"<0")
+
+To count the number of cells that contain the word "yes" (not case sensitive):
+
+   =COUNTIF(data,"yes")
+
+To count the number of cells that contain any text:
+
+   =COUNTIF(data,"*")
+
+To count the number of cells that contain text that begins with the letter "s"
+(not case-sensitive):
+
+   =COUNTIF(data,"s*")
+
+To count the number of cells that contain the letter "s" (not case-sensitive):
+
+   =COUNTIF(data,"*s*")
+
+To count the number of cells that contain either "yes" or "no"  (not
+case-sensitive):
+
+   =COUNTIF(data,"yes")+COUNTIF(data,"no") 
+
+To count the number of three-letter words:
+
+   =COUNTIF(data,"???")
+
+To count the number of cells that contain a value between 1 and 10:
+
+   =COUNTIF(data,">=1")-COUNTIF(data,">10")
+
+To count the number of unique numeric values (ignores text enties):
+
+   =SUM(IF(FREQUENCY(data,data)>0,1,0))
+
+To count the number of cells that contain an error value (this is an array
+formula, entered with Ctrl+Shift+Enter):
+
+   =SUM(IF(ISERR(data),1,0))
+
+Using the formulas in VBA
+
+You can also use these techniques in your VBA code. For example the VBA
+statement below calculates the number of three-letter words in a range named
+data, and assigns the value to the NumWords variable:
+
+  NumWords = Application.COUNTIF(Sheets("Sheet1").Range("data"), "???")
+
+The other formula examples listed above can also be converted to VBA.

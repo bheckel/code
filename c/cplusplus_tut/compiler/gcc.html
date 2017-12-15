@@ -1,0 +1,67 @@
+<HTML>
+<HEAD>
+<TITLE>Compiling using GNU C++ Compiler (egcs, djgpp, ...)</TITLE>
+<meta name="description" content="Method for compiling console applications.">
+<meta name="keywords" content="c++ console compile compiler gnu GNU gcc g++ djgpp egcs">
+</HEAD>
+<body bgcolor="white">
+
+<!--cap-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Compilers </FONT><BR>
+ <FONT SIZE=5><B>Compiling using GNU C++ Compiler</B></FONT>
+</TD><TD VALIGN="bottom">
+ <a href="http://www.cplusplus.com"><IMG SRC="/img/mini.gif" ALT="cplusplus.com" BORDER=0></A>
+</TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/cap-->
+<P>
+<TABLE WIDTH=100%><TR><TD BGCOLOR="#BFFFBF">
+PREVIOUS NOTE: This small text assumes that your compiler has already been installed
+and configured. Otherwise refer to the install information that comes with your
+distribution.
+</TD></TR></TABLE>
+<P>
+
+<H2>Compiling</H2>
+This compiler can perform preprocessing, compilation, assembly and linking of a project
+from a single call to <TT><B>g++</B></TT>. Its format is:
+<BLOCKQUOTE><TT><B>g++ </B><I>options_and_filenames</I></TT></BLOCKQUOTE>
+where <TT><I>options_and_filenames</I></TT> is a sequence of options and filenames
+that can be mixed in the command line.
+<P>
+The most common way of calling <TT><B>g++</B></TT> to compile a single source file
+in C++ is:
+<BLOCKQUOTE><TT><B>g++ </B><I>sourcefile</I><B> -o </B><I>execfile</I></TT></BLOCKQUOTE>
+where <TT><I>sourcefile</I></TT> is the C++ source file to compile and
+<TT><I>execfile</I></TT> is the name of the output file, generally the executable file,
+which must always be preceded by the <TT><B>-o</B></TT> option.
+<P>
+The type of file assumed when specifying a <TT><I>sourcefile</I></TT>
+depends on its extension, that must be:
+<TT><B>.C</B></TT>, <TT><B>.cc</B></TT> or <TT><B>.cxx</B></TT> for C++ source files.
+Additionally, the most recent versions of GNU C++ Compiler assumes also
+<TT><B>.cpp</B></TT> and <TT><B>.c++</B></TT> extensions for C++ source files.
+<TT><B>.ii</B></TT> files are considered preprocessed C++ files.
+<P>
+You may also specify that a file is a C++ source file by preceding its name with
+specifier <TT><B>-x c++</B></TT>. For example, if we want to compile a source file
+with no-extension called <TT><B>mysource</B></TT> we may call g++ thus:
+<BLOCKQUOTE><TT><B>g++ -x c++ mysource -o myexec</B></TT></BLOCKQUOTE>
+
+<!--cua-->
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy;The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+ <TR><TD ALIGN="center"><a href="javascript:history.go(-1)" ><IMG SRC="/img/butnback.gif" BORDER=0>Return back</A></TD></TR>
+
+</TABLE></CENTER>
+<!--/cua-->
+
+</BODY>
+</HTML>

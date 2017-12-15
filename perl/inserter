@@ -1,0 +1,78 @@
+#!/usr/bin/perl -w
+#############################################################################
+#     Name: inserter
+#
+#  Summary: Insert NEW line into each file a directory.
+#
+#           To modify EXISTING strings in a file, see replacer.pl
+#
+#           TODO if I say insert line 5 and there are only 2 lines in the
+#           file, it silently skips that file
+# 
+#           Usage: inserter string insertafterthisline
+#                  Use zero to insert before first line.
+#
+#  Created: Sun, 28 May 2000 15:40:34 (Bob Heckel)
+# Modified: Thu 24 Jul 2003 09:29:02 (Bob Heckel)
+#############################################################################
+
+$printme = <<EOT;
+Preparing to insert line(s) in all text files in $ENV{PWD}. 
+Not recursive.  Original files are NOT backed up during this process.
+Continue [y/n]?
+EOT
+
+if ( !@ARGV ) {
+    die "Usage: $0 InsertString InsertAfterLineNum\n";
+} else {
+  print $printme;
+  $yesno = <STDIN>;
+}
+
+if ( $yesno eq "y\n" ) {
+  # Don't want to specify path.  PWD s/b directory of interest.
+  $dir = "./";
+  $insertstring = $ARGV[0];
+  $afterlinenumber = $ARGV[1];
+  chomp($insertstring); chomp($afterlinenumber);
+
+  ###print "Directory is:\t\t\t\t $dir\n";
+  ###print "Insertion String is:\t\t\t $insertstring\n";
+  ###print "Line Number at Which to Insert is:\t $afterlinenumber\n\n";
+
+  opendir (MYDIR, $dir);
+  @files = readdir(MYDIR);
+  closedir (MYDIR);
+  
+  foreach $f ( @files ) {
+    # Skip directories.
+    next unless -f $f;
+      $fullpath = $dir . $f;
+      open ORIGFILE, $fullpath;
+      # @originalfile contains all lines from file you're changing and could be
+      # deadly if file is large.
+      @originalfile = <ORIGFILE>;
+      close ORIGFILE;
+      # Start at line 1 but use this so that can insert _before_ line 1.
+      if ( $afterlinenumber == 0 ) {
+        unshift @originalfile, $insertstring;
+      } else {
+        # You're at line 1.
+        $i = 1;
+        foreach $line ( @originalfile ) {
+          if ( $i == $afterlinenumber ) {
+            $line .= "$insertstring\n$line";
+          }
+          $i++;
+        }  # Now @originalfile is the new file.
+      }
+      # Orig file destroyed here.  Exists only as @originalfile.
+      open (MODIFILE, ">$fullpath");
+      foreach $line ( @originalfile ) {
+        print MODIFILE $line;
+      }
+      close MODIFILE;
+  }
+} else {                 # user said no, n, nyat, ISAIDNO, etc..
+  print "$0 Cancelled.\n";
+}

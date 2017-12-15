@@ -1,0 +1,42 @@
+<HTML>
+<HEAD>
+<!--
+A little known functionality of JavaScript is its ability to accept one or
+more arguments within a single function. This advantage saves coding time as
+well as memory consumption. Thus, instead of writing different functions for
+different arguments, you can write a single function which handles many
+arguments or combinations of arguments. 
+
+An instance of where you may want to use this is in programming forms. If a
+form changes over time, and if you have used this functionality to validate
+your form, you wouldn't have to rewrite the code, but simply modify the
+existing code. Here's an example: 
+-->
+<SCRIPT Language="JavaScript">
+  function foo() {
+    // Array of argument values.
+    var argv = foo.arguments;
+    // The number of arguments passed to this function.
+    var argc = argv.length;
+    // For formatting purposes only.
+    document.write("<BR><BR>\n\n");
+    // Loop through the arguments (0 through n-1).
+    for (var i = 0; i < argc; i++) {
+      // Write out the argument values.
+      document.write("<BR>\nValue of Argument " + i + ": " + argv[i]);
+    }
+  }
+</SCRIPT>
+</HEAD>
+
+<BODY>
+  <CENTER><H1>Arguments passed to function "foo"</H1></CENTER>
+  <SCRIPT>
+    // CALLING THE FUNCTION THREE TIMES:
+    foo(1, "two", 3);
+    foo("Testing ONE Argument.");
+    foo(3.14159, "Netscape", "Communicator", "Coming", "Soon!");
+  </SCRIPT>
+</BODY>
+</HTML>
+

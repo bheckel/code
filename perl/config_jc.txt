@@ -1,0 +1,15 @@
+
+# Modified: Thu, 18 Nov 1999 08:44:54 (Bob Heckel)
+
+# This array is the names of the fields that you want in your database.
+@fields = ('COEO','D-Date','Region','Ops_Mgr','FTS_Dt','Status','Prodtype',
+           'Matl$','RFTID/L$','CtrID/L$','TravelI$','TotI$','RFTED/L$',
+           'CtrEDL$','TravelE$','Tot_E$','TotJob_MEI$');
+
+# This variable is the location of the database that this
+# configuration file points to.
+$database = "/triweb/CustSvcFin/usa/rtp/jobcost/jc_final.xls";
+
+# This variable is the "relative path" to the database.cgi program.
+$form_action="./database.jc.cgi";
+ 

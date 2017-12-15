@@ -1,0 +1,187 @@
+#!/usr/bin/perl
+##############################################################################
+#    Name: bgrep  (B)ob (grep)
+#
+# Summary: Search directories for regex, viewing results in $EDITOR.
+#
+#          Original motivation was to avoid barfing on binaries in Cygwin 
+#          bash.
+#
+#          This works similarly but is slower:
+#          find . -type f -exec grep "mystring" /dev/null {} \;
+#
+#          Navigation in the results window assumes autocmds have been setup
+#          in .vimrc.
+#         
+#          TODO skip symlinks
+#
+#          Alternative:
+#          $ find /foo/Macros -type f -print0 |xargs -0 grep -i barstring
+#
+#  Created: Sun, 26 Dec 1999 21:44:34 (Bob Heckel)
+# Modified: Thu Jun 20 10:34:23 2002 (Bob Heckel -- ignore Adobe files) 
+# Modified: Mon 24 Jun 2002 15:23:01 (Bob Heckel -- bugfixes)
+# Modified: Thu 21 Nov 2002 10:48:55 (Bob Heckel -- make case insensitive the
+#                                     deafault search) 
+# Modified: Tue 24 Dec 2002 10:22:17 (Bob Heckel -- bugfix to rm temp file) 
+# Modified: Tue 18 Mar 2003 09:31:07 (Bob Heckel -- added exit code to
+#                                     indicate failure, use STDERR)
+# Modified: Fri 28 Sep 2007 09:10:29 (Bob Heckel -- add dir check on no 
+#                                     results found)
+# Modified: Tue 15 Apr 2014 13:15:24 (Bob Heckel -- remove $EDITOR, just use
+#                                     vim, I'm never going to use another
+#                                     editor so stop being coy)
+##############################################################################
+use File::Find;     # used only for recursion
+use Getopt::Std;
+
+$VER = 2.3;
+# Temp file used by vi to display results.
+$DATFILE = "$ENV{TMP}/bgrep$$.grep";
+
+#if ( $ENV{EDITOR} !~ /vi/ ) {
+#  print STDERR "ERROR: vi(m) is required.  Must set env variable EDITOR=vi(m)\n";
+#  Usage(); 
+#}
+Usage() if ( !$ARGV[0] );  # must pass a regex at minimum
+Usage() if ( ! getopts('rch'));
+Usage() if ( $ARGV[0] =~ /-+h.*/);
+Usage() if ( $opt_h );
+
+# If more than one param passed, indicates a specific path (not the default
+# CWD) to search.  
+# E.g. bgrep bobh /tmp/testing/subdir 
+# Silently ignores any third fourth, etc. params passed improperly.
+$searchword = $ARGV[0];
+$searchdir  = $ARGV[1] || '.';
+# If a trailing slash is not provided, append one.
+unless ( $searchdir =~ m#/$# ) {
+  $searchdir = $searchdir . '/';
+}
+
+print STDERR "Searching for \"$searchword\" in $searchdir ...";
+
+if ( $opt_r ) {
+  # TODO may replace with sytem("find .") which recurses
+  find(\&Wanted, $searchdir);
+} else {
+  # Default is CWD and not recursive.
+  @files_in_dir = Norecurse($searchdir);
+  unless ( @files_in_dir ) { 
+    print "  $searchdir contains no regular files.\n";
+    unless ( $opt_r ) {
+      # Show dirs on which user may want to try -r, if any dirs exist
+      opendir DIRHANDLE, "." || die "Can't open dirhandle: $!\n";
+      my @items = grep(!/^..?$/, readdir(DIRHANDLE));
+      my @dirs = grep { -d } @items;
+      print "Try  bgrep -r $searchword  to recurse @dirs\n" if @dirs;
+    }
+    exit;
+  }
+}
+
+# Elim all but textfiles.
+@ARGV = grep { -T } @files_in_dir;
+
+open(TOVIM, ">$DATFILE") || die "Can't open $DATFILE : $!\n";
+# Grep each file for the searchword or regex.
+while ( <> ) {
+  if ( !$opt_c ) {
+    next unless m/$searchword/oi;
+  } else {
+    next unless m/$searchword/o;
+  }
+  $foundflag = 1;
+
+  # Make sure to space before ":" so that ,g will work in Vim.
+  ###print TOVIM "$ARGV : ";
+  print TOVIM "$ARGV ";
+  print TOVIM ;
+  $found++;
+}
+close(TOVIM) || die "Error closing temp file: $!\n";
+
+
+my $rc = 0;  # success
+
+if ( $foundflag ) { 
+  printf("Found %d hit%s...", $found, $found==1 ? "" : "s");
+###  print "Spawning $ENV{EDITOR}...\n";
+  print "Spawning vim...\n";
+  # Force vim to first occurrance of searchword (-c for execute vim command,
+  # \c for case insensitive search).  Assumes hlsearch is au set in .vimrc for
+  # .grep files.
+###  system("$ENV{EDITOR} -c \'/\\c$searchword\' $DATFILE") 
+  system("vim -c \'/\\c$searchword\' $DATFILE") 
+                   ###&& die "bgrep: Problem starting $ENV{EDITOR}.  Exiting.\n";
+                   && die "bgrep: Problem starting vim.  Exiting.\n";
+	print "\n";
+} else {
+  print STDERR "No matches found in $searchdir";
+  print STDERR " or its subdirs." if $opt_r == 1;
+  print STDERR "\n";
+  $rc = 1;  # failure
+}
+
+END {
+  unlink $DATFILE;
+  exit $rc;
+}
+
+
+#############################################################################
+
+# Recursive.
+# Capture each file's fully qualified path in @files_in_dir. Wanted() is
+# mandatory.
+sub Wanted {
+  $x = $File::Find::dir . '/' . $_;
+  next if -l $x;  # TODO won't skip symlinks
+  next if $x =~ /\.bak\d+$/;
+  push @files_in_dir, $x;
+}
+
+
+
+sub Norecurse {
+  my $searchdir = $_[0];
+
+  opendir(TOPLVLDIR, "$searchdir") or die "Can't open $searchdir: $!\n";
+  while ( defined($file = readdir(TOPLVLDIR)) ) {
+    next if $file =~ /^\.\.?$/;
+    next if $file =~ /.*bak$/;
+    # Without this, unless you are in the PWD, Perl can't determine if it's a
+    # textfile in the grep -T line.  This assures the full path of each file
+    # in the directory of interest.
+    $file = $searchdir . $file;
+    # Avoid infinite loop when no regular files exist in the PWD.
+    push(@files_in_dir, $file) if ( -f $file );
+  }
+
+  # Filter out Adobe file that should be considered binaries but squeeze
+  # through grep -T as text.
+  @files_in_dir = grep { !/\.pdf$/ } @files_in_dir;
+
+  return @files_in_dir;
+}
+
+
+sub Usage {
+  my $filename = $1 if $0 =~ m|[/\\:]+([^/\\:]+)$|;
+  print STDERR <<"EOT";
+Usage: $filename [-hcr] PERLREGEX [DIRECTORY]
+       e.g. bgrep 'last\\s+(updated|modified)'
+Synopsis:
+  greps textfiles in a DIRECTORY looking for a PERLREGEX (regex must be quoted
+  if using metacharacters).  Defaults to pwd and case insensitive searching.
+  Returns results in vi.
+    -h    this usage message
+    -c    search case sensitively
+    -r    recursive from PWD ($ENV{PWD} in this case)
+          Do not specify a directory if using this switch
+ 
+ Won't accept wildcarding for textfile names, use this in Vim instead--
+ :grep findme *.txt  <---then use :cn to go from file to file
+EOT
+  exit 1;
+}

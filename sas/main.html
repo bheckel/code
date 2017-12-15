@@ -1,0 +1,206 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+ *     Name: /websrv/sasweb/nchs/main.html
+ *
+ *  Summary: Main welcome page for the NCHS Query System.
+ *
+ *  Created: Thu 06 Feb 2003 12:36:55 (Bob Heckel)
+ *
+ *      RCS:
+ *           $Log: main.html,v $
+ *           Revision 1.7  2003/12/19 15:50:11  bqh0
+ *           Added natality non-reviser and reviser query capability.
+ *           Added output to MS Excel option to avoid IE URL length limitation.
+ *           Improved interface.
+ *
+ *           Revision 1.6  2003/09/19 19:57:08  bqh0
+ *           Fix two-way display of >1 year in output.  Add century to revisers.
+ *           Fix educ edit dropdown example.  Cleanup age fields on non-rev and revisers.
+ *           Changes based on Brenda's review.
+ *
+ *           Revision 1.5  2003/08/26 18:13:27  bqh0
+ *           Removed pages describing Filetype buttons.  Using "tool tips" style for
+ *           an improved UI.
+ *
+ *           Revision 1.4  2003/08/18 21:06:39  bqh0
+ *           Added variables to two-way, fixed bugs in two-way, improved interface,
+ *           added multirace checkboxes to bottom of reviser page.
+ *
+ *           Revision 1.3  2003/08/08 21:09:54  bqh0
+ *           Created separate pages for reviser states.
+ *
+ *           Revision 1.2  2003/07/09 13:54:45  bqh0
+ *           Initial mods for dev version.
+ *
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+  <META NAME="author" CONTENT="Robert S. Heckel Jr. (BQH0)">
+  <META NAME="generator" CONTENT="vim">
+  <TITLE>NCHS SAS IntrNet Web Query System</TITLE>
+  <SCRIPT>
+    /* Adapted from Text Link/Image Map Tooltip Script- portions © Dynamic Drive */
+    if (!document.layers&&!document.all&&!document.getElementById)
+      event="test"
+
+    function ShowTip(current, e, text) {
+      if ( document.all || document.getElementById ){
+        thetitle=text.split('<BR>')
+        if ( thetitle.length > 1 ) {
+          thetitles=''
+          for ( i=0;i<thetitle.length;i++ )
+            thetitles+=thetitle[i]
+          current.title=thetitles
+        } else {
+          current.title=text
+        }
+      }
+      else if ( document.layers ) {
+        document.tooltip.document.write('<LAYER BGCOLOR="white" STYLE="border:1px solid black;font-size:12px;">'+text+'</LAYER>')
+        document.tooltip.document.close()
+        document.tooltip.left=e.pageX+5
+        document.tooltip.top=e.pageY+5
+        document.tooltip.visibility="show"
+      }
+    }
+
+    function HideTip(){
+      if ( document.layers )
+        document.tooltip.visibility="hidden"
+    }
+
+    var neww = null;
+    function WritePopup(msg) {
+      // Open a window the first time we call this, or after an existing neww
+      // window has been closed.
+      if ( (neww == null) || (neww.closed) ) { 
+          neww = window.open('','neww','width=325,height=30,resizable');
+          // Open a document in the window.
+          neww.document.open;
+      }
+        neww.document.write(msg);
+        // Mandatory to flush output to window otherwise appears that nothing
+        // happened.
+        neww.document.close();
+    }
+  </SCRIPT>
+</HEAD>
+<BODY>
+  <CENTER><IMG SRC="intrnet/nchs.jpg" BORDER="1">
+  <BR>
+  <H3><I>NCHS Web Query System</I></H3></CENTER>
+  <!-- Use POST for password security purposes, GET to debug. -->
+  <FORM ACTION="http://mainframe.cdc.gov/sasweb/cgi-bin/broker" METHOD="GET">
+    <INPUT TYPE="hidden" NAME="_DEBUG" VALUE="0">
+    <INPUT TYPE="hidden" NAME="_SERVICE" VALUE="default">
+    <INPUT TYPE="hidden" NAME="_PROGRAM" VALUE="nchscode.Dwiz.sas">
+
+    <!-- User ID box -->
+    <TABLE WIDTH=90% ALIGN="center" BORDER=0 CELLSPACING=0 CELLPADDING=1>
+      <TR><TD BGCOLOR="#999999"><TABLE WIDTH="100%" ALIGN="center" BORDER=0 
+                                     CELLSPACING=0 CELLPADDING=0>
+                                <TR><TD BACKGROUND="intrnet/y.gif">
+                                  <FONT COLOR=#333333>
+                                  <I><B>&nbsp;Enter User ID:</B></I></FONT>
+                              </TABLE>
+    </TABLE>
+    <TABLE BORDER=1 ALIGN="center" WIDTH="90%" BGCOLOR="#FFFFFF" CELLSPACING=0 
+           CELLPADDING=5>
+      <TR><TD><CENTER><INPUT TYPE="text" NAME="userid" VALUE=""></CENTER>
+    </TABLE>
+    <BR>
+
+    <!-- Password box -->
+    <BR>
+    <TABLE BORDER=0 ALIGN="center" WIDTH="90%" CELLSPACING=0 CELLPADDING=1>
+      <TR><TD BGCOLOR="#999999"><TABLE WIDTH="100%" ALIGN="center" BORDER=0 
+                                     CELLSPACING=0 CELLPADDING=0>
+                                <TR><TD BACKGROUND="intrnet/y.gif">
+                                <FONT COLOR=#333333>
+                                <I><B>&nbsp;Enter Password:</B></I></FONT>
+                              </TABLE>
+    </TABLE>
+    <TABLE BORDER=1 ALIGN="center" WIDTH="90%" BGCOLOR="#FFFFFF" CELLSPACING=0 
+           CELLPADDING=5>
+      <TR><TD><CENTER><INPUT TYPE="password" NAME="passwd" VALUE=""></CENTER>
+    </TABLE>
+    <BR>
+
+    <!-- Filetype box -->
+    <BR>
+    <TABLE WIDTH=90% ALIGN="center" BORDER=0 CELLSPACING=0 CELLPADDING=1>
+      <TR><TD BGCOLOR="#999999"><TABLE WIDTH="100%"  ALIGN="center" BORDER=0 
+                                     CELLSPACING=0 CELLPADDING=0>
+                                <TR><TD BACKGROUND="intrnet/y.gif">
+                                <FONT COLOR=#333333>
+                                <I><B>&nbsp;Select Filetype:</B></I></FONT>
+                              </TABLE>
+    </TABLE>
+    <TABLE BORDER=1 ALIGN="center" WIDTH="90%" BGCOLOR="#FFFFFF" CELLSPACING=0 
+           CELLPADDING=5>
+      <TR><TD><CENTER>
+      <INPUT TYPE="radio" NAME="type" VALUE="natmer" CHECKED>
+        <DIV ID="tooltip" STYLE="position:absolute;visibility:hidden"></DIV>
+         
+        <A HREF="#" onMouseover="ShowTip(this,event,'Run Natality queries based on the NCHS 1989 Revision')" 
+                   onMouseout="HideTip()"
+                   onClick="WritePopup('Select this radio button to specify criteria for Natality queries based on the NCHS 1989 Revision. Then click next.')">
+                   Natality</A>
+
+      <INPUT TYPE="radio" NAME="type" VALUE="mormer">
+        <A HREF="#" onMouseover="ShowTip(this,event,'Run Mortality queries based on the NCHS 1989 Revision')" 
+                   onMouseout="HideTip()"
+                   onClick="WritePopup('Select this radio button to specify criteria for Mortality queries based on the NCHS 1989 Revision. Then click Next.')">
+                   Mortality</A>
+
+      &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
+
+      <INPUT TYPE="radio" NAME="type" VALUE="rnatmer">
+        <A HREF="#" onMouseover="ShowTip(this,event,'Run Natality queries based on the NCHS 2003 Revision')" 
+                   onMouseout="HideTip()" 
+                   onClick="WritePopup('Select this radio button to specify criteria for Natality queries based on the NCHS 1989 Revision.  Then click Next.')">
+                   Natality Revisers</A>
+
+      <INPUT TYPE="radio" NAME="type" VALUE="rmormer">
+        <A HREF="#" onMouseover="ShowTip(this,event,'Run Mortality queries based on the NCHS 2003 Revision')" 
+                   onMouseout="HideTip()"
+                   onClick="WritePopup('Select this radio button to specify criteria for Mortality queries based on the NCHS 2003 Revision.  Then click Next.')">
+                   Mortality Revisers</A>
+      <BR>
+      <BR>
+      <INPUT TYPE="submit" VALUE="Next >">
+      </CENTER>
+    </TABLE>
+  </FORM>
+  <BR><BR><BR><BR><BR>
+  <CENTER><FONT SIZE="-2">
+  <!--   Borrowed from the mainframe login screen since we're essentially 
+         logging onto the mainframe. 
+  -->
+  This is a United States Govt. Computer System, which
+  may be accessed and used only for official govt. business by
+  authorized personnel.  Unauthorized access or use may subject
+  violators to criminal, Civil, and/or admin action. There is no
+  right to privacy on this system. All information on this computer
+  system may be monitored, intercepted, recorded, read, copied, and
+  shared by authorized personnel for official purposes including
+  criminal investigations. Access or use of this system, whether
+  authorized or unauthorized, constitutes consent to these terms.
+  </FONT>
+  <BR><BR><BR>
+
+  <HR WIDTH="40%">
+  <!-- TODO cascading style sheets -->
+  |&nbsp;&nbsp;
+  <A HREF="http://mainframe.cdc.gov/sasweb/nchs/help.html">Help</A>
+  &nbsp;&nbsp;
+  |&nbsp;&nbsp;
+  <A HREF="http://mainframe.cdc.gov/sasweb/nchs/contacts.html">Contacts</A>
+  &nbsp;&nbsp;
+  |&nbsp;&nbsp;
+  <A HREF="http://mainframe.cdc.gov/sasweb/nchs/main.html">Home</A>
+  &nbsp;&nbsp;|
+  </CENTER>
+  </BODY>
+</HTML>

@@ -1,0 +1,26 @@
+
+/* Class selectors as found using the DOM option on ODS excel ... */
+
+.body {
+  background:white;
+  font-family:arial;
+}
+
+.systemtitle {
+  font-weight:bold;
+  font-size:12pt;
+  font-family:arial;
+}
+
+.header {
+  background-color:teal;
+  color:beige;
+  font-family:arial;
+  border:1px solid black;
+}
+
+.data {
+  border:1px solid black;
+  font-family:arial;
+  background-color:beige;
+} 

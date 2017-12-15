@@ -1,0 +1,31 @@
+<SCRIPT LANGUAGE="JavaScript">
+<!--   Adapted: Tue, 13 Feb 2001 17:40:07 (Bob Heckel http://hotwired.lycos.com/webmonkey/98/29/index1a_page3.html?tw=programming) -->
+
+  var the_string = "monkey";
+
+  //                                  _ one PAST where you'd expect.
+  var clergy = the_string.substring(0,4);
+
+  var tool = the_string.substring(3,6);
+
+  document.write(the_string + "<BR>" + clergy + "<BR>" + tool + "<BR>");
+</SCRIPT>
+
+<SCRIPT LANGUAGE="JavaScript">
+  // E.g. type http://foo.bar.com/index.html
+  var the_url = prompt("What's the URL?","");
+
+  var lead_slashes = the_url.indexOf("//");
+
+  var domain_start = lead_slashes + 2;
+
+  var without_resource = the_url.substring(domain_start, the_url.length);
+
+  var next_slash = without_resource.indexOf("/");
+
+  var domain = without_resource.substring(0, next_slash);
+
+  document.write(the_url + "<BR>" + lead_slashes + "<BR>" + 
+                 domain_start + "<BR>" + without_resource + "<BR>" + 
+                 next_slash + "<BR>" + domain);
+</SCRIPT>

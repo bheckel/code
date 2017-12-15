@@ -1,0 +1,54 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+ *     Name: uncheck.js.html
+ *  Summary: Demo of manipulating checkboxes based on values of adjacent
+ *           checkboxes.
+ *           Good demo of iterating checkboxes.
+ *  Created: Tue 15 Jul 2003 15:17:54 (Bob Heckel)
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<HTML>
+<HEAD>
+  <SCRIPT Language="JavaScript">
+    function WhichCkd(c) {
+      if ( c.checked ) {
+        alert(c.name + " is checked " + c.value);
+      }
+    }
+    function Deselect(f, c) {
+      // Iterate the 3 checkboxes on form 'frm2'
+      for ( var i=0; i<f.length; i++ ) {
+        if ( c.checked == true && f.elements[i].name != c.name ) {
+          ///alert(f.elements[i].name + " is " + f.elements[i].value);
+          f.elements[i].checked = false;
+        }
+      }
+    }
+    function Select(f, c) {
+      for ( var i=0; i<f.length; i++ ) {
+        if ( c.checked == true && f.elements[i].name != c.name ) {
+          f.elements[i].checked = true;
+        }
+      }
+    }
+  </SCRIPT>
+</HEAD>
+<BODY>
+  <FORM NAME="frm">
+    Simple 'which is checked?' test:
+    <input type="checkbox" name="c1" value="yes" onClick="WhichCkd(this)">ckbox 1
+    <input type="checkbox" name="c2" value="yes" onClick="WhichCkd(this)">ckbox 2
+    <input type="checkbox" name="c3" value="yes" onClick="WhichCkd(this)">ckbox 3
+  </FORM>
+  <FORM NAME="frm2">
+    Deselect the others (if they're checked) when Only is checked:
+    <input type="checkbox" name="c11" value="yes">ckbox 1
+    <input type="checkbox" name="c22" value="yes">ckbox 2
+    <input type="checkbox" name="onlyme" value="yes" onClick="Deselect(document.frm2, this)">Only
+  </FORM>
+  <FORM NAME="frm3">
+    Select the others (if they're not checked) if All is checked:
+    <input type="checkbox" name="c11">ckbox 1
+    <input type="checkbox" name="c22">ckbox 2
+    <input type="checkbox" name="all" onClick="Select(document.frm3, this)">All
+  </FORM>
+</BODY>
+</HTML> 

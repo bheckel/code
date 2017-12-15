@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- HTML5 canvas demos -->
+  <!-- Adapted from diveintohtml5 -->
+  <head>
+    <script>
+      function boxprint() {
+        // Now you can easily find that <canvas> element in the DOM
+        var a_canvas = document.getElementById("a");
+        var a_context = a_canvas.getContext("2d");
+        a_context.fillRect(50, 25, 150, 100);
+      }
+      
+      function clearcanvas() {
+        var a_canvas = document.getElementById("a");
+        a_canvas.width = a_canvas.width;
+      }
+
+      function gridlines() {
+        var canvas = document.getElementById("b");
+        var context = canvas.getContext("2d");
+
+        //////////////
+        // Build grid
+        //
+        // First write it in "pencil"
+        for (var x=0.5; x<500; x+=10) {
+          context.moveTo(x, 0);
+          context.lineTo(x, 375);
+        }
+        for (var y = 0.5; y < 375; y += 10) {
+          context.moveTo(0, y);
+          context.lineTo(500, y);
+        }
+
+        // Then write it in "ink"
+        context.strokeStyle = "#eee";
+        context.stroke();
+
+        // Horizontal line with gap in middle for later text insertion 
+        context.beginPath();
+        context.moveTo(0, 40);
+        context.lineTo(240, 40);
+        context.moveTo(260, 40);
+        context.lineTo(500, 40);
+        context.moveTo(500, 40);
+        context.lineTo(495, 45);
+        // Vertical line with gap in middle for later text insertion 
+        context.moveTo(60, 0);
+        context.lineTo(60, 153);
+        context.moveTo(60, 173);
+        context.lineTo(60, 375);
+        context.moveTo(65, 370);
+        context.lineTo(60, 375);
+        context.lineTo(55, 370);
+
+        context.strokeStyle = "#000";
+        context.stroke();
+        //////////////
+
+        context.font = "bold 12px sans-serif";
+        context.fillText("x", 248, 43);
+        context.fillText("y", 58, 165);
+
+        context.textAlign = "right";
+        context.textBaseline = "bottom";
+        context.fillText("( 500 , 375 )", 492, 370);
+
+        // Draw 2 "dots"
+        context.fillRect(0, 0, 3, 3);
+        context.fillRect(497, 372, 3, 3);
+      }
+
+      function gradient() {
+        var canvas = document.getElementById("c");
+        var context = canvas.getContext("2d");
+
+        // Fade left to right
+        ///var my_gradient = context.createLinearGradient(0, 0, 300, 0);
+        // Diagonal
+        ///var my_gradient = context.createLinearGradient(0, 0, 300, 225);
+        // Fade bottom to top
+        var my_gradient = context.createLinearGradient(0, 0, 0, 225);
+
+
+        my_gradient.addColorStop(0, "black");
+        my_gradient.addColorStop(1, "white");
+
+        // Write it to screen
+        context.fillStyle = my_gradient;
+        context.fillRect(0, 0, 300, 225);
+      }
+
+    </script>
+  </head>
+  <body>
+    <div id="bb"><p onclick="boxprint()">blackbox inside canvas</p></div>
+    <canvas id="a" width="300" height="225"></canvas>
+
+    <div id="r"><p onclick="clearcanvas()">reset blackbox</p></div>
+
+    <hr />
+
+    <div id="grid"><p onclick="gridlines()">draw grid</p></div>
+    <canvas id="b" width="500" height="375"></canvas>
+
+    <hr />
+
+    <div id="gradient"><p onclick="gradient()">draw gradient</p></div>
+    <canvas id="c" width="300" height="225"></canvas>
+  </body>
+</html>  

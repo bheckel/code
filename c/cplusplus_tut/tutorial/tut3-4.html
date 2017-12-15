@@ -1,0 +1,268 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 3.4, Dynamic memory.</TITLE>
+<META NAME="description" CONTENT="C++ operators new and delete. Dynamic memory in ANSI-C using stdlib.h: malloc, calloc, realloc and free">
+<META NAME="keywords" CONTENT="cstdlib pointer NULL">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 3.4 </FONT><BR>
+ <FONT SIZE=5><B> Dynamic memory. </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<p>
+Until now, in our programs, we have only had as much memory as we have requested in
+declarations of variables, arrays and other objects that we included, having
+the size of all of them to be fixed before the execution of the program.  But, What
+if we need a variable amount of memory that can only be determined during
+the program execution (runtime)?, for example, in case that we need an user input
+to determine the necessary amount of space.
+<p>
+The answer is <i>dynamic memory</i>, for which C++ integrates the operators
+<i>new</i> and <i>delete</i>.
+<P>
+<TABLE><TR><TD BGCOLOR="#BFFFBF">
+<IMG SRC="icoc-cpp.gif" ALIGN="left">
+Operators <I><B>new</B></I> and <I><B>delete</B></I> are exclusive of C++. More
+ahead in this same section are shown the C equivalents for these operators.
+</TD></TR></TABLE>
+<p>
+<b>Operators <i>new</i> and <I>new[ ]</I></b><br>
+In order to request dynamic memory it exists the operator <b>new</b>.
+<i>new</i> goes followed by a data <i>type</i> and optionally the number of elements
+required within brackets <tt>[]</tt>. It returns a pointer to the beginning of the
+new block of assigned memory.  Its form is:
+<blockquote><tt>
+<i>pointer</i><b> = new </b><i>type</i>
+</tt></blockquote>
+or
+<blockquote><tt>
+<i>pointer</i><b> = new </b><i>type</i><b> [</b><i>elements</i><b>]</b>
+</tt></blockquote>
+The first expression is used to assign memory to contain one single element of <I>type</I>.
+The second one is used to assign a block (an array) of elements of <I>type</I>.<BR>
+For example:
+<blockquote><tt>
+int * bobby;<br>
+bobby = new int [5];<br>
+</tt></blockquote>
+in this case, the operating system has assigned space for 5 elements of type
+<tt><b>int</b></tt> in the heap and it has returned a pointer to its beginning
+that has been assigned to <tt><b>bobby</b></tt>. Therefore, now, <tt><b>bobby</b></tt>
+points to a valid block of memory with space for 5 <tt><b>int</b></tt> elements.
+<blockquote><img src="imgdyna1.gif"></blockquote>
+You could ask what is the difference between declaring a normal array and
+assigning memory to a pointer as we have just done. The most important one is that
+the <U>size</U> of an array must be a <U>constant</U> value, which limits its size
+to what we decide at the moment of designing the program before its execution,
+whereas the dynamic memory allocation allows to assign memory during the execution
+of the program using any variable, constant or combination of both as size.
+<p>
+The dynamic memory is generally managed by the operating system, and in the
+multitask interfaces can be shared between several applications, so there is a possibility
+that the memory exhausts. If this happens and the operating system cannot assign
+the memory that we request with the operator <tt><b>new</b></tt>, a null pointer
+will be returned. For that reason is recommendable to always verify if after a call to
+instruction <tt><b>new</b></tt> the returned pointer is null:
+<blockquote><tt>
+int * bobby;<br>
+bobby = new int [5];<br>
+if (bobby == NULL) {<br>
+&nbsp; <i>// error assigning memory.  Take measures.</i><br>
+&nbsp; };
+</tt></blockquote>
+<p>
+<b>Operator <i>delete</i>.</b><br>
+Since the necessity of dynamic memory is usually limited to concrete moments within
+a program, once this one is no longer needed it shall be freed so that it become
+available for future requests of dynamic memory. For this exists the operator
+<tt><b>delete</b></tt>, whose form is:<br>
+<blockquote><tt>
+<b>delete </b><i>pointer</i><b>;</b>
+</tt></blockquote>
+or
+<blockquote><tt>
+<b>delete [] </b><i>pointer</i><b>;</b>
+</tt></blockquote>
+The first expression should be used to delete memory alloccated for a single element, and
+the second one for memory allocated for multiple elements (arrays).
+In most compilers both expressions are equivalent and can be used
+without distinction, although indeed they are two different operators and
+so must be considered for operator overloading (we will see that on
+<A HREF="tut4-2.html">section 4.2</A>).
+
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// rememb-o-matic</I>
+#include &lt;iostream.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main ()
+{
+  char input [100];
+  int i,n;
+  long * l, total = 0;
+  cout &lt;&lt; "How many numbers do you want to type in? ";
+  cin.getline (input,100); i=atoi (input);
+  l= new long[i];
+  if (l == NULL) exit (1);
+  for (n=0; n&lt;i; n++)
+  {
+    cout &lt;&lt; "Enter number: ";
+    cin.getline (input,100); l[n]=atol (input);
+  }
+  cout &lt;&lt; "You have entered: ";
+  for (n=0; n&lt;i; n++)
+    cout &lt;&lt; l[n] &lt;&lt; ", ";
+  delete[] l;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>How many numbers do you want to type in? </B>5<BR>
+<B>Enter number : </B> 75<BR>
+<B>Enter number : </B> 436<BR>
+<B>Enter number : </B> 1067<BR>
+<B>Enter number : </B> 8<BR>
+<B>Enter number : </B> 32<BR>
+<B>You have entered: 75, 436, 1067, 8, 32,<BR>
+</B></TT>
+</TD></TR></TABLE>
+</CENTER>
+<p>
+This simple example that memorizes numbers does not have a limited amount of numbers
+that can be introduced, thanks to that we request to the system as much space as it is
+necessary to store all the numbers that the user wishes to introduce.
+
+<p>
+<TT><B>NULL</B></TT> is a constant value defined in manyfold C++ libraries specially
+designed to indicate null pointers. In case that this constant is not defined
+you can do it yourself by defining it to 0:
+<blockquote><tt>#define NULL 0</tt></blockquote>
+It is indifferent to put <tt>0</tt> or <tt>NULL</tt> when checking pointers, but
+the use of <tt>NULL</tt> with pointers is widely extended and it is
+recommended for greater legibility. The reason is that a pointer
+is barely compared or set directly to a numerical literal constant except precisely
+number 0, and this way this action is symbolically masked.
+
+<p>
+<h2>Dynamic memory in ANSI-C</h2>
+Operators <i>new</i> and <i>delete</i> are exclusive of C++ and they are not available
+in C language. In C language, in order to assign dynamic memory we have to resort
+to library <tt><b>stdlib.h</b></tt>. We are going to see them,
+since they are also valid in C++ and they are used in some existing programs.
+
+<p>
+<b>The function <i>malloc</i></b><br>
+It is the generic function to assign dynamic memory to pointers.  Its prototype is:
+<blockquote><tt>
+<b>void * malloc (size_t </b><i>nbytes</i><b>);</b>
+</tt></blockquote>
+where <tt><i>nbytes</i></tt> is the number of bytes that we want to be assigned to the
+pointer. The function returns a pointer of type <tt>void*</tt>, reason why we have
+to <i>type cast</i> the value to the type of the destination pointer, for example:
+<blockquote><tt>
+ char * ronny;<br>
+ ronny = (char *) malloc (10);
+</tt></blockquote>
+This assigns to <tt>ronny</tt> a pointer to an usable block of 10 bytes. When we want
+to assign a block of data of a different type other than char (different from 1 byte)
+we must multiply the number of elements desired by the size of each element.
+Luckyly we have at our disposition the operator <i><tt>sizeof</tt></i>, that returns
+the size of a data type of a concrete datum.
+<blockquote><tt>
+ int * bobby;<br>
+ bobby = (int *) malloc (5 * sizeof(int));
+</tt></blockquote>
+This piece of code assigns to <tt>bobby</tt> a pointer to a block of 5 integers
+of type <i>int</i>, this size can be equal to 2, 4 or more bytes according to the system
+where the program is compiled.
+
+<p>
+<b>The function <i>calloc</i>.</b><br>
+<tt><i>calloc</i></tt> is very similar to <tt>malloc</tt> in its operation, its main
+difference is in its prototype:
+<blockquote><tt>
+<b>void * calloc (size_t </b><i>nelements</i><b>, size_t </b><i>size</i><b>);</b>
+</tt></blockquote>
+since it admits 2 parameters instead of one.  These two parameters are multiplied
+to obtain the total size of the memory block to be assigned.  Usually the first parameter
+(<tt><i>nelements</i></tt>) is the number of elements and the second one
+(<tt><i>size</i></tt>) serves to specify the size of each element.  For example,
+we could define <tt>bobby</tt> with <tt><i>calloc</i></tt> thus:
+<blockquote><tt>
+ int * bobby;<br>
+ bobby = (int *) calloc (5, sizeof(int));
+</tt></blockquote>
+Another difference between <TT><B>malloc</B></TT> and <TT><B>calloc</B></TT> is that
+<TT><B>calloc</B></TT> initializates all its elements to <TT>0</TT>.
+
+<p>
+<b>The function <i>realloc</i>.</b><br>
+It changes the size of a block of memory already assigned to a pointer.
+<blockquote><tt>
+<b>void * realloc (void * </b><i>pointer</i><b>, size_t </b><i>size</i><b>);</b>
+</tt></blockquote>
+<tt><i>pointer</i></tt> parameter receives a pointer to an already assigned
+memory block or a null pointer, and <tt><i>size</i></tt> specifies the new size that
+the memory block shall have. The function assigns <tt><i>size</i></tt> bytes of memory
+to the pointer.  The function may need to change the location of the memory block for
+that the new size can fit, in that case the present content of the block is copied to the
+new one to guarantee that the existing data is not lost. The new pointer is returned
+by the function.  If it has not been posible to assign the memory block with the new size
+it returns a null pointer but the <tt><i>pointer</i></tt> specified as parameter
+and its content remains unchanged.
+
+<p>
+<b>The function <i>free</i>.</b><br>
+It releases a block of dynamic memory previously assigned using
+<tt><b><i>malloc</i></b></tt>, <tt><b><i>calloc</i></b></tt> or
+<tt><b><i>realloc</i></b></tt>.
+<blockquote><tt>
+<b>void free (void * </b><i>pointer</i><b>);</b>
+</tt></blockquote>
+This function must only be used to release memory assigned with functions
+<tt><b><i>malloc</i></b></tt>, <tt><b><i>calloc</i></b></tt> and
+<tt><b><i>realloc</i></b></tt>.
+
+<P>
+You may obtain more information about these functions in the
+<A HREF="http://www.cplusplus.com/ref/cstdlib/">C++ reference for cstdlib</A>.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut3-3.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>3-3. Pointers</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut3-5.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>3-5. Structures.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

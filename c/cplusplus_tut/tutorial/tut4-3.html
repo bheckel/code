@@ -1,0 +1,482 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 4.3, Relationships between Classes</TITLE>
+<META NAME="description" CONTENT="friend functions and classes. Inheritance between classes. Constructors and destructors with inheritance. Multiple inheritance.">
+<META NAME="keywords" CONTENT="public protected private friend :">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 4.3 </FONT><BR>
+ <FONT SIZE=5><B>Relationships between classes</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<P>
+<H2>Friend functions (<TT>friend</TT> keyword)</H2>
+In the previous section we have seen that there were three levels of internal protection
+for the different members of a class: <B>public</B>, <B>protected</B> and <B>private</B>.
+In the case of members
+<I>protected</I> and <I>private</I>, these could not be accessed from outside the same
+class at which they are declared.  Nevertheless, this rule can be transgressed with the
+use of <TT><I>friend</I></TT> keyword in a class, by means of which we can allow
+an external function to gain access to the <TT><B>protected</B></TT> and
+<TT><B>private</B></TT> members of a class.
+<P>
+In order to allow an external function to have access to the <TT><B>private</B></TT>
+and <TT><B>protected</B></TT> members of a class we have to declare 
+the prototye of the external function that will gain access preceded by
+the keyword <TT><B>friend</B></TT> within the class declaration that shares its members.
+In the following example we declare the friend function <TT><B>duplicate</B></TT>:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// friend functions</I>
+#include &lt;iostream.h&gt;
+
+class CRectangle {
+    int width, height;
+  public:
+    void set_values (int, int);
+    int area (void) {return (width * height);}
+    friend CRectangle duplicate (CRectangle);
+};
+
+void CRectangle::set_values (int a, int b) {
+  width = a;
+  height = b;
+}
+
+CRectangle duplicate (CRectangle rectparam)
+{
+  CRectangle rectres;
+  rectres.width = rectparam.width*2;
+  rectres.height = rectparam.height*2;
+  return (rectres);
+}
+
+int main () {
+  CRectangle rect, rectb;
+  rect.set_values (2,3);
+  rectb = duplicate (rect);
+  cout &lt;&lt; rectb.area();
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>24</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+From within the <TT><B>duplicate</B></TT> function, that is friend of
+<TT><B>CRectangle</B></TT>, we have been able to access
+to the members <TT><B>width</B></TT> and <TT><B>height</B></TT> of different objects
+of type <TT><B>CRectangle</B></TT>. Notice that neither in the declaration of
+<TT><B>duplicate()</B></TT> nor in its later use in <TT><B>main()</B></TT>
+we have considered <TT><B>duplicate</B></TT> as a member of class
+<TT><B>CRectangle</B></TT>. It isn't.
+<P>
+The friend functions can serve, for example, to conduct operations between two different
+classes. Generally the use of friend functions is out of an object-oriented programming
+methodology, so whenever it is possible better try to use members of the own class to make
+the process. Like in the previous example, in which would have been shorter to integrate
+<TT><B>duplicate()</B></TT> within the class.
+
+<P>
+<H2>Friend classes (<TT>friend</TT>)</H2>
+Like we have the possibility to define a friend function, we can also define a class
+as friend of another one, allowing that the second one accesses to the
+<TT><B>protected</B></TT> and <TT><B>private</B></TT> members of the first one.
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// friend class</I>
+#include &lt;iostream.h&gt;
+
+class CSquare;
+
+class CRectangle {
+    int width, height;
+  public:
+    int area (void)
+      {return (width * height);}
+    void convert (CSquare a);
+};
+
+class CSquare {
+  private:
+    int side;
+  public:
+    void set_side (int a)
+      {side=a;}
+    friend class CRectangle;
+};
+
+void CRectangle::convert (CSquare a) {
+  width = a.side;
+  height = a.side;
+}
+  
+int main () {
+  CSquare sqr;
+  CRectangle rect;
+  sqr.set_side(4);
+  rect.convert(sqr);
+  cout &lt;&lt; rect.area();
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>16</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+In this example we have declared <TT><B>CRectangle</B></TT> as friend of
+<TT><B>CSquare</B></TT> for that <TT><B>CRectangle</B></TT> can access to the
+<TT><B>protected</B></TT> and <TT><B>private</B></TT> members of <TT><B>CSquare</B></TT>,
+more concretely to <TT><B>CSquare::side</B></TT>, that defines the square side width.
+<P>
+You may also see as a new thing the first instruction of the program, that is the empty
+prototype of class <TT><B>CSquare</B></TT>, this is necessary because within the declaration
+of <TT><B>CRectangle</B></TT> we refer to <TT><B>CSquare</B></TT> (as a parameter
+in <TT><B>convert()</B></TT>). The definition of <TT><B>CSquare</B></TT> is included
+later, so if we did not include a previous definition for <TT><B>CSquare</B></TT>
+this class would not be visible from within the definition of <TT><B>CRectangle</B></TT>.
+<P>
+Consider that friendships are not corresponded if we do not explicitly specify it.
+In our <TT><B>CSquare</B></TT> example <TT><B>CRectangle</B></TT> is considered as a
+class friend, but <TT><B>CRectangle</B></TT> does not do the proper thing with
+<TT><B>CSquare</B></TT>, so <TT><B>CRectangle</B></TT> can access to the
+<TT><B>protected</B></TT> and <TT><B>private</B></TT> members of <TT><B>CSquare</B></TT>
+but not the reverse way.  Although nothing prevents us to declare also
+<TT><B>CSquare</B></TT> as friend of <TT><B>CRectangle</B></TT>.
+
+<P>
+<H2>Inheritance between classes</H2>
+An important feature of classes is the inheritance. This allows us to create an object
+derived from another one, so that it may include some of the other's members plus its own
+ones.
+For example, we are going to suppose that we want to declare a series of classes
+that describe polygons like our <TT><B>CRectangle</B></TT>, or like
+<TT><B>CTriangle</B></TT>. Both have certain common features, like for example,
+the one that both can be described by means of only two sides: height and base.
+<P>
+This could be represented in the world of classes with a class <TT><B>CPolygon</B></TT>
+from which we would derive the two referred ones,
+<TT><B>CRectangle</B></TT> and <TT><B>CTriangle</B></TT>.
+<blockquote ><IMG SRC="imgclas1.gif"></BLOCKQUOTE>
+The class <TT><B>CPolygon</B></TT> would contain members that are common for all
+polygons. In our case: <TT><B>width</B></TT> and <TT><B>height</B></TT>. And
+<TT><B>CRectangle</B></TT> and <TT><B>CTriangle</B></TT>
+would be its derived classes.
+<P>
+Classes derived from others inherit all the visible members of the base class.
+That means that if a base class includes a member <TT><B>A</B></TT> and we derive it
+to another class with another member called <TT><B>B</B></TT>, the derived class will
+contain both <TT><B>A</B></TT> and <TT><B>B</B></TT>.
+<P>
+In order to derive a class from another, we must use the operator <TT><B>:</B></TT> 
+(colon) in the declaration of the derived class in the following way:
+<blockquote ><TT>
+<B>class </B><I>derived_class_name</I><B>:  public</B> <I>base_class_name</I><B>;</B>
+</TT></BLOCKQUOTE>
+where <TT><I>derived_class_name</I></TT> is the name of the <I>derived</I> class and
+<TT><I>base_class_name</I></TT> is the name of the class on which is based.
+<TT><B>public</B></TT> may be replaced by any of the other access specifiers
+<TT><B>protected</B></TT> or <TT><B>private</B></TT>, and describes the access
+for the inherited members, as we will see right after this example:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// derived classes</I>
+#include &lt;iostream.h&gt;
+
+class CPolygon {
+  protected:
+    int width, height;
+  public:
+    void set_values (int a, int b)
+      { width=a; height=b;}
+  };
+
+class CRectangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height); }
+  };
+
+class CTriangle: public CPolygon {
+  public:
+    int area (void)
+      { return (width * height / 2); }
+  };
+  
+int main () {
+  CRectangle rect;
+  CTriangle trgl;
+  rect.set_values (4,5);
+  trgl.set_values (4,5);
+  cout &lt;&lt; rect.area() &lt;&lt; endl;
+  cout &lt;&lt; trgl.area() &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>20<BR>10</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+As you may see, objects of classes <TT><B>CRectangle</B></TT> and <TT><B>CTriangle</B></TT>
+contain all of them members of <TT><B>CPolygon</B></TT>, that are:
+<TT><B>width</TT></B>, <TT><B>height</B></TT> and <TT><B>set_values()</B></TT>.
+<P>
+The <TT><B>protected</B></TT> specifier is similar to <TT><B>private</B></TT>,
+its only difference indeed occurs when deriving classes.  When we derive a class,
+<TT><B>protected</B></TT> members of the base class can be used by other members of
+the derived class, nevertheless <TT><B>private</B></TT> member cannot.
+As we wanted that <TT><B>width</B></TT> and <TT><B>height</B></TT>
+have the ability to be manipulated by members of its derived classes
+<TT><B>CRectangle</B></TT> and <TT><B>CTriangle</B></TT> and not only by members of
+<TT><B>CPolygon</B></TT> we have used the <TT><B>protected</B></TT> access instead of
+<TT><B>private</B></TT>.
+<P>
+We can summarize the different access types according to whom can access to them 
+in the following way:
+<blockquote >
+<TABLE BORDER=1>
+<TR><TD BGCOLOR="silver" ALIGN="center"><B>Access</B></TD>
+ <TD BGCOLOR="silver" ALIGN="center"><TT>public</TT></TD>
+ <TD BGCOLOR="silver" ALIGN="center"><TT>protected</TT></TD>
+ <TD BGCOLOR="silver" ALIGN="center"><TT>private</TT></TD></TR>
+<TR><TD BGCOLOR="silver">members of the same class</TD>
+ <TD ALIGN="center">yes</TD>
+ <TD ALIGN="center">yes</TD>
+ <TD ALIGN="center">yes</TD></TR>
+<TR><TD BGCOLOR="silver">members of derived classes</TD>
+ <TD ALIGN="center">yes</TD>
+ <TD ALIGN="center">yes</TD>
+ <TD ALIGN="center"><FONT COLOR="red">no</FONT></TD></TR>
+<TR><TD BGCOLOR="silver">not-members</TD>
+ <TD ALIGN="center">yes</TD>
+ <TD ALIGN="center"><FONT COLOR="red">no</FONT></TD>
+ <TD ALIGN="center"><FONT COLOR="red">no</FONT></TD></TR>
+</TABLE></BLOCKQUOTE>
+where "<I>not-members</I>" represent any reference from outside the class,
+like for example from <TT><B>main()</B></TT>, from another class or from any function,
+either global and local ones.
+<P>
+In our example, the members inherited by <TT><B>CRectangle</B></TT> and
+<TT><B>CTriangle</B></TT> follow with the same access permission that in the base class
+<TT><B>CPolygon</B></TT>:
+<blockquote ><PRE>
+<TT>CPolygon::width</TT>           <FONT COLOR="green"><I>// protected access</I></FONT>
+<TT>CRectangle::width</TT>         <FONT COLOR="green"><I>// protected access</I></FONT>
+
+<TT>CPolygon::set_values()</TT>    <FONT COLOR="green"><I>// public access</I></FONT>
+<TT>CRectangle::set_values()</TT>  <FONT COLOR="green"><I>// public access</I></FONT>
+</PRE></BLOCKQUOTE>
+This is because we have derived a class from the other as <TT><B>public</B></TT>, remember:
+<blockquote ><TT>class CRectangle: <B>public</B> CPolygon;</TT></BLOCKQUOTE>
+this <TT><B>public</B></TT> keyword represents the <U>minimum</U> level of protection that
+the inherited members of the base class (<TT><B>CPolygon</B></TT>)
+must acquire in the new class (<TT><B>CRectangle</B></TT>). This minimum access level
+for the inherited members can be changed if instead of <TT><B>public</B></TT>
+we put <TT><B>protected</B></TT> or <TT><B>private</B></TT>, for example, supose that
+<TT><B>daughter</B></TT> is a class derived from <TT><B>mother</B></TT> that we defined
+thus:
+
+<blockquote ><TT>class daughter:  protected mother;</TT></BLOCKQUOTE>
+
+this would establish <TT><B>protected</B></TT> as the minimum access level for the members
+of <TT><B>daughter</B></TT> that it inherited from <TT><B>mother</B></TT>.
+That is, all members that were <TT><B>public</B></TT> in <TT><B>mother</B></TT>
+would become <TT><B>protected</B></TT> in <TT><B>daughter</B></TT>, that would be the
+minimum level which they can be inherited.  Of course, this would not restrict that
+<TT><B>daughter</B></TT> could have its own <TT><B>public</B></TT> members.
+The minimum level would only be established for the inherited members of
+<TT><B>mother</B></TT>.
+<P>
+The most common use of an inheritance level different from <TT><B>public</B></TT> is
+<TT><B>private</B></TT> level that serves to completely encapsulate the base class,
+since, in that case, nobody except the own class will be able to access to the members
+of the base class from which it is derived. Anyway, in most of cases classes they are
+derived as <TT><B>public</B></TT>.
+<P>
+If no access level is explicitly written <TT><B>private</B></TT> is assumed for classes
+created with <TT><B>class</B></TT> keyword and <TT><B>public</B></TT> for those created
+with <TT><B>struct</B></TT>.
+
+<P>
+<H2>What is inherited from the base class?</H2>
+In principle every member of base class is inherited by derived one but:<BR>
+<UL>
+<LI><B>Constructor and destructor</B>
+<LI><B><TT>operator=()</TT> member</B>
+<LI><B>friends</B>
+</UL>
+Although constructor and destructor of the base class are not inherited,
+the default constructor (i.e. constructor with no parameters) and the destructor
+of the base class are always called when a new object of a
+derived class is created or destroyed.
+<P>
+If the base class has no default constructor or
+you want that an overloaded constructor is called when a new derived object
+is created, you can specify it in
+each constructor definition of the derived class:
+<BLOCKQUOTE><TT>
+derived_class_name (parameters) : base_class_name (parameters) {}
+</TT></BLOCKQUOTE>
+For example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// constructors and derivated classes</I>
+#include &lt;iostream.h&gt;
+
+class mother {
+  public:
+    mother ()
+      { cout << "mother: no parameters\n"; }
+    mother (int a)
+      { cout << "mother: int parameter\n"; }
+};
+
+class daughter : public mother {
+  public:
+    daughter (int a)
+      { cout << "daughter: int parameter\n\n"; }
+};
+
+class son : public mother {
+  public:
+    son (int a) : mother (a)
+      { cout << "son: int parameter\n\n"; }
+};
+
+int main () {
+  daughter cynthia (1);
+  son daniel(1);
+  
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>mother: no parameters<BR>
+daughter: int parameter<BR>
+&nbsp;<BR>
+mother: int parameter<BR>
+son: int parameter<BR>
+</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+Observe the difference between which mother's constructor is called when
+a new <TT><B>daughter</B></TT> object is created and which when it is
+a <TT><B>son</B></TT> object. The difference is because the constructor
+declaration of <TT><B>daughter</B></TT> and <TT><B>son</B></TT>:
+
+<BLOCKQUOTE><TT><PRE>
+daughter (int a)          <I>// nothing specified: call default constructor</I>
+son (int a) : mother (a)  <I>// constructor specified: call this one</I>
+</PRE></TT></BLOCKQUOTE>
+
+<P>
+<H2>Multiple inheritance</H2>
+In C++ it is perfectly possible that a class inherits fields and methods from more than
+one class simply by separating the different base classes with commas in the declaration
+of the derived class. For example, if we had a specific class to print on screen
+(<TT><B>COutput</B></TT>) and we wanted that our classes <TT><B>CRectangle</B></TT> and
+<TT><B>CTriangle</B></TT> inherit also its members in addition to those of
+<TT><B>CPolygon</B></TT> we could write:
+<blockquote ><TT>
+class CRectangle:  public CPolygon, public COutput {<BR>
+class CTriangle:  public CPolygon, public COutput {
+</TT></BLOCKQUOTE>
+here is the complete example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// multiple inheritance</I>
+#include &lt;iostream.h&gt;
+
+class CPolygon {
+  protected:
+    int width, height;
+  public:
+    void set_values (int a, int b)
+      { width=a; height=b;}
+  };
+
+class COutput {
+  public:
+    void output (int i);
+  };
+
+void COutput::output (int i) {
+  cout &lt;&lt; i &lt;&lt; endl;
+  }
+
+class CRectangle: public CPolygon, public COutput {
+  public:
+    int area (void)
+      { return (width * height); }
+  };
+
+class CTriangle: public CPolygon, public COutput {
+  public:
+    int area (void)
+      { return (width * height / 2); }
+  };
+  
+int main () {
+  CRectangle rect;
+  CTriangle trgl;
+  rect.set_values (4,5);
+  trgl.set_values (4,5);
+  rect.output (rect.area());
+  trgl.output (trgl.area());
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>20<BR>10</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut4-2.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>4-2. Overloading operators. this. Static members.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut4-4.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>4-4. Virtual members. Abstraction. Polymorphism.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+
+</BODY>
+</HTML>

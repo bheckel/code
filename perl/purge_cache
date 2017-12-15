@@ -1,0 +1,237 @@
+#!/usr/bin/perl
+##############################################################################
+#    Name: purge_cache.pl
+#
+# Summary: Based on a directory tree and time to live (both obtained from a
+#          config file), delete aged file pairs from a temporary cache.
+#
+#          init= will always be there; viewed= may not.
+#
+#          If file has not been viewed in $LIFE days, assume it's ok to unlink
+#          it.  Also will unlink never-viewed files with an init time that is
+#          4 times $LIFE days or greater.
+#
+#          This program becomes less effective in Jan 2038.
+#
+#  Created: Tue 27 Feb 2001 09:54:48 (Bob Heckel)
+# Modified: Fri 01 Jun 2001 10:52:34 (Bob Heckel)
+##############################################################################
+
+use strict;
+use warnings;
+use Getopt::Std;
+use ConfLib;     # to parse directory and life
+use POSIX qw(strftime);
+
+our($opt_c, $opt_h);
+getopts('c:h');
+
+use constant DEBUG  => 0;
+use constant CFGDAT => './config.dat';
+###use constant CFGDAT => '/webshop/IWS/bin/config.dat';
+
+Usage(CFGDAT) if $opt_h;
+
+my ($CACHEDIR, $LIFE) = Setup(CFGDAT);
+die "Error during Setup().\n" unless ( $CACHEDIR && $LIFE );
+
+my @CACHEFILES = Traverse($CACHEDIR);
+die "Error during Traverse().\n" unless @CACHEFILES;
+
+# File extension, file extension, patterns in .cf to match, files to examine.
+my $RC = Reap($LIFE, '.cf', '.df', '^init=(\d+)$', '^viewed=(\d+)$', 
+                                                                 @CACHEFILES);
+die "Error during Reap().\n" unless $RC;
+
+exit(0);  # if we haven't died anywhere along the way
+
+
+# Obtain parameters from config file.
+sub Setup {
+  my $configdat        = shift;
+
+  my $secthdr          = 'main';
+  my $keydir           = 'pendingCacheDir';
+  my $keylife          = 'pendingCacheLife';
+  my $pendingCacheDir  = undef;
+  my $pendingCacheLife = undef;
+
+  $configdat = $opt_c if $opt_c;
+
+  my $cfg = new ConfLib;
+  $cfg->load($configdat) 
+                  || die "$0: in Setup(), can't open file $configdat: $!\n";
+  $pendingCacheDir  = $cfg->get($secthdr, $keydir);
+  $pendingCacheLife = $cfg->get($secthdr, $keylife);
+
+  return $pendingCacheDir, $pendingCacheLife;
+}
+
+
+# Gather directory tree files.
+sub Traverse {
+  # Perpetrate unspeakable evil.
+  no strict 'refs';
+  # Twice.
+  no strict 'vars';
+  my $dir = shift;
+
+  opendir($dir, $dir) || die "Cannot open $dir: $!";
+  
+  while ( my $dirent = readdir($dir) ) {
+    # Throw out '.' and '..'
+    next if (($dirent eq ".") || ($dirent eq ".."));
+
+    my $path = $dir."/".$dirent;
+    push(@path, $path);
+    
+    # Recurse for directories.
+    Traverse($path) if (-d $path);
+  }
+  closedir($dir);
+  
+  return @path;
+}
+
+
+sub Reap {
+  my $daystolive = shift;
+  my $ext1       = shift;
+  my $ext2       = shift;
+  # E.g. ^init=(\d+)$
+  my $initregex  = shift;
+  # E.g. ^viewed=(\d+)$
+  my $viewregex  = shift;
+  my @allfiles   = @_;
+
+  my @cf               = ();
+  my $thresh_viewed    = UnixDtPast($daystolive);
+  # Quadruple life on jobs not yet viewed by user.
+  my $thresh_notviewed = UnixDtPast($daystolive, 4);
+  my $rc1              = 0;
+  my $rc2              = 0;
+  my $killed           = 0;
+  my $killedunview     = 0;
+
+  foreach ( @allfiles ) {
+    push(@cf, $_) if /$ext1$/;
+  }
+
+  foreach my $cf_file ( @cf ) {
+    my $holdfile     = undef;
+    my $holdtime     = undef;
+    my $flag         = 0;
+    open(FILE, $cf_file) || die "$0: can't open file $_: $!\n";
+    while ( <FILE> ) {
+      # E.g. ^init=(\d+)$
+      if ( /$initregex/o ) {
+        # Use this if don't find a viewed= line later in FILE.
+        $holdfile = $cf_file;
+        $holdtime = $1;
+      }
+      # E.g. ^viewed=(\d+)$
+      if ( /$viewregex/o ) {
+        # Found a viewed= line, so don't need init= for this FILE.
+        $flag = 1;
+        my $viewtime = $1;
+        if ( $viewtime < $thresh_viewed ) {
+          # Sanity check.
+          die "Reap() error1: Unix time is somehow $viewtime\n"  
+                                                    if $viewtime < 900000000;
+          $rc1 = Purge($cf_file, $ext1, $ext2);
+          # Count number of pairs unlinked.
+          $rc1 == 0 ? $killed++ : die "Purge error.  Exiting.\n";
+        }
+      }
+    }
+
+    unless ( $flag ) {
+      if ( $holdtime < $thresh_notviewed ) {
+        # Sanity check.
+        die "Reap() error2: Unix time is somehow < $holdtime\n" 
+                                                    if $holdtime < 900000000;
+        $rc2 = Purge($holdfile, $ext1, $ext2);
+        # Count number of pairs unlinked.
+        $rc2 == 0 ? $killedunview++ : die "Purge error.  Exiting.\n";
+      }
+    }
+    close FILE;
+  }
+
+  ##################
+  # Status reports on zero or more pairs deleted.
+  my $fmtdt = strftime("%b %d", localtime($thresh_viewed));
+  my $runfrom = undef;
+
+  $ENV{HOSTNAME} ? ($runfrom = "on $ENV{HOSTNAME}") : ($runfrom = '(cron job)');
+
+  print "$0 $runfrom reaped $killed pair  -->\n   (thresh ", 
+        $fmtdt, ") at ", scalar localtime, "\n";
+
+  if ( $killedunview ) {
+    $fmtdt = strftime("%b %d", localtime($thresh_notviewed));
+    print "$0 $runfrom reaped $killedunview UNVIEWED pair -->\n" .
+          "   (thresh ", $fmtdt, ") at ", scalar localtime, "\n";
+  }
+  #
+  ##################
+
+  return 1;
+}
+
+
+sub Purge {
+  my $cf_file = shift;
+  my $ext1    = shift;
+  my $ext2    = shift;
+
+  my $failure = 1;
+
+  (my $df_file = $cf_file) =~ s/$ext1$/$ext2/;
+
+  warn "$0: A $ext1 exists without a $ext2!!  Continuing.\n" 
+                                                         unless -e $df_file;
+
+  if ( ! DEBUG ) {
+    # Remove expired pairs.
+    unlink($cf_file) && ($failure = 0);  # something unusual if it fails
+    unlink($df_file)           # ok if it doesn't exist for some reason
+  } elsif ( DEBUG ) {
+    $failure = 0; 
+    warn "DEBUG>Would have unlinked:\n";
+    my $f1 = $1 if $cf_file =~ m|[/\\:]+([^/\\:]+)$|;
+    my $f2 = $1 if $df_file =~ m|[/\\:]+([^/\\:]+)$|;
+    warn "DEBUG>$f1 / $f2<DEBUG\n\n";
+  }
+
+  return $failure;
+}
+
+
+# Calc Unix date $days in the past.
+sub UnixDtPast {
+  my $days       = shift;
+  my $multiplier = shift;
+
+  $multiplier ||= $multiplier = 1;
+  my $unixseconds = time() - ($days * 60 * 60 * 24 * $multiplier);
+
+  return $unixseconds;
+}
+
+
+sub Usage {
+  my $config = shift;
+
+  my $filename = $1 if $0 =~ m|[/\\:]+([^/\\:]+)$|;
+  print <<"EOT";
+Usage: $filename [OPTION] [CONFIGFILE]
+  Synopsis:
+    Purges temporary files (.cf and .df) based on their age.  
+    Age criteria is obtained from $config
+
+    -h      display this help message and exit
+EOT
+  exit(-1);
+}
+

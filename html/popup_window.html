@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Modified: Fri 05 Dec 2003 13:44:34 (Bob Heckel) -->
+<HTML>
+<HEAD>
+  <TITLE>Pop up window test</TITLE>
+  <META NAME="author" CONTENT="Robert S. Heckel Jr.">
+  <SCRIPT LANGUAGE=JavaScript> 
+    var neww = null;
+    function WritePopup(msg) {
+      // Open a window the first time we call this, or after an existing neww
+      // window has been closed.
+      if ( (neww == null) || (neww.closed) ) { 
+          neww = window.open('','neww','width=450,height=250,resizable');
+          // Open a document in the window.
+          neww.document.open;
+      }
+        neww.document.write(msg);
+        // Mandatory to flush output to window otherwise appears that nothing
+        // happened.
+        neww.document.close();
+    }
+  </SCRIPT>
+</HEAD>
+
+<BODY>
+  Click <A HREF="#righthere">this</A>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  <BR>
+  to go <A NAME="righthere">to this spot</A>
+  <BR>
+  then <A HREF="#" onClick="window.open('http://47.143.212.20', 'fooname')">click me</A>
+  to popup a window and navigate to a new page 
+  or <A HREF="#" onClick="WritePopup('hello world')">click me</A> to open 
+  a popup window.
+</BODY>
+</HTML>

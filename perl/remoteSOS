@@ -1,0 +1,52 @@
+#!/usr/local/bin/perl
+##############################################################################
+#   Script: remoteSOS
+#  Adapted: Mon, 19 Jun 2000 10:43:55 (Bob Heckel -- from Cool Tricks Lincoln
+#                                      Stein)
+# Modified: Thu, 16 Nov 2000 15:40:48 (Bob Heckel)
+##############################################################################
+
+use LWP::Simple;
+
+%SERVERS = (
+           'CAD File grserver' => 'http://47.143.210.230',
+           'oradev server'     => 'http://47.143.208.108'
+           );
+$MAIL          =  '/usr/sbin/sendmail';
+$MAIL_FLAGS    =  '-t -oi';
+$NAME          =  'Bob';
+$WEBMASTER     =  'robertheckel@solectron.com';
+$WEBMASTERHOME =  'rsh@technologist.com';
+
+foreach (sort keys %SERVERS) {
+  sos($_) unless head($SERVERS{$_});
+}
+
+sub sos {
+  my $server = shift;
+
+  open(MAIL,"| $MAIL $MAIL_FLAGS") || die "mail: $!";
+  my $date = localtime();
+  my @minhour = (localtime())[1..2];
+  my $time = sprintf("Time %02d:%02d", $minhour[1], $minhour[0]);
+  print MAIL <<EOT;
+To: $WEBMASTER, $WEBMASTERHOME
+From: httpd <noone\@nowhere.com>
+Subject: $server is unreachable ($time)
+
+$NAME,
+
+I tried to call $server at $date but there was
+no sign of life.  This could mean that the server
+running this Perl script, $0
+has lost its network connection or that the $server 
+httpd daemon has actually died.  Try 
+'$ ps -eaf | grep httpd' or '$ ps -aux | grep httpd first.'
+Then, for oradev, 'su webshop;' '/apache/conf/reconfigure;'
+
+Good Luck,
+
+The Web Server Monitor   
+EOT
+  close MAIL;
+}

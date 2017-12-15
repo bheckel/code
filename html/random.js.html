@@ -1,0 +1,30 @@
+<HTML>
+  <HEAD>
+  <SCRIPT>
+    function RandomNumberGenerator(Seed){
+      var d = new Date();
+      ///this.seed = Seed;
+      this.A = 48271;
+      this.M = 2147483647;
+      this.Q = this.M / this.A;
+      this.R = this.M % this.A;
+      this.oneOverM = 1.0 / this.M;
+      return this;
+    }
+
+    function createRandomNumber(Seed, Min, Max){
+      var rand = new RandomNumberGenerator(Seed);
+      return Math.round((Max-Min) * Math.random(Seed) + Min);
+    }
+
+    var seed = new Date();
+    var third
+    // 40 items just to verify randomness
+    for (var i=0; i<40; i++) {
+      third = createRandomNumber(seed, 0, 60);
+      document.write(third);
+      document.write("<br>");
+    }
+</SCRIPT>
+</HEAD>
+</HTML>  

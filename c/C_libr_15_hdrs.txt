@@ -1,0 +1,40 @@
+From www.freshsources.com Code Capsule's "The Standard C Library, Part 1"
+
+
+Standard C Headers: Group I (required knowledge for every C programmer)
+
+<ctype.h>    Character Handling
+
+<stdio.h>    Input/Output
+
+<stdlib.h>   Miscellaneous Utilities
+
+<string.h>   Text Processing
+
+
+Standard C Headers: Group II (tools for the professional)
+
+<assert.h>   Assertion Support for Defensive Programming
+
+<limits.h>   System Parameters for Integer Arithmetic
+
+<stddef.h>   Universal Types & Constants
+
+<time.h>     Time Processing
+
+
+Standard C Headers: Group III (power at your fingertips when you need it)
+
+<errno.h>    Error Detection
+
+<float.h>    System Parameters for Real Arithmetic
+
+<locale.h>   Cultural Adaptation
+
+<math.h>     Mathematical Functions
+
+<setjmp.h>   Non-local Branching
+
+<signal.h>   Interrupt Handling (sort of)
+
+<stdarg.h>   Variable-length Argument Lists

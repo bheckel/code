@@ -1,0 +1,51 @@
+<!-- Name: newwindow_ea_dept.js.html -->
+<!-- Summary: Provide Dept Details based on user's selection. -->
+<!-- Created: Thu May 20 1999 13:35:27 (Bob Heckel) -->
+<!-- Modified: Thu, 21 Oct 1999 11:04:36 (Bob Heckel) -->
+
+<html>
+<head>
+<!--   <link rel=stylesheet type="text/css" href="http://triweb/CustSvcFin/finance.css"> -->
+  <script language="JavaScript">
+    function dishdept(selx) {
+      // DEBUG
+      alert(document.forms[0].elements[0].options[selx].value);
+      var d = document.forms[0].elements[0].options[selx].value;
+      var i = "Here is GL detail for " + d + ' <A HREF="http://triweb">link</A>'
+               + "<BR>"
+               + d + " Salary Info"
+               + "<BR>"
+               + "GES Charges " + '<A HREF="http://triweb">GES</A>';
+      writeit(i);
+    }
+
+    var newwndo = null;
+    function writeit(msg) {
+      // Open a window the first time we are called, or after an existing
+      // newwndo window has been closed.
+      if ((newwndo == null) || (newwndo.closed)) { 
+          newwndo = window.open("","newwndo","width=600,height=300,resizable");
+          // Open a document in the window.
+          newwndo.document.open;
+      }
+        newwndo.document.write(msg);
+        // Mandatory to flush output to window otherwise appears that nothing
+        // happened.
+        newwndo.document.close();
+    }
+  </script>
+</head>
+
+<body>
+  <h2>Please Select Department:</h2>
+  <form>
+    <select multiple size=15 name="flavor" onChange="dishdept(selectedIndex)">
+        <option value=x SELECTED>Select Department
+        <option value=1234>Dept 1234
+        <option value=3456>Dept 3456
+    </select>
+  </form>
+</body>
+
+</html>
+

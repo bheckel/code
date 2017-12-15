@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<LINK REL="stylesheet" TYPE="text/css" HREF="./%CSSFILE%">
+  <SCRIPT LANGUAGE="JavaScript1.2" SRC="list.js"></SCRIPT>
+
+  <SCRIPT LANGUAGE="JavaScript">
+  function init() {
+    // Dimensions of greybox.
+    var width = 350, height = 22;
+    var uncheckedcolor = "#CCCCCC", checkedcolor = "#BBBBBB";
+
+    toplvlList = new List(true, width, height, uncheckedcolor);
+    toplvlList.setFont("<FONT COLOR='black' SIZE=-1>","</FONT>");
+    Populate('%FILES%', '%CHECKED%', toplvlList, uncheckedcolor, checkedcolor);
+
+    nextlvlList = new List(false, width, height, uncheckedcolor);
+    nextlvlList.setFont("<FONT COLOR='black' SIZE=-1>","</FONT>");
+    Populate('%FILES_SUB%', '%CHECKED_SUB%', nextlvlList, uncheckedcolor, 
+                                                               checkedcolor);
+
+    toplvlList.addList(nextlvlList, '%SUBDIR%');
+    // x, y screen coordinates.
+    toplvlList.build(100,20);
+  }
+
+
+  // Need one of these lines for each filesystem object (for DHTML).
+  function Insert_divs(numlines) {
+    var divids = '';
+    for ( var i=0; i<numlines; i++ ) {
+      divids += '<DIV ID="lItem' + i + '" NAME="lItem' + i + '"></DIV>\n';
+    }
+    document.write(divids);
+  }
+
+  
+  // Used as the value of the new List item.
+  function GenerateListItem(filename, checked) {
+    return "<FORM METHOD='POST' NAME='myform'>" +
+           "<INPUT NAME='mycheckbox' VALUE=" + filename + 
+           " TYPE='checkbox'" + checked +
+           "> <A HREF=" + filename + ">" + filename + "</A></FORM>"; 
+  }
+
+
+  // Receive comma separated list of files in toplevel dir then create a 
+  // new item to add to List.
+  function Populate(f, c, level, uncolor, color) {
+    var filesflat = f; 
+    var checkflat = c; 
+
+    var farr = new Array();
+    var carr = new Array();
+    farr  = filesflat.split(/,/);
+    carr = checkflat.split(/,/);
+    var len = farr.length;
+    for ( var i=0; i<len; i++ ) {
+      var newitem = GenerateListItem(farr[i], carr[i]);
+      if ( carr[i] == 'CHECKED' ) {
+        var ckcolor = color;
+      } else {
+        var ckcolor = uncolor;
+      }
+      level.addItem(newitem, ckcolor);
+    }
+  }
+
+  </SCRIPT>
+
+  <!--   TODO need one of these for each of the files displayed. -->
+</HEAD>
+<BODY ONLOAD="init();">
+  <STYLE TYPE="text/css">
+  #spacer { position: absolute; height: 800; }
+  </STYLE>
+
+  <DIV ID="spacer"></DIV>
+  <SCRIPT>
+    Insert_divs(%NUMFILES%)
+  </SCRIPT>
+
+  <!--   TODO how to move this to bottom of page?  -->
+  <BR><BR><BR><BR><BR><BR>
+  <FORM ACTION=" " METHOD="POST" NAME="myform">
+<!--     <INPUT NAME="mysubmit" TYPE="submit"> -->
+  </FORM>
+</BODY>
+</HTML>
+

@@ -1,0 +1,39 @@
+//BQH0PREN JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,REGION=0M             
+//STEP1    EXEC SAS,TIME=100,OPTIONS='MEMSIZE=0'                        
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)                                     
+//IN       DD DISP=SHR,DSN=BF19.INX0238.NATMER
+//OUT      DD DISP=(NEW,CATLG,DELETE),UNIT=NCHS,                                
+//            DSN=BQH0.INX0238.CSV,                               
+//            DCB=(LRECL=142,RECFM=FB),                                         
+//            SPACE=(CYL,(10,2),RLSE)                                           
+//SYSIN    DD *                                                                 
+
+options nosource;
+ /*---------------------------------------------------------------------
+  *     Name: INPRENAT
+  *
+  *  Summary: Output a comma-delimited file of certificate numbers where
+  *           prenatal visits equal 99.
+  *
+  *  Created: Fri 21 Feb 2003 08:27:10 (Bob Heckel)
+  *---------------------------------------------------------------------
+  */
+options source;
+
+filename IN '../BF19.ZZX0366.NATMER' LRECL=787;
+filename OUT 'junk.csv' LRECL=421;
+
+data work.natal;
+  infile IN MISSOVER;
+  input @3 certno 6.  @69 prenatvisit 2.;
+  ***if prenatvisit eq 99;
+  if prenatvisit eq 24;
+run;
+
+
+data _NULL_;
+  set work.natal;
+  format certno Z6.;
+  file OUT;
+  put @1 certno +(-1)',' prenatvisit;
+run;

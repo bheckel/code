@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+  <TITLE>Testing Regular Expressions</TITLE>
+  <META NAME="author" CONTENT="Robert S. Heckel Jr.">
+  <SCRIPT LANGUAGE="JavaScript">
+    function simpletest() {
+      var str = "hell world";
+
+      var re = /(\w+)\s(\w+)/;
+      newstr = str.replace(re, "$2 $1");
+      alert("ONLOAD swap: " + newstr);
+
+      var re2 = /ll/;
+      newstr2 = str.replace(re2, "x");
+      alert("ONLOAD2 replace: " + newstr2);
+    }
+
+    function getButtonData(buildtype, insertnum, afternum) {
+      alert(buildtype);     
+      alert(insertnum);     
+
+      var regexpat = /(\d+)$/g;
+      var result = afternum.match(regexpat);
+      if ( result != null ) {
+        // Return the whole match.
+        var found = result[0];
+      }
+      alert(found);     
+    }
+  </SCRIPT>
+</HEAD>
+
+<BODY ONLOAD="simpletest()">
+<FORM ACTION=""
+   onClick="getButtonData(window.document.forms[0].prebuild.name,
+                          window.document.forms[0].prebuild.value,
+                          window.document.forms[0].f_Moveafter.value)">
+  <INPUT TYPE="text" NAME="prebuild" VALUE="2">
+  <INPUT TYPE="submit" NAME="f_Moveafter" VALUE="Move after 11">
+</FORM>
+</BODY>
+</HTML>

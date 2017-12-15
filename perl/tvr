@@ -1,0 +1,24 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: tvr
+#
+#      Summary: Return r, based on PV, n, FV
+#               Usage: tvr
+#
+#      Created: Sun, 08 Aug 1999 17:26:41 (Bob Heckel)
+##############################################################################
+
+print "Program returns r, given PV, n, FV\n";
+print "Enter PV:\n";
+$pv = <STDIN>;
+print "Enter number of periods:\n";
+$n = <STDIN>;
+print "Enter FV:\n";
+$fv = <STDIN>;
+
+$divide = $fv / $pv;
+$divn = 1 / $n;
+$retme = ($divide**$divn) - 1;
+
+print "$retme is the rate.\n";
+

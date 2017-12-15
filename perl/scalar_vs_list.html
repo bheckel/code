@@ -1,0 +1,181 @@
+<html>
+
+<head>
+<title>What is Scalar Context?</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<pre>
+From:		<a href="mailto:mjd@op.net">mjd@op.net</a> (<a href="http://www.plover.com/~mjd/">Mark-Jason Dominus</a>)
+Newsgroups:	comp.lang.perl.misc
+Subject:	Re: Some help with the 'reverse' command please.....
+Date:		24 Jan 1998 12:47:20 -0500
+Summary:	Scalar vs. list context
+Keywords:	glycerol payroll perceptual recitative
+X-Motto:	Now Available in Thrilling `PloverVision!'
+X-Project:	Eat
+X-Subliminal-Catchphrase:	``Tohu Vavohu''
+</pre>
+
+<p>In article &lt;34C97BC7.610B19B7@inav.net&gt;, Steel Viper  &lt;sviper@inav.net&gt; wrote:
+<pre><i>
+&gt;@string_array = &lt;STDIN&gt;;
+&gt;
+&gt;@string_array = reverse(@string_array);
+&gt;print(&quot;\n@string_array\n&quot;);
+&gt;print(&quot;\n&quot; . reverse(@string_array) . &quot;\n&quot;);
+&gt;
+&gt;
+&gt;If this is run, the first print statement prints out the lines in the
+&gt;opposite order they were entered, however the second print statement
+&gt;reverses the entire line one at a time. I do not understand what is
+&gt;going on. 
+</i></pre>
+</p>
+
+<p>That is a very good question, and it goes right to the heart of a very
+important and unusual feature of the Perl language, so it'll take a
+little while to explain.  Please bear with me through this explanation
+of one of Perl's central concepts. </p>
+
+<p>Every Perl expression is in one of two `contexts', either `list
+context' or `scalar context', depending on whether it is expected to
+produce a list or a scalar.  Many expressions have quite different
+behaviors in list context than they do in scalar context.</p>
+
+<p>Here is a typical expression:</p>
+
+<pre>
+	EXPRESSION
+</pre>
+
+<p>Here it is again, in a list context:</p>
+
+<pre>
+	@array = EXPRESSION;   # Expression is expected to produce a list
+</pre>
+
+<p>Here is how it looks in a scalar context:</p>
+
+<pre>
+	$scalar = EXPRESSION;   # Expression is expected to produce a scalar
+</pre>
+
+<p>The values that a particular expression has in these two contexts
+might be quite different.  For example, consider this simple
+expression:</p>
+
+<pre>
+	@q
+</pre>
+
+<p>In list context, this produces a list of the items in the array
+<tt>@q</tt>, but in scalar context it produces the <em>number</em> of
+items in the array <tt>@q</tt>.</p>
+
+<pre>
+	@a = @q;    # @q in list context produces a list of items from @q
+	$s = @q;    # but in scalar context, it produces the number of items.
+</pre>
+
+<p>Similarly, </p>
+
+<pre>
+	# Note two very different behaviors of // depending on context
+
+	# Put ('123.45', 'immediately') into @a
+	@a = /The amount was \$(\d+\.\d\d)\.  You must pay ([\w\s]+)\./ 
+
+	# Put 1 into $s, put '123.45' into $1, put 'immediately' into $2
+	$s = /The amount was \$(\d+\.\d\d)\.  You must pay ([\w\s]+)\./ 
+</pre>
+
+<p>The main point here: An expression's behavior can be drastically
+different in list context than it is in scalar context.</p>
+
+<p>Now we'll return to your example.</p>
+
+<pre><i>
+&gt;     @string_array = reverse(@string_array);
+</i></pre>
+
+<p>Here, <tt>reverse</tt> is in list context, because it's being asked
+to produce a list to assign to <tt>@string_array</tt>.  In list
+context, <tt>reverse</tt> reverses the <em>order</em> of its
+arguments, so that the lines come out in the <em>reverse order</em>.
+</p>
+
+<p>Then you did</p>
+
+<pre>
+&gt;    print(&quot;\n&quot; . reverse(@string_array) . &quot;\n&quot;);
+</pre>
+
+<p>Now, here <tt>reverse</tt> is in scalar context, because it is
+being asked to produce a scalar value, a string, which will be
+concatenated with <tt>\n</tt> on the front and back.  In a scalar
+context, <tt>reverse</tt> first concatenates all its arguments, to get
+a single string, and then reverses that string.  As you know by
+now.</p>
+
+<p>How can you get the behavior you really want?  The <tt>reverse</tt>
+here needs to be in a list context.  The argument list of a function
+like `print' is always a list context, so if you get rid of the
+concatenation operators that are providing scalar context to
+`reverse', your problem will go away:</p>
+
+<pre>
+	print &quot;\n&quot;, reverse(@string_array), &quot;\n&quot;;
+</pre>
+
+<p><tt>reverse</tt> is now expected to return a list, which will be inserted
+into the list which is passed to <tt>print</tt>.  This is probably more
+efficient than what you were trying to do anyway, since <tt>print</tt> can
+print out the many strings without bothering to concatenate them
+first, as you were doing.</p>
+
+<p>Again, the general rule is:</p>
+
+<blockquote>
+	There is no general rule for deducing a function's behavior in
+	scalar context from its behavior in list context.
+</blockquote>
+
+<p>This is the cause of a lot of common errors.  One mistake you didn't
+make, but which we see a lot is something like this:</p>
+
+<pre>
+	@a = (reverse(&quot;part&quot;));
+</pre>
+
+<p>The programmer was expecting <tt>@a</tt> to get a list containing
+<tt>&quot;trap&quot;</tt>, but instead they got a list containing
+<tt>&quot;part&quot;</tt> again.  Because <tt>reverse</tt> was in a
+list context, it reversed the <em>order</em> of its arguments, instead
+of reversing the arguments themselves, and since it only had one
+argument, it ended up doing nothing.</p>
+
+<p>Perl has a special operator for just such circumstances.  It's
+called <tt>scalar</tt>, and it forces its argument to be evaluated in
+scalar context.  The last example should have been written as:</p>
+
+<pre>
+	@a = (scalar(reverse(&quot;part&quot;)));
+	# @a now contains (&quot;trap&quot;)
+</pre>
+
+<p>I hope this clears things up for you.</p>
+
+<hr>
+<p>Return to: 
+<a href="../">Universe of Discourse main page</a> |
+<a href="../whatsnew.html">What's new page</a> |
+<a href="./">Perl Paraphernalia</a>
+</p>
+
+<p><a href="mailto:mjd-perl-context-id-ioa+bkb23kl@plover.com">mjd-perl-context-id-ioa+bkb23kl@plover.com</a></p>
+
+</body>
+
+</html>

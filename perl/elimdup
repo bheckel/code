@@ -1,0 +1,18 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: elimdup.pl  
+#
+#      Summary: Eliminate duplicates, sending output to STDOUT.
+#
+#        Usage: elimdup hasdups.txt > nownodups.txt
+#
+#      Created: Mon Dec 21 1998 08:36:34 (Bob Heckel)
+#     Modified: Fri Mar 05 1999 14:23:58 (Bob Heckel)
+##############################################################################
+
+foreach(@ARGV) {
+  @array = <ARGV>;
+  %temp = ();
+  @array = grep ++$temp{$_} < 2, @array; 
+  print @array;
+}

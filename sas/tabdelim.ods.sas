@@ -1,0 +1,32 @@
+%macro build_meta_file2(clientid=, maxdate=);
+  /* Create a tab delimited file from a dataset */
+  ODS PATH work.templat(update) sasuser.templat(read) sashelp.tmplmst(read);
+  proc template;
+    define tagset Tagsets.tab;
+      define event header;
+        put "09"x / if !cmp( COLSTART , "1" );
+        put """" / if cmp( TYPE , "string" );
+        put VALUE;
+        put """" / if cmp( TYPE , "string" );
+      end;
+      define event data;
+        put "09"x / if !cmp( COLSTART , "1" );
+        put """" / if cmp( TYPE , "string" );
+        put VALUE;
+        put """" / if cmp( TYPE , "string" );
+      end;
+      define event colspanfill;
+        put "09"x;
+      end;
+      define event rowspanfill;
+        put "09"x;
+      end;
+      parent=tagsets.csv;
+    end;
+  run;
+
+  ods markup file="Weekly_Target_Patient_Report_&clientid._&maxdate..pdf.meta.txt" tagset=Tagsets.tab;
+    proc print data=sashelp.class NOobs; run;
+  ods markup close;
+%mend;
+%build_meta_file2(clientid=1000002, maxdate=20151019);

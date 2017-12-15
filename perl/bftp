@@ -1,0 +1,269 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: bftp.pl
+#
+#  Summary: Automate FTP (port 21) accesses.  Optionally edit dloaded files.
+#
+#           Note: bfg and bfp call this code
+#
+#           TODO auto crop 80 char line trailing blanks on mainframe 'gets'
+#           TODO make sure ff=unix if it's a MF preset
+#
+#  Created: Thu, 24 Aug 2000 15:18:12 (Bob Heckel)
+# Modified: Fri 13 May 2005 12:46:48 (Bob Heckel)
+##############################################################################
+###use strict;  TODO
+use Getopt::Std;
+use Net::FTP;
+
+# May also have to adjust the next few lines and Retrieve() if change these.
+getopts('gpmjdbklzy'); 
+our($opt_g,$opt_p,$opt_m,$opt_d,$opt_b,$opt_k,$opt_l,$opt_z,$opt_y);
+
+my $DEBUG = $opt_d ? 1 : 0;
+
+my ($localname, $remotename, $username, $ftpserver, $pw, $bkup, $openvi);
+
+Usage() unless $opt_g || $opt_p || $opt_j || $opt_k || $opt_l || $opt_z ||
+               $opt_y;
+
+# Preset mainframe put
+if ( $opt_m && $opt_p) {
+  $localname  = $ARGV[0];
+  # Mainframe requires cd'ing or using parens in the name else it creates a
+  # new data set.
+  $remotename = $ARGV[1];
+  $username   = 'bqh0';
+  $ftpserver  = '158.111.2.21';   # CDC mainframe
+  $pw         = `getpw`;  # get needs same pw below  TODO use single pw
+  $bkup       = 0;
+  $openvi     = 0;
+} 
+elsif ( $opt_p ) {  # put -- full commandline parameters were passed
+  # TODO don't force a remotename, default to localname
+  $localname  = $ARGV[0];
+  $remotename = $ARGV[1];
+  $username   = $ARGV[2];
+  $ftpserver  = $ARGV[3];
+  $pw         = $ARGV[4];  # user prompted if not provided
+  $bkup       = 0;
+}
+elsif ( $opt_j ) { # quickly get TMPTRAN1 from mainframe
+  $localname  = 'junkbftp';
+  $remotename = 'TMPTRAN1';
+  $username   = 'bqh0';
+  $ftpserver  = '158.111.2.21';   # CDC mainframe
+  $pw         = `getpw`;
+  $bkup       = 0;
+  $openvi     = 1;
+}
+elsif ( $opt_k ) { # quickly get TMPTRAN2 (wide)
+  $localname  = 'junk2bftp';
+  $remotename = 'TMPTRAN2';
+  $username   = 'bqh0';
+  $ftpserver  = '158.111.2.21';
+  $pw         = `getpw`;
+  $bkup       = 0;
+  $openvi     = 1;
+}
+elsif ( $opt_l ) { 
+  $localname  = 'junk2bftp';
+  # Single inside double is mandatory.
+  $remotename = "'DWJ2.FCAST.BQH0.TSA.LOG'";
+  $username   = 'bqh0';
+  $ftpserver  = '158.111.2.21';
+  $pw         = `getpw`;
+  $bkup       = 0;
+  $openvi     = 1;
+}
+elsif ( $opt_z ) { 
+  $localname  = 'junk2bftpI';
+  # Single inside double is mandatory.
+  $remotename = "'BQH0.INC.SASLST'";
+  $username   = 'bqh0';
+  $ftpserver  = '158.111.2.21';
+  $pw         = `getpw`;
+  $bkup       = 0;
+  $openvi     = 1;
+}
+elsif ( $opt_y ) { 
+  $localname  = 'junk2bftpO';
+  # Single inside double is mandatory.
+  $remotename = "'BQH0.INC.SASLOG'";
+  $username   = 'bqh0';
+  $ftpserver  = '158.111.2.21';
+  $pw         = `getpw`;
+  $bkup       = 0;
+  $openvi     = 1;
+}
+
+
+# Preset mainframe get
+if ( $opt_m && $opt_g) {
+  $remotename  = $ARGV[0];
+  $localname  = $ARGV[1];
+  # Mainframe requires cd'ing else it creates a new data set.
+  $username   = 'bqh0';
+  $ftpserver  = '158.111.2.21';  # CDC mainframe
+  $pw         = `getpw`;
+  $openvi     = $ARGV[2];
+  $bkup       = 0;
+} 
+elsif ( $opt_g ) {  # get -- full commandline parameters were passed
+  # TODO don't force a remotename, default to localname
+  $remotename = $ARGV[0];
+  $localname  = $ARGV[1];
+  $username   = $ARGV[2];
+  $ftpserver  = $ARGV[3];
+  $pw         = $ARGV[4]; # user prompted if not provided; must be last option
+  $openvi     = $ARGV[5];
+  $bkup       = 0;
+}
+
+Connect($ftpserver, $remotename, $username, $pw);
+Retrieve($remotename, $localname, $bkup, $openvi) 
+                if $opt_g || $opt_j || $opt_k || $opt_l || $opt_z || $opt_y;
+Place($remotename, $localname) if $opt_p;
+
+exit 0;
+
+
+sub Connect {
+  my ($ftpserver, $remotename, $username, $pw) = @_;
+
+  $pw ||= PwPrompt();
+
+  print "$0 connecting to $ftpserver ...\n" if $DEBUG;
+  $ftp = Net::FTP->new($ftpserver,
+                       Debug   => $DEBUG,
+                       Timeout => 100) 
+                  || die "Can't connect to $ftpserver: $@. $?. $!. Exiting.\n";
+  print "$0 created new ftp object...\tLogging in as $username...\n" if $DEBUG;
+  $ftp->login($username, $pw) 
+                     || die "Can't login as $username: $@. $?. $!. Exiting.\n";
+  print "$0 successful login as $username ...\n" if $DEBUG;
+
+  return 0;
+}
+
+
+sub Retrieve {
+  my $remotename = $_[0];
+  my $localname  = $_[1];
+  my $bkup       = $_[2];
+  my $openvi     = $_[3];
+
+  Backup($localname) if $bkup;
+
+  $ftp->hash(1);  # note: prints a single newline if the file is small enough
+  # TODO allow specify text or binary, wtf is the default??
+  $ftp->get($remotename, $localname) || 
+             die "Can't retrieve $remotename.  Try the -d switch.  Exiting.";
+  $ftp->quit || warn "Not a graceful quit.  May indicate a problem.\n";
+
+  print "REMOTE: $remotename -> LOCAL: $localname\n";
+
+  if ( $openvi == 1 ) {
+    print "Spawning $ENV{EDITOR}...\n";
+    if ( $ENV{EDITOR} eq 'vim' ) {
+      # Useful for opening SAS Logs and detecting the EBCDIC/ASCII '^' problem
+      # char.  No swapfile.  Note the escaped backslash.
+      system("$ENV{EDITOR} -n -o -c '/^ERROR.*:\\|^WARNING:\\|µ/' $localname") && 
+                                         die "Can't open $ENV{EDITOR}: $!\n";
+    } else {
+      system("$ENV{EDITOR} $localname") && die "Can't open $ENV{EDITOR}: $!\n";
+    }
+  }
+
+  return 0;
+}
+
+
+sub Place {
+  my $remotename = $_[0];
+  my $localname  = $_[1];
+
+  $ftp->pwd() if $DEBUG;
+
+  print "$0 uploading $localname ...\n" if $DEBUG;
+  $ftp->binary if $opt_b;
+  $ftp->hash(1);
+  $ftp->put($localname, $remotename) || 
+                                die "Can't upload $localname. $@ Exiting.";
+  $ftp->quit || warn "Not a graceful quit.  May indicate a problem.\n";
+
+  print "LOCAL: $localname -> REMOTE: $remotename\n";
+
+  return 0;
+}
+
+
+# Prompt for password if necessary.
+sub PwPrompt {
+  print 'pw: ';
+  system("stty -echo");
+  chomp($pw = <STDIN>);
+  system("stty echo");
+
+  return $pw;
+}
+
+
+sub Backup {
+  my $localname = shift;
+
+  system("cp -v $localname $ENV{TMP}") && 
+                                      die "Can't make backup. $? Exiting.\n";
+}
+
+
+sub Usage {
+  print <<"EOT";
+Up/download a single file to/from an FTP server.  
+Optionally uses preset configurations and/or can spawn $ENV{EDITOR} after GETing.
+
+  Usage: bftp -g[b|d] remotename localname userid server [password] [1]
+            Gets file
+
+         bftp -p[b|d] localname remotename userid server [password]
+            Puts file
+
+            -b binary transfer mode
+            -d verbose FTP server debugging chatter
+    
+         Presets:
+         bftp -gm[b|d] remotename localname [1]
+            Get file using CDC mainframe preset
+
+         bftp -pm[b|d] localname remotename
+            Put file using CDC mainframe preset (make sure ff=unix)
+
+         bftp -[j|k|l|y|z]
+            Retrieve
+            -j BQH0.TMPTRAN1
+            -k BQH0.TMPTRAN2
+
+            -l DWJ2.FCAST.BQH0.TSA.LOG
+
+            -y BQH0.INC.SASLOG
+            -z BQH0.INC.SASLST
+
+  bftp -g welcome.msg gotit.msg anonymous ftp.duke.edu mypw 1
+  bftp -g BYTES420 junk bqh0 mainframe mypw 1  <---gets BQH0.BYTES420
+  bftp -g "'tbe2.final.bf19.dataset'" junk bqh0 mainframe mypw <---2 QUOTES!
+  bftp -gd "'bf19.vscp2000.pgmlib(missmor)'" junk bqh0 mainframe mypw <---SAME!
+  bftp -gm 'pgm.trash(iwant)' ihavenow.txt 1   <---NO BQH0 prefix!
+
+  bftp -p ihave.txt ivesent.txt bqh0 158.111.250.128 mypw
+  bftp -p qry001.sas 'SAS.INTRNET.PDS(Dqry001)' bqh0 mainframe mypw
+  bftp -p main.html /websrv/sasweb/nchs/main.html bqh0 158.111.2.21 mypw
+  bftp -pb stat.pax '/u/bqh0/stat.pax' bqh0 mf mypw
+  bftp -pm BQH0.DEX0312.MEDMER 'DEX0412.MEDMER' bqh0 mf pw <---NO BQH0 prefix!
+  bftp -pm ihave.txt 'pgm.lib(iveuplod)'                   <---NO BQH0 prefix!
+
+  Alternatives: vim ftp://158.111.250.31/remotefile,
+                proc_download.sas & proc_upload.sas or bfg & bfp
+EOT
+
+  exit 1;
+}

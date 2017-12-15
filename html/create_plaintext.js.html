@@ -1,0 +1,27 @@
+<!-- Demo from "JavaScript the Definitive Guide" shows text written to a
+     browser window instead of html.
+     Created: Wed May 19 1999 08:54:55 (adapted by Bob Heckel)
+-->
+
+<SCRIPT language="JavaScript">
+var console = null;
+
+function debug(msg) {
+  // Open a window the first time we are called, or after an existing
+  // console window has been closed.
+  if ((console == null) || (console.closed)) { 
+      console = window.open("","console","width=600,height=300,resizable");
+      // Open a document in the window to display plain text.
+      console.document.open("text/plain");
+  }
+    console.document.writeln(msg);
+}
+</SCRIPT>
+
+<!-- Here's an example of using this script. -->
+<SCRIPT language="JavaScript">var n = 0;</SCRIPT>
+
+<FORM>
+<INPUT TYPE="button" VALUE="Push Me"
+       onClick="debug('You have pushed me:\t' + ++n + ' times.');">
+</FORM>

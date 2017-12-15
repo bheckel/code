@@ -1,0 +1,84 @@
+Heckel, Robert [GWRTP:7020:EXCH]
+From:	zdtips@zdtips.com
+Sent:	Tuesday, May 18, 1999 9:00 PM
+To:	ivbtips@zdtips.com
+Subject:	Visual Basic Tips, 05/19/99
+
+Display a directory browser
+
+Here's some easy to use code for displaying a directory browsing
+window. This allows a user to select a directory.
+
+Private Type BrowseInfo
+  hWndOwner      As Long
+  pIDLRoot       As Long
+  pszDisplayName As Long
+  lpszTitle      As Long
+  ulFlags        As Long
+  lpfnCallback   As Long
+  lParam         As Long
+  iImage         As Long
+End Type
+
+'Browsing for directory.
+Private Const BIF_RETURNONLYFSDIRS = &H1      'For finding a folder to start document searching
+Private Const BIF_DONTGOBELOWDOMAIN = &H2     'For starting the Find Computer
+Private Const BIF_STATUSTEXT = &H4
+Private Const BIF_RETURNFSANCESTORS = &H8
+
+Private Const BIF_BROWSEFORCOMPUTER = &H1000  'Browsing for Computers.
+Private Const BIF_BROWSEFORPRINTER = &H2000   'Browsing for Printers
+Private Const BIF_BROWSEINCLUDEFILES = &H4000 'Browsing for Everything
+
+Private Const MAX_PATH = 260
+
+Private Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal hMem As Long)
+Private Declare Function lstrcat Lib "kernel32" Alias "lstrcatA" (ByVal _
+lpString1 As String, ByVal lpString2 As String) As Long
+
+Private Declare Function SHBrowseForFolder Lib "shell32" (lpbi As _
+BrowseInfo) As Long
+Private Declare Function SHGetPathFromIDList Lib "shell32" (ByVal pidList As _
+Long, ByVal lpBuffer As String) As Long
+
+Public Function BrowseForFolder(hWndOwner As Long, sPrompt As String)
+As String
+
+   '=================================================
+   'Opens the system dialog for browsing for a folder
+   '=================================================
+   Dim iNull As Integer
+   Dim lpIDList As Long
+   Dim lResult As Long
+   Dim sPath As String
+   Dim udtBI As BrowseInfo
+
+  With udtBI
+     .hWndOwner = hWndOwner
+     .lpszTitle = lstrcat(sPrompt, "")
+
+     .ulFlags = BIF_RETURNONLYFSDIRS
+  End With
+
+  lpIDList = SHBrowseForFolder(udtBI)
+  If lpIDList Then
+     sPath = String$(MAX_PATH, 0)
+     lResult = SHGetPathFromIDList(lpIDList, sPath)
+     Call CoTaskMemFree(lpIDList)
+     iNull = InStr(sPath, vbNullChar)
+     If iNull Then
+        sPath = Left$(sPath, iNull - 1)
+     End If
+  End If
+
+  BrowseForFolder = sPath
+
+End Function
+
+Private Sub Form_Click()
+    Dim MyStr As String
+    MyStr = BrowseForFolder(hWnd, "Hello")
+    MsgBox MyStr
+End Sub
+
+Scott Lewis, slewis@vcce.com

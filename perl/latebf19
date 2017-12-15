@@ -1,0 +1,96 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: latebf19 (s/b symlinked as lb)
+#
+#  Summary: Show a state's BF19 files for a particular year, sorted by
+#           shipment number.
+#
+#  Created: Tue 11 Feb 2003 10:37:53 (Bob Heckel)
+# Modified: Wed 05 Mar 2003 13:49:26 (Bob Heckel -- fix the sort output)
+# Modified: Tue 30 Sep 2003 17:11:56 (Bob Heckel -- fix the non-unique hashes
+#                                     that cause NATMER1 to not display)
+# Modified: Tue 16 Dec 2003 16:47:31 (Bob Heckel -- warn on bad parms)
+# Modified: Wed 07 Jan 2004 13:08:39 (Bob Heckel -- fix USAGEMSG warning)
+##############################################################################
+use strict;
+use Net::FTP;
+use constant PW => 'ntbwasss';
+# TODO BEGIN?
+###$PW = `getpw`;
+
+my $defaultyr = substr((localtime)[5], 1, 2);
+my $usagemsg  =<<USAGE;
+Usage: latebf19 STATE [YEAR] [EVENT]
+       e.g. latebf19 nj 02 mor
+       e.g. latebf19 '*' 03 mor    <---all states (caution)
+       Defaults to current year $defaultyr and MOR
+USAGE
+
+die $usagemsg unless @ARGV >= 1;
+
+my $state = $ARGV[0];
+my $year = $ARGV[1] || $defaultyr;
+my $type = $ARGV[2] || 'mor';
+
+# User entered parms in wrong order.  Don't fail silently.
+# TODO generates error on  $ lb ak
+###warn USAGEMSG if $ARGV[2] =~ /\d\d/;
+warn $usagemsg if (exists $ARGV[2]) && ($ARGV[2] =~ /\d\d/);
+
+my $ftp = Net::FTP->new('158.111.2.21', Debug=>0) 
+                               or die "Can't connect: $@ $? $!\n";
+$ftp->debug(0);  # toggle as needed
+$ftp->login('bqh0', PW) or die "Can't login: $@ $? $!\n";
+
+lsDump($state, $year);
+
+$ftp->quit;
+
+exit 0;
+
+
+sub lsDump {
+  my ($s, $y) = @_;
+
+  my @filelist;
+  my @x;
+
+  unless ( @filelist = $ftp->ls("'bf19.${s}x${y}*.${type}mer*'")) { 
+    return 1; 
+  }
+
+  # Remove the quotes.
+  my @fl = map /'(.*)'/, @filelist;
+  # Goal is to sort on the shipment number.  Hash key is the whole filename,
+  # value is the yr, shipment number and event type (and trailing digit if
+  # available).  Need all 3 to be unique.
+  my %h = map /(BF19\.\w\wX(.*\..*))/i, @fl;
+  my %h2;
+  # Transpose keys for values.  We're dangerously assuming uniqueness on keys
+  # and values.
+  while ( (my $key, my $val) = each %h ) { $h2{$val} = $key };
+
+  # TODO do this with a -a switch, otherwise just print highest
+  ###foreach my $f ( sort {$a<=>$b} keys %h2 ) {
+    ###print $h2{$f} . "\n";
+  ###}
+  foreach my $f ( sort keys %h2 ) {
+    print $h2{$f} . "\n";
+  }
+
+  return 0;
+}
+
+__END__
+
+Multiple states via bash:
+
+for i in AK AL AR AS AZ CA CO CT DC DE FL GA GU \
+         HI IA ID IL IN KS KY LA MA MD ME MI MN \
+         MO MP MS MT NC ND NE NH NJ NM NV NY OH \
+         OK OR PA PR RI SC SD TN TX UT VA VI VT \
+         WA WI WV WY YC; do latebf19 $i 02 fet; echo; done >| natjunk.txt
+
+or:
+
+lb VA | tail -n1 && lb GA | tail -n1 && lb FL | tail -n1

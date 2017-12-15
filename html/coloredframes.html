@@ -1,0 +1,42 @@
+<!-- This example is from JavaScript: The Definitive Guide, 3rd Edition.   -->
+<!-- That book and this example were Written by David Flanagan.            -->
+<!-- They are Copyright (c) 1996, 1997, 1998 O'Reilly & Associates.        -->
+<!-- This example is provided WITHOUT WARRANTY either expressed or implied.-->
+<!-- You may study, use, modify, and distribute it for any purpose,        -->
+<!-- as long as this notice is retained.                                   -->
+
+<html>
+<HEAD>
+<TITLE>Colored Frames</TITLE>
+<SCRIPT>
+function setcolor(w) {
+  // Generate a random color.
+  var r = (Math.random() * 256).toString(16);
+  var g = (Math.random() * 256).toString(16);
+  var b = (Math.random() * 256).toString(16);
+  var colorString = "#" + r + g + b;
+
+  // Set the frame background to the random color.
+  w.document.bgColor = colorString;
+
+  // Schedule another call to this method in one second.
+  // Since we call the setTimeout() method of the frame, the string
+  // will be executed in that context, so we must prefix properties
+  // of the top-level window with "parent."
+  w.setTimeout('parent.setcolor(parent.' + w.name + ')', 1000);
+
+  // We could also have done the same thing more simply like this.
+  // setTimeout('setcolor(' + w.name + ')', 1000);
+}
+</SCRIPT>
+</HEAD>
+
+<FRAMESET rows="33%,33%,34%" cols="33%,33%,34%" border=1
+  onLoad="for(var i = 0; i < 9; i++) setcolor(frames[i]);">
+<FRAME NAME="f1" SRC="javascript:''"><FRAME NAME="f2" SRC="javascript:''">
+<FRAME NAME="f3" SRC="javascript:''"><FRAME NAME="f4" SRC="javascript:''">
+<FRAME NAME="f5" SRC="javascript:''"><FRAME NAME="f6" SRC="javascript:''">
+<FRAME NAME="f7" SRC="javascript:''"><FRAME NAME="f8" SRC="javascript:''">
+<FRAME NAME="f9" SRC="javascript:''">
+</FRAMESET>
+</html>

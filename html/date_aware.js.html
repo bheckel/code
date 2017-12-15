@@ -1,0 +1,39 @@
+<html>
+<head>
+  <meta name="Author" content="Bob Heckel">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Date Aware</title>
+  <script language="JavaScript">
+  <!--
+    // Template created Tue Jun 08 1999 10:10:34 (Bob Heckel)
+    // Allow users to upload spreadsheets each month that vary by month
+    // number.  Code eliminates the need for manual adjustment of hrefs.
+    function determinemonth() {
+      var d = new Date();
+      // Fix zero-based array.
+      var d2 = d.getMonth() + 1;
+      // DEBUG
+      alert(d2);
+      var linker = 'file://c|/todel/test' + d2 + '.html';
+      // DEBUG
+      alert(linker);
+      return location.href=linker;
+    }
+  //-->
+  </script>
+</head>
+
+<body>
+  <h1>Same HTML, new name on spdsht based on month number</h1>
+
+  <p>Old method, change HTML ea mo.:
+  <a href="file://c|/todel/test6.html">Date changes ea mo</a>
+
+  <p>New method, change HTML via JavaScript:
+  <form>
+    <input type="button" value="Current Mo." onClick="determinemonth()">
+  </form>
+
+
+</body>
+</html>

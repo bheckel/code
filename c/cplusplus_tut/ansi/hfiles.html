@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<TITLE>ANSI C++: Standard header files</TITLE>
+<META NAME="description" CONTENT="New improvements on header files inclusion">
+<META NAME="keywords" CONTENT="#include iostream.h iostream stdio cstdio">
+</HEAD>
+
+<body bgcolor="white" >
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> ANSI C++ </FONT><BR>
+ <FONT SIZE=5><B> Standard header files </B></FONT>
+</TD><TD VALIGN="bottom"><a href="http://www.cplusplus.com">
+ <IMG SRC="/img/mini.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="/img/head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<P>
+In ANSI-C++ the way to include header files from the standard library has changed.
+
+<P>
+The standard specifies the following modification from the C way of including standard header files:
+<UL>
+<LI> Header file names no longer maintain the <TT><B>.h</B></TT> extension
+typical of the C language and of pre-standard C++ compilers, as in the case of
+<TT><B>stdio.h</B></TT>, <TT><B>stdlib.h</B></TT>, <TT><B>iostream.h</B></TT>, etc.
+This extension <TT><B>h</B></TT> simply disappears and files previously known as
+<TT><B>iostream.h</B></TT> become <TT><B>iostream</B></TT> (without <TT><B>.h</B></TT>).
+<LI> Header files that come from the C language now have to be preceded by a
+<TT><B>c</B></TT> character in order to distinguish them from the new C++ exclusive
+header files that have the same name.  For example <TT><B>stdio.h</B></TT>
+becomes <TT><B>cstdio</B></TT> .
+<LI> All classes and functions defined in standard libraries are under
+the <TT><B>std</B></TT> <I>namespace</I> instead of being global. This not applies to
+C macros that remain as C macros.
+</UL>
+<P>
+Here you have a list of the standard C++ header files:
+<BLOCKQUOTE><TT>
+&lt;algorithm&gt; &nbsp;
+&lt;bitset&gt; &nbsp;
+&lt;deque&gt; &nbsp;
+&lt;exception&gt; &nbsp;
+&lt;fstream&gt; &nbsp;
+&lt;functional&gt; &nbsp;
+&lt;iomanip&gt; &nbsp;
+&lt;ios&gt; &nbsp;
+&lt;iosfwd&gt; &nbsp;
+&lt;iostream&gt; &nbsp;
+&lt;istream&gt; &nbsp;
+&lt;iterator&gt; &nbsp;
+&lt;limits&gt; &nbsp;
+&lt;list&gt; &nbsp;
+&lt;locale&gt; &nbsp;
+&lt;map&gt; &nbsp;
+&lt;memory&gt; &nbsp;
+&lt;new&gt; &nbsp;
+&lt;numeric&gt; &nbsp;
+&lt;ostream&gt; &nbsp;
+&lt;queue&gt; &nbsp;
+&lt;set&gt; &nbsp;
+&lt;sstream&gt; &nbsp;
+&lt;stack&gt; &nbsp;
+&lt;stdexcept&gt; &nbsp;
+&lt;streambuf&gt; &nbsp;
+&lt;string&gt; &nbsp;
+&lt;typeinfo&gt; &nbsp;
+&lt;utility&gt; &nbsp;
+&lt;valarray&gt; &nbsp;
+&lt;vector&gt; &nbsp;
+</TT></BLOCKQUOTE>
+And here is a list of the C header files included in ANSI-C++
+with their new name and their equivalents in ANSI-C:
+<BLOCKQUOTE><TABLE BORDER=1 WIDTH=300>
+<TR><TD BGCOLOR="silver" WIDTH=50%><B>ANSI-C++</B></TD>
+    <TD BGCOLOR="silver" WIDTH=50%><B>ANSI-C</B></TD></TR>
+<TR><TD><TT>&lt;cassert&gt;</TT></TD><TD><TT>&lt;assert.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cctype&gt;</TT></TD><TD><TT>&lt;ctype.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cerrno&gt;</TT></TD><TD><TT>&lt;errno.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cfloat&gt;</TT></TD><TD><TT>&lt;float.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;ciso646&gt;</TT></TD><TD><TT>&lt;iso646.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;climits&gt;</TT></TD><TD><TT>&lt;limits.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;clocale&gt;</TT></TD><TD><TT>&lt;locale.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cmath&gt;</TT></TD><TD><TT>&lt;math.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;csetjmp&gt;</TT></TD><TD><TT>&lt;setjmp.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;csignal&gt;</TT></TD><TD><TT>&lt;signal.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cstdarg&gt;</TT></TD><TD><TT>&lt;stdarg.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cstddef&gt;</TT></TD><TD><TT>&lt;stddef.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cstdio&gt;</TT></TD><TD><TT>&lt;stdio.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cstdlib&gt;</TT></TD><TD><TT>&lt;stdlib.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cstring&gt;</TT></TD><TD><TT>&lt;string.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;ctime&gt;</TT></TD><TD><TT>&lt;time.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cwchar&gt;</TT></TD><TD><TT>&lt;wchar.h&gt;</TT></TD></TR>
+<TR><TD><TT>&lt;cwtype&gt;</TT></TD><TD><TT>&lt;wtype.h&gt;</TT></TD></TR>
+</TABLE></BLOCKQUOTE>
+
+<P>
+Since now classes and functions of the standard libraries are located within
+the <TT><B>std</B></TT> <I>namespace</I> we must use the C++ <TT><B>using</B></TT> directive
+for that these become usable in the same way they were in pre-standard code.  For example,
+to be able to use all the standard classes of <TT><B>iostream</B></TT>
+we would have to include something similar to this:
+<blockquote ><TT>
+#include &lt;iostream&gt;<BR>
+using namespace std;
+</TT></BLOCKQUOTE>
+that would be equivalent to the old expression
+<blockquote ><TT>
+#include &lt;iostream.h&gt;
+</TT></BLOCKQUOTE>
+previous to the standard.
+<P>
+Nevertheless for compatibility with ANSI-C, the use of <I>name</I><TT>.h</TT> way
+to include C header files is allowed.
+Therefore, both following examples are valid and equivalent in a compiler which fulfills
+<TT><B>ANSI-C++</B></TT> specifications:
+
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR>
+<TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// ANSI C++ example</I>
+
+#include &lt;cstdio&gt;
+using namespace std;
+
+int main ()
+{
+  printf ("Hello World!");
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// pre ANSI C++ example
+// also valid under ANSI C++, but deprecated</I>
+
+#include &lt;stdio.h&gt;
+
+int main ()
+{
+  printf ("Hello World!");
+  return 0;
+}
+</PRE></TT></TD></TR></TABLE>
+
+<P>
+In all the examples of the current version of
+<B><a href="../tutorial/index.html">The C++ tutorial</A></B>
+it has been chosen to include the old way because to date is the most compatible format
+(and also shorter), although if you have a compiler that supports ANSI-C++ standard I
+recommended you the use of the new format in your programs.
+
+<!--cua-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy;The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+ <TR><TD ALIGN="center">
+<TABLE CELLPADDING=0 CELLSPACING=0>
+     <TR><TD>Return <a href="javascript:history.go(-1)" >back</A></TD></TR>
+     <TR><TD>Return to <a href="/doc/">Documents section</A></TD></TR></TABLE>
+ </TD></TR>
+</TABLE></CENTER>
+<!--/cua-->
+
+</BODY>
+</HTML>

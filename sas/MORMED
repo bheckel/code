@@ -1,0 +1,719 @@
+//BQH0VITL JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=20,CLASS=J,                     
+//  REGION=0M                                                                   
+//*ROUTE    PRINT R201                                                          
+//*** DJDE DUPLEX=YES,END;                                                      
+//*                                                                             
+//*  PROGRAM NAME  MORMED   03/23/2002  BRENDA BOSWELL                          
+//*  THIS PROGRAM WILL READ THE MORTALITY AND MEDICAL FILES                     
+//*  AND MERGE THEM TOGETHER TO CREATE THE INPUT FILE TO THE                    
+//*  VITALNET SYSTEM                                                            
+//*                                                                             
+//LIST    EXEC PGM=IDCAMS                                                       
+//SYSPRINT DD DSN=BQH0.BF19.DATASET,DISP=OLD                                    
+//SYSIN DD *                                                                    
+ LISTC LEVEL(BF19)                                                              
+//*** END OUTPUT                                                                
+//ANNUAL    EXEC SAS,OPTIONS='MSGCASE,MEMSIZE=0'                                
+//WORK DD SPACE=(CYL,(1900,1900),,,ROUND)                                       
+//IN   DD DSN=BQH0.BF19.DATASET,DISP=SHR                                        
+//SYSIN     DD *                                                                
+* PROGRAMMER  BRENDA BOSWELL;                                                   
+* PROGRAM     MORMED;                                                           
+* DATE        03/23/2002;                                                       
+* PURPOSE     THIS PROGRAM WILL CREATE THE PERMANENT SAS FILES FOR;             
+*             MEDICAL USED IN THE CONTRACT TRACKING STATUS REPORT;              
+* PROGRAM UPDATE;                                                               
+***************************************************************;                
+OPTIONS LS=133 CAPS NONOTES SOURCE;                                             
+                                                                                
+%GLOBAL BYR EYR TYPE RPT CYR CURPR PRVPR TOTCUR TR LYR MED MOR;                 
+                                                                                
+%LET BYR=2002;   /* BEGINNING YEAR */                                           
+%LET EYR=2002;   /* ENDING YEAR */                                            
+%LET CYR=2002;                                                                  
+                                                                                
+%LET TYPE = 3;  /* DATA TO GENERATE BF19 FILES */                               
+                /* 1 = FETMER   */                                              
+                /* 2 = MEDMER   */                                              
+                /* 3 = MORMER   */                                              
+                /* 4 = NATMER   */                                              
+                                                                                
+%LET RPT = 0;   /* PRINT LISTING OF BF19 FILES */                               
+                /* 1 = YES */                                                   
+                /* 0 = NO  */                                                   
+                                                                                
+* SETS VARIABLES FOR PROCESSING OF DATA BASED ON BYR, EYR AND CYR VALS;          
+* CURPR: FLAG TO PROCESS CURRENT YEAR;                                           
+* PRVPR: FLAG TO PROCESS PREVIOUS YEAR(S);                                       
+%MACRO SETVARS;                                                                 
+ %IF &BYR=&EYR AND &EYR=&CYR %THEN                                              
+   %DO;                                                                         
+     %LET CURPR=1;                                                              
+     %LET PRVPR=0;                                                              
+   %END;                                                                        
+ %ELSE %IF &BYR=&EYR AND &EYR NE &CYR %THEN                                     
+   %DO;                                                                         
+     %LET CURPR=0;                                                              
+     %LET PRVPR=1;                                                              
+   %END;                                                                        
+ %ELSE %IF &EYR=&CYR %THEN                                                      
+   %DO;                                                                         
+     %LET CURPR=1;                                                              
+     %LET PRVPR=1;                                                              
+   %END;                                                                        
+ %ELSE                                                                          
+   %DO;                                                                         
+     %LET CURPR=0;                                                              
+     %LET PRVPR=1;                                                              
+   %END;                                                                        
+%MEND SETVARS;                                                                  
+                                                                                
+%SETVARS                                                                        
+                                                                                
+* READS IN FILE NAMES FROM LISTING OF ALL BF19 FILES;                           
+DATA RAWDATA;                                                                  
+  LENGTH FN $ 25;                                                              
+  INFILE IN TRUNCOVER;                                                         
+  INPUT FN $ 18-42;                                                            
+RUN;                                                                          
+                                                                                
+* GENERATES FILENAME STATEMENTS FOR A CERTAIN YEAR;                              
+%MACRO GENYEAR(LYR=);                                                           
+  DATA _NULL_;                                                                  
+  SR = SUBSTR("&LYR",3,2);                                                      
+  CALL SYMPUT('TR',SR);                                                         
+  RUN;                                                                          
+                                                                                
+  *FILTERS ONLY DATA SPECIFIED BY TYPE;                                           
+  %MACRO GENTYPE;                                                                 
+    %IF &TYPE = 1 %THEN                                                           
+      %DO;                                                                        
+        DATA ALLF&LYR;                                                            
+          SET ALLF&LYR;                                                           
+          IF TYPE NE 'FETMER' THEN DELETE;                                        
+          IF YR NE &TR THEN DELETE;                                               
+        RUN;                                                                      
+      %END;                                                                       
+    %ELSE %IF &TYPE = 2 %THEN                                                     
+      %DO;                                                                        
+        DATA ALLF&LYR;                                                            
+          SET ALLF&LYR;                                                           
+          IF TYPE NE 'MEDMER' THEN DELETE;                                        
+          IF YR NE &TR THEN DELETE;                                               
+        RUN;                                                                      
+      %END;                                                                       
+    %ELSE %IF &TYPE = 3 %THEN                                                     
+      %DO;                                                                        
+        DATA ALLF&LYR;                                                            
+          SET ALLF&LYR;                                                           
+          IF TYPE NE 'MORMER' THEN DELETE;                                        
+          IF YR NE &TR THEN DELETE;                                               
+        RUN;                                                                      
+      %END;                                                                       
+    %ELSE %IF &TYPE = 4 %THEN                                                     
+      %DO;                                                                        
+        DATA ALLF&LYR;                                                            
+          SET ALLF&LYR;                                                           
+          IF TYPE NE 'NATMER' THEN DELETE;                                        
+          IF YR NE &TR THEN DELETE;                                               
+        RUN;                                                                      
+      %END;                                                                       
+  %MEND GENTYPE;                                                                  
+                                                                                
+                                                                                
+  DATA ALLF&LYR;                                                                  
+    SET RAWDATA;                                                                  
+    LENGTH BF19 $ 4 ST $ 2 YR $ 2 INDX $ 2 TYPE $ 7;                              
+                                                                                  
+    * 041801 SCAN THE VALUE OF FN TO DETERMINE THE VALUES BETWEEN;                  
+    * PERIODS;                                                                      
+    WORD1 = SCAN(FN,1,'.');                                                       
+    WORD2 = SCAN(FN,2,'.');                                                       
+    WORD3 = SCAN(FN,3,'.');                                                       
+                                                                                  
+    ST=SUBSTR(FN,6,2);                                                            
+    YR=SUBSTR(FN,9,2);                                                            
+                                                                                  
+    * 041801 DETERMINE YRN BY CHECKING TO SEE IF 2 OR 3 DIGIT SHIPMENT;             
+    * NUMBER WAS USED;                                                              
+    IF LENGTH(WORD2) GE 8 THEN                                                    
+      DO;                                                                        
+        YRN=SUBSTR(FN,9,5);                                                      
+        INDX=SUBSTR(FN,21,2);                                                    
+      END;                                                                       
+    ELSE                                                                          
+      DO;                                                                        
+        YRN=SUBSTR(FN,9,4);                                                      
+        INDX=SUBSTR(FN,20,2);                                                    
+      END;                                                                       
+    * 041801 TYPE IS NOW THE VALUE OF WORD3 (NATMER FOR EXAMPLE);                   
+    TYPE=SUBSTR(WORD3,1,6);                                                       
+    BF19=SUBSTR(FN,1,4);                                                          
+    LBR=SUBSTR(FN,6,2) || SUBSTR("&LYR",1,4);                                     
+    FN=TRIM(FN);                                                                  
+    IF BF19 NE 'BF19' THEN DELETE;                                                
+                                                                                  
+   * DELETES MERGED FILES THAT END WITH AN ALPHA EXTENSION;                        
+   * BUT ON 12102001 DAVID ASKED US TO USE THE 2000 MORTALITY;                     
+   * DATASET NAMES THAT END IN THE LETTER M;                                       
+   * PREV WE WERE TOLD TO RETAIN THESE FILES BUT USE THE FINAL;                    
+   * FILES AS LISTED IN THE EXCEL SPREADSHEET WITHOUT THE LETTER M;                
+   * THE FOLLOWING IF STATEMENT AND THE ELSE ARE THE LATEST EDITIONS;              
+   IF TYPE EQ 'MORMER' AND YR EQ '00' THEN                                        
+     DO;                                                                           
+     IF SUBSTR(INDX,1,1) GE 'A' AND SUBSTR(INDX,1,1) LE 'Z' THEN                   
+       DO;                                                                        
+         IF SUBSTR(INDX,1,1) NE 'M' THEN DELETE;                                  
+       END;                                                                       
+     IF SUBSTR(INDX,2,1) GE 'A' AND SUBSTR(INDX,2,1) LE 'Z' THEN                   
+       DO;                                                                        
+         IF SUBSTR(INDX,2,1) NE 'M' THEN DELETE;                                  
+       END;                                                                       
+     END;                                                                          
+   ELSE                                                                           
+     DO;                                                                           
+       IF 'A' LE SUBSTR(INDX,1,1) LE 'Z' THEN DELETE;                                
+       * 100901 ADDED THIS LINE;                                                       
+       IF 'A' LE SUBSTR(INDX,2,1) LE 'Z' THEN DELETE;                                
+     END;                                                                          
+  RUN;                                                                            
+
+  * FILTER DATA SET FOR SPECIFIED TYPE;                                            
+  %GENTYPE                                                                        
+                                                                                  
+                                                                                  
+  * 041801 CONVERT THE YRN VALUE WHICH IS THE YR AND SHIPMENT NUMBER;             
+  * TO NUMERIC BEFORE SORTING SO THE 3 DIGIT SHIP NOS ARE AT BOTTOM;              
+  * 091301 I CHANGED THE CONVERSION FROM CHAR TO NUM BECAUSE IT WAS;              
+  * NOT WORKING FOR MICMER 1998 NOW THAT IT IS USING THE INPUT;                   
+  * FUNCTION IT APPEARS TO BE FINE;                                               
+  * 091201 CHANGED THE INPUT STATEMENT TO 5 FROM 4 BECAUSE IT NO;                 
+  * LONGER CAPTURED THE 3 DIGIT SHIPMENT NUMBERS;                                 
+  DATA ALLF&LYR;                                                                  
+    SET ALLF&LYR;                                                                  
+    YRNUM = INPUT(YRN,5.);                                                         
+  RUN;                                                                            
+                                                                                  
+  PROC SORT DATA=ALLF&LYR;                                                        
+    BY ST YRNUM INDX;                                                             
+  RUN;                                                                            
+                                                                                  
+  *ADDED THIS DATASTEP TO CORRECT THE PROBLEM WITH;                               
+  *THE EXTENSIONS OF THE BF19 MEDMER FILES;                                       
+  DATA ALLF&LYR;                                                            
+   SET ALLF&LYR;                                                            
+   EXT = SUBSTR(FN,23,3);                                                   
+   IF EXT NE '' THEN DELETE;                                                
+  RUN;                                                                      
+                                                                                  
+  * CHOOSE THE LATEST BF19 FROM THE DATASET;                                      
+  DATA ALLF&LYR;                                                                  
+    SET ALLF&LYR;                                                                 
+    BY ST YRNUM INDX;                                                             
+    IF LAST.ST;                                                                   
+    KEEP FN LBR YR;                                                               
+  RUN;                                                                            
+%MEND GENYEAR;                                                                  
+                                                                                
+%MACRO ALLYEARS;                                                                
+  %DO I=&BYR %TO &EYR;                                                           
+    %GENYEAR(LYR=&I)                                                             
+  %END;                                                                          
+                                                                                
+  %MACRO COMBINE;                                                                 
+   %DO I=&BYR %TO &EYR;                                                           
+     ALLF&I                                                                       
+   %END;                                                                          
+  %MEND COMBINE;                                                                  
+                                                                                  
+  DATA ALLYEARS;                                                                 
+    SET %COMBINE;                                                                
+  RUN;                                                                           
+                                                                                  
+  %IF &RPT=1 %THEN %DO;                                                          
+    PROC PRINT;                                                                  
+    RUN;                                                                         
+  %END;                                                                          
+                                                                                  
+  DATA CURRENT;                                                                   
+    SET ALLYEARS;                                                                 
+    MYR = SUBSTR("&CYR",3,2);                                                     
+    IF YR=MYR;                                                                    
+    KEEP LBR;                                                                     
+  RUN;                                                                            
+                                                                                  
+  DATA _NULL_;                                                                    
+    SET CURRENT END=LAST;                                                        
+    N = _N_;                                                                     
+    IF LAST THEN CALL SYMPUT('TOTCUR',N);                                        
+  RUN;                                                                            
+                                                                                  
+  DATA CURRENT;                                                                   
+    SET CURRENT;                                                                  
+    LENGTH ST $ 2;                                                                
+    ST= SUBSTR(LBR,1,2);                                                          
+    KEEP ST;                                                                      
+  RUN;                                                                            
+%MEND ALLYEARS;                                                                 
+                                                                                
+%ALLYEARS                                                                       
+                                                                                
+* GENERATE FILENAME STATEMENTS FROM DATASET OF LATEST BF19 FILES;                
+OPTIONS NONOTES NOSOURCE PAGESIZE=2000;                                         
+FILENAME FNAME '&NAME' DISP=NEW UNIT=FILE                                       
+         LRECL=80 BLKSIZE=1920 RECFM=FB;                                                
+                                                                                
+PROC PRINTTO LOG=FNAME NEW;                                                     
+RUN;                                                                            
+                                                                                
+DATA _NULL_;                                                                    
+  SET ALLYEARS;                                                                 
+  PUT 'FILENAME ' LBR "'" FN  "' " 'DISP=SHR;';                                 
+RUN;                                                                            
+                                                                                
+DATA _NULL_;                                                                    
+  SET CURRENT;                                                                  
+  N = _N_;                                                                      
+  PUT '%LET CUR' N "=" ST ";";                                                  
+RUN;                                                                            
+                                                                                
+PROC PRINTTO;                                                                   
+RUN;                                                                            
+                                                                                
+OPTIONS LS=133 CAPS NOTES SOURCE SOURCE2 MPRINT SYMBOLGEN;                      
+                                                                                
+%INCLUDE FNAME '&NAME';                                                        
+                                                                                
+%LET ST1 = AL;                                                                  
+%LET ST2 = AK;                                                                  
+%LET ST3 = AZ;                                                                  
+%LET ST4 = AR;                                                                  
+%LET ST5 = CA;                                                                  
+%LET ST6 = CO;                                                                  
+%LET ST7 = CT;                                                                  
+%LET ST8 = DE;                                                                  
+%LET ST9 = DC;                                                                  
+%LET ST10= FL;                                                                  
+%LET ST11= GA;                                                                  
+%LET ST12= HI;                                                                  
+%LET ST13= ID;                                                                  
+%LET ST14= IL;                                                                  
+%LET ST15= IN;                                                                  
+%LET ST16= IA;                                                                  
+%LET ST17= KS;                                                                  
+%LET ST18= KY;                                                                  
+%LET ST19= LA;                                                                  
+%LET ST20= ME;                                                                  
+%LET ST21= MD;                                                                  
+%LET ST22= MA;                                                                  
+%LET ST23= MI;                                                                  
+%LET ST24= MN;                                                                  
+%LET ST25= MS;                                                                  
+%LET ST26= MO;                                                                  
+%LET ST27= MT;                                                                  
+%LET ST28= NE;                                                                  
+%LET ST29= NV;                                                                  
+%LET ST30= NH;                                                                  
+%LET ST31= NJ;                                                                  
+%LET ST32= NM;                                                                  
+%LET ST33= NY;                                                                  
+%LET ST34= NC;                                                                  
+%LET ST35= ND;                                                                  
+%LET ST36= OH;                                                                  
+%LET ST37= OK;                                                                  
+%LET ST38= OR;                                                                  
+%LET ST39= PA;                                                                  
+%LET ST40= RI;                                                                  
+%LET ST41= SC;                                                                  
+%LET ST42= SD;                                                                  
+%LET ST43= TN;                                                                  
+%LET ST44= TX;                                                                  
+%LET ST45= UT;                                                                  
+%LET ST46= VT;                                                                  
+%LET ST47= VA;                                                                  
+%LET ST48= WA;                                                                  
+%LET ST49= WV;                                                                  
+%LET ST50= WI;                                                                  
+%LET ST51= WY;                                                                  
+%LET ST52= PR;                                                                  
+%LET ST53= VI;                                                                  
+%LET ST54= YC;                                                                  
+%LET ST55= GU;                                                                  
+%LET ST56= AS;                                                                  
+%LET ST57= MP;                                                                  
+%LET TOTST=57;                                                                  
+                                                                                
+%MACRO READIN;                                                                  
+  %DO J = 1 %TO &TOTCUR;                                                        
+     %DO K = &CYR %TO &CYR;                                                     
+        %LET S = &&CUR&J;                                                       
+        DATA MO&J&K (DROP=ALIAS);                                            
+          INFILE &S&K;                                                        
+          INPUT ALIAS $ 47 SEX $ 48 MONTH $ 49-50 DAY $ 51-52                 
+                YEAR $135-138 UNIT $ 64 AGE $ 65-66 BIRTHMO $ 67-68                
+                BIRTHDY $ 69-70 STATEOFBIRTH $ 74-75 TYPPLAC $ 76                  
+                DSTATE $ 77-78 COUNTY $ 79-81 MARSTAT $ 82 STRES $ 89-90           
+                CNTYRES $ 91-93 HISPANIC $ 94  RACE $ 95 EDUC $ 96-97              
+                INJURY $ 117 BIRTHYR $ 139-142 CERTNO $ 5-10
+                ;                      
+          STATE = "&S";                                                       
+          IF ALIAS = '1' THEN DELETE;                                         
+        RUN;                                                                  
+     %END;                                                                   
+  %END;                                                                     
+  %MACRO CURFILES;                                                          
+    %DO K = 1 %TO &TOTCUR;                                                  
+      MO&K&CYR                                                              
+    %END;                                                                   
+  %MEND CURFILES;                                                          
+                                                                                
+  DATA MOR&CYR;                                                              
+    SET %CURFILES;                                                            
+  RUN;                                                                       
+                                                                              
+  PROC SORT DATA=MOR&CYR OUT=MOR&CYR;                                        
+    BY STATE CERTNO;                                                          
+  RUN;                                                                       
+%MEND READIN;                                                                   
+
+%READIN                                                                         
+                                                                                
+
+* THIS PORTION OF THE PROGRAM WILL READ THE MEDMER FILES;                        
+                                                                                
+%LET TYP = 2;   /* DATA TO GENERATE BF19 FILES */                               
+                /* 1 = FETMER   */                                              
+                /* 2 = MEDMER   */                                              
+                /* 3 = MORMER   */                                              
+                /* 4 = NATMER   */                                              
+                                                                                
+                                                                                
+* SETS VARIABLES FOR PROCESSING OF DATA BASED ON BYR, EYR AND ;
+* CYR VALS;          
+* CURPR: FLAG TO PROCESS CURRENT YEAR;                                           
+* PRVPR: FLAG TO PROCESS PREVIOUS YEAR(S);                                       
+%MACRO SETVARS;                                                                 
+  %IF &BYR=&EYR AND &EYR=&CYR %THEN                                              
+    %DO;                                                                         
+      %LET CURPR=1;                                                              
+      %LET PRVPR=0;                                                              
+    %END;                                                                        
+  %ELSE %IF &BYR=&EYR AND &EYR NE &CYR %THEN                                     
+    %DO;                                                                         
+      %LET CURPR=0;                                                              
+      %LET PRVPR=1;                                                              
+    %END;                                                                        
+  %ELSE %IF &EYR=&CYR %THEN                                                      
+    %DO;                                                                         
+      %LET CURPR=1;                                                              
+      %LET PRVPR=1;                                                              
+    %END;                                                                        
+  %ELSE                                                                          
+    %DO;                                                                         
+      %LET CURPR=0;                                                              
+      %LET PRVPR=1;                                                              
+    %END;                                                                        
+%MEND SETVARS;                                                                  
+                                                                                
+%SETVARS                                                                        
+                                                                                
+* READS IN FILE NAMES FROM LISTING OF ALL BF19 FILES;                           
+DATA RAWDATA;                                                                  
+  LENGTH FN $ 25;                                                              
+  INFILE IN TRUNCOVER;                                                         
+  INPUT FN $ 18-42;                                                            
+RUN;                                                                          
+                                                                                
+* GENERATES FILENAME STATEMENTS FOR A CERTAIN YEAR;                              
+%MACRO GENYEAR(LYR=);                                                           
+  DATA _NULL_;                                                                  
+    SR = SUBSTR("&LYR",3,2);                                                      
+    CALL SYMPUT('TR',SR);                                                         
+  RUN;                                                                          
+                                                                                
+* FILTERS ONLY DATA SPECIFIED BY TYPE;                                           
+%MACRO GENTYPE;                                                                 
+  %IF &TYP = 1 %THEN                                                            
+    %DO;                                                                        
+      DATA ALLF&LYR;                                                            
+        SET ALLF&LYR;                                                           
+        IF TYP NE 'FETMER' THEN DELETE;                                         
+        IF YR NE &TR THEN DELETE;                                               
+      RUN;                                                                      
+    %END;                                                                       
+  %ELSE %IF &TYP = 2 %THEN                                                      
+    %DO;                                                                        
+      DATA ALLF&LYR;                                                            
+        SET ALLF&LYR;                                                           
+        IF TYP NE 'MEDMER' THEN DELETE;                                         
+        IF YR NE &TR THEN DELETE;                                               
+      RUN;                                                                      
+    %END;                                                                       
+  %ELSE %IF &TYP = 3 %THEN                                                      
+    %DO;                                                                        
+      DATA ALLF&LYR;                                                            
+        SET ALLF&LYR;                                                           
+        IF TYP NE 'MORMER' THEN DELETE;                                         
+        IF YR NE &TR THEN DELETE;                                               
+      RUN;                                                                      
+    %END;                                                                       
+  %ELSE %IF &TYP = 4 %THEN                                                      
+    %DO;                                                                        
+      DATA ALLF&LYR;                                                            
+        SET ALLF&LYR;                                                           
+        IF TYP NE 'NATMER' THEN DELETE;                                         
+        IF YR NE &TR THEN DELETE;                                               
+      RUN;                                                                      
+    %END;                                                                       
+%MEND GENTYPE;                                                                  
+                                                                                
+                                                                                
+DATA ALLF&LYR;                                                                  
+  SET RAWDATA;                                                                  
+  LENGTH BF19 $ 4 ST $ 2 YR $ 2 INDX $ 2 TYP $ 7;                               
+                                                                                
+  * 041801 SCAN THE VALUE OF FN TO DETERMINE THE VALUES BETWEEN;                  
+  * PERIODS;                                                                      
+  WORD1 = SCAN(FN,1,'.');                                                       
+  WORD2 = SCAN(FN,2,'.');                                                       
+  WORD3 = SCAN(FN,3,'.');                                                       
+                                                                                
+  ST=SUBSTR(FN,6,2);                                                            
+  YR=SUBSTR(FN,9,2);                                                            
+                                                                                
+  * 041801 DETERMINE YRN BY CHECKING TO SEE IF 2 OR 3 DIGIT SHIPMENT;             
+  * NUMBER WAS USED;                                                              
+  IF LENGTH(WORD2) GE 8 THEN                                                    
+    DO;                                                                        
+      YRN=SUBSTR(FN,9,5);                                                      
+      INDX=SUBSTR(FN,21,2);                                                    
+    END;                                                                       
+  ELSE                                                                          
+    DO;                                                                        
+      YRN=SUBSTR(FN,9,4);                                                      
+      INDX=SUBSTR(FN,20,2);                                                    
+    END;                                                                       
+  * 041801 TYPE IS NOW THE VALUE OF WORD3 (NATMER FOR EXAMPLE);                   
+  TYP=SUBSTR(WORD3,1,6);                                                        
+  BF19=SUBSTR(FN,1,4);                                                          
+  LBR=SUBSTR(FN,6,2) || SUBSTR("&LYR",1,4);                                     
+  FN=TRIM(FN);                                                                  
+  IF BF19 NE 'BF19' THEN DELETE;                                                
+                                                                                
+ * DELETES MERGED FILES THAT END WITH AN ALPHA EXTENSION;                        
+ * BUT ON 12102001 DAVID ASKED US TO USE THE 2000 MORTALITY;                     
+ * DATASET NAMES THAT END IN THE LETTER M;                                       
+ * PREV WE WERE TOLD TO RETAIN THESE FILES BUT USE THE FINAL;                    
+ * FILES AS LISTED IN THE EXCEL SPREADSHEET WITHOUT THE LETTER M;                
+ * THE FOLLOWING IF STATEMENT AND THE ELSE ARE THE LATEST EDITIONS;              
+ IF TYPE EQ 'MORMER' AND YR EQ '00' THEN                                        
+   DO;                                                                           
+   IF SUBSTR(INDX,1,1) GE 'A' AND SUBSTR(INDX,1,1) LE 'Z' THEN                   
+      DO;                                                                        
+        IF SUBSTR(INDX,1,1) NE 'M' THEN DELETE;                                  
+      END;                                                                       
+   IF SUBSTR(INDX,2,1) GE 'A' AND SUBSTR(INDX,2,1) LE 'Z' THEN                   
+      DO;                                                                        
+        IF SUBSTR(INDX,2,1) NE 'M' THEN DELETE;                                  
+      END;                                                                       
+   END;                                                                          
+ ELSE                                                                           
+   DO;                                                                           
+     IF 'A' LE SUBSTR(INDX,1,1) LE 'Z' THEN DELETE;                                
+     * 100901 ADDED THIS LINE;                                                       
+     IF 'A' LE SUBSTR(INDX,2,1) LE 'Z' THEN DELETE;                                
+   END;                                                                          
+RUN;                                                                            
+                                                                                
+* FILTER DATA SET FOR SPECIFIED TYPE;                                            
+%GENTYPE                                                                        
+                                                                                
+* 041801 CONVERT THE YRN VALUE WHICH IS THE YR AND SHIPMENT NUMBER;             
+* TO NUMERIC BEFORE SORTING SO THE 3 DIGIT SHIP NOS ARE AT BOTTOM;              
+DATA ALLF&LYR;                                                                  
+  SET ALLF&LYR;                                                                  
+  LENGTH YRNUM 2.;                                                               
+  YRNUM = YRN;                                                                   
+RUN;                                                                            
+                                                                                
+PROC SORT DATA=ALLF&LYR;                                                        
+  BY ST YRNUM INDX;                                                             
+RUN;                                                                            
+                                                                                
+* ADDED THIS DATASTEP TO CORRECT THE PROBLEM WITH;                               
+* THE EXTENSIONS OF THE BF19 MEDMER FILES;                                       
+DATA ALLF&LYR;                                                            
+  SET ALLF&LYR;                                                            
+  EXT = SUBSTR(FN,23,3);                                                   
+  IF EXT NE '' THEN DELETE;                                                
+RUN;                                                                      
+                                                                                
+* CHOOSE THE LATEST BF19 FROM THE DATASET;                                      
+DATA ALLF&LYR;                                                                  
+  SET ALLF&LYR;                                                                 
+  BY ST YRNUM INDX;                                                             
+  IF LAST.ST;                                                                   
+  KEEP FN LBR YR;                                                               
+RUN;                                                                            
+                                                                                
+%MEND GENYEAR;                                                                  
+                                                                                
+%MACRO ALLYEARS;                                                                
+  %DO I=&BYR %TO &EYR;                                                           
+    %GENYEAR(LYR=&I)                                                             
+  %END;                                                                          
+                                                                                  
+  %MACRO COMBINE;                                                                 
+    %DO I=&BYR %TO &EYR;                                                           
+      ALLF&I                                                                       
+    %END;                                                                          
+  %MEND COMBINE;                                                                  
+                                                                                  
+  DATA ALLYEARS;                                                                 
+    SET %COMBINE;                                                                
+  RUN;                                                                           
+                                                                                  
+  %IF &RPT=1 %THEN %DO;                                                          
+    PROC PRINT;                                                                  
+    RUN;                                                                         
+  %END;                                                                          
+                                                                                  
+  DATA CURRENT;                                                                   
+    SET ALLYEARS;                                                                 
+    MYR = SUBSTR("&CYR",3,2);                                                     
+    IF YR=MYR;                                                                    
+    KEEP LBR;                                                                     
+  RUN;                                                                            
+                                                                                  
+  DATA _NULL_;                                                                    
+    SET CURRENT END=LAST;                                                        
+    N = _N_;                                                                     
+    IF LAST THEN CALL SYMPUT('TOTCUR',N);                                        
+  RUN;                                                                            
+                                                                                  
+  DATA CURRENT;                                                                   
+    SET CURRENT;                                                                  
+    LENGTH ST $ 2;                                                                
+    ST= SUBSTR(LBR,1,2);                                                          
+    KEEP ST;                                                                      
+  RUN;                                                                            
+%MEND ALLYEARS;                                                                 
+                                                                                
+%ALLYEARS                                                                       
+                                                                                
+*GENERATE FILENAME STATEMENTS FROM DATASET OF LATEST BF19 FILES;                
+OPTIONS NONOTES NOSOURCE PAGESIZE=2000;                                         
+FILENAME FNAME '&NAME' DISP=NEW UNIT=FILE                                       
+         LRECL=80 BLKSIZE=1920 RECFM=FB;                                                
+                                                                                
+PROC PRINTTO LOG=FNAME NEW;                                                     
+RUN;                                                                            
+                                                                                
+DATA _NULL_;                                                                    
+  SET ALLYEARS;                                                                 
+  PUT 'FILENAME ' LBR "'" FN  "' " 'DISP=SHR;';                                 
+RUN;                                                                            
+                                                                                
+DATA _NULL_;                                                                    
+  SET CURRENT;                                                                  
+  N = _N_;                                                                      
+  PUT '%LET CUR' N "=" ST ";";                                                  
+RUN;                                                                            
+                                                                                
+PROC PRINTTO;                                                                   
+RUN;                                                                            
+                                                                                
+OPTIONS LS=133 CAPS NOTES SOURCE SOURCE2 MPRINT SYMBOLGEN;                      
+                                                                                
+%INCLUDE FNAME '&NAME';                                                        
+                                                                                
+PROC DATASETS LIBRARY=WORK MTYPE=DATA;                                         
+  SAVE MOR&CYR;                                                                 
+RUN;                                                                           
+                                                                                
+* ADDED THE PROC FREQ TO CALCULATE THE TOTAL RECORD COUNT BY STATE;              
+%MACRO READMED;                                                                 
+  %DO J = 1 %TO &TOTCUR;                                                      
+    %DO K = &CYR %TO &CYR;                                                    
+       %LET S = &&CUR&J;                                                     
+       DATA ME&J&K;                                                        
+       INFILE &S&K;                                                        
+       INPUT DATAYR $ 1-4 MSTATE $ 5-6 CERTNO $ 7-12                       
+             MCONTROL1 $ 28-31 MCONTROL2 $ 32-35                                
+             MCONTROL3 $ 36-39 MANNER $ 40 MPLACINJ $ 41                        
+             MACTIVITY $ 42 MINTREJ $ 43 MACME $ 44                             
+             MUCAUSE $ 45-49 MACMEUC $ 50-54 MUCCOMPARE $ 55                    
+             MAXIS $ 56-215 MTRANSAX $ 216 MRECAXIS $ 217-316
+             ;                  
+            STATE = "&S";                                                       
+       RUN;                                                                  
+     %END;                                                                   
+  %END;                                                                     
+
+  %MACRO CURFILES;                                                          
+    %DO K = 1 %TO &TOTCUR;                                                  
+      ME&K&CYR                                                              
+    %END;                                                                   
+  %MEND CURFILES;                                                          
+                                                                               
+  DATA MED&CYR;                                                              
+    SET %CURFILES;                                                            
+  RUN;                                                                       
+                                                                               
+  PROC DATASETS LIBRARY=WORK MTYPE=DATA;                                         
+    SAVE MOR&CYR MED&CYR;                                                         
+  RUN;                                                                           
+
+  PROC SORT DATA=MED&CYR OUT=MED&CYR;                                        
+    BY STATE CERTNO;                                                          
+  RUN;                                                                       
+%MEND READMED;                                                                  
+
+%READMED                                                                        
+                                                                                
+PROC DATASETS LIBRARY=WORK MTYPE=DATA;                                         
+  SAVE MED&CYR MOR&CYR;                                                         
+RUN;                                                                           
+                                                                                
+* THIS MACRO WILL WAS CREATE A TABLE OF THE RECORDS THAT HAVE;                   
+* MATCHING CERTIFICATE NUMBERS;                                                  
+* AND COMPARE THE TABLE TO THE MEDMER RECORDS TO GET A COUNT OF;                 
+* THE RECORDS THAT DID NOT MATCH;                                                
+                                                                                
+* ASSUMES BHB6.MORMED.YRnnnn HAS BEEN ALLOCATED PRIOR TO RUNNING ;              
+* THIS PROGRAM;                                                                 
+LIBNAME MORMED 'BHB6.MORMED.YR2002' DISP=OLD;                                   
+                                                                                
+%MACRO MORMED;                                                                  
+  %DO K = &BYR %TO &EYR;                                                       
+    DATA MORMED.DATA;                                                          
+      MERGE MOR&K MED&K;                                                       
+      BY STATE CERTNO;                                                        
+      IF SEX = '' THEN DELETE;                                                
+        IF MACMEUC = '' THEN DELETE;                                            
+      RUN;                                                                     
+  %END;                                                                         
+%MEND MORMED;                                                                   
+
+%MORMED                                                                         
+                                                                                
+FILENAME MOROUT 'BHB6.MORMED.YR2002.NEW' DISP=OLD;                              
+                                                                                
+DATA _NULL_;                                                                    
+  SET MORMED.DATA;                                                               
+  FILE MOROUT NOTITLES;                                                          
+  PUT @48 SEX @49 MONTH  @51 DAY @64 UNIT @65 AGE 
+      @67 BIRTHMO @69 BIRTHDY @74 STATEOFBIRTH 
+      @76 TYPPLAC @77 DSTATE @79 COUNTY                
+      @82 MARSTAT @89 STRES @91 CNTYRES @94 HISPANIC                                
+      @95 RACE  @96 EDUC @117 INJURY @135 YEAR 
+      @139 BIRTHYR                         
+      @145 DATAYR @149 MSTATE  @151 CERTNO @157 '0' 
+      @158 '0000' @162 '0' @163 '000' @166 '000000' 
+      @172 MCONTROL1 @177 MCONTROL2 @181 MCONTROL3 
+      @185 MANNER @186 MPLACINJ @187 MACTIVITY 
+      @188 MINTREJ @189 MACME @190 MUCAUSE 
+      @195 MACMEUC @200 MUCCOMPARE @201 MAXIS               
+      @361 MTRANSAX @362 MRECAXIS;                                                  
+RUN;                                                                            
+/*                                                                              

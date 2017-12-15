@@ -1,0 +1,366 @@
+<HTML>
+<HEAD>
+<TITLE>Loan Calculation and Amortization</TITLE>
+
+<SCRIPT LANGUAGE=JavaScript><!--
+document.write('<!-- Hide the script -->');
+
+/*
+    Loan Calculator - © 1998 - Dave Wedwick (dave@wedwick.com)
+
+    You are hereby licensed to use this software for whatever purposes
+    you choose without charge for as long as you like.  Please
+    send a quick e-mail if you are using it (just curious to know
+    how it's used).
+
+    THIS SOFTWARE AND THE ACCOMPANYING FILES ARE PROVIDED "AS IS" AND WITHOUT
+    WARRANTIES AS TO PERFORMANCE OF MERCHANTABILITY OR ANY OTHER WARRANTIES
+    WHETHER EXPRESSED OR IMPLIED (it's just JavaScript, anyway).
+
+    Because of the various hardware and software environments into which
+    these files may be installed, NO WARRANTY OF FITNESS FOR
+    A PARTICULAR PURPOSE IS OFFERED.
+
+    You are hereby licensed to make as many copies of this software and
+    documentation as you wish; give exact copies of the original version to
+    anyone; and distribute this version of the software and documentation
+    in its unmodified form via electronic means.
+*/
+
+var LoanAmt;
+var Rate;
+var Period;
+var Payment;
+
+function CalcPayment(form) {
+  // This calculates the payment amount from the other three values
+
+  // Assign the values from the form
+  LoanAmt = parseFloat(form.LoanAmt.value);
+  Rate = parseFloat(form.Rate.value);
+  Period = parseInt(form.Period.value);
+
+  // Validate the values that are coming from the form
+  if (isNaN(LoanAmt)) {  alert("Missing Loan Amount");   return;  }
+  if (isNaN(Rate))    {  alert("Missing Interest Rate"); return;  }
+  if (isNaN(Period))  {  alert("Missing Period Value");  return;  }
+
+  // The Rate is the yearly interest rate -- adjust to make a monthly rate.
+  //   Also, the rate is a percentage, so divide by 100 to make the usable
+  //   amount;
+  if (Rate >= 1) { Rate /= 100; }
+  Rate /= 12;
+
+  // Calculate the payment based on the other three amounts
+  Payment = LoanAmt *
+               (Rate * Math.pow(1+Rate, Period)) /
+                (Math.pow(1+Rate, Period) - 1);
+
+  // Format the value by multiplying by 100, rounding the number, then
+  //   dividing that result to get two decimal places
+  Payment = Math.ceil(Payment*100) / 100;
+  form.PaymentAmt.value = Payment.toString();
+
+  return;
+}
+
+function CalcLoanAmt(form) {
+  // This calculates the loan principal amount from the other three values
+
+  // Assign the values from the form
+  Rate = parseFloat(form.Rate.value);
+  Period = parseInt(form.Period.value);
+  Payment = parseFloat(form.PaymentAmt.value);
+
+  // Validate the values that are coming from the form
+  if (isNaN(Rate))    {  alert("Missing Interest Rate");   return;  }
+  if (isNaN(Period))  {  alert("Missing Period Value");    return;  }
+  if (isNaN(Payment)) {  alert("Missing Payment Amount");  return;  }
+
+  // The Rate is the yearly interest rate -- adjust to make a monthly rate.
+  //   Also, the rate is a percentage, so divide by 100 to make the usable
+  //   amount;
+  if (Rate >= 1) { Rate /= 100; }
+  Rate /= 12;
+
+  // Calculate the loan amount based on the other three amounts
+  LoanAmt = Payment /
+               ((Rate * Math.pow(1+Rate, Period)) /
+                (Math.pow(1+Rate, Period) - 1));
+
+  // Format the value by multiplying by 100, rounding the number, then
+  //   dividing that result to get two decimal places
+  form.LoanAmt.value = (Math.floor(LoanAmt*100) / 100).toString();
+
+  return;
+}
+
+function CalcPeriod(form) {
+  // This calculates the loan principal amount from the other three values
+
+  // Assign the values from the form
+  LoanAmt = parseFloat(form.LoanAmt.value);
+  Rate = parseFloat(form.Rate.value);
+  Payment = parseFloat(form.PaymentAmt.value);
+
+  // Validate the values that are coming from the form
+  if (isNaN(LoanAmt)) {  alert("Missing Loan Amount");     return;  }
+  if (isNaN(Rate))    {  alert("Missing Interest Rate");   return;  }
+  if (isNaN(Payment)) {  alert("Missing Payment Amount");  return;  }
+
+  // The Rate is the yearly interest rate -- adjust to make a monthly rate.
+  //   Also, the rate is a percentage, so divide by 100 to make the usable
+  //   amount;
+  if (Rate >= 1) { Rate /= 100; }
+  Rate /= 12;
+
+  // If the payment is too low, the denominator in the first
+  //   fraction goes negative, and the natural log of a negative
+  //   is NaN.  So, there is a minimum payment -- or, you would
+  //   never reduce the principal!
+  if (Payment - LoanAmt*Rate < 0) {
+    alert("Payment amount too small.\nIt must be at least $" +
+          (Math.ceil(LoanAmt*Rate)).toString());
+
+    return;
+  }
+
+  // Calculate the period based on the other three amounts
+  with (Math) {
+    Period = ceil(log(Payment / (Payment - LoanAmt*Rate)) /
+                  log(1 + Rate));
+  }
+
+  // Format the value by multiplying by 100, rounding the number, then
+  //   dividing that result to get two decimal places
+  form.Period.value = Period.toString();
+
+  // Re-adjust the payment to reflect this new period
+  CalcPayment(form);
+
+  return;
+}
+
+function CalcRate(form) {
+  // This calculates the interest rate from the other three values.
+  //   I could not find a formula for the interest rate, so I
+  //   find the value iteratively.
+  var TempPayment;
+  var Increment;
+
+  // Assign the values from the form
+  LoanAmt = parseFloat(form.LoanAmt.value);
+  Payment = parseFloat(form.PaymentAmt.value);
+  Period  = parseInt(form.Period.value);
+
+  // Validate the values that are coming from the form
+  if (isNaN(LoanAmt)) {  alert("Missing Loan Amount");     return;  }
+  if (isNaN(Payment)) {  alert("Missing Payment Amount");  return;  }
+  if (isNaN(Period))  {  alert("Missing Period Value");    return;  }
+
+  // Remember the payment value as an integer (for comparing)
+  TempPayment = -9999;   // Init
+  Rate = 50 / 1200;      // Yearly rate of 50% (starting point)
+  Increment = Rate/2;
+
+  with (Math) {
+    while (abs(Payment - TempPayment) > 0.005 ) {
+
+      // Calculate the payment based on the other three amounts
+      TempPayment = LoanAmt *
+                    (Rate * pow(1+Rate, Period)) /
+                    (pow(1+Rate, Period) - 1);
+
+      if (TempPayment > Payment)      { Rate -= Increment;  }
+      else if (TempPayment < Payment) { Rate += Increment;  }
+
+      Increment /= 2;
+    }
+  }
+
+  // Format the rate
+  form.Rate.value = (parseInt(Rate * 1200000) / 1000).toString();
+
+  return;
+}
+
+function ValToMoney(Val, ConverMethod) {
+  // Format the passed value as a float with two decimal places
+  var FmtVal;
+  var DecPos;
+
+  // If the conversion method is 1, use the ceil() method to convert
+  //   the value and not the round()
+  if (ConverMethod == 1) {
+    FmtVal = (Math.ceil(Val * 100) / 100).toString();
+  }
+  else {
+    FmtVal = (Math.round(Val * 100) / 100).toString();
+  }
+
+  // Make sure it has two decimal places after the decimal point
+  DecPos = FmtVal.indexOf('.');
+  if (DecPos == -1)                   {  FmtVal += '.00'; }
+  else if (DecPos == FmtVal.length-1) {  FmtVal += '00';  }
+  else if (DecPos == FmtVal.length-2) {  FmtVal += '0';   }
+
+  return FmtVal;
+}
+
+function ShowAmoritazation(form) {
+  // Show the amortization table in the 2nd frame
+  var Counter;
+  var Bal;
+  var Interest;
+  var Principal;
+  var TotInterest;
+
+  // Assign the values from the form
+  LoanAmt = parseFloat(form.LoanAmt.value);
+  Rate = parseFloat(form.Rate.value);
+  Payment = parseFloat(form.PaymentAmt.value);
+  Period = parseInt(form.Period.value);
+
+  // Validate the values that are coming from the form
+  if (isNaN(LoanAmt)) {  alert("Missing Loan Amount");       return;  }
+  if (isNaN(Rate))    {  alert("Missing Interest Rate");     return;  }
+  if (isNaN(Payment)) {  alert("Missing Payment Amount");    return;  }
+  if (isNaN(Period))  {  alert("Missing Period Amount");     return;  }
+
+  // The Rate is the yearly interest rate -- adjust to make a monthly rate.
+  //   Also, the rate is a percentage, so divide by 100 to make the usable
+  //   amount;
+  if (Rate > 1) { Rate /= 100; }
+  Rate /= 12;
+
+  // Write out the schedule on the 2nd frame
+  with (parent.frames[1].document) {
+
+    open();
+    clear();
+    writeln('<HTML><BODY BGCOLOR=#FFFFFF>');
+
+    write('</CENTER>');
+
+    // -------------------------------
+    // Show the parameters at the top
+    // -------------------------------
+    write('<TABLE BORDER=0>');
+    write('<TR>');
+
+    write('<TD ALIGN=LEFT>Loan Amount</TD>');
+    write('<TD ALIGN=LEFT BGCOLOR=#CACACA>$' + LoanAmt.toString() + '</TD>');
+
+    write('<TD WIDTH=30></TD>');
+
+    write('<TD ALIGN=LEFT>Period</TD>');
+    if (Period == 1) {
+      write('<TD ALIGN=LEFT BGCOLOR=#CACACA>1 month</TD>');
+    }
+    else {
+      write('<TD ALIGN=LEFT BGCOLOR=#CACACA>' + Period.toString() + ' months</TD>');
+    }
+    write('</TR>');
+
+    write('<TR>');
+    write('<TD ALIGN=LEFT>Interest Rate</TD>');
+    write('<TD ALIGN=LEFT BGCOLOR=#CACACA>' + (parseInt(Rate*1200000) / 1000).toString() + '%</TD>');
+
+    write('<TD WIDTH=30></TD>');
+
+    write('<TD ALIGN=LEFT>Monthly Payment</TD>');
+    write('<TD ALIGN=LEFT BGCOLOR=#CACACA>$' + Payment.toString() + '</TD>');
+
+    write('</TR>');
+
+    write('</TABLE>');
+
+    // ----------------------------
+    // Write the results in a table
+    // ----------------------------
+    writeln('<TABLE BORDER=0>');
+    writeln('<TR><TD COLSPAN=5><HR></TD></TR>');
+    write('<TR><TH ALIGN=RIGHT>Month</TH>');
+    write('<TH ALIGN=RIGHT>&nbsp;&nbsp;Payment</TH>');
+    write('<TH ALIGN=RIGHT>&nbsp;&nbsp;Interest</TH>');
+    write('<TH ALIGN=RIGHT>&nbsp;&nbsp;Principal</TH>');
+    writeln('<TH ALIGN=RIGHT>&nbsp;&nbsp;Balance</TH></TR>');
+
+    // Generate the monthly payment breakdown
+    Bal = LoanAmt;
+    TotInterest = 0;
+    for (Counter=1;  Counter <= Period;  Counter++) {
+      // Calc the interest for the remaining balance
+      Interest = Rate * Bal;
+      TotInterest += Interest;
+
+      // Calculate the amount of principal paid this month
+      Principal = Payment - Interest;
+
+      // Reduce the balance
+      Bal -= Principal;
+
+      if (Bal < 0) {
+        Principal += Bal;
+        Bal = 0;
+      }
+
+      write('<TR><TD ALIGN=RIGHT>' + Counter + '</TD>');
+      write('<TD ALIGN=RIGHT>&nbsp;&nbsp;' + ValToMoney(Payment, 1) + '</TD>');
+      write('<TD ALIGN=RIGHT>&nbsp;&nbsp;' + ValToMoney(Interest, 0) + '</TD>');
+      write('<TD ALIGN=RIGHT>&nbsp;&nbsp;' + ValToMoney(Principal, 0) + '</TD>');
+      writeln('<TD ALIGN=RIGHT>&nbsp;&nbsp;' + ValToMoney(Bal, 0) + '</TD></TR>');
+    }
+
+    write('<TR><TD COLSPAN=5><HR></TD></TR>');
+
+    write('<TR><TD COLSPAN=2>Total Interest</TD>');
+    write('<TD>&nbsp;&nbsp;' + ValToMoney(TotInterest, 0) + '</TD></TR>');
+    writeln('</TABLE>');
+
+    writeln('</CENTER></BODY></HTML>');
+    close();
+  }
+  return;
+}
+
+document.write('<!-- End hiding the script -->');
+
+//-->
+</SCRIPT>
+
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF">
+
+<FORM NAME=CalcForm>
+
+Loan Amount<BR>
+<INPUT TYPE=TEXT NAME=LoanAmt SIZE=10>
+<INPUT TYPE=BUTTON VALUE=Calculate onClick="CalcLoanAmt(this.form)">
+<BR><BR>
+
+Yearly Interest Rate<BR>
+<INPUT TYPE=TEXT NAME=Rate SIZE=10>
+<INPUT TYPE=BUTTON VALUE=Calculate onClick="CalcRate(this.form)">
+<BR><BR>
+
+Loan Period (in months)<BR>
+<INPUT TYPE=TEXT NAME=Period SIZE=10>
+<INPUT TYPE=BUTTON VALUE=Calculate onClick="CalcPeriod(this.form)">
+<BR><BR>
+
+Payment<BR>
+<INPUT TYPE=TEXT NAME=PaymentAmt SIZE=10>
+<INPUT TYPE=BUTTON VALUE=Calculate onClick="CalcPayment(this.form)">
+<BR><BR>
+
+<INPUT TYPE=BUTTON VALUE="Amortization Table" onClick="ShowAmoritazation(this.form)">
+<BR>
+</FORM>
+
+<A HREF="mailto:dave@wedwick.com">Prepared by Dave Wedwick</A>
+
+</BODY>
+</HTML>
+

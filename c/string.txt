@@ -1,0 +1,69 @@
+C/C++ Strings
+
+
+Style 1:
+=======
+Most basic initialization:
+
+char mystring[] = { 'H', 'e', 'l', 'l', 'o', '\0' }; 
+
+
+Style 2:
+=======
+Or using constant string (unlike single quotes (') which allow to specify only
+single character constants, double quotes (") are constants that specify a
+succession of characters. These strings enclosed between double quotes have
+always a null character ('\0') automatically appended at the end):
+
+char mystring[] = "Hello";    // array initializer approach
+
+But this is NOT VALID:
+
+mystring = "Hello";
+mystring = { 'H', 'e', 'l', 'l', 'o', '\0' };
+
+Because we can "assign" a multiple constant to an Array ONLY at the moment of
+initializing it.
+
+To use this style successfully, you'd need to do this:
+
+mystring[0] = 'H';
+mystring[1] = 'e';
+mystring[2] = 'l';
+mystring[3] = 'l';
+mystring[4] = 'o';
+mystring[5] = '\0';
+
+
+Style 3:
+=======
+Initialize the content at which the pointer points with constants at the same
+moment of declaring the variable pointer:
+
+char *mystring = "Hello";
+
+In this case static storage is reserved to contain "Hello" and a pointer to
+the first char of this memory block (that corresponds to 'H') is assigned to
+mystring.  It is important to note that mystring contains a value like
+0x1234 and not 'H'.
+
+If our temper changed and we wanted to replace the 'o' by a '!' sign in the
+content pointed to by mystring, we could do it by any of the following two
+ways:
+
+mystring[4] = '!';
+*(mystring+4) = '!';
+
+
+Style 4:
+=======
+Use <string.h> / <cstring> library functions:
+
+char szMyName[80];   // sz used to indicate a string terminated by zero
+strcpy(szMyName, "J. Soulie");
+
+
+Style 5:
+=======
+cin.getline(mystring, 80);
+

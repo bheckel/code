@@ -1,0 +1,41 @@
+#!/usr/bin/perl
+
+# From UnixReview 24 Schwartz 
+# Modified: Wed 31 Mar 2004 15:32:37 (Bob Heckel)
+#################
+# Example 1
+
+dbmopen %DB, "junk_dbm", 0644 or die "can't dbmopen: $!";
+
+print "creating database...\n";
+for ( 1..9 ) {
+  $DB{"item $_"} = rand(10);
+}
+
+print "DEBUG: print database contents:\n";
+for ( keys %DB ) {
+  print "$_ is $DB{$_}\n";
+}
+
+# Usually not needed.
+dbmclose %DB;
+
+
+# Contents are still available (as .dir & .pag) w/o needed to be reloaded via
+# this script.
+
+
+
+__END__
+#################
+# Example 2
+
+# TODO finish
+
+dbmopen %HIST, '/home/bqh0/tmp/testing/byte', 0644 or die "Error: $0: $!";
+
+while (($key,$val) = each %HIST) {
+    print $key, ' = ', unpack('L',$val), "\n";
+}
+dbmclose(%HIST);
+

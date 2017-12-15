@@ -1,0 +1,369 @@
+<html>
+<head>
+<title>C++ Tutorial: 3.2, Strings of Characters.</title>
+<META NAME="description" CONTENT="Declaration, initialization and use of strings. Standard Input with strings using cin.getline.">
+<META NAME="keywords" CONTENT="cin.getline atol atoi buffer">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 3.2 </FONT><BR>
+ <FONT SIZE=5><B> Strings of Characters.</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<p>
+In all programs seen until now, we have used only numerical variables,
+used to express numbers exclusively. But in addition to numerical variables there also
+exist strings of characters, that allow us to represent successions of characters,
+like words, sentences, names, texts, et cetera. Until now we have only used them
+as constants, but we have never considered variables able to contain them.
+<p>
+In C++ there is no specific <I>elemental</I> variable type to store strings of characters.
+In order to fulfill this feature we can use arrays of type <tt><b>char</b></tt>,
+which are successions of <tt><b>char</b></tt> elements. Remember that this data type
+(<tt><b>char</b></tt>) is the one used to store a single character, for that reason arrays
+of them are generally used to make strings of single characters.
+<p>
+For example, the following array (or string of characters):
+<blockquote><tt><b>char jenny [20];</b></tt><br></blockquote>
+can store a string up to 20 characters long. You may imagine it thus:
+<blockquote><img src="imgstri1.gif"></blockquote>
+This maximum size of 20 characters is not required to be always fully used. For example,
+<tt><b>jenny</b></tt> could store at some moment in a program either the string of characters 
+<tt>"Hello"</tt> or the string <tt>"Merry christmas"</tt>.  Therefore, since the array
+of characters can store shorter strings than its total length, there has been
+reached a convention to end the valid content of a string with a null character, whose
+constant can be written <TT><B>0</B></TT> or <TT><B>'\0'</B></tt>.
+<p>
+We could represent <tt><b>jenny</b></tt> (an array of 20 elements of type
+<tt><b>char</b></tt>) storing the strings of characters <tt>"Hello"</tt> and
+<tt>"Merry Christmas"</tt> in the following way:
+
+<blockquote><img src="imgstri2.gif"></blockquote>
+
+Notice how after the valid content it is included a null character (<tt><b>'\0'</b></tt>)
+in order to indicate the end of string. The panels in gray color represent indeterminate
+values.
+
+<p>
+<h2>Initialization of strings</h2>
+<p>
+Because strings of characters are ordinary arrays they fulfill all teir same rules.
+For example, if we want to initialize a string of characters with predetermined
+values we can do it in a similar way to any other array:
+<blockquote><tt>
+char mystring[] = { 'H', 'e', 'l', 'l', 'o', '\0' };
+</tt></blockquote>
+
+In this case we would have declared a string of characters (array) of 6 elements of
+type <tt><b>char</b></tt> initialized with the characters that compose
+<tt><b>Hello</b></tt> plus a null character <tt><b>'\0'</b></tt>.
+
+<p>
+Nevertheless, string of characters have an additional way to initialize its values:
+using <u>constant strings</u>.
+
+<p>
+In the expressions we have used in examples of previous chapters there have already
+appeared several times <U>constants</U> that represented entire strings of characters.
+These are specified enclosed between double quotes (<tt>"</tt>), for example:<br>
+<blockquote><tt>"the result is: "</tt></blockquote>
+is a constant string that we have propably used in some occasion.
+<p>
+Unlike single quotes (<tt>'</tt>) which allow to specify single character constants,
+double quotes (<tt>"</tt>) are constants that specify a succession of characters.
+These strings enclosed between double quotes have always a 
+null character (<tt>'\0'</tt>) automatically appended at the end.
+<p>
+Therefore we could initialize the string <tt><b>mystring</b></tt> with values by
+any of these two ways:
+<blockquote>
+<tt>char mystring [] = { 'H', 'e', 'l', 'l', 'o', '\0' };</tt><br>
+<tt>char mystring [] = "Hello";</tt>
+</blockquote>
+In both cases the Array or string of characters <tt><b>mystring</b></tt> is declared
+with a size of 6 characters (elements of type <tt><b>char</b></tt>): the 5 characters
+that compose <tt><b>Hello</b></tt> plus a final null character (<tt>'\0'</tt>) which 
+specifies the end of the string and that, in the second case, when using double quotes
+(<tt><b>"</b></tt>) it is automatically appended.
+<p>
+Before going further, I notice to you that the assignation of multiple constants like
+double-quoted constants (<tt>"</tt>) to arrays are only valid when
+<u>initializing</u> the array, that is, at the moment when declared.
+Expressions within the code like:<br>
+<blockquote><tt><font color="red">
+mystring = "Hello";<br>
+mystring[] = "Hello";
+</font></tt></blockquote>
+are not valid for arrays, like neither would be:<br>
+<blockquote><tt><font color="red">
+mystring = { 'H', 'e', 'l', 'l', 'o', '\0' };<br>
+</font></tt></blockquote>
+So remember: <u>We can "assign" a multiple constant to an Array only at the moment of
+initializing it</u>. The reason will be more comprehensible when you know a bit more
+about pointers, since then it will be clarified that an array is simply a <I>constant
+pointer</I> pointing to an allocated block of memory. And because of this constantnes,
+the array itself can not be assigned any value, but we can assing values to each of the
+elements of the array.
+<P>
+At the moment of initializing an Array it is a special case, since it is not an
+assignation, although the same equal sign (<TT><B>=</B></TT>) is used.
+Anyway, have always present the rule previously underlined.
+<p>
+<H2>Assigning values to strings</H2>
+Therefore, since the <i>lvalue</i> of an assignation can only be an element of an array
+and not the entire array, what would be valid is to assign a string of characters to
+an array of <tt><b>char</b></tt> using a method like this:<br>
+<blockquote>
+<tt><b>mystring[0] = 'H';<br>
+mystring[1] = 'e';<br>
+mystring[2] = 'l';<br>
+mystring[3] = 'l';<br>
+mystring[4] = 'o';<br>
+mystring[5] = '\0';</b></tt><br>
+</blockquote>
+But as you may think, this does not seem to be a very practical method.  Generally for
+assigning values to an array, and more specifically to a string of characters, a series
+of functions like <tt><b>strcpy</b></tt> are used. 
+<B>strcpy</B> (<b>str</b>ing <b>c</b>o<b>py</b>) is defined in
+the <tt><b>cstring</b></tt> (<TT>string.h</TT>) library and can be called
+the following way:<br>
+<blockquote>
+<tt><b>strcpy (</b><i>string1</i><b>, </b><i>string2</i><b>);</b></tt><br>
+</blockquote>
+This does copy the content of <tt><i>string2</i></tt> into <tt><i>string1</i></tt>.
+<TT><I>string2</I></TT> can be either an array, a pointer, or a <U>constant string</U>,
+so the following line would be a valid way to assign the constant string
+<tt><b>"Hello"</b></tt> to <tt><b>mystring</b></tt>:<br>
+<blockquote><tt>strcpy (mystring, "Hello");</tt><br></blockquote>
+
+For example:
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// setting value to string</I>
+#include &lt;iostream.h&gt;
+#include &lt;string.h&gt;
+
+int main ()
+{
+  char szMyName [20];
+  strcpy (szMyName,"J. Soulie");
+  cout &lt;&lt; szMyName;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>J. Soulie</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+Look how we have needed to include <TT><B>&lt;string.h&gt;</B></TT> header
+in order to be able to use function <TT><B>strcpy</B></TT>.
+
+<p>
+Although we can always write a simple function like the following <tt><b>setstring</b></tt>
+with the same operating than cstring's <tt><b>strcpy</b></tt>:
+
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// setting value to string</I>
+#include &lt;iostream.h&gt;
+
+void setstring (char szOut [], char szIn [])
+{
+  int n=0;
+  do {
+    szOut[n] = szIn[n];
+  } while (szIn[n++] != '\0');
+}
+
+int main ()
+{
+  char szMyName [20];
+  setstring (szMyName,"J. Soulie");
+  cout &lt;&lt; szMyName;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>J. Soulie</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+Another frequently used method to assign values to an array is by using directly
+the input stream (<tt><b>cin</b></tt>). In this case the value of the string is assigned
+by the user during program execution.
+<p>
+When <tt><b>cin</b></tt> is used with strings of characters it is usually used with its
+<tt><b>getline</b></tt> method, that can be called following this prototype:
+<blockquote><tt>
+<b>cin.getline ( char </b><i>buffer</i><b>[], int </b><i>length</i><b>, char</b><i> delimiter</i><b> = ' \n');</b>
+</tt></blockquote>
+where <tt><b><i>buffer</i></b></tt> is the address where to store the input
+(like an array, for example), <tt><b><i>length</i></b></tt> is the maximum length of the
+buffer (the size of the array) and <tt><b><i>delimiter</i></b></tt> is the character used
+to determine the end of the user input, which by default - if we do not include that
+parameter - will be the newline character
+(<tt><b>'\n'</b></tt>).
+<p>
+The following example repeats whatever you type on
+your keyboard. It is quite simple but serves as example on how you can use
+<tt><b>cin.getline</b></tt> with strings:
+
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// cin with strings</I>
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  char mybuffer [100];
+  cout &lt;&lt; "What's your name? ";
+  cin.getline (mybuffer,100);
+  cout &lt;&lt; "Hello " &lt;&lt; mybuffer &lt;&lt; ".\n";
+  cout &lt;&lt; "Which is your favourite team? ";
+  cin.getline (mybuffer,100);
+  cout &lt;&lt; "I like " &lt;&lt; mybuffer &lt;&lt; " too.\n";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>What's your name? </B>Juan<BR>
+<B>Hello Juan.<BR>
+Which is your favourite team? </B>Inter Milan<BR>
+<B>I like Inter Milan too.</B></TT>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+Notice how in both calls to <tt><b>cin.getline</b></tt> we used the same string identifier
+(<tt><b>mybuffer</b></tt>). What the program does in the second call is simply step on
+the previous content of <tt><b>buffer</b></tt> by the new one that is introduced.
+<p>
+If you remember the section about communication through console, you will remember
+that we used the extraction operator (<tt><b>&gt;&gt;</b></tt>) to receive data directly
+from the standard input.  This method can also be used instead
+of <tt><b>cin.getline</b></tt> with strings of characters. For example, in our program,
+when we requested an input from the user we could have written:
+<blockquote><tt>cin &gt;&gt; mybuffer;</tt></blockquote>
+this would work, but this method has the following limitations that
+<TT><B>cin.getline</B></TT> has not:
+<ul>
+<li>It can only receive single words (no complete sentences) since this method uses as
+delimiter any occurrence of a blank character, including spaces, tabulators,
+newlines and carriage returns.
+<li>It is not allowed to specify a size for the buffer. What makes your program
+unstable in case that the user input is longer than the array that will host it.
+</ul>
+For these reasons it is recommendable that whenever you require strings of characters
+coming from <tt><b>cin</b></tt> you use <tt><b>cin.getline</b></tt> instead of
+<tt><b>cin &gt;&gt;</b></tt>.
+
+<P>
+<H2>Converting strings to other types</H2>
+Due to that a string may contain representations of other data types like numbers it might
+be useful to translate that content to a variable of a numeric type. For example, a string
+may contain <TT><B>"1977"</B></TT>, but this is a sequence of 5 chars not so easily
+convertable to a single integer data type. The <TT><B>cstdlib</B></TT>
+(<TT><B>stdlib.h</B></TT>) library provides three useful functions for this purpose:
+<UL>
+<LI><B>atoi:</B> converts string to <TT><B>int</B></TT> type.
+<LI><B>atol:</B> converts string to <TT><B>long</B></TT> type.
+<LI><B>atof:</B> converts string to <TT><B>float</B></TT> type.
+</UL>
+All of these functions admit one parameter and return a value of the requested type
+(<TT>int</TT>, <TT>long</TT> or <TT>float</TT>). These functions combined with
+<TT><B>getline</B></TT> method of <TT><B>cin</B></TT> are a more reliable way to get
+the user input when requesting a number than the classic <TT><B>cin&gt;&gt;</B></TT>
+method:
+
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// cin and ato* functions</I>
+#include &lt;iostream.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main ()
+{
+  char mybuffer [100];
+  float price;
+  int quantity;
+  cout &lt;&lt; "Enter price: ";
+  cin.getline (mybuffer,100);
+  price = atof (mybuffer);
+  cout &lt;&lt; "Enter quantity: ";
+  cin.getline (mybuffer,100);
+  quantity = atoi (mybuffer);
+  cout &lt;&lt; "Total price: " &lt;&lt; price*quantity;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>Enter price: </B>2.75<BR>
+<B>Enter quantity: </B>21<BR>
+<B>Total price: 57.75</B></TT>
+</TD></TR></TABLE>
+</CENTER>
+
+<P>
+<H2>Functions to manipulate strings</H2>
+The <B>cstring</B> library (<TT>string.h</TT>) defines many functions to
+perform some manipulation operations with C-like strings (like already explained strcpy).
+Here you have a brief with the most usual:
+<DL>
+<DT><B><A HREF="/ref/cstring/strcat.html">strcat</A>:</B> &nbsp; <FONT COLOR="#0000ff"><TT><B>char* strcat (char* </B><I>dest</I><B>, const char* </B><I>src</I><B>);</B></TT></FONT>
+<DD>Appends <I>src</I> string at the end of <I>dest</I> string. Returns <I>dest</I>.
+
+<P>
+<DT><B><A HREF="/ref/cstring/strcmp.html">strcmp</A>:</B> &nbsp; <FONT COLOR="#0000ff"><TT><B>int strcmp (const char* </B><I>string1</I><B>, const char* </B><I>string2</I><B>);</B></TT></FONT>
+<DD>Compares strings <I>string1</I> and <I>string2</I>. Returns <TT>0</TT> is both strings are equal.
+
+<P>
+<DT><B><A HREF="/ref/cstring/strcpy.html">strcpy</A>:</B> &nbsp; <FONT COLOR="#0000ff"><TT><B>char* strcpy (char* </B><I>dest</I><B>, const char* </B><I>src</I><B>);</B></TT></FONT>
+<DD>Copies the content of <I>src</I> to <I>dest</I>. Returns <I>dest</I>.
+
+<P>
+<DT><B><A HREF="/ref/cstring/strlen.html">strlen</A>:</B> &nbsp; <FONT COLOR="#0000ff"><TT><B>size_t strlen (const char* </B><I>string</I><B>);</B></TT></FONT>
+<DD>Returns the length of <I>string</I>.
+
+</DL>
+
+<P>
+NOTE: <TT><B>char*</B></TT> is the same as <TT><B>char[]</B></TT>
+<P>
+Check the <A HREF="http://www.cplusplus.com/ref/">C++ Reference</A> for extended
+information about these and other functions of this library.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut3-1.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>3-1. Arrays</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut3-3.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>3-3. Pointers</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

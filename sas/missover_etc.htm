@@ -1,0 +1,1195 @@
+<html>
+<head>
+<title>Technical Tips: Quick Tips</title>
+<script language="JavaScript" type="text/javascript" src="/lib/global.js"></script>
+
+</head>
+
+<body bgcolor="#FFFFFF" marginwidth="0" marginheight="0" leftmargin="0" topmargin="0">
+
+<!-- *********************************************************************************
+     Items to be changed/customized are indicated with !!! 
+     DO NOT CHANGE ANYTHING ELSE.
+     Please pay special attention to the use of style sheets; look for CLASS="".
+     When replacing a custom image, remember to change the ALT attribute.
+************************************************************************************** -->
+
+<!-- include HEADER begin -->
+<table width="100%" height="27" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#000000">
+
+<!-- ******* BEGIN BREADCRUMBS IN LEFT OF TOP BLACK BAR ****************************** -->
+    <td height="27" valign="middle" align="left" nowrap>&nbsp;<b>
+      <a href="/SASHome.html"><font color="#FFFFFF" size="2"><span 
+        class="topnav">www.sas.com</span></font></a>
+<!-- *** !!! Change this link according to the section ************ --> 
+      <font color="#FFFFFF" size="2">&gt;</font>
+      <a href="/service/index.html"><font color="#FFFFFF" size="2"><span 
+        class="topnav">Service and Support</span></font></a>
+      <font color="#FFFFFF" size="2">&gt;</font>
+      <a href="/service/techtips/index.html"><font color="#FFFFFF" size="2"><span 
+        class="topnav">Technical Tips</span></font></a>
+<!-- *** !!! To add a level, copy the above 3 lines below here *********************** -->
+      </b></td>
+<!-- ******* END BREADCRUMBS ********************************************************* -->
+
+<!-- ******* BEGIN RIGHT NAVIGATION IN TOP BLACK BAR ********************************* -->
+<form action="/bin/jump.pl" method="get">
+    <td height="27" valign="middle" align="right" nowrap>
+        <select name="jump_list" onChange="if (options[selectedIndex].value)
+   window.location.href=(options[selectedIndex].value)">
+                    <option value="/"> -- Navigate our Site -- </option>
+          <option value="/corporate/index.html">Our Company</option>
+          <option value="/jobs/index.html">Employment</option>
+          <option value="/news/index.html">News &amp; Events</option>	  		  
+          <option value="/partners/index.html">Partners</option>
+          <option value="/solutions/index.html">Software Solutions</option>
+          <option value="/service/index.html">Service &amp; Support</option>
+          <option value="/service/publications.html">Publications</option>
+          <option value="/offices/intro.html">Worldwide Offices</option>
+          <option value="/search/index.html">Search &amp; Browse</option>
+          <option value="/apps/profile.jsp">Create/Edit User Profile</option>
+          <option value="/FAQ/intro.html">FAQ</option>
+          <option value="/contact/intro.html">Contact Us</option>
+          <option value="/SASHome.html">Home</option>
+			 </select>
+
+          <noscript><input type="submit" value="Go"></noscript>&nbsp;
+
+</td>
+</form>
+<!-- ******* END RIGHT NAVIGATION **************************************************** -->
+  </tr>
+</table>
+
+
+<table border="0" cellpadding="0" cellspacing="0" height="50" width="100%">
+  <tr>
+
+<!-- ******* BEGIN HEADER in blue horizontal bar ************************************* -->
+<!-- ******* !!! Change header image SRC and ALT below ******************************* -->
+    <td width="46%" height="50" bgcolor="#003399"> <img src="/images/banner/l2_hdd_techtips.gif" width="310" height="50" alt="Technical Tips"></td>
+    <td valign="middle" height="50" align="right" width="54%" bgcolor="#003399">
+<a href="/SASHome.html">
+      <img border="0" src="/images/global/hdd_rt.gif" width="159" height="50" alt="SAS - The power to know(tm)"></a></td>
+<!-- ******* END HEADER in blue horizontal bar *************************************** -->
+
+  </tr>
+</table>
+
+<table width="100%" height="18" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td bgcolor="#FFCC33" height="2" colspan="3" nowrap><img src="/images/global/clear.gif" width="1" height="2" alt=""></td>
+  </tr>
+  <tr>
+<!-- ******* BEGIN LOCAL NAVIGATION - in blue horizontal bar ************************** -->
+    <td bgcolor="#003399" width="99%" height="18" valign="middle" nowrap>&nbsp;
+<!-- *** !!! Change links below as needed for this section **************************** --> 
+     <a href="/service/techtips/index.html"><font color="#FFFFFF" size="2"><span class="topnav">Technical Tips Home</span></font></a> 
+      <font color="#FFFFFF" size="2">|</font>
+      <a href="/service/techtips/quicktips/index.html"><font color="#FFFFFF" size="2"><span class="topnav">Quick Tips</span></font></a> 
+      <font color="#FFFFFF" size="2">|</font> 
+      <a href="/service/techtips/bitsandbytes/index.html"><font color="#FFFFFF" size="2"><span class="topnav">SAS Bits &amp; Bytes</span></font></a> 
+      <font color="#FFFFFF" size="2">|</font> 
+      <a href="/service/techtips/ts_qa/index.html"><font color="#FFFFFF" size="2"><span class="topnav">SAS Q&amp;A</span></font></a> 
+</td>
+<!-- ******* END LOCAL NAVIGATION - in blue horizontal bar **************************** -->
+
+    <td bgcolor="#003399" width="14" height="18" valign="bottom" align="right">&nbsp;</td>
+    <td bgcolor="#003399" width="5" height="18" valign="bottom" align="right" nowrap>
+      <img src="/images/global/clear.gif" width="5" height="18" alt=""></td>
+
+  </tr>
+</table>
+<!-- include HEADER end -->
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td width="12" align="left" valign="top"> <img src="/images/global/clear.gif" width="12" height="1" alt=""></td>
+
+<!-- ******* BEGIN MAIN BODY IN MIDDLE COLUMN ***************************************** --> 
+    <td width="70%" valign="top">
+
+
+
+ 
+<!-- *** !!! Change this header to match one of Subsection links in blue bar above **** --> 
+<p><br>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td colspan="3">
+          <b><font size="4" color="#003399"><span class="mainhead">Quick Tip: Making Sense of the INFILE and INPUT Statements</span></font></b>
+          </td>
+        </tr>
+        <tr> 
+          <td rowspan="2"><img src="/images/global/clear.gif" width="48" height="8" alt=""></td>
+          <td width="100%" align="left" valign="top" colspan="2">
+<span class="mainsubhead">or <i>MISSOVER, TRUNCOVER, and PAD, OH MY!</i></span><br>
+<span class="showhead">By Randall Cates, SAS Technical Training Specialist</span><br><br>
+          </td>
+        </tr>
+</table>
+<p>
+
+
+<!-- *** !!! Begin inserting your text here ******************************************* --> 
+
+<p>
+<b>ABSTRACT</b><br>
+SAS has many powerful tools to store, analyze and present data. However, first programmers need to get the data into SAS data sets. This presentation will delve into the intricacies of reading data from sequential (text) files using the DATA step and INFILE and INPUT statements. Discussion will focus on the different options available when reading different types of text files. For example, when you should use the MISSOVER option and when the TRUNCOVER option is more appropriate. This paper assumes the audience has basic knowledge of reading text files using the DATA step (base SAS) and is appropriate for users on any operating system, though some options may be restricted.
+<p>
+<b>Introduction</b><br>
+SAS contains so many features that learning and understanding them all keeps life interesting for many SAS users! This is evident in the INFILE statement. There are no fewer than 34 different options available for this particular statement. This can get very sticky when the data file you need to read differs from the safe, easy columnar data files. So how can we make sense of the plethora of options? This paper will attempt to clarify some of the confusion. Three situations are explored. First we will look at the problems inherent in reading Variable-Length records -- both shorter values and missing data points. Next, reading in multiple files at once. Finally, obtaining data from both remote operating systems and from Web pages using the FILENAME statement.
+<p>
+<b>So Little Time, So Many Options</b><br>
+When the data lines aren't complete, what option will read the data correctly and completely? The INFILE statement has a number of possible options, as shown in the following table:
+<p>
+<table border cellspacing=1 cellpadding=7 width=373>
+<tr><td width="28%" valign="TOP">
+<p>FLOWOVER</td>
+<td width="72%" valign="TOP">
+<p>The default. Causes the INPUT statement to jump to the next record if it doesn't find values for all variables.</td>
+</tr>
+<tr><td width="28%" valign="TOP">
+<p>MISSOVER</td>
+<td width="72%" valign="TOP">
+<p>Sets all empty vars to missing when reading a short line. However, it can also skip values.</td>
+</tr>
+<tr><td width="28%" valign="TOP">
+<p>STOPOVER</td>
+<td width="72%" valign="TOP">
+<p>Stops the DATA step when it reads a short line.</td>
+</tr>
+<tr><td width="28%" valign="TOP">
+<p>TRUNCOVER</td>
+<td width="72%" valign="TOP">
+<p>Forces the INPUT statement to stop reading when it gets to the end of a short line.  This option will not skip information.</td>
+</tr>
+<tr><td width="28%" valign="TOP">
+<p>SCANOVER</td>
+<td width="72%" valign="TOP">
+<p>Causes the INPUT statement to search the data lines for a character string specified in the INPUT.</td>
+</tr>
+<tr><td width="28%" valign="TOP">
+<p>PAD</td>
+<td width="72%" valign="TOP">
+<p>Pads short lines with blanks to the length of the LRECL= option.</td>
+</tr>
+</table>
+
+<p>
+Note: SCANOVER and STOPOVER will not be discussed.
+<p>
+A text file was created with MS Notepad on Windows NT then read into a SAS data set using INFILE and INPUT statements. The list that follows shows the data lines contained in the file. Each line should contain four data points: Last Name, First Name, Employee ID and Job Title. The grayed-out area denotes actual line lengths. (Note: Most Word processors on Windows and UNIX create variable-length lines, whereas mainframe computers files contain lines of uniform length filled in by blanks.)
+<p>
+<img src="missover.gif" width="506" height="193" alt="" border="0">
+<p>
+Then two sets of code were submitted using different options on the INFILE statement. First, the lines were read in with Column Input.
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+DATA test;
+INFILE "d:\infile\emplist.dat" &lt;options&gt;;
+INPUT lastn $ 1-21 Firstn $ 22-31
+Empid $ 32-36 Jobcode $ 37-45;
+RUN;</pre></blockquote>
+</td></tr></table>
+
+<p>
+Then List Input was used.
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+DATA test;
+INFILE "d:\infile\emplist2.dat" &lt;options&gt;;
+INPUT lastn $ Firstn $
+Empid $ Jobcode $ ;
+RUN;
+</pre></blockquote>
+</td></tr></table>
+<p>
+<b>FLOWOVER</b><br>
+The FLOWOVER option is the default option on the INFILE statement. When the INPUT statement reaches the end of non-blank characters without having filled all variables, a new line is read into the Input Buffer and the INPUT statement attempts to fill the rest of the variables starting from column one. Then the next time an INPUT statement is executed, another new line is brought into the Input Buffer. The results (printed with PROC PRINT) are below.
+<p>
+
+<b>Column Input</b><br>
+<table border="1" cellspacing=1 bordercolor="#000000" cellpadding=4 width=321>
+<tr><td width="11%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b><a name="IDX"></a>Obs</b></td>
+<td width="28%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Lastn</b></td>
+<td width="20%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Firstn</b></td>
+<td width="17%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Empid</b></td>
+<td width="24%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Jobcode</b></td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>1</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+LANGKAMM</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+SARAH</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0045</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>2</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+TORRES</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+<p>JAN</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+<p>E0029</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+<p>SMITH</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>3</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+<p>LEISTNER</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+<p>COLIN</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+<p>E0116</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+<p>Mechanic</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>4</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+TOMAS</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+<p>HARALD</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+<p>WADE</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+WAUGH</td>
+</tr>
+</table>
+<p>
+When reading the second line, since the value PILOT did not extend to the required number of columns for Jobcode(37-45), the INPUT statement jumped to the next line to complete Jobcode. Similarly, for the fifth line read in, the INPUT statement first jumped to the sixth line to read Empid, then to the seventh line to read Jobcode.
+<p>
+<b>List Input</b><br>
+<table border cellspacing=1 bordercolor="#000000" cellpadding=4 width=324>
+<tr><td width="11%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Obs</b></td>
+<td width="28%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Lastn</b></td>
+<td width="22%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Firstn</b></td>
+<td width="18%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Empid</b></td>
+<td width="22%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Jobcode</b></td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>1</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+LANGKAMM</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+SARAH</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0045</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>2</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+TORRES</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+JAN</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0029</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>3</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+SMITH</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+MICHAEL</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0065</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+LEISTNER</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>4</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+TOMAS</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+HARALD</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+WADE</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+KIRSTEN</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>5</b></td>
+<td width="28%" valign="TOP" bgcolor="#ffffff">
+WAUGH</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+TIM</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0204</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+</table>
+<p>
+In this example the Pilot values are placed in the appropriate places, but the INPUT statement still loops to the next line when unable to fill all variables.
+<p>
+<b>MISSOVER</b><br>
+When the MISSOVER option is used on the INFILE statement, the INPUT statement does not jump to the next line when reading a short line. Instead, MISSOVER sets variables to missing.
+<p>
+<b>Column input</b><br>
+<table border cellspacing=1 bordercolor="#000000" cellpadding=4 width=312>
+<tr><td width="11%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Obs</b></td>
+<td width="29%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Lastn</b></td>
+<td width="22%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Firstn</b></td>
+<td width="17%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Empid</b></td>
+<td width="21%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Jobcode</b></td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>1</b></td>
+<td width="29%" valign="TOP" bgcolor="#ffffff">
+LANGKAMM</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+SARAH</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0045</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>2</b></td>
+<td width="29%" valign="TOP" bgcolor="#ffffff">
+TORRES</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+JAN</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0029</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>3</b></td>
+<td width="29%" valign="TOP" bgcolor="#ffffff">
+SMITH</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+MICHAEL</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0065</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>4</b></td>
+<td width="29%" valign="TOP" bgcolor="#ffffff">
+LEISTNER</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+COLIN</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0116</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>5</b></td>
+<td width="29%" valign="TOP" bgcolor="#ffffff">
+TOMAS</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+HARALD</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>6</b></td>
+<td width="29%" valign="TOP" bgcolor="#ffffff">
+WADE</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+KIRSTEN</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0126</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="11%" valign="TOP" bgcolor="#c0c0c0">
+<b>7</b></td>
+<td width="29%" valign="TOP" bgcolor="#ffffff">
+WAUGH</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+TIM</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0204</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+</table>
+<p>
+With column input all lines are read in as separate records. Notice however, that the PILOT Jobcodes are still missing. When MISSOVER encounters the End-Of-Line mark, and has not read all required columns for a particular variable, then that variable is set to missing. This is better, but still not perfect.
+<p> 
+<b>List Input</b><br>
+<table border cellspacing=1 bordercolor="#000000" cellpadding=4 width=331>
+<tr><td width="15%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Obs</b></td>
+<td width="25%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Lastn</b></td>
+<td width="20%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Firstn</b></td>
+<td width="18%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Empid</b></td>
+<td width="22%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Jobcode</b></td>
+</tr>
+<tr><td width="15%" valign="TOP" bgcolor="#c0c0c0">
+<b>1</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+LANGKAMM</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+SARAH</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0045</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="15%" valign="TOP" bgcolor="#c0c0c0">
+<b>2</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+TORRES</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+JAN</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0029</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="15%" valign="TOP" bgcolor="#c0c0c0">
+<b>3</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+SMITH</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+MICHAEL</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0065</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="15%" valign="TOP" bgcolor="#c0c0c0">
+<b>4</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+LEISTNER</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+COLIN</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0116</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="15%" valign="TOP" bgcolor="#c0c0c0">
+<b>5</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+TOMAS</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+HARALD</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="15%" valign="TOP" bgcolor="#c0c0c0">
+<b>6</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+WADE</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+KIRSTEN</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0126</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="15%" valign="TOP" bgcolor="#c0c0c0">
+<b>7</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+WAUGH</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+TIM</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0204</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+</table>
+<p>
+Since List Input doesn't specify explicit columns, these data lines can be correctly read using the MISSOVER option.
+<p>
+<b>TRUNCOVER</b><br>
+The TRUNCOVER option acts similarly to MISSOVER, and in addition, will take partial values to fill the first unfilled variable.
+
+<p>
+<b>Column Input</b><br>
+<table border cellspacing=1 bordercolor="#000000" cellpadding=4 width=326>
+<tr><td width="13%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Obs</b></td>
+<td width="26%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Lastn</b></td>
+<td width="20%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Firstn</b></td>
+<td width="18%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Empid</b></td>
+<td width="22%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Jobcode</b></td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>1</b></td>
+<td width="26%" valign="TOP" bgcolor="#ffffff">
+LANGKAMM</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+SARAH</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0045</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>2</b></td>
+<td width="26%" valign="TOP" bgcolor="#ffffff">
+TORRES</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+JAN</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0029</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>3</b></td>
+<td width="26%" valign="TOP" bgcolor="#ffffff">
+SMITH</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+MICHAEL</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0065</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>4</b></td>
+<td width="26%" valign="TOP" bgcolor="#ffffff">
+LEISTNER</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+COLIN</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0116</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>5</b></td>
+<td width="26%" valign="TOP" bgcolor="#ffffff">
+TOMAS</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+HARALD</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>6</b></td>
+<td width="26%" valign="TOP" bgcolor="#ffffff">
+WADE</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+KIRSTEN</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0126</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>7</b></td>
+<td width="26%" valign="TOP" bgcolor="#ffffff">
+WAUGH</td>
+<td width="20%" valign="TOP" bgcolor="#ffffff">
+TIM</td>
+<td width="18%" valign="TOP" bgcolor="#ffffff">
+E0204</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+</table>
+
+<p>
+Here TRUNCOVER successfully reads the short lines, apportioning out the values to the correct places. When the INPUT statement reached a foreshortened line, the TRUNCOVER option takes what's left (e.g. Pilot) and assigns it to the appropriate value. Other variables are set to missing where necessary.
+
+<p>
+<b>List Input</b><br>
+<table border cellspacing=1 bordercolor="#000000" cellpadding=4 width=328>
+<tr><td width="16%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Obs</b></td>
+<td width="22%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Lastn</b></td>
+<td width="23%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Firstn</b></td>
+<td width="16%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Empid</b></td>
+<td width="22%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Jobcode</b></td>
+</tr>
+<tr><td width="16%" valign="TOP" bgcolor="#c0c0c0">
+<b>1</b></td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+LANGKAMM</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+SARAH</td>
+<td width="16%" valign="TOP" bgcolor="#ffffff">
+E0045</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="16%" valign="TOP" bgcolor="#c0c0c0">
+<b>2</b></td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+TORRES</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+JAN</td>
+<td width="16%" valign="TOP" bgcolor="#ffffff">
+E0029</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="16%" valign="TOP" bgcolor="#c0c0c0">
+<b>3</b></td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+SMITH</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+MICHAEL</td>
+<td width="16%" valign="TOP" bgcolor="#ffffff">
+<p>E0065</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="16%" valign="TOP" bgcolor="#c0c0c0">
+<b>4</b></td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+LEISTNER</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+COLIN</td>
+<td width="16%" valign="TOP" bgcolor="#ffffff">
+E0116</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="16%" valign="TOP" bgcolor="#c0c0c0">
+<b>5</b></td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+TOMAS</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+HARALD</td>
+<td width="16%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="16%" valign="TOP" bgcolor="#c0c0c0">
+<b>6</b></td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+WADE</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+KIRSTEN</td>
+<td width="16%" valign="TOP" bgcolor="#ffffff">
+E0126</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="16%" valign="TOP" bgcolor="#c0c0c0">
+<b>7</b></td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+WAUGH</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+TIM</td>
+<td width="16%" valign="TOP" bgcolor="#ffffff">
+E0204</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+</table>
+<p>
+Since List Input reads from delimiter to delimiter, TRUNCOVER still reads in all lines correctly.
+<p>
+<b>PAD</b><br>
+The PAD option does not replace the FLOWOVER option. Instead, the PAD option augments FLOWOVER by adding blanks to lines to fill them out to the logical record length (LRECL). Usually, the PAD option will take the LRECL from the file information, but you can specify LRECL= in the INFILE statement.
+<p>
+<b>Column Input</b><br>
+<table border cellspacing=1 bordercolor="#000000" cellpadding=4 width=355>
+<tr><td width="13%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Obs</b></td>
+<td width="25%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Lastn</b></td>
+<td width="24%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Firstn</b></td>
+<td width="17%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Empid</b></td>
+<td width="22%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Jobcode</b></td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0" height=43>
+<b>1</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff" height=43>
+LANGKAMM</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff" height=43>
+SARAH</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff" height=43>
+E0045</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff" height=43>
+Mechanic</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>2</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+TORRES</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+JAN</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0029</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>3</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+SMITH</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+MICHAEL</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0065</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>4</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+LEISTNER</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+COLIN</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0116</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>5</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+TOMAS</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+HARALD</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">&nbsp;</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>6</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+WADE</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+KIRSTEN</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0126</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="13%" valign="TOP" bgcolor="#c0c0c0">
+<b>7</b></td>
+<td width="25%" valign="TOP" bgcolor="#ffffff">
+WAUGH</td>
+<td width="24%" valign="TOP" bgcolor="#ffffff">
+TIM</td>
+<td width="17%" valign="TOP" bgcolor="#ffffff">
+E0204</td>
+<td width="22%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+</table>
+<p>
+When reading in data with Column Input, SAS reads "just the columns, Ma'am." Since the PAD option adds blanks, SAS can read the appropriate columns without hitting the End-of-File mark. So the data is read in correctly.
+<p> 
+<b>List Input</b><br>
+<table border cellspacing=1 bordercolor="#000000" cellpadding=4 width=336>
+<tr><td width="10%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Obs</b></td>
+<td width="27%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Lastn</b></td>
+<td width="21%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Firstn</b></td>
+<td width="19%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Empid</b></td>
+<td width="23%" valign="BOTTOM" bgcolor="#c0c0c0">
+<b>Jobcode</b></td>
+</tr>
+<tr><td width="10%" valign="TOP" bgcolor="#c0c0c0">
+<b>1</b></td>
+<td width="27%" valign="TOP" bgcolor="#ffffff">
+LANGKAMM</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">
+SARAH</td>
+<td width="19%" valign="TOP" bgcolor="#ffffff">
+E0045</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+Mechanic</td>
+</tr>
+<tr><td width="10%" valign="TOP" bgcolor="#c0c0c0">
+<b>2</b></td>
+<td width="27%" valign="TOP" bgcolor="#ffffff">
+TORRES</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">
+JAN</td>
+<td width="19%" valign="TOP" bgcolor="#ffffff">
+E0029</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+<tr><td width="10%" valign="TOP" bgcolor="#c0c0c0">
+<b>3</b></td>
+<td width="27%" valign="TOP" bgcolor="#ffffff">
+SMITH</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">
+MICHAEL</td>
+<td width="19%" valign="TOP" bgcolor="#ffffff">
+E0065</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+LEISTNER</td>
+</tr>
+<tr><td width="10%" valign="TOP" bgcolor="#c0c0c0">
+<b>4</b></td>
+<td width="27%" valign="TOP" bgcolor="#ffffff">
+TOMAS</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">
+HARALD</td>
+<td width="19%" valign="TOP" bgcolor="#ffffff">
+WADE</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+KIRSTEN</td>
+</tr>
+<tr><td width="10%" valign="TOP" bgcolor="#c0c0c0">
+<b>5</b></td>
+<td width="27%" valign="TOP" bgcolor="#ffffff">
+WAUGH</td>
+<td width="21%" valign="TOP" bgcolor="#ffffff">
+TIM</td>
+<td width="19%" valign="TOP" bgcolor="#ffffff">
+E0204</td>
+<td width="23%" valign="TOP" bgcolor="#ffffff">
+Pilot</td>
+</tr>
+</table>
+<p>
+List Input reads data from delimiter to delimiter. The default delimiter character is a blank. Multiple delimiters are treated as one. So with the PAD option in effect, and FLOWOVER still in effect the INPUT statement must look to the next line to fill the remaining variables.
+<p>
+<b>Synopsis</b><br>
+Reading files with variable line lengths can be frustrating, especially when one doesn't fully understand how each option does and doesn't work. The default option of FLOWOVER expects to fill all variables, and uses multiple lines if necessary.
+<p>
+MISSOVER was originally created to be used in conjunction with PAD and works effectively and well in most situations. However, this can be a CPU intensive process when reading an extremely large file.
+STOPOVER is a good tool for checking code and raw data when dealing with large, potentially messy files, because it forces the DATA step to stop the first time it finds a short line.
+<p>
+TRUNCOVER was developed later than the MISSOVER and PAD options, and deals admirably with not only short lines but with short values. TRUNCOVER is more also efficient since it doesn't require the extra "padding."
+<p>
+One final point about variable-length files. It is possible to copy in a subset of any raw data file directly into the DATA step and run these options on the subset. Use an INFILE DATALINES statement, and add whichever options are appropriate. For example;
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+DATA test;
+   INFILE datalines TRUNCOVER;
+      INPUT lastn $1-20 firstn $21-30
+          empid $31-35 jobcode $37-44;
+DATALINES;
+"add a number of data lines here without semicolons"
+RUN;
+</pre></blockquote>
+</td></tr></table>
+<p>
+<b>All the Files, Please</b><br>
+Another situation that may arise is where the raw data exists in numerous separate files. Here the INFILE statement has a couple of options that can help. The FILEVAR= option allows us to specify a temporary variable, to be filled during DATA step execution, that will contain the name of the raw data file. The END= option allows us to set another temporary variable that registers, for each line read in, "Is this the last line of the file?" We can use these in a number of useful ways to input data from multiple files to a SAS data set. Here are a few possibilities.
+<p>
+First, just list the files in a series of datalineS in the DATA step. (All files have the same types of data and in the same order.)
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+DATA one;
+   LENGTH fil2read $ 40;
+   INPUT fil2read $;
+   INFILE dummy FILEVAR=fil2read
+         END=done;
+   DO WHILE (NOT done=1);
+      INPUT lastn $ firstn $ 
+            hiredate : mmddyy8. 
+            salary;
+      OUTPUT;
+   END;
+DATALINES;
+D:\Infile\emplist.dat
+D:\Infile\emplist1.dat
+D:\Infile\emplist2.dat
+D:\Infile\emplist3.dat
+D:\Infile\emplist4.dat
+RUN;
+</pre></blockquote>
+</td></tr></table>
+<p>
+The first INPUT statement reads each data line in the DATA step and saves the information to the temporary variable (FILE2READ). The INFILE statement reads that variable with FILEVAR= to obtain the path and name of the appropriate file. Then an INPUT/OUTPUT loop reads each file sequentially to the end.
+<p> 
+Be careful to set up the DO loop so that the DATA step never reads in the End-Of-File marker on any file. This will cause the DATA step to terminate, prematurely.
+<p>
+The END= option on the INFILE statement sets up a temporary variable (DONE) which will register 0 (not the last record) or 1 (the last record) for each raw data line read in from each file. By testing for DONE=1 at the top of the loop (DO WHILE), and exiting the DO loop after the last line of every file, we ensure that we never hit the end-of-file for all files read in. This will be true even for empty files.
+<p>
+Another way of accomplishing the task is to set up a SAS data set that stores the names of the files and would be called using a SET statement. The remainder of the DATA step executes as before.
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+DATA one;
+   SET two;
+   INFILE dummy FILEVAR=fil2read 
+         END=done;
+   DO WHILE (NOT done=1);
+      INPUT lastn $ firstn $ 
+            hiredate : mmddyy8. 
+            salary;
+      OUTPUT;
+   END;
+RUN;
+</pre></blockquote>
+</td></tr></table>
+<p>
+Finally, it's possible to read in filenames dynamically, using a FILENAME with the Pipe option. This is useful when all of the files are in the same directory. With the PIPE keyword, the FILENAME statement can take an operating system command in quotes, and accept the result as valid input. Unfortunately, this is not available on mainframe operating systems.
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+FILENAME indata PIPE 
+         "dir D:\Infile\*.dat /b";
+DATA test;
+   LENGTH fil2read $40;
+   INFILE indata MISSOVER;
+   INPUT fil2read $;
+   fil2read="d:\infile\"||fil2read;
+   INFILE dummy FILEVAR=fil2read
+         END=done;
+   DO WHILE(NOT done);
+      INPUT lastn $ firstn $ 
+            hiredate : mmddyy8. 
+            salary;
+      OUTPUT;
+   END;
+RUN;
+</pre></blockquote>
+</td></tr></table>
+<p>
+The information returned from the FILENAME statement is a list of all files in D:\Infile with a .DAT type. One can specify all files, or (as above) specific files. The DATA step can use this information with one INFILE statement and then use the information to read the files by applying it to a FILEVAR= option on a second INFILE statement.
+<p>
+One limitation with the Windows OS is that the Windows command (DIR) returns only the names of the files without the pathnames. So the fil2read variable needs to be augmented with the pathname in an assignment statement.
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+fil2read="d:\infile\"||fil2read;
+</pre></blockquote>
+</td></tr></table>
+<p>
+In UNIX, a similar FILENAME statement would read:
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+FILENAME indata 
+         PIPE "ls -l /Infile/*.dat /b";
+</pre></blockquote>
+</td></tr></table>
+<p>
+The UNIX <b>ls</b> command returns a fully qualified path and filename.
+<p>
+Author's note: After publishing this paper in the SUGI 26 <i>Proceedings</i>, I found a much easier way of doing this. The FILENAME statement can accept multiple filenames at once if surrounded by parentheses separated with spaces. Once a fileref has been defined for a list of files, any INFILE that references it will read each file sequentially with simple DATA step coding. The following code demonstrates using a FILENAME statement with concatenated filenames.
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+FILENAME indata 
+("D:\Infile\emplist1.dat" 
+"D:\Infile\emplist2.dat"
+"D:\Infile\emplist3.dat" 
+"D:\Infile\emplist4.dat");
+DATA test;
+   INFILE indata MISSOVER;
+   INPUT lastn $ firstn $ @31 id $5.
+         @36 jobcode $8 @44 hiredate mmddyy8. salary;
+RUN;
+</pre></blockquote>
+</td></tr></table>
+<p>
+This code will work in both SAS Version 6 and Version 8.
+<p>
+<b>The Files are WHERE??</b><br>
+This last topic is a little off subject; i.e. you can use the FILENAME statement with an FTP option to access and read files on another operating system. The FILENAME statement also has a URL access method to read a file at a Web site. Once a data source has been defined by the FILENAME statement, a DATA step is able to access, open and read the data using usual INFILE/INPUT statements.
+<p>
+To access remote files using the FILENAME FTP Access method, there are a number of options to tell SAS how to get to the data. Fortunately, if one is at all familiar with FTP the options are relatively straightforward.
+<p>
+This example prompts the user for a password, connects to a UNIX server, moves to a particular directory (/Infile/Mydata), reads a file named emplist.dat in the directory, and dumps each record into one variable in the output data set (test).
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+FILENAME unix ftp 'emplist.dat' 
+      cd='Infile/Mydata'
+      user='racate'
+      host='test.unix.sas.com'
+      prompt;
+DATA test;
+   LENGTH name $ 300;
+   INFILE unix truncover;
+   INPUT name $;
+RUN;
+</pre></blockquote>
+</td></tr></table>
+<p>
+When using the FTP option on the FILENAME statement, you need at least one other option to accomplish the connection. You need to define the host OS that you want to contact. The HOST= option sets that up. Also, you usually also need to supply a username and password, or tell SAS and the OS to prompt you for either/both. 
+<p>
+<b>Other options are:</b>
+<p>
+<table border cellspacing=1 cellpadding=7 width=343>
+<tr><td width="25%" valign="TOP">
+<p>DEBUG</td>
+<td width="75%" valign="TOP">
+<p>Writes information to the SAS log about the FTP process.</td>
+</tr>
+<tr><td width="25%" valign="TOP">
+<p>LRECL=</td>
+<td width="75%" valign="TOP">
+<p>Logical record length of remote file.</td>
+</tr>
+<tr><td width="25%" valign="TOP">
+<p>PASS=</td>
+<td width="75%" valign="TOP">
+<p>Password to use on remote server.</td>
+</tr>
+<tr><td width="25%" valign="TOP">
+<p>RECFM=</td>
+<td width="75%" valign="TOP">
+<p>Record format.  "F", "S", "V"</td>
+</tr>
+</table>
+<p>
+Accessing Web pages is similar to the above code. Define a connection to a Web page/site using FILENAME with the URL option defining an http web site as the pathname with other options as necessary then use DATA step coding to read the file.
+<p>
+This example accesses a Web page on the SAS Web site, reads the first 15 lines of HTML code, and writes them to the log.
+<p>
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr><td bgcolor="#EEEEEE">
+<blockquote><pre>
+FILENAMEme foo URL 'http://www.sas.com/service/techsup/intro.html';
+DATA _null_;
+INFILE foo length=len;
+INPUT record $varying200. len;
+PUT record $varying200. len;
+IF _n_=15 THEN stop;
+run;
+</pre></blockquote>
+</td></tr></table>
+<p>
+<b>CONCLUSION</b><br>
+This paper has described some options of the FILENAME statement for different situations. There are many different types of data files, and SAS can read in most, if not all. SAS can read data files of variable lengths, delimited files, files with missing data, multiple files per DATA step, files on other operating systems, even HTML Web pages. With a broader knowledge of SAS' data reading capabilities, programmers can accept data from multiple sources with confidence.
+
+<p>
+<b>References</b>
+<br>
+SAS Institute Inc., <i>SAS&reg; Language Reference, Version 8</i>, Cary, NC: SAS Institute Inc., 1999. 1256 pp.
+<p>SAS Institute Inc., <i>SAS&reg; Companion for the Microsoft Windows Environment, Version</i> 8, Cary, NC: SAS Institute Inc., 1999. 555 pp.
+<p>SAS Institute Inc., <i>Technical Support Notes, TS-581</i>, &quot;Using FILEVAR= to Read Multiple External Files in a DATA Step&quot;  http://ftp.sas.com/techsup/download/technote/ts581.html, Cary, NC: SAS Institute Inc., 2000. 5 pp.
+
+<p>
+This technical tip was submitted by <a href="mailto:Randall.Cates@sas.com">Randall Cates</a>, Technical Training Specialist II for SAS located in the St. Louis Regional Office. If you have a SAS technical tip you think others would find helpful, please share it with us. Send your tips or topics you'd like to see covered to <a href="mailto:techeditor@sas.com">techeditor@sas.com</a>.
+
+<p>
+<br><br>
+
+
+
+    </td>
+<!-- ******* END MAIN BODY ************************************************************ --> 
+
+<!-- ******* BEGIN GRAY VERTICAL RULE ************************************************* --> 
+    <td width="12" align="left" valign="top">
+      <table width="11" cellpadding="0" cellspacing="0" border="0" height="100%">
+        <tr> 
+          <td width="5" valign="top" align="center"><img src="/images/global/clear.gif" width="5" alt=""></td>
+          <td width="1" valign="top" align="center" bgcolor="#CCCCCC"><img src="/images/global/clear.gif" width="1" height="400" alt=""></td>
+          <td width="5" valign="top" align="center"><img src="/images/global/clear.gif" width="5" alt=""></td>
+        </tr>
+      </table>
+    </td>
+<!-- ******* END GRAY VERTICAL RULE *************************************************** --> 
+
+<!-- ******* BEGIN RIGHT COLUMN ******************************************************* -->     
+    <td valign="top">
+
+
+
+
+<!-- *** !!! Change "Show Me" content here ********* --> 
+<!-- *** !!! Add or delete Link/Copy Text lines as needed ******* --> 
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td align="left" width="30%"> 
+<br>
+<span class="showhead"></span><br><br>
+              <span class="newstext">&nbsp;&nbsp;</span>
+<br><br>
+              <span class="newstext">&nbsp;&nbsp;
+</span>
+<br><br>
+
+
+</td>
+              </tr>
+            </table>
+
+ <br>    <br> 
+   </td>
+<!-- ******* END RIGHT COLUMN ****************************************************** -->
+  </tr>
+
+<!-- include FOOTER begin -->
+
+  <tr> 
+ 
+   <td align="center" width="100%" height="21" colspan="5" bgcolor="#FFCC33"> 
+
+<center> 
+<img src="/images/global/clear.gif" width="13" height="8" alt="">
+<span class="yllwbar">
+<a href="/search/index.html">Search & Browse</a> <font size="2">|</font>
+<a href="/subscriptions/index.html">Subscriptions</a> <font size="2">|</font> 
+<a href="/FAQ/intro.html">FAQ</a> <font size="2">|</font> 
+<a href="/contact/intro.html">Contact Us</a> <font size="2">|</font> 
+
+<a href="/Copyright.html">Terms of Use &amp; Legal Information</a>
+<font size="2">|</font> <a href="/Privacy.html">Privacy Statement</a><br>
+Copyright &copy; 2001 SAS Institute Inc. All Rights Reserved.
+</span>      
+</center>
+</td>
+  </tr> 
+
+<!-- include FOOTER end -->
+        </table>                        
+
+</body>
+</html>
+                       
+
+
+
+
+
+
+
+
+

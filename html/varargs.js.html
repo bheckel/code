@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+  <SCRIPT Language="JavaScript">
+    // Demo of how to pass one or more parameters to a JavaScript function.
+    // Adapted: Wed, 31 Jan 2001 08:49:06 (Bob Heckel -- 
+    //   http://developer.netscape.com/docs/examples/javascript/pass_arg.html)
+    function foo() {
+      // Array of argument values.
+      var argv = foo.arguments;
+      // The number of arguments passed to this function.
+      var argc = argv.length;
+
+      // For formatting purposes only.
+      document.write("<BR><BR>\n\n");
+
+      // Loop through the arguments (0 through n-1).
+      for (var i = 0; i < argc; i++) {
+        // Write out the argument values.
+        document.write("<BR>\nValue of Argument " + i + ": " + argv[i]);
+      }
+    }
+  </SCRIPT>
+</HEAD>
+<BODY>
+  <CENTER><H1>Arguments passed to function "foo"</H1></CENTER>
+  <SCRIPT>
+    foo("a single arg");
+    foo(1, "two", 3);
+    foo(3.14159, "many", "passed", "params");
+  </SCRIPT>
+</BODY>

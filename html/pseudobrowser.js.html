@@ -1,0 +1,26 @@
+<!-- Adapted: Thu, 08 Feb 2001 08:27:17 (Bob Heckel - Webmonkey JavaScript tut http://hotwired.lycos.com/webmonkey/98/04/index3a_page6.html?tw=programming) -->
+
+<SCRIPT LANGUAGE="JavaScript">
+  function goThere() {
+    var the_url = window.document.the_form.the_url.value; 
+    var good_url = fixURL(the_url);
+    var new_window = open(good_url,"new_window","menubar,resizable");
+  }
+
+  function fixURL(the_url) {
+    var the_first_seven = the_url.substring(0,7);
+    the_first_seven = the_first_seven.toLowerCase();
+
+    if (the_first_seven != 'http://') {
+      the_url = "http://" + the_url;
+    }
+
+    return the_url;
+  }
+</SCRIPT>
+
+<H5>Pseudo browser.  Type URL with or without http://.  Spawns new window.</H5>
+<!-- If "return true;", you clear the textbox text from user on submit. -->
+<FORM NAME="the_form" onSubmit="goThere(); return false;">
+  <INPUT TYPE="text" NAME="the_url" SIZE=40>
+</FORM>

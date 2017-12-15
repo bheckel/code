@@ -1,0 +1,51 @@
+<!-- Poor man's Perl-less form via email. -->
+<!-- Modified: Thu, 21 Oct 1999 14:50:46 (Bob Heckel) -->
+
+<!-- <script language="javascript"> -->
+<!--   var name = prompt("What is your name?","Write It Here") -->
+<!--   var email = prompt("What is your email address", "Write It Here") -->
+<!-- </script> -->
+
+<!-- TODO email header line doesn't interpolate. -->
+<html>
+<form method='post' action='mailto:bheckel@nortelnetworks.com?subject=script tip mail from " +gbookform.namer.value+ " at " +email+ "' enctype='text/plain' name='gbookform'>
+  <h2>Lil' Emily's Mailing List Registration (maintained by her Dad)</h2>
+  <h4>This form requires that you have an email program that your browser can use to send the form when you click Submit.</h4>
+  <b>Your name</b>
+  <br>
+  <input type="text" name="namer">
+  <br>
+  <b>Your email address (will not be disclosed to anyone; used only for mailing list)</b>
+  <br>
+  <input type="text" name="email">
+  <br>
+  <br>
+  <b>Comments?</b>
+  <br>
+  <textarea cols="40" rows="20" name="maintext"></textarea>
+  <p>
+  <input type="submit" value="Submit" onClick="verify()">
+</form>
+
+<script language="javascript">
+function verify() {
+  var namez = gbookform.namer.value;
+  // DEBUG
+  ////alert(namez);
+  var email = gbookform.email.value;
+  var OpenWindow=window.open("", "newwin", "height=400,width=300");
+  OpenWindow.document.write("<HTML>")
+  OpenWindow.document.write("<TITLE>Thanks for Signing Up</TITLE>")
+  OpenWindow.document.write("<BODY BGCOLOR='ffffcc'>")
+  OpenWindow.document.write("<CENTER>")
+  OpenWindow.document.write("Thank you <B>" + namez + "</B> from <B>" +email+ "</B><P>")
+  OpenWindow.document.write("Your registration <P><I>" + document.gbookform.maintext.value + "</I><P>")
+  OpenWindow.document.write("from " + namez + " at " +email+ "<P>")
+  OpenWindow.document.write("will be sent along when you close this window. Your email address will not be disclosed to anyone. If this does not work due to misconfigured browser/email, please send an email directly to bheckel@excite.com<p>")
+  OpenWindow.document.write("<CENTER>")
+  OpenWindow.document.write("<FORM><INPUT TYPE='button' VALUE='Close Window' onClick='self.close()'></FORM>")
+  OpenWindow.document.write("</CENTER>")
+  OpenWindow.document.write("</HTML>")
+}
+</script>
+</html>

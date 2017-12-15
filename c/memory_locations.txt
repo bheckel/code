@@ -1,0 +1,37 @@
+Adapted: Mon 15 Oct 2001 10:02:52 (Bob Heckel --
+          http://heather.cs.ucdavis.edu/~matloff/UnixAndC/CLanguage/Bits.html )
+
+Memory Locations
+Each memory location in the computer has an identification number, called an
+address. In most current machines, this extends down to the byte level; each
+byte has its own address. The first byte in memory is Byte 0, then Byte 1,
+then Byte 2, and so on. 
+
+When the compiler compiles your program, it will decide at what addresses to
+put each of your program's variables, and how many bytes each variable
+occupies. If you have to know this information (and in C applications we often
+do need to know), we can use the & operator to find the address of a variable,
+and the sizeof operator to find how many bytes the variable (and all
+variables of that same type) takes up. 
+
+
+Suppose, for example, that we have an int variable Y. The statement 
+
+printf("%x %d\n",&Y,sizeof(int));
+will print out for us the address of Y, and the number of bytes taken up by
+any int variable (for this compiler-machine combination). Say the output is 
+
+40b0 4
+Then we know that Y occupies Bytes 40b0, 40b1, 40b2 and 04b3. 
+
+
+Components of a complex data type are guaranteed in C to be stored
+contiguously. Thus for example, on a Sun, if we have the declaration 
+
+int Z[5];
+and if Z starts at address 5000, then Z[0] will be at 5000, Z[1] at 5004,
+Z[2] at 5008, Z[3] at 500c, and Z[4] at 5010. 
+
+
+Similarly, elements within a struct are stored contiguously, and in the
+order declared. 

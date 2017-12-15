@@ -1,0 +1,22 @@
+<SCRIPT>
+  // Want user to enter data in only one of the two inputboxes.
+  function FillOnlyOne(f, g) {
+    if ( f.ilitbox.value && g.olitbox.value ) {
+      alert("Please enter a value in only one of these textboxes.  Only able t
+    }
+  }
+</SCRIPT>
+
+<FORM ACTION="$ENV{SCRIPTFILENAME}" METHOD="GET" NAME="ilitfrm">
+  <CAPTION>Enter Full or Partial Industry Literal e.g. zoo</CAPTION><BR>
+  <INPUT NAME="ilitbox" TYPE="text" VALUE="" SIZE='60' 
+   onChange="FillOnlyOne(document.ilitfrm, document.olitfrm); return false">
+  <INPUT NAME="myigetsubmit" TYPE="submit">
+</FORM>
+
+<FORM ACTION="$ENV{SCRIPTFILENAME}" METHOD="GET" NAME="olitfrm">
+  <CAPTION>Enter Full or Partial Occupation Literal e.g. accordion</CAPTION><BR>
+  <INPUT NAME="olitbox" TYPE="text" VALUE="" SIZE='60'
+   onChange="FillOnlyOne(document.ilitfrm, document.olitfrm); return false">
+  <INPUT NAME="myogetsubmit" TYPE="submit">
+</FORM>

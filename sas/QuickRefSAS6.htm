@@ -1,0 +1,1282 @@
+<HTML>
+<HEAD>
+  <TITLE>SAS 6 Reference Guide</TITLE>
+  <META NAME="description" CONTENT="SAS 6 Reference Guide (in HTML) by Bob Heckel">
+  <META NAME="keywords" CONTENT="sas, reference, summary">
+</HEAD>
+<BODY>
+  <A NAME="top"></A>
+  <CENTER>
+  <H1>SAS 6 Reference Guide</H1>
+  <P>Last updated Tue May 28 09:27:42 2002
+  </CENTER>
+
+  <H4 ALIGN=center>Jump to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <A NAME="contents"></A>
+  <H2>Contents</H2>
+  <UL>
+    <LI><A HREF="#abbrevvarlists">Abbreviated Variable Lists</A>
+    <LI><A HREF="#controlflow">Control Flow</A>
+    <LI><A HREF="#declarations">Declarations</A>
+    <LI><A HREF="#dsoptions">Dataset Options</A>
+    <LI><A HREF="#file">File Options</A>
+    <LI><A HREF="#formats">Formats</A>
+    <LI><A HREF="#functions">Functions</A>
+    <LI><A HREF="#global">Global Statements</A>
+    <LI><A HREF="#infile">Infile Options</A>
+    <LI><A HREF="#input">Input</A>
+    <LI><A HREF="#options">Options Statements</A>
+    <LI><A HREF="#output">Output</A>
+    <LI><A HREF="#procs">Procs</A>
+    <LI><A HREF="#statements">Proc statements</A>
+    <LI><A HREF="#where">Where Operators</A>
+  </UL>
+
+  <H4 ALIGN=center>Jump to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="index"></A>
+  <H2>Index TODO</H2>
+  <!--
+  <A HREF="#abbrevvarlists">Abbreviated Variable Lists</A> &nbsp
+  <A HREF="#controlflow">Control Flow</A> &nbsp
+  <A HREF="#declarations">Declarations</A> &nbsp
+  <A HREF="#dsoptions">Dataset Options</A> &nbsp
+  <A HREF="#file">File Options</A> &nbsp
+  <A HREF="#formats">Formats</A> &nbsp
+  <A HREF="#functions">Functions</A> &nbsp
+  <A HREF="#global">Global Statements</A> &nbsp
+  <A HREF="#infile">Infile Options</A> &nbsp
+  <A HREF="#input">Input</A> &nbsp
+  <A HREF="#options">Options Statements</A> &nbsp
+  <A HREF="#output">Output</A> &nbsp
+  <A HREF="#procs">Procs</A> &nbsp
+  <A HREF="#statements">Proc statements</A> &nbsp
+  <A HREF="#where">Where Operators</A> &nbsp
+  -->
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="statements"></A>
+  <H2>Proc step statements</H2>
+
+  <UL>
+  <FONT SIZE="-1">PROC proc options;</FONT>
+  <BR>
+  <FONT SIZE="-1">BY variable or DESCENDING variable ...;</FONT>
+  <BR>
+  <FONT SIZE="-1">BY variables NOTSORTED;</FONT>
+  <BR>
+  <FONT SIZE="-1">ID variables</FONT>
+  <BR>
+  <FONT SIZE="-1">CLASS variables</FONT>
+  <BR>
+  <FONT SIZE="-1">VAR variables</FONT>
+  <BR>
+  <FONT SIZE="-1">WEIGHT variable; or FREQ variable;</FONT>
+  <BR>
+  <FONT SIZE="-1">LABEL variable='string' ... ;</FONT>
+  <BR>
+  <FONT SIZE="-1">INFORMAT variables informat specification ... ;</FONT>
+  <BR>
+  <FONT SIZE="-1">FORMAT variables format specification ... ;</FONT>
+  <BR>
+  <FONT SIZE="-1">ATTRIB variables</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;LABEL='string'</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;INFORMAT=informat specification</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;FORMAT=format specification</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;... ;</FONT>
+  <BR>
+  <FONT SIZE="-1">RUN;</FONT>
+  <BR>
+  <FONT SIZE="-1">QUIT;</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="procs"></A>
+  <H2>Procs</H2>
+  <UL>
+  <FONT SIZE="-1">PROC PRINT DATA=SAS dataset (dataset options)</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;UNIFORM SPLIT='\';</FONT>
+  <BR>
+  <FONT SIZE="-1">BY variables;</FONT>
+  <BR>
+  <FONT SIZE="-1">ID variables;</FONT>
+  <BR>
+  <FONT SIZE="-1">VAR variables;</FONT>
+  <BR>
+  <FONT SIZE="-1">SUM variables;</FONT>
+  <BR>
+  <FONT SIZE="-1">SUM BY variable;</FONT>
+  <BR>
+  <FONT SIZE="-1">PAGE BY variable;</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">PROC PRINTTO PRINT=fileref or PRINT=PRINT or LOG=fileref
+                  or LOG=LOG</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">PROC SORT DATA=SAS dataset (dataset options) OUT=SAS
+                  dataset;</FONT>
+  <BR>
+  <FONT SIZE="-1">BY variables;</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">PROC DATASETS LIBRARY=libref MTYPE=member type</FONT>
+  <BR>
+  <FONT SIZE="-1">CHANGE old=new ... ; (rename members)</FONT>
+  <BR>
+  <FONT SIZE="-1">EXCHANGE member=member ... ; (swap names)</FONT>
+  <BR>
+  <FONT SIZE="-1">AGE members;</FONT>
+  <BR>
+  <FONT SIZE="-1">DELETE members;</FONT>
+  <BR>
+  <FONT SIZE="-1">SAVE members; (delete most members)</FONT>
+  <BR>
+  <FONT SIZE="-1">COPY OUT=libref;</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;SELECT or EXCLUDE members;</FONT>
+  <BR>
+  <FONT SIZE="-1">APPEND DATA=SAS dataset OUT=SAS dataset FORCE;</FONT>
+  <BR>
+  <FONT SIZE="-1">CONTENTS DATA=member or _ALL_;</FONT>
+  <BR>
+  <FONT SIZE="-1">MODIFY member (TYPE=type LABEL='string');</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;RENAME old=new ... ; (rename variables)</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;LABEL variable='string' ... ;</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;INFORMAT variables informat specification ... ;</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;FORMAT variables format specification ... ;</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;CREATE INDEX variable / options;</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;CREATE INDEX index=variables / options;</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp;&nbsp;DELETE INDEX indexes;</FONT>
+  <BR>
+  <FONT SIZE="-1">QUIT;</FONT>
+  <BR>
+  <BR>
+  <BR>
+  <b>General</b>
+  <BR>
+  <FONT SIZE="-1">PROC SQL;
+  <BR>
+  &nbsp;&nbsp;CREATE table AS
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;SELECT columns
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM table
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE expression
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ORDER BY columns;
+  <BR>
+  QUIT;
+  </FONT>
+  <BR>
+  <BR>
+  <b>Concatenation</b>
+  <BR>
+  <FONT SIZE="-1">PROC SQL;
+  <BR>
+  &nbsp;&nbsp;CREATE TABLE|VIEW table|view AS
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;SELECT columns
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM table1
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;OUTER UNION CORRESPONDING
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;SELECT columns
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM table2;
+  <BR>
+  QUIT;
+  </FONT>
+  <BR>
+  <BR>
+  <b>Merge</b>
+  <BR>
+  <FONT SIZE="-1">PROC SQL;
+  <BR>
+  &nbsp;&nbsp;CREATE TABLE|VIEW table|view AS
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;SELECT columns
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM table1, table2
+  <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;WHERE table1.variable = table2.variable;
+  <BR>
+  QUIT;
+  </FONT>
+
+
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="functions"></A>
+  <H2>Functions</H2>
+
+  <P>List of SAS functions:</P>
+
+  <UL>
+
+  <FONT SIZE="-1">ABS(x)  ARCOS/ARSIN/ATAN(x)  CEIL(x)  COMPOUND(a,f,r,n)
+  COMPRESS(string)  COMPRESS(string, chars)  COS/COSH(rad)
+  DACCDB/DACCDBSL(p,v,y,r)  DACCSL/DACCSYD(p,v,y)  DACCTAB(p,v,r,r...)  DATE()
+  DATEPART(SAS datetime)  DATETIME()  DA(SAS date)  DEPDB/DEPDBSL(p,v,y,r)
+  DEPSL/DEPSYD(p,v,y)  DEPTAB(p,v,r,r...)  DHMS(SAS date, hour, minute, second)
+  DIFn(x)  DIGAMMA(x)  DIM(array, n)  DIM/DIMn(array)  ERF/ERFC(x)  EXP(x)
+  FIPNAME/FIPNAMEL/FIPSTATE(FIPS state)  FLOOR(x)  FUZZ(x)  GAMMA(x)
+  HBOUND(array, n)  HBOUND/HBOUNDn(array)  HNS(hour, minute, second)  HOUR(SAS
+  time/datetime)  INDEX(string, substring)  INDEXC(string, chars)  INPUT(string,
+  informat spec)  INT(x)  INTCK(code, from, to)  INTNX(code, from, duration)
+  INTRR/IRR(12,p1, p2...)  LAGn(value)  LBOUND(array, n) LBOUND/LBOUNDn(array)
+  LEFT(string)  LENGTH(string)  LGAMMA(x)  LOG/LOG2/LOG10(x)  MDY(month, day,
+  year)  MINUTE(SAS time/datetime)  MOD(x, modulus)  MONTH(SAS date)
+  MORT(a,p,r,n)  NETPV/NPV(i, 12, p1, p2...)  PUT(value, format spec)  QTR(SAS
+  date)  REPEAT(string, n)  RIGHT(string)  REVERSE(string)  ROUND(x, unit)
+  SAVING(f,p,r,n)  SCAN(string, n, delimiters)  SECOND(SAS time/datetime)
+  SIGN(x)  SIN/SINH(rad)  SQRT(x)  STFIPS/STNAME/STNAMEL(2-letter state)
+  SUBSTR(string, position, length)  SYMGET('macrovariable')  TAN?TANH(rad)
+  TIME()  TIMEPART(SAS datetime)  TODAY()  TRANSLATE(string, to, from)
+  TRIGAMMA(x)  TRIM(string)  TRUNC(x, length)  UPCASE(string)  VERIFY(string,
+  chars)  WEEKDAY/YEAR(SAS date)  YYQ(year, quarter)
+  ZIPFIPS/ZIPNAME/ZIPNAMEL/ZIPSTATE(ZIP)</FONT>
+  <BR>
+
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="formats"></A>
+  <H2>Formats</H2>
+
+  <P>Character Formats:</P>
+  <UL>
+  <FONT SIZE="-1">$ASCIIw. &nbsp converts native format char data to ASCII
+                  representation.</FONT>
+  <BR>
+  <FONT SIZE="-1">$BINARYw. &nbsp converts char values to binary 
+                  representation.</FONT>
+  <BR>
+  <FONT SIZE="-1">$CHARw. &nbsp writes standard char data.</FONT>
+  <BR>
+  <FONT SIZE="-1">$EBCDICw. &nbsp converts native frmat char data to EBCDIC
+                  representation.</FONT>
+  <BR>
+  <FONT SIZE="-1">$HEXw. &nbsp converts char values to hex representation.</FONT>
+  <BR>
+  <FONT SIZE="-1">$OCTALw. &nbsp converts char values to oct representation.</FONT>
+  <BR>
+  <FONT SIZE="-1">$VARYINGw. &nbsp writes varying-length char values 
+                  (w is max).</FONT>
+  <BR>
+  <FONT SIZE="-1">$w. &nbsp writes standard char data.</FONT>
+  </UL>
+  <BR>
+  <P>Date & Time Formats:</P>
+  <UL>
+  <FONT SIZE="-1">DATEw. &nbsp writes data values (ddmmmyy).</FONT>
+  <BR>
+  <FONT SIZE="-1">DATETIMEw.d &nbsp writes datetime values 
+                  (ddmmmyy:hh:mm:ss.ss).</FONT>
+  <BR>
+  <FONT SIZE="-1">DAYw. &nbsp writes day of month.</FONT>
+  <BR>
+  <FONT SIZE="-1">DDMMYYw. &nbsp writes date values (ddmmyy).</FONT>
+  <BR>
+  <FONT SIZE="-1">MMDDYY10. &nbsp writes date values (05/21/1998).</FONT>
+  <BR>
+  <FONT SIZE="-1">DOWNAMEw. &nbsp writes name of day of the week.</FONT>
+  <BR>
+  <FONT SIZE="-1">HHMMw.d &nbsp writes hours and minutes.</FONT>
+  <BR>
+  <FONT SIZE="-1">HOURw.d &nbsp writes hours and decimal fractions of hours.</FONT>
+  <BR>
+  <FONT SIZE="-1">JULDAYw.d &nbsp writes Julian day of the year.</FONT>
+  <BR>
+  <FONT SIZE="-1">JULIANw. &nbsp writes Julian dates (yyddd or yyyyddd).</FONT>
+  <BR>
+  <FONT SIZE="-1">MMDDYYw. &nbsp writes month-day-year (mmddyy).</FONT>
+  <BR>
+  <FONT SIZE="-1">MMSSw.d &nbsp writes minutes & seconds (e.g. 3:20am is 
+                  200:00).</FONT>
+  <BR>
+  <FONT SIZE="-1">MMYYxw. &nbsp writes month and year separated by a char.</FONT>
+  <BR>
+  <FONT SIZE="-1">MONNAMEw. &nbsp writes name of month.</FONT>
+  <BR>
+  <FONT SIZE="-1">MONTHw. &nbsp writes month of year.</FONT>
+  <BR>
+  <FONT SIZE="-1">MONYYw. &nbsp writes month and year (mmmyy). E.g. MONYY7. is MAY1998</FONT>
+  <BR>
+  <FONT SIZE="-1">NENGOw. &nbsp writes Japanese dates.</FONT>
+  <BR>
+  <FONT SIZE="-1">QTRw. &nbsp writes quarter of year.</FONT>
+  <BR>
+  <FONT SIZE="-1">QTRRw. &nbsp writes quarter of year in Roman numerals.</FONT>
+  <BR>
+  <FONT SIZE="-1">TIMEw.d &nbsp writes hours, minutes & seconds.</FONT>
+  <BR>
+  <FONT SIZE="-1">TODw. &nbsp writes time portion of datetime values.</FONT>
+  <BR>
+  <FONT SIZE="-1">WEEKDATEw. &nbsp writes day of wk and date (day-of-week,
+                  month-name dd yy).</FONT>
+  <BR>
+  <FONT SIZE="-1">WEEKDATXw. &nbsp writes day of wk and date (day-of-week,
+                  dd month-name yy).</FONT>
+  <BR>
+  <FONT SIZE="-1">WEEKDAYw. &nbsp writes day of wk.</FONT>
+  <BR>
+  <FONT SIZE="-1">WORDDATEw. &nbsp writes date with name of month, day and
+                  year (month-name dd, yyyy).</FONT>
+  <BR>
+  <FONT SIZE="-1">WORDDATXw. &nbsp writes date with day, name of month and
+                  year (dd month-name yyyy).</FONT>
+  <BR>
+  <FONT SIZE="-1">YEARw. &nbsp writes year part of date value.</FONT>
+  <BR>
+  <FONT SIZE="-1">YYMMxw. &nbsp writes year and mo, separated by a char
+                  (YYMMxw. is a set of formats).</FONT>
+  <BR>
+  <FONT SIZE="-1">YYMMDDw. &nbsp writes year-month-day (e.g. 8. gives
+                  slashes while 6. doesn't).</FONT>
+  <BR>
+  <FONT SIZE="-1">YYMMDDN8. &nbsp writes year-month-day (e.g. 20000707) </FONT>
+  <BR>
+  <FONT SIZE="-1">YYMONw. &nbsp writes year and mo abbreviation.</FONT>
+  <BR>
+  <FONT SIZE="-1">YYQxw. &nbsp writes year and qtr separated by a char.</FONT>
+  <BR>
+  <FONT SIZE="-1">YYQRxw. &nbsp writes year and qtr in Roman numerals separated
+                  by a char.</FONT>
+  <BR>
+  </UL>
+  <BR>
+  <P>NumericFormats:</P>
+  <UL>
+  <BR>
+  <FONT SIZE="-1">BESTw. &nbsp chooses best notation.</FONT>
+  <BR>
+  <FONT SIZE="-1">BINARYw. &nbsp converts numeric values to binary.</FONT>
+  <BR>
+  <FONT SIZE="-1">COMMAw.d &nbsp writes numeric values with commas and
+                  decimal points.</FONT>
+  <BR>
+  <FONT SIZE="-1">COMMAXw.d &nbsp writes numeric values with commas and
+                  decimal points; comma & decimal point are reversed.</FONT>
+  <BR>
+  <FONT SIZE="-1">DOLLARw.d &nbsp writes numeric values with dollar signs,
+                  commas & decimal points.</FONT>
+  <BR>
+  <FONT SIZE="-1">DOLLARXw.d &nbsp writes numeric values with dollar signs,
+                  commas & decimal points; comma & decim reversed.</FONT>
+  <BR>
+  <FONT SIZE="-1">Ew. &nbsp writes values in scientific notation.</FONT>
+  <BR>
+  <FONT SIZE="-1">FRACTw. &nbsp converts values to fractions.</FONT>
+  <BR>
+  <FONT SIZE="-1">HEXw. &nbsp converts numeric values to hex.</FONT>
+  <BR>
+  <FONT SIZE="-1">IBw.d &nbsp writes integer binary values.</FONT>
+  <BR>
+  <FONT SIZE="-1">NEGPARENSw.d &nbsp displays negative values in parens.</FONT>
+  <BR>
+  <FONT SIZE="-1">OCTALw. &nbsp converts numeric values to octal.</FONT>
+  <BR>
+  <FONT SIZE="-1">PDw.d &nbsp writes packed decimal data.</FONT>
+  <BR>
+  <FONT SIZE="-1">PERCENTw.d &nbsp prints numbers as percentages.</FONT>
+  <BR>
+  <FONT SIZE="-1">PIBw.d &nbsp writes positive integer binary values.</FONT>
+  <BR>
+  <FONT SIZE="-1">PKw.d &nbsp writes unsigned packed decimal data.</FONT>
+  <BR>
+  <FONT SIZE="-1">RBw.d &nbsp writes real binary (floating point) data.</FONT>
+  <BR>
+  <FONT SIZE="-1">ROMANw.d &nbsp writes Roman numerals.</FONT>
+  <BR>
+  <FONT SIZE="-1">SSNw.d &nbsp writes Soc Sec numbers.</FONT>
+  <BR>
+  <FONT SIZE="-1">w.d &nbsp writes standard numeric data.</FONT>
+  <BR>
+  <FONT SIZE="-1">WORDFw.d &nbsp converts numeric values to words.</FONT>
+  <BR>
+  <FONT SIZE="-1">WORDSw.d &nbsp converts numeric values to words, with
+                  decimals as fractions.</FONT>
+  <BR>
+  <FONT SIZE="-1">Zw.d &nbsp writes leading 0s.</FONT>
+  <BR>
+  <FONT SIZE="-1">ZDw.d &nbsp writes data in zoned decimal format.</FONT>
+  <BR>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="declarations"></A>
+  <H2>Declarations</H2>
+  <UL>
+  <FONT SIZE="-1">LENGTH variables length (numeric variables).</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp variables $ length (character variables).</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ...</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp DEFAULT=length (default numeric length)</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ;</FONT>
+  <BR>
+  <FONT SIZE="-1">LABEL variable='string' ...</FONT>
+  <BR>
+  <FONT SIZE="-1">INFORMAT variables informat specification</FONT>
+  <BR>
+  <FONT SIZE="-1">FORMAT variables format specification</FONT>
+  <BR>
+  <FONT SIZE="-1">ATTRIB variables</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp LENGTH=length or LENGTH=$ length</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp LABEL='string'</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp INFORMAT=informat specification</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp FORMAT=format specification</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ... ;</FONT>
+  <BR>
+  <FONT SIZE="-1">RETAIN; (global RETAIN)</FONT>
+  <BR>
+  <FONT SIZE="-1">RETAIN variables initial value ...;</FONT>
+  <BR>
+  <FONT SIZE="-1">ARRAY array {n or * or n1, n2... or low:high, ...}
+                  variables or _TEMPORARY_;</FONT>
+  <BR>
+  <FONT SIZE="-1">ARRAY array {...} length or $ length variables
+                  (initial values); (optional declarations)</FONT>
+  <BR>
+  <FONT SIZE="-1">ARRAY array (index variable) variables; (implicitly
+                  subscripted array)</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="input"></A>
+  <H2>Input</H2>
+
+  <UL>
+  <FONT SIZE="-1">INFILE fileref options;</FONT>
+  <BR>
+  <FONT SIZE="-1">INPUT /</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp @column</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp +n</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp variable informat specification</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ...</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp @ or @@ (line hold)</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ;</FONT>
+  <BR>
+  <FONT SIZE="-1">or INPUT variable variable ...; (list input)</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="controlflow"></A>
+  <H2>Control Flow</H2>
+
+  <UL>
+  <FONT SIZE="-1">DO; ... END; ("a DO block")</FONT>
+  <BR>
+  <BR>
+  E.g.
+  <BR>
+  <CODE>
+    do foo = 0 to 31;
+    <BR>
+    &nbsp;&nbsp;bar = mdy(1, 1, foo);
+      <BR>
+     &nbsp;&nbsp;output;
+      <BR>
+    end;
+  </CODE>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">IF condition THEN action</FONT>
+  <BR>
+  <FONT SIZE="-1">ELSE action</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">IF condition THEN action</FONT>
+  <BR>
+  <FONT SIZE="-1">ELSE IF condition THEN</FONT>
+  <BR>
+  <FONT SIZE="-1">ELSE action</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">SELECT;</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp WHEN(condition) action</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ...</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp OTHERWISE action</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp END;</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">SELECT(expression);</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp WHEN(expression) action</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ...</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp OTHERWISE(expression) action</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp END;</FONT>
+  <BR>
+  <BR>
+  E.g.
+  <BR>
+  <CODE>
+    select (a);
+      <BR>
+       &nbsp;&nbsp;when (1) x=x*10;
+      <BR>
+       &nbsp;&nbsp;when (2);
+      <BR>
+       &nbsp;&nbsp;when (3,4,5) x=x*100;
+      <BR>
+       &nbsp;&nbsp;otherwise;
+      <BR>
+    end;
+  <BR>
+  </CODE>
+  <BR>
+  <FONT SIZE="-1">DO index variable = expression, expression ... or
+                  start TO end or start TO end BY increment</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp WHILE(condition)</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp UNTIL(condition)</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ; ... END; (DO loop)</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1"><i>Inside an iterative expression:</i>
+  <BR>
+  <FONT SIZE="-1">IF condition THEN CONTINUE;</FONT>
+  <BR>
+  <FONT SIZE="-1"><i>Skip the rest of the DO group but continue from beginning of DO loop</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">Inside an iterative expression:.</i>
+  <BR>
+  <FONT SIZE="-1">IF condition THEN LEAVE;</FONT>
+  <BR>
+  <FONT SIZE="-1"><i>Skip the rest of the DO group and terminate the DO group.</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">Inside an iterative expression:.</i>
+  <BR>
+  <FONT SIZE="-1">RETURN;</FONT>
+  <BR>
+  <FONT SIZE="-1"><i>Skip the rest of the DO group and go to the top of the step code.</i></FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">IF condition; (subsetting IF)</FONT>
+  <BR>
+  <BR>
+   E.g.
+  <BR>
+  <CODE>
+      IF STRESIDE IN ('01','02','03','04','05','06','07','08',
+   <BR>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    '51','52','53','54','55','57','59');
+   </CODE>
+  <BR>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">DELETE;</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">LINK statement label;</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">&nbsp ... statement label: ... RETURN;</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">GOTO statement label;</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">DO OVER myarrayname</FONT>
+  <BR>
+  <FONT SIZE="-1"><i>&nbsp;&nbsp;iterate each array element</i></FONT>
+  <BR>
+  <FONT SIZE="-1">END</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">STOP;</FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">ABORT;</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="output"></A>
+  <H2>Output</H2>
+
+  <UL>
+  <FONT SIZE="-1">FILE fileref options;</FONT>
+  <BR>
+  <FONT SIZE="-1">FILE LOG;</FONT>
+  <BR>
+  <FONT SIZE="-1">FILE PRINT options;</FONT>
+  <BR>
+  <FONT SIZE="-1">PUT #line</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp /</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp @column</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp +n</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp 'string'</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp variable format specification</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ...</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp @ (line hold)</FONT>
+  <BR>
+  <FONT SIZE="-1">&nbsp ;</FONT>
+  <BR>
+  <FONT SIZE="-1">PUT variable ...; (list output)</FONT>
+  <BR>
+  <FONT SIZE="-1">PUT _ALL_ or variable= ...; (named output)</FONT>
+  <BR>
+  <FONT SIZE="-1">PUT _INFILE_; (copy input record)</FONT>
+  <BR>
+  <FONT SIZE="-1">OUTPUT;</FONT>
+  <BR>
+  <FONT SIZE="-1">OUTPUT SAS datasets;</FONT>
+  <BR>
+  <FONT SIZE="-1">RETURN;</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="abbrevvarlists"></A>
+  <H2>Abbreviated Variable Lists</H2>
+
+  <UL>
+  <FONT SIZE="-1">X1-X100 X001-X100</FONT>
+  <BR>
+  <FONT SIZE="-1">_ALL_ _CHAR_ or _CHARACTER_ _NUMERIC_</FONT>
+  <BR>
+  <FONT SIZE="-1">A--B A-CHARACTER-B A-NUMERIC-B</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="global"></A>
+  <H2>Global Statements</H2>
+
+  <UL>
+  <FONT SIZE="-1">TITLEn 'string';</FONT>
+  <BR>
+  <FONT SIZE="-1">FOOTNOTEn 'string';</FONT>
+  <BR>
+  <FONT SIZE="-1">OPTIONS system options;</FONT>
+  <BR>
+  <FONT SIZE="-1">MISSING letters and/or _;</FONT>
+  <BR>
+  <FONT SIZE="-1">FILENAME filref device and/or 'file' &nbsp options;</FONT>
+  <BR>
+  <FONT SIZE="-1">LIBNAME libref 'file' &nbsp options;</FONT>
+  <BR>
+  <FONT SIZE="-1">%INCLUDE fileref / options</FONT>
+  <BR>
+  <FONT SIZE="-1">X</FONT>
+  <BR>
+  <FONT SIZE="-1">X 'operating system command';</FONT>
+  <BR>
+  <FONT SIZE="-1">DM 'display manager commands';</FONT>
+  <BR>
+  <FONT SIZE="-1">* comment;</FONT>
+  <BR>
+  <FONT SIZE="-1">/* comment */</FONT>
+  <BR>
+  <FONT SIZE="-1">PAGE;</FONT>
+  <BR>
+  <FONT SIZE="-1">SKIP n;</FONT>
+  <BR>
+  <FONT SIZE="-1">%PUT;</FONT>
+  <BR>
+  <FONT SIZE="-1">%LET macrovaiable = constant text;</FONT>
+  <BR>
+  <FONT SIZE="-1">&macrovariable</FONT>
+  <BR>
+  <FONT SIZE="-1">%MACRO macro(parameters); ... %MEND;</FONT>
+  <BR>
+  <FONT SIZE="-1">%MACRO macro(parameters); ... %MEND;</FONT>
+  <BR>
+  <FONT SIZE="-1">%macro(parameters);</FONT>
+  <BR>
+  <FONT SIZE="-1">ENDSAS;</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="options"></A>
+  <H2>System Options Statements</H2>
+
+  <UL>
+  <FONT SIZE="-1">AUTOEXEC=(configuration) &nbsp CAPS/NOCAPS &nbsp
+  CENTER?NOCENTER CONFIG=(configuration) &nbsp DATE/NODATE &nbsp DMS/NODMS
+  (configuration) DSNFERR/NODSNFERR &nbsp ERRORABEND/NOERRORABEND &nbsp ERRORS=
+  &nbsp FMTERR/NOFMTERR FORMCHAR= &nbsp INITSTMT= or IS=(configuration) &nbsp
+  INVALIDDATA= &nbsp LABEL/NOLABEL _LAST_= &nbsp LINESIZE= or LS= &nbsp MISSING=
+  &nbsp OVP/NOOVP &nbsp PAGENO= &nbsp PAGESIZE= or PS= &nbsp S= S2= &nbsp
+  SOURCE/NOSOURCE &nbsp SOURCE2/NOSOURCE2 &nbsp SYSIN=(configuration) &nbsp
+  SYSPARM= USER=libref &nbsp VNFERR/NOVNFERR &nbsp
+  WORKINIT/NOWORKINIT(configuration) &nbsp YEARCUTOFF= </FONT>
+  <BR>
+  <BR>
+  <FONT SIZE="-1">IMPLMAC/NOIMPLMAC &nbsp MACRO/NOMACRO(configuration)
+  MAUTOSOURCE/NOMAUTOSOURCE &nbsp MERROR/NOMERROR &nbsp MLOGIC/NOMLOGIC &nbsp
+  MPRINT/NOMPRINT SASAUTOS= &nbsp SERROR/NOSERROR &nbsp SYMBOLGEN or
+  SGEN/NOSYMBOLGEN or NOSGEN </FONT> 
+  <BR>
+  <BR>
+  <FONT SIZE="-1">COMPRESS=YES/COMPRESS=NO &nbsp FIRSTOBS= &nbsp OBS= &nbsp
+  REPLACE/NOREPLACE REUSE=YES/REUSE=NO </FONT>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="dsoptions"></A>
+  <H2>Dataset Options</H2>
+
+  <UL>
+  <FONT SIZE="-1">COMPRESS=YES/COMPRESS=NO(output)</FONT>
+  <BR>
+  <FONT SIZE="-1">DROP=variables</FONT>
+  <BR>
+  <FONT SIZE="-1">FIRSTOBS=(input)</FONT>
+  <BR>
+  <FONT SIZE="-1">IN=variable(input)</FONT>
+  <BR>
+  <FONT SIZE="-1">KEEP=variables</FONT>
+  <BR>
+  <FONT SIZE="-1">LABEL=</FONT>
+  <BR>
+  <FONT SIZE="-1">OBS=(input)</FONT>
+  <BR>
+  <FONT SIZE="-1">RENAME=(old=new ...)</FONT>
+  <BR>
+  <FONT SIZE="-1">REPLACE=YES/REPLACE=NO(output)</FONT>
+  <BR>
+  <FONT SIZE="-1">REUSE=YES/REUSE=NO(output)</FONT>
+  <BR>
+  <FONT SIZE="-1">TYPE=</FONT>
+  <BR>
+  <FONT SIZE="-1">WHERE=(condition)(input)</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="where"></A>
+  <H2>Where Operators</H2>
+
+  <UL>
+  <FONT SIZE="-1">BETWEEN ... AND</FONT>
+  <BR>
+  <FONT SIZE="-1">CONTAINS or ?</FONT>
+  <BR>
+  <FONT SIZE="-1">IS NULL or IS MISSING</FONT>
+  <BR>
+  <FONT SIZE="-1">LIKE 'pattern'</FONT>
+  <BR>
+  <FONT SIZE="-1">_=any char &nbsp %=any chars &nbsp =* (soundex)</FONT>
+  <BR>
+  </UL>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="infile"></A>
+  <H2>Infile Options</H2>
+
+  <UL>
+  <FONT SIZE="-1">COLUMN= or COL=variable &nbsp END=variable &nbsp EOF=
+  statement label &nbsp FIRSTOBS= &nbsp LINESIZE= or LS= &nbsp LRECL &nbsp
+  MISSOVER/FLOWOVER/STOPOVER &nbsp OBS= &nbsp PAD/NOPAD &nbsp RECFM= &nbsp
+  UNBUFFERED &nbsp DLM=</FONT>
+  </UL>
+  <BR>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+  <A NAME="file"></A>
+  <H2>File Options</H2>
+
+  <UL>
+  <FONT SIZE="-1">COLUMN= or COL=variable &nbsp HEADER=statement label &nbsp
+  LINE= &nbsp LINESIZE= or LS= &nbsp LINESLEFT= or LL=variable &nbsp
+  LRECL= &nbsp N= &nbsp NOTITLES &nbsp OLD/MOD &nbsp PAD/NOPAD &nbsp
+  PAGESIZE=/PS= &nbsp PRINT/NOPRINT &nbsp RECFM=</FONT>
+  </UL>
+  <BR>
+
+  <H4 ALIGN=center>Back to <A HREF="#contents">Contents</A> or <A HREF="#index">Index</A></H4>
+
+  <!-- ----------------------------------------------------------------------------- -->
+
+<pre>
+ + (suffix) denotes 6.07 and later = (suffix) denotes 6.08 and later
+ # (suffix) denotes 6.10 and later
+ @ (suffix) denotes 6.11 and later
+ & (suffix) denotes 6.12/6.09E and later
+ 7 (prefix) denotes 7 and later
+ 8 (prefix) denotes 8 and later
+ 9 (prefix) denotes 9 and later
+
+ * (suffix) denotes system-specific CALL denotes call routine instead of function
+ SASLang = "SAS Language, Reference Version 6 First Edition"
+ SASPnnn = "SAS Technical Report P-nnn"
+ SASL610 = "SAS Software: Changes and Enhancements, Release 6.10"
+ SASGRPH = "SAS/GRAPH Software Volume 1, Reference Ver 6 First Edition"
+ 9ONLDOC = "SAS Version 9 Online Documentation"
+
+ [e] denotes an EBCDIC value
+ [a] denotes an ASCII value
+
+------------------All Systems except VSE ---------------------------7ADDR+ (var) memory address of variable var [avail on CMS and MVS in 6.07] 9ADDRLONG (var) same as ADDR but enhanced for 32-bit and 64-bit platforms 7HOSTHELP@&(method,<file>,<parm>) invokes native help system [avail on UNIX,
+ WINDOWS, and OS/2 in 6.11; avail on OpenVMS in 6.12] 7MODULEC@ (<cntl>,modn,arg1,...argn) character return value from execution of external routine modn [avail on WINDOWS and OS/2 in 6.11] 7MODULEN@ (<cntl>,modn,arg1,...argn) numeric return value from execution of external routine modn [avail on WINDOWS and OS/2 in 6.11] 7MODULE@ CALL(<cntl>,modn,arg1,...argn) executes external routine modn [avail on WINDOWS and OS/2 in 6.11]
+ 7PEEK+@ (addr,<len>) the contents of a numeric variable stored at memory location addr for length len [2-8]; default len = 4 [avail on CMS and MVS in 6.07; avail on WINDOWS and OS/2 in 6.11]
+ 7PEEKC+@ (addr,<len>) the contents of a character variable stored at memory location addr for length len [1-200]; default len = 8 [avail on CMS and MVS in 6.07; avail on WINDOWS and OS/2 in 6.11]
+ 9PEEKCLONG (addr,<len>) same as PEEKC but enhanced for 32- & 64-bit platforms 9PEEKLONG (addr,<len>) same as PEEK but enhanced for 32-bit & 64-bit platforms 7POKE (s,p,<l>) stores data from s into memory location p for length l 7POKE+ CALL(s,p,<l>) stores data from s into memory location p for length
+ l [avail on CMS and MVS in 6.07] 9POKELONG CALL(s,p,<l>) same as CALL POKE but enhanced for 32- & 64-bit systems 9PTRLONGADD(ptr,<n>) performs pointer arithmetic on 32-bit and 64-bit platforms 8SLEEP* (t,<units>) return code from suspension of execution of a data step
+ for t*units seconds; units default to 1 for PC and .001 for non-PC [avail on PC in 6.04 as SLEEP(t) where t is seconds] 8SLEEP* CALL(t,<units>) suspends execution of a data step for t*units seconds units default to .001 for all systems SYSGET&+ (var) value of host-specific variable var [avail on UNIX in 6.06 and avail on CMS in 6.07] SYSTEM& (str) return code from invocation of system command str [avail on CMS, MVS, and UNIX in 6.06]
+ SYSTEM CALL(str) issues system command str 9SYSPROCESSID() process id of current process 9SYSPROCESSNAME(<pid>) name associated with current process or pid if specified
+ ------------------CMS and MVS only ----------------------------------
+GETEXEC* (var) value of EXEC2 or REXX variable var
+ PUTEXEC* CALL(var,val) assigns EXEC2 or REXX variable var the value val
+ ------------------CMS only ------------------------------------------
+CMS* (str) return code from invocation of system command str
+ ------------------MVS only ------------------------------------------
+TSO* (str) return code from invocation of system command str
+ TSO* CALL(str) issues system command str
+ ------------------WINDOWS and OS/2 ----------------------------------
+DMYTECHC* (str) character count in hex for packet str
+ DMYTECKS* CALL(str,icks,ccks) checksum value for packet str; icks is initial
+
+ checksum and ccks is calculated checksum DMYTECWD* (str,rstr) number of tokens in packet str; if packet >200 characters,
+ str is the first 200, rstr is the remainder; else rstr = '' DMYTERVC* (x) converts DataMyte 2-byte hex number x to an ascii number WAKEUP* (t) t specifies a time when a data step begins execution; the return
+ value is the number of seconds slept
+ Product-specific functions
+ --------------------------
+inrvars = "independent normal random variables"
+ type[t] = "for a Type [t] doubling-sampling plan"
+
+ ------------------GRAPH ---------------------------------------------
+note most of the GRAPH functions have varying parameter lists
+ depending on the value of the first argument; refer to 9ONLDOC
+
+ GASK CALL(attr,parms...) current setting for attribute 'attr'
+ GDRAW (ge,parms...) return code from creating graphic element 'ge'
+ GINIT () return code from initializing DSGI (Data Step Graphics Interface)
+ GPRINT (code) displays message that corresponds to error code 'code'
+ GRAPH (tsk,parms...) return code from performing lib management task 'tsk'
+ GSET (attr,parms...) return code from setting graphic element attribute
+
+ 'attr' GTERM () return code from terminating DSGI (Data Step Graphics Interface) ------------------IML ----------------------------------------------
+7MODULEIC (<cntl>,modn,arg1,...argn) character return value from execution of external routine modn; invoked from within the IML procedure 7MODULEIN (<cntl>,modn,arg1,...argn) numeric return value from execution of external routine modn; invoked from within the IML procedure 7MODULEI CALL(<cntl>,modn,arg1,...argn) executes external routine modn;
+ invoked from within the IML procedure ------------------QC -----------------------------------------------AOQ2 (rep,N,a1,r1,a2,n1,n2,p) average outgoing quality type[B] ASN2 (mode,a1,r1,a2,n1,n2,p) average sample number type[B] ATI2 (N,a1,r1,a2,n1,n2,p) average total inspection type[B] BAYESACT CALL(k,s,df,a1,...<an>,y1,...<yn>,b1,...<bn>,p) posterior probabili
+ties that observations are contaminated with a larger variance
+ C4 (n) expected value of the standard deviation of n inrvars
+ CUSUMARL (type,sd,h,k,<hs>) average run length of a one- or two-sided
+
+ cumulative sum control chart scheme D2 (n) expected value of the sample range of n inrvars D3 (n) standard deviation of the range of n inrvars EWMAARL (sd,r,k) average run length for exponentially weighted moving average PROBACC2 (a1,r1,a2,n1,n2,D,N) acceptance probablility type[A] PROBACC2 (a1,r1,a2,n1,n2,p) acceptance probablility type[B] PROBMED (n,x) probability that the sample median is less than or equal to x
+ for a sample of n inrvars STDMED (n) standard deviation of the median of a normally distributed sample with size n 
+ ------------------------------------------------------------------------------THE NEXT THREE GROUPS OF FUNCTIONS DESCRIBED REQUIRE A DIRECTORY-ID, FILE-ID, OR DATASET-ID TOKEN OBTAINED FROM DOPEN, FOPEN | MOPEN, OR OPEN RESPECTIVELY Unless otherwise specified, these functions return 0 if the specific operation was successful and a nonzero value if the operation was not successful ------------------------------------------------------------------------------External File Functions ----------------------
+DCLOSE& (dirid) closes directory dirid
+ 9DCREATE (dirname,<pdir>) creates directory dirname under current working directory or parent directory pdir; returns full pathname if successful, null string if unscuccessful
+ DINFO& (dirid,itm) host-specific information itm concerning directory dirid DNUM& (dirid) number of members in directory dirid DOPEN& (fileref) opens directory fileref and returns a unique numeric
+ directory identifier, returns 0 if open unsuccessful DOPTNAME& (dirid,n) host-specific info item number n about directory dirid DOPTNUM& (dirid) number of information items available for directory dirid DREAD& (dirid,n) name of the nth member in directory dirid DROPNOTE& (fid,notid) deletes note marker notid from FNOTE [DROPNOTE can also
+ be used to delete a notid from NOTE--refer to "Data Step Functions"] FAPPEND& (fid,<cc>) appends current record in the FDB to file fid with
+ optional carriage control character cc
+ FCLOSE& (fid) closes file fid
+ FCOL& (fid) current column position in the FDB for file fid
+ FDELETE& (fid) deletes file fid
+ FGET& (fid,var,<len>) copies data from the FDB into variable var for
+
+ optional length len FINFO& (fid,itm) host-specific information itm concerning file fid FNOTE& (fid) unique note identifier for the last record read from file fid FOPEN& (filref,<mode>,<recl>,<recfm>) opens file filref for input or update
+ and returns a unique numeric file identifier or zero if open fails FOPTNAME& (fid,n) host-specific information item number n about file fid FOPTNUM& (fid) number of information items available for file fid FPOINT& (fid,notid) positions the read pointer to notid (from the FNOTE
+ function) in file fid FPOS& (fid,p) positions column pointer in the FDB to column p for file fid FPUT& (fid,d) moves data d to the FDB of file fid starting at the FDB's
+ current column position; d can be text or a variable
+ FREAD& (fid) reads a record from file fid into the FDB
+ FREWIND& (fid) positions file pointer to the beginning of file fid
+ FRLEN& (fid) size of last record read or current record size of file fid
+ FSEP& (fid,sep) sets token delimiter(s) sep for file fid
+ FWRITE& (fid,<cc>) writes the current record in the FDB to file fid with
+
+ optional carriage control character cc
+ MOPEN& (dirid,mname,<mode>,<recl>,<recfm>) opens member mname in directory dirid for input or update and returns a unique numeric file identifier, returns 0 if open unsuccessful; optional record parms
+ Data Step Functions
+ -------------------
+
+ATTRC& (dsid,attr) value of character attribute attr for data set dsid ATTRN& (dsid,attr) value of numeric attribute attr for data set dsid CLOSE& (dsid) closes data set dsid CUROBS& (dsid) current observation number from data set dsid DROPNOTE& (dsid,notid) deletes a note marker notid from NOTE [DROPNOTE can also
+ delete a notid from FNOTE--refer to "External File Functions"]
+ DSNAME& (dsid) data set name associated with dsid
+ FETCH& (dsid,<NOSET>) reads the next nondeleted observation from data set
+
+ dsid into the DDV
+ FETCHOBS& (dsid,obs,<opts>) reads observation number obs from from data set
+
+ dsid into the DDV NOTE& (dsid) unique note identifier for current obs of data set dsid OPEN& (dsname,<mode>) opens data set dsname for input and returns a unique
+ numeric data set identifier, returns 0 if open unsuccessful POINT& (dsid,notid) locates observation identified by notid (from the NOTE
+ function) in data set dsid REWIND& (dsid) positions data set dsid back to beginning SET& CALL(dsid) automatically sets values of data set variables or macro
+ variables after a READ; typically follows an OPEN function call 
+GETVARC& (dsid,n) character value of the nth variable in data set dsid
+ GETVARN& (dsid,n) numeric value of the nth variable in data set dsid
+ VARFMT& (dsid,n) format assigned to the nth variable in data set dsid
+ VARINFMT& (dsid,n) informat assigned to the nth variable in data set dsid
+ VARLABEL& (dsid,n) label assigned to the nth variable in data set dsid
+ VARLEN& (dsid,n) length of the nth variable in data set dsid
+ VARNAME& (dsid,n) name of the nth variable in data set dsid
+ VARNUM& (dsid,vname) position of variable vname in data set dsid, 0 if
+
+ the variable does not exist in the data set
+ VARTYPE& (dsid,n) type ('C'|'N') of the nth variable in data set dsid
+
+ SAS Variable Attibutes
+ ---------------------w/v = "associated with the variable" var_by_exp = "the variable defined by the expression" w/var_by_exp = "associated with the variable defined by expression"
+ 7VARRAY (var) 1 if variable var is an array, 0 if not 7VARRAYX (exp) 1 if var_by_exp exp is an array, 0 if not 7VFORMAT (var) format w/v var 7VFORMATD (var) decimal value of the format w/v var 7VFORMATDX (exp) decimal value of the format w/var_by_exp exp 7VFORMATN (var) name of the format w/v var 7VFORMATNX (exp) name of the format w/var_by_exp exp 7VFORMATW (var) width value of the format w/v var 7VFORMATWX (exp) width value of the format w/var_by_exp exp 7VFORMATX (exp) format w/var_by_exp exp 7VINARRAY (var) 1 if variable var is a member of an array, 0 if not 7VINARRAYX (exp) 1 if var_by_exp is a member of an array, 0 if not 7VINFORMAT (var) informat w/v var 7VINFORMATD (var) decimal value of the informat w/v var 7VINFORMATDX(exp) decimal value of the informat w/var_by_exp exp 7VINFORMATN (var) name of the informat w/v var 7VINFORMATNX(exp) name of the informat w/var_by_exp exp 7VINFORMATW (var) width value of the informat w/v var 7VINFORMATWX(exp) width value of the informat w/var_by_exp exp 7VINFORMATX (exp) informat w/var_by_exp exp 7VLABEL (var) label w/v var 7VLABELX (exp) label w/var_by_exp exp 7VLENGTH (var) compile-time size of the variable var 7VLENGTHX (exp) compile-time size of the var_by_exp exp 7VNAME (var) name of the variable var
+ VNAME CALL(var1,var2) assigns the name of variable var1 as the value of
+ variable var2 7VNAMEX (exp) name of the var_by_exp exp 9VNEXT CALL(var,type,len) returns name, type, and length of variable var 7VTYPE (var) type ('C'|'N') of the variable var 7VTYPEX (exp) type ('C'|'N') of the var_by_exp exp 9VVALUE (var) formatted value w/v var 9VVALUEX (exp) formatted value w/var_by_exp exp
+ State and Zipcode
+ -----------------
+name[type] = "name <= 20 characters in [type] case"
+
+ FIPNAME (fcode) converts FIPS code to a state name[upper]
+ FIPNAMEL (fcode) converts FIPS code to a state name[mixed]
+ FIPSTATE (fcode) converts FIPS code to a two-char postal state code
+ STFIPS (pcode) converts two-char postal state code to a FIPS code
+ STNAME (pcode) converts two-char postal state code to a state name[upper]
+ STNAMEL (pcode) converts two-char postal state code to a state name[mixed]
+
+ 9ZIPCITY (zcode) converts five-char zip code to a city name and a two-char
+ postal state code ZIPFIPS (zcode) converts five-char zip code to a FIPS code ZIPNAME (zcode) converts five-char zip code to a state name[upper] ZIPNAMEL (zcode) converts five-char zip code to a state name[mixed] ZIPSTATE (zcode) converts five-char zip code to a two-char postal state code 
+ Character functions ---------
+first [type] = "first position of any [type] in string str beginning at position pos, default pos = 1; a negative value of pos searches right to left"
+ parm lists (str,...<strn>) for the CAT* functions can be denoted using character arrays (of ary1-aryn)
+ ANSI2OEM* CALL(str,dst,len) [WINDOWS] converts string str from ansi to oem for
+ length len and stores result in string dst 
+ 9ANYALNUM  (str,<pos>) first alphanumeric character 
+ 9ANYALPHA  (str,<pos>) first alphabetic character 
+ 9ANYCNTRL  (str,<pos>) first control character 
+ 9ANYDIGIT  (str,<pos>) first digit 
+ 9ANYFIRST  (str,<pos>) first character valid as the beginning of a SAS variable 
+ name 
+ 9ANYGRAPH  (str,<pos>) first graphical character 
+ 9ANYLOWER  (str,<pos>) first lowercase letter 
+ 9ANYNAME  (str,<pos>) first character valid as part of a SAS variable name 
+ 9ANYPRINT  (str,<pos>) first printable character 
+ 9ANYPUNCT  (str,<pos>) first punctuation character 
+ 9ANYSPACE  (str,<pos>) first white-space character 
+ 9ANYUPPER  (str,<pos>) first uppercase letter 
+
+ 9ANYXDIGIT (str,<pos>) first hexadecimal character that represents a digit ASCEBC* (str) [VMS] converts string str from ascii to ebcdic BYTE (n) nth character in ascii or ebcdic collating sequence
+ 9CAT (str,...<strn>) concatenates strings without removing leading or trailing blanks 9CATS (str,...<strn>) concatenates strings and removes leading and trailing blanks 9CATS CALL(result,str,...<strn>) assigns result the value of concatenating
+ strings str-strn along with removing leading and trailing blanks 9CATT (str,...<strn>) concatenates strings and removes trailing blanks only 9CATT CALL(result,str,...<strn>) assigns result the value of concatenating
+ strings str-strn along with removing trailing blanks only 9CATX (sep,str,...<strn>) concatenates strings, removes leading and trailing blanks, and inserts separator sep
+ 9CATX CALL(sep,result,str,...<strn>) assigns result the value of concatenating strings, removing all leading and trailing blanks, and inserting separator sep
+ 9COALESCEC (str1,...<strn>) first non-missing string of strings str1-strn COLLATE (s,<e>) string of chars in collating seq fr start pos s to end pos e (s,,<l>) string of chars in collate seq from start pos s for length l 9COMPARE (str1,str2,<mod>) position of the leftmost character by which strings str1 and str2 differ with optional modifiers mod 9COMPCOST CALL(op1,val1,...<opn,valn>) set the costs of operations for later use by the COMPGED function 9COMPGED (str1,str2,<cut>,<mod>) general edit distance between strings str1 and str2; for details refer to 9ONLDOC 9COMPLEV (str1,str2,<cut>,<mod>) Levenshtein edit distance between strings
+ str1 and str2; for details refer to 9ONLDOC COMPBL+ (str) removes multiple blanks between blank-delimited substrs in str COMPRESS (str,<rem>,<mod>) removes blanks OR chars specified in rem from str;
+ added in V9, optional parameter mod modifies 2nd parameter 9COUNT (src,str,<mod>) number of times substr str appears in string src with modifiers mod 9COUNTC (src,str,<mod>) number of times characters in str appear or do not appear within src with modifiers mod DEQUOTE+ (str) removes surrounding quotes, single or double, from str and removes multiple single and double quotes within str EBCASC* (str) [VMS] converts string str from ebcdic to ascii 9FIND (src,str,<pos>,<mod>) first position of string str located in string src using start position pos and modifiers mod 9FINDC (src,str,<mod>) first position of any characters in str that appear
+ or do not appear within src using start position pos & modifiers mod INDEX (src,str) first position of string str located in string src INDEXC (src,str,...<strn>) first position of any character in any of the
+ strings str-strn located in string src
+ INDEXW+ (src,str,<dlm>) first position of the blank-delimited substring str in string src; third parameter added in V9 allows you to specify a delimeter other than a blank through character expression dlm 
+LEFT (str) converts leading blanks to trailing blanks in string str
+ LENGTH (str) length of string str 9LENGTHC (str) length of string str including trailing blanks 9LENGTHM (str) amount of memory in bytes that is allocated for string str 9LENGTHN (str) length of string str excluding trailing blanks; 0 if blank
+ LOWCASE+ (str) converts all uppercase characters in str to lowercase 9NLITERAL (str) SAS name literal of string str 9NOTALNUM (str,<pos>) first non-alphanumeric character 9NOTALPHA (str,<pos>) first non-alphabetic character 9NOTCNTRL (str,<pos>) first non-control character 9NOTDIGIT (str,<pos>) first non-digit 9NOTFIRST (str,<pos>) first character invalid as the beginning of a SAS
+ variable name 9NOTGRAPH (str,<pos>) first non-graphical character 9NOTLOWER (str,<pos>) first non-lowercase character 9NOTNAME (str,<pos>) first character invalid as part of a SAS variable name 9NOTPRINT (str,<pos>) first non-printable character 9NOTPUNCT (str,<pos>) first non-punctuation character 9NOTSPACE (str,<pos>) first non-white-space character 9NOTUPPER (str,<pos>) first non-uppercase character 9NOTXDIGIT (str,<pos>) first character that is not a hexadecimal digit 9NVALID (str,<b>) 1 if string str is a valid SAS variable name based on basis
+ b, 0 if not; for values of b refer to 9ONLDOC OEM2ANSI* CALL(str,dst,len) [WINDOWS] converts string str from oem to ansi for length len and stores result in string dst 9PROPCASE (str,<dlm>) converts string str to proper case with delimeters dlm matches a pattern QUOTE+ (str) adds surrounding double quotes to string str, and doubles any
+ double quotes found within str
+ RANK (x) position of character x in ascii or ebcdic collating sequence
+ REPEAT (str,n) string consisting of string str repeated n+1 times
+ REVERSE (str) string str with its characters in reverse order
+
+ substring that matches a pattern
+ RIGHT (str) converts trailing blanks to leading blanks in string str
+ SCAN (str,n,<dlm>) nth substring in str separated by delimeters dlm
+
+ see 9ONLDOC for default dlm; beginning with V7 a negative value of n scans the string right to left 9SCAN CALL(str,n,pos,len,<dlm>) position and length of nth substring in string str separated by delimiters dlm; see 9ONLDOC for default dlm 9SCANQ (str,n,<dlm>) same as SCAN but ignores delimeters within quotation marks 9SCANQ CALL(str,n,pos,len,<dlm>) same as CALL SCAN but ignores delimeters within quotation marks SOUNDEX+ (str) encodes string str according to a patented search algorithm described in SASP222, p64 SPEDIS& (str,key) a value representing the likelihood that string str matches
+ string key 9STRIP (str) removes all leading and trailing blanks 9SUBPAD (str,pos,<n>) n characters of str beginning at position pos: if n=0,
+ null string is returned; if pos + n-1 > length(str), result is padded with blanks
+ SUBSTR (str,pos,<n>) "x = substr()" returns n characters of str beginning at position pos "substr() = x" assigns n chars of x to str beginning at position pos beginning in V9, if n is omitted str will be assigned a length of 8
+ 9SUBSTRN (str,pos,<n>) n characters of str beginning at position pos, allowing negative values for both pos and n, and possible null string return
+ TRANSLATE (str,to1,from1,...<ton,fromn>) converts all characters in str that
+ occur in from1 to their respective character in to1 for every
+ fromn-ton pair of strings
+
+ TRANWRD+ (str,to,from) converts all blank-delimited occurrences of string
+ from in string str to string to TRIM (str) removes all trailing blanks TRIMN+ (str) removes all trailing blanks, NULL if result is a blank UPCASE (str) converts all lowercase characters in str to uppercase VERIFY (str,excerpt1,...<excerptn>) position of the first character in str
+ that is not present in any of the strings excerpt1-excerptn ABS (num) absolute value of num AIRY+ (num) value of the airy function; the differential equation w"-xw=0 ARCOS (num) arccosine in radians; -1 < num < 1 ARSIN (num) arcsine in radians; -1 < num < 1 ATAN (num) arctangent in radians
+ 9ATAN2 (num1,num2) arctangent in of two numeric variables in radians 9BETA (a,b) beta function of first shape parm a and second shape parm b
+ CEIL (num) smallest integer greater than or equal to num 9CEILZ (num) smallest integer greater than or equal to num without fuzzing 7COMB (n,r) combinations of n elements taken r at a time 7CONSTANT (c) machine or mathematical constant c, values of c are:
+ E natural base LOGBIG log w/respect to base of big PI pi LOGSMALL log w/respect to base of small EULER euler constant SQRTBIG square root of big EXACTINT exact integer SQRTSMALL square root of small BIG largest dp num MACEPS machine precision constant SMALL smallest dp num LOGMACEPS log w/respect to base of maceps [dp = double-precision] SQRTMACEPS square root of maceps
+ COS (num) cosine; num must be in radians
+ COSH (num) hyperbolic cosine
+ DAIRY+ (num) derivative of the airy function
+
+ 7DEVIANCE (dist,var,parms...) deviance from distribution dist using random
+ variable var; parameter list varies depending on distribution
+ DIGAMMA (num) derivative of the LGAMMA function; num > 0
+ ERF (num) the integral defined in SASLang, p546
+ ERFC (num) complement to the ERF function [1-erf(num)]
+ EXP (num) the constant e raised to the power of num
+
+ 7FACT (num) factorial of num FLOOR (num) largest integer less than or equal to num
+ 9FLOORZ (num) largest integer less than or equal to num without fuzzing FUZZ (num) nearest integer value if num is within 1e-12 of the integer GAMMA (num) the integral defined in SASLang, p551 IBESSEL+ (nu,x,kode) bessel function when kode=0, and modified bessel function
+ when kode != 0 of order nu evaluated at x
+ INT (num) truncates decimal portion of num
+
+ 9INTZ (num) truncates decimal portion of num without fuzzing JBESSEL+ (nu,x) bessel function of order nu evaluated at x LGAMMA (num) natural logarithm of GAMMA(num) LOG (num) natural logarithm of num LOG10 (num) common logarithm of num LOG2 (num) logarithm to the base 2 of num
+ 9LOGISTIC CALL(var1,...<varn>) replaces each variable with the logistic value of that variable; only accepts variable names 9LOGBETA (a,b) logarithm of the beta function with shape parameters a and b
+ MOD (num,div) remainder of the quotient num/div 9MODZ (num,div) remainder of the quotient num/div without fuzzing 7PERM (n,r) permutations of n elements taken r at a time
+ ROUND (num,<unit>) num rounded to the nearest unit u, default u = 1 9ROUNDE (num,<unit>) num rounded to the nearest unit u, default u = 1; if result halfway between two multiples, an even multiple is returned
+ 9ROUNDZ (num,<unit>) num rounded to the nearest unit u [def = 1] without fuzzing SIGN (num) -1 if num < 0, 0 if num = 0, and 1 if num > 0 SIN (num) sine; num must be in radians SINH (num) hyperbolic sine
+ 9SOFTMAX CALL(var1,...<varn>) replaces each variable with the softmax value of that variable; only accepts variable names SQRT (num) square root of num 9STDIZE CALL(<opt1,>...<optn,>var1,...<varn>) standardizes each variable's
+ value according to options; see 9ONLDOC for option values TAN (num) tangent; num must be in radians and not an odd multiple of pi/2 TANH (num) hyperbolic tangent
+ 9TANH CALL(<var1,...<varn>) replaces each variable with the hyperbolic
+ tangent of that variable; only accepts variable names
+ TRIGAMMA (num) derivative of the DIGAMMA function; num > 0
+ TRUNC (num,len) truncates num stored as a double to len bytes
+
+ Probability 	functions
+ -----------
+le = "is less than or equal to"
+ prob_ = "probability that an observation from a<n>|the"
+ frvrdist = "from various continuous and discrete distributions"
+
+ BETAINV (p,a,b) pth quantile from beta distribution with shape parms a and b CDF& (id,q,<s>,<l>) left cumulative distribution function frvrdist CINV (p,df,<nc>) pth quantile from the chi-square distribution with
+ degrees of freedom df and a noncentrality parameter nc CNONCT+ (x,df,prob) the noncentrality parameter from a noncentral chi-square distribution whose parameters are x, df, and nc
+ FINV (p,ndf,ddf,<nc>) pth quantile from the F distribution with numerator and denominator degrees of freedom ndf and ddf and a noncentrality parameter nc
+ FNONCT+ (x,ndf,ddf,<nc>) the noncentrality parameter from an noncentral F distribution whose parameters are x, ndf, ddf, and nc GAMINV (p,a) pth quantile from the gamma distribution with shape parameter a
+ 9LOGCDF (id,q,<s>,<l>) logarithm of the left cumulative distribution function LOGPDF& (id,q,<s>,<l>) logarithm of the probability density function frvrdist LOGPMF& (id,q,<s>,<l>) logarithm of the probability mass function frvrdist LOGSDF& (id,q,<s>,<l>) log of the survival function (log upper tail) frvrdist PDF& (id,q,<s>,<l>) probability density function frvrdist PMF& (id,q,<s>,<l>) probability mass function frvrdist POISSON (m,n) prob_ Poisson distribution, with mean m, le n PROBBETA (x,a,b) prob_ beta distribution, with shape parameters a and b, le x PROBBNML (p,n,m) prob_ binomial distribution, with probability of success p,
+ number of trials n, and number of successes m, le m 7PROBBNRM+ (x,y,r) probability from the bivariate normal distribution [avail with the QC product in 6.07] PROBCHI (x,df,<nc>) prob_ chi-square distribution, with degrees of freedom df and noncentrality parameter nc, le x PROBF (x,ndf,ddf,<nc>) prob_ F distribution, with numerator and denominator
+ degrees of freedom ndf and ddf, and noncentrality parameter nc, le x PROBGAM (x,a) prob_ gamma distribution, with shape parameter a, le x PROBHYPR (n,k,s,<r>) prob_ extended hypergeometric distribution, with
+ population n, items k, sample size s, and odds ratio r, le x
+ PROBIT (p) pth quantile from the standard normal distribution
+
+ 7PROBMC+ (dist,q,p,df,np,<parms>) probability or the quantile from various distributions with finite and infinite degrees of freedom for the variance estimate [avail with the QC product in 6.07]
+ PROBNEGB (p,n,m) prob_ negative binomial distribution, with probability of
+ success p and number of successes n, le m PROBNORM (x) prob_ standard normal distribution le x PROBT (x,df,<nc>) prob_ Student's t distribution with degrees of freedom df
+ 9QUANTILE 	(dist,prob,<s>,<l>,<sc>) quantile from a specified distribution
+ and noncentrality parameter nc, le x
+ SDF& (id,q,<s>,<l>) survival function (upper tail) frvrdist
+ TINV (p,df,<nc>) pth quantile from the Student's t distribution with
+
+ degrees of freedom df and a noncentrality parameter nc
+ TNONCT+ (x,df,prob) the noncentrality parameter from a noncentral t
+ distribution whose parameters are x, df, and nc
+
+ Programatical
+ -------------
+
+9ALLPERM 	CALL(k,arg1,...<argn>) all permutations of arguments arg1 to argn
+ 9CHOOSEC 	(x,arg1,...<argn>) xth selection among arguments arg1 to argn as a character value, x can be an expression; a negative value of x treats argn as arg1 and counts right to left
+ 9CHOOSEN 	(x,arg1,...<argn>) xth selection among arguments arg1 to argn as a numeric value, x can be an expression; a negative value of x treats argn as arg1 and counts right to left
+ 9IFC 	(expr,t,f,<m>) character value t, f, or m based on whether expression
+ expr evaluates to true, false, or missing, respectively 9IFN (expr,t,f,<m>) numeric value t, f, or m based on whether expression expr evaluates to true, false, or missing, respectively 
+ varup [dist] = "updates seed and returns a variate generated from 
+ a<n>|the [dist] distribution" 
+ NORMAL  (seed) var normal with mean 0 and variance 1 
+ RANBIN  (seed,n,p) var binomial with mean np and variance np(1-p) 
+ RANCAU  (seed) var Cauchy with location parameter 0 and scale parameter 1 
+ 9RAND  (dist,parm1,...parmn) generates random numbers from distribution dist 
+ with parameters approriate for specified distribution 
+ RANEXP  (seed) var exponential with parameter 1 
+ RANGAM  (seed,a) var gamma with parameter a 
+ RANNOR  (seed) var normal with mean 0 and variance 1 
+ RANPOI  (seed,m) var Poisson with mean m 
+ RANTBL  (seed,p1,...pn) var probability mass function defined by p1-pn 
+ RANTRI  (seed,h) var triangular with parameter h 
+ RANUNI  (seed) var uniform on the interval (0,1) 
+ RANBIN  CALL(seed,n,p) varup binomial with mean np and variance np(1-p) 
+ RANCAU  CALL(seed) varup Cauchy w/location parameter 0 and scale parameter 1 
+ RANEXP  CALL(seed) varup exponential with parameter 1 
+ RANGAM  CALL(seed,a) varup gamma with parameter a 
+ RANNOR  CALL(seed) varup normal with mean 0 and variance 1 
+ 9RANPERK  CALL(seed,k,n1,...<nn>) updates seed and returns random permutation 
+ of variables n1-nn taken k at a time, "n1,...<nn>" can be specified 
+ as "of n1-nn" 
+ 9RANPERM  CALL(seed,n1,...<nn>) updates seed and returns random permutation 
+ of variables n1-nn, "n1,...<nn>" can be specified as "of n1-nn" 
+ RANPOI  CALL(seed,m) varup Poisson with mean m 
+ RANTBL  CALL(seed,p1,...pn) varup probability mass function defined by p1-pn 
+ RANTRI  CALL(seed,h) varup triangular with parameter h 
+ RANUNI  CALL(seed) varup uniform on the interval (0,1) 
+
+ 9STREAMINIT CALL(seed) specifies a seed to use for subsequent calls to RAND UNIFORM (seed) var uniform on the interval (0,1)
+ Statistical
+ ----------of args = "of nonmissing arguments n1-nn" parm lists (n1,...<nn>) can be denoted using arrays (of ary1-aryn)
+ 9COALESCE (n1,...<nn>) first non-missing value of arguments n1-nn CSS (n1,n2,...<nn>) corrected sum of squares of args
+(n1,n2,...<nn>) coefficient of variation of args 9GEOMEAN (n1,n2,...<nn>) geometric mean of args; fuzzes values near zero to 0 9GEOMEANZ (n1,n2,...<nn>) geometric mean value of args without fuzzing 9HARMEAN (n1,n2,...<nn>) harmonic mean of args; fuzzes values near zero to 0 9HARMEANZ (n1,n2,...<nn>) harmonix mean of args without fuzzing 9IQR (n1,n2,...<nn>) interquartile range of args
+ KURTOSIS (n1,n2,n3,n4,...<nn>) kurtosis of args 9LARGEST (k,n1,n2,...<nn>) kth largest value of args 9MAD (n1,...<nn>) median absolute deviation from the median of args
+ MAX (n1,n2,...<nn>) maximum value of args
+ 9MEDIAN (n1,...<nn>) median of args MEAN (n1,n2,...<nn>) mean value of args MIN (n1,n2,...<nn>) minimum value of args N (n1,...<nn>) number of args NMISS (n1,...<nn>) number of missing arguments n1-nn ORDINAL (count,n1,n2,...<nn>) largest of the first count arguments n1-nn
+ 9PCTL<n> (p,n1,...<nn>) nth (1-5) percentile p of args RANGE (n1,n2...<nn>) difference between the largest and smallest of args 9RMS (n1,...<nn>) root mean square of args SKEWNESS (n1,n2,n3,...<nn>) skewness statistic of args
+ 9SMALLEST (k,n1,n2,...<nn>) kth smallest value of args STD (n1,n2,...<nn>) standard deviation of args STDERR (n1,n2,...<nn>) standard error of the mean of args SUM (n1,n2,...<nn>) sum of nonmissing args n1-nn USS (n1,n2,...<nn>) uncorrected sum of squares of args VAR (n1,n2,...<nn>) variance of args 
+ Logical  functions 
+ ------- 11 
+ BAND+  (x1,x2) the bitwise AND of x1 and x2 
+ BLSHIFT+  (x1,n) the bitwise left shift of x1 for n bits 
+ BNOT+  (x1) the bitwise NOT of x1 
+ BOR+  (x1,x2) the bitwise OR of x1 and x2 
+ BRSHIFT+  (x1,n) the bitwise right shift of x1 for n bits 
+ BXOR+  (x1,x2) the bitwise EXCLUSIVE OR of x1 and x2 
+
+ Special SAS Operations
+ ----------------------
+
+CEXIST& (cent,<Unit>) 1 if catalog or catalog entry cent exists, 0 if not
+ optional 'U' keyword parameter verifies ability to update
+ DIF<n> (var) first differences between var and its nth lag; default n = 1
+ DIM (array,dim) nth dimension dim of a multidimensional array
+ DIM<n> (array) nth dimension of an array; default n = 1
+ EXECUTE+ CALL(mac) executes resolved value of sas macro mac following the
+
+ current data step; the data step must end with a run statement EXIST& (mem,<mtyp>,<gen>) 1 if SAS data library member exists, 0 if not; opt
+ member type mtyp; optional generation number gen added in V9 FEXIST& (fref) 1 if external file identified by fileref fref exists, 0 if not FILEEXIST&(pname) 1 if external file identified by physical name pname exists,
+ 0 if not
+ FILENAME& (lname,<pname>,<dev>,<opts>,<dir>) if pname is present, return code from assigning fileref lname to physical file pname with device dev and host-specific options opts; if pname absent, deassigns fileref
+ FILEREF& (fn) zero if filename fn has been assigned, nonzero if it has not GETOPTION&(opt,<rep>) value of option opt with optional reporting keyword rep HBOUND (array,dim) upper bound of nth dimension dim of a multidim array HBOUND<n> (array) upper bound of the nth dimension of array; default n = 1 INPUT (src,inf) read the value of src using informat inf
+ use this to convert character data to numeric data INPUTC+ (src,inf,<w>,<d>) read the value of src using character informat inf specified at run time; w = width and d = decimal value for informat INPUTN+ (src,inf,<w>,<d>) read the value of src using numeric informat inf specified at run time; w = width and d = decimal value for informat
+ 7IORCMSG () formatted error message associated with current value of _IORC_ LABEL CALL(var,str) assigns label str to the variable var LAG<n> (var) nth lag value of variable var stored/retrieved in a queue LBOUND (array,dim) lower bound of the nth dimension dim of a multidim array LBOUND<n> (array) lower bound of the nth dimension of array; default n = 1 LIBNAME& (lname,<pname>,<eng>,<opts>) if pname is present, return code from
+ assigning libref lname to physical library pname with engine eng and host-specific options opts; if pname is absent, deassigns libref
+ LIBREF& (lib) zero if libname lib has been assigned, nonzero if it has not 7MISSING (e) 1 if variable or expression e contains a missing value, 0 if not 9MISSING CALL(var1,...<varn>) assigns a missing value to all variable names
+ var1-varn: can use "of" construct; eg, call missing(of _all_)
+ PATHNAME& (fref) physical name of SAS data library or external file fref
+ PUT (src,f) write the value of src using format f
+
+ use this to convert numeric data to character data PUTC+ (src,for,<w>,<d>) write the value of src using character format for specified at run time; w = width and d = decimal value for format PUTN+ (src,for,<w>,<d>) write the value of src using numeric format for specified at run time; w = width and d = decimal value for format RESOLVE+ (mac) resolved value of sas macro mac [more flexible than SYMGET] 9SYMEXIST (mac) 1 if sas macro mac exists, 0 if it does not exist
+ SYMGET (mac) value of sas macro mac during datastep execution 9SYMGLOBL (mac) 1 if sas macro mac is global in scope, 0 if not 9SYMLOCAL (mac) 1 if sas macro mac is local in scope, 0 if not
+ SYMPUT CALL(mac,str) assigns the value str to sas macro mac 9SYMPUTX CALL(mac,str,<symtab>) assigns the value str to sas macro mac in
+ symbol table symtab and removes both leading and trailing blanks SYSMSG& () message produced from a data set or external file function call SYSPROD+ (prod) 1 if sas product prod is licensed, 0 if prod is not licensed,
+ and -1 if prod is not recognized
+ SYSRC& () return code from a data set or external file function call
+ SYSPARM () value of the string specified with the SYSPARM option
+
+ 9UUIDGEN (<warn>,<form>) Universal Unique Identifier in form form (binary or character[default]) with maximum warnings warn [default=1] 
+ COMPOUND (a,f,r,n) the missing argument of the four; f = a(1 + r)**n 8CONVX (y,f,c1,...cn) convexity for an enumerated cashflow 8CONVXP (a,c,n,k,k0,y) convexity for a periodic cashflow stream
+ DACCDB (p,v,y,r) accumulated depreciation using a declining balance method DACCDBSL (p,v,y,r) same as DACCCB but with conversion to an sld function DACCSL (p,v,y) accumulated depreciation using the straight-line method DACCSYD (p,v,y) accumulated depreciation using the sum-of-years-digits method DACCTAB (p,v,t1,...<tn>) accumulated depreciation using user-specified tables DEPDB (p,v,y,r) depreciation using the declining balance method DEPDBSL (p,v,y,r) same as DEPDB but with conversion to an sld function DEPSL (p,v,y) straight-line depreciation DEPSYD (p,v,y) sum-of-years-digits depreciation DEPTAB (p,v,t1,...<tn>) depreciation using specified tables
+ 8DUR (y,f,c1,...cn) modified duration for an enumerated cashflow
+ 8DURP (a,c,n,k,k0,y) modified duration for a periodic cashflow stream INTRR (freq,c0,c1,...cn) internal rate of return as a fraction IRR (freq,c0,c1,...cn) internal rate of return as a percentage MORT (amt,pay,rate,period) missing argument of the four amortization parms NETPV (rate,freq,c0,c1,...cn) net present value with rate as a fraction NPV (rate,freq,c0,c1,...cn) net present value with rate as a percentage
+ 8PVP (a,c,n,k,k0,y) present value for a periodic cashflow stream SAVING (f,p,r,n) the missing argument of the four from a periodic saving f = (p(1 + r)((1 + r)**n - 1)) / r 8YIELDP (a,c,n,k,k0,y) yield-to-maturity for a periodic cashflow stream
+ Dates and Times
+ ---------------
+
+7DATDIF (d1,d2,b) number of days between sas date values d1 and d2 according
+ to basis b ('30/360' or 'Actual')
+ DATE () sas date equal to the current date
+ DATEJUL (n) converts julian date n to a sas date; n = yyddd or yyyyddd
+ DATEPART (dt) date portion of the sas datetime value dt
+ DATETIME () sas datetime equal to the current date and time
+ DAY (d) day-of-month [1-31] from the sas date value d
+ DHMS (d,h,m,s) sas datetime from date, hour, minute, and second
+ HMS (h,m,s) sas time from hour, minute, and second
+ HOUR (tdt) hour [0-23] from either sas time or sas datetime value tdt
+ INTCK (int,fr,to) number of time intervals 'int' from 'fr' to 'to';
+
+ fr and to are sas dates, times, or datetimes; interval values are listed in SASLang, p558 and SASP222+, p58
+ INTNX (int,fr,num) adds 'num' 'int' intervals to starting 'fr'
+ fr and to are sas dates, times, or datetimes; interval values are
+ listed in SASLang, p560 and SASP222+, p59
+
+ (int,fr,num,align) 'align' parm added in Rel 6.11 and 6.09E; advances
+ result to the 'beginning', 'middle', or 'end' of the interval
+ JULDATE (d) julian date equivalent of the sas date d
+ JULDATE7& (d) julian date (with a 4-digit year) equivalent of the sas date d
+ MDY (m,d,y) sas date month, day, and year
+ MINUTE (tdt) minute [0-59] from either sas time or sas datetime value tdt
+ MONTH (d) month [1-12] from the sas date value d
+ QTR (d) quarter of the year [1-4] during which sas date value d falls
+ SECOND (tdt) second [0-59] from either sas time or sas datetime value tdt
+ TIME () sas time equal to the current time
+ TIMEPART (dt) time portion of the sas datetime value dt
+ TODAY () sas date equal to the current date
+ WEEKDAY (d) day-of-week [1-7] from the sas date value d, 1 = Sunday, etc.
+ YEAR (d) year as a four digit number from the sas date value d
+
+ 7YRDIF (d1,d2,b) number of years between sas date values d1 and d2 according to basis b ('30/360', 'Actual', 'ACT/360', or 'ACT/365') YYQ (y,q) sas date equal to the first day of quarter q in year y 
+8HTMLDECODE(str) decoded string from str containing HTML numeric character
+ references or HTML character entity references 8HTMLENCODE(str) encoded string from str using HTML character entity references 8URLDECODE (str) decoded string from str using the URL escape syntax 8URLENCODE (str) encoded string from str using the URL escape syntax
+ Pattern Matching
+ ----------------
+
+9PRXCHANGE (expr|rxid,t,src) performs pattern-matching replacement on str src 9PRXCHANGE CALL(rxid,t,ostr,<nstr>,<len>,<trunc>,<n>) performs pattern-matching 9PRXDEBUG CALL(b) if b > 0 then enables debug output; if zero, disables it 9PRXFREE CALL(rxid) frees memory allocated by expression id from PRXPARSE 9PRXMATCH (expr|rxid,src) position of beginning of pattern expr or id rxid 9PRXNEXT CALL(rxid,beg,end,src,pos,len) position and length of a substring
+ that matches a pattern and iterates over multiple matches 9PRXPAREN (rxid) last bracket match for which there is a match in a pattern 9PRXPARSE (expr) unique numeric id to compiled Perl regular expression expr 9PRXPOSN (rxid,cb,src) capture buffer cb from string src using pattern id rxid 9PRXPOSN CALL(rxid,cb,beg,<len>) start position and length for capture buffer 9PRXSUBSTR CALL(rxid,src,pos,<len>) position and length of a substring that 7RXCHANGE CALL(rx,n,src,str) changes substring(s) that match a pattern 7RXFREE CALL(rx) frees memory allocated by other RX functions 7RXMATCH (rx,str) position of beginning of a substring that matches a pattern 7RXPARSE (expr) unique identifier value from parsing pattern expression expr 7RXSUBSTR CALL(rx,str,<pos>,<len>,<n>) finds position, length, and score of a
+</pre>
+</BODY>
+</HTML>

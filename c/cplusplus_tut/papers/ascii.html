@@ -1,0 +1,289 @@
+<HTML>
+<HEAD>
+<TITLE>ASCII Code</TITLE>
+<meta name="description" content="Explains the ASCII code and some of its variants" >
+<meta name="keywords" content="c++ console ASCII code" >
+</HEAD>
+<body bgcolor="white" >
+
+<!--cap-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=5><B> ASCII</B></FONT><BR>
+ <FONT SIZE=4>(American Standard Code for Information Interchange)</FONT>
+</TD><TD VALIGN="bottom">
+ <a href="http://www.cplusplus.com" ><IMG SRC="/img/mini.gif" ALT="cplusplus.com" BORDER=0></A>
+</TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/cap-->
+
+<P>
+As you probably know, in its lower level computers can only handle <TT><B>0</B></TT>s
+(zeros) and
+<TT><B>1</B></TT>s (ones). Using sequences of <TT><B>0</B></TT> and <TT><B>1</B></TT>
+a computer can handle numbers in binary format (as explained in document <A HREF="hex.html"><B>numeral radixes</B></A>).
+Nevertheless there is no such evident way to represent letters with <TT><B>0</B></TT>s
+and <TT><B>1</B></TT>s. For this purpose is the ASCII code used.
+<P>
+
+The ASCII code is a table or list containing all the letters of the alphabet plus
+a variety of additional characters. In this code, each character is represented by
+an order number, which is always the same.
+For example, the ASCII code to represent the capital letter <TT><B>A</B></TT> is always
+represented by order number <TT><B>65</B></TT>, which is easily representable using
+<TT><B>0</B></TT>s and <TT><B>1</B></TT>s in binary notation (<TT><B>1000001</B></TT>).
+
+<P>
+The standard ASCII code defines 128 character codes (from 0 to 127).
+The first 32 are control codes (non-printable), and the other 96 are representable
+characters:
+<BLOCKQUOTE>
+<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=3>
+<TR><TD ALIGN=center WIDTH=30>*</TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>0</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>1</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>2</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>3</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>4</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>5</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>6</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>7</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>8</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>9</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>A</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>B</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>C</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>D</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>E</B></TD>
+<TD BGCOLOR=silver ALIGN=center WIDTH=30><B>F</B></TD>
+</TR>
+<TR><TD BGCOLOR="silver" ALIGN=center WIDTH=30><B>0</B></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>NUL</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>SOH</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>STX</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>ETX</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>EOT</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>ENQ</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>ACK</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>BEL</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>BS</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>TAB</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>LF</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>VT</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>FF</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>CR</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>SO</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>SI</TT></FONT></TD>
+</TR>
+<TR><TD BGCOLOR="silver" ALIGN=center WIDTH=30><B>1</B></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>DLE</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>DC1</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>DC2</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>DC3</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>DC4</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>NAK</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>SYN</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>ETB</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>CAN</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>EM</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>SUB</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>ESC</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>FS</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>GS</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>RS</TT></FONT></TD>
+<TD ALIGN=center WIDTH=30><FONT COLOR="green"><TT>US</TT></FONT></TD>
+</TR>
+<TR><TD BGCOLOR="silver" ALIGN=center WIDTH=30><B>2</B></TD>
+<TD ALIGN=center WIDTH=30><TT>&nbsp;</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#33</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#34</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#35</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#36</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#37</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#38</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#39</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#40</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#41</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#42</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#43</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#44</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#45</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#46</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#47</TT></TD>
+</TR>
+<TR><TD BGCOLOR="silver" ALIGN=center WIDTH=30><B>3</B></TD>
+<TD ALIGN=center WIDTH=30><TT>&#48</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#49</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#50</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#51</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#52</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#53</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#54</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#55</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#56</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#57</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#58</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#59</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#60</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#61</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#62</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#63</TT></TD>
+</TR>
+<TR><TD BGCOLOR="silver" ALIGN=center WIDTH=30><B>4</B></TD>
+<TD ALIGN=center WIDTH=30><TT>&#64</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#65</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#66</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#67</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#68</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#69</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#70</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#71</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#72</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#73</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#74</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#75</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#76</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#77</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#78</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#79</TT></TD>
+</TR>
+<TR><TD BGCOLOR="silver" ALIGN=center WIDTH=30><B>5</B></TD>
+<TD ALIGN=center WIDTH=30><TT>&#80</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#81</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#82</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#83</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#84</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#85</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#86</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#87</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#88</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#89</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#90</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#91</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#92</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#93</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#94</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#95</TT></TD>
+</TR>
+<TR><TD BGCOLOR="silver" ALIGN=center WIDTH=30><B>6</B></TD>
+<TD ALIGN=center WIDTH=30><TT>&#96</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#97</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#98</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#99</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#100</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#101</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#102</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#103</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#104</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#105</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#106</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#107</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#108</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#109</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#110</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#111</TT></TD>
+</TR>
+<TR><TD BGCOLOR="silver" ALIGN=center WIDTH=30><B>7</B></TD>
+<TD ALIGN=center WIDTH=30><TT>&#112</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#113</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#114</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#115</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#116</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#117</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#118</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#119</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#120</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#121</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#122</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#123</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#124</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#125</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&#126;</TT></TD>
+<TD ALIGN=center WIDTH=30><TT>&nbsp;</TT></TD>
+</TR>
+</TABLE>
+* This panel is organized to be easily read in hexadecimal: row numbers represent the
+first digit and the column numbers represent the second one. For example, the
+<TT><B>A</B></TT> character is located at the <TT><B>4th</B></TT> row and the
+<TT><B>1st</B></TT> column, so it would be represented as hexadecimal
+number <TT><B>0x41</B></TT> (<TT><b>65</B></TT>).
+</BLOCKQUOTE>
+
+<P>
+In addition to the 128 standard ASCII codes (the ones listed above ranging from 0 to 127),
+most machines have another 128 extra codes which form what is known as extended ASCII
+(with ranges from 129 to 255).
+This extended ASCII character set is platform-dependent, meaning that it may vary from one
+machine to another, or between operating systems.
+<P>
+The most-used extended ASCII character sets are OEM and ANSI.
+<P>
+The OEM character set is included in all PC-compatible computers as the default character
+set when the system boots before loading any operating system and under MS-DOS. 
+It includes some foreign signs, some marked characters and also pieces to draw simple panels.
+Unfortunately it is usually redefined by some regional country-specific configurations
+to include local symbols.
+<BLOCKQUOTE><IMG SRC="ascii1.gif"></BLOCKQUOTE>
+The ANSI character set is a standard that is included in systems like Windows, some
+UNIX platforms and some applications. It includes many more local symbols and marked
+letters than OEM so it can be used with more languages without having to be redefined:
+<BLOCKQUOTE><IMG SRC="ascii2.gif"></BLOCKQUOTE>
+
+<P>
+Here you have an interactive Decimal-Hexadecimal-Octal-ASCII converter (Netscape 3+ or MSIE 4+):
+
+<P><CENTER>
+
+<!--***************************************************************************-->
+<!--* DEC-HEX-OCT-ASCII converter by Juan Soulie - http://www.soulie.com/juan *-->
+<!--***************************************************************************-->
+ <script language="JavaScript" >
+ <!--
+ function updt (f,n) {
+   var asc="                                 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ";
+   eval ("v=new Number(parseInt(f.field"+n+".value,n))");
+   if (n==0) {v=new Number (asc.indexOf(f.field0.value))}
+   f.field10.value=v.toString(10);
+   f.field16.value=v.toString(16);
+   f.field8.value=v.toString(8);
+   f.field0.value=asc.charAt(v.toString(10));
+ }
+ // -->
+ </SCRIPT>
+ <form name="theform" >
+
+ <TABLE CELLPADDING=5 CELLSPACING=0 BORDER=1><TR><TD BGCOLOR="silver">
+ <TABLE><TR>
+ <TD ALIGN="center">DEC:<BR><INPUT TYPE="text" NAME="field10" SIZE=5 MAXLENGTH=5 onChange="updt (this.form,10)"></TD>
+ <TD ALIGN="center">HEX:<BR><INPUT TYPE="text" NAME="field16" SIZE=5 MAXLENGTH=5 onChange="updt (this.form,16)"></TD>
+ <TD ALIGN="center">OCT:<BR><INPUT TYPE="text" NAME="field8" SIZE=5 MAXLENGTH=5 onChange="updt (this.form,8)"></TD>
+ <TD ALIGN="center">ASCII:<BR><INPUT TYPE="text" NAME="field0" SIZE=5 MAXLENGTH=1 onChange="updt (this.form,0)"></TD>
+ <TD ALIGN="center"> <BR><INPUT TYPE="reset" VALUE="reset"></TD></TR>
+ <TR><TD ALIGN="center" COLSPAN=5>
+ <FONT FACE="arial,helvetica" SIZE=1>Write a datum in the suitable input field and press TAB</FONT>
+ </TD></TR></TABLE>
+ </TD></TR></TABLE>
+ </FORM>
+<!--*** End Of DEC-HEX-OCT-ASCII converter ***-->
+
+</CENTER></P>
+
+<!--cua-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy;The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+ <TR><TD ALIGN="center">
+<TABLE CELLPADDING=0 CELLSPACING=0>
+     <TR><TD>Return <a href="javascript:history.go(-1)" >back</A></TD></TR>
+     <TR><TD>Return to <a href="../index.html">Documents Section</A></TD></TR></TABLE>
+ </TD></TR>
+</TABLE></CENTER>
+<!--/cua-->
+
+</BODY>
+</HTML>

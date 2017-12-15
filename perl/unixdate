@@ -1,0 +1,25 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: unixdate
+#
+#  Summary: Given a Unix date, print it in RFC822 format.
+#
+#  Created: Tue 27 Feb 2001 15:26:55 (Bob Heckel)
+# Modified: Wed 03 Jan 2007 12:38:07 (Bob Heckel)
+##############################################################################
+
+if ( !$ARGV[0] ) {
+  print STDERR "Usage: $0 1005160491\nReturns human readable date " .
+               "(RFC822) based on unix number passed to it.\n\n" .
+               'To go the other way: $ date +%s -d"May 12 1998"' . "\n" .
+               'To get a SAS datetime (add 10 years of seconds):' . "\n" .
+               '$ echo `date +%s -d"05/12/1998"` + 315569520 | bc' . "\n";
+               'To use SAS datetime use:' . "\n" .
+               '%put %sysfunc(putn(1443540460, datetime14.));' . "\n\n";
+
+  print time(), "\n";
+
+  exit(__LINE__);
+}
+
+print scalar localtime($ARGV[0]), "\n";

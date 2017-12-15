@@ -1,0 +1,65 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: pop3maildel
+#
+#  Summary: Delete AT&T email that has been forwarded to freeshell.
+#
+#  Created: Sat 03 Aug 2002 12:23:51 (Bob Heckel)
+# Modified: Sun 16 May 2004 21:26:58 (Bob Heckel)
+##############################################################################
+use Mail::POP3Client;
+
+use constant DEBUG => 1;
+
+if ( @ARGV ) {
+  print STDERR "Usage: $0 Deletes all mail on AT&T, no prompting.\n";
+  exit(__LINE__);
+}
+
+$pop = new Mail::POP3Client( HOST => "postoffice.worldnet.att.net" );
+###$pop->User($ARGV[0]);
+$pop->User('bheckel');
+###$pop->Pass($ARGV[1] );
+$pop->Pass('sanda1cc');
+$pop->Connect() || 
+   die "can't connect (might be bad pw, no mail exists or can't reach server): $pop->Message()";
+
+die "no mail to delete" unless $pop->Count();
+print "pop count is: ", $pop->Count(), "\n" if DEBUG;
+
+###if ( DEBUG ) {
+  ###$totbytes = 0;
+  ###for ( $i=1; $i<=$pop->Count(); $i++ ) {
+    ###($msgnum, $size) = split ' ', $pop->List($i);
+    ###print "Msgnum: $msgnum and Size: $size\n";
+    ###$totbytes += $size;
+  ###}
+  # Print aligned.
+  ###system("align 'AT&T quota is:' '10000000 bytes' 20");
+  ###system("align 'currently consuming:'  '$totbytes bytes' 20");
+###}
+
+###print "OK to delete all [y/n]? ";
+###chomp($y_or_n = <STDIN>);
+###if ( $y_or_n =~ /n/i ) {
+  ###$pop->Close;
+  ###exit 1;
+###}
+
+for ( $i=1; $i<=$pop->Count(); $i++ ) {
+  $pop->Delete($i);
+  ###print "Deleted $i\n" if DEBUG;
+}
+
+###print "OK to commit [y/n]? ";
+###chomp($y_or_n = <STDIN>);
+###if ( $y_or_n =~ /n/i ) {
+  ###exit 1;
+###}
+
+# TODO how to elim the Autoload error (appears to still delete ok)
+# Can't locate package AutoLoader for @Mail::POP3Client::ISA during global
+# destruction.  Does this suppress it?
+no warnings;
+$pop->Close;   # commit the deletions
+

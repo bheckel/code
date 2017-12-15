@@ -1,0 +1,341 @@
+<HTML>
+<HEAD>
+<TITLE>NetscapeWorld - Cookie Code to Analyze User Activity and Create Custom Pages - February 1997</TITLE>
+<META name="description" content="NetscapeWorld - cookie code">
+<META name="keywords" content="NetscapeWorld, cookies, cookie code, cookie primer, cookie how-to"> 
+<META name="author" content="Matisse Enzer and Brian Wilson">
+</HEAD>
+<BODY bgcolor="#FFFFFF" text="#000000" link="#0000FF" alink="#FF000000" vlink="#551a8b">
+
+<IMG WIDTH="100%" HEIGHT="2" SRC="/netscapeworld/icons/red.gif" ALT="_______________">
+
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="10">
+<TR>
+<TD ALIGN="CENTER">
+
+<H1 ALIGN="CENTER">Cookie how-to code</H1>
+<H3 ALIGN="CENTER">This accompanies 
+<A HREF="/netscapeworld/nw-02-1997/nw-02-cookiehowto.html">
+A step-by-step guide to using cookies to analyze user activity &#38; create
+custom pages</A></H3>
+
+<P ALIGN="CENTER"><EM>By Matisse Enzer and Brian Wilson</EM>
+
+</TD>
+<TD WIDTH="125" ALIGN="LEFT" VALIGN="TOP">
+
+<center>
+<font size="+1" FACE="Arial, Helvetica, Sans-serif"><strong>NetscapeWorld</strong></font>
+<br>
+<font size="-1" FACE="Arial, Helvetica, Sans-serif">has become</font>
+<br>
+<a href="/index.html"><img vspace="0" border="0" width="107" height="58" src="/netscapeworld/ned-icons/ned-logo.107.stack.gif" alt="[Netscape Enterprise Developer Table of Contents]"></a>
+<br>
+<img vspace="5" border="0" width="107" height="2" src="/netscapeworld/icons/red.gif" alt="">
+<br>
+<font size="-1" FACE="Arial, Helvetica, Sans-serif">February 1997</font>
+<br>
+</center>
+<font FACE="Arial, Helvetica, Sans-serif">
+<a href="/netscapeworld/nw-02-1997/nw-02-toc.html"><img vspace="0" align="bottom" border="0" width="13" height="13" src="/netscapeworld/ned-icons/a-blue.gif" alt="[February 1997 Table of Contents]">Table of Contents</a>
+<br>
+<a href="/netscapeworld/common/nw.backissues.topical.html"><img vspace="0" border="0" width="13" height="13" src="/netscapeworld/ned-icons/a-blue.gif" alt="[Archives]">Topical Index</a>
+<br>
+<a href="/netscapeworld/search.html"><img vspace="0" border="0" width="13" height="13" src="/netscapeworld/ned-icons/a-blue.gif" alt="[Search]">Search</a>
+</font>
+
+
+</TD></TR></TABLE>
+
+
+<H3 ALIGN="CENTER"><A NAME="1">Send an HTML file and set a cookie</A></H3>
+<PRE WIDTH="80">
+# This is a comment in a Perl script. Comments are our friends.
+#
+$DOMAIN = 'www.netscapeworld.com';
+$EXPIRES= 'Sat Jan 11 22:11:04 GMT 1997';
+$return_page = '/usr/local/etc/httpd/docs/thanks.html';
+
+# Clean up the form fields to remove spaces, commas, and semi-colons
+# A fancier version would also URL-encode the string.
+foreach $field (country, state) {
+		$FORM{$field} =~ tr/ /+/;   # Turn spaces into plus signs.
+		$FORM{$field} =~ s/,//g;    # Strip out commas
+		$FORM{$field} =~ s/;//g;    # Strip out semi-colons
+	}
+
+# Build the cookie.
+$COOKIE = "LOCATION=$FORM{country},$FORM{state} ;
+			expires=$EXPIRES ;
+			domain=$DOMAIN";
+
+# Set the cookie and send the user the thank you page.
+print "Set-cookie: $COOKIE\n";
+print "Content-type: text/html\n\n";  #Note extra newline to mark
+					#end of header.
+
+# This is the perl way to send a file to STDOUT
+open(FILE,$return_page);
+while (&lt;FILE&gt;) {
+		print;
+}
+
+# All done.
+close(FILE);  # Not really needed but is sure doesn't hurt.
+</PRE>
+<P><IMG WIDTH="100%" HEIGHT="2" SRC="/netscapeworld/icons/red.gif" ALT="_______________">
+
+<H3 ALIGN="CENTER"><A NAME="2">Moving cookie data into and out of a database</A></H3>
+
+<PRE WIDTH="80">
+$DBM = '/usr/local/etc/httpd/misc/userdata';	# Full path to DBM
+						# files
+$USER = "$ENV{REMOTE_USER}"; # Just to have a shorter variable name
+
+# We assume here that the form contents have been parsed and
+# put into an associative array, %FORM, and that the contents
+# of each field have been cleaned up to removed troublesome
+# characters.
+#
+# Open a  DBM database for storage on hard disk
+dbmopen(%DBASE, "$DBM",0600);	# The associative array %DBASE
+				# now points to the DBM files on disk.
+# Pack the contents of all form fields into a single
+# string in the format:   name1=value;name2=value;name3=value...
+foreach $field (keys(%FORM)) {
+	$record .= "$field=$FORM{$field};";
+}
+chop $record;  # Remove the extra ; at the end.
+
+# Update the users' record in the DBM array/database
+$DBASE{$USER} = $record;
+</PRE>
+
+<P><IMG WIDTH="100%" HEIGHT="2" SRC="/netscapeworld/icons/red.gif" ALT="_______________">
+
+<H3 ALIGN="CENTER"><A NAME="3">Building a simple page based on a cookie</A></H3>
+
+<PRE WIDTH="80">
+unless ($ENV{HTTP_COOKIE}) {
+	$country   = 'USA';           # Default values
+	$state     = 'South+Dakota';  # Better format for UNIX file names
+	$statename = 'South Dakota';  # More human readable
+	&sendHTML;  # subroutine that sends a chunk of HTML
+	exit(0);    # we are all done. exit the program.
+}
+
+# If we get this far, the user has a cookie, so get their username
+# We assume the cookie contains something like
+#    IDENTITY=puffball
+split(/=/,$ENV{HTTP_COOKIE});  #  @_ contains results
+$user = $_[1];
+
+# The database records contain something like
+#    Country=USA%State=New+York%Food=Ice+Cream
+dbmopen(%DBASE, "$DBM");  # Associate %DBASE with a DBM set.
+
+# Now we actually pull the users' data from the database,
+# and put it into the default patternspace ($_)
+$_ = $DBASE{$user};
+
+# This next line splits the default patternspace ($_) first
+# on  %   and then on  = and maps the result into an
+# associative array, %RECORD
+%RECORD = map split(/%/), split(/=/);
+
+# So, $RECORD{Country} now contains the user's country, e.g USA
+# and $RECORD{State}       contains  'New+York'
+# and $RECORD{Food}        contains  'Ice+Cream'
+
+$country = $RECORD{Country};
+$state = $RECORD{State};
+$_ = $state;
+$statename = tr/+/ /; Turns those +'s back into spaces.
+
+&sendHTML;  # subroutine that sends a chunk of HTML
+exit(0);    # We're all done. Exit the program.
+
+sub sendHTML {
+print "&lt;-- Start HTML inserted by personalnews.pl --&gt;"
+print "&lt;UL&gt;";
+print "&lt;LI&gt;&lt;A HREF=\"/headlines/$state.html\"&gt;$statename Local Headlines&lt;/A&gt;"
+print "&lt;LI&gt;&lt;A HREF=\"/headlines/$country.html\"&gt;$country National Headlines&lt;/A&gt;"
+print "&lt;/UL&gt;";
+print "&lt;-- End HTML inserted by personalnews.pl --&gt;"
+}
+</PRE>
+
+<P><IMG WIDTH="100%" HEIGHT="2" SRC="/netscapeworld/icons/red.gif" ALT="_______________">
+
+<H3 ALIGN="CENTER"><A NAME="4">Sending a cookie with a serialized ID</A></H3>
+<PRE WIDTH="80">
+# Send a cookie with a serialized id
+# (It is recommended that you add flock() calls to this code!)
+
+my ($file) = 'seqf';
+my ($n) = 0;
+if (open (SEQF, "&#60;$file")) {
+    $n = &#60;SEQF&#62;;
+    close SEQF;
+}
+open (SEQF, "&#62;$file");
+print SEQF $n+1;
+close SEQF;
+print "Set-cookie: SERIAL=$n\n";
+</PRE>
+
+<P><IMG WIDTH="100%" HEIGHT="2" SRC="/netscapeworld/icons/red.gif" ALT="_______________">
+
+<H3 ALIGN="CENTER"><A NAME="5">Logging a cookie </A></H3>
+    <PRE WIDTH="80">
+$logfile = /usr/local/etc/httpd/logs/cookielog; # Location of log file
+$timezone = -8;  # How many hours ahead or behind GMT are we?
+
+# Get the cookie and split out the value we want
+$_ = $ENV{HTTP_COOKIE};
+split(/=/);  # @_ now contains the parts, $_[1] is the part we want
+$IDENTITY = $_[1]; 
+$time = time + ($timezone * 60 * 60);
+$now = gmtime $time;
+
+open(LOGFILE, "&#62;&#62;$logfile");	# Open the log file for appending
+				# In real life you might want to add
+				# flock() code here.
+print LOGFILE "$now\t$IDENTITY\n";  # Add an entry to the log file
+</PRE>
+
+<P><IMG WIDTH="100%" HEIGHT="2" SRC="/netscapeworld/icons/red.gif" ALT="_______________">
+
+<H3 ALIGN="CENTER"><A NAME="6">A cookie report</A></H3>
+    <PRE WIDTH="80">
+    
+#!/usr/local/bin/perl
+# This is a comment. I love comments.
+# Cook the log file produced by cookietracker
+# by Chuck Musser chuck@matisse.net
+# modified 11/27/96 by Matisse Enzer matisse@matisse.net
+
+unless (@ARGV) {
+   print "Usage:   $0 filename [filename filename...]\n";
+   exit(1);
+}
+
+$firstline = &#60;&#62;;                   # get the first line of the input file
+@fields = split(/\s/,$firstline);  # split the line on whitespace
+$last_index = $#fields;            #get the index value of the last field
+$request_index = $last_index - 4;  # the position of the request string
+
+
+#loop through the file
+while(&#60;&#62;) {
+    # extract the request and cookie fields
+    @fields = split(/\s/, $_);   # split a line into fields
+    $request_string = $fields[request_index];
+    $cookie = $fields[$last_index];
+    unless ( $cookie eq '-' ) {
+        $_ = $request_string;
+        if ( $cookie && (!/gif|jpg/) ) {    # only handle non-gif/jpg lines
+           $visitors{$cookie} ++;
+	   $page{$request_string} ++;
+        }
+    }
+}
+
+#get the number of visits for each visitor into an array
+foreach $vis (keys(%visitors)) {
+    
+#    if ( $visitors{$vis} &#62; 1 ) {
+    push( @visits, $visitors{$vis} );
+    $numvisits ++;
+    $numhits += $visitors{$vis};
+    if ($visitors{$vis} &#62; $max) {
+	$max =  $visitors{$vis};
+	$maxname = $vis;
+    }
+#    } else { rejects ++; } 
+}
+
+printf "median number of hits per cookieholder  : %.2f\n", &median(@visits);
+printf "avg. number of hits per cookieholder : %.2f\n", $numhits/$numvisits;
+printf "total number of cookie holders   : %d\n", $numvisits;
+printf "Most obsessed with our site: %s with %d hits\n", $maxname, $max;
+
+sub median {
+    local (@dataset) = sort numerically @_;
+    local ($elems, $odd, $middle, $a, $b );
+    $elems = $#dataset + 1;
+    $odd = $elems % 2; # odd or even number of elements?
+    $middle= (($elems + 1) / 2); # get the middle element in the set.
+
+    if( $odd ) { 
+	return $dataset[$middle - 1];
+    } else {
+	$a = (int($middle) - 1); $b = $a + 1;
+	return (($dataset[$a] + $dataset[++$a]) / 2);    
+    }
+}
+
+sub  numerically{ $a &#60;=&#62; $b;}
+
+</FONT></PRE>
+
+<P><IMG WIDTH="100%" HEIGHT="2" SRC="/netscapeworld/icons/red.gif" ALT="_______________">
+
+<H3 ALIGN="CENTER"><A NAME="7">Comparing cookies to areas visited</A></H3>
+
+<PRE WIDTH="80">
+# Cross index user data with log file results
+
+$logfile = '/path/to/log/file';
+
+&getURL;	# Run subroutine that get the URL we want to analyze.
+    		# Put results into   $target
+    
+&findcookies;	# Go through the log file and build a list of all the
+		# unique cookies associated with the target URL.
+		#
+		# One way to build a list of unique values is like this:
+		# Assume the cookie we have just found is in $cookie
+		# then do:
+		#           $COOKIELIST{$cookie}++;
+		#
+		# So if $cookie contained "199601.WPI.23" then
+		# $COOKIELIST{199601.WPI.23} will now contain "1"
+		# the first time we do this, and will increment
+		# each time we call this command.
+
+	# After we have gone through the whole log file we can
+	# use the   each()   operator to go through all the cookies and
+	# pull the corresponding info from our database.
+	# Something like this:
+while ( ($cookie,$hits) = each(%COOKIELIST) ) {
+	$_ = $DATABASE{$cookie};  # This assumes that the %DATABASE
+				  # array has already been linked
+				  # to our database.
+	# Let's further assume that each database record looks like
+	# this:    Company=Intel%Title=Manager
+	# So:
+%RECORD = map split(/%/), split(/=/);
+
+	# Now  $RECORD{Company} = Intel
+	# and  $RECORD{Title}   = Manager
+
+	if ($RECORD{Title} eq "Manager") {  # This person makes buying decisions
+	    $managers++;                    # Increment the count of managers
+	}
+
+	$count++;  # Increment a count of how many cookies processed
+
+    }   # End of 'while' loop - go back to start of loop, get another cookie
+        # from the list and do it again.
+
+# At this point we have a number in  $count  that tells us how many
+# cookies visited the target page, and a number in  $managers  that tells
+# us how many of those were Managers.
+# Print it out for posterity:
+print "$count cookies, of which $managers are Managers\n";
+
+</PRE>
+
+</BODY>
+</HTML>

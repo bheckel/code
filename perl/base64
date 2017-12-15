@@ -1,0 +1,66 @@
+#!/usr/bin/perl
+##############################################################################
+#     Name: base64
+#
+#  Summary: Encode or decode base64.
+#
+#           Input file must contain only base64 data (no headers or it'll
+#           barf).
+#
+#  Adapted: Sat 09 Jun 2001 12:27:34 (Bob Heckel -- from Perl FAQ)
+# Modified: Fri 28 Feb 2003 08:34:39 (Bob Heckel)
+##############################################################################
+use MIME::Base64;
+use Getopt::Std;
+
+die "Usage: base64 [-d] inputfile outputfile\n" if $#ARGV < 1;
+
+my $f2 = pop @ARGV;
+my $f1 = pop @ARGV;
+
+our $opt_d;
+getopts('d', \%h);
+
+# Was a -d passed in?
+exists $h{d} ? Decode($f1, $f2) : Encode($f1, $f2);
+
+exit 0;
+
+
+sub Encode {
+  my $f1 = shift;
+  my $f2 = shift;
+
+  open RAW, $f1  ||  die "$0: can't open $f1: $!\n";
+  open ENCODED, ">$f2"  ||  die "$0: can't open $f2: $!\n";
+
+  # If you want to encode a large file, you should encode it in chunks that
+  # are a multiple of 57 bytes. This ensures that the base64 lines line up and
+  # that you do not end up with padding in the middle. 57 bytes of data fills
+  # one complete base64 line (76 == 57*4/3): 
+  while ( read(RAW, my $buf, 60*57) ) {
+    print ENCODED MIME::Base64::encode($buf);
+  }
+
+  close RAW;
+  close ENCODED;
+}
+
+
+sub Decode {
+  my $f1 = shift;
+  my $f2 = shift;
+
+  open BASE64, $f1  || die "$0: can't open file $f1: $!\n";
+  open DECODED, ">$f2"  ||  die "$0: can't open file $f2: $!\n";
+
+  while ( <BASE64> ) {
+    tr#A-Za-z0-9+/##cd;                      # remove non-base64 chars 
+    tr#A-Za-z0-9+/# -_#;                     # convert to uuencoded format 
+    $len = pack("c", 32 + 0.75*length);      # compute length byte 
+    print DECODED unpack("u", $len . $_);    # uudecode and print
+  }
+
+  close BASE64;
+  close DECODED;
+}

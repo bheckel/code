@@ -1,0 +1,29 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: tvp
+#
+#      Summary: Return PV, based on FV, r, n
+#               Usage: tvp
+#
+#      Created: Fri, 06 Aug 1999 11:10:55 (Bob Heckel)
+#     Modified: Fri, 06 Aug 1999 22:41:31 (Bob Heckel--naming convention chg)
+##############################################################################
+
+print "Program returns PV, given FV, r, n\n";
+# Cygwin bug.
+$x = <STDIN>;
+print "Enter FV:\n";
+$fv = <STDIN>;
+print "Enter rate e.g 10%:\n";
+$rate = <STDIN>;
+print "Enter number of periods:\n";
+$period = <STDIN>;
+
+$frac = $rate / 100;
+$discintf = (1 / (1 + $frac)**$period);
+$retme = $fv * $discintf;
+
+print "$retme is the PV.\n";
+
+
+

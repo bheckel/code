@@ -1,0 +1,287 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 5.3, Exception handling</TITLE>
+<META NAME="description" CONTENT="Trying, throwing and catching exceptions.">
+<META NAME="keywords" CONTENT="try catch throw">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 5.3 </FONT><BR>
+ <FONT SIZE=5><B>Exception handling</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+<P>
+<TABLE><TR><TD BGCOLOR="#BFFFBF">
+<IMG SRC="icoansi.gif" ALIGN="left">
+Exception handling explained in this section is a new feature introduced
+by ANSI-C++ standard.
+If you use a C++ compiler that is not adapted to this standard it is possible
+that you cannot use this feature.<BR>
+</TD></TR></TABLE>
+<P>
+
+During the development of a program, it may be some cases where we do not have the
+certainty that a piece of the code is going to work right, either because it accesses to
+resources that do not exist or because it gets out of an expected range, etc...
+<P>
+This type of anomalous situations are included in what we consider exceptions
+and C++ has recently incorporated three new operators to help us to handle these situations:
+<B>try</B>, <B>throw</B> and <B>catch</B>.
+<P>
+Its form of use is the following:
+<BLOCKQUOTE><TT><PRE>
+<B>try {</B>
+  // code to be tried
+  <B>throw </B>exception<B>;
+}
+catch (</B>type &nbsp;exception<B>)
+{</B>
+  // code to be executed in case of exception
+<B>}</B>
+</PRE></TT></BLOCKQUOTE>
+
+And its operation:<BR>
+- The code within the <TT><B>try</B></TT> block is executed normally.  In case that an
+exception takes place, this code must use <TT><B>throw</B></TT> keyword and a parameter
+to throw an exception. The type of the parameter details the exception and can be of any
+valid type.<BR>
+- If an exception has taken place, that is to say, if it has been executed a
+<TT><B>throw</B></TT> instruction within the <TT><B>try</B></TT> block, the
+<TT><B>catch</B></TT> block is executed receiving as parameter the exception
+passed by <TT><B>throw</B></TT>.
+<P>
+For example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// exceptions</I>
+#include &lt;iostream.h&gt;
+
+int main () {
+  char myarray[10];
+  try
+  {
+    for (int n=0; n&lt;=10; n++)
+    {
+      if (n&gt;9) throw "Out of range";
+      myarray[n]='z';
+    }
+  }
+  catch (char * str)
+  {
+    cout &lt;&lt; "Exception: " &lt;&lt; str &lt;&lt; endl;
+  }
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Exception: Out of range</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+
+In this example, if within the <TT><B>n</B></TT> loop, <TT><B>n</B></TT> gets to be
+more than <TT>9</TT> an exception is thrown, since <TT><B>myarray[n]</B></TT>
+would in that case point to a non-trustworthy memory address.  When
+<TT><B>throw</B></TT> is executed, the <TT><B>try</B></TT> block finalizes right away
+and every object created within the <TT><B>try</B></TT> block is destroyed.
+After that, the control is passed to the corresponding <TT><B>catch</B></TT> block
+(that is only executed in these cases).  Finally the program continues right after the
+<TT><B>catch</B></TT> block, in this case: <TT><B>return 0;</B></TT>.
+<P>
+The syntax used by <TT><B>throw</B></TT> is similar to the one of <TT><B>return</B></TT>: 
+Only one parameter that is not needed to be enclosed between parenthesis.
+<P>
+The <TT><B>catch</B></TT> block must go right after the
+<TT><B>try</B></TT> block without including any code line between them.
+The parameter that <TT><B>catch</B></TT> accepts can be of any valid type.
+Even more, <TT><B>catch</B></TT> can be overloaded so that it can accept different types
+as parameters.  In that case the <TT><B>catch</B></TT> block executed is the one
+that matches with the type of the exception sent (the parameter of <TT><B>throw</B></TT>):
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// exceptions: multiple catch blocks</I>
+#include &lt;iostream.h&gt;
+
+int main () {
+  try
+  {
+    char * mystring;
+    mystring = new char [10];
+    if (mystring == NULL) throw "Allocation failure";
+    for (int n=0; n&lt;=100; n++)
+    {
+      if (n&gt;9) throw n;
+      mystring[n]='z';
+    }
+  }
+  catch (int i)
+  {
+    cout &lt;&lt; "Exception: ";
+    cout &lt;&lt; "index " &lt;&lt; i &lt;&lt; " is out of range" &lt;&lt; endl;
+  }
+  catch (char * str)
+  {
+    cout &lt;&lt; "Exception: " &lt;&lt; str &lt;&lt; endl;
+  }
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Exception: index 10 is out of range</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+
+In this case there is a possibility that happen, at least, two different exceptions:<BR>
+<OL>
+<LI> That the required block of 10 characters cannot be assigned (something rare, but possible):  in this case an exception is thrown that will be caught by <TT><B>catch (to char * str)</B></TT>.<BR>
+<LI> That the maximum index for <TT><B>mystring</B></TT> is exceeded:  in this case the exception thrown will be caught by <TT><B>catch (int i)</B></TT>, since parameter is an integer number.
+</OL>
+<P>
+We can also define a <TT><B>catch</B></TT> block that captures all the exceptions
+independently of the type used in the call to <TT><B>throw</B></TT>. For that we
+have to write three points instead of the parameter type and name accepted by
+<TT><B>catch</B></TT>:
+<BLOCKQUOTE><TT><PRE>
+try {
+  <I>// code here</I>
+}
+catch (...) {
+  cout &lt;&lt; "Exception occurred";
+}
+</PRE></TT></BLOCKQUOTE>
+<P>
+It is also possible to nest <TT><B>try-catch</B></TT> blocks within more external
+<TT><B>try</B></TT> blocks. In these cases, we have the possibility that an internal
+<TT><B>catch</B></TT> block forwards the exception received to the
+external level, for that it is used the expression <TT><B>throw;</B></TT> with
+no arguments.  For example:
+<BLOCKQUOTE><TT><PRE>
+try {
+  try {
+      <I>// code here</I>
+  }
+  catch (int n) {
+      throw;
+  }
+}
+catch (...) {
+  cout &lt;&lt; "Exception occurred";
+}
+</PRE></TT></BLOCKQUOTE>
+
+<P>
+<H2>Exceptions not caught</H2>
+If an exception is not caught by any <TT><B>catch</B></TT> statement
+because there is no catch statement with a matching type,
+the special function <TT><B>terminate</B></TT> will be called.
+<P>
+This function is generally defined so that it terminates the current process immediately
+showing an "Abnormal termination" error message.
+Its format is:
+<BLOCKQUOTE><TT><B>void terminate();</B></TT></BLOCKQUOTE>
+
+<P>
+<H2>Standard exceptions</H2>
+Some functions of the standard C++ language library send exceptions that can be captured
+if we include them within a <TT><B>try</B></TT> block. These exceptions are sent with a
+class derived from <TT><B>std::exception</B></TT> as type.  This class
+(<TT>std::exception</TT>) is defined in the C++ standard header file
+<TT><B>&lt;exception&gt;</B></TT> and serves as pattern for the standard hierarchy of
+exceptions:
+<BLOCKQUOTE>
+<TABLE CELLSPACING=0 CELLPADDING=0>
+<TR><TD><TT>exception</TT></TD></TR>
+<TR><TD><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>bad_alloc</TT></TD><TD><TT>(thrown by <B>new</B>)</TT></TD></TR>
+<TR><TD><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>bad_cast</TT></TD><TD><TT>(thrown by <B>dynamic_cast</B> when fails with a referenced type)</TT></TD></TR>
+<TR><TD><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>bad_exception</TT></TD><TD><TT>(thrown when an exception doesn't match any <B>catch</B>)</TT></TD></TR>
+<TR><TD><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>bad_typeid</TT></TD><TD><TT>(thrown by <B>typeid</B>)</TT></TD></TR>
+<TR><TD><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>logic_error</TT></TD></TR>
+<TR><TD><IMG SRC="16linea1.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>domain_error</TT></TD></TR>
+<TR><TD><IMG SRC="16linea1.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>invalid_argument</TT></TD></TR>
+<TR><TD><IMG SRC="16linea1.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>length_error</TT></TD></TR>
+<TR><TD><IMG SRC="16linea1.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><IMG SRC="16linea3.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>out_of_range</TT></TD></TR>
+<TR><TD><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>runtime_error</TT></TD></TR>
+<TR><TD><IMG SRC="16linea1.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>overflow_error</TT></TD></TR>
+<TR><TD><IMG SRC="16linea1.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><IMG SRC="16linea2.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>range_error</TT></TD></TR>
+<TR><TD><IMG SRC="16linea1.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><IMG SRC="16linea3.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>underflow_error</TT></TD></TR>
+<TR><TD><IMG SRC="16linea3.gif" WIDTH=16 HEIGHT=16 ALIGN="left"><TT>ios_base::failure</TT></TD><TD><TT>(thrown by <B>ios::clear</B>)</TT></TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+Because this is a class hierarchy,
+if you include a <TT><B>catch</B></TT> block to capture any of the exceptions of this
+hierarchy using the argument by reference (i.e. adding an ampersand &amp; after the type)
+you will also capture all the derived ones (rules of inheritance in C++).
+<P>
+The following example catches an exception of type <TT><B>bad_typeid</B></TT>
+(derived from <TT><B>exception</B></TT>) that is generated
+when requesting information about the type pointed by a null pointer:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// standard exceptions</I>
+
+#include &lt;iostream.h&gt;
+#include &lt;exception&gt;
+#include &lt;typeinfo&gt;
+
+class A {virtual f() {}; };
+
+int main () {
+  try {
+    A * a = NULL;
+    typeid (*a);
+  }
+  catch (std::exception& e)
+  {
+    cout &lt;&lt; "Exception: " &lt;&lt; e.what();
+  }
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Exception: Attempted typeid of NULL pointer</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+You can use the classes of standard hierarchy of exceptions to throw your exceptions or
+derive new classes from them.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut5-2.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>5-2. Namespaces.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut5-4.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>5-4. Advanced classes type-cast.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</BODY>
+</HTML>

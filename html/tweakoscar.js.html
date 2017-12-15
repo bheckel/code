@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+  <TITLE>Oscar gui test</TITLE>
+  <META NAME="Author" CONTENT="Bob Heckel">
+  <SCRIPT LANGUAGE="JavaScript">
+    function OpenControlWndo() {
+      ctrlpanel = window.open("", "floating_control_window", 
+                                "resizable,width=300,height=200,status=no,toolbar=no,menubar=no");
+                   
+      ctrlpanel.document.open();
+      ctrlpanel.document.write("<HTML><HEAD></HEAD><BODY>");
+      ctrlpanel.document.write("<FORM NAME=controlpanel>");
+      ctrlpanel.document.write("<CENTER><H3>Tweaker</H3></CENTER><PRE>");
+      ctrlpanel.document.write("      Route: <INPUT NAME=route TYPE=TEXT><BR>");
+      ctrlpanel.document.write("Route Param: <INPUT NAME=rparam TYPE=TEXT><BR>");
+      ctrlpanel.document.write("     Upside: <INPUT NAME=upside TYPE=TEXT><BR>");
+      ctrlpanel.document.write("  BackSched: <INPUT NAME=bs TYPE=TEXT></PRE>");
+      ctrlpanel.document.write("</FORM><FORM><CENTER>");
+      ctrlpanel.document.write("<INPUT TYPE=submit VALUE='View Changes'");
+      ctrlpanel.document.write(" onClick=opener.ChangeValues(controlpanel.route.value)>");
+      ctrlpanel.document.write("</CENTER></FORM></BODY></HTML>");
+      ctrlpanel.document.close;
+    }
+
+    function CheckAllVert() {
+      if ( document.wholeform.colhdr[1].checked ) {
+        for ( i=0; i<wholeform.colhdr.length-1; i++ ) {
+          document.wholeform.colB[i].checked = 'on';
+        }
+      } else {
+        for ( i=0; i<wholeform.colhdr.length -1; i++ ) {
+          document.wholeform.colB[i].checked = '';
+        }
+      }
+    }
+
+    function CkboxAdjacent(changeme) {
+      changeme.checked = 'on';
+    }
+
+    function ChangeValues(value_to_chg) {
+      document.wholeform.valB[0].value = value_to_chg;
+      document.wholeform.colB[0].checked = 'on';
+      // Keep Tweaker on top.
+      ctrlpanel.focus();
+    }
+  </SCRIPT>
+</HEAD>
+
+<BODY onLoad="OpenControlWndo()">
+<TABLE BORDER="0">
+  <!-- Start Header rows -->
+  <TR>
+    <FORM NAME="wholeform">
+      <TH></TH>
+      <TH>
+      <FONT SIZE="-2">
+      IntervalA<INPUT NAME="colhdr" TYPE="checkbox" onClick="CheckAllVert()">
+      </FONT>
+      </TH>
+      <TH>
+      <FONT SIZE="-2">
+      IntervalB<INPUT NAME="colhdr" TYPE="checkbox" onClick="CheckAllVert()">
+      </FONT>
+      </TH>
+      <TH>
+      <FONT SIZE="-2">
+      IntervalC<INPUT NAME="colhdr" TYPE="checkbox" onClick="CheckAllVert()">
+      </FONT>
+      </TH>
+  </TR>
+  <!-- End Header rows -->
+
+  <TR>
+    <TD>
+      <FONT SIZE="-2"><B>
+      EX54BA<INPUT NAME="rowhdr" TYPE="checkbox">
+      </FONT></B>
+    </TD>
+
+    <TD ALIGN="right" BGCOLOR="red">
+      <FONT SIZE="-2">
+      <INPUT NAME="valA" TYPE="text" SIZE="2" VALUE="5" 
+          onChange="CkboxAdjacent(document.wholeform.colA[0])">
+      <INPUT NAME="colA" TYPE="checkbox">
+      </FONT>
+    </TD>
+
+    <TD ALIGN="right">
+      <FONT SIZE="-2">
+      <INPUT NAME="valB" TYPE="text" SIZE="2" VALUE="6" 
+          onChange="CkboxAdjacent(document.wholeform.colB[0])">
+      <INPUT NAME="colB" TYPE="checkbox">
+      </FONT>
+    </TD>
+
+    <TD ALIGN="right" BGCOLOR="red">
+      <FONT SIZE="-2">
+      <INPUT NAME="valC" TYPE="text" SIZE="2" VALUE="7" 
+          onChange="CkboxAdjacent(document.wholeform.colC[0])">
+      <INPUT NAME="colC" TYPE="checkbox">
+      </FONT>
+    </TD>
+  </TR>
+
+  <TR>
+    <TD>
+        <FONT SIZE="-2"><B>
+        EX54AC<INPUT NAME="rowhdr" TYPE="checkbox">
+        </FONT></B>
+    </TD>
+
+    <TD ALIGN="right" BGCOLOR="red">
+      <FONT SIZE="-2">
+      <INPUT NAME="valA" TYPE="text" SIZE="2" VALUE="8" 
+          onChange="CkboxAdjacent(document.wholeform.colA[1])">
+      <INPUT NAME="colA" TYPE="checkbox">
+      </FONT>
+    </TD>
+
+    <TD ALIGN="right">
+      <FONT SIZE="-2">
+      <INPUT NAME="valB" TYPE="text" SIZE="2" VALUE="9" 
+          onChange="CkboxAdjacent(document.wholeform.colB[1])">
+      <INPUT NAME="colB" TYPE="checkbox">
+      </FONT>
+    </TD>
+
+    <TD ALIGN="right" BGCOLOR="red">
+      <FONT SIZE="-2">
+      <INPUT NAME="valC" TYPE="text" SIZE="2" VALUE="10" 
+          onChange="CkboxAdjacent(document.wholeform.colC[1])">
+      <INPUT NAME="colC" TYPE="checkbox">
+      </FONT>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+<BR>
+<FORM ACTION=" " METHOD="POST">
+  <INPUT TYPE="submit" VALUE="Save Changes">
+  not ready...
+</FORM>
+
+</BODY>
+</HTML>
+

@@ -1,0 +1,78 @@
+<html>
+<head>
+  <script language="JavaScript" type="text/javascript">
+    function appendHTML(html) {
+      if ( document.all )
+        document.body.insertAdjacentHTML("beforeEnd", html);
+      else if ( document.createRange ) {
+        var range = document.createRange();
+        range.setStartAfter(document.body.lastChild);
+        var docFrag = range.createContextualFragment(html);
+        document.body.appendChild(docFrag);
+      }
+      else if (document.layers) {
+        var l = new Layer(window.innerWidth);
+        l.document.open();
+        l.document.write(html);
+        l.document.close();
+        l.top = document.height;
+        document.height += l.document.height;
+        l.visibility = "show";
+      }
+    }
+
+    function RandomNumberGenerator(Seed){
+      var d = new Date();
+      this.M = 2147483647;
+      this.oneOverM = 1.0 / this.M;
+      return this;
+    }
+
+    function createRandomNumber(Seed, Min, Max){
+      var rand = new RandomNumberGenerator(Seed);
+      return Math.round((Max-Min) * Math.random(Seed) + Min);
+    }
+
+    function ChangeText(txt) {
+      var low = 1;
+      var high = 10;  // xxx
+      var retval = 0;
+      var str;
+      var x;
+      var y;
+      var t;
+
+      while ( (retval < low) || (retval > high) ) {
+        // x is 0 or 1
+        ///x=Math.floor(Math.random()*2);
+        ///now = new Date();
+        ///y=Math.floor(Math.random()*2);
+        ///if ( y < 1 ) {
+        ///  now = new Date();
+        ///}
+        ///t=now.getTime()+x+y;
+        ///retval = Math.abs(Math.sin(t));
+        ///retval = parseInt(retval*high);
+        var seed = new Date()
+        retval = createRandomNumber(seed, 0, high);
+      }
+
+      if ( retval == 1 ) {
+        str="anicca - masked by continuity";
+      } else if ( retval == 2 ) {
+        str="anatta - masked by compactness";
+      }
+      t=setTimeout("ChangeText()", 10000);
+      ///alert(retval)
+      ///document.getElementById('mytxt').innerHTML=str;
+      ///document.write(retval)
+      ///appendHTML(new Date() + '<br>');
+      appendHTML(retval + '<br>');
+    }
+  </script>
+</head>
+<body onLoad="ChangeText('mytxt')">
+  Test randomness
+  <h2 id="mytxt">...uppada...thiti...bhanga...</h2>
+</body>
+</html>

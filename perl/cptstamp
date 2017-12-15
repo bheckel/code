@@ -1,0 +1,19 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: cptstamp
+#
+#  Summary: Copy timestamp from one file to other(s).
+#
+#  Adapted: Tue, 29 Aug 2000 14:21:57 (Bob Heckel -- from Tom Christiansen's
+#                  http://www.perl.com/CPAN/authors/Tom_Christiansen/scripts)
+##############################################################################
+
+if ( @ARGV < 2 ) {
+  die "Usage: cptimes timestamp_file other_file1 other_file2 ...\n";
+} 
+
+$timestampfn = shift;
+
+($atime, $mtime) = (stat($timestampfn))[8,9];
+
+utime $atime, $mtime, @ARGV;

@@ -1,0 +1,32 @@
+<!-- Demo from Voodoo tut that creates new html doc and displays it in its own
+     window.
+     Thu May 06 1999 16:00:16 (Bob Heckel)
+-->
+
+<html>
+<head>
+<script language="JavaScript">
+  function openwindow() {
+    // Empty string indicates new window, not an existing page.
+    myWin= open("", "displayWindow", "width=500, height=400, status=yes, toolbar=no, menubar=no");
+    // open document for further output
+    myWin.document.open();
+    // create document
+    myWin.document.write("<html><head><title>On-the-fly");
+    myWin.document.write("</title></head><body>");
+    myWin.document.write("<center><font size=+3>");
+    myWin.document.write("This HTML-document has been created ");
+    myWin.document.write("with the help of JavaScript!");
+    myWin.document.write("</font></center>");
+    myWin.document.write("</body></html>");
+    // close the document - (not the window!)
+    myWin.document.close();
+  }
+</script>
+</head>
+<body>
+  <form>
+  <input type="button" value="spawn new window" onClick="openwindow()">
+  </form>
+</body>
+</html>

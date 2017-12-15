@@ -1,0 +1,18 @@
+
+int *ptr;
+
+&  gives "address of" -- changes a thing into a pointer (i.e. given a thing,
+point to it).
+
+Think of  &  as "the address of &___"
+e.g. ptr = &arealvalue;
+
+*  dereferences -- changes a pointer into a thing (i.e. given a pointer, get
+the thing referenced).
+
+Think of  * as "value at address of *___"  
+e.g. val = *ptr;  
+
+Don't confuse declaration  e.g. int *ptr   with the above. This just sets up
+ptr to accept memory addresses and may be better expressed as  int* ptr;  if
+you're not doing multiple declarations on one line.

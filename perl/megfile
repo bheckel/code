@@ -1,0 +1,46 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: megfile
+#
+#  Summary: Create a garbage text file whose size is passed in from
+#           the user.
+#
+#           TODO allow any size to be specified, not just meg sizes
+#
+#           Alternate approach --- generate 500MB (unreadable) garbage file:
+#             $ dd if=/dev/zero of=biggarbage bs=50000 count=10000
+#
+#  Adapted: Wed 23 May 2001 09:16:06 (Bob Heckel -- InformIT Unix Hints and
+#                                     Hacks Kirk Waingrow)
+# Modified: Wed 29 Aug 2001 10:11:09 (Bob Heckel)
+##############################################################################
+
+# Some parameter must be passed:
+if ( !@ARGV || $ARGV[0] =~ /-+h.*/ ) {
+  print STDERR "Usage: $0 n foo\nGenerates file n megs in size named foo.\n";
+  exit(__LINE__);
+}
+
+$size  = $ARGV[0];
+$fname = $ARGV[1];
+$list  = '';   # _not_ undef
+
+open FILE, ">tmp$$" || die "can't open: $!\n";
+
+# Create the first megabyte.
+for ( $i=0; $i< 100000; $i++ )   { 
+  print FILE "**********"; 
+}
+
+close(FILE);
+
+# Duplicate the first megabyte file $i many times.
+for ( $i=0; $i<$size; $i++ ) { 
+  $list = "$list tmp$$"     # can't use .=
+}
+
+###`cat $list > ${size}${fname}`;
+`cat $list > ${fname}`;
+
+unlink("tmp$$");
+

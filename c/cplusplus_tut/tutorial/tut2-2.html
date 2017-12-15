@@ -1,0 +1,307 @@
+<html>
+<head>
+<title>C++ Tutorial: 2.2, Functions (I).</title>
+<META NAME="description" CONTENT="Declaring and calling functions. Returning values. use of void.">
+<META NAME="keywords" CONTENT="return main function">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 2.2 </FONT><BR>
+ <FONT SIZE=5><B> Functions (I). </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<p>
+Using functions we can structure our programs in a more modular way, accessing to all
+the potential that structured programming in C++ can offer to us.
+<p>
+A function is a block of instructions that is executed when it is called from some other
+point of the program. The following is its format:<br>
+<blockquote>
+<tt><b><i>type name</i> ( <i>argument1</i>, <i>argument2</i>, ...) <i>statement</i></b></tt><br>
+</blockquote>
+where:<br>
+&nbsp; <b><i><tt>� type</tt></i></b> is the type of data returned by the function.<br>
+&nbsp; <b><i><tt>� name</tt></i></b> is the name by which it will be possible to call the function.<br>
+&nbsp; <b><i><tt>� arguments</tt></i></b> (as many as wanted can be specified).
+Each argument consists of a type of data followed by its identifier, like in a
+variable declaration (for example, <tt>int x</tt>) and which acts within the function
+like any other variable. They allow to pass parameters to the function when it
+is called. The different parameters are separated by <u>commas</u>.<br>
+&nbsp; <b><i><tt>� statement</tt></i></b> is the function's body. It can be a single instruction or
+a block of instructions. In the latter case it must be delimited by curly brackets
+<tt><B>{}</B></tt>.<br>
+<p>
+Here you have the first function example:
+
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// function example</I>
+#include &lt;iostream.h&gt;
+
+int addition (int a, int b)
+{
+  int r;
+  r=a+b;
+  return (r);
+}
+
+int main ()
+{
+  int z;
+  z = addition (5,3);
+  cout << "The result is " << z;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>The result is 8</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+In order to examine this code, first of all remember something said at the
+beginning of this tutorial: a C++ program always begins its execution
+by the <tt><b>main</b></tt> function.  So we will begin by there.
+<p>
+We can see how the <tt><b>main</b></tt> function begins by declaring the variable
+<tt><b>z</b></tt> of type <tt><b>int</b></tt>. Right after that we see a call to
+<tt><b>addition</b></tt> function. If we pay attention we will be able to see the similarity
+between the structure of the call to the function and the declaration of the function
+itself some code lines above:
+<blockquote>
+<img src="imgfunc1.gif"><br>
+</blockquote>
+The parameters have a clear correspondence.  Within the <tt><b>main</b></tt> function
+we called to <tt><b>addition</b></tt> passing two values: <tt><b>5</b></tt> and
+<tt><b>3</b></tt> that correspond to the <tt><b>int a</b></tt> and <tt><b>int b</b></tt>
+parameters declared for the function <tt><b>addition</b></tt>.
+<p>
+At the moment at which the function is called from <TT><B>main</B></TT>, the control is
+lost by <tt><b>main</b></tt> function and passed to function <tt><b>addition</b></tt>.
+The value of both parameters passed in the call (<tt><b>5</b></tt> and <tt><b>3</b></tt>)
+are copied to the local variables <tt><b>int a</b></tt> and <tt><b>int b</b></tt> within
+the function.
+
+<p>
+ Function <tt><b>addition</b></tt> declares a new variable (<tt><b>int r;</b></tt>), and
+by means of the expression <tt><b>r=a+b;</b></tt>, it assigns to <tt><b>r</b></tt> the
+result of <tt><b>a</b></tt> plus <tt><b>b</b></tt>. Because the passed parameters for
+<tt><b>a</b></tt> and <tt><b>b</b></tt> are <tt><b>5</b></tt> and <tt><b>3</b></tt>
+respectively the result is <tt><b>8</b></tt>.
+<p>
+The following line of code:<br>
+<blockquote><tt><b>return (r);</b></tt><br></blockquote>
+finalizes function <tt><b>addition</b></tt>, and returns the control back to the function
+that has called it (<tt><b>main</b></tt>) following the program by the same point
+in which it was interrupted by the call to <tt><b>addition</b></tt>. But additionally,
+<TT><B>return</B></TT> was called with the content of variable
+<TT><B>r</B></TT> (<TT><B>return (r);</B></TT>), that at that moment was 8, so this value
+is said to be <B>returned</B> by the function.
+<blockquote><img src="imgfunc2.gif"></blockquote>
+The value returned by a function is the value given to the function when it is evaluated.
+Therefore, <tt><b>z</b></tt> will store the value returned by
+<tt><b>addition (5, 3)</b></tt>, that is <tt><b>8</b></tt>. To explain it
+somehow you can imagine that the call
+to a function (<tt><b>addition (5,3)</b></tt>) is literally replaced by the value it
+returns (<tt><b>8</b></tt>).
+<p>
+The following line of code in <tt><b>main</b></tt> is:<br>
+<blockquote>
+<tt>cout << "The result is " << z;</tt><br>
+</blockquote>
+that, as you may already suppose, produces the printing of the result on the screen.
+<p>
+<table cellpadding="5" WIDTH=100%><tr><td bgcolor="#BFBFFF">
+<img src="imgvars1.gif" align="right">
+<b>Scope of variables [re]</b>
+<p>
+You must consider that the scope of variables declared within a function or any other
+block of instructions is only the own function or the own block of instructions and cannot
+be used outside of them. For example, in the previous example it had been impossible to use
+the variables <tt><b>a</b></tt>, <tt><b>b</b></tt> or <tt><b>r</b></tt>
+directly in function <tt><b>main</b></tt> since they were local variables to the function
+<tt><b>addition</b></tt>. Also, it had been impossible to use the variable
+<tt><b>z</b></tt> directly within the function <tt><b>addition</b></tt>, since this
+was a local variable to the function <tt><b>main</b></tt>.
+<p>
+Therefore, the scope of local variables is limited to the same nesting level in which
+they are declared.  Nevertheless you can also declare <u>global</U> variables that are
+visible from any point of the code, inside and outside any function.  In order to declare
+global variables you must do it outside any function or block of instructions, that means,
+directly in the body of the program.
+</td></tr></table>
+<p>
+And here is another example about functions:
+
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// function example</I>
+#include &lt;iostream.h&gt;
+
+int subtraction (int a, int b)
+{
+  int r;
+  r=a-b;
+  return (r);
+}
+
+int main ()
+{
+  int x=5, y=3, z;
+  z = subtraction (7,2);
+  cout &lt;&lt; "The first result is " &lt;&lt; z &lt;&lt; '\n';
+  cout &lt;&lt; "The second result is " &lt;&lt; subtraction (7,2) &lt;&lt; '\n';
+  cout &lt;&lt; "The third result is " &lt;&lt; subtraction (x,y) &lt;&lt; '\n';
+  z= 4 + subtraction (x,y);
+  cout &lt;&lt; "The fourth result is " &lt;&lt; z &lt;&lt; '\n';
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>The first result is 5<BR>
+The second result is 5<BR>
+The third result is 2<BR>
+The fourth result is 6<BR></TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+In this case we have created the function <tt><b>subtraction</b></tt>. The only thing that
+this function does is to subtract both passed parameters and to return the result.
+<p>
+Nevertheless, if we examine the function <tt><b>main</b></tt> we will see that we have
+made several calls to function <tt><b>subtraction</b></tt>. We have used some different
+calling methods so that you see other ways or moments when a function can be called.
+<p>
+In order to understand well these examples you must consider once again that a call to a
+function could perfectly be replaced by its return value.  For example the first case
+(that you should already know beacause it is the same pattern that we have used in
+previous examples):<br>
+<blockquote><tt><b>
+z = subtraction (7,2);<br>
+cout &lt;&lt; "The first result is " &lt;&lt; z;</b></tt><br>
+</blockquote>
+If we replace the function call by its result (that is <tt><b>5</b></tt>), we would have:<br>
+<blockquote>
+<tt><b>z = 5;<br>
+cout &lt;&lt; "The first result is " &lt;&lt; z;</b></tt><br>
+</blockquote>
+<p>
+As well as
+<blockquote>
+<tt><b>cout &lt;&lt; "The second result is " &lt;&lt; subtraction (7,2);</b></tt><br>
+</blockquote>
+has the same result that the previous call, but in this case we made the call to
+<tt>subtraction</tt> directly as a parameter for <tt>cout</tt>.  Simply imagine that we
+had written:<br>
+<blockquote>
+<tt><b>cout &lt;&lt; "The second result is " &lt;&lt; 5;</b></tt><br>
+</blockquote>
+since <tt><b>5</b></tt> is the result of <tt><b>subtraction (7,2)</b></tt>.
+<p>
+In the case of<br>
+<blockquote>
+<tt><b>cout &lt;&lt; "The third result is " &lt;&lt; subtraction (x,y);</b></tt><br>
+</blockquote>
+The only new thing that we introduce is that the parameters of <tt><b>subtraction</b></tt>
+are variables instead of constants.  That is perfectly valid.  In this case the values
+passed to the function <tt><b>subtraction</b></tt> are the <U>values</U> of <tt><b>x</b></tt>
+and <tt><b>y</b></tt>, that are <tt><b>5</b></tt> and <tt><b>3</b></tt> respectively,
+giving <tt><b>2</b></tt> as result.
+<p>
+The fourth case is more of the same.  Simply to comment that instead of:<br>
+<blockquote>
+<tt><b>z = 4 + subtraction (x,y);</b></tt><br>
+</blockquote>
+we could perfectly have put:<br>
+<blockquote>
+<tt><b>z = subtraction (x,y) + 4;</b></tt><br>
+</blockquote>
+with exactly the same result.  Notice that the semicolon sign (<tt><b>;</b></tt>) goes at
+the end of the whole expression. It does not necessarily have to go right after the
+function call. The explanation might be once again that you
+imagine that a function can be replaced by its result:<br>
+<blockquote>
+<tt><b>z = 4 + 2;<BR>z = 2 + 4;</b></tt><br>
+</blockquote>
+
+<p>
+<h2>Functions with no types.  The use of <i>void</i>.</h2>
+
+If you remember the syntax of a function declaration:<br>
+<blockquote>
+<tt><b><i>type name</i> ( <i>argument1</i>, <i>argument2</i> ...) <i>statement</i></b></tt><br>
+</blockquote>
+you will see that it is obligatory that this declaration begins with a
+<tt><b><i>type</i></b></tt>, that is the type of the data that will be returned by the function
+with the <tt><b>return</b></tt> instruction. But what if we want to return no value?
+<p>
+Imagine that we want to make a function just to show a message on the screen.
+We do not need that it returns any value, moreover, we either need to receive no parameters.
+For that was devised the <TT><B>void</B></TT> type in C language. Take a look at:
+
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// void function example</I>
+#include &lt;iostream.h&gt;
+
+void dummyfunction (void)
+{
+  cout &lt;&lt; "I'm a function!";
+}
+
+int main ()
+{
+  dummyfunction ();
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>I'm a function!</TT></B>
+</TD></TR></TABLE>
+<P>
+Although in C++ it is not necessary to specify <tt><b>void</b></tt>
+its use is considered suitable to stand out that it is a function without parameters
+or arguments and not something else.
+<p>
+What you must always be aware of is that the format for <u>calling</u> a function includes to
+specify its name and to enclose between parenthesis the arguments. The non-existence
+of arguments do not exempts us from the obligation to put parenthesis, for that reason
+the call to <tt><b>dummyfunction</b></tt> is<br>
+<blockquote><tt><b>dummyfunction ();</b></tt><br></blockquote>
+This stands out that it is a call to a function and not the name of a variable nor
+anything else.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut2-1.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>2-1. Control structures.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut2-3.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>2-3. Functions (II).</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

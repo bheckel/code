@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<TITLE>Compiling from command line with Microsoft Visual C++</TITLE>
+<meta name="description" content="Method for compiling console applications." >
+<meta name="keywords" content="c++ console compile microsoft">
+</HEAD>
+<body bgcolor="white" >
+
+<!--cap-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Compilers </FONT><BR>
+ <FONT SIZE=5><B>Compiling from command line with Microsoft Visual C++</B></FONT>
+</TD><TD VALIGN="bottom">
+ <a href="http://www.cplusplus.com" ><IMG SRC="/img/mini.gif" ALT="cplusplus.com" BORDER=0></A>
+</TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/cap-->
+<P>
+Visual C++ supports the possibility to compile 32 bits programs with no need to use the
+integrated development environment, simply from the comman line.
+<P>
+For that, first of all we need that a series of system environment variables be suitably
+defined.  More concretely they are the variables
+<TT><B>%INCLUDE%</B></TT> and <TT><B>%LIB%</B></TT> that define the directories where
+the include and library files are, as well as it is also recommendable to add the directories
+where the executable file that we need to compile are to the path.
+<P>
+Luckily, during the initial installation of Visual C++ a BAT file called
+<TT><B>VCVARS32.bat</B></TT> would have been automatically created defining all these
+environment variables for us.  This BAT file is located at the subdirectory
+<TT><B>BIN</B></TT> that hangs from the directory where you have installed Visaul C++,
+that by default would be something similar to:
+<blockquote ><TT>
+C:\Program Files\Microsoft Visual Studio\VC98\BIN
+</TT></BLOCKQUOTE>
+Maybe this file is already being automatically executed whenever our operating system
+starts up, to know that we can just try this test: from the command line type:
+<blockquote ><TT>
+set INCLUDE
+</TT></BLOCKQUOTE>
+if the system shows a series of paths separated by commas the file has already been executed.
+If a message telling that the environment variable has not yet been defined (is not defined)
+is shown you will have to execute the file <TT><B>VCVARS32.bat</B></TT> manually.
+<P>
+<H2>The command line compiler (<TT><B>CL</B></TT>).</H2>
+In the BIN subdirectory where our compiler is (that one which VCVARS32 includes in the PATH)
+there is an utility called <TT><B>CL.EXE</B></TT> specially designed to compile programs
+from the command line.  Its prototype is the following one:
+<blockquote><TT>
+<B>CL </B><I>option(s) file(s) </I><B>@</B><I>command_file</I><B> /link </B><I>link_options</I>
+</TT></BLOCKQUOTE>
+where the only obligatory parameter is <TT><I>file(s)</I></TT> that shall be a list of
+the sourcecode files and libraries that we want to compile together.
+The different file types will be distinguished according to its extension, thus:
+<blockquote >
+ <TT><B>c</B></TT> will be considered C language source code files, and<BR>
+ <TT><B>cpp</B></TT> and <TT><B>cxx</B></TT> will be considered C++ language source code
+files.<BR>
+</BLOCKQUOTE>
+if we want to use other extensions for our sourcecode files we will have to precede the
+name of the file with <TT><B>/Tc</B></TT> for files in C language and with
+<TT><B>/Tp</B></TT> for files written in C++ language (with no
+space character between these espefier tags and the file name).
+<P>
+The <TT><I>option(s)</I></TT> parameter can go intermingled between the files, or before
+or after them. They are compiling options, because there are many, mainly different types
+of optimizations, I'm not going to detail them (consult the compiler help typing
+<TT><B>CL /HELP</B></TT> for a complete list, or take a llok at the Article <I>Compiler
+Command-Line Syntax</I> of the
+<I>Visul C++ Programmer's Guide</I> includes in the MSDN).
+<P>
+The <TT><B>@</B><I>command_file</I></TT> parameter is used to specify the name of
+a file that contains other command line options preceded by an at sign (<tt><B>@</B></TT>).
+<TT><B>CL</B></TT> will insert the content of that file at the point of the command line
+where you specify its name as if you typed the content of the file.
+<P>
+Finally <TT><B>/link</B> <I>link-options</I></TT> is used to specify options to the linker,
+that are automatically called by <TT><B>CL</B></TT> if the <TT><B>/c</B></TT> option is not
+specified. It serves to specify the type of executable file that we want to create,
+the location of libraries and include files and other linker options like the debugging
+level.  Consult the Visual C++ help for more details.
+<P>
+<H2>In summary</H2>
+In summary, if you want to compile a unique C++ source code file into an executable
+like for example <TT><B>test.cpp</B></TT> and you have already executed
+<TT><B>VCVARS32.BAT</B></TT> it would be enough to write at the command line:
+<blockquote ><TT>
+LC test.cpp
+</TT></BLOCKQUOTE>
+that would generate the file <TT><B>test.exe</B></TT>.
+
+<P>
+<TABLE WIDTH=100%><TR><TD ALIGN="right">
+<FONT SIZE=1>Microsoft and Visual C++ are registered trademarks of Microsoft Corporation</FONT>
+</TD></TR></TABLE>
+
+<!--cua-->
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy;The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+ <TR><TD ALIGN="center"><a href="javascript:history.go(-1)" ><IMG SRC="/img/butnback.gif" BORDER=0>Return back</A></TD></TR>
+
+</TABLE></CENTER>
+<!--/cua-->
+
+</BODY>
+</HTML>

@@ -1,0 +1,25 @@
+<!-- Allow user to key new data without having to backspace over the prompt 
+     text.  Make existing VALUE data disappear upon entering the inputbox.
+-->
+<SCRIPT LANGUAGE="JavaScript">
+  function ClearTxtBx(atextbox) {
+    atextbox.value = "";
+  }
+
+  function FillDt() {
+    now = new Date();
+    document.myform1.mytextbox3.value = now;
+  }
+</SCRIPT>
+
+
+<BODY onLoad="FillDt()">
+  <FORM NAME="myform1">
+    <INPUT NAME="mytextbox" TYPE="text" VALUE="Click to begin editing" SIZE=70 onClick="ClearTxtBx(this);return false">
+    <!-- better -->
+    <INPUT NAME="mytextbox2" TYPE="text" VALUE="Click to begin editing 2" SIZE=70 onClick="this.value='';return false">
+    <!-- unrelated -->
+    <INPUT NAME="mytextbox3" TYPE="text" SIZE=70>
+  </FORM>
+</BODY>
+

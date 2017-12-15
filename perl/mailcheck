@@ -1,0 +1,42 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: mailcheck.pl
+#
+#  Summary: Check for mail on server.  Notify user of how many if any exists.
+#
+#  Created: Fri 28 Sep 2001 13:25:02 (Bob Heckel)
+# Modified: Thu 08 Nov 2001 15:01:51 (Bob Heckel)
+##############################################################################
+
+$DEBUG = 0;
+
+while ( 1 ) {
+  # Assumes $HOME/.fetchmailrc is configured.
+  $anymail = `fetchmail -c`;
+  $dt      = localtime();
+
+  print "DEBUG: $anymail" if $DEBUG;
+  # Side effect is that this code is suspended until the msgbox is ok'd.
+  system('msgbox', '~/bin/mailcheck', 
+         "You have new mail ($1) as of $dt",
+         'information'
+        ) 
+                            if $anymail =~ /fetchmail: (\d+) messages? for/;
+
+  $hour = (localtime())[2];
+  $wday = (localtime())[6];
+
+  if ( $hour > 18 || $hour < 7 ) {   # between 7 pm and 7 am
+    ###print "$dt\t sleeping 21600 secs: hour $hour wday $wday\n" if $DEBUG;
+    ###sleep 21600;   # 6 hr
+    ###next;
+    die "After hours.  Shutting down $0\n";
+  } elsif ( $wday == 6 || $wday == 0 ) {  # weekend
+    print "$dt\t sleeping 43200 secs: hour $hour wday $wday\n" if $DEBUG;
+    sleep 43200;  # 12 hrs
+    next;
+  } else {  # normal workday during normal work hours
+    print "$dt\t sleeping 900 secs: hour $hour wday $wday\n" if $DEBUG;
+    sleep 900;
+  }
+}

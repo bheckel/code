@@ -1,0 +1,7 @@
+//BQH0HFS  JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=1,CLASS=F,REGION=0M
+//STEP1    EXEC SAS90,TIME=100,OPTIONS='MEMSIZE=0,ALTLOG=OLOG,
+//                                      ALTPRINT=OLST'
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)
+//OLST     DD PATH='/u/bqh0/saslst'
+//OLOG     DD PATH='/u/bqh0/saslog'
+//SYSIN    DD *

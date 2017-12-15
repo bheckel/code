@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- HTML5 images demo -->
+  <!-- Adapted from diveintohtml5 -->
+
+  <canvas id="e" width="177" height="113"></canvas>
+
+  <script>
+    var canvas = document.getElementById("e");
+    var context = canvas.getContext("2d");
+    var cat = new Image();
+
+    cat.src = "cat.png";
+
+    cat.onload = function() {
+      for (var x=0, y=0; x<500 && y<375; x+=50, y+=37) {
+        context.drawImage(cat, x, y, 88, 56);
+      }
+    };
+  </script>
+</html>  

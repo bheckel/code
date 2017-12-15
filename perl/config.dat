@@ -1,0 +1,79 @@
+# Integrated On-line Metrics configuration file
+#
+[main]
+desc=Packland Integrated On-line Metrics 
+baseDir=/webshop/Metrics
+dispatcher=/Metrics
+cookiePath=/Metrics
+graphics=/Metrics/graphics
+chartCacheDir=/Public/chartCache
+chartCacheURL=/chartCache
+sessionDB=
+helpData=
+cookiePersistMinutes=60
+administrator=markhewt@americasm01.nt.com
+headerScript=
+moduleConfig=config.dat
+copyright=Nortel Networks Corp.
+
+[modules]
+beatrate=/webshop/Metrics/modules/beatrate/bin
+sqlconversion=/home/bheckel/Metrics/modules/sqlconversion/bin
+demo=/webshop/Metrics/modules/demo/bin
+docs=/home/hewett/Metrics/modules/docs/bin
+docs:options=devonly
+
+#
+# Fonts, colors and other items passed directly into the HTML templates
+#
+[style]
+PAGEWIDTH=600
+# font aliases
+SANS=Arial,Helvetica
+BOOK=Times-Roman
+MONO=Courier
+# named colors
+BGCOLOR=#FFFFFF
+STANDOUT=#000099
+ATTENTION=#CC0000
+TOOLBARCOLOR=#CCCCCC
+POSTIT=#FFFFCC
+COLOR1=#99CC99
+COLOR2=#669966
+LINK=#003300
+VLINK=#003300
+ALINK=#CCCC99
+
+#
+# HTML/SQL templates
+#
+[templates]
+baseDir=/webshop/Metrics/templates
+error=error.htpl
+catalog=catalog.htpl
+moduleListing=module_listing.htpl
+wrapper=wrapper.htpl
+
+#
+# format strings
+#
+[format]
+toolbarButton=<INPUT TYPE=SUBMIT NAME="%s" VALUE="%s" %s>
+toolbarButton:javascript=<INPUT TYPE=BUTTON NAME="%s" VALUE="%s" %s>
+defaultSelect=<SELECT NAME="%s" SIZE=1>%s</SELECT>
+defaultOption=<OPTION VALUE="%s" %s>%s
+defaultRadio=<INPUT TYPE=RADIO NAME="%s" VALUE="%s" %s>%s&nbsp;&nbsp;
+standout=<FONT COLOR="#000099" FACE="Courier" SIZE="-1">%s</FONT>
+attention=<FONT COLOR="#CC0000"><B>%s</B></FONT>
+debug=<<EOT
+<PRE><FONT COLOR="#009900" FACE="Courier" SIZE="-1">--------------- Debug Output --------------
+%s</FONT></PRE>
+EOT
+
+#
+# toolbars
+#
+[toolbar:main]
+buttons=home
+home:function=Home
+home:label=Home

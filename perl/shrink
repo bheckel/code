@@ -1,0 +1,69 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: shrink
+#
+#  Summary: Shrink a file either in half or to a certain number of lines
+#           by printing to STDOUT.
+#
+#           See also halvelog.
+#
+#  Created: Mon 11 Nov 2002 09:46:43 (Bob Heckel)
+# Modified: Sun 02 Feb 2003 11:27:11 (Bob Heckel)
+##############################################################################
+use strict;
+
+# Must precede Getopt::Std
+Usage() if !@ARGV;
+my $f = pop @ARGV;
+
+use Getopt::Std;
+
+our($opt_e, $opt_h);
+getopts('e:h');
+
+Usage() if $opt_h;
+
+open FILE, $f or die "Error: $0: $!";
+
+$opt_e ? EvenSelection($f, $opt_e) : EveryOther();
+
+close FILE;
+
+exit 0;
+
+
+sub EvenSelection {
+  my $fn     = shift;
+  my $wanted = shift;
+
+  my $wc = `wc -l $fn`;
+  $wc =~ /(\d+)/;
+  my $x = int($1 / $wanted)+1;
+
+  while ( <FILE> ) {
+    print $_ if ( $. % $x ) == 0;
+  }
+
+  return 0;
+}
+
+
+sub EveryOther {
+  while ( <FILE> ) {
+    print $_ if ( $. % 2 ) == 0;
+  }
+
+  return 0;
+}
+
+
+sub Usage {
+  print STDERR <<"EOT";
+Usage: $0 [-eN -h] FILENAME
+       Print every other line of a file to STDOUT.
+       Original file is not modified. 
+         -e10  print approx. 10 evenly represented lines to STDOUT
+         -h    this usage message
+EOT
+  exit(__LINE__);
+}

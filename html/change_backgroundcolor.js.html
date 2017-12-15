@@ -1,0 +1,30 @@
+<!--
+<html>
+<body>
+  <script type="text/javascript">
+    document.body.bgColor="yellow";
+  </script>
+</body>
+</html>
+-->
+
+<!-- or  -->
+<!-- <input type="button" onclick="document.body.bgColor='yellow';" value="Click me to change background color"> -->
+
+<!-- or better via a style object -->
+<html>
+<head>
+  <script type="text/javascript">
+    function ChangeBackground(c) {
+      document.body.style.backgroundColor=c;
+      ///document.write(c)
+    }
+  </script>
+</head>
+<body>
+<p id="p1">Color Tester</p>
+<form>
+  <input type="text" name="mycolor"><input type="button" onclick="ChangeBackground(mycolor.value)" value="Test background color">
+</form>
+</body>
+</html> 

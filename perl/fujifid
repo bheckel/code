@@ -1,0 +1,107 @@
+#!/usr/local/bin/perl
+##############################################################################
+#     Name: fujifid
+#
+#  Summary: Parse Fiducial file into machine usable text.
+#           Adapted from IWS fujifile.pl
+#
+#  Created: Thu, 17 Aug 2000 15:12:57 (Bob Heckel)
+##############################################################################
+
+
+Usage($0, '') if ( $ARGV[0] =~ /-+h.*/ );
+  
+my $filename = $ARGV[0] || Usage($0, 'No textfile provided');
+
+open(FH, $filename) || Usage($0, $!);
+
+printf("%-14s %10s %9s %9s %9s\n", 'Fid Name', 'X Loc', 'Y Loc',
+                                   'Side', 'Size');
+# Intialize new section.
+my $fline         = undef;
+my $itemname_odd  = undef;
+my $itemname_even = undef;
+my $odd           = undef;
+my $even          = undef;
+
+while ( <FH> ) {
+  next if /^$/;
+  # New entry...
+  if ( /^Number of\s+(\w+)\s+Fiducials on (\w)\w+ Side \= +(\d+)/i ) {
+    $glob_or_loc = $1;
+    $t_or_b      = $2;
+    $numlines    = $3;
+
+    # Initialize if this is the first run.
+    $odd  = -1 unless ( $numlines == $been_here_before );
+    $even =  0 unless ( $numlines == $been_here_before );
+
+    $been_here_before = $3;
+
+    # Finish up previous datablock.
+    if ( $fline ) {
+      print $fline;
+      $fline = undef;
+    }
+    if ( $t_or_b eq 'T' ) {
+      $odd += 2;
+      $itemname_odd = 1;
+      $itemname_even = undef;
+    } else {
+      $t_or_b = 'B';
+      $even += 2;
+      $itemname_even = 1;
+      $itemname_odd = undef;
+    }
+  }
+  # Continued entry...
+  if ( /Fiducial diameter = r(\d+) at x=(-?\d+\.?\d+)\s+y=(-?\d+\.?\d+)/i ) {
+    if ( $itemname_odd ) {
+      $fidname = $t_or_b . 'FID' . $odd;
+      $fline .= sprintf("%-14s %10.3f %9.3f %9d %9d\n", $fidname, $2, $3, $odd, $1); 
+      $odd += 2;
+    } else {
+      $fidname = $t_or_b . 'FID' . $even;
+      $fline .= sprintf("%-14s %10.3f %9.3f %9d %9d\n", $fidname, $2, $3, $even, $1); 
+      $even += 2;
+    }
+  }
+}
+
+
+sub Usage {
+  my $errfile  = $_[0];
+  my $errmsg   = $_[1];
+
+  if ( $errmsg ) {
+    print "$errmsg.  Exiting.\n";
+  } else {
+    print<<EOT
+
+This application parses a Fuji fiducial textfile passed to it into a
+machine-specific formatted textfile, printing to standard output.
+
+  ----------------------------------------------------------- 
+ | Sample input file:                                        |
+ | =================                                         |
+ | Number of Global Fiducials on Top Side =    4             |
+ |                                                           |
+ | Fiducial diameter = r61 at x=-0.295  y=11.457             |
+ | Fiducial diameter = r62 at x=-11.614 y=11.457             |
+ | ...                                                       |
+ |                                                           |
+ | Sample output to screen:                                  |
+ | =======================                                   |
+ | Fid Name            X Loc     Y Loc      Side      Size   |
+ | TFID1              -0.295    11.457         1        61   |
+ | TFID3             -11.614    11.457         1        62   |
+ | ...                                                       |
+  ----------------------------------------------------------- 
+
+EOT
+  }
+    print "Usage: $errfile [-h --help] TEXTFILE_TO_PROCESS\n";
+    exit -1 ;
+}
+
+close(FH) || Usage($0, "Can't close $file");

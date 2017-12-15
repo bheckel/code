@@ -1,0 +1,79 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.5	//
+ERR_ABORT	stderr.h	37;"	d
+ERR_ABT	stderr.h	49;"	d
+ERR_COMM	stderr.h	34;"	d
+ERR_ERR	stderr.h	48;"	d
+ERR_ERRNO	stderr.h	42;"	d
+ERR_EXIT	stderr.h	36;"	d
+ERR_FLUSH	stderr.h	38;"	d
+ERR_LOG	stderr.h	50;"	d
+ERR_NOARG0	stderr.h	40;"	d
+ERR_PID	stderr.h	41;"	d
+ERR_REM	stderr.h	47;"	d
+ERR_STAMP	stderr.h	39;"	d
+ERR_STAT	stderr.h	32;"	d
+ERR_SYSERR	stderr.h	52;"	d
+ERR_SYSREM	stderr.h	51;"	d
+ERR_USAGE	stderr.h	35;"	d
+ERR_USE	stderr.h	46;"	d
+FILTER_H	filter.h	21;"	d
+Filter	filter.h	/^typedef void (*Filter)(FILE *fp, char *fn);$/;"	t
+STDERR_H	stderr.h	19;"	d
+TimeConversion	timestamp.c	/^typedef struct tm *(*TimeConversion)(const time_t *);$/;"	t	file:
+arg0	stderr.c	/^static char arg0[15] = "**undefined**";$/;"	v	file:
+cat	filter.c	/^static void cat(FILE *fp, char *fn)$/;"	f	file:
+def_format	stderr.c	/^static const char def_format[] = "%Y-%m-%d %H:%M:%S";$/;"	v	file:
+err_error	stderr.c	/^void (err_error)(const char *format, ...)$/;"	f
+err_fprint	stderr.c	/^void (err_fprint)(FILE *fp, int flags, int estat, const char *string, va_list args)$/;"	f
+err_function	filter.c	/^static void (*err_function)(const char *, ...) = err_syserr;$/;"	v	file:
+err_logmsg	stderr.c	/^void (err_logmsg)(FILE *fp, int flags, int estat, const char *string, ...)$/;"	f
+err_print	stderr.c	/^void (err_print)(int flags, int estat, const char *string, va_list args)$/;"	f
+err_rcs_string	stderr.c	/^const char *(err_rcs_string)(const char *s2, char *buffer, size_t buflen)$/;"	f
+err_remark	stderr.c	/^void (err_remark)(const char *format, ...)$/;"	f
+err_report	stderr.c	/^void (err_report)(int flags, int estat, const char *string, ...)$/;"	f
+err_stderr	stderr.c	/^FILE *(err_stderr)(FILE *newerr)$/;"	f
+err_syserr	stderr.c	/^void (err_syserr)(const char *format, ...)$/;"	f
+err_sysrem	stderr.c	/^void (err_sysrem)(const char *format, ...)$/;"	f
+err_time	stderr.c	/^static char *err_time(char *buffer, size_t buflen)$/;"	f	file:
+error	stderr.c	/^void            (error)(const char *s1)$/;"	f
+error	stderr.h	81;"	d
+error2	stderr.c	/^void            (error2)(const char *s1, const char *s2)$/;"	f
+error2	stderr.h	82;"	d
+errout	stderr.c	/^static FILE *errout = 0;$/;"	v	file:
+fcopy	filter.c	/^static void fcopy(FILE *f1, FILE *f2)$/;"	f	file:
+ffilter	filter.h	41;"	d
+filter	filter.c	/^void            filter(int argc, char **argv, int optnum, Filter function)$/;"	f
+filter_h	filter.h	/^static const char filter_h[] = "@(#)$Id: filter.h,v 1.7 1998\/03\/31 22:06:20 jleffler Exp $";$/;"	v
+filter_setcontinue	filter.c	/^void filter_setcontinue(void)$/;"	f
+format	timestamp.c	/^static const char *format = "%a %b %d %H:%M:%S %Y";$/;"	v	file:
+getarg0	stderr.c	/^const char *(getarg0)(void)$/;"	f
+list	stderr.c	/^static const char *list[] =$/;"	v	file:
+main	filter.c	/^int             main(int argc, char **argv)$/;"	f
+main	stderr.c	/^int main(int argc, char **argv)$/;"	f
+main	timestamp.c	/^int main(int argc, char **argv)$/;"	f
+nflag	timestamp.c	/^static int nflag = 0;$/;"	v	file:
+print_time	timestamp.c	/^static void print_time(time_t t, TimeConversion function)$/;"	f	file:
+rcs	filter.c	/^static const char rcs[] = "@(#)$Id: filter.c,v 3.9 2002\/09\/27 21:28:13 jleffler Exp $";$/;"	v	file:
+rcs	stderr.c	/^static const char rcs[] = "@(#)$Id: stderr.c,v 7.5 2001\/08\/11 06:25:48 jleffler Exp $";$/;"	v	file:
+remark	stderr.c	/^void            (remark)(const char *s1)$/;"	f
+remark	stderr.h	83;"	d
+remark2	stderr.c	/^void            (remark2)(const char *s1, const char *s2)$/;"	f
+remark2	stderr.h	84;"	d
+sccs	timestamp.c	/^static const char sccs[] = "@(#)$Id: timestamp.c,v 2.8 1998\/06\/23 23:53:27 jleffler Exp $";$/;"	v	file:
+setarg0	stderr.c	/^void (setarg0)(const char *argv0)$/;"	f
+stderr_h	stderr.h	/^static const char stderr_h[] = "@(#)$Id: stderr.h,v 7.2 2003\/03\/07 02:07:06 jleffler Exp $";$/;"	v
+stop	stderr.c	/^void            (stop)(const char *s1)$/;"	f
+stop	stderr.h	85;"	d
+tm_format	stderr.c	/^static const char *tm_format = def_format;$/;"	v	file:
+tz	timestamp.c	/^static long tz = 0;$/;"	v	file:
+tz_offset	timestamp.c	/^static time_t tz_offset(const char *str)$/;"	f	file:
+tztime	timestamp.c	/^static struct tm *tztime(const time_t *t)$/;"	f	file:
+usage	stderr.c	/^void            (usage)(const char *s1)$/;"	f
+usage	stderr.h	86;"	d
+version	stderr.c	/^void (version)(const char *s1, const char *s2)$/;"	f
+vis	filter.c	/^static void vis(FILE *fp, char *fn)$/;"	f	file:

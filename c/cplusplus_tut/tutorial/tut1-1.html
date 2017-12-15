@@ -1,0 +1,261 @@
+<html>
+<head>
+<title>C++ Tutorial: 1.1, Structure of a program</title>
+<META NAME="description" CONTENT="What a C++ program looks like (Hello World sample). How to include comments">
+<META NAME="keywords" CONTENT="start beginning hello world comments // /* */">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 1.1 </FONT><BR>
+ <FONT SIZE=5><B> Structure of a C++ program </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+<p>
+Probably the best way to start learning a programming language is with a program.
+So here is our first program:
+
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// my first program in C++</I>
+
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  cout &lt;&lt; "Hello World!";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>Hello World!</B></TT>
+</TD></TR></TABLE>
+<P>
+The left side shows the source code for our first program, which we can name, for example,
+<tt>hiworld.cpp</tt>. The right side shows the result of the
+program once compiled and executed. The way to edit and compile a program depends on the
+compiler you are using. Depending on if it has a Development Interface or not and on its version.
+Consult section <a href="../compiler/console.html">compilers</a> and the
+manual or help included with your compiler if you have doubts on how to compile
+a C++ console program.
+<p>
+
+The previous program is the first program that most programming apprentices write
+for the first time, and its result is the printing on screen of the "Hello World!"
+sentence. It is one of the simpler programs that can be written in C++, but it already
+includes the basic components that every C++ program has. We are going to take a look
+at them one by one:
+
+<dl>
+<p>
+<dt><tt><b>// my first program in C++</b></tt><br>
+<dd>This is a comment line.  All the lines beginning with two slash signs
+(<tt><B>//</B></tt>) are considered comments and do not have any effect in the
+behavior of the program. They can be used by the programmer to include
+short explanations or observations within the source itself. In this case, the line is a
+brief description of what our program does.
+
+<p>
+<dt><b><tt>#include &lt;iostream.h&gt;</tt></b><br>
+<dd>Sentences that begin with a pound sign (<tt>#</tt>) are directives for the preprocessor.
+They are not executable code lines but indications for the compiler.
+In this case the sentence <tt><B>#include &lt;iostream.h&gt;</B></tt> tells the compiler's
+preprocessor to include the <b>iostream</b> standard header file.
+This specific file includes the declarations of the basic standard
+input-output library in C++, and it is included because its functionality is used later
+in the program.
+
+<p>
+<dt><b><tt>int main ()</tt></b><br>
+<dd>This line corresponds to the beginning of the <TT><B>main</B></TT> function
+declaration.  The <tt><b>main</b></tt> function
+is the point by where all C++ programs begin their execution.
+It is independent from whether it is at the beginning, at the end or by the middle of the
+code - its content is always the first to be executed when a program starts.
+In addition, for that same reason, it is essential that all C++ programs have a
+<TT><B>main</B></TT> function.
+
+<p>
+<tt><b>main</b></tt> goes followed by a pair of parenthesis <tt><b>()</b></tt>
+because it is a function.  In C++ all functions are followed by a pair of parenthesis
+<tt>()</tt> that, optionally, can include arguments within them.  The content of the
+<tt><b>main</b></tt> function follows immediately to its formal declaration enclosed
+between curly brackets (<b><tt>{}</tt></b>), as in our example.
+<p>
+<dt><b><tt>cout &lt;&lt; "Hello World";</tt></b><br>
+<dd>This instruction does the most important thing in this program.
+<tt><b>cout</b></tt> is the standard output stream in C++ (usually the screen), and the full
+sentence inserts a sequence of characters (in this case "Hello World") into this output
+stream (the screen).
+<TT><B>cout</B></TT> is declared in the <TT>iostream.h</TT> header file, so in order to
+be able to use it that file must be included.
+
+<p>
+Notice that the sentence ends with a semicolon character (<tt><b>;</b></tt>).
+This character has the meaning of finishing the instruction and <U>must</U> be included
+after <U>every</U> instruction you include in any C++ program (one of the most common errors
+of C++ programmers is indeed to forget to include a semicolon <b>;</b> at the end of
+each instruction).
+<p>
+<dt><b><tt>return 0;</tt></b></br>
+<dd>The <tt><b>return</b></tt> instruction makes the <tt><b>main()</b></tt> function
+to finish and return the code that the instruction is followed by, in this case
+<tt><b>0</b></tt>.  This it is most usual way to terminate a program that has not found
+any errors during its execution.  As you will see in coming examples,
+all C++ programs end with a sentence similar to this.
+
+</dl>
+
+<p>
+Therefore, you may have noticed that not all the lines of this program did an action.
+There were lines containing only comments (those beginning by <tt><b>//</b></tt>),
+lines with instructions for the compiler's preprocessor (those beginning by
+<tt><b>#</b></tt>), then there were lines that initiated the declaration of a function
+(in this case, the <tt><b>main</b></tt> function) and, finally lines with instructions
+(like the call to <tt><b>cout &lt;&lt;</b></tt>), these last ones were all included within
+the block delimited by the curly brackets (<tt><b>{}</b></tt>) of the <tt><b>main</b></tt>
+function.
+<p>
+The program has been structured in different lines in order to be more readable,
+but it is not compulsory to do so.  For example, instead of
+<blockquote><tt><pre>
+int main ()
+{
+  cout &lt;&lt; " Hello World ";
+  return 0;
+}
+</pre></tt></blockquote>
+we could have written:
+<blockquote><tt>
+int main () { cout &lt;&lt; " Hello World ";  return 0;  }
+</tt></blockquote>
+in just one line and this would have had exactly the same meaning.
+<p>
+In C++ the separation between instructions is specified with an ending semicolon
+(<tt>;</tt>) after each one. The division of code in different lines serves only to
+make it more legible and schematic for the humans that may read it.
+<P>
+Here is a program with some more instruction:
+
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// my second program in C++</I>
+
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  cout &lt;&lt; "Hello World! ";
+  cout &lt;&lt; "I'm a C++ program";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>Hello World! I'm a C++ program</B></TT>
+</TD></TR></TABLE>
+
+<p>
+In this case we used the <tt><b>cout &lt;&lt;</b></tt> method twice in two different
+instructions.  Once again, the separation in different lines of the code has just been
+done to give greater readability to the program, since <tt><b>main</b></tt> could
+perfectly have been defined thus:
+<blockquote><tt>
+int main () { cout &lt;&lt; " Hello World!  ";  cout &lt;&lt; " I'm to C++ program ";  return 0; }
+</tt></blockquote>
+
+We were also free to divide the code in more lines if we considered it convenient:
+<blockquote><tt><pre>
+int main ()
+{
+  cout &lt;&lt;
+    "Hello World!";
+  cout
+    &lt;&lt; "I'm a C++ program";
+  return 0;
+}
+</pre></tt></blockquote>
+And the result would have been exactly the same than in the previous examples.
+<p>
+Preprocessor directives (those that begin by <tt><b>#</b></tt>) are out of this rule
+since they are not true instructions.  They are <U>lines</U> read and discarded by the
+preprocessor that finaly do not produce any code.  These must be specified in their
+own line and do not require to include a semicolon (<tt>;</tt>) at the end.
+<p>
+<h2>Comments.</h2>
+Comments are pieces of source code discarded from the code by the compiler.
+They do nothing. Their purpose is only to allow the programmer to insert notes or
+descriptions embedded within the source code.
+<p> C++ supports two ways to insert comments:
+<blockquote><tt>
+// line comment<br>
+/* block comment */
+</tt></blockquote>
+The first of them - the line comment, discards everything from where the pair of
+slash signs (<tt><B>//</B></tt>) is found up to the end of that same line.
+The second one, the block comment, discards everything between the
+<tt><B>/*</B></tt> characters and the next appearance of the <tt><B>*/</B></tt> characters,
+with the possibility to include several lines.
+<p>
+We are going to add comments to our second program:
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE>
+<I>/* my second program in C++
+   with more comments */</I>
+
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  cout &lt;&lt; "Hello World! ";     <I>// says Hello World!</I>
+  cout &lt;&lt; "I'm a C++ program"; <I>// says I'm a C++ program</I>
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>Hello World! I'm a C++ program</B></TT>
+</TD></TR></TABLE>
+<p>
+If you include comments within the sourcecode of your programs without using the 
+comment characters combinations <tt>//</tt>, <tt>/*</tt> nor <tt>*/</tt>, the compiler
+will take them as if they were C++ instructions and, most likely, it will show up one
+or several error messages.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved<BR></FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="index.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>Main Menu</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut1-2.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>1-2. Variables. Data types. Constants.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+<P>
+
+Additional readings:<br>
+  
+<a href="../ansi/hfiles.html">ANSI-C++: Standard Header Files</a>.
+
+</body>
+</html>

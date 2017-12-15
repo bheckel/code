@@ -1,0 +1,399 @@
+<html>
+<head>
+<title>C++ tutorial: 1.3, Operators.</title>
+<META NAME="description" CONTENT="special keywords and signs that conduct operations in C++: assignation, arithmetics, increase and decrese, relational, logic, conditional, bitwise and others. Priority.">
+<META NAME="keywords" CONTENT="= + - * / % += -= *= /= %= &gt;&gt;= &lt;&lt;= &= ^= |= ++ -- == != &gt;= &lt;= &gt; &lt; ! && || ? & | ^ ~ &lt;&lt; &gt;&gt;">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 1.3 </FONT><BR>
+ <FONT SIZE=5><B> Operators. </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<p>
+Once we know of the existence of variables and constants we can begin to operate with them.
+For that purpose, C++ provides the operators, which in this language are a set of
+keywords and signs that are not part of the alphabet but are available in all
+keyboards. It is important to know them since they are the basis of the C++ language.
+<p>
+You do not have to memorize all the content of this page, since the details are
+only provided to serve you as a later reference in case you need it.
+<dl>
+<p>
+<dt><b>Assignation (<tt>=</tt>).</b>
+<dd>
+The assignation operator serves to assign a value to a variable.<br>
+<blockquote><tt>a = 5;</tt></blockquote>
+assigns the integer value <B>5</B> to variable <b>a</b>. The part at the left of the
+<tt>=</tt> operator is known as <I>lvalue</I> (left value) and the right one as
+<i>rvalue</i> (right value). <i>lvalue</i> must always be a variable whereas the right side
+can be either a constant, a variable, the result of an operation or any combination of
+them.
+<p>
+It is necessary to emphasize that the assignation operation always takes place from
+right to left and never at the inverse.<br>
+<blockquote><tt>a = b;</tt></blockquote>
+assigns to variable <tt><b>a</b></tt> (<i>lvalue</i>) the value that contains
+variable <tt><b>b</b></tt> (<i>rvalue</i>) independently of the value that was stored
+in <tt><b>a</b></tt> at that moment.  Consider also that we are only assigning the
+<u>value</u> of <tt><b>b</b></tt> to <tt><b>a</b></tt> and that a later change of
+<tt><b>b</b></tt> would not affect the new value of <tt><b>a</b></tt>.
+<p>
+For example, if we take this code (with the evolution of the variables' content in green
+color):
+<blockquote><tt><pre>
+int a, b;    <font color="green"><i>// a:?  b:?</i></font>
+a = 10;      <font color="green"><i>// a:10 b:?</i></font>
+b = 4;       <font color="green"><i>// a:10 b:4</i></font>
+a = b;       <font color="green"><i>// a:4 b:4</i></font>
+b = 7;       <font color="green"><i>// a:4 b:7</i></font>
+</pre></tt></blockquote>
+it will give us as result that the value contained in <tt><b>a</b></tt> is <tt><b>4</b></tt>
+and the one contained in <tt><b>b</b></tt> is <tt><b>7</b></tt>. The final modification
+of <tt><b>b</b></tt> has not affected <tt><b>a</b></tt>, although before we have declared
+<tt><b>a = b;</b></tt> (right-to-left rule).
+<p>
+A property that has the assignation operation in C++ over other programming
+languages is that an assignation operation can be used as <i>rvalue</i> (or part of
+an <i>rvalue</i>) for another assignation.  For example:
+<blockquote><tt>a = 2 + (b = 5);</tt></blockquote>
+is equivalent to:
+<blockquote><tt>b = 5;<br>a = 2 + b;</tt></blockquote>
+that means: first assign <tt><b>5</b></tt> to variable <tt><b>b</b></tt> and then
+assign to <tt><b>a</b></tt> the value <tt><b>2</b></tt> plus the result of the
+previous assignation of <tt><b>b</b></tt> (that is 5), remaining
+<tt><b>a</b></tt> with a final value of <tt><b>7</b></tt>. Thus, the following expression
+is also valid in C++:
+<blockquote><tt>a = b = c = 5;</tt></blockquote>
+assigns 5 to the three variables <TT><b>a</b></TT>, <TT><b>b</b></TT> and <TT><b>c</b></TT>.
+<p>
+<dt><b>Arithmetic operators (<tt> +, -, *, /, % </tt>)</b><br>
+<dd>
+The five arithmetical operations supported by the language are:
+<blockquote><table>
+<tr><td>+</td><td>addition</td></tr>
+<tr><td>-</td><td>subtraction</td></tr>
+<tr><td>*</td><td>multiplication</td></tr>
+<tr><td>/</td><td>division</td></tr>
+<tr><td>%</td><td>module</td></tr>
+</table></blockquote>
+Operations of addition, subtraction, multiplication and division would not suppose an
+understanding challenge for you since they literally correspond with their respective
+mathematical operators.
+<p>
+The only one that may not be known by you is the <b>module</b>,
+specified with the percentage sign (%). Module is the operation that gives the rest of
+a division of two integer values.  For example, if we write
+<tt><b>a = 11 % 3;</b></tt>, the variable <tt><b>a</b></tt>
+will contain <tt><b>2</b></tt> as result since <tt><b>2</b></tt> is the rest from
+dividing 11 between 3.
+
+<p>
+<dt><b>Compound assignation operators (<tt>+=, -=, *=, /=, %=, &gt;&gt;=, &lt;&lt;=, &amp;=, ^=, |=</tt>)</b><br>
+<dd>
+A feature of assignation in C++ that contributes to its fame of sparing language
+when writing are the compound assignation operators
+(<b><tt>+=</tt></b>, <b><tt>-=</tt></b>, <b><tt>*=</tt></b> and <b><tt>/=</tt></b> among others),
+which allow to modify the value of a variable with one of the basic operators:<br>
+<blockquote>
+<tt><b>value += increase;</b></tt> is equivalent to <tt><b>value = value + increase;</b></tt><br>
+<tt><b>a -= 5;</b></tt> is equivalent to <tt><b>a = a - 5;</b></tt><br>
+<tt><b>a /= b;</b></tt> is equivalent to <tt><b>a = a / b;</b></tt><br>
+<tt><b>price *= units + 1;</b></tt> is equivalent to <tt><b>price = price * (units + 1);</b></tt><br>
+</blockquote>
+and the same for all other operations.
+<p>
+<dt><b>Increase and decrease.</b><br>
+<dd>
+Another example of saving when writing code are the <I>increase</I> operator
+(<TT><B>++</B></TT>) and the <i>decrease</i> operator (<TT><B>--</B></TT>). They
+increase or reduce by 1 the value stored in a variable. They are equivalent
+to <tt><b>+=1</b></tt> and to <tt><b>-=1</b></tt>, respectively.  Thus:<br>
+<blockquote><tt>
+a++;<br>a+=1;<br>a=a+1;
+</tt></blockquote>
+are all equivalent in its functionality: the three increase by 1 the value of <tt><b>a</b></tt>.
+<p>
+Its existence is due to that in the first C compilers the three previous
+expressions produced different executable code according to which one was used.
+Nowadays this type of code optimization is generally done automatically by the compiler.
+<p>
+A characteristic of this operator is that it can be used both as a <i>prefix</i> or
+as a <i>suffix</i>. That means it can be written before the variable identifier
+(<tt><b>++a</b></tt>) or after (<tt><b>a++</b></tt>) and, although in so simple expressions
+like <tt><b>a++</b></tt> or <tt><b>++a</b></tt> they have exactly the same meaning, in
+other operations in which the result of the <i>increase</i> or <i>decrease</i> operation
+is evaluated as another expression they may have an important difference in their meaning:
+In case that the increase operator is used as a <i>prefix</i> (<tt><b>++a</b></tt>)
+the value is increased before the expression is evaluated and therefore the
+increased value is considered in the expression; in case that it is used as a
+<i>suffix</i> (<tt><b>a++</b></tt>) the value stored in <TT><B>a</B></TT> is increased after
+being evaluated and therefore the value stored before the increase
+operation is evaluated in the expression. Notice the difference:
+<blockquote>
+<table width="50%" cellspacing="5" border="0"><tr><td width="50%" align="center"><b><u>Example 1</u></b></td>
+ <td width="50%" align="center"><b><u>Example 2</u></b></td></tr>
+<tr><td bgcolor="#FFFFBF" width="50%"><tt><b>B=3;<br>A=++B;</b><br><I>// A is 4, B is 4</I></tt></td>
+ <td bgcolor="#FFFFBF" width="50%"><tt><b>B=3;<br>A=B++;</b><br><I>// A is 3, B is 4</I></tt></td></tr></table>
+</blockquote>
+In Example 1, <tt><b>B</b></tt> is increased before its value is copied to <tt><b>A</b></tt>.
+While in Example 2, the value of <tt><b>B</b></tt> is copied to <tt><b>A</b></tt> and
+<TT><B>B</B></TT> is later increased.
+<p>
+<dt><b>Relational operators ( <tt>==, !=,  &gt;, &lt;, &gt;=, &lt;=</tt> )</b><br>
+<dd>
+In order to evaluate a comparison between two expressions we can use the Relational
+operators. As specified by the ANSI-C++ standard, the result of a relational operation is a
+<tt><b>bool</b></tt> value that can only be <tt><b>true</b></tt> or <tt><b>false</b></tt>,
+according to the result of the comparison.
+<p>
+We may want to compare two expressions, for example, to know if they are equal or if one
+is greater than the other. Here is a list of the relational operators that can be performed
+in C++:
+<blockquote><table>
+<tr><td><tt>==</tt></td><td>Equal</td></tr>
+<tr><td><tt>!=</tt></td><td>Different</td></tr>
+<tr><td><tt>&gt;</tt></td><td>Greater than</td></tr>
+<tr><td><tt>&lt;</tt></td><td>Less than </td></tr>
+<tr><td><tt>&gt;=</tt></td><td>Greater or equal than</td></tr>
+<tr><td><tt>&lt;=</tt></td><td>Less or equal than</td></tr>
+</table></blockquote>
+Here you have some examples:<br>
+<blockquote><table>
+<tr><td><tt><b>(7 </B>==<B> 5)</b></tt></td><td> would return <tt><b>false</b></tt>.</td></tr>
+<tr><td><tt><b>(5 &gt; 4)</b></tt></td><td> would return <tt><b>true</b></tt>.</td></tr>
+<tr><td><tt><b>(3 != 2)</b></tt></td><td> would return <tt><b>true</b></tt>.</td></tr>
+<tr><td><tt><b>(6 &gt;= 6)</b></tt></td><td> would return <tt><b>true</b></tt>.</td></tr>
+<tr><td><tt><b>(5 &lt; 5)</b></tt></td><td> would return <tt><b>false</b></tt>.</td></tr>
+</table></blockquote>
+of course, instead of using only numberic constants, we can use any valid expression,
+including variables. Suppose that
+<tt><b>a=2</b></tt>, <tt><b>b=3</b></tt> and <tt><b>c=6</b></tt>,<br>
+<blockquote><table>
+<tr><td><tt><b>(a </B>==<B> 5)</b></tt></td><td> would return <tt><b>false</b></tt>.</td></tr>
+<tr><td><tt><b>(a*b &gt;= c)</b></tt></td><td> would return <tt><b>true</b></tt> since <tt>(2*3 &gt;= 6)</tt> is it.</td></tr>
+<tr><td><tt><b>(b+4 &gt; a*c)</b></tt></td><td> would return <tt><b>false</b></tt> since <tt>(3+4 &gt; 2*6)</tt> is it.</td></tr>
+<tr><td><tt><b>((b=2) </B>==<B> a)</b></tt></td><td> would return <tt><b>true</b></tt>.</td></tr>
+</table></blockquote>
+Be aware. Operator <tt>=</tt> (one equal sign) is not the same as operator <tt>==</tt>
+(two equal signs), the first is an assignation operator (assigns the right side of the
+expression to the variable in the left) and the other (<tt>==</tt>) is a relational operator
+of equality that compares whether both expressions in the two sides of the operator are equal
+to each other. Thus, in the last expression <tt>((b=2) == a)</tt>, we first assigned
+the value <TT><B>2</B></TT> to <tt><b>b</b></tt> and then we compared it to
+<tt><b>a</b></tt>, that also stores value <tt><b>2</b></tt>, so
+being <tt><b>true</b></tt> the result of the operation.
+<p>
+<table width=95%><tr><td bgcolor="#BFFFBF">
+<img src="icoansi.gif" align="left">
+In many compilers previous to the publication of the ANSI-C++ standard, as well as in the C
+language, the relational operations did not return a <tt><b>bool</b></tt> value
+<tt><b>true</b></tt> or <tt><b>false</b></tt>, rather they returned an
+<tt><b>int</b></tt> as result with a value of <tt><b>0</b></tt> in order to represent
+<b>"false"</b> and a value <u>different from <tt><b>0</b></tt></u> (generally
+<tt><b>1</b></tt>) to represent <b>"true"</b>. For more information, or if your compiler
+does not support the bool type, consult the section
+<a href="../ansi/bool.html">bool type</a>.
+</td></tr></table>
+<p>
+
+<dt><b>Logic operators ( <tt>!,  &amp;&amp;, ||</tt> ).</b><br>
+<dd>
+Operator <b>!</b> is equivalent to boolean operation NOT, it has only one
+operand, located at its right, and the only thing that it does is to invert the value
+of it, producing <tt><b>false</b></tt> if its operand is <tt><b>true</b></tt> and
+<tt><b>true</b></tt> if its operand is <tt><b>false</b></tt>.
+It is like to say that it returns the opposite result of evaluating its operand.
+For example:<br>
+<blockquote><table>
+<tr><td><tt><b>!(5 == 5)</b></tt></td><td> returns <tt><b>false</b></tt> because the expression at its right <tt>(5 == 5)</tt> would be <tt><b>true</b></tt>.</td></tr>
+<tr><td><tt><b>!(6 <= 4)</b></tt></td><td> returns <tt><b>true</b></tt> because <tt>(6 <= 4)</tt> would be <tt><b>false</b></tt>.</td></tr>
+<tr><td><tt><b>!true</b></tt></td><td> returns <tt><b>false</b></tt>.</td></tr>
+<tr><td><tt><b>!false</b></tt></td><td> returns <tt><b>true</b></tt>.</td></tr>
+</table></blockquote>
+
+Logic operators <tt><b>&amp;&amp;</b></tt> and <tt><b>||</b></tt>
+are used when evaluating two expressions to obtain a single result. They
+correspond with boolean logic operations <I>AND</I> and <I>OR</I> respectively.
+The result of them depends on the relation between its two operands:<br>
+<blockquote><table border="1">
+<tr><td bgcolor="silver" align="center">First<br>Operand<br><b>a</b></td><td bgcolor="silver" align="center">Second<br>Operand<br><b>b</b></td><td bgcolor="silver" align="center"><tt>result<br><b>a &amp;&amp; b</b></tt></td><td bgcolor="silver" align="center"><tt>result<br><b>a || b</b></tt></td></tr>
+<tr><td>true</td><td>true</td><td><b>true</b></td><td><b>true</b></td></tr>
+<tr><td>true</td><td>false</td><td><b>false</b></td><td><b>true</b></td></tr>
+<tr><td>false</td><td>true</td><td><b>false</b></td><td><b>true</b></td></tr>
+<tr><td>false</td><td>false</td><td><b>false</b></td><td><b>false</b></td></tr>
+</table></blockquote>
+For example:<br>
+<blockquote>
+<tt><b>( (5 </B>==<B> 5) &amp;&amp; (3 &gt; 6) )</b></tt> returns <tt><b>false</b></tt> <tt>( <i>true</i> &amp;&amp; <i>false</i> )</tt>.<br>
+<tt><b>( (5 </B>==<B> 5) || (3 &gt; 6))</b></tt> returns <tt><b>true</b></tt> <tt>( <i>true</i> || <i>false</i> )</tt>.<br>
+</blockquote>
+
+<p>
+<dt><b>Conditional operator ( <tt>?</tt> ).</b><br>
+<dd>
+The conditional operator evaluates an expression and returns a different value according
+to the evaluated expression, depending on whether it is <i>true</i> or <i>false</i>.
+Its format is:
+<blockquote><tt><i>condition <b>?</b> result1 <b>:</b> result2</i></tt></blockquote>
+if <tt><i>condition</i></tt> is <tt><b>true</b></tt> the expression will return
+<tt><i>result1</i></tt>, if not it will return <tt><i>result2</i></tt>.<br>
+<blockquote><table>
+<tr><td><tt><b>7</B>==<B>5 ? 4 : 3</b></tt></td><td> &nbsp; returns <b>3</b> since <b>7</b> is not equal to <b>5</b>.</td></tr>
+<tr><td><tt><b>7</B>==<B>5+2 ? 4 : 3</b></tt></td><td> &nbsp; returns <b>4</b> since <b>7</b> is equal to <b>5+2</b>.</td></tr>
+<tr><td><tt><b>5</B>&gt;<B>3 ? a : b</b></tt></td><td> &nbsp; returns <tt><b>a</b></tt>, since <b>5</b> is greater than <b>3</b>.</td></tr>
+<tr><td><tt><b>a</B>&gt;<B>b ? a : b</b></tt></td><td> &nbsp; returns the greater one, <tt><b>a</b></tt> or <tt><b>b</b></tt>.</td></tr>
+</table></blockquote>
+<p>
+<dt><b>Bitwise Operators ( <tt>&amp;, |, ^, ~, &lt;&lt;, &gt;&gt;</tt> ).</b><br>
+<dd>Bitwise operators modify the variables considering the bits that represent the value
+they store, that means, their binary representation.
+<blockquote><table border="1">
+<tr><td bgcolor="silver">op</td><td bgcolor="silver">asm</td><td bgcolor="silver">Description</td></tr>
+<tr><td>&amp;</td><td><b>AND</b></td><td>Logical AND</td></tr>
+<tr><td>|</td><td><b>OR</b></td><td>Logical OR</td></tr>
+<tr><td>^</td><td><b>XOR</b></td><td>Logical exclusive OR</td></tr>
+<tr><td>~</td><td><b>NOT</b></td><td>Complement to one (bit inversion)</td></tr>
+<tr><td>&lt;&lt;</td><td><b>SHL</b></td><td>Shift Left</td></tr>
+<tr><td>&gt;&gt;</td><td><b>SHR</b></td><td>Shift Right</td></tr>
+</table></blockquote>
+For more information about binary numbers and bitwise operations, consult
+<a href="../papers/boolean.html">Boolean logic</a>.
+
+<P>
+<DT><B>Explicit type casting operators</B><BR>
+<DD>
+Type casting operators allows you to convert a datum of a given type to another.
+There are some ways to do this in C++, the most popular one, compatible with the C language
+is to precede the expression to be converted by the new type enclosed between
+parenthesis <TT><B>()</B></TT>:
+<BLOCKQUOTE><TT>
+int i;<BR>
+float f = 3.14;<BR>
+i = (int) f;<BR>
+</TT></BLOCKQUOTE>
+The previous code converts the float number <TT><B>3.14</B></TT> to an integer value
+(<TT><B>3</B></TT>). Here, the type casting operator was <TT><B>(int)</B></TT>.
+Another way to do the same thing in C++ is using the constructor form: preceding the
+expression to be converted by the type and enclose <U>the expression</U> between
+parenthesis:
+<BLOCKQUOTE><TT>
+i = int ( f );
+</TT></BLOCKQUOTE>
+Both ways of type casting are valid in C++. And additionally ANSI-C++ added new
+type casting operators more specific for object oriented programming
+(<A HREF="tut5-4.html">Section 5.4, Advanced class type-casting</A>).
+
+<P>
+<DT><B>sizeof()</B><BR>
+<DD>
+This operator accepts one parameter, that can be either a variable type or a variable
+itself and returns the size in bytes of that type or object:
+<BLOCKQUOTE><TT>a = sizeof (char);</TT></BLOCKQUOTE>
+This will return <TT><B>1</B></TT> to <TT><B>a</B></TT> because <TT><B>char</B></TT> is
+a one byte long type.<BR>
+The value returned by <TT><B>sizeof</B></TT> is a constant, so it is always determined
+before program execution.
+
+<p>
+<dt><b>Other operators</b><br>
+<dd>
+Later in the tutorial we will see some few more operators, like the ones referring to
+pointers or the specifics for object-oriented programming. Each one is treated in its
+respective section.
+
+</dl>
+
+<p>
+<h2>Priority of operators</h2>
+When making complex expressions with several operands on it we may have some doubts
+about which operand is evaluated first and which later. For example, in this expression:<br>
+<blockquote><tt>a = 5 + 7 % 2</tt><br></blockquote>
+we may doubt if it really means:<br>
+<blockquote>
+<tt>a = 5 + (7 % 2)</tt> with result <b>6</b>, or<br>
+<tt>a = (5 + 7) % 2</tt> with result <b>0</b><br>
+</blockquote>
+The correct answer is the first of the two expressions, with a result of <tt><b>6</b></tt>.
+There is an established order with the priority of each operator, and not
+only the arithmetic ones (those whose preference we may already know from mathematics)
+but for all the operators which can appear in C++. From greatest to lowest priority.
+The priority order is as follows:
+<blockquote><table border="1">
+<tr><td bgcolor="silver"><b>Priority</b></td><td bgcolor="silver"><b>Operator</b></td><td bgcolor="silver"><b>Description</b></td><td bgcolor="silver"><b>Associativity</b></td></tr>
+<tr><td>1</td><td><tt>::</tt></td><td>scope</td><td>Left</td></tr>
+<tr><td>2</td><td><tt>() [ ] -&gt; . sizeof</tt></td><td>&nbsp;</td><td>Left</td></tr>
+<tr><td rowspan="6">3</td>
+ <td><tt>++ --</tt></td><td>increment/decrement</td><td rowspan="6">Right</td></tr>
+ <tr><td><tt>~</tt></td><td>Complement to one (bitwise)</td></tr>
+ <tr><td><tt>!</tt></td><td>unary NOT</td></tr>
+ <tr><td><tt>&amp; *</tt></td><td>Reference and Dereference (pointers)</td></tr>
+ <tr><td><tt>(<i>type</i>)</tt></td><td>Type casting</td></tr>
+ <tr><td><tt>+ -</tt></td><td>Unary less sign</td></tr>
+<tr><td>4</td><td><tt>* / %</tt></td><td>arithmetical operations</td><td>Left</td></tr>
+<tr><td>5</td><td><tt>+ -</tt></td><td>arithmetical operations</td><td>Left</td></tr>
+<tr><td>6</td><td><tt>&lt;&lt; &gt;&gt;</tt></td><td>bit shifting (bitwise)</td><td>Left</td></tr>
+<tr><td>7</td><td><tt>&lt; &lt;= &gt; &gt;=</tt></td><td>Relational operators</td><td>Left</td></tr>
+<tr><td>8</td><td><tt>== !=</tt></td><td>Relational operators</td><td>Left</td></tr>
+<tr><td>9</td><td><tt>&amp; ^ |</tt></td><td>Bitwise operators</td><td>Left</td></tr>
+<tr><td>10</td><td><tt>&amp;&amp; ||</tt></td><td>Logic operators</td><td>Left</td></tr>
+<tr><td>11</td><td><tt>?:</tt></td><td>Conditional</td><td>Right</td></tr>
+<tr><td>12</td><td><tt>= += -= *= /= %=<br>&gt;&gt;= &lt;&lt;= &amp;= ^= |=</tt></td><td>Assignation</td><td>Right</td></tr>
+<tr><td>13</td><td><tt>,</tt></td><td>Comma, Separator</td><td>Left</td></tr>
+</table></blockquote>
+<P>
+<i>Associativity</i> defines -in the case that there are several operators of the same
+priority level- which one must be evaluated before, the rightmost one or the leftmost
+one.<br>
+<P>
+All these precedence levels for operators can be manipulated or become more legible
+using parenthesis sign <tt><B>(</B></tt> and <tt><B>)</B></tt> like in this example:<br>
+<blockquote>
+<tt>a = 5 + 7 % 2;</tt><br>
+</blockquote>
+might be written as:<br>
+<blockquote>
+<tt>a = 5 + (7 % 2);</tt> or <br>
+<tt>a = (5 + 7) % 2;</tt><br>
+</blockquote>
+according to the operation that we wanted to perform.
+<P>
+So if you want to write a complicated expression and you are not sure of the precedence
+levels include always parenthesis. It will probably be also a more legible code.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut1-2.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>1-2. Variables. Data types. Constants.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut1-4.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>1-4. Communication through console.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+
+</body>
+</html>

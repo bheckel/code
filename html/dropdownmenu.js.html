@@ -1,0 +1,18 @@
+<!-- Navigate to a URL website based on dropdown drop down menu. -->
+
+<!-- Also see better demo: website_navigation.html -->
+
+<script language="JavaScript">
+function dropdown(list){ 
+  window.location.href = list .options[list.selectedIndex].value; 
+}
+</script>
+
+<form name="nav">
+  <select name="site" size=1  onChange ="dropdown(document.nav.site)">
+    <option value="">Go to.... 
+    <option value="http://triweb/CustSvcFin">Go to site A
+    <option value="http://triweb/CustSvcFin">Go to site B
+  </select> 
+</form>
+

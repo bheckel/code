@@ -1,0 +1,74 @@
+Brainbench Quiz
+Programmers Question of the Week - January 2000 - 1
+Subject Area: C 
+
+Sample Code: 
+
+char buf1[100];
+char buf2[100]; 
+char *strptr1;
+char *strptr2;
+
+strcpy(buf1, "abcdefghijklmnopqrstuvwxyz");
+strcpy(buf2, "Hello");
+
+strptr1 = buf1 + 6;
+strcpy(strptr1, buf2);
+
+strptr2 = (strptr1 + 8);
+strncpy(strptr2, buf2, 5);
+
+printf("%s\n", buf1); 
+
+Question:
+ Given the sample code above, which of the following string values will be
+ printed? 
+1.
+ abcdefHello 
+2.
+ abcdefHellolmnHellotuvwxyz 
+3.
+ abcdefghijklmnopqrstuvwxyz 
+4.
+ HellolmnHellotuvwxyz 
+5.
+ ghijklmnHellotuvwxyz 
+
+--------------------------------------------------------------------------------
+ Correct Answer: 1.  A null is written after the word Hello when it is copied
+ using strcpy. Any characters after the null are not printed.  This question
+ tests your understanding of string handling, character pointers, null
+ termination for strings, and the strcpy function which are all essential for
+ writing code to work with text in C.
+
+The sample code does the following:
+
+Creates two buffers and pointers.  
+  char buf1[100];
+  char buf2[100]; 
+  char *strptr1;
+  char *strptr2;
+
+Copies the alphabet into the first buffer and the word hello into the second.  
+  strcpy(buf1, "abcdefghijklmnopqrstuvwxyz");
+  strcpy(buf2, "Hello");
+
+Sets strptr1 to point to the seventh character of the first buffer, which
+would be pointing to the letter g.
+  strptr1 = buf1 + 6;
+
+Copies the word Hello from the second buffer into the first buffer starting
+where the letter g is. This will overwrite the letters ghijk with the letters
+to Hello, but it also writes a null character ('\0') over the l.  
+  strcpy(strptr1, buf2);
+
+Sets strptr2 to point to the 15th character of the first buffer, which would
+be pointing to the letter o.  
+  strptr2 = (strptr1 + 8);
+
+Copies the first five characters from the second buffer into the first buffer.
+This will overwrite the letters opqr with the letters Hell, but in this case
+no null character is written.  The contents of the first buffer is printed,
+which will print the characters until the first null character. 
+  strncpy(strptr2, buf2, 5);
+

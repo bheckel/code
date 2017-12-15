@@ -1,0 +1,71 @@
+//BQH0MMCK JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,REGION=0M
+//STEP1    EXEC SAS,TIME=100,OPTIONS='MSGCASE,MEMSIZE=0'
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)
+//SYSIN    DD *
+ /*---------------------------------------------------------------------------
+  *     Name: MORMEDCK
+  *
+  *  Summary: Produce summary of data from MORMED flatfiles to
+  *           compare against Vitalnet.
+  *
+  *  Created: Fri 17 May 2002 14:24:34 (Bob Heckel)
+  * Modified: Tue 05 Nov 2002 10:49:12 (Bob Heckel)
+  *---------------------------------------------------------------------------
+  */
+options ls=133 nocenter caps notes source pagesize=32767;
+***filename MORMEDIN 'BHB6.MORMED.YR1999.NEW';
+***filename MORMEDIN 'BHB6.MORMED.YR2000.NEW';
+***filename MORMEDIN 'DWJ2.MORMED.YR2001.NEW';
+filename MORMEDIN 'DWJ2.MORMED.YR2002.NEW';
+
+data work.mmtxtfile;
+  infile MORMEDIN;
+  input @48 sex $char1.  @77 state $char2.  @89 stres $char2. 
+        @95 race $char1.  @145 datayr $char4.  @195 icd10 $char5.;
+run;
+
+
+data work.icd_filter;
+  set work.mmtxtfile;
+  ***if state = '21';
+  where (icd10 like 'ZZ%');
+run;
+
+
+proc format;
+  value $f_sex  '1'       = 'Male'
+                '2'       = 'Female'
+                 OTHER    = 'do not know';
+
+  value $f_race '1'       = 'White (1)'
+                '2'       = 'Black (2)'
+                '3'       = 'Indian (3)'
+                '4'       = 'Chinese (4)'
+                '5'       = 'Japanese (5)'
+                '6'       = 'Hawaiian (6)'
+                '7'       = 'Filipino (7)'
+                '8'       = 'Other (8)'
+                'A' - 'E' = 'Other API (A-E)'
+                'F'       = 'Multi-racial (F)'
+                '0'       = 'Other Entries (0)'
+                '9'       = 'Not Reported (9)'
+                OTHER     = 'do not know (OTHER)';
+run;
+
+
+***proc freq data=work.icd_filter;
+  ***format sex $f_sex.  race $f_race.;
+  ***tables race*sex;
+***run;
+
+proc freq data=work.icd_filter;
+  format sex $f_sex.;
+  ***tables state*sex;
+  /* For some reason Goldman is using state of residence, not
+   * occurrence. 
+   */
+  tables stres*sex;
+run;
+
+
+  /* vim: set tw=72 ft=sas ff=unix: */

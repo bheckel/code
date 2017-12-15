@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+##############################################################################
+#     Name: mutt-view
+#
+#  Summary: View jpgs via Mutt's attachment menu.
+#           Assumes symlinks:
+#           $ ln -s ~/bin/mutt-view ~/bin/mutt-jpg
+#           $ ln -s ~/bin/mutt-view ~/bin/mutt-word
+#           $ ln -s ~/bin/mutt-view ~/bin/mutt-gif
+#
+#           This pgm is called from within ~/.mailcap
+#
+# Created: Sun 27 Jan 2002 08:01:18 (Bob Heckel)
+# Modified: Sat 22 May 2004 19:20:20 (Bob Heckel)
+##############################################################################
+
+# Determine how we were called:
+if ( $0 =~ /mutt-jpg$/ ) {
+  $tmpfile = "tmpmutt$$.jpg";
+  print "$0 is processing jpeg $tmpfile...\n\n";
+} elsif ( $0 =~ /mutt-gif$/ ) {
+  $tmpfile = "tmpmutt$$.gif";
+  print "$0 is processing gif $tmpfile...\n\n";
+} elsif ( $0 =~ /mutt-word$/ ) {
+  $tmpfile = "tmpmutt$$.doc";
+  print "$0 is processing Word doc $tmpfile...\n\n";
+} else {
+  print "Error.  Unknown file type.  Edit ~/bin/mutt-view.  Exiting.\n";
+}
+
+open(BINARYDATA, ">$tmpfile") || die "$0: can't open $tmpfile: $!\n";
+
+while ( <> ) {
+  print BINARYDATA $_;
+}
+
+close(BINARYDATA);
+
+system("start $tmpfile") && die "$0: can't start $tmpfile: $!\n";
+
+sleep 2;  # give external pgm (e.g. iview) time to parse the data
+
+unlink("$tmpfile") || die "$0: can't cleanup: $!\n";
+
+print "...processed successfully.  Exiting.";

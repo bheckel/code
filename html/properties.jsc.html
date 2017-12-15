@@ -1,0 +1,47 @@
+<!-- From javadebugger samples, modi by bobh
+     Tue May 11 1999 09:24:24 (Bob Heckel)
+-->
+<html>
+<head>
+<title>Properties Display Sample</title>
+
+<script language="JavaScript">
+<!-- Hide from old browsers
+function showProps( ob, name ) {
+    var prop;
+    for( prop in ob )
+        document.writeln( name+"[\""+prop+"\"]"+" = "+ob[prop]+"<br>");
+}
+
+function CallAlert( msg ) {
+    alert( msg );
+}
+
+// stop hiding -->
+</script>
+</head>
+
+<body>
+<script language="JavaScript">
+<!-- Hide from old browsers
+
+showProps( window, "window" );
+document.writeln( "<br>" );
+
+showProps( document, "document" );
+document.writeln( "<br>" );
+
+showProps( navigator, "navigator" );
+document.writeln( "<br>" );
+
+showProps( location, "location" );
+document.writeln( "<br>" );
+
+showProps( history, "history" );
+document.writeln( "<br>" );
+
+// stop hiding -->
+</script>
+
+</body>
+</html>

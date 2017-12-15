@@ -1,0 +1,56 @@
+03Jun08
+
+Good Afternoon Bob Heckel, 
+
+If this is the one I think you are running into this.   We see this in a couple of different ways but the cause is the same.    I would install the hotfix listed below from us.  
+
+We are suddenly seeing a rash of problems regarding the Connect: error and certain printer drivers in certain machines. This behavior has been reported on HP and Compaq machines, laptops and tablets. More specifically, the culprit is the HP Mobile Printing PS printer/driver and/or HP LaserJet PCL printer/driver. The behavior occurs when one of these printers is set as the default printer.
+ 
+To correct this problem, you can either remove this printer or set another printer as the default printer. To select another default printer, you can do the following:
+ 
+   1. Start, Settings, Printers and Faxes
+   2. Right click another printer
+   3. Select, 'Set as Default Printer'
+ 
+If there is not another printer available, you can add a 'dummy' printer and select it as the default printer.
+
+If you can switch to another default printer (close and reopen SAS after doing so), can you get PROC IMPORT to work again? 
+
+
+
+----------------------------------------------------------
+
+1) Go to Start -> Settings -> Printers and Faxes
+2) Choose 'Add a Printer' which should open up the wizard
+3) Select 'local Printer attached to this computer' , but don't don't detect and install a Plug and Play printer.
+4) Take the default for the port and hit 'Next'
+5) Select a manufacturer other than HP (such as Compaq or Epson, etc.) and choose any model printer.( I did the Epson LX-80).
+6) Take the default printer name, and choose yes to make the printer the default.
+7) Don't worry about sharing the printer (choose no)
+8) Do not print a test page, and click Finish.
+
+After the dummy printer is set as the default, close SAS and start a new session, then try PROC IMPORT again.
+
+----------------------------------------------------------
+
+
+We have been talking to HP about this problem, but in the meantime we have also created a customer hotfix to be used if the problem is isolated to one or two machines.
+
+Here are the instructions and link to the hotfix for the printer problem:
+
+Installation instructions:  http://ftp.sas.com/techsup/download/hotfix/ve9/accpcff/e9pf04/win/e9pf04wn.txt
+
+Download: http://ftp.sas.com/techsup/download/hotfix/ve9/accpcff/e9pf04/win/e9pf04wn.exe
+
+HP has also come out with new printer drivers that should resolve the problem. Here is the link to HP's new drivers:
+
+There are three of them: one for PCL 5 one for PCL 6 and one for PostScript.
+
+http://www.hp.com/go/universalprintdriver_software
+
+If you are interested in testing the new drivers, please install the appropriate one and then try connecting to the original printer before you import the Excel file (after closing and restarting SAS). 
+
+Respectfully,
+
+Peter Ruzsa
+Tech Support

@@ -1,0 +1,10 @@
+Paste into Immediate Window to test:
+
+? Application.ActiveCell
+Same:
+? ActiveCell
+? ActiveSheet.Name
+? ActiveWindow.UsableHeight
+? ActiveWorkbook.Name
+? RangeSelection
+? ThisWorkbook.Name

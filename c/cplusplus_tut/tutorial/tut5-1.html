@@ -1,0 +1,461 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 5.1, Templates</TITLE>
+<META NAME="description" CONTENT="Function Templates. Class Templates. Specialization. Value parameters.">
+<META NAME="keywords" CONTENT="template typename">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 5.1 </FONT><BR>
+ <FONT SIZE=5><B>Templates</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+<P>
+<TABLE><TR><TD BGCOLOR="#BFFFBF">
+<IMG SRC="icoansi.gif" ALIGN="left">
+Templates are a new feature introduced by ANSI-C++ standard. If 
+you use a C++ compiler that is not adapted to this standard it is possible
+that you cannot use them.<BR>
+</TD></TR></TABLE>
+
+<P>
+<H2>Function templates</H2>
+Templates allow to create generic functions that admit any data type as parameters
+and return value without having to overload the function with all the possible data types.
+Until certain point they fulfill the functionality of a macro.  Its prototype is any
+of the two following ones:
+<BLOCKQUOTE><TT>
+<B>template &lt;class </B><I>indetifier</I><B>&gt;</B> <I>function_declaration</I>;<BR>
+<B>template &lt;typename </B><I>indetifier</I><B>&gt;</B> <I>function_declaration</I>;<BR>
+</TT></BLOCKQUOTE>
+the only difference between both prototypes is the use of keyword <TT><B>class</B></TT>
+or <TT><B>typename</B></TT>, its use is indistinct since both expressions have exactly
+the same meaning and behave exactly the same way.
+<P>
+For example, to create a template function that returns the greater one of two objects
+we could use:
+<BLOCKQUOTE><TT><PRE>
+template &lt;class GenericType&gt;
+GenericType GetMax (GenericType a, GenericType b) {
+ return (a>b?a:b);
+}
+</PRE></TT></BLOCKQUOTE>
+As specifies the first line, we have created a template for a generic data type that we
+have called <TT><B>GenericType</B></TT>. Therefore in the function that follows,
+<TT><B>GenericType</B></TT> becomes a valid data type and it is used
+as type for its two parameters <TT><B>a</B></TT> and <TT><B>b</B></TT> and as return value
+for the function <TT><B>GetMax</B></TT>.
+<P>
+<TT><B>GenericType</B></TT> still does not represent any concrete data type;
+when the function <TT><B>GetMax</B></TT> will be called we will be able
+to call it with any valid data type. This data type will serve as <I>pattern</I> and
+will replace <TT><B>GenericType</B></TT> in the function.
+The way to call a template class with a type pattern is the following:
+
+<BLOCKQUOTE><TT>
+<I>function</I> <B>&lt;</B><I>pattern</I><B>&gt; (</B><I>parameters</I><B>);</B>
+</TT></BLOCKQUOTE>
+Thus, for example, to call <TT><B>GetMax</B></TT> and to compare two integer values
+of type <TT><B>int</B></TT> we can write:
+<BLOCKQUOTE><TT>
+ int x,y;<BR>
+ GetMax &lt;int&gt; (x,y);
+</TT></BLOCKQUOTE>
+so <TT><B>GetMax</B></TT> will be called as if each appearance of
+<TT><B>GenericType</B></TT> was replaced by an <TT><B>int</B></TT> expression.
+<P>
+Ok, here is the complete example:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// function template</I>
+#include &lt;iostream.h&gt;
+
+template &lt;class T&gt;
+T GetMax (T a, T b) {
+  T result;
+  result = (a>b)? a : b;
+  return (result);
+}
+
+int main () {
+  int i=5, j=6, k;
+  long l=10, m=5, n;
+  k=GetMax&lt;int&gt;(i,j);
+  n=GetMax&lt;long&gt;(l,m);
+  cout &lt;&lt; k &lt;&lt; endl;
+  cout &lt;&lt; n &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>6<BR>10</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+(In this case we have called the generic type <TT><B>T</B></TT> instead of
+<TT><B>GenericType</B></TT> because it is shorter and in addition is one of the most
+usual identifiers used for templates, although it is valid to use any valid identifier).
+<P>
+In the example above we used the same function <TT><B>GetMax()</B></TT> with arguments
+of type <TT><B>int</B></TT> and <TT><B>long</B></TT> having written a single implementation
+of the function.  That is to say, we have written a function template and called it
+with two different patterns.
+<P>
+As you can see, within our <TT><B>GetMax()</B></TT> template function
+the type <TT><B>T</B></TT> can be used to declare new objects:
+<BLOCKQUOTE><TT>T result;</TT></BLOCKQUOTE>
+<TT><B>result</B></TT> is an object of type <TT><B>T</B></TT>, like
+<TT><B>a</B></TT> and <TT><B>b</B></TT>, that is to say, of the type that we enclose
+between angle-brackets <TT>&lt;&gt;</TT> when calling our template function.
+<P>
+
+In this concrete case where the generic <TT><B>T</B></TT> type is used as parameter for
+function <TT><B>GetMax</B></TT> the compiler can find out automatically which data type
+is passed to it without having you to specify it with patterns <TT><B>&lt;int&gt;</B></TT>
+or <TT><B>&lt;long&gt;</B></TT>. So we could have written:
+<BLOCKQUOTE><TT>
+int i,j;<BR>
+GetMax (i,j);
+</TT></BLOCKQUOTE>
+since being both <TT><B>i</B></TT> and <TT><B>j</B></TT> of type <TT><B>int</B></TT>
+the compiler would assume automatically that the wished function is for type
+<TT><B>int</B></TT>.  This implicit method is more usual and would produce the same result:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// function template II</I>
+#include &lt;iostream.h&gt;
+
+template &lt;class T&gt;
+T GetMax (T a, T b) {
+  return (a>b?a:b);
+}
+
+int main () {
+  int i=5, j=6, k;
+  long l=10, m=5, n;
+  k=GetMax(i,j);
+  n=GetMax(l,m);
+  cout &lt;&lt; z &lt;&lt; endl;
+  cout &lt;&lt; n &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>6<BR>10</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+Notice how in this case, within function <TT><B>main()</B></TT> we called our template
+function <TT><B>GetMax()</B></TT> without explicitly specifying the type between
+angle-brackets <TT><B>&lt;&gt;</B></TT>. The compiler automatically determines what type
+is needed on each call.
+<P>
+Because our template function includes only one data type (<TT><B>class T</B></TT>) and both
+arguments it admits are both of that same type, we cannot call to our template function
+with two objects of different types as parameters:
+<BLOCKQUOTE><TT><FONT COLOR="red">
+int i;<BR>
+long l;<BR>
+k = GetMax (i,l);
+</FONT></TT></BLOCKQUOTE>
+It would be incorrect, since our function waits for two arguments of <U>the same</U> type
+(or class).
+<P>
+We can also make template-functions that admit more than one generic class or
+data type.  For example:
+<BLOCKQUOTE><TT><PRE>
+template &lt;class T, class U&gt;
+T GetMin (T a, U b) {
+  return (a&lt;b?a:b);
+}
+</PRE></TT></BLOCKQUOTE>
+In this case, our template function <TT><B>GetMin()</B></TT> admits two parameters of
+different types and returns an object of the same type as the first parameter
+(<TT><B>T</B></TT>) that is passed. For example, after that declaration we could call
+the function writing:
+<BLOCKQUOTE><TT><PRE>
+int i,j;
+long l;
+i = GetMin&lt;int,long&gt; (j,l);
+</PRE></TT></BLOCKQUOTE>
+or even
+<BLOCKQUOTE><TT><PRE>
+i = GetMin (j,l);
+</PRE></TT></BLOCKQUOTE>
+even although <TT><B>j</B></TT> and <TT><B>l</B></TT> are of different types.
+
+<P>
+<H2>Class templates</H2>
+We also have the possibility to write class templates, so that a class can have members
+based on generic types that do not need to be defined at the moment of creating the class
+or whose members use these generic types.  For example:
+<BLOCKQUOTE><TT><PRE>
+template &lt;class T&gt;
+class pair {
+    T values [2];
+  public:
+    pair (T first, T second)
+    {
+      values[0]=first; values[1]=second;
+    }
+};
+</PRE></TT></BLOCKQUOTE>
+The class that we have just defined serves to store two elements of any valid type.
+For example, if we wanted to declare an object of this class to store two integer values
+of type <TT><B>int</B></TT> with the values
+<TT><B>115</B></TT> and <TT><B>36</B></TT> we would write:
+<BLOCKQUOTE><TT>
+pair&lt;int&gt; myobject (115, 36);
+</TT></BLOCKQUOTE>
+this same class would serve also to create an object to store any other type:
+<BLOCKQUOTE><TT>
+pair&lt;float&gt; myfloats (3.0, 2.18);
+</TT></BLOCKQUOTE>
+The only member function has been defined <I>inline</I> within the class declaration,
+nevertheless if this is not thus and we define a function member outside the declaration
+we always must also precede the definition with the prefix <TT><B>template &lt;... &gt;</B></TT>.
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// class templates</I>
+#include &lt;iostream.h&gt;
+
+template &lt;class T&gt;
+class pair {
+    T value1, value2;
+  public:
+    pair (T first, T second)
+      {value1=first; value2=second;}
+    T getmax ();
+};
+
+template &lt;class T&gt;
+T pair&lt;T&gt;::getmax ()
+{
+  T retval;
+  retval = value1&gt;value2? value1 : value2;
+  return retval;
+}
+
+int main () {
+  pair &lt;int&gt; myobject (100, 75);
+  cout &lt;&lt; myobject.getmax();
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>100</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+notice how the definition of member function <TT><B>getmax</B></TT> begins:
+<BLOCKQUOTE><TT>
+template &lt;class <B>T</B>&gt;<BR>
+<B>T</B> pair&lt;<B>T</B>&gt;::getmax ()
+</TT></BLOCKQUOTE>
+All <TT><B>T</B></TT>s that appear are necessary, reason why whenever you declare
+member functions you will have to follow a format similar to this (the second
+<TT><B>T</B></TT> makes reference to the type returned by the function, so this may vary).
+
+<P>
+<H2>Template specialization</H2>
+A template specialization allows a template to make specific implementations for when
+the pattern is of a determined type.  For example, suppose that our class template
+<TT><B>pair</B></TT> included a function to return the result of the module operation
+between the objects contained in it, but we only want that it works when the contained
+type is <TT><B>int</B></TT>
+and for the rest of types we want that this function always returns <TT><B>0</B></TT>.
+This can be done this way:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// Template specialization </I>
+#include &lt;iostream.h&gt;
+
+template &lt;class T&gt;
+class pair {
+    T value1, value2;
+  public:
+    pair (T first, T second)
+      {value1=first; value2=second;}
+    T module () {return 0;}
+};
+
+template &lt;&gt;
+class pair &lt;int&gt; {
+    int value1, value2;
+  public:
+    pair (int first, int second)
+      {value1=first; value2=second;}
+    int module ();
+};
+
+template &lt;&gt;
+int pair&lt;int&gt;::module() {
+  return value1%value2;
+}
+
+int main () {
+  pair &lt;int&gt; myints (100,75);
+  pair &lt;float&gt; myfloats (100.0,75.0);
+  cout &lt;&lt; myints.module() &lt;&lt; '\n';
+  cout &lt;&lt; myfloats.module() &lt;&lt; '\n';
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>25<BR>0</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+As you can see in the code the specialization is defined this way:
+<BLOCKQUOTE><TT>
+<B>template &lt;&gt; class </B><I>class_name</I><B> &lt;</B><I>type</I><B>&gt;</B>
+</TT></BLOCKQUOTE>
+The specialization is part of a template, for that reason we must begin the declaration
+with <TT><B>template &lt;&gt;</B></TT>.  And indeed because it is a specialization for a
+concrete type the generic type cannot be used in it, as well as the first angle-brackets
+<TT><B>&lt;&gt;</B></TT>
+must appear empty. After the class name we must include the type that is being specialized
+enclosed between angle-brackets <TT><B>&lt;&gt;</B></TT>.
+
+<P>
+When we specialize a type of a template we must also define all the members
+adequating them to the specialization (if one pays attention, in the example
+above we have had to include its own constructor, although it is identic to the one
+in the generic template).  The reason is that no member is "inherited" from the generic
+template to the specialized one.
+
+<P>
+<H2>Parameter values for templates</H2>
+Besides the template arguments preceded by <TT><B>class</B></TT> or <TT><B>typename</B></TT>
+keyword that represent a type, functions templates and class templates can include other
+parameters that are not types whenever they are also constant values, like for example
+values of fundamental types.
+As an example see this class template that serves to store arrays:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// array template</I>
+#include &lt;iostream.h&gt;
+
+template &lt;class T, int N&gt;
+class array {
+    T memblock [N];
+  public:
+    setmember (int x, T value);
+    T getmember (int x);
+};
+
+template &lt;class T, int N&gt;
+array&lt;T,N&gt;::setmember (int x, T value) {
+  memblock[x]=value;
+}
+
+template &lt;class T, int N&gt;
+T array&lt;T,N&gt;::getmember (int x) {
+  return memblock[x];
+}
+
+int main () {
+  array &lt;int,5&gt; myints;
+  array &lt;float,5&gt; myfloats;
+  myints.setmember (0,100);
+  myfloats.setmember (3.0,3.1416);
+  cout &lt;&lt; myints.getmember(0) &lt;&lt; '\n';
+  cout &lt;&lt; myfloats.getmember(3) &lt;&lt; '\n';
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>100<BR>3.1416</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+It is also possible to set default values for any template parameter just as that
+is done with function parameters. 
+<P>
+Some possible template examples seen above:
+
+<BLOCKQUOTE><TT><PRE>
+template &lt;class T&gt;              // The most usual: one class parameter.
+template &lt;class T, class U&gt;     // Two class parameters.
+template &lt;class T, int N&gt;       // A class and an integer.
+template &lt;class T = char&gt;       // With a default value.
+template &lt;int Tfunc (int)&gt;      // A function as parameter.
+</TT></BLOCKQUOTE>
+
+<P>
+<H2>Templates and multiple-file projects</H2>
+From the point of view of the compiler, templates are not normal function or classes.
+They are compiled on demand. Meaning that the code of a template function is not
+compiled until an instantiation is required. At that moment, when an instantiation is
+required, the compiler generates from the template a function specifically for that type.
+<P>
+
+When projects grow it is usual to split the code of a program in different source files.
+In these cases, generally the interface and implementation are separated.
+Taking as example a library of functions, the interface generally consists on the
+prototypes of all the functions that can be called, these are generally declared in a
+"header file" with <TT><B>.h</B></TT> extension, and the implementation (the definition
+of these functions) is in an independent file of c++ code.
+<P>
+
+The macro-like functionality of templates, forces us to a restriction for multi-file
+projects: the implementation (definition) of a template class or function <U>must</U> be
+in the same file as the declaration. That means we cannot separate the interface in a
+separate header file and we must include both interface and implementation in any file
+that uses the templates.
+<P>
+
+Going back to the library of functions, if we wanted to make a library of function templates,
+instead of creating a header file (<TT><B>.h</B></TT>) we should create a "template file"
+with both the interface and implementation of the function templates
+(there is no convention on the extension for these type of file other that no extension at all or to keep the .h).
+The inclusion more
+than once of the same template file with both declarations and definitions in a project
+doesn't generate linkage errors, since they are compiled on demand and compilers that allow
+templates should be prepared to not generate duplicate code in these cases.
+
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut4-4.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>4-4. Polymorphism.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut5-2.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>5-2. Namespaces.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</BODY>
+</HTML>

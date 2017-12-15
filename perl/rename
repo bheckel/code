@@ -1,0 +1,44 @@
+#!/usr/bin/perl -w
+# rename - Larry's filename fixer
+# From Perl Cookbook p. 327
+# Adapted: Tue, 16 May 2000 08:58:00 (Bob Heckel)
+#
+# sample call: $ rename 's/1/xxx/' *
+#
+# Actually, a shell script like this should work: 
+# for i in *; do mv "$i" `echo $i | sed 's/ /_/g'`; done
+# or
+# d=`date +%d%b%y`; for i in *.ppt; do mv "$i" `echo $i |sed "s/^......./${d}/g"`; done
+#
+# Modified: Mon Jul 15 08:18:06 2002 (Bob Heckel -- add visual confirmation) 
+# Modified: Fri 18 Oct 2002 13:20:02 (Bob Heckel) 
+
+# TODO recurse
+
+print "Deprecated.  Use this instead:\nfor i in `find -name '*one*'`; do mv \"\$i\" `echo \$i | sed 's/o/O/g'`; done\n";
+exit 66;
+
+errmsg() unless $ARGV[0];
+errmsg() if $ARGV[0] =~ /-+h.*/;
+
+$op = shift or errmsg();
+
+chomp(@ARGV = <STDIN>) unless @ARGV;
+
+foreach ( @ARGV ) {
+  $was = $_;
+  eval $op;
+  die $@ if $@;
+  unless ( $was eq $_ ) {
+    rename($was, $_);
+    print "Renamed:  $was -> $_\n";
+  }
+}
+
+
+sub errmsg { 
+  print "Usage: rename 's/plregex/plregex/' [files]\n"; 
+  print "       Renames all files in a single directory\n";
+  print "       using a Perl regex\n";
+  exit(__LINE__);
+}

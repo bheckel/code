@@ -1,0 +1,167 @@
+<HTML>
+<HEAD>
+<TITLE>Console application projects with Microsoft Visual C++</TITLE>
+<meta name="description" content="Steps to follow for creating a console application project">
+<meta name="keywords" content="c++ console compile compiler microsoft project" >
+</HEAD>
+<body bgcolor="white">
+
+<!--cap-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Compilers </FONT><BR>
+ <FONT SIZE=5><B>Console application projects with Microsoft Visual C++</B></FONT>
+</TD><TD VALIGN="bottom">
+ <a href="http://www.cplusplus.com" ><IMG SRC="/img/mini.gif" ALT="cplusplus.com" BORDER=0></A>
+</TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/cap-->
+
+<P>
+The most recent versions of this compiler are integrated in a development environment called
+Microsoft Visual Studio. The simplest method to create applications in this environment
+is by creating projects.  We are going to create a project with the name
+<B>test</B> but you can simply follow these same instructions for any other project name
+just by changing any appearance of <B>test</B> by the name you choose.
+<P>
+<H2>Creating a new project</H2>
+<TABLE><TR><TD>
+ <B>1.</B> Launch the Microsoft Visual C++ environment.<BR>
+ If your development environment starts empty press on <TT><B><U>F</U>ile</B></TT> and
+<TT><B><U>N</U>ew...</B></TT><BR>
+ <IMG SRC="vc1.gif" BORDER=1>
+</TD></TR><TR><TD>
+  
+ <P>
+ <B>2.</B> A dialog box called <TT><B>New</B></TT> will appear, similar to the following one:<BR>
+</TD></TR><TR><TD>
+ <IMG SRC="vc2.gif" BORDER=1>
+</TD></TR><TR><TD>
+ Follow these steps:<BR>
+ <blockquote>
+ <B>a.</B> Select the Projects tab.<BR>
+ <B>b.</B> Select the project type "Win32 Console Application"<BR>
+ <B>c.</B> Type the Location of your hard drive where you want to store the files of your projects.<BR>
+ <B>d.</B> Give a name to the project, the one you wish, for example <TT><B>test</B></TT>. This name will be automatically added to the path that you specified in step <B>c.</B>.<BR>
+ <B>e.</B> Click <TT><B>OK</B></TT>.<BR>
+ </BLOCKQUOTE>
+ If you are using version 6 of the development environment, a dialog box will appear asking
+what type of application you wish, in that case answer "An empty project" and click
+<TT>Finish</TT>. 
+<P>
+ It will probably appear a summarizing panel. Ok.
+<P>
+ <B>3.</B> At this point you shall have an empty project and in the left side it should
+appear a list of classes, that because we have still not begun a program it will be empty.<BR>
+ <IMG SRC="vc3.gif" BORDER=1 ALIGN="left">
+ If you pay attention, you will be able to see in the bottom left side, two tab:
+<TT><B>ClassView</B></TT> and <TT><B>FileView</B></TT>.  Press on FileView.
+</TD></TR><TR><TD>
+ <B>4.</B><BR>
+ <IMG SRC="vc4.gif" BORDER=1 ALIGN="left">
+ In <TT><B>FileView</B></TT> you should be able to see a group icon
+ called <TT><B>test files</B></TT> (replacing <TT>test</TT> by the name that you gave to
+ the project in step <TT><B>2d.</B></TT>).<BR>
+ Right click on it and select the option <TT><B>Add <U>F</U>iles to Project...</B></TT><BR>
+</TD></TR><TR><TD>
+ <B>5.</B>
+ A Dialog box called "Insert Files into Project" will be opened. It is a
+ common exploring dialog box opened by the directory in which we have placed the project
+ in step <TT><B>2.</B></TT>.<BR>
+ <IMG SRC="vc7.gif"><BR>
+ Using this dialog box we can include the files we need in the project writing its name
+in the "<U>F</U>ile name:" field.  For example we could include the file
+<TT><B>test.cpp</B></TT> (it is a generalized custom to call the main file of the project
+like the project itself plus the <TT><B>.cpp</B></TT> extension). 
+Because it will probably be a new file, the environment will warn us that the file does
+not still exist and it will ask us if we want to refer it anyway.  We will answer
+<TT><B>Yes</B></TT>.
+<P>
+ <B>6.</B>
+ Once we have included our file(s) in the project, these would have to be visible under
+the <TT><B>test files</B></TT> group (replacing <TT>test</TT> by the name you gave to the
+project in step <TT><B>2d.</B></TT>).<BR>
+ <IMG SRC="vc5.gif" BORDER=1 ALIGN="left">
+If you are using Visual C++ 6 the files would appear within a subfolder
+called <TT><B>Source Files</B></TT>, in previous versions it will appear directly
+into the <TT><B>test files</B></TT> folder.<BR>
+ Now, double-clicking on any project file (for example 
+<TT><B>test.cpp</B></TT>) the file will be opened in the main frame 
+of the development environment and we will be able to edit its content.
+If the file that we want to open does not exists yet you will be asked if you wish
+to create it. Try to click on <TT><B>test.cpp</B></TT> and say that indeed you
+want to create it.<BR>
+</TD></TR><TR><TD>
+<P>
+ Now we can edit any of our project's files in the way we want.
+</TD></TR>
+</TABLE>
+
+<P>
+<H2>Compilation and execution of a project</H2>
+Once we have finished the program and we want to try to run it, we will go to the main menu
+in the top of the window and select <TT><B>Build</B></TT>, and there the option
+<TT><B>Execute test.exe</B></TT> (replacing <TT>test</TT> by the name given to the project).<BR>
+You may also do this same operation by pressing on the red exclamation icon
+(<IMG SRC="vc6.gif">) in the menu bar, or by pressing the keys <TT>Control</TT>
+ and <TT>F5</TT> simultaneously.  Use the method that you prefer.
+<P>
+If our code is correct and everything goes well, the resulting program will be executed.
+If not everithing has gone perfect, errors and warnings may be displayed, in this case,
+at the bottom side of the development interface it will be a frame that will
+display the quantity of errors and warnings.  If you scroll up this screen (or if you expand
+it) you will be able to see the details of errors and warnings following this format:
+<blockquote ><TT>
+File name(line number) : error/warning code: description
+</TT></BLOCKQUOTE>
+like for example:
+<blockquote ><TT>
+C:\myprograms\test.cpp(9) : error C2065: 'trox' : undeclared identifier
+</TT></BLOCKQUOTE>
+If you double-click on anyone of these lines, the place in the source code where presumably
+the expression that causes the error is will be signaled. Use this location and the
+error description to correct it.
+<P>
+Once your program has been executed for the first time using this method
+an executable file with <TT><B>.EXE</B></TT> extension will be generated,
+it will be in the working folder for this project within subfolder <TT><B>Debug</B></TT>
+or <TT><B>Release</B></TT>, according to the active configuration for the project
+(<TT><B>Build | Set Activate Configuration...</B></TT>).
+<P>
+<H2>Opening, Saving and Closing an existing project</H2>
+When we created a project, Visual C++ generates for us a Workspace that includes
+the project plus the files that we have opened while working on it.
+<P>
+It is recommendable that you use the options <TT><B>Open Workspace...</B></TT>,
+<TT><B>Save Workspace</B></TT> and <TT><B>Close Workspace</B></TT> of the
+<TT><B>File</B></TT> menu when you want to open an existing project or when you want
+to close the project that you are editing to open another one.
+<P>
+For more information consult help.
+
+<P>
+<H2>Other options</H2>
+You may also compile your applications from the command line with no need to launch
+the development environment following the instructions detailed in<BR>
+<a href="vccl.html" >Compiling from the command line with Visual Microsoft C++</A>
+
+<P>
+<TABLE WIDTH=100%><TR><TD ALIGN="right">
+<FONT SIZE=1>Microsoft and Visual C++ are registered trademarks of Microsoft Corporation</FONT>
+</TD></TR></TABLE>
+
+<!--cua-->
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy;The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+ <TR><TD ALIGN="center"><a href="javascript:history.go(-1)" ><IMG SRC="/img/butnback.gif" BORDER=0>Return back</A></TD></TR>
+
+</TABLE></CENTER>
+<!--/cua-->
+
+</BODY>
+</HTML>

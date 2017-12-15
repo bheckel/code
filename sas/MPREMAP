@@ -1,0 +1,271 @@
+//BQH0MP   JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=1,CLASS=F,REGION=0M
+//STEP1    EXEC SAS,TIME=100,OPTIONS='MSGCASE,MEMSIZE=0'
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)
+//TABDEL   DD DISP=SHR,DSN=BQH0.MP03.TXT
+//OUTNCHS  DD DISP=(NEW,CATLG,DELETE),UNIT=NCHS,
+//            DSN=DWJ2.MP03.MOR.NCHSFMT.D07JUL03,
+//            DCB=(LRECL=142,RECFM=FB),
+//            SPACE=(CYL,(10,2),RLSE)
+//SYSIN    DD *
+
+ /*-------------------------------------------------------------------
+  *     Name: MPREMAP
+  *
+  *  Summary: Import a tab-delimited textfile, do conversions per the
+  *           provided specification, output the data in NCHS format.
+  *
+  *           Input file TABDEL was created by copying each column from
+  *           MP's Access database (per Jenny's WordPerfect specs),
+  *           pasting into Vim, then making simple edits where
+  *           necessary.  Pasted the minor changes into a new
+  *           spreadsheet.  When all 26 cols were done, selected all of
+  *           spreadsheet, copy and paste back into Vim (tabs inserted
+  *           automatically by Excel) for use as TABDEL.
+  *
+  *  Created: Wed 02 Jul 2003 12:52:35 (Bob Heckel)
+  * Modified: Mon 07 Jul 2003 09:03:33 (Bob Heckel)
+  *-------------------------------------------------------------------
+  */
+options ls=max yearcutoff=1905;
+
+***filename TABDEL 'junk.in';
+***filename OUTNCHS 'junk.out' LRECL=142;
+
+data work.exceldata;
+  infile TABDEL dlm='05'x dsd missover;
+  ***infile TABDEL DLM='09'x DSD MISSOVER;
+  /* 26 variables, 163 observations. */
+  input certno:$CHAR6. lname:$CHAR20. fname:$CHAR15. minit:$CHAR1.
+        sex:$CHAR1. dod:DATE9. ssn:$CHAR9. age:F3. mos:$CHAR2. 
+        days:$CHAR3. hrs:$CHAR3. dob:DATE9. pob:$CHAR20. inpat 
+        erout doa nurs res othr country:$CHAR20. resid:$CHAR20. 
+        marit:$CHAR20.  hisp:$CHAR20. elem:F3. colleg:F3. 
+        fath:$CHAR20. inj:$CHAR1.  eth:$CHAR20.
+        ;
+run;
+proc print; run;
+
+
+ /* Apply remaining business rules per Jenyy Justice's
+  * K:\Everyone\Marianas\MarianasConv\NMIMor02.WPD */
+data work.converted;
+  set work.exceldata;
+  /* We create these variables in this step. */
+  format deathmonth Z2.  deathday Z2.  deathyr Z4.
+         birthmonth Z2.  birthday Z2. birthyr Z4.
+         age_adjusted Z2.
+         educ Z2.
+         ;
+
+  if dod then
+    /* Two digit zero padded as a result of the format statement above. */
+    do;
+      deathmonth = month(dod);
+      deathday = day(dod);
+      deathyr = year(dod);
+    end;
+  else
+    do;
+      deathmonth = '99';
+      deathday = '99';
+      deathyr = '9999';
+    end;
+
+  ageunit = '0';
+  age_adjusted = age;
+  if age > 99 then
+    do;
+      ageunit = '1';
+      age = age-100;
+    end;
+
+  if age < 1 then
+    ageblank = '1';
+
+  if mos eq 0 or mos eq '' then
+    mosblank = '1';
+
+  if days eq 0 or days eq '' then
+    daysblank = '1';
+
+  if hrs eq 0 or hrs eq '' then
+    hrsblank = '1';
+
+  if ageblank then
+    do;
+      if not mosblank then
+        do;
+          ageunit = '2';
+          age_adjusted = mos;
+        end;
+      else if not daysblank then
+        do;
+          ageunit = '4';
+          age_adjusted = days;
+        end;
+      else if not hrsblank then
+        do;
+          ageunit = '5';
+          age_adjusted = hrs;
+        end;
+      else
+        do;
+          ageunit = '9';
+          age_adjusted = '99';
+        end;
+    end;
+
+  if dob then
+    do;
+      birthmonth = month(dob);
+      birthday = day(dob);
+      birthyr = year(dob);
+    end;
+  else
+    do;
+      birthmonth = '99';
+      birthday = '99';
+      birthyr = '9999';
+    end;
+
+  select ( upcase(pob) );
+    when ('MARIANAS', 'NORTHERN MARIANAS', 'NORTHERN MARIANAS ISLANDS',
+          'MP', 'SAIPAN', 'TINIA', 'ROTA') pob_adjusted = '62';
+    when ('GUAM')                          pob_adjusted = '54';
+    when ('CANADA')                        pob_adjusted = '55';
+    when ('PUERTO RICO')                   pob_adjusted = '52';
+    when ('CUBA')                          pob_adjusted = '56';
+    when ('VIRGIN ISLANDS')                pob_adjusted = '53';
+    when ('MEXICO')                        pob_adjusted = '57';
+    when ('TEXAS')                         pob_adjusted = '44';
+    when ('NEW JERSEY')                    pob_adjusted = '31';
+    when ('WISCONSIN')                     pob_adjusted = '50';
+    otherwise                              pob_adjusted = '99';
+  end;
+
+  if inpat then
+    typlace = '1';
+  else if erout then
+    typlace = '2';
+  else if doa then
+    typlace = '3';
+  else if nurs then
+    typlace = '5';
+  else if res then
+    typlace = '6';
+  else if othr then
+    typlace = '7';
+  else
+    typlace = '9';
+
+  select ( upcase(country) );
+    when ('MP', 'MARIANAS', 'SAIPAN', 'TINIA', 'ROTA') stocc = '62';
+    otherwise                                          stocc = '99';
+  end;
+  if stocc = '99' then
+    /* Catch the 'SAIPAN, MP' etc. entries. */
+    do;
+      if index(upcase(country), 'SAIPAN') then
+        stocc = '62';
+      if index(upcase(country), 'TINIA') then
+        stocc = '62';
+      if index(upcase(country), 'ROTA') then
+        stocc = '62';
+    end;
+
+  select ( upcase(marit) );
+    when ('MARRIED', 'MARIT')                          marit_adjusted = '1';
+    when ('NEVER MARRIED', 'NEVER  MARRIED', 'SINGLE') marit_adjusted = '2';
+    when ('WIDOWED')                                   marit_adjusted = '3';
+    when ('DIVORCED')                                  marit_adjusted = '4';
+    otherwise                                          marit_adjusted = '9';
+  end;
+
+  select ( upcase(resid) );
+    when ('MP', 'MARIANAS', 'SAIPAN', 'TINIA', 'ROTA') stres = '62';
+    when ('GUAM')                                      stres = '54';
+    otherwise                                          stres = '99';
+  end;
+  if stres eq 99 and stocc ne '' then
+    stres = stocc;
+
+  select ( upcase(hisp) );
+    when ('HISP', 'HISPANIC')   hisp_adjusted = '5';
+    when ('MEX', 'MEXICAN')     hisp_adjusted = '1';
+    when ('CUB', 'CUBAN')       hisp_adjusted = '3';
+    when ('PR', 'PUERTO RICAN') hisp_adjusted = '2';
+    otherwise                   hisp_adjusted = '9';
+  end;
+
+  if eth = '' then
+    race = '8';            
+  else
+    do;
+      select ( upcase(eth) );
+        when ('WHITE', 'AMERICAN')   race = '1';
+        when ('BLACK', 'AFRICAN', 'AFRICAN-AMERICAN')     race = '2';
+        when ('NATIVE AMERICAN')       race = '3';
+        when ('CHINA', 'CHINESE', 'TAIWAN', 'TAIWANESE') race = '4';
+        when ('JAPAN', 'JAPANESE') race = '5';
+        when ('HAWAIIAN') race = '6';
+        when ('PHILIPINO', 'FILIPINO', 'PHILIPINES') race = '7';
+        when ('ASIAN INDIAN', 'INDIA') race = 'A';
+        when ('KOREAN', 'KOREA') race = 'B';
+        when ('SAMOAN', 'AMERICAN SAMOAN') race = 'C';
+        when ('VIETNAM', 'VIETNAMESE') race = 'D';
+        when ('GUAM', 'GUAMANIAN', 'CHAMORRO', 'CHAMORRAN') race = 'E';
+        otherwise race = '0';
+      end;
+    end;
+
+  educ = '99';
+  if not colleg then
+    educ = elem;
+  else if colleg < 18 then
+    educ = colleg+12; 
+  else if colleg > 17 then
+    educ = colleg;
+  else
+    educ = '99';
+
+  if educ eq . then
+    educ = '99';
+
+  autopsy = '9';
+
+  if inj eq '' then
+    inj = '9';
+
+  linkcert = '      '; 
+  linkyob = '    '; 
+  linkpob = '  ';
+  if ageunit not in('0','1') then
+    do;
+      linkcert = certno;
+      linkyob = birthyr; 
+      linkpob = pob_adjusted;
+    end;
+run;
+
+
+ /* Create the 142 byte NCHS textfile. */
+data _NULL_;
+  set work.converted;
+  file OUTNCHS;
+  /* Ignore certain xls input (e.g. residence col from the xls and
+   * hardcode 61) per layout instructions.
+   */
+  put @5 certno  @11 lname  @31 fname  @46 minit  @48 sex
+      @49 deathmonth  @51 deathday  @55 ssn  @64 ageunit  
+      @65 age_adjusted
+      @67 birthmonth  @69 birthday  @74 pob_adjusted
+      @76 typlace  @77 stocc  @82 marit_adjusted
+      @89 stres @94 hisp_adjusted  @95 race  @96 educ  
+      @98 fath  @117 inj  @122 autopsy  @123 linkcert  
+      @129 linkyob  @133 linkpob  @135 deathyr  @139 birthyr
+      ;
+run;
+
+
+
+  /* vim: set tw=72 ft=sas: */ 

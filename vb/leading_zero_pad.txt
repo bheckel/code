@@ -1,0 +1,14 @@
+
+A function for numbers beginning with 0
+
+Here is a function that is very helpful when you need some number that 
+begins with 0's and has to be a certain number of digits: 
+
+Function PadToString(intValue, intDigits) 
+PadToString = String(intDigits - Len(intValue), "0") & intValue 
+End Function 
+
+Usage: 
+myNewStr = PadToString(702, 6) 
+
+myNewStr would be "000702" 

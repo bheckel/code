@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- HTML5 images demo -->
+  <!-- Adapted from diveintohtml5 -->
+  <img id="cat" src="cat.png" alt="sleeping cat" width="177" height="113">
+  <canvas id="e" width="177" height="113"></canvas>
+  <script>
+  window.onload = function() {
+    var canvas = document.getElementById("e");
+    var context = canvas.getContext("2d");
+    var cat = document.getElementById("cat");
+    context.drawImage(cat, 0, 0);
+  };
+  </script>
+  </body>
+</html>  

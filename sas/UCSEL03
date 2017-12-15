@@ -1,0 +1,49 @@
+//BQH0SELE JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=5,CLASS=V,REGION=0M             
+/*ROUTE    PRINT R341 
+//PRINT    OUTPUT FORMDEF=A10111,PAGEDEF=V06683,CHARS=GT15,COPIES=1 
+//STEP1    EXEC SAS,TIME=100,OPTIONS='MEMSIZE=0,ALTPRINT=OLST,ALTLOG=OLOG'                        
+//WORK     DD SPACE=(CYL,(100,100),,,ROUND)                                     
+//OLST     DD DISP=SHR,DSN=BQH0.INC.SASLIST                                     
+//OLOG     DD DISP=SHR,DSN=BQH0.INC.SASLOG                                      
+//SASLIST  DD SYSOUT=0,OUTPUT=*.PRINT,RECFM=FBA,LRECL=132,BLKSIZE=132 
+//IN       DD DISP=SHR,DSN=BF19.LAX0303.MEDMER
+//SYSIN    DD *                                                                 
+
+OBSOLETE?
+
+ /******************************************************************
+  * PROGRAM     UCSEL03
+  * CREATED     BOB HECKEL (BQH0)
+  * DATE        2003-05-15
+  *
+  * RUN A STATE'S UNDERLYING CAUSE REPORT FOR SPECIFIC ICD10 CODES.
+  *
+  * UPDATE LOG:
+  ******************************************************************/
+ /* EXPECTING LRECL=132 IN JCL */
+OPTIONS SOURCE SOURCE2 LINESIZE=128 nos99nomig;
+
+%GLOBAL NUMSPECIFICLINES;
+
+ /* ICD10 CODES OF INTEREST (USED IN %RUNUNDCAUSE) PER DWJ2.
+  * SAMPLE LINE (LOWERCASED TO AVOID CONFUSION WITH THE 113 UC
+  * REPORT):
+  * A04  - Other bacterial intestinal infections
+  * A047 - Enterocolitis due to Clostridium difficile
+  */
+FILENAME ICDS 'BQH0.SPECICD.TXT' DISP=SHR;
+
+DATA WANTEDCODES;
+  INFILE ICDS TRUNCOVER END=LASTOBS;
+  INPUT CAUSE $  TITLE $ 1-60;
+  IF LASTOBS THEN
+    CALL SYMPUT('NUMSPECIFICLINES', _N_);
+RUN;
+
+%INCLUDE 'BQH0.PGM.LIB(UCSELECT)';
+
+ /* YEAR OF INTEREST (A.K.A. END YEAR),
+  * NUMBER OF ICD10 CODES TO REPORT,
+  * US TOTAL YR. 
+  */
+%RUNUNDCAUSE(2003, &NUMSPECIFICLINES, 2002);

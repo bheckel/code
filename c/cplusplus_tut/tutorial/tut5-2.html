@@ -1,0 +1,272 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 5.2, Namespaces</TITLE>
+<META NAME="description" CONTENT="Splitting the global scope">
+<META NAME="keywords" CONTENT="namespace scope blocks">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 5.2 </FONT><BR>
+ <FONT SIZE=5><B>Namespaces</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<P>
+Namespaces allow us to group a set of global classes, objects and/or functions under a
+name. To say it somehow, they serve to split the global scope in sub-scopes known
+as <I>namespaces</I>.
+<P>
+The form to use <I>namespaces</I> is:
+<BLOCKQUOTE><TT>
+<B>namespace </B><I>identifier</I><BR>
+<B>{</B><BR>
+&nbsp; <I> namespace-body</I><BR>
+<B>}</B><BR>
+</TT></BLOCKQUOTE>
+Where <TT><I>identifier</I></TT> is any valid identifier and
+<TT><I>namespace-body</I></TT> is the set of classes, objects and functions that are
+included within the <I>namespace</I>.  For example:
+<BLOCKQUOTE><TT><PRE>
+namespace general
+{
+  int a, b;
+}
+</PRE></TT></BLOCKQUOTE>
+In this case, <TT><B>a</B></TT> and <TT><B>b</B></TT> are normal variables integrated
+within the <B>general</B> <I>namespace</I>.  In order to access to these variables
+from outside the namespace we have to use the scope operator <TT><B>::</B></TT>.
+For example, to access the previous variables we would have to put:
+<BLOCKQUOTE><TT>
+general::a<BR>
+general::b
+</TT></BLOCKQUOTE>
+<P>
+The functionality of <I>namespaces</I> is specially useful in case that there is a possibility
+that a global object or function can have the same name than another one, causing a
+redefinition error.  For example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// namespaces</I>
+#include &lt;iostream.h&gt;
+
+namespace first
+{
+  int var = 5;
+}
+
+namespace second
+{
+  double var = 3.1416;
+}
+
+int main () {
+  cout &lt;&lt; first::var &lt;&lt; endl;
+  cout &lt;&lt; second::var &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>5<BR>3.1416</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+In this case two global variables with the <TT><B>var</B></TT> name exist,
+one defined within <I>namespace</I> <TT><B>first</B></TT> and another one in
+<TT><B>second</B></TT>. No redefinition errors thanks to <I>namespaces</I>.
+
+<P>
+<H2>using namespace</H2>
+The <TT><B>using</B></TT> directive followed by <TT><B>namespace</B></TT> serves to
+associate the present nesting level with a certain <I>namespace</I> so that the objects
+and functions of that <I>namespace</I> can be accesible directly as if they were
+defined in the global scope.  Its utilization follows this prototype:
+<BLOCKQUOTE><TT>
+<B>using namespace </B><I>identifier</I><B>;</B>
+</TT></BLOCKQUOTE>
+Thus, for example:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// using namespace example</I>
+#include &lt;iostream.h&gt;
+
+namespace first
+{
+  int var = 5;
+}
+
+namespace second
+{
+  double var = 3.1416;
+}
+
+int main () {
+  using namespace second;
+  cout &lt;&lt; var &lt;&lt; endl;
+  cout &lt;&lt; (var*2) &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>3.1416<BR>6.2832</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+In this case we have been able to use <TT><B>var</B></TT> without having to precede
+it with any scope operator.
+<P>
+You have to consider that the sentence <TT><B>using namespace</B></TT>
+has validity only in the block in which it is declared (understanding as a block
+the group of instructions within key brackets <TT><B>{}</B></TT>) or in all the code
+if it is used in the global scope.  Thus, for example, if we had intention to first use
+the objects of a <I>namespace</I> and then those of another one we could do something
+similar to:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// using namespace example</I>
+#include &lt;iostream.h&gt;
+
+namespace first
+{
+  int var = 5;
+}
+
+namespace second
+{
+  double var = 3.1416;
+}
+
+int main () {
+  {
+    using namespace first;
+    cout &lt;&lt; var &lt;&lt; endl;
+  }
+  {
+    using namespace second;
+    cout &lt;&lt; var &lt;&lt; endl;
+  }
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>5<BR>3.1416</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+<H2>alias definition</H2>
+We have the possibility to define alternative names for <I>namespaces</I>
+that already exist. The form to do it is:
+<BLOCKQUOTE><TT>
+<B>namespace</B> <I>new_name</I> <B>=</B> <I>current_name</I> <B>;</B>
+</TT></BLOCKQUOTE>
+
+<P>
+<H2><I>Namespace</I> std</H2>
+One of the best examples that we can find about <I>namespaces</I> is the
+standard C++ library itself. According to ANSI C++ standard, the definition <U>all</U>
+the classes, objects and functions of the standard C++ library are defined within
+<I>namespace</I> <TT><B>std</B></TT>.
+<P>
+
+You may have noticed that we have ignored this rule all along this tutorial.
+I've decided to do so since this rule is almost as recent as the ANSI standard itself
+(1997) and many older compilers do not comply with this rule.
+
+<P>
+Almost all compilers, even those complying with ANSI standard, allow the use
+of the traditional header files (like <TT><B>iostream.h</B></TT>,
+<TT><B>stdlib.h</B></TT>, etc), the ones we have used througout this tutorial.
+Nevertheless, the ANSI standard has completely redesigned this libraries
+taking advantage of the templates feature and following the rule to declare
+all the functions and variables under the namespace <TT><B>std</B></TT>.
+<P>
+The standard has specified new names for these "header" files, basically using the same
+name for C++ specific files, but without the ending <TT><B>.h</B></TT>.
+For example, <TT><B>iostream.h</B></TT> becomes <TT><B>iostream</B></TT>.
+<P>
+
+If we use the ANSI-C++ compliant include files
+we have to bear in mind that all the functions, classes and objects
+will be declared under the <TT><B>std</B></TT> namespace.
+For example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// ANSI-C++ compliant hello world</I>
+#include &lt;iostream&gt;
+
+int main () {
+  std::cout &lt;&lt; "Hello world in ANSI-C++\n";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Hello world in ANSI-C++</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+Although it is more usual to use <TT><B>using namespace</B></TT> and save us to have to use
+the scope operator <TT><B>::</B></TT> before all the references to standard objects:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// ANSI-C++ compliant hello world (II)</I>
+#include &lt;iostream&gt;
+using namespace std;
+
+int main () {
+  cout &lt;&lt; "Hello world in ANSI-C++\n";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Hello world in ANSI-C++</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+The name for the C files has also suffered some changes.
+You can find more information on the new names for the
+standard header files in the document
+<a href="../ansi/hfiles.html">Standard header files</A>.
+<P>
+The use of the ANSI-compliant way to include the standard libraries, apart for the
+ANSI-compliance itself, is highly recommended for STL users.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut5-1.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>5-1. Templates.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut5-3.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>5-3. Exception handling.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</BODY>
+</HTML>

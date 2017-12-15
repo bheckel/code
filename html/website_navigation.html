@@ -1,0 +1,29 @@
+
+<script language="JavaScript">
+  function urlgo(drop){ 
+    window.location.href = drop.options[drop.selectedIndex].value; 
+  }
+</script>
+
+<form name="menuform1">
+  <center>
+  <table border="0">
+    <tr>
+      <td><select name="section1" size="1" width="200">
+            <option value='http://www.cdc.gov'>1999
+            <option value=''>2000
+            <option value=''>2001
+          </select>
+    <input type="button" value="Go" onClick="urlgo(document.menuform1.section1)">
+    </tr>
+    <tr>
+      <td><select name="section2" size="1" width="200">
+            <option value='http://www.cdc.gov'>cdc
+            <option value=''>web
+            <option value=''>other
+          </select>
+    <input type="button" value="Go" onClick="urlgo(document.menuform1.section2)">
+    </tr>
+  </table>
+  </center>
+</form>

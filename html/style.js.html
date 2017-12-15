@@ -1,0 +1,17 @@
+<!-- http://www.w3schools.com/htmldom/dom_using.asp -->
+<html>
+  <head>
+    <script type="text/javascript">
+    function ChangeStyles() {
+      document.body.style.backgroundColor="lavender";
+      document.getElementById("p1").style.color="blue";
+      document.getElementById("p1").style.fontFamily="Arial";
+    }
+    </script>
+  </head>
+
+  <body>
+    <p id="p1">Hello world!</p>
+    <input type="button" onclick="ChangeStyles()" value="Change style color and font without CSS" />
+  </body>
+</html> 

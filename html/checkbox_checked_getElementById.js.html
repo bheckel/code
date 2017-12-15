@@ -1,0 +1,23 @@
+<html>
+<head>
+<script type="text/javascript">
+
+  function BuildTextBox() {
+    var myCkbox = document.getElementById('idCk');
+
+    if ( myCkbox.checked == true )
+      document.getElementById('idBoxHere').innerHTML='<input name="foo" type="text">';
+    else
+      alert("DEBUG unchecked")		
+  }
+
+</script>
+</head>
+<form>
+  <input type='checkbox' id='idCk' onclick='BuildTextBox()' />
+<!--   <p id="idBoxHere">placehold</p> -->
+  <p id="idBoxHere">
+  Textbox appears when checkbox is checked
+  <p>This text <b>isn't</b> overwritten by getElementById
+</form>
+</html>

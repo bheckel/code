@@ -1,0 +1,394 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 3.5, Structures.</TITLE>
+<META NAME="description" CONTENT="Declaring and using structures">
+<META NAME="keywords" CONTENT="struct structure">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 3.5 </FONT><BR>
+ <FONT SIZE=5><B> Structures</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+<p>
+<h2>Data structures.</h2>
+A data structure is a set of diverse types of data that may have different lengths grouped
+together under a unique declaration.  Its form is the following:
+<BLOCKQUOTE><TT><PRE>
+<B>struct </B><I>model_name </I><B>{</B>
+  <I>type1 element1</I><B>;</B>
+  <I>type2 element2</I><B>;</B>
+  <I>type3 element3</I><B>;
+  .
+  .
+}</B> <I>object_name</I><B>;</B>
+</PRE></TT></BLOCKQUOTE>
+where <tt><i>model_name</i></tt> is a name for the model of the structure type and the
+optional parameter <tt><i>object_name</i></tt> is a valid identifier (or identifiers)
+for structure object instantiations. Within curly brackets <tt>{ }</tt> they are the types
+and their sub-identifiers corresponding to the elements that compose the structure.
+<p>
+If the structure definition includes the parameter <tt><i>model_name</i></tt> (optional),
+that parameter becomes a valid type name equivalent to the structure. For example:
+<BLOCKQUOTE><TT><PRE>
+struct products {
+  char name [30];
+  float price;
+} ;
+
+products apple;
+products orange, melon;
+</PRE></TT></BLOCKQUOTE>
+We have first defined the structure model <tt><b>products</b></tt> with two fields:
+<tt><b>name</b></tt> and <tt><b>price</b></tt>, each of a different type. We have then
+used the name of the structure type (<tt><b>products</b></tt>) to declare three objects of
+that type:
+ <tt><b>apple</b></tt>, <tt><b>orange</b></tt> and <tt><b>melon</b></tt>.
+<p>
+Once declared, <TT><B>products</B></TT> has become a new valid type name like
+the fundamental ones <I>int</I>, <I>char</I> or <I>short</I>. And since then
+we have been able to declare <U>objects</U> (variables) of that type.
+<P>
+The optional field <tt><i>object_name</i></tt> that can go at the end of the structure
+declaration serves to directly declare objects of the structure type. For example,
+to declare the structure objects <tt><b>apple</b></tt>, <tt><b>orange</b></tt> and
+<tt><b>melon</b></tt> like we have done previously we could also have done it this way:
+<BLOCKQUOTE><TT><PRE>
+struct products {
+  char name [30];
+  float price;
+} apple, orange, melon;
+</PRE></TT></BLOCKQUOTE>
+Moreover, in cases like the last one in which we took advantage of the declaration of
+the structure model to declare objects of it, the parameter
+<tt><i>model_name</i></tt> (in this case <tt><b>products</b></tt>) becomes optional.
+Although if <TT><I>model_name</I></TT> is not included it will not be possible to
+declare more objects of this same model later.
+<p>
+It is important to clearly differentiate between what is a structure <B>model</B>, and what
+a structure <I>object</I>. Using the terms we used with variables, the <I>model</I> is the
+<I>type</I>, and the <I>object</I> is the <I>variable</I>. We can instantiate many
+<I>objects</I> (variables) from a single <I>model</I> (type).
+<P>
+Once we have declared our three objects of a determined structure model
+(<tt><b>apple</b></tt>, <tt><b>orange</b></tt> and <tt><b>melon</b></tt>)
+we can operate with the fields that form them. To do that we have to use a point
+(<tt>.</tt>) inserted between the object name and the field name.
+For example, we could operate with anyone of these elements as if they were
+standard variables of their respective types:
+<blockquote><tt><font color="blue">
+apple.name<br>
+apple.price<br>
+orange.name<br>
+orange.price<br>
+melon.name<br>
+melon.price<br>
+</font></tt></blockquote>
+each one being of its corresponding data type:
+<TT><B>apple.name</B></TT>,
+<TT><B>orange.name</B></TT> and
+<TT><B>melon.name</B></TT> are of type <TT><B>char[30]</B></TT>, and
+<TT><B>apple.price</B></TT>,
+<TT><B>orange.price</B></TT> and
+<TT><B>melon.price</B></TT> are of type <TT><B>float</B></TT>.
+
+<p>
+We are going to leave apples, oranges and melons and go with an example about movies:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// example about structures</I>
+#include &lt;iostream.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct movies_t {
+  char title [50];
+  int year;
+} mine, yours;
+
+void printmovie (movies_t movie);
+
+int main ()
+{
+  char buffer [50];
+
+  strcpy (mine.title, "2001 A Space Odyssey");
+  mine.year = 1968;
+
+  cout &lt;&lt; "Enter title: ";
+  cin.getline (yours.title,50);
+  cout &lt;&lt; "Enter year: ";
+  cin.getline (buffer,50);
+  yours.year = atoi (buffer);
+
+  cout &lt;&lt; "My favourite movie is:\n ";
+  printmovie (mine);
+  cout &lt;&lt; "And yours:\n ";
+  printmovie (yours);
+  return 0;
+}
+
+void printmovie (movies_t movie)
+{
+  cout &lt;&lt; movie.title;
+  cout &lt;&lt; " (" &lt;&lt; movie.year &lt;&lt; ")\n";
+}
+
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Enter title:</B> Alien<BR>
+<B>Enter year:</B> 1979<BR>
+&nbsp;<BR>
+<B>My favourite movie is:<BR>
+&nbsp;2001 A Space Odyssey (1968)<BR>
+<B>And yours:<BR>
+&nbsp;Alien (1979)<BR>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<p>
+The example shows how can we use the elements of a structure and the structure itself
+as normal variables. For example, <tt><b>yours.year</b></tt> is a valid variable
+of type <tt><b>int</b></tt>, as well as <tt><b>mine.title</b></tt> is a valid array
+of 50 <i>chars</i>.
+<p>
+Notice that either <tt><b>mine</b></tt> and <tt><b>yours</b></tt> are also treated
+as valid variables of type <tt><b>movie_t</b></tt> when being passed to the function
+<tt><b>printmovie()</b></tt>.  Therefore, one of the most important advantages of
+structures is that we can refer either to their elements individually or to all the
+structure as a block.
+<p>
+Structures are a feature used very often to build data bases, specially if we consider
+the possibility of building arrays of them.
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// array of structures</I>
+#include &lt;iostream.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define N_MOVIES 5
+
+struct movies_t {
+  char title [50];
+  int year;
+} films [N_MOVIES];
+
+void printmovie (movies_t movie);
+
+int main ()
+{
+  char buffer [50];
+  int n;
+  for (n=0; n&lt;N_MOVIES; n++)
+  {
+    cout &lt;&lt; "Enter title: ";
+    cin.getline (films[n].title,50);
+    cout &lt;&lt; "Enter year: ";
+    cin.getline (buffer,50);
+    films[n].year = atoi (buffer);
+  }
+  cout &lt;&lt; "\nYou have entered these movies:\n";
+  for (n=0; n&lt;N_MOVIES; n++)
+    printmovie (films[n]);
+  return 0;
+}
+
+void printmovie (movies_t movie)
+{
+  cout &lt;&lt; movie.title;
+  cout &lt;&lt; " (" &lt;&lt; movie.year &lt;&lt; ")\n";
+}
+
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Enter title:</B> Alien<BR>
+<B>Enter year:</B> 1979<BR>
+<B>Enter title:</B> Blade Runner<BR>
+<B>Enter year:</B> 1982<BR>
+<B>Enter title:</B> Matrix<BR>
+<B>Enter year:</B> 1999<BR>
+<B>Enter title:</B> Rear Window<BR>
+<B>Enter year:</B> 1954<BR>
+<B>Enter title:</B> Taxi Driver<BR>
+<B>Enter year:</B> 1975<BR>
+&nbsp;<BR>
+<B>You have entered these movies:<BR>
+Alien (1979)<BR>
+Blade Runner (1982)<BR>
+Matrix (1999)<BR>
+Rear Window (1954)<BR>
+Taxi Driver (1975)<BR>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+<H2>Pointers to structures</H2>
+Like any other type, structures can be pointed by pointers. The rules are the
+same as for any fundamental data type: The pointer must be declared as a
+pointer to the structure:
+<BLOCKQUOTE><TT><PRE>
+struct movies_t {
+  char title [50];
+  int year;
+};
+
+movies_t amovie;
+movies_t * pmovie;
+</PRE></TT></BLOCKQUOTE>
+
+Here <TT><B>amovie</B></TT> is an object of struct type <TT><B>movies_t</B></TT>
+and <TT><B>pmovie</B></TT> is a pointer to point to objects of struct type
+<TT><B>movies_t</B></TT>. So, the following, as with fundamental types,
+would also be valid:
+<BLOCKQUOTE><TT>
+pmovie = &amovie;
+</TT></BLOCKQUOTE>
+Ok, we will now go with another example, that will serve us to introduce a new operator:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// pointers to structures</I>
+#include &lt;iostream.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct movies_t {
+  char title [50];
+  int year;
+};
+
+
+int main ()
+{
+  char buffer[50];
+
+  movies_t amovie;
+  movies_t * pmovie;
+  pmovie = & amovie;
+
+  cout &lt;&lt; "Enter title: ";
+  cin.getline (pmovie-&gt;title,50);
+  cout &lt;&lt; "Enter year: ";
+  cin.getline (buffer,50);
+  pmovie-&gt;year = atoi (buffer);
+
+  cout &lt;&lt; "\nYou have entered:\n";
+  cout &lt;&lt; pmovie-&gt;title;
+  cout &lt;&lt; " (" &lt;&lt; pmovie-&gt;year &lt;&lt; ")\n";
+
+  return 0;
+}
+
+
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>Enter title:</B> Matrix<BR>
+<B>Enter year:</B> 1999<BR>
+&nbsp;<BR>
+<B>You have entered:<BR>
+Matrix (1999)<BR>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<p>
+The previous code includes a new important introduction: operator <tt><b>-&gt;</b></tt>. This
+is a reference operator that is used exclusively with pointers to structures
+and pointers to classes. It allows us not to have to use parenthesis on each reference to
+a structure member. In the example we used:
+<blockquote><tt>movies-&gt;title</tt></blockquote>
+that could be translated to:
+<blockquote><tt>(*movies).title</tt></blockquote>
+both expressions <TT><B>movies-&gt;title</B></TT> and <TT><B>(*movies).title</B></TT>
+are valid and
+mean that we are evaluating the element <tt><b>title</b></tt> of the structure
+<u>pointed by</u> <tt><b>movies</b></tt>.  You must distinguish it clearly from:
+<blockquote><tt>*movies.title</tt></blockquote>
+that is equivalent to
+<BLOCKQUOTE><TT>*(movies.title)</TT></BLOCKQUOTE>
+and that would serve to evaluate the value pointed by element <tt><b>title</b></tt> of
+structure <tt><b>movies</b></tt>, that in this case (where title is not a pointer)
+it would not make much sense.
+The following panel summarizes possible combinations of pointers and structures:
+
+<BLOCKQUOTE><TABLE BORDER=1 CELLPADDING=2>
+<TR><TD BGCOLOR="silver"><B>Expression</B></TD>
+ <TD BGCOLOR="silver"><B>Description</B></TD><TD BGCOLOR="silver"><B>Equivalent</B></TD></TR>
+<TR><TD><TT><B>movies.title</B></TT></TD>
+ <TD>Element <TT><B>title</B></TT> of structure <TT><B>movies</B></TT></TD><TD><TT>&nbsp;</TT></TD></TR>
+<TR><TD><TT><B>movies->title</B></TT></TD>
+ <TD>Element <TT><B>title</B></TT> of structure <U>pointed by</U> <TT><B>movies</B></TT></TD><TD><TT>(*movies).title</TT></TD></TR>
+<TR><TD><TT><B>*movies.title</B></TT></TD>
+ <TD>Value <U>pointed by</U> element <TT><B>title</B></TT> of structure <TT><B>movies</B></TT></TD><TD><TT>*(movies.title)</TT></TD></TR>
+</TABLE></BLOCKQUOTE>
+
+<P>
+<H2>Nesting structures</H2>
+
+Structures can also be nested so that a valid element of a structure 
+can also be another structure.
+<BLOCKQUOTE><TT><PRE>
+struct movies_t {
+  char title [50];
+  int year;
+}
+
+struct friends_t {
+  char name [50];
+  char email [50];
+  movies_t favourite_movie;
+  } charlie, maria;
+
+friends_t * pfriends = &charlie;
+</PRE></TT></BLOCKQUOTE>
+Thus, after the previous declaration we could use the following expressions:
+<blockquote><tt>
+charlie.name<br>
+maria.favourite_movie.title<br>
+charlie.favourite_movie.year<br>
+pfriends-&gt;favourite_movie.year<br>
+</tt></blockquote>
+(where, by the way, the last two expressions are equivalent).
+<p>
+The concept of structures that has been discussed in this section is the same used
+in C language, nevertheless, in C++, the structure concept has been extended
+up to the same functionality of a <i>class</i> with the peculiarity that all of its elements
+are considered <I>public</I>. But you will have more details about this topic on section
+<A HREF="tut4-1.html">4.1, Classes</A>.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut3-4.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>3-4. Dynamic memory</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut3-6.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>3-6. User defined data types.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

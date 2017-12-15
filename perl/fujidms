@@ -1,0 +1,155 @@
+#!/usr/local/bin/perl
+##############################################################################
+#     Name: fujidms
+#
+#  Summary: Parse DMS100/UE9000 file into machine usable text.
+#
+#  Created: Wed, 25 Oct 2000 12:46:02 (Bob Heckel)
+# Modified: Mon, 04 Dec 2000 08:59:26 (Bob Heckel)
+##############################################################################
+
+Usage($0, '') if ( $ARGV[0] =~ /-+h.*/ );
+# 600 is desired by Dzung Nguyen, Fuji can handle 999.
+# This value cannot be reached exactly and probably will be exceeded if many
+# of the designators look like this e.g. R890-R891 instead of R890.  The
+# average is thrown off by wide elements.
+# Best to go 100 less than your desired max.
+$MAXWIDTH = 500;
+ParseDMSUE();
+
+
+sub ParseDMSUE {
+  # E.g. sl6x21ad_msl_0301.txt
+  my $filename = $ARGV[0] || Usage($0, 'No textfile provided');
+
+  my @wholeline   = ();
+  my $designation = '';
+
+  open(FH, "$filename") 
+                 || die "$0 -- Can't open file $filename: $!.\nExiting.\n";
+
+  $/ = '$ITEM$';     # Strange delimiter.
+  my $currdate = localtime();
+  # Visual confirmation of file that user selected.  Placed on first line of
+  # the text/plain browser output.
+  print "Extracted and parsed by IWS-- input file: $ARGV[0] ($currdate).";
+
+  # Sample record:
+  #         0   1      2    3    4  5    6        7      8
+  # $ITEM$ 100,5024,173463,1.000,EA,F,P0881992,NTLX8201,07,
+  # C431-C432,C444
+  while ( <FH> ) {
+    my $bytes = 0;
+    # Remove $ITEM$ indicators.
+    chomp;          
+    $bytes = length($_);
+    # Remove carriage ret/newlines that force CPC to be on one line and
+    # the Designators on another.
+    s/\r*\n//g;         
+    # Eliminate potential multiple spaces in DDMez web files.
+    s/,\s+(\w+)/,$1/;
+    # Eliminate potential multiple spaces in DDMez web files.
+    s/,\s+$/, /;
+    s/\./_/g;  # Replace periods with underscores, per Dzung Nguyen.
+    @wholeline = split(',', $_);
+
+    # Found a long line that will choke Fuji.
+    if ( $bytes > $MAXWIDTH ) { 
+      my $avgelement = 0;
+      my $maxelems   = 0;
+      my $tmp        = undef;
+      my $cpc        = undef;
+      $cpc = $wholeline[6];
+      # This CPC will have to wrap at least once, based on the fact that it
+      # has fallen into this if loop.
+      # Rough average of element length, rounded up.
+      $avgelement = round($bytes / scalar(@wholeline)) + 1;
+      # S/b around 63. 
+      $maxelems = round($MAXWIDTH / $avgelement);
+      # Times to break the long line (not including first line).
+      my $breakline = round(scalar(@wholeline) / $maxelems);
+      my $i = 0;
+      while ( $breakline > 0 ) {
+        # Don't jump off the end of the array.
+        $i += $maxelems;
+        if ( defined($wholeline[$i]) ) {
+          my $tmp = $wholeline[$i];
+          # Insert.
+          $wholeline[$i] = "\n$cpc, " . $tmp;
+          $breakline--
+        } else {
+          $breakline--
+        }
+      }
+    }
+
+    # cpccode always located at position 6.
+    $out .= $wholeline[6];
+    # Designation always spans array element 8 thru end of array.
+    for ( my $j=8; $j<=$#wholeline; $j++ ) {
+      $out .= $wholeline[$j];
+      # Don't use comma after final element in the row.
+      unless ( $j == $#wholeline ) {
+        $out .= ', ';
+      }
+    }
+  $out .= "\n";
+  }
+  close(FH);
+  print $out;
+}
+
+
+sub round {
+  $arg = $_[0];
+
+  if ( $arg > 0.0 ) {
+    $arg = int($arg + 0.5);
+  } else {
+    $arg = 0.0;
+  }
+
+  return $arg;
+}
+
+
+sub Usage {
+  my $errfile  = $_[0];
+  my $errmsg   = $_[1];
+
+  if ( $errmsg ) {
+    print "$errmsg.  Exiting.\n";
+  } else {
+    print<<'EOT'
+
+This application parses a Fuji DMS/UE textfile passed to it into a
+machine-specific formatted textfile, printing to standard output.
+
+Periods '.' are converted to underscores '_'
+Lines wrap at around 600 characters.
+
+  ---------------------------------------------------------------------------
+ | Sample input file:                                                        |
+ |                                                                           |
+ |  $ITEM$ 0200,5022,414859,1.000,EA,F,A0379041,,,                           |
+ |  P1                                                                       |
+ |  $ITEM$ 0210,5022,74324,1.000,EA,F,A0256138,,,                            |
+ |  C3                                                                       |
+ |  $ITEM$ 0220,5022,81795,2.000,EA,F,A0285609,,,                            |
+ |  C4,C5                                                                    |
+ | ...                                                                       |
+ |                                                                           |
+ |                                                                           |
+ | Sample output to screen:                                                  |
+ |                                                                           |
+ | A0379041, P1                                                              |
+ | A0256138, C3                                                              |
+ | A0285609, C4, C5                                                          |
+ | ...                                                                       |
+  ---------------------------------------------------------------------------
+EOT
+
+  }
+    print "Usage: $errfile [-h --help] TEXTFILE_TO_PROCESS\n";
+    exit -1 ;
+}

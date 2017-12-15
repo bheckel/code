@@ -1,0 +1,68 @@
+/* Keep file css_pastry_demo.html in same directory as this file.
+ * Wed May 12 1999 15:16:30 (Bob Heckel) 
+ */
+
+BODY {
+  background-color: #66CC99;
+  background-image: url(./bg.gif);
+  background-repeat: repeat;
+  background-position: center;
+  font-family: Arial, Helvetica, Verdana, Times;
+  font-size: 90%;
+  margin: 10%
+}
+
+H1, H2, H3, H4, H5, H6 {
+  font-family: Helvetica, Verdana, Times, Arial
+}
+
+H1 {
+  font-size: 140%;
+  text-indent: -10%
+}
+H1 FONT {font-family: Times, serif}
+
+H2 { font-size: 130% }
+H2 FONT {font-family: Times, serif}
+
+H3 { font-size: 120% }
+H3 FONT {font-family: Times, serif}
+
+H4 { font-size: 110% }
+
+/*** Commented out to test the pseudo class selectors.
+A:link { 
+  color: blue;
+  background-color: white
+}
+A:visited { color: purple }
+A:active { color: green }
+A:hover { color: yellow }
+***/
+
+P { text-indent: 10% }
+/* Without this, legacy code with FONT FACE=Arial will keep showing Arial. */
+P FONT {font-family: Verdana, sans-serif}
+
+.description { font-style: italic }
+.ingredient { font-family: wingdings }
+.method { font-family: "minion web" }
+
+A.onsite:link {background-color: #ccffcc}
+A.onsite:visited {background-color: #99ffcc}
+A.onsite:active {background-color: #66ffcc}
+A.onsite:hover {background-color: #33ffcc}
+A.offsite:link {background-color: #ffccff}
+A.offsite:visited {background-color: #ff99ff}
+A.offsite:active {background-color: #ff99ff}
+A.offsite:hover {background-color: #ff66ff}
+A.ftp:link {background-color: #ffffcc}
+A.ftp:visited {background-color: #ffff99}
+A.ftp:active {background-color: #ffff66}
+A.ftp:hover {background-color: #ffff33}
+A.email:link {background-color: #00ffff}
+A.email:visited {background-color: #66ffff}
+A.email:active {background-color: #99ffff}
+A.email:hover {background-color: #ccffff}
+
+

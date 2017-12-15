@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+  <!-- Make sure string contains certain characters. -->
+  <SCRIPT LANGUAGE="JavaScript">
+    function verify() {
+      var the_email = prompt("What's your email address?", "");
+
+      var the_at_is_at = the_email.indexOf("@");
+
+      if ( the_at_is_at == -1 ) {
+        alert("Email addresses must have @ signs in them.  Ctrl-r to retry");
+      } else {
+       var the_first_ltr = the_email.charAt(0);
+       document.write("Thank you. @ sign is at position " + the_at_is_at +
+                      ".  There is an " + the_first_ltr + " to start the string." +
+                      "  The spice can continue to flow.");
+     }
+   }
+  </SCRIPT>
+</HEAD>
+
+<BODY onLoad="verify()">
+</BODY>
+</HTML>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="hello.xsl"?>
+<!-- <?xml-stylesheet type="text/xsl" href="valueofselect.xsl"?> -->
+<!-- <?xml-stylesheet type="text/xsl" href="foreach.xsl"?> -->
+<!-- <?xml-stylesheet type="text/xsl" href="case_choose.xsl"?> -->
+
+<!-- http://www.w3schools.com/xsl/ -->
+
+<!-- See hello.xsl -->
+
+<catalog>
+  <cd>
+    <title>Empire Burlesque</title>
+    <artist>Bob Dylan</artist>
+    <country>USA</country>
+    <company>Columbia</company>
+    <price>9.99</price>
+    <year>1985</year>
+  </cd>
+  <cd>
+    <title>Romanza</title>
+    <artist>Andrea Bocelli</artist>
+    <country>USA</country>
+    <company>Razr</company>
+    <price>12.90</price>
+    <year>1995</year>
+  </cd>
+</catalog>

@@ -1,0 +1,245 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"></meta>
+<title></title>
+</head>
+
+<body>
+ 
+      <H1> <b style="color:black;background-color:#99ff99">VBA</b> <b style="color:black;background-color:#ffff66">Quick</b> <b style="color:black;background-color:#a0ffff">Reference</b></H1> 
+    
+  
+  <a name="00000001"></a>
+<div align="left">
+<table border="2" cellspacing="0">
+<tr valign="bottom"><th width="22" bgcolor="#B0B0B0">&nbsp;</th>
+  <th width="348" nowrap="nowrap" align="center" bgcolor="#B0B0B0"><b>A</b></th>
+  <th width="417" nowrap="nowrap" align="center" bgcolor="#B0B0B0"><b>B</b></th></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="18"><b>1</b></th>
+  <td nowrap="nowrap"><font size="4" face="Arial"><b>Appendix B: <b style="color:black;background-color:#99ff99">VBA</b> <b style="color:black;background-color:#ffff66">Quick</b> 
+  <b style="color:black;background-color:#a0ffff">Reference</b></b></font></td>
+  <td>&nbsp;</td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="12"><b>2&nbsp;</b></th>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>3&nbsp;</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial"><b>Referring 
+  to things in Excel </b></font></td>
+  <td>&nbsp;</td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>
+  4&nbsp;</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A workbook</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Workbooks(&quot;MyBook.xls&quot;)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>5</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A worksheet</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Worksheets(&quot;Sheet1&quot;) 
+  or Sheets(&quot;Sheet1&quot;)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>6</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A cell 
+  or range in A1 convention </font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;A1&quot;) 
+  or Range(&quot;A1:C5&quot;)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>7</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Several 
+  cells or ranges</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;A1,C5,D11&quot;) 
+  or Range(&quot;A1:C5,F6,D2:E5&quot;)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>8</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A range 
+  in R1C1 convention</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(Cells(1,1): 
+  Cells(5,10))</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>9</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A cell 
+  in R1C1 convention </font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Cells(1, 
+  5)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>10</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A range 
+  with a name</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;RangeName&quot;)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>11</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">An entire&nbsp; 
+  column or row in A1 convention</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Columns(&quot;D:D&quot;) 
+  or Rows(&quot;6:6&quot;)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>12</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">An entire 
+  column or row in R1C1 convention</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Columns(1) 
+  or Rows(6)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>13</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A number 
+  of rows with fixed (i.e., known) row numbers</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Rows(&quot;6:100&quot;)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>14</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A number 
+  of rows with variable row numbers</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Rows(startRow 
+  &amp; &quot;:&quot; &amp; endRow)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>15</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">The 
+  3rd row of a range (C5:G5 here)</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;C3:G15).Rows(3)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>16</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">All 
+  cells in a worksheet</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Worksheets(&quot;Sheet1&quot;).Cells</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>17</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A cell 
+  relative to a specified cell (C16 here)</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;F15&quot;).Offset(1, 
+  -3)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>18</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">A range 
+  relative to a specified range (D8:F13 here)</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;B5:D10&quot;).Offset(3,2)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>19</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">The 
+  currently selected object (cell, range, etc.)</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Selection</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>20</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">The 
+  workbook containing the procedure being executed</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">ThisWorkbook</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>21</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">The 
+  currently active workbook</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">ActiveWorkbook</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>22</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">The 
+  currently active cell (may be part of selected range)</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">ActiveCell</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>23</b></th>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>24&nbsp;</b></th>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>25&nbsp;</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial"><b>Using 
+  some common properties</b></font></td>
+  <td>&nbsp;</td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>26&nbsp;</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To retrieve 
+  the value (contents) of a cell or range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">cellVal 
+  = Cells(1,5).Value</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>27</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To assign 
+  values to a cell or range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;A1:C3&quot;). 
+  Value = 123</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>28</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To assign 
+  values to a named cell or range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;RangeName&quot;). 
+  Value = 123</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>29</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To retrieve 
+  the text in a cell</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">cellText 
+  = Range(&quot;A1&quot;).Text</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>30</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To get 
+  the column or row number of a cell</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;C5&quot;).Column 
+  or Range (&quot;C5&quot;).Row or Selection.Column</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>31</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To get 
+  the number of the first column of a range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range 
+  (&quot;F5:H10&quot;).Column or Selection .Column</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>32</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To enter 
+  a formula into a cell or range in A1 convention</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;A3&quot;).Formula 
+  = &quot;=Sum(A1:A2)&quot;</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>33</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To enter 
+  a formula into a cell or range in R1C1 convention</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;A3&quot;).FormulaR1C1 
+  = &quot;=SUM(R[-2]C:R[-1]C)&quot;</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>34</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To name 
+  a cell or range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;A1:C3&quot;). 
+  Name = &quot;RangeName&quot;</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>35</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">To rename 
+  a worksheet</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Worksheets(&quot;Sheet3&quot;).Name 
+  = &quot;Stock Options&quot;</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>36</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Hide 
+  or unhide a worksheet </font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Worksheets(&quot;Sheet1&quot;).Visible&nbsp; 
+  = False or True</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>37</b></th>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>38&nbsp;</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial"><b>Using 
+  some common methods</b></font></td>
+  <td>&nbsp;</td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>39&nbsp;</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Activate 
+  a worksheet</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Sheets(&quot;Sheet1&quot;).Activate</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>40</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Select 
+  the entire active worksheet</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Cells.Select</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>41</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Select 
+  a range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;A1:C12&quot;).Select</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>42</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Activate 
+  a cell within a selected range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;F6&quot;).Activate</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>43</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Clear 
+  current selection (worksheet, range, etc.) </font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Selection.Clear</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>44</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Clear 
+  both contents and format of a range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;D1:D7&quot;).Clear</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>45</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Clear 
+  contents (but not format) of a range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;D1:D7&quot;).ClearContents</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>46</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Clear 
+  format (but not contents) of a range</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;D1:D7&quot;).ClearFormats</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>47</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Delete 
+  several rows or columns</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Rows 
+  (&quot;6:10&quot;).Delete or Columns(&quot;7:12&quot;).Delete</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>48</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Copy 
+  a range and paste at a different location</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Range(&quot;A1:C12&quot;).Copy 
+  Range(&quot;D1&quot;)</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>49</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Insert 
+  a row before row 4</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Rows(4).Insert</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>50</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Insert 
+  a worksheet before the active sheet</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Sheets.Add 
+  or Worksheets.Add</font></td></tr>
+<tr valign="bottom"><th nowrap="nowrap" align="center" bgcolor="#B0B0B0" height="20"><b>51</b></th>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Delete 
+  a worksheet</font></td>
+  <td nowrap="nowrap" valign="middle"><font size="2" face="Arial">Worksheets(&quot;Sheet1&quot;).Delete</font></td></tr>
+</table>
+</div>
+
+
+</body>
+</html>

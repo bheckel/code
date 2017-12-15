@@ -1,0 +1,468 @@
+<html>
+<head>
+<title>Perl Paraphernalia: Understand References Today</title>
+</head>
+
+<body bgcolor="#ffffff">
+<h1>Understand References Today</h1>
+<!-- ... or die; -->
+
+<p>&copy; Copyright 1998 <a href="http://www.tpj.com"><cite>The Perl
+Journal</cite></a>.  Reprinted with permission.</p>
+
+<p>One of the most important new features in Perl 5 was the capability to
+manage complicated data structures like multidimensional arrays and
+nested hashes.  To enable these, Perl 5 introduced a feature called
+`references', and using references is the key to managing complicated,
+structured data in Perl.  Unfortunately, there's a lot of funny syntax
+to learn, and the manual is not as clear in this area as it usually
+is.  The manual is quite complete, and a lot of people find that a
+problem, because it can be hard to tell what is important and what
+isn't.
+</p>
+
+<p>Fortunately, you only need to know 10% of what's in the manual to get
+90% of the benefit.  This article is going to show you that 10%.
+</p>
+
+<h2>Who Needs Complicated Data Structures?</h2>
+
+<p>One problem that came up all the time in Perl 4 was how to represent a
+hash whose values were lists.  Perl 4 had hashes, of course, but the
+values had to be scalars; they couldn't be lists.  
+</p>
+
+<p>Why would you want a hash of lists?  Let's take a simple example: You
+have a file of city and state names, like this:
+</p>
+
+<pre>
+	Chicago, Illinois
+	New York, New York
+	Albany, New York
+	Springfield, Illinois
+	Trenton, New Jersey
+	Evanston, Illinois
+</pre>
+
+<p>and you want to produce an output like this, with each state mentioned
+once, and then an alphabetical list of the cities in that state:
+</p>
+
+<pre>
+        Illinois:  Chicago, Evanston, Springfield.
+	New Jersey: Trenton.
+	New York: Albany, New York.
+</pre>
+
+<p>The natural way to do this is to have a hash, whose keys are state
+names.  Associated with each state name key is a list of the cities in
+that state.  Each time you read a line of input, split it into a state
+and a city, look up the list of cities already known to be in that
+state, and append the new city to the list.  When you're done reading
+the input, iterate over the hash as usual, sorting each list of cities
+before you print it out.
+</p>
+
+<p>If hash values can't be lists, you lose.  In Perl 4, hash values can't
+be lists; they can only be numbers or strings.  You lose.  You'd
+probably have to combine all the cities into a single string somehow,
+and then when time came to write the output, you'd have to break the
+string into a list, sort the list, and turn it back into a string.
+This is messy and error-prone.  And it's frustrating, because Perl
+already has perfectly good lists that would solve the problem if only
+you could use them.
+</p>
+
+<h2>The Solution</h2>
+
+<p>Unfortunately, by the time Perl 5 rolled around, we were already stuck
+with this design: Hash values must be scalars.  The solution is
+references.
+</p>
+
+<p>A reference is a scalar value that <em>refers to</em> an entire array or an
+entire hash (or to just about anything else.)  Names are one kind of
+reference that you're already familiar with.  Think of the President:
+a messy, inconvenient bag of blood and bones.  But to talk about him,
+or to represent him in a computer program, all you need is the easy,
+convenient scalar string <tt>Bill Clinton</tt>.
+</p>
+
+<p>References in Perl are like names for arrays and hashes.  They're
+Perl's private, internal names, so you can be sure they're
+unambiguous.  Unlike <tt>Bill Clinton</tt>, a reference only refers to
+one thing, and you always know what it refers to.  If you have a
+reference to an array, you can recover the entire array from it.  If
+you have a reference to a hash, you can recover the entire hash.  But
+the reference is still an easy, compact scalar value.  </p>
+
+<p>You can't have a hash whose values are arrays; hash values can only be
+scalars.  We're stuck with that.  But a single reference can refer to
+an entire array, and references are scalars, so you can have a hash of
+references to arrays, and it'll act a lot like a hash of arrays, and
+it'll be just as useful as a hash of arrays.
+</p>
+
+<p>We'll come back to this city-state problem later, after we've seen
+some syntax for managing references.
+</p>
+
+
+<h2>Syntax</h2>
+
+<p>There are just two ways to make a reference, and just two ways to use
+it once you have it.
+</p>
+
+<h3>Making References</h3>
+
+
+<b>Make Rule 1:</b> If you put a <tt>\</tt> in front of a variable, you get a
+	     reference to that variable.
+
+<pre>
+    $aref = \@array;         # $aref now holds a reference to @array
+    $href = \%hash;          # $href now holds a reference to %hash
+</pre>
+
+<p>Once the reference is stored in a variable like <tt>$aref</tt> or <tt>$href</tt>, you
+can copy it or store it just the same as any other scalar value:
+</p>
+
+<pre>
+    $xy = $aref;             # $xy now holds a reference to @array
+    $p[3] = $href;           # $p[3] now holds a reference to %hash
+    $z = $p[3];              # $z now holds a reference to %hash
+</pre>
+
+<p>These examples show how to make references to variables with names.
+Sometimes you want to make an array or a hash that doesn't have a
+name.  This is analogous to the way you like to be able to use the
+string <tt>"\n"</tt> or the number 80 without having to store it in a named
+variable first.
+</p>
+
+<b>Make Rule 2:</b> <tt>[ ITEMS ]</tt> makes a new, anonymous array,
+and returns a  
+reference to that array. <br>
+<tt>{ ITEMS }</tt> makes a new, anonymous
+             hash. and returns a reference to that hash.
+
+<pre>
+    $aref = [ 1, "foo", undef, 13 ];  # $aref now holds a reference to an array
+    $href = { APR => 4, AUG => 8 };   # $href now holds a reference to a hash
+</pre>
+
+<p>The references you get from rule 2 are the same kind of
+references that you get from rule 1:
+</p>
+
+<pre>
+	$aref = [ 1, 2, 3 ];
+
+	@array = (1, 2, 3);
+	$aref = \@array;
+</pre>
+
+<p>The first line is an abbreviation for the following two lines, except
+that it doesn't create the superfluous array variable <tt>@array</tt>.
+</p>
+
+
+<h3>Using References</h3>
+
+<p>What can you do with a reference once you have it?  It's a scalar
+value, and we've seen that you can store it as a scalar and get it
+back again just like any scalar.  There are just two more ways to use
+it:
+</p>
+
+<b>USE RULE 1:</b>  If <tt>$aref</tt> contains a reference to an array, then you can
+             put <tt>{$aref}</tt> anywhere you would normally put the name of
+             an array.  For example, <tt>@{$aref}</tt> instead of <tt>@array</tt>.
+
+<p>Let's see some examples of that:
+</p>
+
+<pre>
+@a		@{$aref}		An array
+reverse @a	reverse @{$aref}	Reverse the array
+$a[3]		${$aref}[3]		An element of the array
+$a[3] = 17;	${$aref}[3] = 17	Assigning an element
+</pre>
+
+<p>On each line are two expressions that do the same thing.  The
+left-hand versions operate on the array @a, and the right-hand
+versions operate on the array that is referred to by $aref, but once
+they find the array they're operating on, they do the same things to
+the arrays.
+</p>
+
+<p>Using a hash reference is <em>exactly</em> the same:
+</p>
+
+<pre>
+%h		%{$href}		A hash
+keys %h		keys %{$href}		Get the keys from the hash
+$h{'red'}	${$href}{'red'}		An element of the hash
+$h{'red'} = 17	${$href}{'red'} = 17	Assigning an element
+</pre>
+
+
+
+<p>Most often, when you have an array or a hash, you want to get or
+set a single element from it.  <tt>${$aref}[3]</tt> and
+<tt>${$href}{'red'}</tt> have too much punctuation, and Perl lets you
+abbreviate.  </p>
+
+<p>
+<b>USE RULE 2:</b>  <tt>${$aref}[3]</tt> is too hard to read, so you can write
+<tt>$aref-&gt;[3]</tt> instead.
+</p>
+
+<p>
+	     <tt>${$href}{red}</tt> is too hard to read, so you can write
+<tt>$href-&gt;{red}</tt> instead.
+</p>
+
+<p>If <tt>$aref</tt> holds a reference to an array, then
+<tt>$aref-&gt;[3]</tt> is the fourth element of the array.  Don't
+confuse this with <tt>$aref[3]</tt>, which is the fourth element of a
+totally different array, one deceptively named <tt>@aref</tt>.
+<tt>$aref</tt> and <tt>@aref</tt> are unrelated the same way that
+<tt>$item</tt> and <tt>@item</tt> are.  </p>
+
+<p>
+Similarly, <tt>$href-&gt;{'red'}</tt> is part of the hash referred to
+by the scalar variable <tt>$href</tt>, perhaps even one with no name.
+<tt>$href{'red'}</tt> is part of the deceptively named %href hash.
+It's easy to forget to put in the <tt>-&gt;</tt>, and if you do
+forget, you'll get bizarre results when your program gets array and
+hash elements out of totally unexpected hashes and arrays that weren't
+the ones you wanted to use.
+</p>
+
+
+<h2>An Example</h2>
+
+<p>Let's see a quick example of how all this is useful.
+</p>
+
+<p>First, remember that <tt>[1, 2, 3]</tt> makes an anonymous array
+containing <tt>(1, 2, 3)</tt>, and gives you a reference to that
+array.  </p>
+
+<p>Now think about
+</p>
+
+<pre>
+	@a = ( [1, 2, 3],
+               [4, 5, 6],
+	       [7, 8, 9]
+             );
+</pre>
+
+<p><tt>@a</tt> is an array with three elements, and each one is a reference to
+another array.
+</p>
+
+<p>
+<tt>$a[1]</tt> is one of these references.  It refers to an array, the
+array containing <tt>(4, 5, 6)</tt>, and because it is a reference to
+an array, <b>Use Rule 2</b> says that we can write
+<tt>$a[1]-&gt;[2]</tt> to get the third element from that array.
+<tt>$a[1]-&gt;[2]</tt> is the 6.  Similarly, <tt>$a[0]-&gt;[1]</tt> is
+the 2.  What we have here is like a two-dimensional array; you can
+write <tt>$a[ROW]-&gt;[COLUMN]</tt> to get or set the element in any
+row and any column of the array.
+</p>
+
+<p>
+The notation still looks a little cumbersome, so there's one more
+abbreviation:  
+</p>
+
+<h3>Arrow Rule</h3>
+
+<p>
+	In between two <strong>subscripts</strong>, the arrow is optional.
+</p>
+
+<p>
+Instead of <tt>$a[1]-&gt;[2]</tt>, we can write <tt>$a[1][2]</tt>; it means the same thing.<br>
+Instead of <tt>$a[0]-&gt;[1]</tt>, we can write <tt>$a[0][1]</tt>; it means the same thing.
+</p>
+
+<p>
+Now it really looks like two-dimensional arrays!
+</p>
+
+<p> You can see why the arrows are important.  Without them, we would
+have had to write <tt>${$a[1]}[2]</tt> instead of <tt>$a[1][2]</tt>.
+For three-dimensional arrays, they let us write <tt>$x[2][3][5]</tt>
+instead of the unreadable <tt>${${$x[2]}[3]}[5]</tt>.  </p>
+
+<h2>Solution</h2>
+
+<p>Here's the answer to the problem I posed the the beginning of the
+article of reformatting a file of city and state names:
+</p>
+
+<pre>
+ 1	while (&lt;&gt;) {
+ 2	  chomp;
+ 3	  my ($city, $state) = split /, /;
+ 4	  push @{$table{$state}}, $city;
+ 5	}
+ 6
+ 7	foreach $state (sort keys %table) {
+ 8	  print "$state: ";
+ 9	  my @cities = @{$table{$state}};
+10        print join ', ', sort @cities;
+11	  print ".\n";
+12	}
+</pre>
+
+<p>The program has two pieces:  Lines 1--5 read the input and build a
+data structure, and lines 7--12 analyze the data and print out the
+report.  
+</p>
+
+<p>In the first part, line 4 is the important one.  We're going to
+have a hash, <tt>%table</tt>, whose keys are state names, and whose
+values are (references to) arrays of city names.  After acquiring a
+city and state name, the program looks up <tt>$table{$state}</tt>,
+which holds (a reference to) the list of cities seen in that state so
+far.  Line 4 is totally analogous to </p>
+
+<pre>
+	push @array, $city;
+</pre>
+
+<p>
+except that the name <tt>array</tt> has been replaced by the reference
+<tt>{$table{$state}}</tt>.  The <tt>push</tt> adds a city name to the end of the
+referred-to array.
+</p>
+
+<p>
+In the second part, line 9 is the important one.  Again,
+<tt>$table{$state}</tt> is (a reference to) the list of cities in the state, so
+we can recover the original list, and copy it into the array <tt>@cities</tt>,
+by using <tt>@{$table{$state}}</tt>.  Line 9 is totally analogous to
+</p>
+
+<pre>
+	@cities = @array;
+</pre>
+
+<p>
+except that the name <tt>array</tt> has been replaced by the reference
+<tt>{$table{$state}}</tt>.  The <tt>@</tt> tells Perl to get the entire array.
+</p>
+
+<p>
+The rest of the program is just familiar uses of <tt>chomp</tt>, <tt>split</tt>, <tt>sort</tt>,
+and <tt>print</tt>, and doesn't involve references at all.
+</p>
+
+<p> There's one fine point I skipped.  Suppose the program has just
+read the first line in its input that mentions the state of Ohio.
+It's on line 4, <tt>$state</tt> is <tt>Ohio</tt>, and <tt>$city</tt>
+is <tt>Cleveland</tt>.  Since this is the first city in Ohio,
+<tt>$table{$state}</tt> is undefined---in fact there isn't an
+<tt>Ohio</tt> key in <tt>%table</tt> at all.  What does line 4 do
+here?  </p>
+
+<pre>
+ 4	push @{$table{$state}}, $city;
+</pre>
+
+<p>
+This is Perl, so it does the exact right thing.  It sees that you want
+to push <tt>Cleveland</tt> onto an array that doesn't exist, so it helpfully
+makes a new, empty, anonymous array for you, installs it in the table,
+and then pushes <tt>Cleveland</tt> onto it.
+</p>
+
+
+<h2>The Rest</h2>
+
+<p>
+I promised to give you 90% of the benefit with 10% of the details, and
+that means I left out 90% of the details.  Now that you have an
+overview of the important parts, it should be easier to read the
+<tt>perlref</tt> manual page, which discusses 100% of the details.
+</p>
+
+<p>
+Some of the highlights or <tt>perlref</tt>: 
+</p>
+
+<ul>
+<li> You can make references to anything, including scalars, functions,
+  and other references.
+
+<li> In <b>Use Rule 1</b>, you can often omit the curly braces.  For example, 
+  <tt>@$aref</tt> is the same as <tt>@{$aref}</tt>, and
+     <tt>$$aref[1]</tt> is the same as  
+     <tt>${$aref}[1]</tt>.  I usually leave the curly braces in.
+
+<li> To see if a variable contains a reference, use the <tt>ref</tt> function.
+  It returns true if its argument is a reference.  Actually it's a
+  little better than that:  It returns <tt>HASH</tt> for hash references and
+  <tt>ARRAY</tt> for array references.
+
+<li> If you try to use a reference like a string, you get strings like
+
+<tt>ARRAY(0x80f5dec)</tt>   or    <tt>HASH(0x826afc0)</tt>
+
+<p>  If you ever see a string that looks like this, you'll know you
+     printed out a reference by mistake.
+</p>
+
+<p>  A side effect of this representation is that you can use <tt>eq</tt> to see
+     if two references refer to the same thing.  (If you need to do
+     that, use <tt>==</tt> instead; it's much faster.)
+</p>
+
+<li> You can use a string as a kind of reference.  If you use the string
+  <tt>"foo"</tt> as an array reference, it's taken to be a reference to the
+  array <tt>@foo</tt>.  This is called a `soft reference' or `symbolic reference'.
+
+</ul>
+
+     <p>
+You might prefer to go on to the <tt>perllol</tt> manual page instead of
+<tt>perlref</tt>; it discusses lists of lists and multidimensional arrays in
+detail.  After that, you should move on to the <tt>perldsc</tt> manual page;
+it's a Data Structure Cookbook that shows recipes for using and
+printing out arrays of hashes, hashes of arrays, and other kinds of
+data.
+</p>
+     
+
+<h2>In Summary</h2>
+
+     <p>
+Everyone needs compound data structures, and in Perl the way you get
+them is with references.  There are four important rules for managing
+references: Two for making references and two for using them.  Once you
+know these rules you can do most of the important things you need to
+do with references. 
+</p>
+     
+
+<hr>
+
+<p>Return to: 
+<a href="../../">Universe of Discourse main page</a> |
+<a href="../">Perl Paraphernalia</a> |
+<a href="./">Just the FAQs</a>
+</p>
+<address><a href="mailto:mjd-perl-faqs-id-ipk+bkb2yic+@plover.com">mjd-perl-faqs-id-ipk+bkb2yic+@plover.com</a></address>
+
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+ *     Name: hash.js.html
+ *  Summary: Emulate a hash (associative array) in JavaScript.
+ *  Created: Wed 20 Nov 2002 10:20:33 (Bob Heckel)
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<SCRIPT LANGUAGE="JavaScript">
+  var hash = new Array();
+
+  // Load the hash.
+  hash["soylent_green"] = "people";
+  hash["soylent_red"] = "plankton number 42";
+
+  // Poke at it with a stick.
+  document.write("Soylent Green is ");
+  document.write(hash["soylent_green"]);
+  document.write("<BR>");
+
+  var soylent_red_ingred = hash["soylent_red"];
+  document.write("Soylent Red is merely ");
+  document.write(soylent_red_ingred);
+  document.write("<BR>");
+
+  // Iterate the hash.
+  for ( var i in hash ) {
+    document.write("KEY=" + i + " VALUE=" + hash[i] + "<BR>");
+  }
+
+</SCRIPT>

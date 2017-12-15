@@ -1,0 +1,95 @@
+trace off;  
+echo on; 
+ /*
+  * Signon.mainframe.tcp 
+  *
+  *           Often named foo.scr in !SASROOT/connect/saslink/
+  *
+  *           SAS RLINK signon script for mainframe SAS and Windows 
+  *           PC SAS communication using the TCP protocol.
+  *
+  *           Macro variables &userid and &passwd refer to the
+  *           mainframe.
+  *
+  *           2003-02-28 (bqh0) corrected the logoff sequence
+  *           2003-11-13 (bqh0) increase WORK memory
+  *           2004-03-30 (bqh0) increase memsize
+  *           2004-09-27 (bqh0) lengthen password timeout
+  */
+
+if tcp goto onoff;
+ /* Fall-thru error */
+log 'ERROR: <Signon.mainframe.tcp> This RLINK file is for OPTIONS COMAMID=TCP';
+abort;
+
+onoff:
+  if signoff goto signoff;
+
+  /* Login to TSO */
+  log 'NOTE: <Signon.mainframe.tcp> Scanning for "IKJ56700A ENTER USERID -" ...' ;
+  waitfor 'IKJ56700A ENTER USERID -': getuid, 30 seconds;
+  goto stop1;
+
+getuid:
+  type "&userid" LF;
+  log '';
+  log 'NOTE: <Signon.mainframe.tcp> Scanning for "ENTER CURRENT PASSWORD" ...' ;
+  scanfor 'ENTER CURRENT PASSWORD': getpwd, 30 second;
+  goto stop2 ;
+
+getpwd:
+  type "&passwd" LF;
+  log '';
+  log 'NOTE: <Signon.mainframe.tcp> Scanning for "READY" ...' ;
+  scanfor 'READY' : startsas, 40 second ;
+
+ /* Changed 2003-11-13 per
+  * http://support.sas.com/techsup/unotes/SN/004/004896.html
+  * to increase memory available in WORK.
+  * Apparently ls=max *may* cause an out-of-memory problem.
+  */
+startsas:
+  log '';
+  log "NOTE: <Signon.mainframe.tcp> Logged on to TSO...starting remote SAS...";
+  type "alloc f(rwork) sp(100,100) cyl dsorg(ps) unit(disk) recfm(f s)";
+  type "blksize(6144) reuse" LF;
+  type '%SAS913 ';
+  /* Atlanta mainframe support suggestion: */
+  type " O('DMR,COMAMID=tcp,memsize=32M,";
+  type "noterminal,no$syntaxcheck,work=rwork')" LF;
+  waitfor 'SESSION ESTABLISHED', 120 seconds : stop3;
+  log '';
+  log 'NOTE: <Signon.mainframe.tcp> SAS session has been established.';
+  stop;
+
+
+stop1:
+  log 'ERROR: <Signon.mainframe.tcp> Problem with initial login, no USERID prompt ';
+  log 'ERROR: <Signon.mainframe.tcp> from the mainframe.';
+  stop;
+
+stop2:
+  log 'ERROR: <Signon.mainframe.tcp> Problem with TSO login, TSO configuration, or no ';
+  log 'ERROR: <Signon.mainframe.tcp> READY prompt.';
+  ***waitfor 5 seconds;
+  ***waitfor 'IKJ56400A ENTER LOGON OR LOGOFF-', 10 seconds : stop3;
+  ***type 'logon' LF;
+  ***goto onoff;
+  stop;
+
+stop3:
+  log 'ERROR: <Signon.mainframe.tcp> Problem with SAS execution on mainframe.';
+  stop;
+
+signoff:
+  snapshot;
+  type 'logoff' LF;
+  waitfor 'LOGGED OFF', 20 seconds : noterm;
+  log 'NOTE: <Signon.mainframe.tcp> SAS/CONNECT conversation terminated normally.';
+  stop;
+
+
+noterm:
+  snapshot;
+  log 'WARNING: <Signon.mainframe.tcp> Did not get messages confirming logoff.';
+  abort;

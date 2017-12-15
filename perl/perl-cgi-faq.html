@@ -1,0 +1,1568 @@
+<HTML>
+<HEAD><TITLE>Perl CGI Programming FAQ</TITLE></HEAD>
+<!--
+
+<BODY BGCOLOR="#9FCFFF" TEXT="#1F1F5F">
+
+turn off color for a while.
+
+add these questions:
+
+    lock files
+    parse html 
+    why ! cgilib
+    mailto form, verify addr
+
+-->
+
+<BODY>
+
+<B>
+<PRE>
+                       .d8888b.    .d8888b.   8888888
+                      d88P  Y88b  d88P  Y88b    888
+                      888    888  888    888    888
+                      888         888           888
+                      888         888  88888    888
+                      888    888  888    888    888
+                      Y88b  d88P  Y88b  d88P    888
+                       "Y8888P"    "Y8888P88  8888888
+
+                       PCP => Perl CGI Program (ming)
+
+                                Version 1.0
+
+</PRE>
+</B>
+
+<CENTER>
+<BIG>
+<B>
+Shishir Gundavaram <A HREF="mailto:shishir@ora.com">&lt;shishir@ora.com&gt;</a> 
+<BR>
+Tom Christiansen   <A HREF="mailto:tchrist@perl.com">&lt;tchrist@perl.com&gt;</a>
+</B>
+</BIG>
+</CENTER>
+
+<HR>
+<H1>Under Construction</H1>
+This page needs severe updating.
+I've a list of things yet to do or fix, but more suggestions are always welcome.  See 
+also the <A HREF="/perl/faq/idiots-guide.html">Idiot's Guide to Solving 
+Perl CGI Problems</a>.
+<P>
+--tchrist
+<HR>
+
+<HR>
+<H1>1.0 - Introduction</H1>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q1.1">Q1.1:</A>
+Why does my HTML page/form need a script?</H2>
+
+<P>
+There are times when you might want to have some dynamic information
+(information that's <B>not</B> constant) in your HTML documents. This could
+include simple information such as the date and time, or a counter that
+displays "You are visitor number xxx", but it could also include
+such things as pie charts/graphs based on user input, results
+from searching a database, or animations. And the only way you
+can produce results like these is with CGI scripts (though you
+can also do so with client side applications like Java and JavaScript,
+but that's a totally different story!)
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q1.2">Q1.2:</A>
+What does CGI stand for?
+</H2>
+
+<P>
+Here is an excellent description that my editors
+<A HREF="http://jasper.ora.com/andyo">Andy Oram</A> and
+<A HREF="http://pcnt1.ora.com">Linda Mui</A> (they're great!) wrote up:
+
+<PRE>
+<B>C</B>ommon          Assures you that CGI can be used by many
+		languages and interact with many different
+		types of systems.  It doesn't tie you down to
+		one way of doing what you want.
+
+<B>G</B>ateway         Suggests that CGI's strength lies not in what
+		it does by itself, but in the potential access
+		it offers to other systems such as databases
+		and graphic generators.
+
+<B>I</B>nterface       Simply means that CGI provides a well-defined
+		way to call up its features--in other words,
+		that you can write programs that use it.
+</PRE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q1.3">Q1.3:</A>
+What <B>is</B> a script, anyway? 
+What can I do with a script?
+</H2>
+
+<P>
+Simply put, a script is a program! OK, OK, there are semantical differences
+between the two terms. If you really want to know, pick up a book on
+computer programming (or is that computer scripting :-)
+
+<P>
+You can create a lot of magic by writing a CGI program/script. You can
+create graphics on the fly, access databases and return results and
+connect to other Internet information servers.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q1.4">Q1.4:</A>
+What is Perl and why do so many people use it for CGI?</H2>
+
+<P>
+The answer is located in the first three lines of the Perl manpage:
+
+<BLOCKQUOTE>
+Perl is an interpreted language optimized for scanning
+arbitrary text files, extracting information from those text
+files, and printing reports based on that information.
+</BLOCKQUOTE>
+
+Most CGI applications involve manipulating data in some fashion and
+accessing external programs and applications. Perl provides easy to use
+tools that make these tasks a cinch.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q1.5">Q1.5:</A>
+Is there a book or on-line docs on CGI and/or Perl programming?</H2>
+<P>
+
+<UL TYPE="disc">
+<LI><A HREF="http://hoohoo.ncsa.uiuc.edu/cgi">NCSA CGI Documentation</A></LI>
+
+<LI><A HREF="http://robot0.ge.uiuc.edu/~carlosp/cs317/ft.4-5.html">
+Forms Tutorial</A></LI>
+
+<LI><A HREF="http://www.cs.oberlin.edu/students/thirdstream/paxtond/cgi_stuff.html">Numerous Links to CGI References</A></LI>
+
+<LI><A HREF="http://www.best.com/~hedlund/cgi-faq">The original CGI FAQ</A></LI>
+
+<LI><A HREF="http://mox.perl.com/perl/faq/index.html">Perl FAQ</A></LI>
+
+<LI><A HREF="http://www-genome.wi.mit.edu/WWW/faqs/www-security-faq.html">
+A comprehensive WWW and CGI Security FAQ written by Lincoln Stein</A></LI>
+
+<LI><A HREF="http://www.cerf.net/~paulp/cgi-security/safe-cgi.txt">
+A CGI Security FAQ written by Paul Phillips</A></LI>
+
+<LI><A HREF="http://boutell.com/faq">WWW FAQ</A></LI>
+
+</UL>
+
+<P>
+
+Here is a list of books on CGI and Perl compiled by
+<A HREF="http://wwwiz.com/books/cgi-perl.html">Cye H. Waldman</A>:
+
+<PRE>
+---------------+---------------------------------+--------------+-------+------
+Author         | Title                           | Publisher    | Media | Price
+---------------+---------------------------------+--------------+-------+------
+Christian      | <A HREF="http://zelda.thomson.com/itcp/neuss/neuss.html">The Webmaster's Handbook:</A>       | Int. Thomson | CD    | $30
+Neuss &        | <A HREF="http://zelda.thomson.com/itcp/neuss/neuss.html">Perl Power for Your Web Server</A>  |              |       |
+Johan Vromans  |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+William E.     | CGI Scripting                   | New Riders   | CD    | $45
+Weinman        |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+Garbus et al.  | Perl Programming Unleashed      | Sams.net     | CD    |
+               | (Available Mar 1996)            |              |       |
+---------------+---------------------------------+--------------+-------+------
+Steven E.      | <A HREF="http://www.mispress.com/introcgi/online_app.html">Introduction to CGI & Perl</A>:     | MIS Press    |       |
+Brenner        | <A HREF="http://www.mispress.com/introcgi/online_app.html">Web Scripts</A>:                    |              |       |
+Edwin Aoki     |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+Ed Tittel      | Perl 5 Programming Secrets      | IDG Books    | CD    |
+et al.         | (Available Mar 1996)            |              |       |
+---------------+---------------------------------+--------------+-------+------
+Mitzelfelt     | Special Edition Using Perl      | Que          |       |
+---------------+---------------------------------+--------------+-------+------
+Shishir        | <A HREF="http://www.ora.com/gnn/bus/ora/item/cgi_prog.html">CGI Programming on the</A>          | O'Reilly     |       | $30
+Gundavaram     | <A HREF="http://www.ora.com/gnn/bus/ora/item/cgi_prog.html">World Wide Web</A>                  |              |       |
+---------------+---------------------------------+--------------+-------+------
+Rob Farrel     | <A HREF="http://db.www.idgbooks.com/database/book/isbn/generic-book.tmpl?query=1-56884-780-7">The Official 60 Minute Guide</A>    | IDG Books    |       | $20
+               | <A HREF="http://db.www.idgbooks.com/database/book/isbn/generic-book.tmpl?query=1-56884-780-7">to CGI Programming with Perl</A>    |              |       |
+---------------+---------------------------------+--------------+-------+------
+Ed Tittel      | <A HREF="http://www.io.com/~mcintyre/lanwrght/wps.htm">Web Programming Secrets</A>         | IDG Books    | CD    | $40
+et al.         |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+John Deep      | <A HREF="http://www.wiley.com:80/compbooks/k25.html">Developing CGI Applications</A>     | Wiley        |       | $30
+               | <A HREF="http://www.wiley.com:80/compbooks/k25.html">with Perl</A>                       |              |       |
+---------------+---------------------------------+--------------+-------+------
+Jon Orwant     | Perl 5 Interactive              | Waite        |       | $30
+---------------+---------------------------------+--------------+-------+------
+Reggie David   | Perl 5 How-To                   | Waite        | CD    | $40
+               | (Available Spring 1996)         |              |       |
+---------------+---------------------------------+--------------+-------+------
+Eric Herrmann  | Teach Yourself CGI              | Sams.net     |       | $30
+               | Programming with Perl in a      |              |       |
+               | Week                            |              |       |
+---------------+---------------------------------+--------------+-------+------
+Walnut Creek   | Perl (Collected resources,      | Walnut Creek | CD    | $40
+CD-ROM         | archives, tutorial, examples,   |              |       |
+               | source code,etc.)               |              |       |
+---------------+---------------------------------+--------------+-------+------
+Carl Dichter & | <A HREF="http://www.prenhall.com/013/016964/ptr/01696-4.html">Software Engineering with</A>       |              |       |
+Mark Pease     | <A HREF="http://www.prenhall.com/013/016964/ptr/01696-4.html">Perl</A>                            |              |       |
+               | (This is an advanced text for   | Prentice     | Disk  | $30
+               | software professionals; it is   | Hall         |       |
+               | not a tutorial)                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+Ellie Quigley  | Perl by Example                 | Prentice     |       | $27
+               |                                 | Hall         |       |
+---------------+---------------------------------+--------------+-------+------
+John December  |  HTML & CGI Unleashed           | Sams.net     | CD    | $50
+Mark Ginsburg  |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+David Till     | Teach Yourself Perl in 21       | Sams         |       | $30
+               | Days                            |              |       |
+---------------+---------------------------------+--------------+-------+------
+Larry Wall &   | <A HREF="http://www.ora.com/www/item/pperl.html">Programming Perl</A>                | O'Reilly     |       | $30
+Randal L.      |                                 |              |       |
+Schwartz       |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+Randal L.      | <A HREF="http://www.ora.com/www/item/lperl.html">Learning Perl</A>                   | O'Reilly     |       | $25
+Schwartz       |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+Ed Tittel      | Foundations of WWW              | IDG Books    | CD    | $40
+et al.         | Programming with HTML and CGI   |              |       |
+---------------+---------------------------------+--------------+-------+------
+Eric Lease     | <A HREF="http://152.1.24.177/teaching/manuscript/0010-title-page.html">Teaching a New Dog Old Tricks</A>   |              |       | FREE!
+Morgan         | (Mac-based WWW Starter Kit      |              |       |
+               | with Server)                    |              |       |
+---------------+---------------------------------+--------------+-------+------
+Susan Peck  &  | <A HREF="http://www.ora.com/gnn/bus/ora/item/website.html">Website: Everything You Need</A>    | O'Reilly     | CD    | $500
+Linda Mui      | <A HREF="http://www.ora.com/gnn/bus/ora/item/website.html">to Know...</A>                      |              |       |
+               | (This is a complete Website     |              |       |
+               | kit for Windows NT 3.5)         |              |       |
+---------------+---------------------------------+--------------+-------+------
+Lincoln D.     | <A HREF="http://www-genome.wi.mit.edu/WWW/">How to Set Up and Maintain a</A>    | Addison      |       | $29
+Stein          | <A HREF="http://www-genome.wi.mit.edu/WWW/">World Wide Web Site</A>             | Wesley       |       |
+---------------+---------------------------------+--------------+-------+------
+Jonathan       | The Web Server Book             | Ventana      | CD    | $50
+Magid et al.   |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+net.Genesis &  | Build a Web Site                | Prima        |       | $35
+Devra Hall     |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+David          | Running a Perfect Web Site      | Que          | CD    | $40
+Chandler       |                                 |              |       |
+---------------+---------------------------------+--------------+-------+------
+Jon Weiderspan | Planning & Managing a Web       | Addison      | CD    | $40
+Chuck Shotton  | Site on the Macintosh           | Wesley       |       |
+---------------+---------------------------------+--------------+-------+------
+</PRE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q1.6">Q1.6:</A>
+Is there a mailing list or newsgroup for this kind of thing?</H2>
+
+<P>
+There is a very useful newsgroup:
+<A HREF="news:comp.infosystems.www.authoring.cgi">
+comp.infosystems.www.authoring.cgi</A>,
+that's "monitored" by numerous CGI experts. However, you should <B>not</B>
+post a question to this group (or any other group, for that matter),
+until you have read the FAQ.
+
+<P>
+Various <A HREF="http://perl.com/perl/info/mailing-lists.html">mailing lists for Perl, CGI, and the Web</a> exist.  
+Here are two of the most popular:
+
+<P>
+<DL>
+<DT><A HREF="mailto:cgi-perl-request@webstorm.com">cgi-perl-request@webstorm.com</A>
+<A HREF="http://www.webstorm.com/local/cgi-perl">[ Hypermail archive ]</A>
+
+<P>
+<DD>
+This list is for those who are writing/or interested
+in writing Perl 5 modules for CGI. It is <B>not</B> intended for
+any type of CGI support.
+
+<P>
+<DT><A HREF="mailto:libwww-perl-request@ics.uci.edu">
+libwww-perlrequest@ics.uci.edu</A>
+<A HREF="http://www.ics.uci.edu/WebSoft/libwww-perl/archive">
+[ Hypermail Archive ]</A>
+<P>
+<DD>libwww-perl is a Perl library that provides a simple
+programming interface for writing Web clients and servers.
+
+<P>
+<DT>You can access the Perl 4 distribution at:<DD>
+<A HREF="http://www.ics.uci.edu/pub/websoft/libwww-perl">
+http://www.ics.uci.edu/pub/websoft/libwww-perl</A>
+
+<P>
+<DT>The Perl 5 libwww modules are located at:<DD>
+<A HREF="http://www.oslonett.no/home/aas/perl/www">
+http://www.oslonett.no/home/aas/perl/www</A>
+<br>
+
+</DL>
+<P>
+<B>CPAN:</B>
+Perl modules may also be retrieved from 
+the <A HREF="http://perl.com/CPAN/README.html">multiplexed distributed CPAN</a> system.  This chooses
+    a "<A HREF="http://perl.com/perl/news/cpan-mux.html">site near you</a>".
+For example,
+LWP modules are retrievable as 
+<A HREF="http://perl.com/cgi-bin/cpan_mod?module=LWP">source</A> 
+or just the <A HREF="http://perl.com/cgi-bin/cpan_mod?module=LWP&readme=1">readme</A>.
+<P>
+
+<!--#######################################################################-->
+<HR><H2><A NAME="Q1.7">Q1.7:</A>
+Are there archives on the net of mailings or postings about this?
+</H2>
+
+<P>
+Yes, look at
+<A HREF="http://CriticalMass.com/Concord/">The Usenet Newstand</A>, which has
+all of the <B>comp.infosystems.www.*</B> newsgroups are archived. In addition,
+the cgi-perl and libwww mailing lists are archived there as well.
+<P>
+
+<!--#######################################################################-->
+
+<HR>
+<H1>2.0 - Modules</H1>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q2.1">Q2.1:</A>
+Should I use the Perl CGI modules to code all my CGI scripts? Isn't it easier to do it myself?</H2>
+
+<P>
+It really depends on what you are trying to do. The CGI modules should
+generally be used for heavy-duty CGI scripts. For simple scripts,
+its is far easier and quicker to roll your own or use
+<A HREF="http://bytor.engr.wisc.edu/pub/perl/cpan/authors/id/SHGUN/CGI_Lite-1.62.pm.gz">CGI Lite</A> (current version is v1.62). If you really want, you
+can even use the old Perl 4
+<A HREF="http://www.bio.cam.ac.uk/web/form.html">cgi-lib.pl</A> library.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q2.2">Q2.2:</A>
+How do I figure out how xyz module works?</H2>
+
+<P>
+Most modules have manpages embedded within the module itself. If that's the
+case, you can use the <B>pod2man</B> script to view the manpage:
+<P>
+<BLOCKQUOTE>
+<CODE>% pod2text name_of_module.pm 
+<BR>
+% pod2man name_of_module.pm | nroff -man | more</CODE>
+</BLOCKQUOTE>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q2.3">Q2.3:</A>
+What CGI or WWW libraries are available for Perl4? </H2>
+
+<P>
+The most widely used CGI library for Perl 4 is
+<A HREF="http://www.bio.cam.ac.uk/web/form.html">cgi-lib.pl</A> written by
+Steven Benner.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q2.4">Q2.4:</A>
+What CGI modules are available for Perl 5? Which should I use, and why?</H2>
+
+<P>
+<DL>
+
+<P>
+<DT><A HREF="http://www-genome.wi.mit.edu/WWW/tools/scripting/CGI.pm.tar.Z">CGI.pm</A><DD>
+This wonderful module has some of the same functionality as the CGI::* modules. You can
+use this if you don't want to deal with multiple modules.  We will show you an
+example of how to use CGI.pm to debug your CGI scripts later in this document.
+<P>
+Lincoln has also written an excellent book on the Web and CGI, titled
+<A HREF="http://www-genome.wi.mit.edu/WWW/">How to Set Up and Maintain a World Wide Web Site</A>.
+
+<P>
+<DT><A HREF="http://www-genome.wi.mit.edu/WWW/tools/scripting/CGIperl">CGI::* Modules</A><DD>
+These modules, most of them originally written by <A HREF="mailto:Tim.Bunce@ig.co.uk">Tim Bunce</A>
+and now maintained by <A HREF="lstein@genome.wi.mit.edu">Lincoln Stein</A>, allow
+you to create and decode forms, debug your CGI programs and maintain state between forms.
+
+<P>
+<DT><A HREF="http://bytor.engr.wisc.edu/pub/perl/cpan/authors/id/SHGUN/CGI_Lite-1.62.pm.gz">CGI Lite</A><DD>
+This lightweight module is an alternative to the CGI::* modules.  It is something of a
+glorified version of the old <A HREF="http://www.bio.cam.ac.uk/web/form.html">cgi-lib.pl</A>
+with some added functionality.
+</UL>
+
+<P>
+All three of these modules have the ability to decode the
+<B>multipart</B> form data (i.e file upload).
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q2.5">Q2.5:</A>
+Why are so many of these CGI perl libraries object-oriented? 
+    I don't know any of this OO programming.  Aren't there simpler libraries for 
+    non-programmers to use? How hard can it be?
+</H2>
+
+<P>
+
+Actually, it's not very hard at all.  See Tom Christiansen's 
+<A HREF="http://perl.com/perl/everything_to_know/easy_objects.html">
+Easy Intro to Using Perl Objects</a> for a quick primer.
+
+<P>
+The CGI modules mentioned above are a piece of cake to use! Here is
+a simple example that uses
+<A HREF="http://bytor.engr.wisc.edu/pub/perl/cpan/authors/id/SHGUN/CGI_Lite-1.62.pm.gz">CGI Lite</A>
+to print out form data:
+
+<BLOCKQUOTE><PRE>
+#!/usr/local/bin/perl5
+
+use CGI_Lite;
+
+$cgi = new CGI_Lite;
+%data = $cgi-&#62;parse_form_data;
+
+print "Content-type: text/plain", "\n\n";
+
+foreach $key (keys %data) {
+    print $key, " = ", $data{$key}, "\n";
+}
+
+exit (0);
+</PRE></BLOCKQUOTE>
+
+Note, if you did not build Perl on your system or do not have access to install
+these modules with the other Perl library files, you can <B>still</B> use it
+by placing the module in a convenient place and adding the following to your
+script:
+
+<BLOCKQUOTE>
+<PRE>
+BEGIN {
+    unshift (@INC, "/your/dir/favorite/place");
+}
+</PRE>
+</BLOCKQUOTE>
+
+Now, here is an example using the CGI::* modules:
+
+<BLOCKQUOTE>
+<PRE>
+#!/usr/local/bin/perl5
+
+use CGI::Form;
+
+$cgi_form = new CGI::Form;
+
+print &#60;&#60;'End_of_Header';
+    &#60;HTML&#62;
+    &#60;HEAD&#62;&#60;TITLE&#62;Watch This!&#60;/TITLE&#62;&#60;/HEAD&#62;
+    &#60;BODY&#62;
+    &#60;H1&#62;Watch This!&#60;/H1&#62;
+End_of_Header
+
+print $form-&#62;startform;
+
+## Creates a text field
+
+print "Name: ";
+print $form-&#62;textfield('name'), "&#60;BR&#62;\n";
+
+## Creates a group of radio buttons
+
+print "&#60;P&#62;Where do you live: &#60;BR&#62;";
+print $form-&#62;radio_group (-name      =&#62; 'where',
+                          -values    =&#62; ['North America',
+                                         'South America',
+                                         'Europe',
+                                         'Australia',
+                                         'Asia',
+                                         'Antartica'],
+                          -default   =&#62; 'North America',
+                          -linebreak =&#62; 'true');
+
+## Creates a textarea field
+
+print "Comments: ";
+print $form-&#62;textarea('comments', undef, 5, 40);
+
+print "&#60;P&#62;";
+print $form-&#62;reset;
+print $form-&#62;defaults;
+print $form-&#62;submit ('Send!', 'Submit');
+print $form-&#62;endform;
+
+print "&#60;/BODY&#62;&#60;/HTML&#62;";
+</PRE>
+</BLOCKQUOTE>
+<P>
+
+The <B>reset</B>, <B>defaults</B> and <B>submit</B> methods create different
+type of buttons. The reset button allows you to clear the values in the
+current form and display values from the previous state (or session). The
+defaults button clears the form entirely. And the submit method creates a
+Submit button for you to send the data to the server.
+
+<P>
+Now, wasn't that simple?
+<P>
+
+<!--#######################################################################-->
+
+<HR>
+<H1>3.0 - CGI and the WWW Server</H1>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q3.1">Q3.1:</A>
+Where does my PCP have to live to execute? What is the cgi-bin directory for?</H2>
+
+<P>
+The server is generally configured so that it executes CGI scripts that are
+located in the "cgi-bin" directory. However, the server administrator can
+set up aliases in the server configuration files, so that scripts
+with certain extensions (i.e .cgi, .pl) can also be executed.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q3.2">Q3.2:</A>
+What are file access permissions?</LI> How do I change them?</H2>
+
+<P>
+File permissions allow read, write, and execute access to users
+based on their user identification (also known as uid), and their
+membership to certain groups. You can use the command: chmod
+to change a file's permissions. Here is an example:
+
+<BLOCKQUOTE><PRE>% ls -ls form.cgi
+
+  1 -rwx------  1 shishir       974 Oct 31 22:15 form.cgi*
+</PRE></BLOCKQUOTE>
+
+This has a permission of 0700 (octal), which means that no one
+(besides the owner) can read to, write from, and execute this file.
+Let's use the chmod command to change the permissions:
+
+<BLOCKQUOTE><PRE>
+% chmod 755 form.cgi
+% ls -ls form.cgi
+
+  1 -rwxr-xr-x  1 shishir       974 Oct 31 22:15 form.cgi*
+</PRE></BLOCKQUOTE>
+
+This changes the permissions so that users in the same
+group as "shishir", as well as all other users have the permission
+to read from, and execute this file.
+
+<P>
+See the manpages for the chmod command for a full explanation of
+the various octal codes.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q3.3">Q3.3:</A>
+Where should Perl be installed so I can execute it?</H2>
+
+<P>
+Perl can be installed anywhere on the system! The only thing you have to
+make sure is that the server is not running in a chroot-ed environment,
+and that it can access the interpreter. In other words, system administrators
+can change the root directory, so that "/" does not point to the actual
+root ("/"), but to another directory.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q3.4">Q3.4:</A>
+Why am I getting the "Server: Error 500" message?</H2>
+
+<P>
+You can get a server error for the following reasons:
+
+<P>
+<UL TYPE="disc">
+
+<LI>If the script does not contain the "#!/usr/local/bin/perl"
+header line that points to the Perl interpreter, or if the path to
+the interpreter (and/or a library file) is invalid.
+
+<P>
+<LI>If the first line output from the script is not
+a valid HTTP header (i.e "Content-type: text/html"),
+or if there is <B>NO</B> blank line after the header data.
+
+<P>
+<LI>If there is a syntax error in your script. Always run it
+from the command-line first.
+</UL>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q3.5">Q3.5:</A>
+I try to open a file for writing so I can save my data, but the open () command fails. What's going on?</H2>
+
+<P>
+Generally, the HTTP server will be running as user "nobody", or "www",
+or some other user id that has mimimal privileges. As a result,
+the directory (where you intend to create the file) must be
+writeable by this process id.
+
+<P>
+To be on the safe side, always check the return status from the open
+command to see if it was a success:
+
+<BLOCKQUOTE><PRE>
+open (FILE, "/abc/data.txt")
+    || error ("Could not open file /abc/data.txt");
+
+	.
+	.	
+	.
+
+sub error {
+    my ($message) = @_;
+	
+    print &#60;&#60;End_of_Error;
+Content-type: text/html
+Status: 500 CGI Error
+
+&#60;HTML&#62;
+&#60;HEAD&#62;&#60;TITLE&#62;CGI Error&#60;/TITLE&#62;&#60;/HEAD&#62;
+&#60;BODY&#62;
+&#60;H1&#62;Oops! Error&#60;/H1&#62;
+&#60;HR&#62;
+$message
+&#60;HR&#62;
+&#60;/BODY&#62;
+&#60;/HTML&#62;
+
+End_of_Error
+}
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR>
+<H1>4.0 - Specific Programming Questions</H1>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.1">Q4.1:</A>
+I want the user to fill in a form and mail it to me. How can I do this? Are there any examples to show me how?</H2>
+
+<P>
+It is actually a fairly simple process to do this. Your CGI script
+must be able to perform two tasks:
+
+<P>
+<UL TYPE="disc">
+
+<LI>Decode the form data. Remember, all data in the form
+will be URL encoded (let's ignore Netscape 2.0 multipart MIME
+messages).</LI>
+
+<P>
+<LI>Open a pipe to mail (or sendmail), and write the form data
+to the file.</LI>
+</UL>
+
+<P>
+Let's assume you're using the CGI::* modules. Here is how you would
+deal with sendmail:
+
+<BLOCKQUOTE><PRE>
+$cgi_form = new CGI::Form;
+
+$from     = $cgi_form-&#62;param('from');
+$name     = $cgi_form-&#62;param('name');
+$to       = $cgi_form-&#62;param('to');
+$subject  = $cgi_form-&#62;param('subject');
+$message  = $cgi_form-&#62;param('message');
+
+open (SENDMAIL, "| /usr/bin/sendmail -t -n");
+print SENDMAIL &#60;&#60;End_of_Mail;
+From: $from &#60;$name&#62;
+To: $to
+Reply-To: $from
+Subject: $subject
+
+$message
+End_of_Mail
+</PRE></BLOCKQUOTE>
+
+One thing you should note is the "Reply-To:" header. Since the server
+is running as user "nobody", the mail headers might be messed up
+(especially when people are trying to reply to it). The "Reply-To:" field
+fixes that.
+
+<P>
+There are a lot of mail gateways floating around that use mail in the
+following format:
+<BLOCKQUOTE><PRE>
+open (MAIL, "| mail -s 'Subject' $to");
+
+                                   ^
+                                   |
+                                   +-- Possible security hole!!!!
+</PRE></BLOCKQUOTE>
+<P>
+
+If you don't check the $to variable for shell metacharacters,
+you're in for a major headache! For example, if some malicious user
+entered the following:
+<BLOCKQUOTE><PRE>; rm -fr / ;</PRE></BLOCKQUOTE>
+<P>
+You'll have a major problem on your hands.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.2">Q4.2:</A>
+The formmail script looks complicated. Why can't I use a mailto: URL so that it just mails me the info the user filled in?</H2>
+
+<P>
+Unfortunately, the mailto: command is not supported by all
+browsers. If you have this in your document, it is a limiting factor,
+as people who use browsers that do not support this, will not have
+the ability to send you mail.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.3">Q4.3:</A>
+How do I do PCP from non-Unix platforms, like the Mac, MS-DOS, Windows, and NT? Will my PCP port amongst all these environments?  Can it be transparent? I have an account on a UNIX server, but work on a Windows/Mac system.  How can I test my CGI script on my own system?</H2>
+
+<P>
+Perl has been ported to all the platforms that are mentioned above. As
+a result, your PCP program should be reasonably portable. If you're are
+interfacing with various external programs on the UNIX side, then
+it probably will not be portable, but if you're just manipulating
+data, opening and reading files, etc., you should have no problem.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.4">Q4.4:</A>
+What are STDERR and STDIN and STDOUT connected to in a PCP?</H2>
+
+<P>
+In a CGI environment, STDERR points to the server error log file. You can
+take this to your advantage by outputting debug messages, and then checking
+the log file later on.
+
+<P>
+Both STDIN and STDOUT point to the browser. In actuality, STDIN
+actualls points to the server which interprets the client (or browser's)
+request and information, and sends that to the script.
+
+<P>
+In order to catch errors, you can "dupe" STDERR to STDOUT early on
+in your script (after outputting the valid HTTP headers):
+
+<BLOCKQUOTE><PRE>
+open (STDERR, ">&STDOUT");
+</PRE></BLOCKQUOTE>
+
+This redirects all of the error messages to STDOUT (i.e the browser).
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.5">Q4.5:</A>
+How do I write an access counter script?</H2>
+
+<P>
+Counter scripts tend to be very popular. The idea behind a counter is
+very simple:
+
+<P>
+<UL TYPE="disc">
+<LI>Use a file to store the data</LI>
+<P>
+<LI>Whenever someone visits the site, increment the number in the file</LI>
+</UL>
+
+<P>
+Here is a simple counter script:
+
+<BLOCKQUOTE><PRE>
+#!/usr/local/bin/perl
+
+$counter = "/home/shishir/counter.dat";
+print "Content-type: text/plain", "\n\n";
+
+open (FILE, $counter) || die "Cannot read from the counter file.\n";
+flock (FILE, 2);
+$visitors = &#60;FILE&#62;;
+flock (FILE, 8);
+close (FILE);
+
+open (FILE, ">" . $counter) || die "Cannot write to counter file.\n";
+flock (FILE, 2);
+print FILE $visitors;
+flock (FILE, 8);
+close (FILE);
+</PRE></BLOCKQUOTE>
+
+You can now use SSI (Server Side Includes) to display a counter in your
+HTML document:
+<P>
+You are visitor number:
+<BLOCKQUOTE><PRE>
+<CODE>&#60;!--#exec cgi="/cgi-bin/counter.pl--&#62;</CODE>
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.6">Q4.6:</A>
+How can I strip all the html tags from a document with a Perl substitute?</H2>
+
+<P>
+Here is a simple regular expression that will strip HTML tags:
+
+<BLOCKQUOTE><PRE>$line =~ s/&#60;(([^ &#62;]|\n)*)&#62;//g;</PRE></BLOCKQUOTE>
+
+<P>
+Or you can "escape" certain characters in a HTML tag so that it can
+be displayed:
+
+<BLOCKQUOTE><PRE>$line =~ s/&#60;(([^&#62;]|\n)*)&#62;/&lt;$1&gt;/g;</PRE></BLOCKQUOTE>
+
+<P>
+For more information, see Tom's
+<A HREF="ftp://perl.com/perl/scripts/striphtml">striphtml program</A>, which is
+also included in 
+his
+<A HREF="http://perl.com/perl/all_about/regexps.html">tour of perl5 regexps</A>.
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.7">Q4.7:</A>
+How can I tell what user/host/browser called my program?</H2>
+
+<P>
+You can use the environment variable HTTP_USER_AGENT to determine the user's
+browser.
+
+<P>
+<B><I>[ From WWW FAQ ]</I></B>
+<P>
+
+Five important environment variables are available to your CGI script to help
+in identifying the end user.
+<P>
+<UL TYPE="disc">
+<LI>HTTP_FROM</LI>
+This environment variable is, theoretically, set to the email address
+of the user. However, many browsers do not set it at all, and most
+browsers that do support it allow the user to set any value for this
+variable. As such, it is recommended that it be used only as a
+default for the reply email address in an email form.
+
+<P>
+<LI>REMOTE_USER</LI>
+This variable only set if secure authentication was used to access
+the script. The AUTH_TYPE variable can be checked to determine what
+form of secure authentication was used. REMOTE_USER will then contain
+the name the user authenticated under. Note that REMOTE_USER is only
+set if authentication was actually used, and is not supported by all
+web servers. Authentication may unexpectedly fail to happen under the
+NCSA server if the method used for the transaction is not listed in
+the access.conf file (ie, &#60;Limit GET POST&#62; should be set rather than
+the default, &#60;Limit GET&#62;).
+
+<P>
+<LI>REMOTE_IDENT</LI>
+<P>
+This variable is set if the server has contacted an IDENTD server on
+the client machine. This is a slow operation, usually turned off in
+most servers, and there is no way to ensure that the client machine
+will respond honestly to the query, if it responds at all.
+
+<P>
+<LI>REMOTE_HOST</LI>
+<P>
+This variable will not identify the user specifically, but does
+provide information about the site the user has connected from, if
+the hostname was retrieved by the server. In the absence of any
+certainty regarding the user's precise identity, making decisions
+based on a list of trusted addresses is sometimes an adequate
+workaround. This variable is not set if the server failed to look
+up the host name or skipped the lookup in the interest of speed;
+see REMOTE_ADDR below. Also keep in mind that you may see all users
+of a particular proxy server listed under one hostname.
+
+<P>
+<LI>REMOTE_ADDR</LI>
+<P>
+This variable will not identify the user specifically, but does
+provide information about the site the user has connected from.
+REMOTE_ADDR will contain the dotted-decimal IP address of the client.
+In the absence of any certainty regarding the user's precise identity,
+making decisions based on a list of trusted addresses is sometimes an
+adequate workaround. This variable is always set, unlike REMOTE_HOST,
+above. Also keep in mind that you may see all users of a particular
+proxy server listed under one address.
+<P>
+</UL>
+<B><I>[ End of info from WWW FAQ ]</I></B>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.8">Q4.8:</A>
+Can people read my PCP? If they do, is it a security problem that they know how my code works? How can I hide it?</H2>
+
+<P>
+If you configure your server so that it recognizes that all files in
+a specific directory (i.e "cgi-bin"), or files with certain
+extensions (i.e ".pl", ".tcl", ".sh", etc) are CGI programs, then the server
+will execute these programs. There is no way for users to see the script
+itself.
+
+<P>
+On the other hand, if you allow people to look at your script (by placing
+it, for example, in the document root directory), it is not a security
+problem, in most cases, providing that there are <B>no</B> security holes
+in the program. If the program does contain security holes and you allow
+users to view the program, then they can and will exploit the problem.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.9">Q4.9:</A>
+Do I have to copy the whole Perl library into my htdocs directory?</H2>
+
+<P>
+No, your CGI scripts can access files outside the server and document root
+directories, unless the server is running in a chroot-ed environment.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.10">Q4.10:</A>
+Why shouldn't I have people type in passwords or social security numbers or credit card numbers? Isn't that what TYPE="password" is for?</H2>
+
+<P>
+<B>No!</B> The forms interface allows you to have a "password" field, but
+it should not be used for anything highly confidential. The main reason
+for this is that all form data (including "password" fields) gets sent
+from the browser to the Web server as <B>plain text</B>, and not as
+encrypted data.
+
+<P>
+If you want to solicit secure information, you need to use a
+secure server, such as <A HREF="http://home.netscape.com/comprod/netscape_commerce.html">Netscape's Commerce Server</A>.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.11">Q4.11:</A>
+How do I generate separate pages for netscape vs. the rest of the world?</H2>
+
+<P>
+You can have your CGI script determine whether your script is being
+accessed by Netscape by using the environment variable HTTP_USER_AGENT.
+Here is an example:
+
+<BLOCKQUOTE><PRE>
+$browser = $ENV{'HTTP_USER_AGENT'};
+
+if ($browser =~ /Mozilla/) {
+    #
+    # Netscape
+    #
+} else {
+    #
+    # Non Netscape
+    #
+}
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.12">Q4.12:</A>
+Why doesn't my system () output come out in the right order?</H2>
+
+<P>
+This has to do with the way the standard output is buffered. In order for
+the output to display in the correct order, you need to turn buffering off
+by using the $| variable:
+<BLOCKQUOTE><PRE>$| = 1;</PRE></BLOCKQUOTE>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.13">Q4.13:</A>
+I hear that Netscape is going to support Java.  Does that mean I have to use Java now instead of Perl? Should I?</H2>
+
+<P>
+No, No. The concept of Java is totally different than that of CGI.
+CGI refers to server-side execution, while Java refers to client-side
+execution. There are certain things (like animations) which can be
+improved by using Java. However, you can continue to use Perl to develop
+server-side applications.
+
+<P>
+For more information, here are a few documents you can look at:
+
+<P>
+<UL TYPE="disc">
+<LI><A HREF="http://sun.java.com">Sun's Java Documentation</A></LI>
+<P>
+
+<LI><A HREF="http://mox.perl.com/perl/versus/java.html">
+<I>Java uber Alles</I> by <A HREF="mailto:tchrist@mox.perl.com">Tom C.</A></LI>
+<P>
+
+<LI><A HREF="http://www.nombas.com/otherdoc/javamagk.htm">
+<I>Java, the Illusion</I></A>
+</UL>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.14">Q4.14:</A>
+How can I access my environment variables? Why are they different sometimes?</H2>
+
+<P>
+You can access the environment variables through the %ENV associative
+array. Here is a simple script that dumps out all of the
+environment variables (sorted):
+
+<BLOCKQUOTE><PRE>
+#!/usr/local/bin/perl
+
+print "Content-type: text/plain", "\n\n";
+	
+foreach $key (sort keys %ENV) {
+    print $key, " = ", $ENV{$key}, "\n";
+}
+
+exit (0);
+</PRE></BLOCKQUOTE>
+
+<P>
+Unfortunately, not all browsers set the same environment variables. For
+example, HTTP_REFERER is not set by all browsers.
+
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.15">Q4.15:</A>
+Why does my output get mangled ( like "if b &#60; a" is messed up.)?</H2>
+
+<P>
+If you send a MIME content type of HTML, you will have to "escape"
+certain characters, such as "&#60;", "&#38" and "&#62;", or else the browser
+will think it is HTML.
+
+<P>
+You have to escape the characters by using the following
+construct:
+
+<BLOCKQUOTE><PRE>&#38;&#35;ASCII Code;</PRE></BLOCKQUOTE>
+
+<P>
+Here is a simple script that you can run on the command-line that will
+give you the ASCII code for non alpha-numeric characters:
+
+<BLOCKQUOTE><PRE>
+#!/usr/local/bin/perl
+
+print "Please enter a string: ";
+
+chop ($string = &#60;STDIN&#62;);
+$string =~ s/([^\w\s])/sprintf ("&#38;&#35;%d;", ord ($1))/ge;
+
+print "The escaped string is: $string\n";
+
+exit (0);
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.16">Q4.16:</A>
+How come when I run it from the command line, my PCP works, but not from the browser?</H2>
+
+<P>
+This most likely is due to permission problems. Remember, your server
+is probably running as "nobody", "www", or a process with very minimal
+privileges. As a result, it will not be able to execute your script
+unless it has permissions to do so.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.17">Q4.17:</A>
+How come my PCP runs fine but doesn't manage to write its output files?</H2>
+
+<P>
+Again, this has to do with permissions! The server cannot write to a
+file in a certain directory if it does not have permissions to do so.
+
+<P>
+You should make it a point to check for error status from the open command:
+
+<BLOCKQUOTE><PRE>
+print "Content-type: text/plain\n\n";
+
+.
+.
+.
+
+open (FILE, ">" . "/some/dir/some.file") ||
+    print "Cannot write to the data file!";
+
+.
+.
+.
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.18">Q4.18:</A>
+How do I make a form that maintains state, or has several entry points?</H2>
+
+<P>
+You can use the <A HREF="http://www-genome.wi.mit.edu/ftp/pub/software/WWW/CGIperl/docs/MiniSvr.pm.html">CGI::MiniSvr</A> module to keep state between
+multiple entry points.
+
+<P>
+Or you can create a series of dynamic documents that pass a unique
+session identification, either as a query, extra path name, or as
+a hidden field, to each other.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.19">Q4.19:</A>
+How do I debug my PCP without running it from a web browser?</H2>
+
+<P>
+It's difficult to debug a CGI script. You can emulate a server by
+setting environment variables manually:
+
+<BLOCKQUOTE><PRE>
+setenv HTTP_USER_AGENT "Mozilla/2.0b6"       (csh)
+
+or
+
+export HTTP_USER_AGENT = "Mozilla/2.0b6"     (ksh, bash)
+</PRE></BLOCKQUOTE>
+
+You can emulate a POST request by placing the data in a file
+and piping it to your program:
+
+<BLOCKQUOTE><PRE>cat data.file | some_program.pl</PRE></BLOCKQUOTE>
+
+<P>
+You can use the CGI.pm (or the CGI::* modules) to debug your script.
+Say you have a simple script like the following, which prints out
+all the key/value pairs you pass it.
+
+<BLOCKQUOTE><PRE>
+#!/usr/local/bin/perl5
+
+use CGI;
+
+$cgi = new CGI;
+
+print $cgi-&#62;header;
+print $cgi-&#62;start_html("Simple CGI.pm Program");
+print "&#60;H1&#62;Simple CGI.pm Program&#60;/H1&#62;\n";
+print "&#60;HR &#62;";
+print "Here is a list of the values you passed: ";
+print $cgi-&#62;dump;
+
+exit (0);
+</PRE></BLOCKQUOTE>
+
+The script doesn't care whether you're passing the values as
+a GET, POST or ISINDEX query, or from the command line, standard input,
+or text file. For debugging purposes, let's pass some values through
+the command line:
+
+<BLOCKQUOTE><PRE>
+% simple.cgi first=shishir last=gundavaram document='CGI\ FAQ'
+
+or
+
+% simple.cgi "first=shishir&last=gundavaram&document='CGI\ FAQ'"
+</PRE></BLOCKQUOTE>
+
+In the second example, you have to have quotes around the entire
+string, or else the shell will get confused when it sees the "&"
+character. Now, here is how you would debug from standard input:
+
+<BLOCKQUOTE><PRE>
+% simple.cgi
+<B>(waiting for standard input)</B>
+first=shishir
+last=gundavaram
+document=CGI\ FAQ
+^D
+</PRE></BLOCKQUOTE>
+
+Of course, you can also use a file to store the form data, and
+then do input redirection, like so:
+
+<BLOCKQUOTE><PRE>% simple.cgi < form.data</PRE></BLOCKQUOTE>
+<P>
+
+You can use also use CGI Lint -- will be released shortly -- which will
+do much of the same. It will also check for potential security problems,
+errors in open () and invalid HTTP headers.
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.20">Q4.20:</A>
+How can I call a PCP without using a &#60;FORM&#62; tag?</H2>
+
+<P>
+You can call a CGI program by simply opening the URL to it:
+
+<BLOCKQUOTE><PRE>http://some.machine/cgi-bin/your_program.pl</PRE></BLOCKQUOTE>
+
+<P>
+You can also have a link in a document, such as:
+
+<P>
+<CODE>
+&#60;A HREF="http://some.machine/cgi-bin/your_program.pl"&#62;<BR>
+Click here to access my CGI program&#60;/A&#62;
+</CODE>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.21">Q4.21:</A>
+How do I stop people from calling my form without filling out anything? Why do they keep doing this?</H2>
+
+<P>
+The reason they call a form with nothing filled in is
+that they save the URL to the form, which they then
+call again, which is just an empty GET (and not a POST
+or a filled-out GET).
+
+<P>
+However, you can check the information from
+all the fields and return a "no response" if any of them are empty. Here
+is an example (assume the associative array %form contains your form
+information):
+
+<BLOCKQUOTE><PRE>
+$error = 0;
+
+foreach $value (values %form) {
+     $value =~ s/\s//g;
+     $error = 1 unless ($value);
+}
+
+if ($error) {
+    print "Content-type: text/plain\n";
+    print "Status: 204 No Response\n\n";
+    print "You should only see this message if your browser does";
+    print "not support the status code 204\n";
+} else {
+    #
+    # Process Data Here
+    #
+}
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.22">Q4.22:</A>
+What are all the <A HREF="http://www.w3.org/hypertext/WWW/Protocols/HTTP/HTRESP.html">server response codes</A> and what do they mean?</H2>
+
+<P>
+A CGI program can send specific response codes to the server, which in turn,
+it will send to the browser. For example, if you want a "No Response"
+(meaning that the browser will not load a new page), then you need to
+send a response code of 204 (see above).
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.23">Q4.23:</A>
+Why doesn't: 
+    <BLOCKQUOTE> <CODE>print "Location: http://host/page.html\n"</CODE> </BLOCKQUOTE> 
+    work? Why does it only work the first time and get 
+    the redirects wrong later?
+</H2>
+
+<P>
+A CGI program can only send <B>one</B> Location header. You also cannot
+send a MIME content type if you want the server to perform redirection.
+For example, this is not valid, though it may work with some servers:
+
+<BLOCKQUOTE><PRE>
+#!/usr/local/bin/perl
+
+.
+.
+.
+print "Content-type: text/plain\n"
+print "Location: http://some.machine/some.doc\n\n"";
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.24">Q4.24:</A>
+How can I automatically include a: <P> 
+    <BLOCKQUOTE><CODE>"Last updated: ..."</CODE> </BLOCKQUOTE>
+    line at the bottom of all my HTML pages? Or can I only do that for 
+    SSI pages? How do I get the date of the CGI script?
+</H2>
+
+<P>
+If you are dynamically creating documents using CGI, then you can
+insert a timestamp pretty easily. Here is an example (Perl 5 only).
+
+<BLOCKQUOTE><PRE>
+$last_updated = localtime (time);
+print "Last updated: $last_updated\n";
+</PRE></BLOCKQUOTE>
+
+or:
+
+<BLOCKQUOTE><PRE>
+require "ctime.pl";
+
+$last_updated = &ctime (time);
+print "Last updated: $last_updated\n";
+</PRE></BLOCKQUOTE>
+
+or even:
+
+<BLOCKQUOTE><PRE>
+chop ($date = `/usr/local/bin/date`);
+print "Last updated: $last_updated\n";
+</PRE></BLOCKQUOTE>
+
+You can accomplish this with SSI like this:
+
+<BLOCKQUOTE><PRE>&#60;--#echo var="LAST_MODIFIED"--&#62;</PRE></BLOCKQUOTE>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q4.25">Q4.25:</A>
+When is a PCP too complex for a simple task and shell will do?  When is it not powerful enough for a hard one? Isn't C++ much better for this kind of thing? What about C?</H2>
+
+<P>
+Each language has its own advantages and disadvantages. I'm sure you've
+heard this many times: it depends on what you're trying to do.
+If you writing a CGI that's going to be accessed thousands of times
+in an hour, then you should write it in C or C++. If you are looking
+for a quick solution (as far as implementation), then Perl is the way to go!
+
+<P>
+You should generally avoid the shell for any type of CGI programming, just
+because of the potential for security problems.
+<P>
+
+<!--#######################################################################-->
+
+<HR>
+<H1>5.0 - Security</H1>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q5.1">Q5.1:</A>
+Is a PCP more or less secure than a shell or C one?</H2>
+
+<P>
+The answer to this is: a CGI program is prone to security problems
+no matter what language it is written in!
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q5.2">Q5.2:</A>
+What particular security concerns should I be aware of?</H2>
+
+<P>
+<B>Never</B> expose any form data to the shell. All of the following
+are possible security holes:
+
+<P>
+<UL TYPE="disc">
+<LI><CODE>open (COMMAND, "/usr/ucb/finger $form_user");</CODE></LI>
+
+<P>
+<LI><CODE> system ("/usr/ucb/finger $form_user");</CODE></LI>
+<P>
+
+<LI><CODE> @data = `usr/ucb/finger $form_user`;</CODE></LI>
+</UL>
+
+<P>
+However, the second construct can be made safer by passing the arguments as
+a list, rather than a string -- which the shell will mess with:
+
+<BLOCKQUOTE><PRE>system ("/usr/ucb/finger", $form_user);</PRE></BLOCKQUOTE>
+<P>
+
+You should also look at:
+
+<P>
+<UL TYPE="disc">
+<LI><A HREF="http://www-genome.wi.mit.edu/WWW/faqs/www-security-faq.html">
+A comprehensive WWW and CGI Security FAQ written by Lincoln Stein</A></LI>
+
+<P>
+<LI><A HREF="http://www.cerf.net/~paulp/cgi-security/safe-cgi.txt">
+A CGI Security FAQ written by Paul Phillips</A></LI>
+</UL>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q5.3">Q5.3:</A>
+Why is everyone saying that<br>
+    <CODE>http://bigidiot.abuse-me.com/perl.exe?foo.pl</CODE></br>
+is dangerous? How bad can it be?
+</H2>
+
+<P>
+<I><B>Extremely dangerous!</B></I> Just imagine what will happen if
+I do something like this:
+
+<BLOCKQUOTE>
+<CODE>http://bigidiot.abuse-me.com/cgi-bin/perl.exe?-e+'format:%20c'</CODE>
+
+</BLOCKQUOTE>
+Now, do you agree with me? The way to avoid these potential nightmares is to:
+
+<P>
+<UL TYPE="disc">
+<LI>Move the perl.exe binary from the "cgi-bin" to a location outside
+of the server root directory.</LI>
+
+<P>
+<LI>Create a batch script in the "cgi-bin" directory which calls your CGI.</LI>
+</UL>
+
+<P>
+Now, here's an example. Assume your CGI script is called "sample.pl"
+and your batch script is called "simple.bat":
+
+<BLOCKQUOTE><PRE>
+@echo off
+c:\dos_perl\perl.exe c:\netscape\ns-home\docs\cgi-bin\simple.pl
+</PRE></BLOCKQUOTE>
+
+Now, you can can do the following:
+
+<BLOCKQUOTE><PRE>&#60;A HREF="/cgi-bin/simple.bat"&#62;Click Here&#60;/A&#62;</PRE></BLOCKQUOTE>
+<P>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q5.4">Q5.4:</A>How can I call progam with backticks securely? Is it
+    true that: <br><CODE>@ans = `grep '$user_field' some.file`;</CODE><br> is insecure?</H2>
+
+<P>
+<B>Yes!</B> It's very dangerous! Imagine if $user_field contains something
+like the following:
+
+<BLOCKQUOTE><PRE>
+; rm -fr / ;
+</PRE></BLOCKQUOTE>
+
+<P>
+A much safer way to accomplish the above is:
+
+<BLOCKQUOTE><PRE>
+if (open (GREP, "-|")) {
+    @ans = &#60;GREP&#62;;
+} else {
+    exec ("/usr/local/bin/grep", $user_field, "some.file")
+        || die "Error exec'ing command", "\n";
+}
+
+close (GREP);
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR><H2><A NAME="Q5.5">Q5.5:</A>
+Is it true that <CODE>/$user_variable/</CODE> is a security hole in Perl 5?
+</H2>
+
+<P>
+No! It's not. It's a security hole if you evaluate the
+expression at runtime using the <B>eval</B> command. Something
+like can be dangerous:
+
+<BLOCKQUOTE><PRE>
+foreach $regexp (@all_regexps) {
+    eval "foreach (\@data) { push (\@matches, \$_) if m|$regexp|o; }";
+}
+</PRE></BLOCKQUOTE>
+
+<!--#######################################################################-->
+
+<HR>
+<BLOCKQUOTE>
+<FONT SIZE=2>
+This document, and all its parts, are Copyright (c) 1996, Shishir
+Gundavaram and Tom Christiansen.  All rights reservered.
+Permisson to distribute this collection, in part or full, via electronic
+means (emailed, posted or archived) or printed copy are granted providing
+that no charges are involved, reasonable attempt is made to use the most
+current version, and all credits and copyright notices are retained.
+Requests for other distribution rights, including incorporation in
+commercial products, such as books, magazine articles, or CD-ROMs should be
+made to either of the authors.
+</FONT>
+</BLOCKQUOTE>
+</BODY>
+</HTML>
+
+<HR>
+Return to:
+<UL>
+<LI>The <A HREF="index.html">FAQ index page</a>.
+<LI>The <A HREF="/perl/index.html">Perl home page</a>.
+</UL>
+<HR>
+Copyright 1996 <A HREF="mailto:tchrist@perl.com">Tom Christiansen</a>.
+<BR>All rights reserved.

@@ -1,0 +1,15 @@
+
+Here is a nice function for finding a leap year.  The trick is to not only
+dividing the year by 4, but also test for division by 100 and 400.
+
+Public Function IsLeapYear(iYear As Integer)
+    '-- Check for leap year
+    If (iYear Mod 4 = 0) And _
+    ((iYear Mod 100 <> 0) Or (iYear Mod 400 = 0)) Then
+        IsLeapYear = True
+    Else
+        IsLeapYear = False
+    End If
+End Function
+
+From--Tricia L. Lewis [tricia@vbce.com]

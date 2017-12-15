@@ -1,0 +1,563 @@
+2011-05-23
+
+Give an example of a project where you used a Software Development Lifecycle.  (Documentation/validation especially)
+
+Give an example of a project where you translated, merged and/or formatted data.
+
+Give an example of a project where you directed SAS programming via a configuration file.
+
+Give an example of a project where web technologies (HTML, XML, XSLT, Apache, Sharepoint, etc.) were employed.
+
+How do you debug and test your SAS programs?
+
+Name and describe three SAS functions that you have used.  Name and describe a SAS Macro function that you have used.
+
+What system options would you use to debug a macro?
+
+How would you delete duplicate observations in SAS?
+
+How does SAS internally store 01Jan1960?
+
+Which SAS products have you used?
+
+What was the largest app you've worked on?  Records?
+
+---
+
+p307-24.pdf
+
+Very Basic
+==========
++ What SAS statements would you code to read an external raw data file to a
+DATA step?
+
+filename F 't.txt';
+infile F DSD MISSOVER LRECL=256 FIRSTOBS=2;
+input foo :$40.;
+
+
++ How do you read in the variables that you need?
+
+input
+
+
++ Are you familiar with special input delimiters? How are they used?
+
+infile TABDEL DLM='09'x DSD MISSOVER;
+
+
++ If reading a variable length file with fixed input, how would you prevent
+SAS from reading the next record if the last variable didn't have a value?
+
+FLOWOVER uses next line to fill its vars "SAS went to a new line when..."
+MISSOVER sets them to missing
+STOPOVER halts datastep, does not get creative behind your back
+
+
++ What is the difference between an informat and a format? Name three
+informats or formats.
+
+Formats modify existing SAS, informats convert raw into SAS.
+"the the format prints and informat converts"
+
+BEST. MONYY. DOLLAR8.2 Z3. DATE9.
+
+
++ Name and describe three SAS functions that you have used, if any?
+
+substr(), sum(), system()
+
+
++ How would you code the criteria to restrict the output to be produced?
+
+IF or WHERE statements in the datastep.  The WHERE statement selects
+observations before they are brought into the program data vector, making it a
+more efficient programming technique. The subsetting IF statement works on
+observations AFTER they are read into the program data vector.
+
+
++ What is the purpose of the trailing @? The @@? How would you use them?
+
+Use a single trailing @ to allow the next INPUT statement to read again from
+the same record. Use a double trailing @ to hold a record for the next INPUT
+statement across iterations of the DATA step.
+
+
++ Under what circumstances would you code a SELECT construct instead of IF
+statements?
+
+When you have a long series of mutually exclusive conditions, using a SELECT
+group is more efficient than using a series of IF-THEN statements because CPU
+time is reduced. SELECT groups also make the program easier to read and debug.
+
+
++ What statement do you code to tell SAS that it is to write to an external
+file? What statement do you code to write the record to the file?
+
+filename
+file
+put
+
+
++ If reading an external file to produce an external file, what is the
+shortcut to write that record without coding every single variable on the
+record?
+
+"a--b"
+
+
++ If you're not wanting any SAS output from a data step, how would you code
+the data statement to prevent SAS from producing a set?
+
+data _NULL_;
+
+
++ What is the one statement to set the criteria of data that can be coded in
+any step?
+
+WHERE
+
+
++ Have you ever linked SAS code? If so, describe the link and any required
+statements used to either process the code or the step itself.
+
+%include 'foo.sas';
+
+
++ How would you include common or reuse code to be processed along with your
+statements?
+
+%include
+
+
++ When looking for data contained in a character string of 150 bytes, which
+function is the best to locate that data: scan, index, or indexc?
+
+index
+
+
++ If you have a data set that contains 100 variables, but you need only five
+of those, what is the code to force SAS to use only those variable?
+
+keep=
+
+
++ Code a PROC SORT on a data set containing State, District and County as the
+primary variables, along with several numeric variables.
+
+? wtf ?
+
+
++ How would you delete duplicate observations?
+
+NODUPKEY on proc sort statement
+
+
++ How would you delete observations with duplicate keys?
+
+NODUPKEY on proc sort statement
+
+
++ How would you code a merge that will keep only the observations that have
+matches from both sets.
+
+...
+merge t (in=in_one) tmp2 (in=in_two);
+by foo;
+if in_one and in_two;
+...
+
+
++ How would you code a merge that will write the matches of both to one data
+set, the non-matches from the left-most data set to a second data set, and the
+non-matches of the right-most data set to a third data set.
+
+data inboth nomatchin1 nomatchin2;
+  merge one(in=in1) two(in=in2);
+  by id;
+  if in1 and in2       then output inboth;
+  if (in1=0 and in2=1) then output nomatchin1;
+  if (in1 and not in2) then output nomatchin2;
+run;
+
+
+Internals
+========
++ What is the Program Data Vector (PDV)? What are its functions?
++ Does SAS 'Translate' (compile) or does it 'Interpret'? Explain.
++ At compile time when a SAS data set is read, what items are created?
++ Name statements that are recognized at compile time only?
++ Identify statements whose placement in the DATA step is critical.
++ Name statements that function at both compile and execution time.
++ Name statements that are execution only.
++ In the flow of DATA step processing, what is the first action in a typical
+DATA Step?
++ What is _n_?
+
+Base SAS
++ What is the effect of the OPTIONS statement ERRORS=1?
++ What's the difference between VAR A1 - A4 and VAR A1 -- A4?
++ What do the SAS log messages "numeric values have been converted to
+character" mean? What are the implications?
++ Why is a STOP statement needed for the POINT= option on a SET statement?
++ How do you control the number of observations and/or variables read or written?
++ Approximately what date is represented by the SAS date value of 730?
++ How would you remove a format that has been permanently associated with a
+variable?
++ What does the RUN statement do?
++ Why is SAS considered self-documenting?
++ What areas of SAS are you most interested in?
++ Briefly describe 5 ways to do a "table lookup" in SAS.
++ What versions of SAS have you used (on which platforms)?
++ What are some good SAS programming practices for processing very large data
+sets?
++ What are some problems you might encounter in processing missing values? *In
+Data steps? Arithmetic? Comparisons? Functions? Classifying data?
++ How would you create a data set with 1 observation and 30 variables from a
+data set with 30 observations and 1 variable?
++ What is the different between functions and PROCs that calculate the same
+simple descriptive statistics?
++ If you were told to create many records from one record, show how you would
+do this using arrays and with PROC TRANSPOSE?
++ What are _numeric_ and _character_ and what do they do?
++ How would you create multiple observations from a single observation?
++ For what purpose would you use the RETAIN statement?
++ What is a method for assigning first.VAR and last.VAR to the BY group
+variable on unsorted data?
++ What is the order of application for output data set options, input data set
+options and SAS statements?
++ What is the order of evaluation of the comparison operators: + - * / ** ( ) ?
+
+Testing, debugging
++ How could you generate test data with no input data?
++ How do you debug and test your SAS programs?
++ What can you learn from the SAS log when debugging?
++ What is the purpose of _error_?
++ How can you put a "trace" in your program?
++ Have you ever used the SAS Debugger?
++ What other SAS features do you use for error trapping and data validation?
+
+Missing values
++ How does SAS handle missing values in: assignment statements, functions, a
+merge, an update, sort order, formats, PROCs?
++ How many missing values are available? When might you use them?
++ How do you test for missing values?
++ How are numeric and character missing values represented internally?
+
+General
++ What has been your most common programming mistake?
++ What is your favorite programming language and why?
++ What is your favorite operating system? Why?
++ Do you observe any coding standards? What is your opinion of them?
++ What percent of your program code is usually original and what percent
+copied and modified?
++ Have you ever had to follow SOPs or programming guidelines?
++ Which is worse: not testing your programs or not commenting your programs?
++ Name several ways to achieve efficiency in your program. Explain trade-offs.
++ What other SAS products have you used and consider yourself proficient in
+using?
+
+Functions
++ How do you make use of functions?
++ When looking for contained in a character string of 150 bytes, which
+function is the best to locate that data: scan, index, or indexc?
++ What is the significance of the 'OF' in X=SUM(OF a1-a4, a6, a9);?
++ What do the PUT and INPUT functions do?
++ Which date function advances a date, time or date/time value by a given
+interval?
++ What do the MOD and INT function do?
++ How might you use MOD and INT on numerics to mimic SUBSTR on character
+strings?
++ In ARRAY processing, what does the DIM function do?
++ How would you determine the number of missing or nonmissing values in
+computations?
++ What is the difference between: x=a+b+c+d; and x=SUM(a,b,c,d);?
++ There is a field containing a date. It needs to be displayed in the format
+"ddmonyy" if it's before 1975, "dd mon ccyy" if it's after 1985, and as 'Disco
+Years' if it's between 1975 and 1985. How would you accomplish this in data
+step code? Using only PROC FORMAT.
++ In the following DATA step, what is needed for 'fraction' to print to the
+log? data _null_; x=1/3; if x=.3333 then put 'fraction'; run;
++ What is the difference between calculating the 'mean' using the mean
+function and PROC MEANS?
+
+PROCs
++ Have you ever used "Proc Merge"? (be prepared for surprising answers..)
++ If you were given several SAS data sets you were unfamiliar with, how would
+you find out the variable names and formats of each dataset?
++ What SAS PROCs have you used and consider yourself proficient in using?
++ How would you keep SAS from overlaying the a SAS set with its sorted version?
++ In PROC PRINT, can you print only variables that begin with the letter "A"?
++ What are some differences between PROC SUMMARY and PROC MEANS?
+
++ PROC FREQ:
++ Code the tables statement for a single-level (most common) frequency.
++ Code the tables statement to produce a multi-level frequency.
++ Name the option to produce a frequency line items rather that a table.
++ Produce output from a frequency. Restrict the printing of the table.
+
++ PROC MEANS:
++ Code a PROC MEANS that shows both summed and averaged output of the data.
++ Code the option that will allow MEANS to include missing numeric data to be
+included in the report.
++ Code the MEANS to produce output to be used later.
++ Do you use PROC REPORT or PROC TABULATE? Which do you prefer? Explain.
+
+Merging/Updating
++ What happens in a one-on-one merge? When would you use one?
++ How would you combine 3 or more tables with different structures?
++ What is a problem with merging two data sets that have variables with the same name but different data?
++ When would you choose to MERGE two data sets together and when would you SET two data sets?
++ Which data set is the controlling data set in the MERGE statement?
++ How do the IN= variables improve the capability of a MERGE?
++ Explain the message 'MERGE HAS ONE OR MORE DATASETS WITH REPEATS OF BY
+VARIABLES".
+
+Simple statistics
++ How would you generate 1000 observations from a normal distribution with a
+mean of 50 and standard deviation of 20. How would you use PROC CHART to look
+at the distribution? Describe the shape of the distribution.
++ How do you generate random samples?
+
+Customized Report Writing
++ What is the purpose of the statement DATA _NULL_ ;?
++ What is the pound sign used for in the DATA _NULL_?
++ What would you use the trailing @ sign for?
++ For what purpose(s) would you use the RETURN statement?
++ How would you determine how far down on a page you have printed in order to
+print out footnotes?
++ What is the purpose of using the N=PS option?
+
+Macro
++ What system options would you use to help debug a macro?
++ Describe how you would create a macro variable.
++ How do you identify a macro variable?
++ How do you define the end of a macro?
++ How do you assign a macro variable to a SAS variable?
++ For what purposes have you used SAS macros?
++ What is the difference between %LOCAL and %GLOBAL?
++ How long can a macro variable be? A token?
++ If you use a SYMPUT in a DATA step, when and where can you use the macro
+variable?
++ What do you code to create a macro? End one?
++ Describe how you would pass data to a macro.
++ You have five data sets that need to be processed identically; how would you
+simplify that processing with a macro?
++ How would you code a macro statement to produce information on the SAS log?
+This statement can be coded anywhere.
++ How do you add a number to a macro variable?
++ If you need the value of a variable rather than the variable itself, what
+would you use to load the value to a macro variable?
++ Can you execute a macro within a macro? Describe.
++ Can you a macro within another macro? If so, how would SAS know where the
+current macro ended and the new one began?
++ How are parameters passed to a macro?
+
+Pharmaceutical Industry
++ Describe the types of SAS programming tasks that you performed: Tables?
+Listings? Graphics? Ad hoc reports? Other?
++ Have you been involved in editing the data or writing data queries?
++ What techniques and/or PROCs do you use for tables?
++ Do you prefer PROC REPORT or PROC TABULATE? Why?
++ Are you involved in writing the inferential analysis plan? Tables
+specifications?
++ What do you feel about hardcoding?
++ How experienced are you with customized reporting and use of DATA _NULL_
+features?
++ How do you write a test plan?
++ What is the difference between verification and validation?
+
+Intangibles
++ What was the last computer book you purchased? Why?
++ What is your favorite all time computer book? Why?
++ For contractors:
++ Will it bother you if the guy at the next desk times the frequency and
+duration of your bathroom/coffee breaks on the grounds that 'you are getting
+paid twice as much as he is'?
+
++ How will you react when, while consulting a SAS documentation manual to get
+an answer to a problem, someone says: 'hey, I thought you were supposed to
+know all that stuff already, and not have to look it up in a book!'
+
++ Can you continue to write code while the rest of the people on the floor
+where you work have a noisy party to which you were not invited?
+Non-Technical
++ Can you start on Monday?
++ Do you think professionally?
++ How do you put a giraffe into the refrigerator? Correct answer: Open the
+refrigerator door, put the giraffe in, and close the door. This question tests
+whether or not the candidate is doing simple things in a complicated way.
+
++ How do you put an elephant in the refrigerator? Incorrect answer: Open the
+refrigerator door, put in the elephant, and close the door. Correct answer:
+Open the refrigerator door, take out the giraffe, put in the elephant, and
+close the door. This question tests your foresight.
+
++ The Lion King is hosting an animal conference. All the animals in the world
+attend except one. Which animal does not attend? Correct answer: The elephant.
+The elephant is in the refrigerator, remember? This tests if you are capable
+of comprehensive thinking.
+
++ There is a river notoriously known for its large crocodile population. With
+ease, how do you safely cross it? Correct answer: Simply swim across. All of
+the crocodiles are attending the Lion King's animal conference. This questions
+your reasoning ability.
+
+Open-ended questions
++ Describe a time when you were really stuck on a problem and how you solved it.
++ Describe the function and utility of the most difficult SAS macro that you
+have written.
++ Give me an example of ..
++ Tell me how you dealt with ...
++ How do handle working under pressure?
++ Of all your work, where have you been the most successful?
++ What are the best/worst aspects of your current job?
++ If you could design your ideal job, what would it look like?
++ How necessary is it to be creative in your work?
++ If money were no object, what would you like to do?
++ What would you change about your job?
+
+
+
+GSK Interview Questions -SAS/SQL Programmer
+
+General Information:
+
+Describe your present and past work history.
+
+
+
+
+
+
+
+
+
+Discuss your reasons for applying for this position.  What are your expectations?
+
+
+
+
+
+
+
+
+Time Management/Adaptability/Ability to Meet Deadlines
+
+Tell me about a time you had to meet a scheduled deadline while your work was being continually disrupted.   What caused you the most difficulty and why?
+
+
+
+
+
+
+
+
+
+At one time or another, everyone is pressured to sacrifice quality in order to get work done on time.   Tell me about a time that happened to you.  What did you do?
+
+
+
+
+
+
+
+
+
+
+
+
+
+Contributing to Team Success/Teamwork/Attitude 
+
+On past team projects, how did you handle issues that came up with other team members? 
+
+
+
+
+
+
+
+
+How do you describe your communication skills?
+
+
+
+
+
+
+
+Attention to Detail
+
+
+Describe the things you do to control errors in your work?  Tell me about the last time those methods helped you.  What did you do?
+
+
+
+
+
+
+
+
+
+Tell me about a time you thought you had completed a project but your manager returned it to you for additional work.  Describe the project and the steps you needed to take to complete it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Technical Skills
+
+Give an example of a project where you extracted data from an Oracle database using SQL.
+
+
+
+
+
+
+Give an example of a project where you translated, merged and/or formatted data from multiple sources.
+
+
+
+
+
+
+Give an example of a project where you loaded data into an Oracle database.
+
+
+
+
+
+
+Give an example of a project where you designed a database, datamart or data warehouse.  How did you ensure that it was efficiently designed?
+
+
+
+
+
+
+Give an example of a project where you used SAS/Intrnet, HTML or IIS.
+
+
+
+
+
+
+Give an example of a project where you generated reports or tables.
+
+
+
+
+
+
+Give an example of a project where you used a Software Development Lifecycle or incorporated cGMP Part 11 standards.
+

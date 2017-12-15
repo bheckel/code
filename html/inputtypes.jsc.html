@@ -1,0 +1,45 @@
+<html>
+<head>
+  <meta name="Author" content="Bob Heckel">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> </title>
+  <script language="JavaScript">
+  <!--
+  function first() {
+    alert("Value fo textelement: " + document.myForm.myText.value);
+  }
+
+  function second() {
+    var myString = "The checkbox is ";
+    if (document.myForm.myCheckbox.checked) {myString+="checked"}
+      else {myString += "not checked"};
+    alert(myString);
+  }
+  -->
+  </script>
+</head>
+
+<body bgcolor=lightblue>
+<h1>Javascript test </h1>
+<form name="myForm">
+  <input type="text" name="myText" value="bla bla bla">
+  <input type="button" name="button1" value="Button1" onClick="first()">
+  <br>
+  <input type="checkbox" name="myCheckbox" CHECKED>
+  <input type="button" name"button2" value="Button2" onClick="second()">
+</form>
+<br>
+<p>
+
+<script language="JavaScript">
+<!--
+document.write("Bgcolor is: ");
+document.write(document.bgColor + "<br>");
+
+document.write("Text on second but is: ");
+document.write(document.myForm.button2.value);
+-->
+</script>
+
+</body>
+</html>

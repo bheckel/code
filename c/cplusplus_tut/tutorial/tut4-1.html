@@ -1,0 +1,535 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 4.1, Classes</TITLE>
+<META NAME="description" CONTENT="Declaration, initialization and use of classes. Constructors and destructors. Overloading constructors. Pointers to classes. :: scope operator.">
+<META NAME="keywords" CONTENT="class empty constructor copy constructor public private protected">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 4.1 </FONT><BR>
+ <FONT SIZE=5><B> Classes</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<P>
+A class is a logical method to organize data and functions in a same structure.
+They are declared using keyword <TT><B>class</B></TT>, whose functionality is similar
+to the one of the C keyword <TT><B>struct</B></TT>, but with the possibility of
+including functions as members, moreover than only data.
+<P>
+Its form is:
+<BLOCKQUOTE><TT><PRE>
+<B>class </B><I>class_name</I> <B>{</B>
+  <I>permission_label_1</I>:
+    <I>member1</I><B>;</B>
+  <I>permission_label_2</I>:
+    <I>member2</I><B>;
+  ...
+  }</B> <I>object_name</I><B>;</B>
+</PRE></TT></BLOCKQUOTE>
+where <TT><B><I>class_name</I></B></TT> is a name for the class (user defined <I>type</I>)
+and the optional field <TT><B><I>object_name</I></B></TT> is one, or several, valid object
+identifiers.  The body of the declaration can contain <TT><B><I>members</I></B></TT>,
+that can be either data or function declarations, and
+optionally <TT><B><i>permission labels</I></B></TT>,
+that can be any of these three keywords:
+<TT><B>private:</B></TT>, <TT><B>public:</B></TT> or <TT><B>protected:</B></TT>. They
+make reference to the permission which the following <I>members</I> acquire:
+<UL>
+<LI>
+<TT><B>private</B></TT> members of a class are accessible only from other members of its
+same class or from its "<I>friend</I>" classes.
+<LI>
+<TT><B>protected</B></TT> members are accessible, in addition to from members of the same
+class and <I>friend</I> classes, also from members of its <I>derived</I> classes.
+<LI>
+Finally, <TT><B>public</B></TT> members are accessible from anywhere where the class
+is visible.
+</UL>
+If we declare members of a class before including any permission label the
+members they are considered <TT><B>private</B></TT>, since it is the default permission that
+the members of a class declared with the <TT><B>class</B></TT> keyword acquire.
+<P>
+For example:
+
+<BLOCKQUOTE><TT><PRE>
+class CRectangle {
+    int x, y;
+  public:
+    void set_values (int,int);
+    int area (void);
+  } rect;
+</PRE></TT></BLOCKQUOTE>
+
+Declares class <TT><B>CRectangle</B></TT> and an object called <Tt><B>rect</B></TT>
+of this class (type).  This class contains four members: two variables of type
+<TT><B>int</B></TT> (<TT><B>x</B></TT> and <TT><B>y</B></TT>) in the
+<TT><B>private</B></TT> section (because private is the default permission)
+and two functions in the <TT><B>public</B></TT> section:
+<TT><B>set_values()</B></TT> and <TT><B>area()</B></TT>, of which we have only included
+the prototype.
+<P>
+Notice the difference between class name and object name:  In the previous example,
+<TT><B>CRectangle</B></TT> was the class name (i.e., the user-defined type), whereas
+<TT><B>rect</B></TT> was an object of type <TT><B>CRectangle</B></TT>. Is the same
+difference that <TT><B>int</B></TT> and <TT><B>a</B></TT> have in the following declaration:
+<BLOCKQUOTE><TT>int a;</TT></BLOCKQUOTE>
+<TT><B>int</B></TT> is the <I>class name</I> (type) and <TT><B>a</B></TT> is the
+<I>object name</I> (variable).
+<P>
+On successive instructions in the body of the program we can refer to any of the
+public members of the object <TT><B>rect</B></TT> as if they were
+normal functions or variables, just by putting the <U>object</U>'s name followed by a point
+and then the class member (like we did with C <TT><B>struct</B></TT>s). For example:
+<blockquote ><TT>
+rect.set_value (3,4);<BR>
+myarea = rect.area();
+</TT></BLOCKQUOTE>
+but we will not be able to refer to <TT><B>x</B></TT> nor <TT><B>y</B></TT> since they
+are <U>private</U> members of the class and they could only be referred from other
+members of that same class.  Confused? Here is the complete example of class
+<TT><B>CRectangle</B></TT>:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// classes example</I>
+#include &lt;iostream.h&gt;
+
+class CRectangle {
+    int x, y;
+  public:
+    void set_values (int,int);
+    int area (void) {return (x*y);}
+};
+
+void CRectangle::set_values (int a, int b) {
+  x = a;
+  y = b;
+}
+
+int main () {
+  CRectangle rect;
+  rect.set_values (3,4);
+  cout &lt;&lt; "area: " &lt;&lt; rect.area();
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>area: 12</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+The new thing in this code is the operator <TT><B>::</B></TT> of scope included in the
+definition of <TT><B>set_values()</B></TT>.  It is used to declare a member of a class
+outside it. Notice that we have defined the behavior of function <TT><B>area()</B></TT>
+within the definition of the <TT><B>CRectangle</B></TT> class - given its extreme simplicity.
+Whereas <TT><B>set_values()</B></TT> has only its protype declared within the class 
+but its definition is outside. In this outside declaration we must use the operator of
+scope <TT><B>::</B></TT>.
+<P>
+The scope operator (<TT><B>::</B></TT>) allows to specify the class to which the member
+being declared belongs to, granting exactly the same scope properties
+as if it was directly defined within the class.  For example, in the function
+<TT><B>set_values()</B></TT> of the previous code, we have resorted to the variables
+<TT><B>x</B></TT> and <TT><B>y</B></TT>, that are members of class
+<TT><B>CRectangle</B></TT> and that are only visible inside it and its members
+(since they are <TT><B>private</B></TT>).
+<P>
+The only difference between defining a class member function completely within its
+class and to include only the prototype, is that in the first case the function
+will automatically be considered <I>inline</I> by the compiler, while in the second
+it will be a normal (not-inline) class member function.
+<P>
+The reason why we have made <TT><B>x</B></TT> and <TT><B>y</B></TT>
+<TT><B>private</B></TT> members (remember that if nothing else is said all members of a
+class defined with keyword <I>class</I> have <TT><B>private</B></TT> access) it is because
+we have already defined a function to introduce those values in the object
+(<TT><B>set_values()</B></TT>) and therefore the rest of the program does not have
+why to access directly to them. Perhaps in a so simple example as this one you
+do not see a great utility protecting those two variables, but in greater projects
+it may be very important that values cannot be modified in an unexpected way
+(unexpected way, from the point of view of the object).
+<P>
+One of the greater advantages of classes is that we can declare several different
+objects from it.  For example, following with the previous example of class
+<TT><B>CRectangle</B></TT>, we could have declared the object <TT><B>rectb</B></TT>
+in addition to the object <TT><B>rect</B></TT> :
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// class example</I>
+#include &lt;iostream.h&gt;
+
+class CRectangle {
+    int x, y;
+  public:
+    void set_values (int,int);
+    int area (void) {return (x*y);}
+};
+
+void CRectangle::set_values (int a, int b) {
+  x = a;
+  y = b;
+}
+
+int main () {
+  CRectangle rect, rectb;
+  rect.set_values (3,4);
+  rectb.set_values (5,6);
+  cout &lt;&lt; "rect area: " &lt;&lt; rect.area() &lt;&lt; endl;
+  cout &lt;&lt; "rectb area: " &lt;&lt; rectb.area() &lt;&lt; endl;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>rect area: 12<BR>rectb area: 30</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+Notice that does not give the same result the call to <TT><B>rect.area()</B></TT>
+than the call to <TT><B>rectb.area()</B></TT>. To explain it somehow,
+each object
+of class <TT><B>CRectangle</B></TT> has its own variables <TT><B>x</B></TT>
+and <TT><B>y</B></TT>, and its own functions <TT><B>set_value()</B></TT>
+and <TT><B>area()</B></TT>.
+<P>
+On that is based the concept of <I><B>object</B></I> and
+<I><B>object-oriented programming</B></I>. In that data and functions are properties
+of the object, instead of the usual view of objects as function parameters in structured
+programming. In this and the following sections we will discuss advantages of this
+methodology.
+<P>
+In this concrete case, the class (type of object) to which we were talking about is
+<TT><B>CRectangle</B></TT>, of which there are two instances, or objects:
+<TT><B>rect</B></TT> and <TT><B>rectb</B></TT>, each one with its own member variables
+and member functions.
+
+<P>
+<H2>Constructors and destructors</H2>
+Objects generally need to initialize variables or to assign dynamic memory during their
+process of creation to become totally operative and to avoid returning unexpected values
+during their execution. For example, what would happen if in the previous example we
+called the function <TT><B>area()</B></TT> before having called function
+<TT><B>set_values</B></TT>? Probably an indetermined result since the members
+<TT><B>x</B></TT> and <TT><B>y</B></TT> would have never been assigned a value.
+<P>
+In order to avoid that, a class can include a special function: a <I>constructor</I>,
+which can be declared by naming a member function with the <U>same name</U> as the class.
+This constructor <I>function</I> will be called automatically when a new instance of
+the class is created (when declaring a new object or allocating an object of that class) and
+only then. We are going to implement <TT><B>CRectangle</B></TT> including a
+<I>constructor</I>:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// classes example</I>
+#include &lt;iostream.h&gt;
+
+class CRectangle {
+    int width, height;
+  public:
+    CRectangle (int,int);
+    int area (void) {return (width*height);}
+};
+
+CRectangle::CRectangle (int a, int b) {
+  width = a;
+  height = b;
+}
+
+int main () {
+  CRectangle rect (3,4);
+  CRectangle rectb (5,6);
+  cout &lt;&lt; "rect area: " &lt;&lt; rect.area() &lt;&lt; endl;
+  cout &lt;&lt; "rectb area: " &lt;&lt; rectb.area() &lt;&lt; endl;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>rect area: 12<BR>rectb area: 30</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+As you can see, the result of this example is identical to the previous one.
+In this case we have only replaced the function <TT><B>set_values</B></TT>, that no longer
+exists, by a class <I>constructor</I>. Notice the way in which the parameters
+are passed to the constructor at the moment at which the instances of the class are
+created:
+<blockquote ><TT>
+CRectangle rect (3,4);<BR>
+CRectangle rectb (5,6);
+</TT></BLOCKQUOTE>
+You can also see how neither the prototype nor the later constructor declaration
+include a return value, even no <TT><B>void</B></TT> type, this must always be thus.
+A constructor never returns a value nor the <TT><B>void</B></TT> has to be specified.
+Right how we have not done in the previous example.
+
+<P>
+The <B>Destructor</B> fulfills the opposite functionality. This
+is automatically called when an object is released from the memory, either because its
+scope of existence has finished (for example, if it was defined as a local object
+within a function and the function ends) or because it is an object dynamically assigned
+and is released using operator <TT><B>delete</B></TT>.
+<P>
+The destructor must have the same name as the class with a tilde (<TT><B>~</B></TT>)
+as prefix and it must return no value.
+<P>
+The use of destructors is specially suitable when an object assigns dynamic memory
+during its life and at the moment of being destroyed we want to release the memory
+that it has used.
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// example on constructors and destructors</I>
+#include &lt;iostream.h&gt;
+
+class CRectangle {
+    int *width, *height;
+  public:
+    CRectangle (int,int);
+    ~CRectangle ();
+    int area (void) {return (*width * *height);}
+};
+
+CRectangle::CRectangle (int a, int b) {
+  width = new int;
+  height = new int;
+  *width = a;
+  *height = b;
+}
+
+CRectangle::~CRectangle () {
+  delete width;
+  delete height;
+}
+
+int main () {
+  CRectangle rect (3,4), rectb (5,6);
+  cout &lt;&lt; "rect area: " &lt;&lt; rect.area() &lt;&lt; endl;
+  cout &lt;&lt; "rectb area: " &lt;&lt; rectb.area() &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>rect area: 12<BR>rectb area: 30</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+
+<P>
+<H2>Overloading Constructors</H2>
+
+<P>
+Like any other function, a constructor can also be overloaded with several functions
+that have the same name but different type or number of parameters.  Remember that the
+compiler will execute the one that matches at the moment at which a function with that
+name is called (<A HREF="tut2-3.html">Section 2.3, Functions-II</A>). In this case, at the
+moment at which a class object is declared.
+
+<P>
+In fact, in the cases where we declare a class and we do not specify any constructor
+the compiler automatically assumes two overloaded constructors
+("<I>default constructor</I>" and "<I>copy constructor</I>").  For example, for the class:
+<BLOCKQUOTE><TT><PRE>
+class CExample {
+  public:
+    int a,b,c;
+    void multiply (int n, int m) { a=n; b=m; c=a*b; };
+  };
+</PRE></TT></BLOCKQUOTE>
+with no constructors, the compiler automatically assumes that it has the following
+constructor member functions:
+<UL>
+<LI><B>Empty constructor</B><BR>
+It is a constructor with no parameters defined as <I><B>nop</B></I> (empty block of
+instructions). It does nothing.
+<BLOCKQUOTE><TT>CExample::CExample () { };</TT></BLOCKQUOTE>
+<LI><B>Copy constructor</B><BR>
+It is a constructor with only one parameter of its same type
+that assigns to every nonstatic class member variable of the object a copy of the
+passed object.
+<BLOCKQUOTE><TT><PRE>
+CExample::CExample (const CExample& rv) {
+  a=rv.a;  b=rv.b;  c=rv.c;
+  }
+</PRE></TT></BLOCKQUOTE>
+</UL>
+
+<P>It is important to indicate that both default constructors: the <I>empty construction</I>
+and the <I>copy constructor</I> exist only if no other constructor is explicitly declared.
+In case that <U>any</U> constructor with <U>any</U> number of parameters is declared none
+of these two default constructors will exist, so if you want them to be there, you shall
+define your own ones.
+
+<P>
+Of course, you can also overload the class constructor providing different
+constructors for when you pass parameters between parenthesis
+and when you do not (empty):
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// overloading class constructors</I>
+#include &lt;iostream.h&gt;
+
+class CRectangle {
+    int width, height;
+  public:
+    CRectangle ();
+    CRectangle (int,int);
+    int area (void) {return (width*height);}
+};
+
+CRectangle::CRectangle () {
+  width = 5;
+  height = 5;
+}
+
+CRectangle::CRectangle (int a, int b) {
+  width = a;
+  height = b;
+}
+
+int main () {
+  CRectangle rect (3,4);
+  CRectangle rectb;
+  cout &lt;&lt; "rect area: " &lt;&lt; rect.area() &lt;&lt; endl;
+  cout &lt;&lt; "rectb area: " &lt;&lt; rectb.area() &lt;&lt; endl;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>rect area: 12<BR>rectb area: 25</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+In this case <TT><B>rectb</B></TT> was declared without parameters, so it
+has been initialized with the <I>constructor</I> that has no parameters, which declares
+both <TT><B>width</B></TT> and <TT><B>height</B></TT> with a value of <TT><B>5</B></TT>.
+<P>
+Notice that if we declare a new object and we do not want to pass parameters to it
+we do not have to include parentheses <TT><B>()</B></TT>:
+<BLOCKQUOTE><TT><PRE>
+CRectangle rectb;   <I>// right</I>
+<FONT  COLOR="red">CRectangle rectb(); <I>// wrong!</I></FONT>
+</PRE></TT></BLOCKQUOTE>
+
+<P>
+<H2>Pointers to classes</H2>
+It is perfectly valid to create pointers pointing to classes, in order to do that
+we must simply consider that once declared, the class becomes a valid type,
+so use the <I>class name</I> as the type for the pointer.
+For example:
+<blockquote><TT>CRectangle * prect;</TT></BLOCKQUOTE>
+is a pointer to an object of class <TT><B>CRectangle</B></TT>.
+<P>
+As it happens with data structures, to refer directly to a member of an object pointed
+by a pointer you should use operator <TT><B>-&gt;</B></TT>. Here is an example with
+some possible combinations:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// pointer to classes example</I>
+#include &lt;iostream.h&gt;
+
+class CRectangle {
+    int width, height;
+  public:
+    void set_values (int, int);
+    int area (void) {return (width * height);}
+};
+
+void CRectangle::set_values (int a, int b) {
+  width = a;
+  height = b;
+}
+
+int main () {
+  CRectangle a, *b, *c;
+  CRectangle * d = new CRectangle[2];
+  b= new CRectangle;
+  c= &a;
+  a.set_values (1,2);
+  b->set_values (3,4);
+  d->set_values (5,6);
+  d[1].set_values (7,8);
+  cout &lt;&lt; "a area: " &lt;&lt; a.area() &lt;&lt; endl;
+  cout &lt;&lt; "*b area: " &lt;&lt; b->area() &lt;&lt; endl;
+  cout &lt;&lt; "*c area: " &lt;&lt; c->area() &lt;&lt; endl;
+  cout &lt;&lt; "d[0] area: " &lt;&lt; d[0].area() &lt;&lt; endl;
+  cout &lt;&lt; "d[1] area: " &lt;&lt; d[1].area() &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>a area: 2<BR>*b area: 12<BR>*c area: 2<BR>d[0] area: 30<BR>d[1] area: 56</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+Next you have a summary on how can you read some pointer and class operators 
+(<TT><B>*, &amp;, ., -&gt;, [ ]</B></TT>) that appear in the previous example:
+<blockquote><PRE>
+<TT><B>*x</B></TT>     <I>can be read:</I>  pointed by <TT><B>x</B></TT>
+<TT><B>&x</B></TT>     <I>can be read:</I>  address of <TT><B>x</B></TT>
+<TT><B>x.y</B></TT>    <I>can be read:</I>  member <TT><B>y</B></TT> of object <TT><B>x</B></TT>
+<TT><B>(*x).y</B></TT> <I>can be read:</I>  member <TT><B>y</B></TT> of object pointed by <TT><B>x</B></TT>
+<TT><B>x-&gt;y</B></TT>   <I>can be read:</I>  member <TT><B>y</B></TT> of object pointed by <TT><B>x</B></TT> (equivalent to the previous one)
+<TT><B>x[0]</B></TT>   <I>can be read:</I>  first object pointed by <TT><B>x</B></TT>
+<TT><B>x[1]</B></TT>   <I>can be read:</I>  second object pointed by <TT><B>x</B></TT>
+<TT><B>x[n]</B></TT>   <I>can be read:</I>  (n+1)<SUP><SMALL>th</SMALL></SUP> object pointed by <TT><B>x</B></TT>
+</PRE></BLOCKQUOTE>
+Be sure you understand the logic of all of these before going on. If you have doubts,
+read again this section and/or consult sections
+"<A HREF="tut3-3.html">3.3, Pointers</A>" and
+"<A HREF="tut3-5.html">3.5, Structures</A>".
+
+<P>
+<H2>Classes defined with keyword <TT>struct</TT></H2>
+C++ language has extended the C keyword <TT><B>struct</B></TT> to the same functionality
+of the C++ <TT><B>class</B></TT> keyword except that its members are <TT><B>public</B></TT>
+by default instead of being <TT><B>private</B></TT>.
+<P>
+Anyway, due to that both <TT><B>class</B></TT> and <TT><B>struct</B></TT> have almost the
+same functionality in C++, <TT><B>struct</B></TT> is usually used for 
+data-only structures and <TT><B>class</B></TT> for
+classes that have procedures and member functions.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut3-6.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>3-6. User defined data types.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut4-2.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>4-2. Overloading operators. this. Static members.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</BODY>
+</HTML>

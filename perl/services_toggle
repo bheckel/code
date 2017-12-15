@@ -1,0 +1,42 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: services_toggle
+#
+#  Summary: Start and stop the Windows Services
+#           
+#  Adapted: Tue 22 Jul 2003 14:56:30 (Bob Heckel --
+#                                   http://www.le-berre.com/perl/main.htm)
+# Modified: Sat 01 May 2004 19:47:50 (Bob Heckel)
+##############################################################################
+use Win32::Service;
+use Win32;
+
+my %status;
+my $svc = 'Messenger';
+# TODO not working
+###my $svc = 'Retrospect Launcher';
+$|++;
+
+Win32::Service::GetStatus('', $svc, \%status);
+
+if ( $status{CurrentState} == 4 ) {
+  print "stop $svc? [y/n] ";
+  if ( <STDIN> =~ /y/i ) {
+    Win32::Service::StopService('', $svc) 
+                                      || die "error: can't stop service\n";
+    print "Service stopped\n";
+  } else {
+    print "cancelled\n";
+  }
+} elsif ( $status{CurrentState} == 1 ) {
+  print "start $svc? [y/n] ";
+  if ( <STDIN> =~ /y/i ) {
+    Win32::Service::StartService(Win32::NodeName( ), $svc) 
+                                     || die "error: can't start service\n";
+    print "Service started\n";
+  } else {
+    print "cancelled\n";
+  }
+} else {
+  die "error\n";
+}

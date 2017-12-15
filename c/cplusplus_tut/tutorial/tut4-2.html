@@ -1,0 +1,360 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 4.2, Overloading operators</TITLE>
+<META NAME="description" CONTENT="overloading language operators. Keyword this. Static members">
+<META NAME="keywords" CONTENT="operator this static operator+ operator=
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 4.2 </FONT><BR>
+ <FONT SIZE=5><B> Overloading operators</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<P>
+C++ incorporates the option to use language standard operators between classes in addition
+to between fundamental types. For example:
+<blockquote ><TT>
+int a, b, c;<BR>
+a = b + c;<BR>
+</TT></BLOCKQUOTE>
+is perfectly valid, since the different variables of the addition are all
+fundamental types.  Nevertheless, is not so obvious that we can perform the following
+operation (in fact it is incorrect):
+<blockquote ><TT><FONT COLOR="red">
+struct { char product [50];  float price; }  a, b, c;<BR>
+a = b + c;
+</FONT></TT></BLOCKQUOTE>
+The assignation of a class (or <TT>struct</TT>) to other one of the same type is allowed
+(default copy constructor). What would produce an error would be the addition operation,
+that in principle is not valid between non-fundamental types.
+<P>
+But thanks to the C++ ability to overload operators, we can get to do that objects derived
+from composed types as the previous one can accept operators which would not be
+accepted otherwise or even modify the effect of operators which they already admit.
+Here is a list of all the operators that can be overloaded:
+<BLOCKQUOTE><TT><PRE>
++    -    *    /    =    &lt;    &gt;    +=   -=   *=   /=   &lt;&lt;   &gt;&gt;
+&lt;&lt;=  &gt;&gt;=  ==   !=   &lt;=   &gt;=   ++   --   %    &    ^    !    |
+~    &=   ^=   |=   &&   ||   %=   []   ()   new  delete
+</PRE></TT></BLOCKQUOTE>
+To overload an operator we only need to write a class member function whose name is
+<TT><B>operator</B></TT> followed by the operator sign that we want to overload,
+following this prototype:
+<BLOCKQUOTE><TT>
+<I>type</I> <B>operator</B> <I>sign</I> <B>(</B><I>parameters</I><B>);</B>
+</TT></BLOCKQUOTE>
+Here you have an example that includes the operator <TT><B>+</B></TT>. We are going to
+sum the bidimensional vectors <TT><B>a(3,1)</B></TT> and <TT><B>b(1,2)</B></TT>.
+The addition of two bidimensional vectors is an operation as simple as to
+add the two <I>x</I> coordinates to obtain the resulting <I>x</I> coordinate
+and to add the two <I>y</I> coordinates to obtain the resulting <I>y</I>.
+In this case the result will be <TT><B>(3+1,1+2) = (4,3)</B></TT>.
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// vectors: overloading operators example</I>
+#include &lt;iostream.h&gt;
+
+class CVector {
+  public:
+    int x,y;
+    CVector () {};
+    CVector (int,int);
+    CVector operator + (CVector);
+};
+
+CVector::CVector (int a, int b) {
+  x = a;
+  y = b;
+}
+
+CVector CVector::operator+ (CVector param) {
+  CVector temp;
+  temp.x = x + param.x;
+  temp.y = y + param.y;
+  return (temp);
+}
+
+int main () {
+  CVector a (3,1);
+  CVector b (1,2);
+  CVector c;
+  c = a + b;
+  cout &lt;&lt; c.x &lt;&lt; "," &lt;&lt; c.y;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>4,3</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+If you are baffled seeing so many <TT><B>CVector</B></TT> consider that some of them
+make reference to the class name <TT><B>CVector</B></TT> and others are functions
+with that name (constructor and destructor). Do not confuse them:
+<blockquote><TT><PRE>
+CVector (int, int);            <FONT COLOR="green"><I>// function name CVector (constructor)</I></FONT>
+CVector operator+ (CVector);   <FONT COLOR="green"><I>// function operator+ that <U>returns</U> CVector type</I></FONT>
+</PRE></TT></BLOCKQUOTE>
+
+The function <TT><B>operator+</B></TT> of class <TT><B>CVector</B></TT> is the one
+that is in charge of overloading the arithmetic operator <TT><B>+</B></TT>. 
+This one can be called by any of these two ways:
+<blockquote><TT>c = a + b;<BR>c = a.operator+ (b);</TT></BLOCKQUOTE>
+
+<P>
+<TABLE CELLPADDING=5><TR><TD BGCOLOR="#BFBFFF">
+Notice also that we have incuded the empty constructor (without parameters) and we have
+defined it with a <I>no-op</I> block of instructions:
+<blockquote ><TT>CVector () { };</TT></BLOCKQUOTE>
+this is necessary, since there already exists another constructor,
+<blockquote ><TT>CVector (int, int);</TT></BLOCKQUOTE>
+and if so none of the <I>default constructors</I> will exist in <TT>CVector</TT>
+if we do not explicitly declare it like we have done.
+Otherwise the declaration
+<blockquote><TT>CVector c;</TT></BLOCKQUOTE>
+included in <TT><B>main()</B></TT> would not be valid.
+<P>
+Anyway, I have to warn you that a <I>no-op</I> block is not a recommended implementation
+for a constructor,
+since it does not fulfill the minimum functionality that a constructor should have,
+which is the initialization of all the variables in the class.
+In our case this constructor leaves variables <TT><B>x</B></TT> and <TT><B>y</B></TT>
+undefined. Therefore, a more advisable declaration would have been something
+similar to this:
+<blockquote ><TT>CVector () { x=0;  y=0;  };</TT></BLOCKQUOTE>
+that for simplicity I have not included in the code.
+</TD></TR></TABLE>
+
+<P>
+As well as a class includes by deafult an empty and a copy constructor, it also includes
+a default definition for the <B>assignation operator (<TT>=</TT>)</B> 
+between two classes of the same type. This copies the whole content of the
+non-static data members of the parameter object (the one at the right side of the sign) to the
+one at the left side.
+Of course, you can redefine it to any other functionality that you want for this operator,
+like for example, copy only certain class members.
+
+<P>
+The overload of operators does not force its operation to bear a relation to the
+mathematical or usual meaning of the operator, although it is recommended. For example,
+it is not very logical to use operator <TT><B>+</B></TT> to subtract two classes or
+operator <TT><B>==</B></TT> to fill with zeros a class, although it is perfectly possible
+to do so.
+<P>
+Although the prototype of a function <TT><B>operator+</B></TT> can seem obvious
+since it takes the right side of the operator as the parameter for the function
+<TT>operator+</TT> of the left side object, other operators are not so clear.
+Here you have a table with a summary on how the different <B>operator</B> functions
+must be declared (replace <TT>@</TT> by the operator in each case):
+<blockquote>
+<TABLE BORDER=1>
+ <TD BGCOLOR="silver" ALIGN="center">Expression</TD>
+ <TD BGCOLOR="silver" ALIGN="center">Operator (<TT>@</TT>)</TD>
+ <TD BGCOLOR="silver" ALIGN="center"><B>Function member</I></TD>
+ <TD BGCOLOR="silver" ALIGN="center"><B>Global function</I></TD></TR>
+<TR>
+ <TD ALIGN="center" WIDTH=20%><TT>@a</TT></TD>
+ <TD ALIGN="center" WIDTH=20%><TT>+ - * &amp; !  ~ ++ --</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>A::operator@()</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>operator@(A)</TT></TD></TR>
+<TR>
+ <TD ALIGN="center" WIDTH=20%><TT>a@</TT></TD>
+ <TD ALIGN="center" WIDTH=20%><TT>++ --</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>A::operator@(int)</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>operator@(A, int)</TT></TD></TR>
+<TR>
+ <TD ALIGN="center" WIDTH=20%><TT>a@b</TT></TD>
+ <TD ALIGN="center" WIDTH=20%><TT>+ - * / % ^ &amp; | &lt; &gt; == !=  &lt;= &gt;= &lt;&lt; &gt;&gt; &amp;&amp; || ,</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>A::operator@(B)</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>operator@(A, B)</TT></TD></TR>
+<TR>
+ <TD ALIGN="center" WIDTH=20%><TT>a@b</TT></TD>
+ <TD ALIGN="center" WIDTH=20%><TT>= += -= *= /= %= ^= &amp;= |= &lt;&lt;= &gt;&gt;= [ ]</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>A::operator@(B)</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>-</TT></TD></TR>
+<TR>
+ <TD ALIGN="center" WIDTH=20%><TT>a(b, c...)</TT></TD>
+ <TD ALIGN="center" WIDTH=20%><TT>()</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>A::operator()(B, C...)</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>-</TT></TD></TR>
+<TR>
+ <TD ALIGN="center" WIDTH=20%><TT>a-&gt;b</TT></TD>
+ <TD ALIGN="center" WIDTH=20%><TT>-&gt;</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>A::operator-&gt;()</TT></TD>
+ <TD ALIGN="center" WIDTH=30%><TT>-</TT></TD></TR>
+</TABLE>
+* where <TT><B>a</B></TT> is an object of class <TT><B>A</B></TT>, <TT><B>b</B></TT>
+is an object of class <TT><B>B</B></TT> and <TT><B>c</B></TT> is an object of class
+<TT><B>C</B></TT>.
+</BLOCKQUOTE>
+
+You can see in this panel that there are two ways to overload some class operators:
+as <I>member function</I> and as <I>global function</I>. Its use is indistinct,
+nevertheless I remind you that functions that are not members of a class cannot
+access the <TT>private</TT> or <TT>protected</TT> members of the class unless the global
+function is <TT><I>friend</I></TT> of the class (friend is explained later).
+
+<P>
+<H2>The keyword <TT>this</TT></H2>
+The keyword <TT><B>this</B></TT> represents within a class
+the address in memory of the <U>object</U> of that class
+that is being executed.
+It is a pointer whose value is always the address of the object.
+<P>
+It can be used to check if a parameter passed to a member function of an object
+is the object itself.
+For example, 
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// this</I>
+#include &lt;iostream.h&gt;
+
+class CDummy {
+  public:
+    int isitme (CDummy&amp; param);
+};
+
+int CDummy::isitme (CDummy&amp; param)
+{
+  if (&amp;param == this) return 1;
+  else return 0;
+}
+
+int main () {
+  CDummy a;
+  CDummy* b = &a;
+  if ( b-&gt;isitme(a) )
+    cout &lt;&lt; "yes, &amp;a is b";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>yes, &amp;a is b</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+It is also frequenty used in <TT><B>operator=</B></TT>
+member functions that return objects by reference (avoiding
+the use of temporary objects). Following with the vector's examples seen before we could
+have written an <TT><B>operator=</B></TT> function like this:
+<BLOCKQUOTE><TT><PRE>
+CVector& CVector::operator= (const CVector& param)
+{
+  x=param.x;
+  y=param.y;
+  return *this;
+}
+</PRE></TT></BLOCKQUOTE>
+In fact this is a probable default code generated for the class if we include no
+<TT><B>operator=</B></TT> member function.
+<P>
+
+<P>
+<H2>Static members</H2>
+A class can contain static members, either data and functions.
+<P>
+Static data members of a class are also known as "class variables", because their content
+does not depend on any object. There is only one unique value for all the objects of that
+same class.
+<P>
+For example, it may be used for that a variable within a class can contain the number of
+objects of that class declared, like in the following example:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// static members in classes</I>
+#include &lt;iostream.h&gt;
+
+class CDummy {
+  public:
+    static int n;
+    CDummy () { n++; };
+    ~CDummy () { n--; };
+};
+
+int CDummy::n=0;
+
+int main () {
+  CDummy a;
+  CDummy b[5];
+  CDummy * c = new CDummy;
+  cout &lt;&lt; a.n &lt;&lt; endl;
+  delete c;
+  cout &lt;&lt; CDummy::n &lt;&lt; endl;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>7<BR>6</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+In fact, static members have the same properties as global variables but enjoying class scope.
+For that reason, and to avoid that they may be declared several times, according to
+ANSI-C++ standard, we can only include the protype (declaration) in the class declaration
+but not the definition (initialization). In order to initialize a static
+data-member we must include a formal definition outside the class, in the global scope,
+like in the previous example.
+<P>
+Because it is a unique variable for all the objects of the same class,
+this can be referred as a member of any object of that class or even directly
+by the class name (of course this is only valid for <U>static</U> members):
+<blockquote ><TT>
+cout &lt;&lt; a.n;<BR>
+cout &lt;&lt; CDummy::n;
+</TT></BLOCKQUOTE>
+These two calls included in the previous example are referring to the same variable:
+the static variable <TT><B>n</B></TT> within class <TT><B>CDummy</B></TT>.
+<P>
+Once again, I remind you that in fact it is a global variable. The only difference is
+its name outside the class.
+<P>
+Like we may include static data within a class we can also include static functions.
+They represent the same:  they are global functions that are called as if they were
+object members of a given class. They can <U>only</U> refer to static data, in no case to
+nonstatic members of the class, as well as they do not allow the use of
+keyword <TT><B>this</B></TT>, since it makes reference to an object pointer and these
+functions in fact are not members of any object but directly members of the class.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut4-1.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>4-1. Classes.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut4-3.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>4-3. Relationships between classes. Inheritance.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</BODY>
+</HTML>

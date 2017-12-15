@@ -1,0 +1,49 @@
+<!-- Demo of two pane frame that allows navigation from the left pane. -->
+<!-- Mon May 17 1999 15:04:48 (Bob Heckel) -->
+<!-- Modified: Tue Jun 22 1999 12:33:47 (Bob Heckel) -->
+
+<!-- Relies on having test.html available in same directory:
+<html>
+<head>
+  <meta name="Author" content="Bob Heckel">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title> </title>
+</head>
+<body>
+  <h1>TEst </h1>
+  <a href="webtechn10col10.html" target="bobhwindow"> testlink </a>
+  <p> Test
+</body>
+</html>
+-->
+
+<HTML>
+<HEAD>
+<TITLE>Frame Leftpane Navigation Demo</TITLE>
+</HEAD>
+
+<!-- 
+Demo of many options:
+<FRAME SRC="url" NAME="window_name" SCROLLING=YES|NO|AUTO
+ MARGINWIDTH="value" MARGINHEIGHT="value" NORESIZE> 
+-->
+
+<!-- The frame.html names the TARGET window (e.g. bobhwindow) and the
+     leftpane window aims at it (e.g. a href="test.html" target="bobhwindow")
+-->
+
+<!-- Be very careful - won't work unless frames come after HEAD, before /HTML 
+     and are not contained within BODY /BODY.
+-->
+
+<FRAMESET COLS="25%,75%">
+  <FRAME BORDER=0 SRC="test.html">
+  <FRAME BORDER=0 SRC="headertmplt.html" NAME="bobhwindow">
+</FRAMESET>
+<NOFRAMES>
+Your browser cannot display frames.
+</NOFRAMES>
+
+<a href="html3-2.htm">click</a>
+
+</HTML>

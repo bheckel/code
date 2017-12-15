@@ -1,0 +1,44 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: ruup
+#
+#  Summary: Are you up?  Is server up?
+#
+#  Created: Thu 09 Oct 2003 13:09:12 (Bob Heckel)
+# Modified: Tue 16 Aug 2005 09:20:41 (Bob Heckel)
+##############################################################################
+
+$secs = ($ARGV[1] ? $ARGV[1] : 60);
+
+unless ( $ARGV[0] ) {
+  print <<"EOT";
+  Usage: ruup IPADDRESS
+        Pings a server, beeping and exiting when up.  Tries every $secs seconds.
+EOT
+  exit;
+}
+
+$down = 1;
+print "Pinging $ARGV[0] every $secs seconds...beeps and exits on success...\n";
+
+while ( $down eq 1 ) {
+  # Use an input filter pipe.
+  # TODO unix differs from win32 - use unix ping switch
+  ###open PIPE, "ping $ARGV[0]|" or die "Error: $0: $!";
+  # W2K
+  ###open PIPE, "/c/WINNT/system32/ping $ARGV[0]|" or die "Error: $0: $!";
+  # XP
+  open PIPE, "/c/WINDOWS/system32/ping $ARGV[0]|" or die "Error: $0: $!";
+
+  { local $/ = undef; $contents = <PIPE>; }
+
+  $down = $contents =~ /Request timed out/;
+
+  if ( $down ) {
+    print ' down: ' . scalar localtime, "\n";
+    sleep $secs;
+  }
+}
+
+system 'beep';
+print "$ARGV[0] is now available\n";

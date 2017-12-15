@@ -1,0 +1,46 @@
+ /* OK to run via Connect. */
+
+%global BYR EYR MERGETYPE RPT;
+%let BYR=2003;
+%let EYR=2003;
+%let MERGETYPE=MORMER;
+%let RPT=0;
+%let WANTFULLREVS=0;
+
+ /* Produces the dataset work.allyears.  Make sure BQH0.PGM.LIB(LISTC) has run
+  * recently. 
+  */
+%include 'BQH0.PGM.LIB(LATESHRT)';
+%include 'BQH0.PGM.LIB(TABDELIM)';
+
+
+data work.tmp;
+  set work.allyears;
+  length currinfile $80;
+
+  infile TMPIN FILEVAR=fn FILENAME=currinfile TRUNCOVER END=done;
+
+  do while ( not done );
+    input @1 block $CHAR1.  @47 alias $CHAR1.;
+    if alias eq ' ' then
+      cnt+1;
+    mergefile=fn;
+    output;
+  end;
+  cnt=0;
+run;
+
+proc sort data=work.tmp;
+  by mergefile;
+run;
+
+proc sql;
+  create table work.counts as
+  select mergefile label='Filename', max(cnt) as maxcnt label='Record Count'
+  from work.tmp
+  group by mergefile
+  ;
+quit;
+
+proc print LABEL; run;
+%Tabdelim(work.counts, 'BQH0.TMPTRAN1');

@@ -1,0 +1,594 @@
+<html>
+<head>
+<title>Suffering from Buffering?</title>
+
+<body bgcolor="white">
+<p align=right><font size=-1>&copy; Copyright 1998 The Perl Journal.  Reprinted with permission.</font></p>
+
+
+<h1>Suffering from Buffering?</h1>
+
+<p align=center><font color="red">	My log file has nothing in it!</font></p>
+
+<p align=center><font color="red">	My output is coming out in the wrong order!
+</font></p>
+
+<p align=center><font color="red">	When my program terminates abnormally, the output is incomplete!
+</font></p>
+
+<p align=center><font color="red">	My web server says I didn't send the right headers, but I'm
+	sure I did!
+</font></p>
+
+<p align=center><font color="red">	I'm trying to send data over the network, but nothing is sent!
+</font></p>
+
+<p>I'm afraid you're probably a victim of buffering.</p>
+
+<a name="WhatIsBuffering">
+<h2>What is Buffering?</h2>
+</a>
+
+<p>I/O is performed by your operating system.  When Perl wants to read
+data from the disk, or to write it to the network, or to read or write
+data anywhere, Perl has to make a request to the operating system and
+ask that the data be read or written.  This is an example of `making a
+system call'.  (Don't confuse this with Perl's <tt>system</tt> function,
+which is totally unrelated.)
+</p>
+
+<p>Making a system call is a relatively slow operation.  On top of that,
+if the data is coming from the disk, you might have to wait for the
+disk to spin to the right position (that's called the `latency time')
+and you might have to wait for the disk heads to move over to the
+right track (that's called the `seek time'), and as computer
+operations go, that wait is unbearably long---several milliseconds is
+typical.  By contrast, a typical computer operation, such as assigning
+to a variable or adding two numbers, takes a fraction of a
+microsecond.
+</p>
+
+
+
+<p>Suppose you're reading a ten-thousand line file line by line:
+</p>
+
+<pre>
+	while (&lt;FILE&gt;) {
+	  print if /treasure/;
+	}
+</pre>
+
+<p>If Perl made a system call for every read operation, that would be
+10,001 system calls in all (one extra to detect end-of-file), and if
+the file was on the disk, it would have to wait for the disk at least
+10,000 times.  That would be very slow.
+</p>
+
+<p>For efficiency, Perl uses a trick called <em>buffering</em>.  The
+first time you ask to read from the file, Perl has to make a system
+call.  Since system calls are expensive, it plans ahead.  If you tried
+to read a little bit of text, you will probably want to read the rest
+later.  The blocks on your disk are probably about 8K bytes, and your
+computer hardware is probably designed to transfer an entire block of
+data from the disk at once.  So instead of asking the system for a
+little bit of text, Perl actually asks the system for an entire
+blockful, which hardly takes longer to get than a little bit would
+have.  Then it stores this block of data in a region of memory that is
+called a <em>buffer</em>, and gives you back the one line you asked for.  The
+next time you ask for a line, Perl already has the line you want in
+memory in the 8K buffer.  It doesn't have to make another system call;
+it just gives you the next line out of the buffer.  Eventually you
+read up to the end of the buffer, and then Perl makes another system
+call to get another bufferful of data.  </p>
+
+<p>If lines typically have about 60 characters each, then the 10,000-line
+file has about 610,000 characters in it.  Reading the file
+line-by-line with buffering only requires 75 system calls and 75 waits
+for the disk, instead of 10,001.  On my system, a simple program with
+buffered reading ran about 40% faster than the corresponding program
+that made a system call for every line.
+</p>
+
+<p>For writing, Perl uses the same trick.  When you write data to a file
+with <tt>print</tt>, the data doesn't normally go into the file right away.
+Instead, it goes into a buffer.  When the buffer is full, Perl writes
+all the data in the buffer at once.  This is called <em>flushing the
+buffer</em>.  Here the performance gain is even bigger than for reading,
+about 60%.  But the buffering can sometimes surprise you.
+</p>
+
+
+<h2>Surprise!</h2>
+
+<p>Suppose you have a program like this:
+</p>
+
+<pre>
+	foreach $item (@items) {
+	  think_for_a_long_time($item);
+	  print LOG "Finished thinking about $item.\n";
+	}
+</pre>
+
+<p>Suppose there are 1,000 items, and the program will have to think
+about each one for two minutes.  The program will take about 35 hours
+to complete, and you'd like to be able to peek at the log file to see
+how it is doing.  You start up the program, wait ten minutes, and peek
+at the log file---but there's nothing there.  Disaster!  What
+happened?  Is the program stuck?  Is it taking five times as long to
+think about the items as you thought it would?
+</p>
+
+<p>No, the program is not stuck, or even slow.  The problem is that the
+<tt>print</tt>s to the log file are being buffered.  The program has thought
+about the first five items, and it wrote the log messages for them,
+but the writes went into the buffer, and Perl isn't going to make a
+system call to send the buffer to the disk until the buffer is full.
+The buffer is probably 8K bytes, and the log messages are about 28
+bytes each, so what's going to happen is that you won't see anything
+in the log file until about ten hours from now, when the first 292
+messages will appear all at once.  After that, you won't get any more
+messages for another ten hours.
+</p>
+
+<p>That's a problem, because it's not what you wanted.  Here you don't
+really care about the efficiency gain of buffered writes.  On the plus
+side of buffering, you're saving about four seconds over the 35-hour
+lifetime of the program.  On the minus side, it's making your logging
+feature useless.  You think having the log is worth waiting an extra
+four seconds, so you'd like to turn off the buffering.
+</p>
+
+
+<h2>Disabling Inappropriate Buffering</h2>
+
+<p>In Perl, you can't turn the buffering off, but you can get the same
+benefits by making the filehandle <em>hot</em>.  Whenever you print to a hot
+filehandle, Perl flushes the buffer immediately.  In our log file
+example, it will flush the buffer every time you write another line to
+the log file, so the log file will always be up-to-date.
+</p>
+
+<p>Here's how to make the filehandle hot:
+</p>
+
+<pre>
+	{ my $ofh = select LOG;
+	  $| = 1;
+	  select $ofh;
+	}
+</pre>
+
+<p>The key item here is the <tt>$|</tt> variable.  If you set it to a
+true value, it makes the current filehandle hot.  What's the current
+filehandle?  It's the one last selected with the <tt>select</tt>
+operator.  So to make <tt>LOG</tt> hot, we `select' it, set
+<tt>$|</tt> to a true value, and then we re-`select' whatever
+filehandle was selected before we selected <tt>LOG</tt>.  </p>
+
+<p>Now that <tt>LOG</tt> is hot, Perl will flush the buffer every time
+we print to <tt>LOG</tt>, so messages will appear in the log file as
+soon as we print them.  </p>
+
+<p>Sometimes you might see code like this:
+</p>
+
+<pre>
+	select((select(LOG), $|=1)[0]);
+</pre>
+
+<p>That's a compressed way of writing the code above that makes
+<tt>LOG</tt> hot.  </p>
+
+<p>If you happen to be using the <tt>FileHandle</tt> or <tt>IO</tt> modules, there's a
+nicer way to write this:
+</p>
+
+<pre>
+	use FileHandle;          # Or `IO::Handle' or `IO::'-anything-else
+
+	...
+
+	LOG-&gt;autoflush(1);       # Make LOG hot.
+
+	...
+</pre>
+
+
+
+<h2>Hot and Not Hot</h2>
+
+<p>If Perl is really buffering output, how is it you didn't notice it
+before?  For example, run this program, <tt>favorite</tt>:
+</p>
+
+<pre>
+	print "What is your favorite number?   ";
+	$num = &lt;STDIN&gt;;
+	$mine = $num + 1;
+	print "Well, my favorite is $mine, which is a much better number.\n";
+</pre>
+
+
+<pre>
+	% ./favorite
+	What is your favorite number?     119
+	Well, my favorite is 120, which is a much better number.
+</pre>
+
+<p>If you run this, you find that it works the way you expect: The
+prompt appears on the screen right away.  Where's the buffering?  Why
+didn't Perl save up the output until it had a full buffer?  Because
+that's almost never what you want when you're writing to a terminal,
+the standard I/O library that Perl uses takes care of it for you.
+When a filehandle is attached to the terminal, as <tt>STDOUT</tt> is
+here, it is in <em>line buffered mode</em> by default.  A filehandle
+in line buffered mode has two special properties: It's flushed
+automatically whenever you print a newline character to it, and it's
+flushed automatically whenever you read from the terminal.  The second
+property is at work here: <tt>STDOUT</tt> is flushed automatically
+when we read from <tt>STDIN</tt>.  </p>
+
+<p>But now let's try it with <tt>STDOUT</tt> attached to a file
+instead of to the terminal: </p>
+
+<pre>
+	% ./favorite &gt; OUTPUT
+</pre>
+
+<p>Here the <tt>STDOUT</tt> filehandle has been attached to the file
+<tt>OUTPUT</tt>.  The program has printed the prompt to the file, and
+is waiting for you to enter your favorite number.  But if you open
+another window, and look into <tt>OUTPUT</tt>, you'll see that the
+prompt that <tt>favorite</tt> printed isn't in the file yet; it's
+still in the buffer.  <tt>STDOUT</tt> is attached to a file, rather
+than to a terminal, so it isn't line-buffered; only filehandles
+attached to the terminal are line-buffered by default.  </p>
+
+<p>When the program finishes, it flushes all its buffers, so after you
+enter your favorite number, all the output, including the prompt,
+appears in the file at the same time.
+</p>
+
+<p>There's one other exception to the rule that says that filehandles
+are cold unless they're attached to the terminal: The filehandle
+<tt>STDERR</tt>, which is normally used for error logging, is always
+in line buffered mode by default.  If our original example had used
+<tt>STDERR</tt> instead of LOG we wouldn't have had the buffering
+problem.  </p>
+
+
+<h2>Other Perils of Buffering</h2>
+
+<a name="OutputInWrongOrder">
+<p align=center><font color="red">``My output is coming out in the
+wrong order!''</font></p>
+</a>
+
+<p>Here's a typical program that exhibits this common problem:
+</p>
+
+<pre>
+	print "FILE LISTING OF DIRECTORY $dir:\n";
+	print "---------------------------------\n";
+	system("ls -l $dir");
+	print "---------------------------------\n";
+</pre>
+
+
+<p>Run this on a terminal, and it comes out OK.  But if you run it
+with <tt>STDOUT</tt> redirected to a file, it doesn't work: the header
+appears after the file listing, instead of at the top.  </p>
+
+<p>So why didn't it work?  Standard output is buffered, so the header
+lines are saved in the buffer and don't get to the file just yet.
+Then you run <tt>ls</tt>, which has its own buffer, and <tt>ls</tt>'s
+buffer is flushed when <tt>ls</tt> exits, so <tt>ls</tt>'s output goes
+into the file.  Then you print the footer line and it goes into your
+programs buffer.  Finally, your program finishes and flushes its
+buffer, and all three lines go into the output file, after the output
+from <tt>ls</tt>.  To fix this, make <tt>STDOUT</tt> hot.  </p>
+
+<p>Now that we know why the data got into the file in the wrong order,
+that raises another question: If we have it print to the terminal, why
+does the output come out in the right order instead of the wrong
+order?  Because when <tt>STDOUT</tt> is attached to the terminal, it
+is in line buffered mode, and is flushed automatically whenever we
+print a newline character to it.  The two header lines are flushed
+immediately, because they end with newlines; then comes the output of
+<tt>ls</tt>, and finally the footer line.  </p>
+
+<a name="BadHTTPHeaders">
+<p align=center><font color="red">``My web server says I didn't send the
+right headers, but I'm sure I did!''</font></p>
+</a>
+
+<p>Here's a typical program that exhibits this common problem:
+</p>
+
+
+<pre>
+	print "Content-type: text/html\n\n";
+
+	print "&lt;title&gt;What Time Is It?&lt;/title&gt;\n";
+	print "&lt;h1&gt;The Current Time in Philadelphia is&lt;/h1&gt;\n\n";
+	print "&lt;pre&gt;\n";
+
+	system("date");
+
+	print "&lt;/pre&gt;\n\n";
+</pre>
+
+<p>You might think that the output is going to come out in the order
+you put it in the program, with the <tt>Content-type</tt> header, then
+the title, and with the date in between the <tt>&lt;pre&gt;</tt> tags.
+But it isn't.  The <tt>print</tt> statements execute, but the output
+goes into your program's buffer.  Then you run <tt>date</tt>, which
+generates some output, this time into the <tt>date</tt> command's
+buffer.  When <tt>date</tt> exits (almost immediately), this buffer is
+flushed, and the server (whch is listening to your standard output)
+gets the date before it gets the output from your <tt>print</tt>s;
+your <tt>print</tt> data is still in the buffer.  Later, when your
+program exits, its own buffer is flushed and the server gets the
+output from the <tt>print</tt>s.  </p>
+
+<p>The server was expecting to see that <tt>Content-type</tt> line
+first, but instead it got the date first.  It can't proceed without
+knowing the content-type of the output, so it gives up and sends a
+message to the browser that says something like <tt>500 Internal
+Server Error</tt>.  </p>
+
+<p>Solution 1: Make <tt>STDOUT</tt> hot.  Solution 2: Collect the
+output from <tt>date</tt> yourself and insert it into your buffer in the
+appropriate place: </p>
+
+<pre>
+	...
+
+	$the_date = `date`;
+	print $the_date;
+
+	...
+</pre>
+
+
+<p>Here's a similar sort of problem that stems from the program aborting
+before you wanted it to:
+</p>
+
+<pre>
+	print "Content-type: text/html\n\n";
+
+	print "&lt;title&gt;Division Table&lt;/title&gt;\n";
+	print "&lt;h1&gt;Division Table&lt;/h1&gt;\n\n";
+
+	for (i=0; $i&lt;10; $i++) {
+	  for (j=0; $j&lt;10; $j++) {
+	    print $i/$j, "\t";               # Ooops
+	  }
+	  print "\n";
+	}
+</pre>
+
+<p>The program is going to abort at the line that says `Ooops', because it
+divides by zero, and it's going to print the message
+</p>
+
+<pre>
+	Illegal division by zero at division.cgi line 8.
+</pre>
+
+<p>What you actually see on your web browser depends a lot on the
+details of the web server, but here's one possible scenario: The
+server will collect all the output from your program, and send it back
+to the browser.  You might think that the <tt>Content-type</tt> line
+will come first, followed by the title, and then the <tt>division by
+zero</tt> message, but you'd be wrong.  The content-type and the title
+are printed to <tt>STDOUT</tt>, which is buffered, but the <tt>divsion
+by zero</tt> message is printed to <tt>STDERR</tt>, which isn't
+buffered.  Result: The content-type and title are buffered.  Then the
+error message comes out, and then, when the program exits, the
+<tt>STDOUT</tt> buffer is flushed and the content-type and title come
+out at last.  The server was expecting to see the
+<tt>Content-type</tt> line right away, gets confused because it
+appears to be missing, and reports an error.  </p>
+
+<p>As usual, you can fix this by making <tt>STDOUT</tt> hot.  Another way:
+Redirect error messages to a separate file, like this:
+</p>
+
+<pre>
+	open STDERR, "&gt; /tmp/division.err";
+</pre>
+
+<p>A third way:
+</p>
+
+<pre>
+	use CGI::Carp 'fatalsToBrowser';
+</pre>
+
+<p>The <tt>CGI::Carp</tt> module will arrange that fatal error
+messages are delivered to the browser with a simple prefabricated HTTP
+header, so that the browser displays the error message properly.  </p>
+
+<p>Making both handles cold won't work, because when the program
+finishes, there's no telling which of the two will be flushed first.
+</p>
+
+<a name="NoResponseOnNetwork">
+<p align=center><font color="red">``I'm trying to send data over the
+network, but nothing is sent!''</font></p>
+</a>
+
+<p>This one is the plague of novice network applications programmers; it
+bites almost everyone the first time they write a network application.
+</p>
+
+<p>For concreteness, suppose you're writing a mail client, which will
+open a connection to the mail server and try to send a mail message to
+it.  Your client will need to use the SMTP (Simple Mail Transfer
+Protocol) to talk to the server.  In SMTP, the client opens a
+connection and then engages the server in a conversation that goes
+something like this:
+</p>
+
+
+<pre>
+	Server says: 220 gradin.cis.upenn.edu ESMTP
+	Client says: HELO plover.com
+	Server: 250 gradin.cis.upenn.edu Hello mailuser@plover.com
+	Client: MAIL From: &lt;mjd-id-ipk+bcfci2x+@plover.com&gt;
+	Server: 250 &lt;mjd-id-ipk+bcfci2x+@plover.com&gt;... Sender ok
+	(And so on...)
+</pre>
+
+<p>The usual complaint: <font color="red">``I opened the connection
+all right, and I got the greeting from the server, but it isn't
+responding to my client's commands!''</font> And by now you know the
+reason why: The client's output to the network socket is being
+buffered, and Perl is waiting to send the data over the network until
+there's a whole bufferful.  The server hasn't responded because it
+hasn't received anything to respond to.  </p>
+
+<p>Solution: Make the socket filehandle hot.  Another solution: Use
+the <tt>IO::Socket</tt> module; recent versions (since version 1.18)
+make sockets hot by default.  </p>
+
+<a name="AbnormalTermination">
+<p align=center><font color="red">``When my program terminates
+abnormally, the output is incomplete!''</font></p>
+</a>
+
+<p>When the program exits normally, by executing <tt>die</tt> or
+<tt>exit</tt> or by reaching the end of the program, it flushes all
+the buffers.  But if the program is killed suddenly, it might exit
+without getting to flush the buffers, and then the output files will
+be incomplete.  The Unix <tt>kill</tt> command destroys a process in
+this way and can leave behind incomplete files.  </p>
+
+<p>Even worse, a file that exits in this way can leave behind
+<em>corrupt</em> data.  For example, imagine a program that writes out
+a database file.  The database file is supposed to contain records of
+exactly 57 characters each.  </p>
+
+<p>Suppose the program has printed out 1,000 records, and then someone
+kills it and it doesn't have a chance to flush its buffer.  It turns
+out that only 862 complete records have made it into the file, but
+that's not the worst part.  The buffer is flushed every 8,192 bytes,
+and 57 does not divide 8,192 evenly, so the last record that was
+flushed to the file is incomplete; only its first 18 bytes appear in
+the file.  The other 39 bytes were still in the buffer, and they're
+lost.  The file is now corrupted, and any program that reads it
+assuming that each record is exactly 57 bytes long is going to get
+garbled data and produce the wrong results.
+</p>
+
+<p>One possible solution to this is to simply make the filehandle hot.
+Another is to do the buffering yourself: Accumulate 57-byte records
+into a scalar variable until you have a lot of them, and then write
+them all at once.  A third solution is to use the <tt>setvbuf</tt>
+method provided by the <tt>Filehandle</tt> and <tt>IO::</tt> modules
+to make the buffer size an exact multiple of 57 bytes; then it'll
+never contain any partial records when it's flushed.  That looks like
+this: </p>
+
+
+<pre>
+	use IO::Handle '_IOFBF'; # `FBF' means `Fully Buffered'
+	
+	FH-&gt;setvbuf($buffer_var, _IOFBF, 8151); 
+</pre>
+
+<p>(I picked 8151 here because it's the largest number less than 8K that
+is a multiple of 57.)
+</p>
+	
+<p>A fourth solution is to manually flush the buffer before it gets
+completely full.  The next section explains how to do this.
+</p>
+
+<h2>Flushing on Command</h2>
+
+<p>Sometimes you'd like to have buffering, but you want to control when
+the buffer is flushed.  For example, suppose you're writing a lot of
+data over the network to a logging service.  For efficiency, you'd
+like buffering, but you don't want the log to get too far out of date.
+You want to let data accumulate in the buffer for up to ten seconds,
+and then flush it out, at least six times per minute.
+</p>
+
+<p>Here's a typical strategy for doing that:
+</p>
+
+<pre>
+	if (time &gt; $last_flush_time + 10) {
+	  my $ofh = select LOG;
+	  $| = 1;                    # Make LOG socket hot
+	  print LOG "";              # print nothing
+	  $| = 0;                    # LOG socket is no longer hot
+	  select $ofh;
+	  $last_flush_time = time;
+	}
+
+	... Do something else ...
+</pre>
+
+<p>We select the <tt>LOG</tt> filehandle and make it temporarily hot.
+Then we print the empty string to the filehandle.  Because the handle
+is hot, this flushes the buffer---printing to a hot filehandle always
+flushes the buffer.  Then we return the filehandle to its un-hot state
+so that future writes to <tt>LOG</tt> will be buffered.  </p>
+
+<p>If you're using the <tt>FileHandle</tt> or <tt>IO</tt> modules,
+there's a simpler interface: </p>
+
+<pre>
+	$filehandle-&gt;flush();         # Flush the buffer
+</pre>
+
+<p>It does just the same as the code above.
+</p>
+
+
+<h2>Other Directions</h2>
+
+<p>If for some reason you want to avoid the buffering entirely, you
+can use Perl's <tt>sysread</tt> and <tt>syswrite</tt> operators.
+These don't use buffering at all.  That makes them slow, but they are
+often appropriate for tasks like network communications where you
+don't want buffering anyway.  All Perl's other I/O functions,
+including <tt>write</tt>, <tt>print</tt>, <tt>read</tt>,
+<tt>&lt;FILEHANDLE&gt;</tt>, and <tt>getc</tt>, are buffered.  If you
+do both buffered and unbuffered I/O on the same filehandle, you're
+likely to confuse yourself, so beware.  </p>
+
+<h2>Summary</h2>
+
+<p>For efficiency, Perl does not read or write the disk or the network
+when you ask it to.  Instead, it reads and writes large chunks of data
+to a `buffer' in memory, and does I/O to the buffer; this is much
+faster than making a request to the operating system for every read or
+write.  Usually this is what you want, but sometimes the buffering
+causes problems.  Typical problems include communicating with
+conversational network services and writing up-to-date log files.  In
+such circumstances, you would like to disable the buffering.  You can
+do that in Perl with by setting <tt>$|=1</tt>.  This special variable
+makes the currently selected filehandle hot, so that the buffer is
+flushed after every write.  </p>
+
+
+
+<hr>
+
+<p>Return to: 
+<a href="../../">Universe of Discourse main page</a> |
+<a href="../">Perl Paraphernalia</a> |
+<a href="./">Just the FAQs</a>
+</p>
+<address><a href="mailto:mjd-perl-faqs-id-ipk+bcfci2x+@plover.com">mjd-perl-faqs-id-ipk+bcfci2x+@plover.com</a></address>
+
+</body>
+
+</html>

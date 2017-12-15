@@ -1,0 +1,52 @@
+<HTML>
+<HEAD>
+  <!-- Adapted: Mon 27 Aug 2001 15:33:15 (Bob Heckel-->
+  <!--                                    JavaScript The Definitive Guide) -->
+  <TITLE>Validate Verify Form Field Not Blank Empty</TITLE>
+  <SCRIPT language="JavaScript">
+    // Determine when a string contains only whitespace characters.
+    function isblank(s) {
+      for ( var i=0; i<s.length; i++ ) {
+        var c = s.charAt(i);
+        if ( (c != ' ') && (c != '\n') && (c != '\t') ) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+
+    // Determine which fields are empty.
+    function validate(f) {
+      var empty_fields = "";
+      var j = 0;  // singular or plural
+
+      for ( var i=0; i<f.length; i++ ) {
+        var e = f.elements[i];  // one of these for each INPUT in the form
+        ///alert(f.elements[i].type);
+        // buttons are always blank.
+        if ( f.elements[i].type == 'button' ) {
+          continue;
+        }
+        if ( (e.value == null) || (e.value == "") || isblank(e.value) ) {
+          j++;
+          empty_fields += "\n    " + e.name;
+          continue;
+        }
+      }
+
+      (j > 1) ? alert(empty_fields + " are empty") 
+                                         : alert(empty_fields + " is empty");
+    }
+  </SCRIPT>
+</HEAD>
+
+<BODY BGCOLOR="#666699">
+  <FORM NAME="the_form">
+    <INPUT TYPE="textbox" NAME="the_textbox">Must Not Be Empty<BR>
+    <INPUT TYPE="textbox" NAME="the_textbox2">This One Either<BR><BR>
+    <INPUT TYPE="button"  NAME="the_button" VALUE="Test For Empty Fields"
+                                       onClick="validate(document.the_form)">
+  </FORM>
+</BODY>
+</HTML>

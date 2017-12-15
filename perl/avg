@@ -1,0 +1,40 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: avg
+#
+#  Summary: Calculate average.
+#
+#           ESSENTIAL 
+#
+#  Created: Thu, 12 Aug 1999 13:43:24 (Bob Heckel)
+# Modified: Sat 26 Jul 2003 19:57:52 (Bob Heckel)
+##############################################################################
+
+if ( @ARGV && $ARGV[0] =~ /-+h.*/ ) {
+  print STDERR "Usage: $0 [-h --help]\n";
+  print STDERR "  E.g.    echo 10 15 | avg\n";
+  exit(__LINE__);
+}
+
+while ( <STDIN> ) {
+  chomp;
+  @avgthese = split '\s+', $_;
+}
+
+$i = 0;
+$x = 0;
+$y = 0;
+
+foreach ( @avgthese ) {
+  $x = $avgthese[$i];
+  $y = $x + $y;
+  $i++;
+}
+
+$z = $y / (scalar @avgthese);
+# TODO wtf is this for?
+###$z =~ s/(\d{1,3})(?=(?:\d\d\d)+(?!\d))/$1,/g;
+
+# TODO verbose switch to get this:
+###print "$z is the average of ", scalar @avgthese, " entries\n";
+print "$z\n";

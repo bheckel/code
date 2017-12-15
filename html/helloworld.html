@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+  <TITLE>Hello World</TITLE>
+  <META NAME="Author" CONTENT="Bob Heckel">
+  <META NAME="keywords" CONTENT="hello world">
+  <SCRIPT LANGUAGE="JavaScript" SRC="debuggerbob.js"></SCRIPT>
+</HEAD>
+
+<!-- this is a comment -->
+<BODY BGCOLOR="#FFEBCD">
+  <H2>Hello World</H2>
+  <FORM NAME="myform" onClick="getProperties(window.document.myform.mysubmit.style)">
+    <INPUT NAME="mysubmit" TYPE="submit" STYLE="background=red" VALUE="Into The Abyss">
+  </FORM>
+  <A HREF="thisgoesnowhere"onClick="getProperties(window.document.links)">Helloworld</A>
+  <FORM NAME="myform2" onClick="getProperties(window.history)">
+    <INPUT NAME="mysubmit2" TYPE="submit" VALUE="Don't Know Much About History">
+  </FORM>
+</BODY>
+</HTML>

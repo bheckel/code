@@ -1,0 +1,16 @@
+<!-- Output today's date to webpage. -->
+<!-- Created: Mon Jul 19 1999 16:26:21 (Bob Heckel) -->
+
+  <script language="JavaScript">
+    d = new Date();
+    mo = d.getMonth() + 1;
+    day = d.getDate();
+    yr = d.getYear() + 1900;
+    full = "";
+    full += mo;
+    full += "/";
+    full += day;
+    full += "/";
+    full += yr;
+    document.write("<strong><center><br>" + full + "<br><br></center></strong>");
+  </script>

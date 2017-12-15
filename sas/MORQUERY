@@ -1,0 +1,107 @@
+* PROGRAM NAME  MORQUERY;                                                       
+* PROGRAMMER    TITANIA DUMAS-ROBERSON;                                         
+* CREATE DATE   11/15/1999;                                                     
+                                                                                
+* THIS PROGRAM WILL DISPLAY A REPORT OF ANY ONE;                                
+* VARIABLE ON A MORMER FILE BY THE COUNTY OF OCCURRENCE;                        
+                                                                                
+* UPDATE LOG;                                                                   
+* 02/16/2001 (BHB6) ADDED CODE TO DELETE ALIAS RECORDS;                         
+* 03/06/2003 (BQH0) MAJOR CHANGES MADE TO DETECT FIPS/NON-FIPS FILE;
+
+ /* DEBUG */
+***FILENAME IN 'BF19.ZZX0166.MORMER';
+FILENAME IN 'BF19.ZZX0366.MORMER';
+%LET AVAR=FOO; %LET STARTC=96; %LET ENDC=97;
+                                                                                
+OPTIONS LS=133 NOTES SOURCE ERRORABEND MPRINT;                                                       
+ /* USER'S PHRASE, STARTING MERGED FILE BYTE, ENDING MERGED 
+  * FILE BYTE.  PROVIDED BY THE AF FORM. 
+  */
+%GLOBAL AVAR STARTC ENDC;                            
+
+ /* DETERMINE IF THIS IS A FIPS STATE. */
+DATA _NULL_;                                                                    
+  /* Y IF THIS A FIPS REVISOR, N IF NOT. */
+  %GLOBAL REVISEDF;
+  /* ONLY WANT TO TEST A SINGLE LINE.  OK IF STOCCNEW IS NOT 
+   * AVAILABLE. 
+   */
+  INFILE IN OBS=1 MISSOVER;                                                                     
+  /* MORTALITY STATE OF OCCURRENCE. */
+  INPUT STOCCOLD 77-78  YR 135-138  STOCCNEW $ 147-148;
+                                                                                 
+  /* IF DATA YEAR IS LESS THAN OR EQUAL TO 2002 THEN IT IS 
+   * AUTOMATICALLY NOT A FIPS STATE.
+   */
+  IF YR LE 2002 THEN                                                       
+    DO;
+      REVISEDF = 'N';
+      CALL SYMPUT('REVISEDF', REVISEDF);
+      STOP;
+    END;
+
+  /* IF STATE IS NOT USING FIPS IT WILL HAVE NUMBERS IN THE STATE 
+   * FIELD. 
+   */
+  IF STOCCOLD GE 01 AND STOCCOLD LE 99 THEN
+    DO;
+      REVISEDF = 'N';
+      CALL SYMPUT('REVISEDF', REVISEDF);
+    END;
+
+  /* IF STATE IS USING FIPS IT WILL HOLD AN ALPHA STRING LIKE 
+   * 'AL' IN STOCCNEW OTHERWISE IT WILL BE BLANK.
+   */
+  IF STOCCNEW EQ "" THEN
+    DO;
+      REVISEDF = 'N';
+      CALL SYMPUT('REVISEDF', REVISEDF);
+    END;
+  ELSE
+    DO;
+      REVISEDF = 'Y';
+      CALL SYMPUT('REVISEDF', REVISEDF);
+    END;
+RUN;
+
+
+ /* MORTALITY */
+%MACRO DECIDEINPUTSTMT;
+  %GLOBAL INPSTMT;
+  /* IF IT'S A FIPS REVISOR: */
+  %IF &REVISEDF = N %THEN
+    %DO;
+      %LET INPSTMT=%STR(INPUT ALIAS $ 47 COUNTYOCC $ 79-81 
+                        ITEM $ &STARTC-&ENDC);
+    %END;
+  %ELSE %IF &REVISEDF = Y %THEN
+    %DO;
+      %LET INPSTMT=%STR(INPUT ALIAS $ 47 COUNTYOCC $ 149-151 
+                        ITEM $ &STARTC-&ENDC);
+    %END;
+%MEND DECIDEINPUTSTMT;
+%DECIDEINPUTSTMT
+
+
+DATA ALL;                                                                      
+  %GLOBAL FNAME;
+  LENGTH NAME $25;                                                             
+  INFILE IN FILENAME=NAME;                                                     
+  &INPSTMT;
+  IF ALIAS = '1' THEN DELETE;                                                  
+  CALL SYMPUT('FNAME', NAME);                                                   
+RUN;                                                                          
+
+
+PROC SORT DATA=ALL;                                                           
+  BY ITEM;                                                                     
+RUN;                                                                          
+
+
+PROC FREQ DATA=ALL;                                                           
+  TABLES COUNTYOCC*ITEM / MISSING;                                                
+  LABEL ITEM = "&AVAR BYTES &STARTC-&ENDC";                                                          
+  TITLE1 "&AVAR BY THE COUNTY OF OCCURRENCE";                                  
+  TITLE2 "DATASET NAME: &FNAME  FIPS STATE (Y/N): &REVISEDF";                                               
+RUN;                                                                          

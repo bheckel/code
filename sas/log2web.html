@@ -1,0 +1,217 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+  * PROGRAM NAME: /websrv/sasweb/nchs/misc/log2web.html
+  *
+  *  DESCRIPTION: Main page for SAS Log Web Viewer.
+  *
+  *     CALLS TO: BQH0.SAS.INTRNET.PDS(LOG2WEB)
+  *    CALLED BY: user's web browser
+  *
+  *  INPUT MVARS: none
+  *
+  *   PROGRAMMER: BQH0
+  * DATE WRITTEN: 01 JUL 2004
+  *
+  *   UPDATE LOG:                                              
+  * Modified: Tue 28 Dec 2004 15:23:26 (Bob Heckel)
+  * Modified: Wed 16 Mar 2005 16:05:23 (Bob Heckel - add FCAST logs)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<HTML>
+<HEAD>
+  <TITLE>NCHS DAEB SAS Log Web Viewer</TITLE>
+  <SCRIPT>
+    function ClearRadios(oRad) {
+      if ( typeof oRad.length != 'undefined' ) {
+        for ( var i=0; i<oRad.length; i++ ) {
+          oRad[i].checked = false;
+        }
+      } else {
+        oRad.checked = false;
+      }
+    } 
+
+    // Show information when user hovers over word.
+    function ShowTip(current, e, text) {
+      // Usually IE
+      if ( document.all || document.getElementById ) {
+        thetitle=text.split('<br>')
+        if ( thetitle.length > 1 ) {
+          thetitles=''
+          for ( i=0;i<thetitle.length;i++ )
+            thetitles+=thetitle[i]
+          current.title=thetitles
+        } else
+          current.title=text
+      }
+      // Usually Mozilla
+      else if ( document.layers ){
+        document.document.write('<layer bgColor="white" style="border:1px solid black;font-size:12px;">'+text+'</layer>')
+        document.document.close()
+        document.left=e.pageX+5
+        document.top=e.pageY+5
+        document.visibility="show"
+      }
+    }
+  </SCRIPT>
+</HEAD>
+<BODY>
+  <FONT COLOR="#000080"><CENTER><H2>SAS Log Viewer</H2>
+  <HR>
+  <FORM ACTION="http://mainframe.cdc.gov/sasweb/cgi-bin/broker" METHOD="GET" Name=form1>
+    <INPUT TYPE="hidden" NAME="_DEBUG" VALUE="0">
+    <INPUT TYPE="hidden" NAME="_SERVICE" VALUE="default">
+    <INPUT TYPE="hidden" NAME="_PROGRAM" VALUE="nchscode.log2web.sas">
+    <h3>State-specific Logs</h3>
+    <TABLE BORDER=1>
+      <TR>
+      <TD ROWSPAN=2>DWJ2.ssyyyy.eee.LOG<br>
+          E.g. DWJ2.AK2004.NAT.LOG
+      <TD ROWSPAN=2>
+      <SELECT NAME="the_stabbrev" SIZE=10>
+        <OPTION VALUE="AK" SELECTED>AK
+        <OPTION VALUE="AL">AL
+        <OPTION VALUE="AR">AR
+        <OPTION VALUE="AS">AS
+        <OPTION VALUE="AZ">AZ
+        <OPTION VALUE="CA">CA
+        <OPTION VALUE="CO">CO
+        <OPTION VALUE="CT">CT
+        <OPTION VALUE="DC">DC
+        <OPTION VALUE="DE">DE
+        <OPTION VALUE="FL">FL
+        <OPTION VALUE="GA">GA
+        <OPTION VALUE="GU">GU
+        <OPTION VALUE="HI">HI
+        <OPTION VALUE="IA">IA
+        <OPTION VALUE="ID">ID
+        <OPTION VALUE="IL">IL
+        <OPTION VALUE="IN">IN
+        <OPTION VALUE="KS">KS
+        <OPTION VALUE="KY">KY
+        <OPTION VALUE="LA">LA
+        <OPTION VALUE="MA">MA
+        <OPTION VALUE="MD">MD
+        <OPTION VALUE="ME">ME
+        <OPTION VALUE="MI">MI
+        <OPTION VALUE="MN">MN
+        <OPTION VALUE="MO">MO
+        <OPTION VALUE="MP">MP
+        <OPTION VALUE="MS">MS
+        <OPTION VALUE="MT">MT
+        <OPTION VALUE="NC">NC
+        <OPTION VALUE="ND">ND
+        <OPTION VALUE="NE">NE
+        <OPTION VALUE="NH">NH
+        <OPTION VALUE="NJ">NJ
+        <OPTION VALUE="NM">NM
+        <OPTION VALUE="NV">NV
+        <OPTION VALUE="NY">NY
+        <OPTION VALUE="OH">OH
+        <OPTION VALUE="OK">OK
+        <OPTION VALUE="OR">OR
+        <OPTION VALUE="PA">PA
+        <OPTION VALUE="PR">PR
+        <OPTION VALUE="RI">RI
+        <OPTION VALUE="SC">SC
+        <OPTION VALUE="SD">SD
+        <OPTION VALUE="TN">TN
+        <OPTION VALUE="TX">TX
+        <OPTION VALUE="UT">UT
+        <OPTION VALUE="VA">VA
+        <OPTION VALUE="VI">VI
+        <OPTION VALUE="VT">VT
+        <OPTION VALUE="WA">WA
+        <OPTION VALUE="WI">WI
+        <OPTION VALUE="WV">WV
+        <OPTION VALUE="WY">WY
+        <OPTION VALUE="YC">YC
+      </SELECT><br>
+      <TD>
+      <INPUT TYPE="radio" NAME="the_evt" VALUE="NAT" CHECKED>NAT
+      <INPUT TYPE="radio" NAME="the_evt" VALUE="FET">FET
+      <INPUT TYPE="radio" NAME="the_evt" VALUE="MOR">MOR
+      <INPUT TYPE="radio" NAME="the_evt" VALUE="MED">MED
+      <TR>
+      <TD COLSPAN=4><INPUT TYPE="radio" NAME="the_yr" VALUE="2003">2003
+      <INPUT TYPE="radio" NAME="the_yr" VALUE="2004" CHECKED>2004
+      <INPUT TYPE="radio" NAME="the_yr" VALUE="2005">2005
+    </TABLE>
+    <INPUT TYPE="submit" NAME=the_sub VALUE="View Current Jobstream Log">
+    <BR>
+    <HR>
+    <H3>User-specific Logs</H3>
+    <H4>Step 1 -- choose user id:</H4>
+    <SELECT NAME="the_uid" SIZE=10>
+      <OPTION VALUE="ALM5" SELECTED>ALM5
+      <OPTION VALUE="BHB6">BHB6
+      <OPTION VALUE="BQH0">BQH0
+      <OPTION VALUE="BXJ9">BXJ9
+      <OPTION VALUE="CES0">CES0
+      <OPTION VALUE="CKJ1">CKJ1
+      <OPTION VALUE="CMC6">CMC6
+      <OPTION VALUE="CWT4">CWT4
+      <OPTION VALUE="DWJ2">DWJ2
+      <OPTION VALUE="EKM2">EKM2
+      <OPTION VALUE="HDG7">HDG7
+      <OPTION VALUE="KJK4">KJK4
+      <OPTION VALUE="MBJ1">MBJ1
+      <OPTION VALUE="PYH9">PYH9
+      <OPTION VALUE="REV2">REV2
+      <OPTION VALUE="SLM6">SLM6
+      <OPTION VALUE="VDJ2">VDJ2
+    </SELECT>
+    <BR><BR>
+    <H4>Step 2 -- select log type:</H4>
+    FCAST option "1 - TIME SERIES ANALYSIS REPORTS USING ANNUAL PERCENTAGES"<BR>
+    E.g. DWJ2.FCAST.ALM5.TSA.NAT.LOG<br>
+    <INPUT TYPE="radio" NAME="the_pgm1" VALUE="NAT" CHECKED><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'NATALITY')">NAT</A>
+    <INPUT TYPE="radio" NAME="the_pgm1" VALUE="FET"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'FETAL DEATH')">FET</A>
+    <INPUT TYPE="radio" NAME="the_pgm1" VALUE="MOR"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'MORTALITY')">MOR</A>
+    <INPUT TYPE="radio" NAME="the_pgm1" VALUE="UC"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'UNDERLYING CAUSE OF DEATH')">UC</A>
+    <INPUT TYPE="radio" NAME="the_pgm1" VALUE="NRH"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'NATALITY MULTI-RACE / MULTI-HISPANIC')">NRH</A>
+    <INPUT TYPE="radio" NAME="the_pgm1" VALUE="MRH"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'MORTALITY MULTI-RACE / MULTI-HISPANIC')">MRH</A>
+    <INPUT TYPE="radio" NAME="the_pgm1" VALUE="FRH"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'FETAL DEATH MULTI-RACE / MULTI-HISPANIC')">FRH</A>
+    <BR>
+    <INPUT TYPE="submit" NAME=the_sub VALUE="View Current FCAST TSA Log">
+    <BR><BR><BR>
+    FCAST option "5 - OTHER REPORTS"<BR>
+    E.g. DWJ2.FCAST.ALM5.OTH.UC113S.LOG<br>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="UC113S" CHECKED><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'113 SELECTED UNDERLYING CAUSES OF DEATH BY STATE (>= 1999 ONLY)')">UC113S</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="UC113SY"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'113 SELECTED UNDERLYING CAUSES OF DEATH BY YEAR  (>= 1999 ONLY)')">UC113SY</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="NATOUT"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'OUT OF STATE OCCURRENCE/RESIDENCE REPORTS - NATALITY')">NATOUT</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="MOROUT"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'OUT OF STATE OCCURRENCE/RESIDENCE REPORTS - MORTALITY')">MOROUT</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="INFOUT"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'OUT OF STATE OCCURRENCE/RESIDENCE REPORTS - INFANT DEATHS')">INFOUT</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="FETOUT"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'OUT OF STATE OCCURRENCE/RESIDENCE REPORTS - FETAL DEATHS')">FETOUT</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="RPT50"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'REPORTED AGE OF MOTHER GREATER THAN OR EQUAL TO 50')">RPT50</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="COMP50"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'COMPUTED AGE OF MOTHER GREATER THAN OR EQUAL TO 50')">COMP50</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="NATDUP"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'NATALITY DUPLICATE RECORDS REPORT')">NATDUP</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="MORDUP"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'MORTALITY DUPLICATE RECORDS REPORT')">MORDUP</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="UCRARE"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'INFREQUENT AND RARE CAUSE OF DEATH (BY STATE)')">UCRARE</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="MISS"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'COUNT MISSING RECORDS BY QUARTER')">MISS</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="UC57"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'ALL STATES 57 SELECTED CAUSES OF DEATH TSA')">UC57</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="UC3"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'ALL STATES 3 DIGIT ICD CODE TSA')">UC3</A>
+    <INPUT TYPE="radio" NAME="the_pgm2" VALUE="FETDUP"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'FETAL DUPLICATE RECORDS REPORT')">FETDUP</A><br>
+    <INPUT TYPE="submit" NAME=the_sub VALUE="View Current FCAST OTH Log">
+    <BR><BR><BR>
+    FCAST option "6 - REVISER MENU"<BR>
+    E.g. DWJ2.FCAST.ALM5.REV.UC113S.LOG<br>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="FREQ" CHECKED><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'FREQUENCY REPORT FOR ANY VARIABLE')">FREQ</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="FIPS"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'FIPS EDIT REPORT')">FIPS</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="CNTY"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'CROSS-TABULATION BY COUNTRY OF OCCURRENCE REPORT')">CNTY</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="FAC"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'CROSS-TABULATION BY FACILITY REPORT')">FAC</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="CLOSE"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'CLOSEST NEIGHBOR FORECAST TABLE')">CLOSE</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="TRANS"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'TRANSFER FILE FROM UNIX AND PRODUCE REPORT - BIRTHS AND DEATHS')">TRANS</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="INFMO"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'REPORT INFANT DEATHS BY MONTH OF OCCURRENCE AND UNIT')">INFMO</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="FETMER"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'CREATE FETAL DEATH MERGED REVISER FILE FROM THE COPY FILES')">FETMER</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="MORDUP"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'MORTALITY DUPLICATE RECORDS REPORT')">MORDUP</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="NATDUP"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'NATALITY DUPLICATE RECORDS REPORT')">NATDUP</A>
+    <INPUT TYPE="radio" NAME="the_pgm3" VALUE="FETDUP"><A STYLE="text-decoration:none" HREF="#" onMouseover="ShowTip(this,event,'FETAL DUPLICATE RECORDS REPORT')">FETDUP</A><br>
+    <INPUT TYPE="submit" NAME=the_sub VALUE="View Current FCAST REV Log">
+  </FORM>
+  <BR><BR><HR>
+  <FORM onsubmit="ClearRadios(form1);return false;">
+    <INPUT TYPE="submit" VALUE="Clear">
+  </FORM>
+  <HR>
+  If the application appears to hang, it is probably due to a migrated log file or heavy load on the mainframe.
+</BODY>
+</HTML>

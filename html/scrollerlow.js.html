@@ -1,0 +1,31 @@
+<html>
+<head>
+<script language="JavaScript">
+  var myMsg = "Results updated as of 6/17/99.       More results now available.  Testing....";
+
+  var i = 0;
+  var scrollCounter = 0;
+
+  function scrollMsg(){
+    var frontPart = myMsg.substring(i,myMsg.length)
+    var backPart = myMsg.substring(0,i)
+    window.status = frontPart + backPart
+    if (i < myMsg.length) {
+            i++
+    }
+    else{
+            i = 0
+            scrollCounter++
+    }
+    if (scrollCounter < 3){
+            setTimeout ("scrollMsg()",100)
+    }
+  }
+</script>
+</head>
+
+<body onload="scrollMsg()" bgcolor="red">
+  <h1>Some Text and Graphics.</h1>
+  <h5>Scroller testing below</h5>
+</body>
+</html>

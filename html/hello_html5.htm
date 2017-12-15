@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>HTML5 Demo IBM developerWorks Joe Lennon 02Mar10</title>
+  <link rel="stylesheet" href="hello_html5.css" />
+  <!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+</head>
+<body>
+  <header>
+  <hgroup>
+    <h1>Datapost Name</h1>
+    <h2>An example of HTML5 and CSS3 in action</h2>
+  </hgroup>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <article>
+    <header>
+      <time datetime="2010-01-12" pubdate>
+        <span>Jan</span> 12
+      </time>
+      <h1>
+        <a href="#" title="Link to this post" rel="bookmark">Article Heading</a>
+      </h1>
+    </header>
+    <p>This is an article that demonstrates some of the new features that HTML5 and CSS3 has to offer.
+    This article contains several sections, each with its own heading, as well as a video element which
+    will play a video without Flash on browsers that support it.</p>
+    <section>
+      <header>
+        <h1>This is a section heading</h1>
+      </header>
+      <p>This is an example of a basic section of a document. A section can refer to different parts of
+      a document, application or page. According to the draft W3C spec, HTML5 sections usually have
+      headings.</p>
+    </section>
+
+    <section>
+      <header>
+        <h1>This is a video section</h1>
+      </header>
+      <p><video src="http://www.double.co.nz/video_test/transformers480.ogg" controls autoplay>
+        <div class="no-html5-video"><p>This video will work in Mozilla Firefox or Google Chrome only.</p></div>
+      </video></p>
+    </section>
+
+    <section>
+      <header>
+        <h1>This is a feedback form</h1>
+      </header>
+      <p><form>
+        <label for="contact_name">Name:</label>
+        <input id="contact_name" placeholder="Enter your name" autofocus><br />
+        <label for="contact_email">E-mail:</label>
+        <input type="email" id="contact_email" placeholder="Enter your email address"><br />
+        <label for="contact_phone">Phone:</label>
+        <input id="contact_phone" placeholder="Enter your phone number"><br />
+        <label for="contact_callback">Callback on:</label>
+        <input type="datetime" id="contact_callback"><br />
+        <label for="contact_priority">Priority:</label>
+        <input type="range" min="1" max="5" value="1" id="contact_priority"><br /><br />
+        <input type="submit" value="Request Call">
+      </form></p>
+    </section>
+
+    <section>
+      <header>
+        <h1>This is a 2D Canvas section</h1>
+      </header>
+      <p>
+        <canvas id="my_canvas" width="480" height="320"></canvas>
+        <div id="no-canvas"><p>You need a Canvas-compatible browser to view this area.</p></div>
+      </p>
+    </section>
+  </article>
+
+  <footer>
+    <p>&copy; 2009 Company Name. All rights reserved.</p>
+  </footer>
+</body>
+</html>

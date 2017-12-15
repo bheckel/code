@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<!-- Save this file to a webserver ready dir -->
+<!-- Make sure .sas file is in an Intrnet-aware dir: LINKS (d:\sas_programs), nchscode, etc -->
+
+<!-- Call via: http://localhost/intrnet/sas_intrnet_test.html -->
+<!--           http://rtpsawn321/links/t.html -->
+
+<!-- or bypass this page and just run the SAS code -->
+<!-- http://rtpsawn321/sasweb/cgi-bin/broker.exe?_service=default&_program=LINKS.t.sas&UID=foo&_debug=131 -->
+
+<!-- Modified: Thu 29 Apr 2010 13:57:45 (Bob Heckel) -->
+
+<html>
+  <head>
+    <title>Testing SAS Intrnet</title>
+    <meta name="author" content="Robert S. Heckel Jr.">
+  </head>
+  <body>
+    <!-- <form action="http://localhost/cgi-sas/broker" method="post" name="the_form"> -->
+  <!--   <form action="http://localhost/cgi-sas/broker" method="get" name="the_form"> -->
+    <!-- <form action="http://mainframe.cdc.gov/sasweb/cgi-bin/broker" method="get" name="the_form"> -->
+    <form action="http://rtpsawn321/sasweb/cgi-bin/broker.exe" method="POST" name="the_form">
+      <input type="hidden" name="_DEBUG" value="131">
+      <input type="hidden" name="_SERVICE" value="default">
+      <!-- <input type="hidden" name="_program" value="intrcode.sas_intrnet.sas"> -->
+  <!--     <input type="hidden" name="_program" value="nchscode.sas_intrnet.sas"> -->
+      <input type="hidden" name="_PROGRAM" value="links.t.sas">
+      <input type="hidden" name="THE_TYPE" value="42">
+      <input name="the_textbox" type="TEXT" value="none provided">
+      <input name="the_submit" type="submit">
+    </form>
+  </body>
+</html>

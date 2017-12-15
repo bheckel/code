@@ -1,0 +1,54 @@
+//BQH0NY JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,REGION=0M                                                                   
+//STEP1  EXEC SAS,OPTIONS='MSGCASE,MEMSIZE=0'                                
+//WORK   DD SPACE=(CYL,(500,50),,,ROUND)                                          
+//IN     DD DISP=SHR,DSN=BQH0.LINKRECS.DAT                                         
+//OUT    DD DISP=(NEW,CATLG,DELETE),UNIT=NCHS,                                               
+//          DSN=DWJ2.NYMORLNK.D25JUN02,                                            
+//          DCB=(LRECL=142,RECFM=FB),                                              
+//          SPACE=(CYL,(10,2),RLSE)                                                
+//SYSIN  DD *                                                                
+
+ /*---------------------------------------------------------------------
+  *     Name: FLATNY
+  *
+  *  Summary: Read a textfile of NY state data            
+  *           from which a special file needs to be created 
+  *           for Pam to make updates to and remerge with the
+  *           primary file.                             
+  *
+  *  Created: Tue 25 Jun 2002 12:36:00 (Bob Heckel)
+  *---------------------------------------------------------------------
+  */
+options linesize=72 pagesize=32767 nodate source source2 notes mprint
+        symbolgen mlogic obs=max errors=5 number serror merror
+        noreplace datastmtchk=allkeywords nocenter;
+
+data work.getdata;                                                             
+  infile IN;
+  input @1 yod $char4.  @6 dcertno $char6.  @18 lbirthstate $char2.
+        @21 lyob $char4.  @26 lbcertno $char6.
+        ;
+run;                                                                            
+                                                                                
+
+proc sort data=work.getdata;                                                   
+  by dcertno;                                                                   
+run;                                                                            
+                                                                                
+
+data _NULL_;                                                                    
+  file OUT;
+  set work.getdata;                                                                 
+  put @5 dcertno $char6.  @77 '33'  @123 lbcertno $char6.  
+      @129 lyob $char4.  @133 lbirthstate $char2.  @135 yod $char4.
+      ;                 
+run;                                                                            
+
+ /* Sample input */
+ /***
+2001 000003 1326 33 2000 126078                                  
+2001 000012 4652 33 2001 000032              
+2001 000068 5563 33 2001 000052
+ ***/
+/*                                                                              
+//                                                                              

@@ -1,0 +1,400 @@
+<html>
+<head>
+<title>ZDNet: Printer Friendly - <font color="#999933">Perl Wisdom:</font><br>Date Manipulation</title>
+</HEAD>
+<BODY bgcolor=#ffffff alink="#ff0000" link=#333399 vlink=#6666ff>
+<br>
+<br>
+<!-----TEXT START----->
+<TABLE BORDER=0 WIDTH=590 CELLPADDING=0 CELLSPACING=0>
+	<TR>
+		<TD WIDTH=600 VALIGN="TOP">
+<FONT FACE="arial, helvetica" SIZE="5"><B><font color="#999933">Perl Wisdom:</font><br>Date Manipulation</B></FONT><BR>
+By <i><A HREF="mailto:devhead@torkington.com">Nathan Torkington</A></i>, 
+<a href=''>DevHead</a><br>July 27, 1999 2:16 PM PT<BR>
+
+
+<a href="/devhead/stories/articles/0,4413,2200404,00.html"></a>
+
+As the new millennium approaches, many people are learning (some for
+the first time) that there are two &quot;l&quot;s and two &quot;n&quot;s in millennium.
+Others are learning that not all languages have date functions with
+obvious return values.  In this column, you'll learn how Perl handles
+dates, how to avoid writing a Y2K bug, and how to determine exactly when the
+Y2.038K bug will strike.
+
+<p>What's in a date<br>
+There are many different ways to represent dates as strings:</p>
+
+<ul>
+<li> &quot;18 Jan 1973&quot; 
+<li> &quot;18/01/1973&quot; 
+<li> &quot;01/18/1973&quot; 
+<li> &quot;Jan 18 1973&quot; 
+<li> &quot;18-01-73&quot; 
+<li> &quot;18-01-1973&quot; 
+<li> &quot;01/73&quot;</ul>
+
+<p>Some formats are particular to email messages, some to HTTP headers, some to checkbooks, some to utility bills; some are used only on credit cards, while some formats are simply ambiguous (for example, is &quot;01-06-1973&quot; the 1st day of the 6th month, or the 6th day of the 1st month?). Regardless of their uses all formats are hard to manipulate.</p>
+
+<p>If you want to find the difference between &quot;18 Jan 1973&quot; and &quot;6 Sep
+1950&quot;, you'll need to convert to a numeric representation.  Unix uses such a representation internally: epoch seconds.  A date and time together are represented as seconds since midnight January 1, 1970 GMT.  &quot;18 Jan 1973&quot; (let's assume midnight) comes out as 96163200. Midnight starts a day under this system.</p>		</TD>
+	</TR>
+</TABLE>
+<!--content stop-->
+
+
+
+<br>
+<br>
+<!-----TEXT START----->
+<TABLE BORDER=0 WIDTH=590 CELLPADDING=0 CELLSPACING=0>
+	<TR>
+		<TD WIDTH=600 VALIGN="TOP">
+<FONT FACE="arial, helvetica" SIZE="5"><B>Let's Make a Date</B></FONT><BR>
+By <i><A HREF="mailto:devhead@torkington.com">Nathan Torkington</A></i>, 
+<a href=''>DevHead</a><br>July 27, 1999 2:18 PM PT<BR>
+
+
+URL: <A HREF="http://www.zdnet.com/devhead/stories/articles/0,4413,2302822,00.html">http://www.zdnet.com/devhead/stories/articles/0,4413,2302822,00.html</A><P>
+
+<a href="/devhead/stories/articles/0,4413,2200404,00.html"></a>
+
+You can test this yourself with the <CODE>gmtime</CODE> function built into Perl. Give it an integer representing seconds since the epoch, and in scalar context it will return a string representing the date at that
+point in time:
+
+<pre>
+perl &#150;le 'print scalar gmtime 96163200'
+Thu Jan 18 00:00:00 1973</pre>
+
+<p>If you call <CODE>gmtime()</CODE> in list context, you'll get back a list of distinct values for hour, minute, seconds, day, month, year, etc:</p>
+
+<pre>
+perl &#150;le 'print join(&quot;,&quot;, gmtime 96163200)'
+0,0,0,18,0,73,4,17,0</pre>
+
+<p>The first three zeroes represent seconds, minutes, and hour values
+respectively.  Hours are 0-23, so P.M. is hour 12 and later. The next
+value is the day in the month (the 18th in this case). The fifth
+value is the month number, which starts at zero (representing
+January). It starts at zero because it's meant to be a subscript into
+an array of month names:</p>
+
+<pre>@months = qw(Jan Feb Mar Apr May Jun 
+     Jul Aug Sep Oct Nov Dec); $month  = 
+     (gmtime 96163200)&#91;4&#93;;     # &quot;Jan&quot;</pre>
+
+<p>The year (73 in the example above) is the source of much confusion.
+It is not the last two digits of the year. It is the year with 1900
+subtracted from it. Why is this the case?  That's the way C did it,
+and Perl tries to make its versions of the library and system calls
+as close to the operating system's as possible.</p>
+
+<p>So if you wanted to print out a 4-digit year, you would say:</p>
+
+<pre>$year = (gmtime 96163200)&#91;5&#93; + 1900;</pre>
+
+<p>Failure to understand how to do this is one cause of those Y2K
+bugs you've probably heard about:</p>
+
+<pre>$year = &quot;19&quot; . (gmtime 96163200)&#91;5&#93;;
+     # BAD.  2000 gives 19100</pre>
+
+<p>You're not done with the return value of <CODE>gmtime()</CODE>, though: there's still 4, 17, and 0. Those are the day of the week (Sunday is day 0), the day of the year (0 is the first day of the year. Go figure),
+and whether or not daylight savings time is in effect (0 indicating
+it wasn't, positive if it was, negative if the information was
+unavailable).</p>		</TD>
+	</TR>
+</TABLE>
+<!--content stop-->
+
+			
+			
+			
+
+
+<br>
+<br>
+<!-----TEXT START----->
+<TABLE BORDER=0 WIDTH=590 CELLPADDING=0 CELLSPACING=0>
+	<TR>
+		<TD WIDTH=600 VALIGN="TOP">
+<br>
+<br>
+<FONT FACE="arial, helvetica" SIZE="5"><B>Now! Now! Now!</B></FONT><BR>
+By <i><A HREF="mailto:devhead@torkington.com">Nathan Torkington</A></i>, 
+<a href=''>DevHead</a><br>July 27, 1999 2:18 PM PT<BR>
+
+
+URL: <A HREF="-">-</A><P>
+
+<a href="/devhead/stories/articles/0,4413,2200404,00.html"></a>
+
+The <CODE>time()</CODE> function, built into Perl, returns you the current date and time as an epoch seconds value.  If you want to turn this into a
+string, use the <CODE>gmtime()</CODE> and <CODE>localtime()</CODE> functions:
+<pre>
+$now = localtime(time());
+($sec, $min, $hour, $day, $mon, $year, 
+     $wday, $yday, $isdst) = localtime(time());</pre>
+
+<p>If you call <CODE>localtime()</CODE> or <CODE>gmtime()</CODE> with no argument, it will call
+<CODE>time(</CODE>) for you:</p>
+
+<pre>$now = localtime();
+($sec, $min, $hour, $day, $mon, $year, 
+     $wday, $yday, $isdst) = localtime();</pre>		</TD>
+	</TR>
+</TABLE>
+<!--content stop-->
+
+
+			
+			
+
+
+
+
+<!-----TEXT START----->
+<br>
+<br>
+<TABLE BORDER=0 WIDTH=590 CELLPADDING=0 CELLSPACING=0>
+	<TR>
+		<TD WIDTH=600 VALIGN="TOP">
+<FONT FACE="arial, helvetica" SIZE="5"><B>Common Date/Time Operations</B></FONT><BR>
+By <i><A HREF="mailto:devhead@torkington.com">Nathan Torkington</A></i>, 
+<a href=''>DevHead</a><br>July 27, 1999 2:19 PM PT<BR>
+
+
+URL: <A HREF="http://www.zdnet.com/devhead/stories/articles/0,4413,2302837,00.html">http://www.zdnet.com/devhead/stories/articles/0,4413,2302837,00.html</A><P>
+
+<a href="/devhead/stories/articles/0,4413,2200404,00.html"></a>
+
+If you want to find the difference between two points in time, convert
+them to epoch seconds values and then subtract one from the other:
+<br clear="all">
+
+<pre>$difference_in_seconds = $later_datetime &#151; 
+$earlier_datetime;</pre>
+
+<p>To convert seconds to minutes, hours, or days, you simply divide by
+60, 3600, and 86400 respectively:</p>
+<pre>
+$difference_in_minutes = $difference_in_seconds / 60;
+$difference_in_hours = $difference_in_seconds / 3600;
+$difference_in_day = $difference_in_seconds / 86400;</pre>
+
+<p>You can use this division in reverse to answer the question &quot;what
+will the date be four days from now?&quot;</p>
+
+<pre>$then = time() + 86400 * 4;
+print scalar localtime $then;</pre>
+
+<p>This gives an answer accurate to the second.  For instance, if the
+epoch seconds value four days in the future is 932836935, then when
+you print the date out as a string you see:</p>
+
+<pre>Sat Jul 24 11:23:17 1999</pre>
+
+<p>If you want to drop back to the midnight that started the date
+(e.g. &quot;Sat Jul 24 00:00:00 1999&quot;) use modulus:</p>
+<pre>
+$then = $then &#151; $then % 86400; 
+     # truncate to the day</pre>
+
+<p>Similarly you can round to the nearest midnight with:</p>
+
+<pre>$then += 43200;    # add on half a day
+$then = $then &#151; $then % 86400; 
+     # truncate to the day</pre>
+
+<p>This works if your time zone is an even number of hours away from GMT.
+Not all time zones are so obliging. What you really want is an epoch
+seconds value where the seconds are measured in your own time zone,
+not in GMT.</p>
+
+<p>Perl comes with a module called <CODE>Time::Local</CODE> which provides you with two functions, <CODE>timelocal()</CODE> and <CODE>timegm()</CODE>. These take the same list of values that <CODE>localtime()</CODE> and <CODE>gmtime()</CODE> return, and give you back an epoch seconds value:</p>
+
+<pre>use Time::Local;
+$then = time() + 4*86400;
+$then = timegm localtime $then;
+     # local epoch seconds
+$then -= $then % 86400;
+     # truncate to the day
+$then = timelocal gmtime $then;      
+     # back to gmt epoch seconds
+print scalar localtime $then, &quot;&#092;n&quot;;</pre>		</TD>
+	</TR>
+</TABLE>
+<!--content stop-->
+
+
+
+
+<br>
+<br>
+
+<!-----TEXT START----->
+<TABLE BORDER=0 WIDTH=590 CELLPADDING=0 CELLSPACING=0>
+	<TR>
+		<TD WIDTH=600 VALIGN="TOP">
+<FONT FACE="arial, helvetica" SIZE="5"><B>Making Sense of the World</B></FONT><BR>
+By <i><A HREF="mailto:devhead@torkington.com">Nathan Torkington</A></i>, 
+<a href=''>DevHead</a><br>July 27, 1999 2:22 PM PT<BR>
+
+
+URL: <A HREF="http://www.zdnet.com/devhead/stories/articles/0,4413,2302844,00.html">http://www.zdnet.com/devhead/stories/articles/0,4413,2302844,00.html</A><P>
+
+<a href="/devhead/stories/articles/0,4413,2200404,00.html"></a>
+
+So far you've been manipulating distinct hour, day, year, etc. values,
+as well as epoch seconds values.  But the world presents you dates and
+times as strings.  How do you go from a string to an epoch seconds
+value?
+
+<p>One way is to write a small custom parser.  This has the advantage of
+being flexible and fast:</p>
+
+<pre>use Time::Local;
+@months{qw(Jan Feb Mar Apr May Jun 
+     Jul Aug Sep Oct Nov Dec)} = (0..11);
+$_ = &quot;19 Dec 1997 15:30:02&quot;;
+/(&#092;d&#092;d)&#092;s+(&#092;w+)&#092;s+(&#092;d+)&#092;s+(&#092;d+):(&#092;d+):(&#092;d+)/
+     or die &quot;Not a date&quot;;
+$mday = $1;
+$mon  = exists($months{$2}) ? $months{$2} : die
+     &quot;Bad month&quot;;
+$year = $3 &#151; 1900;
+($h, $m, $s) = ($4, $5, $6);
+$epoch_seconds = timelocal($s,$m,$h,$mday,$mon,$year);</pre>
+
+<p>A more general solution, however, is to install the <CODE>Date::Manip</CODE> module
+<a href="http://search.cpan.org/search?dist=DateManip">from CPAN</a>.</p>
+
+<pre>use Date::Manip;
+$epoch_seconds = UnixDate(&quot;19 Dec 1997 
+     15:30:02&quot;,&quot;s&quot;);</pre>
+
+<p>Be warned, however, that <CODE>Date::Manip</CODE> is a large module and will increase the starting time of your program.  One reason to accept the startup penalty is because <CODE>Date::Manip</CODE> parses dates in all sorts of different and interesting formats:</p>
+
+<pre>&quot;today&quot;
+&quot;now&quot;
+&quot;first sunday in april 2000&quot;
+&quot;3:15, today&quot;
+&quot;3:15pm, first sunday in april 2000&quot;
+&quot;2000/01/18 09:15&quot;</pre>		</TD>
+	</TR>
+</TABLE>
+<!--content stop-->
+
+
+
+
+
+
+
+<br>
+<br>
+<!-----TEXT START----->
+<TABLE BORDER=0 WIDTH=590 CELLPADDING=0 CELLSPACING=0>
+	<TR>
+		<TD WIDTH=600 VALIGN="TOP">
+<FONT FACE="arial, helvetica" SIZE="5"><B>2036, 2037, 2038, ..., 1901?!</B></FONT><BR>
+By <i><A HREF="mailto:devhead@torkington.com">Nathan Torkington</A></i>, 
+<a href=''>DevHead</a><br>July 27, 1999 2:24 PM PT<BR>
+
+
+URL: <A HREF="http://www.zdnet.com/devhead/stories/articles/0,4413,2302846,00.html">http://www.zdnet.com/devhead/stories/articles/0,4413,2302846,00.html</A><P>
+
+<a href="/devhead/stories/articles/0,4413,2200404,00.html"></a>
+
+Most C programs store an epoch seconds value in a signed integer,
+which means you can have positive and negative dates. But computer memory cannot represent an integer of infinite size; hence we only have so many
+bits in which to represent seconds. This means that there are limits
+on the date calculations we can do with epoch seconds values.
+
+<p>The precise limitations depend on how many bits your machine will give
+to such an integer. Perl tries hard to store integer values in 32
+bits.  Crudely speaking, one bit will be used to indicate positive or
+negative, so we're down to 31 bits for the number. The biggest number
+you can store in 8 bits is 255, which is 2 to the power of 8, less
+one.  So here's how Perl can tell us the biggest number we can store
+in a signed 32-bit integer:</p>
+
+<pre>print 2**31&#150;1, &quot;&#092;n&quot;;
+2147483647</pre>
+
+<p>What date does this correspond to?</p>
+
+<pre>print scalar(gmtime 2**31-1), &quot;&#092;n&quot;;
+Tue Jan 19 03:14:07 2038</pre>
+
+<p>What happens one second after then?</p>
+
+<pre>print scalar(gmtime 2**31), &quot;&#092;n&quot;;
+Fri Dec 13 20:45:52 1901</pre>
+
+<p>Whoa! What happened? 2**31 is too big for a signed 32-bit integer.
+It &quot;wraps around,&quot; setting the negative bit, and becoming the largest negative number that's representable. This corresponds to the most
+number of seconds before the 1970 epoch.</p>
+
+<p>What is the end result of this? You can't store dates before
+<code>gmtime(2**31)</code> or after <code>gmtime(2**31-1)</code> as epoch seconds.</p>
+
+<p>Don't reach for the cyanide pill just yet, though &#151; it's not a major problem. If you need to work on dates before or after the boundaries
+of signed 32-bit epoch seconds, simply change your representation.
+There are plenty of modules on CPAN that work with dates: <CODE>Date::Calc</CODE> and <CODE>Date::Manip</CODE> are probably the two most powerful.</p>
+
+<p>Both modules use their own date representations, and so avoid the
+Y1901-Y2038 restrictions. <CODE>Date::Manip</CODE> uses the Gregorian calendar, extrapolated back to the year 0000 AD and forward to the year 9999AD. <CODE>Date::Calc</CODE> also uses the Gregorian calendar and can work with years from 1 to at least 32767.</p>		</TD>
+	</TR>
+</TABLE>
+<!--content stop-->
+
+			
+			
+			
+			
+			
+
+
+<br>
+<br>
+<!-----TEXT START----->
+<TABLE BORDER=0 WIDTH=590 CELLPADDING=0 CELLSPACING=0>
+	<TR>
+		<TD WIDTH=600 VALIGN="TOP">
+<FONT FACE="arial, helvetica" SIZE="5"><B>Summary</B></FONT><BR>
+By <i><A HREF="mailto:devhead@torkington.com">Nathan Torkington</A></i>, 
+<a href=''>DevHead</a><br>July 27, 1999 2:26 PM PT<BR>
+
+
+URL: <A HREF="http://www.zdnet.com/devhead/stories/articles/0,4413,2302852,00.html">http://www.zdnet.com/devhead/stories/articles/0,4413,2302852,00.html</A><P>
+
+<a href="/devhead/stories/articles/0,4413,2200404,00.html"></a>
+
+Various countries adopted the Gregorian calendar at different times
+(you've probably heard the story of the missing fortnight in England
+in 1752 caused by the change from Julian to Gregorian calendars), and
+you should be aware of which calendar your date assumes. Taking a
+date derived from the Gregorian calendar and working with it as though
+it were a Julian date is not going to give accurate results. However, this
+rarely turns out to be something that people other than astronomers
+and astrologers care about (Shakespeare was born on a Thursday? Or
+was it a Saturday? Was Pluto ascending Uranus?).
+
+<p>The 32 bit limit does have wider ramifications than those associated with Perl programs. Inside every Unix machine is an integer being incremented once each second, counting seconds since the epoch. If this value, as it is on many Unices, is kept in a 32-bit signed integer, the system will experience severe time confusion in 2038 when the rollover occurs. Most operating systems are expected to fix this well before 2038.</p>
+
+<p>For dates and times in the range 1902-2037, storing them as the number
+of seconds before or after the epoch (midnight January 1, 1970 GMT)
+lets you use integer arithmetic, the built-in <CODE>gmtime()</CODE> and <CODE>localtime()</CODE> functions, and the standard <CODE>Time::Local</CODE> module. To calculate dates outside that range, or to parse dates in odd formats, try the <CODE>Date::Manip</CODE> and <CODE>Date::Calc</CODE> modules from CPAN. </p>
+
+<p>Further Reading<br>
+Chapter 3 of <i>Perl Cookbook</i> is dedicated to dates and times. The
+<CODE>perlfunc manpage</CODE> (also in Chapter 3 of <i>Programming Perl</i>) has information on the <CODE>gmtime()</CODE> and <CODE>localtime()</CODE> functions.  <a href="http://www.cpan.org/">CPAN is the Comprehensive Perl Archive Network,</a>: a set of mirrored FTP and web sites, which includes <a href="http://www.perl.com/CPAN-local/">this Perl site,</a> and <a href="http://search.cpan.org/">an experimental search interface</a> for the modules on CPAN. Finally, <a href="http://www.pip.dknet.dk/~c-t/calendar.html">this site on time measurement and chronology</a> has lots of information on different calendars.</p>		</TD>
+	</TR>
+</TABLE>
+<!--content stop-->
+
+</body>
+</html>
+

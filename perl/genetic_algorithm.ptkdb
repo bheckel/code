@@ -1,0 +1,16 @@
+$files = {
+           '_<genetic_algorithm.pl' => [
+                                         {
+                                           'fname' => 'genetic_algorithm.pl',
+                                           'line' => '62',
+                                           'text' => '  foreach my $byte (1 .. $dna_byte_length)
+',
+                                           'expr' => undef,
+                                           'value' => 1,
+                                           'type' => 'user'
+                                         }
+                                       ]
+         };
+$expr_list = [];
+$eval_saved_text = undef;
+$main_win_geometry = '820x500+154+154';

@@ -1,0 +1,169 @@
+<HTML>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+ *     Name: balloon.js.html
+ *  Summary: Display tool-tip like balloons over links.
+ *           Only tested on IE 5.5 and Netscape 4.76
+ *
+ *           See tooltip.html for better version.
+ *
+ *  Adapted: Tue Nov 19 15:30:17 2002 (Bob Heckel -- based on Balloon000515
+ *                                     by Christiaan Hofman, May 2000 )
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<HEAD>
+  <SCRIPT> 
+    // Used if no link is used in the call to LinkBalloon()
+    var defaultpg = 'nothing_to_see_here.html';
+    var hash = new Array();
+
+    // Must be one entry for each link in the <BODY> below.
+    hash['link1'] = 'This is the first demo Balloon';
+    hash['link2'] = 'This is the second demo Balloon with a longer tooltip';
+
+
+    function SetUpTips() { 
+      for ( var i in hash ) {
+        MakeBalloon(i, 100, hash[i]);
+      }
+    }   
+
+
+    function MakeBalloon(id, width, message) {
+      var balloon = '<STYLE TYPE="text/css"><!-- #' + id + 
+                    ' {width:'+width+';height:auto;} --></STYLE>' +
+                    '<DIV CLASS="balloon" ID="'+id+'">'+message+'</DIV>';
+      document.writeln(balloon);
+    }
+
+
+    function LinkBalloon(id, text, status, href) {
+      status = status || balloonStatus;
+      if ( href ) {
+        var cls = 'linktip';
+        if ( status == 'href' )  status = null;
+      } else {
+        var cls = 'tip';
+        href = defaultpg;        
+        if ( status == 'href' )  status = '';
+      }
+      if ( status == 'id' )  status = id;
+      status = (typeof(status) == 'string')? 'status=\''+status+'\'' : '';
+      document.write('<A HREF="'+href+'" CLASS="'+cls+'"'+
+                   ' onMouseOver="ShowBalloon(\''+id+'\', event);'+status+'"'+
+                   ' onMouseOut="HideBalloon(\''+id+'\',event)">'+
+                   text +'</A>');
+    }
+
+
+    // Standard call for a Balloon, called by the link at mouseover. 
+    function ShowBalloon(id, event) {
+      if ( document.all ) {
+        var x = document.body.scrollLeft + document.documentElement.scrollLeft 
+                                                   + window.event.clientX + 10;
+        var y = document.body.scrollTop + document.documentElement.scrollTop 
+                                                   + window.event.clientY + 10;
+      } else if (document.layers || document.getElementById) {
+        var x = event.pageX + 10;
+        var y = event.pageY + 10;
+      } 
+      PutBalloon(id, x, y);
+      if ( window.onBalloonCall )  window.onBalloonCall(id, event);             
+    }
+
+
+    // Standard removal of a Balloon, called by the link at mouseout. 
+    function HideBalloon(id, event) {
+      RemoveBalloon(id);
+      if ( window.onBalloonHide )  window.onBalloonHide(id, event);
+    }
+
+
+    // The event handlers onBalloonCall and onBalloonHide can be set to
+    // perform appropriate actions.  When another Balloon is called or
+    // removed, use the following two functions (to avoid a loop). 
+    function PutBalloon(id, x, y) {
+      var l;
+      with (Math) {
+        if ( document.layers ) {
+            l = document.layers[id];
+            l.left = min(max(x, window.pageXOffset), window.pageXOffset + 
+                                             window.innerWidth - l.clip.width);
+            l.top = min(max(y, window.pageYOffset), window.pageYOffset + 
+                                           window.innerHeight - l.clip.height);
+        } else if ( document.all ) {
+            l = document.all[id].style;
+            l.pixelLeft = min(max(x, document.body.scrollLeft + 
+                  document.documentElement.scrollLeft), 
+                  document.body.scrollLeft + 
+                  document.documentElement.scrollLeft + 
+                  document.body.clientWidth - l.pixelWidth);
+            l.pixelTop = min(max(y, document.body.scrollTop + 
+                                 document.documentElement.scrollTop), 
+                                 document.body.scrollTop + 
+                                 document.documentElement.scrollTop + 
+                                 document.body.clientHeight - l.pixelHeight);
+        } else if ( document.getElementById ) {
+            l = document.getElementById(id).style;
+            l.left = min(max(x, window.pageXOffset), window.pageXOffset + 
+                                  window.innerWidth - parseInt(l.width)) +"px";
+            l.top = min(max(y, window.pageYOffset), window.pageYOffset + 
+                                window.innerHeight - parseInt(l.height)) +"px";
+        } 
+      }
+      if ( !l ) return;
+      l.visibility = "visible";
+      l.zIndex = 10;
+    }
+
+
+    function RemoveBalloon(id) {
+      if ( document.layers ) {
+          var l = document.layers[id];
+      } else if ( document.all ) {
+          var l = document.all[id].style; 
+      } else if ( document.getElementById ) {
+          var l = document.getElementById(id).style;
+      }
+      if ( !l ) return;
+      if ( !l.fixed )   l.visibility = "hidden";
+    }
+
+    //  The default balloon status text. 
+    window.balloonStatus = "Tip";
+
+    //  The default balloon and link styles. 
+    document.writeln( 
+      '<STYLE TYPE="text/css"><!--',
+      'DIV.balloon {',
+      ' position:absolute; visibility:hidden; display:block; ',
+      ' background-color:#FFFACD; layer-background-color:#FFEC8B; color:black;',
+      ' font-family:helvetica; border-color:#CFCFCF;',
+      ' border-width:thin; border-style:outset; padding:0; } ',
+      ' A.tip:link { text-decoration:none; color:blue; cursor:default; } ',
+      ' A.tip:visited { text-decoration:none; color:purple; cursor:default; } ',
+      ' A.tip:active { text-decoration:none; color:red; cursor:default; } ',
+      ' A.tip:hover { text-decoration:none; color:red; cursor:default; } ',
+      ' A.linktip:link { color:blue; } ',
+      ' A.linktip:visited { color:purple; } ',
+      ' A.linktip:active { color:blue; } ',
+      ' A.linktip:hover { color:red }',
+      '--></STYLE>');
+
+    SetUpTips();  // initialize
+  </SCRIPT> 
+</HEAD> 
+<BODY> 
+  Testing a line Testing a line Testing a line Testing a line
+  <SCRIPT> LinkBalloon('link1','xfirst link') </SCRIPT>
+  Testing a line Testing a line Testing a line Testing a line
+  Testing a line Testing a line Testing a line Testing a line
+  Testing a line Testing a line Testing a line Testing a line
+  Testing a line Testing a line Testing a line Testing a line
+  Testing a line Testing a line Testing a line Testing a line
+  <SCRIPT> LinkBalloon('link2','ysecond link','href','http://www.cdc.gov');</SCRIPT>
+  Testing a line Testing a line Testing a line Testing a line
+  Testing a line Testing a line Testing a line Testing a line
+  Testing a line Testing a line Testing a line Testing a line
+</BODY>
+</HTML>
+
+  <!--  /* vim: set ft=javascript: */ -->

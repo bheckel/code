@@ -1,0 +1,77 @@
+1                                        The SAS System          14:10 Monday, November 27, 2006
+
+NOTE: Copyright (c) 1999-2001 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software Release 8.2 (TS2M0)
+      Licensed to GSK US 400 USER PC LICENSE, Site 0047144009.
+NOTE: This session is executing on the WIN_PRO  platform.
+
+
+
+The following hot fixes for SAS version 8.2 have been applied.
+
+    82BA01    82BA04    82BA10    82BA13    82BA14    82BA19
+    82BA22    82BA25    82BA27    82BA34    82BA35    82BA37
+    82BA41    82BA47    82BA48    82BA53    82BA54    82BA61
+    82BA67    82BA72    82BA82    82BA84    82BA91    82BA93
+    82BB01    82BB08    82BB12    82BB13    82BB18    82BB19
+    82BB24    82BB25    82BB26    82BB27    82BB28    82BB32
+    82BB35    82BB39    82BB40    82BB41    82BB44    82BB46
+    82BB49    82BB50    82BB51    82BB59    82BB65
+
+    82AS02    82CT07    82ES01    82ES02    82ET01    82FS01
+    82GR02    82GR06    82ML01    82MX01    82OC02    82OC05
+    82OD06    82PF04    82QC01    82QC02    82QC03    82QC04
+    82SB07    82ST01    82ST04    82ST08    82ST11    82ST13
+    82ST14    82ST15    82ST16
+
+For a description of the problems addressed by these hot fixes please
+refer to http://ftp.sas.com/techsup/download/hotfix/82_win_sbcs.html
+
+
+NOTE: SAS initialization used:
+      real time           0.59 seconds
+      cpu time            0.40 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is C:\cygwin\home\bheckel\code\sas\autoexec.sas.
+
+NOTE: (autoexec.sas): SASROOT is C:\Program Files\SAS Institute\SAS\V8
+NOTE: (autoexec.sas): WORK lib is:
+NOTE: Libref=   WORK 
+      Scope=    Kernel   
+      Engine=   V8 
+      Access=   TEMP 
+      Physical Name= C:\cygwin\home\bheckel\tmp\SAS Temporary Files\_TD2288
+      File Name= C:\cygwin\home\bheckel\tmp\SAS Temporary Files\_TD2288
+NOTE: Libref L was successfully assigned as follows: 
+      Engine:        V8 
+      Physical Name: C:\cygwin\home\bheckel\code\sas
+
+
+NOTE: }}}
+
+NOTE: AUTOEXEC processing completed.
+
+1          options notes source NOcenter;
+2          
+3          data; put '!!!hello'; run;
+
+!!!hello
+NOTE: The data set WORK.DATA1 has 1 observations and 0 variables.
+
+4          
+5          data tmp;
+6            set SASHELP.shoes (obs=10);
+7          run;
+
+NOTE: There were 10 observations read from the data set SASHELP.SHOES.
+NOTE: The data set WORK.TMP has 10 observations and 7 variables.
+
+8          proc print data=_LAST_; run;
+
+NOTE: There were 10 observations read from the data set WORK.TMP.
+NOTE: The PROCEDURE PRINT printed page 1.
+
+
+bob
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414

@@ -1,0 +1,7 @@
+"CS112"|"King      "|5
+"CS114"|"Othertwo  "|10
+"CS116"|"Boomone   "|12
+"CX123"|"Oneentry  "|1
+"DD123"|"Dummyone  "|12
+"DD456"|"Dummytwo  "|10
+"DD789"|"Dummythree"|5

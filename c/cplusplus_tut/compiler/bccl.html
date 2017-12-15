@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<TITLE>Compiling from command line with Borland C++</TITLE>
+<meta name="description" content="Method for compiling console applications.">
+<meta name="keywords" content="c++ console compile compiler borland">
+</HEAD>
+<body bgcolor="white">
+
+<!--cap-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Compilers </FONT><BR>
+ <FONT SIZE=5><B>Compiling from the command line with Borland C++</B></FONT>
+</TD><TD VALIGN="bottom">
+ <a href="http://www.cplusplus.com"><IMG SRC="/img/mini.gif" ALT="cplusplus.com" BORDER=0></A>
+</TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/cap-->
+<P>
+<TABLE WIDTH=100%><TR><TD BGCOLOR="#BFFFBF">
+PREVIOUS NOTE: This text is based upon the free distribution of the Borland C++ 5.5
+Command Line tools, but it is applicable to most C++ compilers made by Borland
+with just some small variations.
+</TD></TR></TABLE>
+<P>
+Borland compilers support the possibility to compile our projects directly from the
+command line.
+<P>
+For that it is recommendable that we make certain preparative operations that will ease
+the compiling process.  First we must locate the directory where our compiler has been
+installed, that from now on we will call <I>base directory</I>. From this directory
+they usually hang subdirectories <TT><B>BIN</B></TT>, <TT><B>INCLUDE</B></TT> and
+<TT><B>LIB</B></TT>. In the Borland C++ 5.5 Command Line Tools the directory by default is:
+<blockquote><TT>C:\BORLAND\BCC55</TT></BLOCKQUOTE>
+<P>
+Once located, we will go to the subdirectory called <TT><B>BIN</B></TT> that hangs from
+this <I>base directory</I>.  In the <TT>BIN</TT> subdirectory is the main application
+that is in charge of compiling programs from the command line;  in case that it
+is a 32bits Borland C++ compiler this one will be called <TT>BCC32.exe</TT>;
+otherwise in previous versions it could be called <TT>BCC.exe</TT> (Borland C++) or
+<TT>TCC.exe</TT> (Turbo C++).
+<P>
+If our compiler is <TT>BCC32.EXE</TT> we have to generate a file called
+<TT><B>BCC32.CFG</B></TT> in the case that it does not exists yet (If we are using an old
+version of Turbo C++ this file has to be called <TT>TURBOC.CFG</TT>).
+In order to edit te file you may use either Windows Notepad, MSDOS <TT>Edit</TT> or your
+favorite editor. You must make that the file include the following lines
+(copy all characters, even the initial <TT><B>-</B></TT>, and do not add spaces):
+<blockquote ><TT>
+-IC:\BORLAND\BCC55\INCLUDE<BR>
+-LC:\BORLAND\BCC55\LIB
+</TT></BLOCKQUOTE>
+replacing <TT>C:\BORLAND\BCC55</TT> by your <I>base directory</I> if it is different.
+Optionally, in this file we may include other options that we always want to be included
+when compiling a program.
+<P>
+Without leaving <TT><B>BIN</B></TT> directory we will create the file
+<TT><B>ILINK32.CFG</B></TT> (if our compiler is not a 32 bits one, we must create the
+file <TT>TLINK.CFG</TT>) with the following content:
+<blockquote><TT>
+- LC:\BORLAND\BCC55\LIB
+</TT></BLOCKQUOTE>
+replacing <TT>C:\BORLAND\BCC55</TT> by your <I>base directory</I> if it is different.
+In this file we can include any other linker options.
+<P>
+Finally we only have to include the complete path of
+the <TT><B>BIN</B></TT> directory that hangs from our <I>base directory</I>
+(<TT>C:\BORLAND\BCC55\BIN</TT>)
+in the system environment variable called <TT><B>PATH</B></TT>. For that:
+<UL>
+<LI><B>Under Windows 95/98 or MSDOS:</B> We edit the file <TT>C:\AUTOEXEC.BAT</TT>.
+A method to do so if we are in Windows is to press <B>Start</B>, select the <B>Run...</B>
+options in the menu and type in:<BR>
+<TT>&nbsp; NOTEPAD C:\AUTOEXEC.BAT</TT><BR>
+or if we are in MSDOS mode, we shall type:<BR>
+<TT>&nbsp; EDIT C:\AUTOEXEC.BAT</TT><BR>
+Once we have opened the file we will add the following line at the end of it:
+<BR>
+<TT>&nbsp; SET PATH=C:\BORLAND\BCC55\BIN;%PATH%</TT><BR>
+(replacing <TT>C:\BORLAND\BCC55</TT> by your <I>base directory</I>)<BR>
+In order to finish, we will restart the computer.
+
+<LI><B>Under Windows NT/2000:</B> Open the System Properties dialog box. This is done
+by simultaneously pressing Windows and Pause keys or by clicking on <B>Start</B>,
+<B>Configuration</B>, <B>Control Panel</B>, <B>System</B>.<BR>
+There we go to <B>Advanced</B>, <B>Environment Variables...</B>, where the different
+environment variables will be shown, we will press on the one called <B>Path</B> and we
+will click on <B>edit</B>, where -without erasing the previous content- we will add a
+point-and-comma sign at the end (<TT><B>;</B></TT>) followed by the directory:<BR>
+<TT>&nbsp; C:\BORLAND\BCC55\BIN</TT><BR>
+(replacing <TT>C:\BORLAND\BCC55</TT> by our <I>base directory</I>)
+</UL>
+
+<P>
+<H2>Compiling</H2>
+Once finished the previous process we will be ready to use our borland compiler
+for compiling programs from the command line. To do so we have to use the executable
+<TT><B>BCC32.EXE</B></TT> located at <TT>BIN</TT> subdirectory, that should already
+be in the PATH.  If you want to detailed know its options type the name of the
+program without parameters (<TT><B>BCC32.EXE</B></TT>). In order to compile a program
+you shall write the compiler name (<TT><B>BCC32</B></TT>) followed by the names of the
+sourcecode files you want to compile.  For example, to compile the file
+<TT><B>test.cpp</B></TT> we would write:
+<blockquote><TT><B>bcc32 test.cpp</B></TT></BLOCKQUOTE>
+in the command line.
+
+<P>
+<TABLE WIDTH=100%><TR><TD ALIGN="right">
+<FONT SIZE=1>Borland and Borland C++ Compiler are trademarks of Inprise Corporation</FONT>
+</TD></TR></TABLE>
+
+<!--cua-->
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="/img/2x2.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy;The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+ <TR><TD ALIGN="center"><a href="javascript:history.go(-1)" ><IMG SRC="/img/butnback.gif" BORDER=0>Return back</A></TD></TR>
+
+</TABLE></CENTER>
+<!--/cua-->
+
+</BODY>
+</HTML>

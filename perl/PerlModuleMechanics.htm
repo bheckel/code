@@ -1,0 +1,678 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd"> 
+<html>
+<head>
+<TITLE>Perl Module Mechanics</TITLE>
+</head>
+<body bgcolor="#fffff8" text="#000000">
+
+<H1 align="center"><A NAME="TOC1">Perl Module Mechanics</A></H1>
+
+This page describes the mechanics of creating, compiling, releasing
+and maintaining Perl modules.
+<p>
+This is not a reference manual.
+Rather, it is a running account of how to do these things.
+More to the point, it is an account of how <em>I</em> do these things.
+Accordingly
+<p>
+<ul>
+<li> It ignores <a href="pm/xs/intro/index.html">XS</a>
+<li> Pathnames and other details may vary on your system
+<li> You have to put up with a certain amount of editorializing
+</ul>
+<hr>
+
+<UL>
+<LI> <A HREF="#TOC2"> Perl modules </A>
+<UL>
+<LI> <A HREF="#TOC3"> The Perl 5 Module List </A>
+<LI> <A HREF="#TOC4"> Module names </A>
+<LI> <A HREF="#TOC5"> One component, two component, three component, four... </A>
+<LI> <A HREF="#TOC6"> Module names vs. Inheritance </A>
+<LI> <A HREF="#TOC7"> Module files </A>
+<LI> <A HREF="#TOC8"> Module libraries </A>
+</UL>
+<LI> <A HREF="#TOC9"> Ready, Set, Go </A>
+<UL>
+<LI> <A HREF="#TOC10"> Development directories </A>
+<LI> <A HREF="#TOC11"> How hard could it be? </A>
+<LI> <A HREF="#TOC12"> h2xs </A>
+</UL>
+<LI> <A HREF="#TOC13"> Creating a Perl Module </A>
+<UL>
+<LI> <A HREF="#TOC14"> MANIFEST </A>
+<LI> <A HREF="#TOC15"> Changes </A>
+<LI> <A HREF="#TOC16"> test.pl </A>
+<LI> <A HREF="#TOC17"> Makefile.PL </A>
+<LI> <A HREF="#TOC18"> Bar.pm </A>
+</UL>
+<LI> <A HREF="#TOC19"> Building a Perl Module </A>
+<UL>
+<LI> <A HREF="#TOC20"> perl Makefile.PL </A>
+<LI> <A HREF="#TOC21"> make </A>
+<LI> <A HREF="#TOC22"> make test </A>
+<LI> <A HREF="#TOC23"> make install </A>
+<LI> <A HREF="#TOC24"> Abbreviations </A>
+<LI> <A HREF="#TOC24.5">pm_to_blib</a>
+</UL>
+<LI> <A HREF="#TOC25"> Building Related Perl Modules </A>
+<LI> <A HREF="#TOC26"> Testing a Perl Module from the Build Directory</A>
+<UL>
+<LI> <A HREF="#TOC27"> Multiple .t files </A>
+<LI> <A HREF="#TOC28"> Data files </A>
+<LI> <A HREF="#TOC29"> -w </A>
+<LI> <A HREF="#TOC30"> Verbose Output </A>
+</UL>
+<LI> <A HREF="#TOC31"> Testing a module from a Perl program </A>
+<LI> <A HREF="#TOC32"> Documenting a Perl Module </A>
+<UL>
+<LI> <A HREF="#TOC33"> Man Pages </A>
+<LI> <A HREF="#TOC34"> Web Pages </A>
+</UL>
+</UL>
+
+<hr>
+
+<H2><A NAME="TOC2">Perl modules</A></H2>
+A <I>Perl module</I> is a self-contained piece of Perl code that can
+be used by a Perl program or by other Perl modules. It is conceptually
+similar to a C link library, or a C++ class.
+
+<H3><A NAME="TOC3"></A>
+<A HREF="ftp://ftp.cis.ufl.edu/pub/perl/CPAN/modules/00modlist.long.html">
+The Perl 5 Module List</A></H3>
+
+<A HREF="ftp://ftp.cis.ufl.edu/pub/perl/CPAN/modules/00modlist.long.html">
+The Perl 5 Module List</A> describes many publicly available modules, and includes guidelines for module creation and use.
+This document provides introduction and overview; 
+the module list should be consulted for detail and references.
+
+<H3><A NAME="TOC4">Module names</A></H3>
+Each Perl module has a name. Module names must be unique.  To minimize name space collisions, Perl provides a hierarchal name space for modules, similar to the name space for Java classes.
+
+Components of a module name are separated by double colons (::).  Thus, we can have 
+ <P>
+<table border>
+<tr><th>Module		</th><th>Function			     </th></tr>
+<tr><td>Math::Complex	</td><td>Complex number data type	     </td></tr>
+<tr><td>Math::Approx	</td><td>Approximate x,y-values by a function</td></tr>
+<tr><td>String::Approx  </td><td>Approximate string matching and substitution</td></tr>
+<tr><td>String::BitCount</td><td>Count number of "1" bits in strings</td></tr>
+</table>
+ <P>
+without conflict.
+
+<H3><A NAME="TOC5">One component, two component, three component, four...</A></H3>
+There is no restriction on the number of components in a module name; however, most ordinary application modules have two-component names.
+ <P>
+One-component module names are a limited resource, and should only be taken for patently global things:
+ <P>
+<table border>
+<tr><th>Module		</th><th>Function			     </th></tr>
+<tr><td>Config</td><td>Stores details of the Perl build configuration </td></tr>
+</table>
+ <P>
+Names with three or more components risk confusing users:
+ <P>
+Will the real module please stand up?
+
+<UL>
+<LI> Math::Complex::Number
+<LI> Math::Number::Complex
+</UL>
+
+<H3><A NAME="TOC6">Module names vs. Inheritance</A></H3>
+The module name hierarchy doesn't have anything to do with class inheritance.  
+<CODE>Math::Complex</CODE> might be a subclass of <CODE>Math</CODE>, or it might not.  
+It might be a subclass of <CODE>String::Approx</CODE>, for that matter.
+
+<H3><A NAME="TOC7">Module files</A></H3>
+Each module is contained in a <a href="#single">single</a> file.  Module files are stored in a subdirectory hierarchy that parallels the module name hierarchy.  Thus, 
+ <P>
+<table border>
+<tr><th>Module		</th><th>Is Stored In		</th></tr>
+<tr><td>Config		</td><td>Config.pm		</td></tr>
+<tr><td>Math::Complex	</td><td>Math/Complex.pm	</td></tr>
+<tr><td>String::Approx	</td><td>String/Approx.pm	</td></tr>
+</table>
+ <P>
+All module files have an extension of <CODE>.pm</CODE>.  
+<i>pm</i> stands for Perl Module.  
+ <P>
+You may also encounter <CODE>.pl</CODE> files.  
+<i>pl</i> stands for Perl Library.  
+<CODE>.pl</CODE> files were used in Perl4; 
+<CODE>.pm</CODE> files are preferred in Perl5.
+
+<H3><A NAME="TOC8">Module libraries</A></H3>
+The Perl interpreter has a list of directories in which it searches for modules.  
+Within a Perl program, 
+this list is available in the global array <CODE>@INC</CODE>.  
+<a href="#inc">INC</a> is short for "include".  
+ <P>
+To see the initial contents of <CODE>@INC</CODE>, do 
+ <P>
+<PRE>
+	>perl -V
+	@INC: 
+	/usr/local/lib/perl5/5.00503/IP19-irix
+	/usr/local/lib/perl5/5.00503
+	/usr/local/lib/perl5/site_perl/5.005/IP19-irix
+	/usr/local/lib/perl5/site_perl/5.005
+	.
+</PRE>
+
+
+
+
+<P>
+As installed on my machine,
+the Perl interpreter looks for modules in five places.  
+Two of these have <CODE>IP19-irix</CODE> in their path; 
+these are for modules that link to separately compiled C code, and are therefore architecture dependent.  
+The last is the <a href="#cwd">current working directory</a>.  
+ <P>
+<CODE>/usr/local/lib/perl5/5.00503</CODE> contains modules that come with the standard Perl5 distribution.
+ <P>
+Finally, <CODE>/usr/local/lib/perl5/site_perl/</CODE> contains modules that are built and installed locally; i.e. are not part of the standard distribution.  Local and standard modules are separated in this way so that a new release of the interpreter can replace the standard modules without disturbing the locally installed ones.
+ <P>
+So, if the modules listed above were installed on my system, they would be in
+ <P>
+<table border>
+<tr>
+<th>Module</th>
+<th>Path</th>
+</tr>
+<tr><td><code>Config</code></td>
+<td><code>/usr/local/lib/perl5/site_perl/5.005/Config.pm</code></td>
+</tr>
+<tr>
+<td><code>Math::Complex</code></td>
+<td><code>/usr/local/lib/perl5/site_perl/5.005/Math/Complex.pm</code></td>
+</tr>
+<tr>
+<td><code>String::Approx</code></td>
+<td><code>/usr/local/lib/perl5/site_perl/5.005/String/Approx.pm</code></td>
+</tr>
+</table>
+
+<H2><A NAME="TOC9">Ready, Set, Go</A></H2>
+Perl is an interpreted language, 
+and has not the source code/object code distinction that exists in languages like C or Java.  
+The programmer writes a <CODE>.pm</CODE> file, 
+and the interpreter executes it.  
+This means that you can edit the <CODE>.pm</CODE> files in <CODE>/usr/local/lib/perl5/site_perl/</CODE>, 
+and your edits will be  effective immediately.
+ <P>
+Don't.
+ <P>
+Many people may be running programs that depend on the modules in 
+<CODE>/usr/local/lib/perl5/site_perl</CODE>.  
+When the modules break, the programs break, 
+and then there are <a href="#users">users lined up at your door</a>. 
+
+<H3><A NAME="TOC10">Development directories</A></H3>
+You need to establish a development area for developing Perl modules.
+It could be in <code>/usr/local/src</code>, 
+it could be in your home directory,
+or it could be somewhere else.
+It should <strong>not</strong> be in <code>/usr/local/lib/perl5/site_perl/</code>.
+<P>
+I'll write <code>.../development/</code> to refer to the development
+directory, where ever it is.
+
+<H3><A NAME="TOC11">How hard could it be?</A></H3>
+Building and installing Perl modules would seem simple.  
+They aren't compiled or linked.  
+All you have to do is copy the <CODE>.pm</CODE>
+ file from the development area to <CODE>/usr/local/lib/perl5</CODE>.
+ <P>
+For ordinary Perl modules, this is true. However. Some Perl modules
+link to dynamically loaded shared C libraries, via a special interface
+language called <a href="#XS">XS</a>.
+This not only requires compiling and linking, 
+but potentially involves all the worst kinds of system dependencies.
+
+<H3><A NAME="TOC12">h2xs</A></H3>
+To get you started on this perilous journey, 
+Perl provides a utility called <CODE>h2xs</CODE>.  
+<CODE>h2xs</CODE> reads the <CODE>.h</CODE> file for a C library
+and creates a skeleton for the <CODE>.xs</CODE> file that will be required to build a Perl module that links to that library.  
+It also constructs a fairly elaborate system of directories and makefiles in which to build and test the Perl module.
+ <P>
+Over time, the structure that <CODE>h2xs</CODE> creates has become the
+standard for building Perl modules: even modules that don't link to C
+code.  I use this structure, because
+<UL>
+<LI> it works
+<LI> I like to be standard
+</UL>
+
+<H2><A NAME="TOC13">Creating a Perl Module</A></H2>
+To create a new perl module, 
+go to your development area and do 
+
+<PRE>
+	.../development>h2xs -X -n Foo::Bar
+	Writing Foo/Bar/Bar.pm
+	Writing Foo/Bar/Makefile.PL
+	Writing Foo/Bar/test.pl
+	Writing Foo/Bar/Changes
+	Writing Foo/Bar/MANIFEST
+	.../development>
+</PRE>
+
+ <P>
+The <CODE>-X</CODE> switch specifies that this module does not link to C code.
+The <CODE>-n</CODE> switch gives the name of the new module.  
+ <P>
+<CODE>h2xs</CODE> creates 
+<CODE>Foo/Bar/</CODE> and populates it with the five files listed.
+<CODE>Foo/Bar/</CODE> is called 
+the <I>module</I> directory or
+the <I>build</I> directory.
+ <P>
+Let's look at the five files.
+
+<H3><A NAME="TOC14">MANIFEST</A></H3>
+<CODE>MANIFEST</CODE> lists the files in the build directory.  
+<a href="#makemaker">MakeMaker</a> checks that all the files listed in <CODE>MANIFEST</CODE> are present, 
+and complains if they aren't.  This is mainly used to ensure that module distributions are received intact.
+
+<H3><A NAME="TOC15">Changes</A></H3>
+This is a file to record a change history of the module.  
+<CODE>h2xs</CODE> creates it, but it's up to the programmer to maintain it.
+
+<H3><A NAME="TOC16">test.pl</A></H3>
+<CODE>test.pl</CODE> contains a skeleton test routine for the module.  
+As created, 
+all it does is verify that the module can be loaded into a Perl program.  
+If nothing else, 
+this will catch syntax errors in the module.  
+Programmers are encouraged to add functional tests to <CODE>test.pl.</CODE>  
+See Test::Harness for details on writing test code.
+
+<H3><A NAME="TOC17">Makefile.PL</A></H3>
+A single makefile could not manage all the system configuration issues involved in building a Perl XS module.  
+Rather than try, 
+<CODE>h2xs</CODE> creates <CODE>Makefile.PL.</CODE>  
+This is actually a short Perl program:
+
+<PRE>
+	.../development/Foo/Bar>cat Makefile.PL
+	use ExtUtils::MakeMaker;
+	# See lib/ExtUtils/MakeMaker.pm for details of how to influence
+	# the contents of the Makefile that is written.
+	WriteMakefile(
+	    'NAME'      => 'Foo::Bar',
+	    'VERSION_FROM' => 'Bar.pm', # finds $VERSION
+	);
+</PRE>
+
+<a name="makemaker"></a>
+The crucial line is the first one: 
+<CODE>use ExtUtils::MakeMaker;</CODE>.  
+MakeMaker is the entry point to a large system of Perl modules.  
+These modules know how to write makefiles, 
+and various subclasses of them know how to write makefiles for your particular system.  
+The <CODE>WriteMakefile()</CODE> call causes an appropriate makefile to be written.  
+Arguments to <CODE>WriteMakefile()</CODE> control the contents of the makefile.
+
+<H3><A NAME="TOC18">Bar.pm</A></H3>
+This is the actual Perl module.  
+As created, it contains some skeleton code and documentation; 
+see <a href="module_anatomy.html">Module Anatomy</a> for a description of this.
+
+<H2><A NAME="TOC19">Building a Perl Module</A></H2>
+To build a Perl module, you issue four commands:
+
+<PRE>
+	perl Makefile.PL
+	make
+	make test
+	make install
+</PRE>
+
+<H3><A NAME="TOC20">perl Makefile.PL</A></H3>
+The first step is to run <CODE>Makefile.PL</CODE> to create the makefile.  
+<CODE>Makefile.PL</CODE> is a Perl program, 
+but it has no shebang, 
+so you have to invoke the interpreter explicitly.  
+
+<H3><A NAME="TOC21">make</A></H3>
+This creates a directory named <CODE>blib</CODE> (for Build LIB) in the module directory, 
+and installs the module in it.  
+<CODE>blib</CODE> is a private test area for the module.  Try doing
+
+<PRE>
+	.../development/Foo/Bar>ls -R blib/
+</PRE>
+
+Pretty amazing, no?
+If <CODE>Foo::Bar</CODE> linked to C code, 
+you'd see those subdirectories populated with 
+<CODE>.ix</CODE> files and 
+<CODE>.al</CODE> files and 
+<CODE>.bs</CODE> files and 
+<CODE>.so</CODE> files and maybe a griffin or two.  
+A copy of your <CODE>.pm</CODE> file is down there too: it's at
+
+<PRE>
+	.../development/Foo/Bar/blib/lib/Foo/Bar.pm
+</PRE>
+
+<H3><A NAME="TOC22">make test</A></H3>
+This will run <CODE>test.pl</CODE>, 
+with special command line switches that cause Perl to find the copy of your module that is buried under <CODE>blib/</CODE>, 
+and not any other copies that might be <a href="#floating">floating around</a>.
+
+This is where you'll see syntax errors flagged, and functional errors if you added your own tests.
+
+<H3><A NAME="TOC23">make install</A></H3>
+This installs your module in <CODE>/usr/local/lib/perl5/site_perl</CODE>.  
+As soon as it's installed, it's available to everyone.
+
+<H3><A NAME="TOC24">Abbreviations</A></H3>
+After a while, you get tired of typing those same four commands over and over again.  I defined these aliases to cut down on the keystrokes:
+ <P>
+<table border>
+<tr><th>Alias    </th><th>Expansion				</th></tr>
+<tr><td>pmmake   </td><td>perl Makefile.PL && make		</td></tr>
+<tr><td>pmtest	 </td><td>perl Makefile.PL && make && make test	</td></tr>
+<tr><td>pminstall</td><td>perl Makefile.PL && make && make test && make install</td></tr>
+</table>
+ <P>
+The &amp;&amp; operator executes the following command provided that the preceding command completed successfully.  So if there's an error, the list stops right there.
+
+<H3><A NAME="TOC24.5">pm_to_blib</a></H3>
+All good makefiles compare the modification times on the source and 
+object files,
+and only rebuild things that are out of date.
+Tracking the modification times of all the files under
+<code>blib/</code> would be complicated,
+so the makefile creates a zero-length file named 
+<code>pm_to_blib</code> in the module directory
+and tracks its modification time instead.
+      <p>
+If <code>pm_to_blib</code> gets <a href="#sync">out of sync</a> 
+with your <code>.pm</code> files,
+then the makefile will think <code>blib/</code> is up to date and 
+won't rebuild it. 
+If this happens, 
+just delete <code>pm_to_blib</code> and run <code>make</code> again.
+
+<H2><A NAME="TOC25">Building Related Perl Modules</A></H2>
+Sometimes you have several modules that work together.  You could create a separate module directory for each one:
+<PRE>
+	.../development>h2xs -X -n Foo::Bar
+	.../development>h2xs -X -n Foo::Zot
+</PRE>
+One problem with this is that you have to keep hopping between directories to edit and build them.  A bigger problem is that you can't test them together.
+ <P>
+Suppose you make edits to both modules.  
+Now you try to test <CODE>Foo::Bar</CODE>.  
+<CODE>Foo::Bar</CODE> uses <CODE>Foo::Zot</CODE>.  
+In particular, 
+it uses the currently released version, 
+which doesn't have the edits that you just made to <CODE>Foo::Zot</CODE>
+ in the development area.  
+So you can't test <CODE>Foo::Bar</CODE> until you've <EM>installed</EM>
+ the new version of <CODE>Foo::Zot</CODE>, 
+which you probably don't want to do right now, 
+since you haven't tested it yet.
+ <P>
+The solution is to create both modules into the same directory:
+<PRE>
+	.../development/lib/perl>h2xs -X -n Foo::Bar
+	.../development/lib/perl>cp Foo/Bar/Bar.pm Foo/Bar/Zot.pm
+</PRE>
+
+You don't even have to <a href="#mess">mess</a> with <CODE>Makefile.PL</CODE> to do this; 
+MakeMaker scans the build directory for <CODE>.pm</CODE> files and includes them all in the makefile.
+
+<H2><A NAME="TOC26">Testing a Perl Module from the Build Directory</A></H2>
+There are actually two places where <CODE>make test</CODE> will look for test routines: 
+
+<UL>
+<LI><CODE>.../Foo/Bar/test.pl</CODE>
+<LI><CODE>.../Foo/Bar/t/*.t</CODE>
+</UL>
+
+<CODE>h2xs</CODE> creates <CODE>test.pl</CODE> for you; 
+it's up to you whether you want to create a <CODE>t/</CODE> directory.  
+If you do, make test will execute any <CODE>.t</CODE> files that it finds there.
+ <P>
+One of the first things I do after creating a new module is trade in <CODE>test.pl</CODE> for a <CODE>.t</CODE> file:
+<PRE>
+	.../development/lib/perl/Foo/Bar>mkdir t
+	.../development/lib/perl/Foo/Bar>mv test.pl t/bar.t
+</PRE>
+
+There are several advantages to putting your test code in <CODE>t/</CODE>.
+
+<H3><A NAME="TOC27">Multiple .t files</A></H3>
+You can only have one <CODE>test.pl</CODE> file, 
+but you can have as many <CODE>.t</CODE> files as you want.  
+If you are maintaining several <CODE>.pm</CODE> files in the same module directory, 
+each one can have it's own <CODE>.t</CODE> file:
+<PRE>
+	Foo/Bar/t/bar.t
+	Foo/Bar/t/zot.t
+</PRE>
+
+<H3><A NAME="TOC28">Data files</A></H3>
+If a module reads or writes files, 
+you'd like to be able to test that functionality.  
+<CODE>t</CODE>/ provides a convenient place to put data files for test routines to use:
+<PRE>
+	.../development/Foo/Bar/t/bar.t
+	.../development/Foo/Bar/t/fodder
+</PRE>
+
+<CODE>make test</CODE> will run <CODE>bar.t</CODE> as usual; 
+it will ignore <CODE>fodder</CODE>, 
+because that file doesn't have a <CODE>.t</CODE> extension.  
+<CODE>bar.t</CODE> can then test <CODE>Foo::Bar</CODE> on the 
+<CODE>fodder</CODE> file.
+
+Beware that when make test executes a <CODE>.t</CODE> file, 
+the current working directory is the module directory, not <CODE>t/</CODE>.  
+So
+<PRE>
+	open(SEQ, "fodder")
+</PRE>
+	
+won't work.  Instead, you have to write
+<PRE>
+	open(SEQ, "t/fodder")
+</PRE>
+
+<H3><A NAME="TOC29">-w</A></H3>
+Test code in <CODE>t/</CODE> runs under <CODE>-w</CODE>;
+test code in <CODE>test.pl</CODE> does not.
+ <P>
+<CODE>-w</CODE> is a command line option to the Perl interpreter.  
+When a program runs under <CODE>-w</CODE>, 
+Perl issues warnings about potentially ambiguous or incorrect code.
+ <P>
+<CODE>-w</CODE> is similar in spirit to lint: 
+it complains about <a href="#every"><EM>every little thing</EM></a>.  
+It is too picky for my taste, 
+and I rarely use it.  
+However.  
+<CODE>-w</CODE> cannot be <a href="#warning">selectively enabled</a>.  
+Either the entire program and all its modules run under <CODE>-w</CODE>, 
+or none of them do.  
+This leads to a policy question about who should decide whether to run under <CODE>-w</CODE>.
+ <P>
+The answer to this question is that the main program should decide.  
+This has two implications for module writers:
+
+<DL>
+<DT> Never enforce <CODE>-w</CODE> from inside a module.
+<DD> A module can turn on <CODE>-w</CODE> by setting the <CODE>$^W</CODE> variable.  
+Never do this.  
+If you turn on <CODE>-w</CODE>, 
+then it will be in force not just for your module,
+but for every other module and for the main program.  
+Most likely, 
+there will be some code among these that does not run clean under -w, 
+and the user will then be faced with (typically) hundreds of lines of warning messages.
+<DT> Make sure your modules run clean under <CODE>-w</CODE>
+<DD> If the main program specifies <CODE>-w</CODE>, 
+and your module doesn't run clean under <CODE>-w</CODE>, 
+then the user will again be faced with extraneous warnings.  
+The way to make sure your modules run clean under <CODE>-w</CODE> 
+is to put the test routines in <CODE>t/*.t</CODE>.
+</DL>
+
+<H3><A NAME="TOC30">Verbose Output</A></H3>
+If your module fails some of it's tests, 
+you'd probably like to know which ones.  
+You can get more output from your test routines by running
+<PRE>
+	make TEST_VERBOSE=1 test
+</PRE>
+
+<H2><A NAME="TOC31">Testing a module from a Perl program</A></H2>
+Sometimes, 
+you want to test a module by running a program that actually uses it.  
+If the module is installed, 
+this is easy enough, 
+but what if the module isn't installed?  
+Somehow, 
+you have to get the program to find the <CODE>.pm</CODE> 
+file in the development directory.
+ <P>
+This used to require playing complicated games with <CODE>@INC</CODE> 
+or <CODE>use lib</CODE>, 
+but as of Perl 5.004, there's a much simpler way: <CODE>use
+blib</CODE>.
+<CODE>blib</CODE> is (what else?) a Perl module.
+From the 
+<a href=
+"http://www.perl.com/pub/doc/manual/html/pod/perl5004delta.html#Pragmata">
+perldelta.pod</a>:
+<dl>
+<DT><STRONG>use blib</STRONG><DD>
+<DT><STRONG>use blib 'dir'</STRONG>
+<DD>
+Looks for MakeMaker-like <EM>'blib'</EM> directory structure starting
+in
+<EM>dir</EM> (or current directory) and working back up to five levels
+of parent
+directories.
+<P>
+Intended for use on command line with <STRONG>-M</STRONG> option as a
+way of testing arbitrary scripts against an uninstalled version
+of a package.
+</dl>
+
+<H2><A NAME="TOC32">Documenting a Perl Module</A></H2>
+Perl modules contain their own documentation,
+written in a simple markup language called POD (Plain Old Documentation).
+There are a variety of filters for translating PODs to other formats:
+<CODE>pod2text</CODE>, 
+<CODE>pod2man</CODE>, 
+<CODE>pod2html</CODE>, 
+<CODE>pod2latex</CODE>, 
+<CODE>pod2usage</CODE>. 
+ <P>
+Programmers are <strong>strongly</strong> encouraged to write PODs for all their Perl programs and modules.
+See <A HREF="module_pod.html">module PODs</A> for details.
+
+<H3><A NAME="TOC33">Man Pages</A></H3>
+Man pages for Perl modules are stored in 
+<CODE>/usr/local/lib/perl5/man/man3/</CODE>.
+You may want to add this directory to your <CODE>MANPATH</CODE>.
+<p>
+The build procedure for a Perl module automatically creates and installs a man page for the module.
+<CODE>make</CODE> invokes <CODE>pod2man</CODE>
+to generate <CODE>Foo::Bar.3</CODE> from <CODE>Bar.pm</CODE>,
+and <CODE>make install</CODE> copies <CODE>Foo::Bar.3</CODE> to the <CODE>man3</CODE> directory.
+
+<H3><A NAME="TOC34">Web Pages</A></H3>
+The build procedure for a Perl module does not create a 
+<CODE>.html</CODE> version of the POD.
+It's easy enough to do by hand, but, again, 
+you get tired of all the typing.
+I put the following in my <CODE>.bashrc</CODE> file:
+
+<PRE>
+	WEB_ROOT='/usr/www/html'
+	PERL_LIB='Perl/Lib'
+
+	pmweb ()
+	{
+	    if [ -z $1 ]
+	    then
+	        echo No destination;
+	        return;
+	    fi;
+	    pod2html *.pm;
+	    chmod 444 *.html;
+	    mv -f *.html $WEB_ROOT/$PERL_LIB/$1/
+	}
+</PRE>
+
+With these defines, I can type
+
+<PRE>
+	pmweb Foo
+</PRE>
+
+in the build directory, 
+and <CODE>bar.html</CODE> will be created and moved to the appropriate directory.
+
+<hr>
+<H1 align="center"><A NAME="TOC36">Notes</A></H1>
+
+<DL>
+
+<DT><a name="single">single </a>
+<DD>Modules that link to compiled C code comprise multiple files.
+
+<DT><a name="inc">INC </a>
+<DD>Arguably, it would be better named <CODE>@LIB</CODE>, but...um...it isn't.
+
+<DT><a name="cwd">current working directory </a>
+<DD>This is less useful than it seems, because you aren't usually in the directory where the module is stored.
+
+<DT><a name="users">users lined up at your door</a>
+<DD>I speak from personal experience here.
+
+<DT><a name="XS">XS</a>
+<DD>XS is a (phonetic?) acronym for eXternal Subroutine.
+"External" means external to Perl, i.e. written in C.
+
+<DT><a name="floating">floating around</a>
+<DD>say, in <CODE>/usr/local/lib/perl5/site_perl/</CODE>
+
+<DT><a name="sync">out of sync </a>
+<DD>say, because you touched it, or because of NFS latency
+
+<DT><a name="mess">mess</a>
+<DD>MakeMaker is large and complex, 
+and the makefiles that it generates are inscrutable. Caveat Scriptor. 
+
+<dt><a name="every"><em>every little thing</em></a>
+<dd>Successive versions of Perl have refined <code>-w</code> to emit
+fewer spurious warnings.
+
+<dt><a name="warning">selectively enabled</a>
+<dd>As of Perl 5.6.0, the <code>use warnings</code> pragma provides
+lexically scoped warnings.
+
+</DL>
+
+<hr>
+
+<ADDRESS>
+<a href="../index.html">Steven McDougall</a> / 
+<A HREF="mailto:swmcd@world.std.com"> swmcd@world.std.com</A> / 
+<a href="../swm.asc"> pgp key </a> /
+2000 August 25
+</ADDRESS>
+
+</body></html>

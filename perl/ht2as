@@ -1,0 +1,14 @@
+#!/bin/sh
+#############################################################################
+#    Name: ht2as
+# Summary: Convert html doc to ascii.  Caution--not perfect conversion.
+#          Original file is not modified.
+# 
+#          May be better to use Lynx's dump command.
+#
+# Usage: ht2as htmldoc.htm asciidoc.txt
+# Created: Mon Mar 29 1999 22:54:10 (Bob Heckel)
+# Modified: Thu Jul 29 1999 11:02:01 (Bob Heckel)
+#############################################################################
+
+perl -0777 -pe 's/<[^>]*>//gs' $1 > $2

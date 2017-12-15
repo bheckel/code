@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <ModulePrefs title="Inlined Empire"/>
+  <Content type="html-inline">
+  <![CDATA[
+    <script type="text/javascript">
+
+      function getObj(name) {
+        if (document.getElementById) {
+          this.obj = document.getElementById(name);
+          this.style = document.getElementById(name).style;
+        } else {
+          return;
+        }
+      }
+
+      function changeDiv(divnm) {
+        // call function to get the object
+        var myObj = new getObj(divnm);
+
+        myObj.style.visibility = 'collapse';
+      }
+
+      _IG_RegisterOnloadHandler(function () {
+        document.body.style.backgroundColor="#CCCCCC"; 
+
+        // Whack the Google logo, search box and misc links
+        changeDiv('regular_logo');
+        changeDiv('q');
+        changeDiv('btnG');
+        changeDiv('btnI');
+        changeDiv('gsea');
+
+      });
+
+    </script>
+  ]]>
+  </Content>
+</Module>

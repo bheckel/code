@@ -1,0 +1,2176 @@
+<html>
+
+<head>
+<title>TLC: October 2000: Perl Regular Expressions - Expanded Tutorial</title>
+
+
+<META http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<META name="description" content="perl 4, perl 5, perl traps">
+<META name="keywords" content="Traps for Perl4 Programmers">
+<META name=author content="Tintagel Net Solutions Group, Inc.  http://www.tnsgroup.com">
+<META name="robots" content="index,follow">
+
+
+
+<BODY BGCOLOR="#F7ECDD" LINK="#bf0425" ALINK="#fdb900" TEXT="black" VLINK="#1200fd" TOPMARGIN=0 LEFTMARGIN=0 MARGINHEIGHT=0 MARGINWIDTH=0>
+</HEAD>
+<h2><B>	Perl Regular Expressions - Expanded Tutorial</B></TD></h2>
+
+
+	</B></TD><FORM action=http://www.perlarchive.com/search/search.cgi method=get TARGET="_top">
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN --><FONT FACE="Arial,Helvetica,sans serif" SIZE=2>
+
+<UL>
+
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<LI><A HREF="#part 1: the basics">Part 1: The basics</A></LI>
+	<UL>
+
+		<LI><A HREF="#simple word matching">Simple word matching</A></LI>
+		<LI><A HREF="#using character classes">Using character classes</A></LI>
+		<LI><A HREF="#matching this or that">Matching this or that</A></LI>
+		<LI><A HREF="#grouping things and hierarchical matching">Grouping things and hierarchical matching</A></LI>
+		<LI><A HREF="#extracting matches">Extracting matches</A></LI>
+		<LI><A HREF="#matching repetitions">Matching repetitions</A></LI>
+		<LI><A HREF="#building a regex">Building a regex</A></LI>
+		<LI><A HREF="#using regular expressions in perl">Using regular expressions in Perl</A></LI>
+	</UL>
+
+	<LI><A HREF="#part 2: power tools">Part 2: Power tools</A></LI>
+	<UL>
+
+		<LI><A HREF="#more on characters, strings, and character classes">More on characters, strings, and character classes</A></LI>
+		<LI><A HREF="#compiling and saving regular expressions">Compiling and saving regular expressions</A></LI>
+		<LI><A HREF="#embedding comments and modifiers in a regular expression">Embedding comments and modifiers in a regular expression</A></LI>
+		<LI><A HREF="#noncapturing groupings">Non-capturing groupings</A></LI>
+		<LI><A HREF="#looking ahead and looking behind">Looking ahead and looking behind</A></LI>
+		<LI><A HREF="#using independent subexpressions to prevent backtracking">Using independent subexpressions to prevent backtracking</A></LI>
+		<LI><A HREF="#conditional expressions">Conditional expressions</A></LI>
+		<LI><A HREF="#a bit of magic: executing perl code in a regular expression">A bit of magic: executing Perl code in a regular expression</A></LI>
+		<LI><A HREF="#pragmas and debugging">Pragmas and debugging</A></LI>
+	</UL>
+
+	<LI><A HREF="#bugs">BUGS</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+	<LI><A HREF="#author and copyright">AUTHOR AND COPYRIGHT</A></LI>
+	<UL>
+
+		<LI><A HREF="#acknowledgments">Acknowledgments</A></LI>
+	</UL>
+
+</UL>
+<!-- INDEX END -->
+
+<HR COLOR="#FFCC66" SIZE=1>
+<P>
+<H3><A NAME="description">DESCRIPTION</A></H3>
+<P>This page provides a basic tutorial on understanding, creating and
+using regular expressions in Perl.  It serves as a complement to the
+reference page on regular expressions <EM>perlre</EM>.  Regular expressions
+are an integral part of the <FONT FACE="Courier New,mono">m//</FONT>, <FONT FACE="Courier New,mono">s///</FONT>, <FONT FACE="Courier New,mono">qr//</FONT> and <FONT FACE="Courier New,mono">split</FONT>
+operators and so this tutorial also overlaps with
+<EM>perlop/``Regex Quote-Like Operators''</EM> and <EM>perlfunc/split</EM>.</P>
+<P>Perl is widely renowned for excellence in text processing, and regular
+expressions are one of the big factors behind this fame.  Perl regular
+expressions display an efficiency and flexibility unknown in most
+other computer languages.  Mastering even the basics of regular
+expressions will allow you to manipulate text with surprising ease.</P>
+<P>What is a regular expression?  A regular expression is simply a string
+that describes a pattern.  Patterns are in common use these days;
+examples are the patterns typed into a search engine to find web pages
+and the patterns used to list files in a directory, e.g., <FONT FACE="Courier New,mono">ls *.txt</FONT>
+or <FONT FACE="Courier New,mono">dir *.*</FONT>.  In Perl, the patterns described by regular expressions
+are used to search strings, extract desired parts of strings, and to
+do search and replace operations.</P>
+<P>Regular expressions have the undeserved reputation of being abstract
+and difficult to understand.  Regular expressions are constructed using
+simple concepts like conditionals and loops and are no more difficult
+to understand than the corresponding <FONT FACE="Courier New,mono">if</FONT> conditionals and <FONT FACE="Courier New,mono">while</FONT>
+loops in the Perl language itself.  In fact, the main challenge in
+learning regular expressions is just getting used to the terse
+notation used to express these concepts.</P>
+<P>This tutorial flattens the learning curve by discussing regular
+expression concepts, along with their notation, one at a time and with
+many examples.  The first part of the tutorial will progress from the
+simplest word searches to the basic regular expression concepts.  If
+you master the first part, you will have all the tools needed to solve
+about 98% of your needs.  The second part of the tutorial is for those
+comfortable with the basics and hungry for more power tools.  It
+discusses the more advanced regular expression operators and
+introduces the latest cutting edge innovations in 5.6.0.</P>
+<P>A note: to save time, 'regular expression' is often abbreviated as
+regexp or regex.  Regexp is a more natural abbreviation than regex, but
+is harder to pronounce.  The Perl pod documentation is evenly split on
+regexp vs regex; in Perl, there is more than one way to abbreviate it.
+We'll use regexp in this tutorial.</P><B>NO YOU WON'T, EDITED 12/2001 -- BOBH</B>
+<P>
+<HR COLOR="#FFCC66" SIZE=1>
+<H3><A NAME="part 1: the basics">Part 1: The basics</A></H3>
+<P>
+<H2><A NAME="simple word matching">Simple word matching</A></H2>
+<P>The simplest regex is simply a word, or more generally, a string of
+characters.  A regex consisting of a word matches any string that
+contains that word:</P>
+<FONT SIZE=3><PRE>
+    &quot;Hello World&quot; =~ /World/;  # matches</PRE></FONT>
+<P>What is this perl statement all about? <FONT FACE="Courier New,mono">&quot;Hello World&quot;</FONT> is a simple
+double quoted string.  <FONT FACE="Courier New,mono">World</FONT> is the regular expression and the
+<FONT FACE="Courier New,mono">//</FONT> enclosing <FONT FACE="Courier New,mono">/World/</FONT> tells perl to search a string for a match.
+The operator <FONT FACE="Courier New,mono">=~</FONT> associates the string with the regex match and
+produces a true value if the regex matched, or false if the regex
+did not match.  In our case, <FONT FACE="Courier New,mono">World</FONT> matches the second word in
+<FONT FACE="Courier New,mono">&quot;Hello World&quot;</FONT>, so the expression is true.  Expressions like this
+are useful in conditionals:</P>
+<FONT SIZE=3><PRE>
+    if (&quot;Hello World&quot; =~ /World/) {
+        print &quot;It matches\n&quot;;
+    }
+    else {
+        print &quot;It doesn't match\n&quot;;
+    }</PRE></FONT>
+<P>There are useful variations on this theme.  The sense of the match can
+be reversed by using <FONT FACE="Courier New,mono">!~</FONT> operator:</P>
+<FONT SIZE=3><PRE>
+    if (&quot;Hello World&quot; !~ /World/) {
+        print &quot;It doesn't match\n&quot;;
+    }
+    else {
+        print &quot;It matches\n&quot;;
+    }</PRE></FONT>
+<P>The literal string in the regex can be replaced by a variable:</P>
+<FONT SIZE=3><PRE>
+    $greeting = &quot;World&quot;;
+    if (&quot;Hello World&quot; =~ /$greeting/) {
+        print &quot;It matches\n&quot;;
+    }
+    else {
+        print &quot;It doesn't match\n&quot;;
+    }</PRE></FONT>
+<P>If you're matching against the special default variable <FONT FACE="Courier New,mono">$_</FONT>, the
+<FONT FACE="Courier New,mono">$_ =~</FONT> part can be omitted:</P>
+<FONT SIZE=3><PRE>
+    $_ = &quot;Hello World&quot;;
+    if (/World/) {
+        print &quot;It matches\n&quot;;
+    }
+    else {
+        print &quot;It doesn't match\n&quot;;
+    }</PRE></FONT>
+<P>And finally, the <FONT FACE="Courier New,mono">//</FONT> default delimiters for a match can be changed
+to arbitrary delimiters by putting an <FONT FACE="Courier New,mono">'m'</FONT> out front:</P>
+<FONT SIZE=3><PRE>
+    &quot;Hello World&quot; =~ m!World!;   # matches, delimited by '!'
+    &quot;Hello World&quot; =~ m{World};   # matches, note the matching '{}'
+    &quot;/usr/bin/perl&quot; =~ m&quot;/perl&quot;; # matches after '/usr/bin',
+                                 # '/' becomes an ordinary char</PRE></FONT>
+<P><FONT FACE="Courier New,mono">/World/</FONT>, <FONT FACE="Courier New,mono">m!World!</FONT>, and <FONT FACE="Courier New,mono">m{World}</FONT> all represent the
+same thing.  When, e.g., <FONT FACE="Courier New,mono">&quot;&quot;</FONT> is used as a delimiter, the forward
+slash <FONT FACE="Courier New,mono">'/'</FONT> becomes an ordinary character and can be used in a regex
+without trouble.</P>
+<P>Let's consider how different regexs would match <FONT FACE="Courier New,mono">&quot;Hello World&quot;</FONT>:</P>
+<FONT SIZE=3><PRE>
+    &quot;Hello World&quot; =~ /world/;  # doesn't match
+    &quot;Hello World&quot; =~ /o W/;    # matches
+    &quot;Hello World&quot; =~ /oW/;     # doesn't match
+    &quot;Hello World&quot; =~ /World /; # doesn't match</PRE></FONT>
+<P>The first regex <FONT FACE="Courier New,mono">world</FONT> doesn't match because regexs are
+case-sensitive.  The second regex matches because the substring
+<FONT FACE="Courier New,mono">'o&nbsp;W'</FONT>&nbsp; occurs in the string <FONT FACE="Courier New,mono">&quot;Hello&nbsp;World&quot;</FONT>&nbsp;.  The space
+character ' ' is treated like any other character in a regex and is
+needed to match in this case.  The lack of a space character is the
+reason the third regex <FONT FACE="Courier New,mono">'oW'</FONT> doesn't match.  The fourth regex
+<FONT FACE="Courier New,mono">'World '</FONT> doesn't match because there is a space at the end of the
+regex, but not at the end of the string.  The lesson here is that
+regexs must match a part of the string <EM>exactly</EM> in order for the
+statement to be true.</P>
+<P>If a regex matches in more than one place in the string, perl will
+always match at the earliest possible point in the string:</P>
+<FONT SIZE=3><PRE>
+    &quot;Hello World&quot; =~ /o/;       # matches 'o' in 'Hello'
+    &quot;That hat is red&quot; =~ /hat/; # matches 'hat' in 'That'</PRE></FONT>
+<P>With respect to character matching, there are a few more points you
+need to know about.   First of all, not all characters can be used 'as
+is' in a match.  Some characters, called <STRONG>metacharacters</STRONG>, are reserved
+for use in regex notation.  The metacharacters are</P>
+<FONT SIZE=3><PRE>
+    {}[]()^$.|*+?\</PRE></FONT>
+<P>The significance of each of these will be explained
+in the rest of the tutorial, but for now, it is important only to know
+that a metacharacter can be matched by putting a backslash before it:</P>
+<FONT SIZE=3><PRE>
+    &quot;2+2=4&quot; =~ /2+2/;    # doesn't match, + is a metacharacter
+    &quot;2+2=4&quot; =~ /2\+2/;   # matches, \+ is treated like an ordinary +
+    &quot;The interval is [0,1).&quot; =~ /[0,1)./     # is a syntax error!
+    &quot;The interval is [0,1).&quot; =~ /\[0,1\)\./  # matches
+    &quot;/usr/bin/perl&quot; =~ /\/usr\/local\/bin\/perl/;  # matches</PRE></FONT>
+<P>In the last regex, the forward slash <FONT FACE="Courier New,mono">'/'</FONT> is also backslashed,
+because it is used to delimit the regex.  This can lead to LTS
+(leaning toothpick syndrome), however, and it is often more readable
+to change delimiters.</P>
+<P>The backslash character <FONT FACE="Courier New,mono">'\'</FONT> is a metacharacter itself and needs to
+be backslashed:</P>
+<FONT SIZE=3><PRE>
+    'C:\WIN32' =~ /C:\\WIN/;   # matches</PRE></FONT>
+<P>In addition to the metacharacters, there are some ASCII characters
+which don't have printable character equivalents and are instead
+represented by <STRONG>escape sequences</STRONG>.  Common examples are <FONT FACE="Courier New,mono">\t</FONT> for a
+tab, <FONT FACE="Courier New,mono">\n</FONT> for a newline, <FONT FACE="Courier New,mono">\r</FONT> for a carriage return and <FONT FACE="Courier New,mono">\a</FONT> for a
+bell.  If your string is better thought of as a sequence of arbitrary
+bytes, the octal escape sequence, e.g., <FONT FACE="Courier New,mono">\033</FONT>, or hexadecimal escape
+sequence, e.g., <FONT FACE="Courier New,mono">\x1B</FONT> may be a more natural representation for your
+bytes.  Here are some examples of escapes:</P>
+<FONT SIZE=3><PRE>
+    &quot;1000\t2000&quot; =~ m(0\t2)   # matches
+    &quot;1000\n2000&quot; =~ /0\n20/   # matches
+    &quot;1000\t2000&quot; =~ /\000\t2/ # doesn't match, &quot;0&quot; ne &quot;\000&quot;
+    &quot;cat&quot;        =~ /\143\x61\x74/ # matches, but a weird way to spell cat</PRE></FONT>
+<P>If you've been around Perl a while, all this talk of escape sequences
+may seem familiar.  Similar escape sequences are used in double-quoted
+strings and in fact the regexs in Perl are mostly treated as
+double-quoted strings.  This means that variables can be used in
+regexs as well.  Just like double-quoted strings, the values of the
+variables in the regex will be substituted in before the regex is
+evaluated for matching purposes.  So we have:</P>
+<FONT SIZE=3><PRE>
+    $foo = 'house';
+    'housecat' =~ /$foo/;      # matches
+    'cathouse' =~ /cat$foo/;   # matches
+    'housecat' =~ /${foo}cat/; # matches</PRE></FONT>
+<P>So far, so good.  With the knowledge above you can already perform
+searches with just about any literal string regex you can dream up.
+Here is a <EM>very simple</EM> emulation of the Unix grep program:</P>
+<FONT SIZE=3><PRE>
+    % cat &gt; simple_grep
+    #!/usr/bin/perl
+    $regex = shift;
+    while (&lt;&gt;) {
+        print if /$regex/;
+    }
+    ^D</PRE></FONT>
+<FONT SIZE=3><PRE>
+    % chmod +x simple_grep</PRE></FONT>
+<FONT SIZE=3><PRE>
+    % simple_grep abba /usr/dict/words
+    Babbage
+    cabbage
+    cabbages
+    sabbath
+    Sabbathize
+    Sabbathizes
+    sabbatical
+    scabbard
+    scabbards</PRE></FONT>
+<P>This program is easy to understand.  <FONT FACE="Courier New,mono">#!/usr/bin/perl</FONT> is the standard
+way to invoke a perl program from the shell.
+<FONT FACE="Courier New,mono">$regex&nbsp;=&nbsp;shift;</FONT>&nbsp; saves the first command line argument as the
+regex to be used, leaving the rest of the command line arguments to
+be treated as files.  <FONT FACE="Courier New,mono">while&nbsp;(&lt;&gt;)</FONT>&nbsp; loops over all the lines in
+all the files.  For each line, <FONT FACE="Courier New,mono">print&nbsp;if&nbsp;/$regex/;</FONT>&nbsp; prints the
+line if the regex matches the line.  In this line, both <FONT FACE="Courier New,mono">print</FONT> and
+<FONT FACE="Courier New,mono">/$regex/</FONT> use the default variable <FONT FACE="Courier New,mono">$_</FONT> implicitly.</P>
+<P>With all of the regexs above, if the regex matched anywhere in the
+string, it was considered a match.  Sometimes, however, we'd like to
+specify <EM>where</EM> in the string the regex should try to match.  To do
+this, we would use the <STRONG>anchor</STRONG> metacharacters <FONT FACE="Courier New,mono">^</FONT> and <FONT FACE="Courier New,mono">$</FONT>.  The
+anchor <FONT FACE="Courier New,mono">^</FONT> means match at the beginning of the string and the anchor
+<FONT FACE="Courier New,mono">$</FONT> means match at the end of the string, or before a newline at the
+end of the string.  Here is how they are used:</P>
+<FONT SIZE=3><PRE>
+    &quot;housekeeper&quot; =~ /keeper/;    # matches
+    &quot;housekeeper&quot; =~ /^keeper/;   # doesn't match
+    &quot;housekeeper&quot; =~ /keeper$/;   # matches
+    &quot;housekeeper\n&quot; =~ /keeper$/; # matches</PRE></FONT>
+<P>The second regex doesn't match because <FONT FACE="Courier New,mono">^</FONT> constrains <FONT FACE="Courier New,mono">keeper</FONT> to
+match only at the beginning of the string, but <FONT FACE="Courier New,mono">&quot;housekeeper&quot;</FONT> has
+keeper starting in the middle.  The third regex does match, since the
+<FONT FACE="Courier New,mono">$</FONT> constrains <FONT FACE="Courier New,mono">keeper</FONT> to match only at the end of the string.</P>
+<P>When both <FONT FACE="Courier New,mono">^</FONT> and <FONT FACE="Courier New,mono">$</FONT> are used at the same time, the regex has to
+match both the beginning and the end of the string, i.e., the regex
+matches the whole string.  Consider</P>
+<FONT SIZE=3><PRE>
+    &quot;keeper&quot; =~ /^keep$/;      # doesn't match
+    &quot;keeper&quot; =~ /^keeper$/;    # matches
+    &quot;&quot;       =~ /^$/;          # ^$ matches an empty string</PRE></FONT>
+<P>The first regex doesn't match because the string has more to it than
+<FONT FACE="Courier New,mono">keep</FONT>.  Since the second regex is exactly the string, it
+matches.  Using both <FONT FACE="Courier New,mono">^</FONT> and <FONT FACE="Courier New,mono">$</FONT> in a regex forces the complete
+string to match, so it gives you complete control over which strings
+match and which don't.  Suppose you are looking for a fellow named
+bert, off in a string by himself:</P>
+<FONT SIZE=3><PRE>
+    &quot;dogbert&quot; =~ /bert/;   # matches, but not what you want</PRE></FONT>
+<FONT SIZE=3><PRE>
+    &quot;dilbert&quot; =~ /^bert/;  # doesn't match, but ..
+    &quot;bertram&quot; =~ /^bert/;  # matches, so still not good enough</PRE></FONT>
+<FONT SIZE=3><PRE>
+    &quot;bertram&quot; =~ /^bert$/; # doesn't match, good
+    &quot;dilbert&quot; =~ /^bert$/; # doesn't match, good
+    &quot;bert&quot;    =~ /^bert$/; # matches, perfect</PRE></FONT>
+<P>Of course, in the case of a literal string, one could just as easily
+use the string equivalence <FONT FACE="Courier New,mono">$string&nbsp;eq&nbsp;'bert'</FONT>&nbsp; and it would be
+more efficient.   The  <FONT FACE="Courier New,mono">^...$</FONT> regex really becomes useful when we
+add in the more powerful regex tools below.</P>
+<P>
+<H2><A NAME="using character classes">Using character classes</A></H2>
+<P>Although one can already do quite a lot with the literal string
+regexs above, we've only scratched the surface of regular expression
+technology.  In this and subsequent sections we will introduce regex
+concepts (and associated metacharacter notations) that will allow a
+regex to not just represent a single character sequence, but a <EM>whole
+class</EM> of them.</P>
+<P>One such concept is that of a <STRONG>character class</STRONG>.  A character class
+allows a set of possible characters, rather than just a single
+character, to match at a particular point in a regex.  Character
+classes are denoted by brackets <FONT FACE="Courier New,mono">[...]</FONT>, with the set of characters
+to be possibly matched inside.  Here are some examples:</P>
+<FONT SIZE=3><PRE>
+    /cat/;       # matches 'cat'
+    /[bcr]at/;   # matches 'bat, 'cat', or 'rat'
+    /item[0123456789]/;  # matches 'item0' or ... or 'item9'
+    &quot;abc&quot; =~ /[cab]/;    # matches 'a'</PRE></FONT>
+<P>In the last statement, even though <FONT FACE="Courier New,mono">'c'</FONT> is the first character in
+the class, <FONT FACE="Courier New,mono">'a'</FONT> matches because the first character position in the
+string is the earliest point at which the regex can match.</P>
+<FONT SIZE=3><PRE>
+    /[yY][eE][sS]/;      # match 'yes' in a case-insensitive way
+                         # 'yes', 'Yes', 'YES', etc.</PRE></FONT>
+<P>This regex displays a common task: perform a a case-insensitive
+match.  Perl provides away of avoiding all those brackets by simply
+appending an <FONT FACE="Courier New,mono">'i'</FONT> to the end of the match.  Then <FONT FACE="Courier New,mono">/[yY][eE][sS]/;</FONT>
+can be rewritten as <FONT FACE="Courier New,mono">/yes/i;</FONT>.  The <FONT FACE="Courier New,mono">'i'</FONT> stands for
+case-insensitive and is an example of a <STRONG>modifier</STRONG> of the matching
+operation.  We will meet other modifiers later in the tutorial.</P>
+<P>We saw in the section above that there were ordinary characters, which
+represented themselves, and special characters, which needed a
+backslash <FONT FACE="Courier New,mono">\</FONT> to represent themselves.  The same is true in a
+character class, but the sets of ordinary and special characters
+inside a character class are different than those outside a character
+class.  The special characters for a character class are <FONT FACE="Courier New,mono">-]\^$</FONT>.  <FONT FACE="Courier New,mono">]</FONT>
+is special because it denotes the end of a character class.  <FONT FACE="Courier New,mono">$</FONT> is
+special because it denotes a scalar variable.  <FONT FACE="Courier New,mono">\</FONT> is special because
+it is used in escape sequences, just like above.  Here is how the
+special characters <FONT FACE="Courier New,mono">]$\</FONT> are handled:</P>
+<FONT SIZE=3><PRE>
+   /[\]c]def/; # matches ']def' or 'cdef'
+   $x = 'bcr';
+   /[$x]at/;   # matches 'bat', 'cat', or 'rat'
+   /[\$x]at/;  # matches '$at' or 'xat'
+   /[\\$x]at/; # matches '\at', 'bat, 'cat', or 'rat'</PRE></FONT>
+<P>The last two are a little tricky.  in <FONT FACE="Courier New,mono">[\$x]</FONT>, the backslash protects
+the dollar sign, so the character class has two members <FONT FACE="Courier New,mono">$</FONT> and <FONT FACE="Courier New,mono">x</FONT>.
+In <FONT FACE="Courier New,mono">[\\$x]</FONT>, the backslash is protected, so <FONT FACE="Courier New,mono">$x</FONT> is treated as a
+variable and substituted in double quote fashion.</P>
+<P>The special character <FONT FACE="Courier New,mono">'-'</FONT> acts as a range operator within character
+classes, so that a contiguous set of characters can be written as a
+range.  With ranges, the unwieldy <FONT FACE="Courier New,mono">[0123456789]</FONT> and <FONT FACE="Courier New,mono">[abc...xyz]</FONT>
+become the svelte <FONT FACE="Courier New,mono">[0-9]</FONT> and <FONT FACE="Courier New,mono">[a-z]</FONT>.  Some examples are</P>
+<FONT SIZE=3><PRE>
+    /item[0-9]/;  # matches 'item0' or ... or 'item9'
+    /[0-9bx-z]aa/;  # matches '0aa', ..., '9aa',
+                    # 'baa', 'xaa', 'yaa', or 'zaa'
+    /[0-9a-fA-F]/;  # matches a hexadecimal digit
+    /[0-9a-zA-Z_]/; # matches an alphanumeric character,
+                    # like those in a perl variable name</PRE></FONT>
+<P>If <FONT FACE="Courier New,mono">'-'</FONT> is the first or last character in a character class, it is
+treated as an ordinary character; <FONT FACE="Courier New,mono">[-ab]</FONT>, <FONT FACE="Courier New,mono">[ab-]</FONT> and <FONT FACE="Courier New,mono">[a\-b]</FONT> are
+all equivalent.</P>
+<P>The special character <FONT FACE="Courier New,mono">^</FONT> in the first position of a character class
+denotes a <STRONG>negated character class</STRONG>, which matches any character but
+those in the brackets.  Both <FONT FACE="Courier New,mono">[...]</FONT> and <FONT FACE="Courier New,mono">[^...]</FONT> must match a
+character, or the match fails.  Then</P>
+<FONT SIZE=3><PRE>
+    /[^a]at/;  # doesn't match 'aat' or 'at', but matches
+               # all other 'bat', 'cat, '0at', '%at', etc.
+    /[^0-9]/;  # matches a non-numeric character
+    /[a^]at/;  # matches 'aat' or '^at'; here '^' is ordinary</PRE></FONT>
+<P>Now, even <FONT FACE="Courier New,mono">[0-9]</FONT> can be a bother the write multiple times, so in the
+interest of saving keystrokes and making regexs more readable, Perl
+has several abbreviations for common character classes:</P>
+<UL>
+<LI><STRONG><A NAME="item_%5Cd_is_a_digit_and_represents_%5B0%2D9%5D">\d is a digit and represents [0-9]</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%5Cs_is_a_whitespace_character_and_represents_%5B%">\s is a whitespace character and represents [\ \t\r\n\f]</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_character">\w is a word character (alphanumeric or _) and represents [0-9a-zA-Z_]</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%5CD_is_a_negated_%5Cd%3B_it_represents_any_charac">\D is a negated \d; it represents any character but a digit [^0-9]</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%5CS_is_a_negated_%5Cs%3B_it_represents_any_non%2D">\S is a negated \s; it represents any non-whitespace character [^\s]</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%5CW_is_a_negated_%5Cw%3B_it_represents_any_non%2D">\W is a negated \w; it represents any non-word character [^\w]</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_The_period_%27%2E%27_matches_any_character_but_%22">The period '.' matches any character but ``\n''</A></STRONG><BR>
+
+</UL>
+<P>The <FONT FACE="Courier New,mono">\d\s\w\D\S\W</FONT> abbreviations can be used both inside and outside
+of character classes.  Here are some in use:</P>
+<FONT SIZE=3><PRE>
+    /\d\d:\d\d:\d\d/; # matches a hh:mm:ss time format
+    /[\d\s]/;         # matches any digit or whitespace character
+    /\w\W\w/;         # matches a word char, followed by a
+                      # non-word char, followed by a word char
+    /..rt/;           # matches any two chars, followed by 'rt'
+    /end\./;          # matches 'end.'
+    /end[.]/;         # same thing, matches 'end.'</PRE></FONT>
+<P>Because a period is a metacharacter, it needs to be escaped to match
+as an ordinary period. Because, for example, <FONT FACE="Courier New,mono">\d</FONT> and <FONT FACE="Courier New,mono">\w</FONT> are sets
+of characters, it is incorrect to think of <FONT FACE="Courier New,mono">[^\d\w]</FONT> as <FONT FACE="Courier New,mono">[\D\W]</FONT>; in
+fact <FONT FACE="Courier New,mono">[^\d\w]</FONT> is the same as <FONT FACE="Courier New,mono">[^\w]</FONT>, which is the same as
+<FONT FACE="Courier New,mono">[\W]</FONT>. Think DeMorgan's laws.</P>
+<P>An anchor useful in basic regexs is the <STRONG>word&nbsp;anchor</STRONG>&nbsp;
+<FONT FACE="Courier New,mono">\b</FONT>.  This matches a boundary between a word character and a non-word
+character <FONT FACE="Courier New,mono">\w\W</FONT> or <FONT FACE="Courier New,mono">\W\w</FONT>:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;Housecat catenates house and cat&quot;;
+    $x =~ /cat/;    # matches cat in 'housecat'
+    $x =~ /\bcat/;  # matches cat in 'catenates'
+    $x =~ /cat\b/;  # matches cat in 'housecat'
+    $x =~ /\bcat\b/;  # matches 'cat' at end of string</PRE></FONT>
+<P>Note in the last example, the end of the string is considered a word
+boundary.</P>
+<P>You might wonder why <FONT FACE="Courier New,mono">'.'</FONT> matches everything but <FONT FACE="Courier New,mono">&quot;\n&quot;</FONT> - why not
+every character? The reason is that often one is matching against
+lines and would like to ignore the newline characters.  For instance,
+while the string <FONT FACE="Courier New,mono">&quot;\n&quot;</FONT> represents one line, we would like to think
+of as empty.  Then</P>
+<FONT SIZE=3><PRE>
+    &quot;&quot;   =~ /^$/;    # matches
+    &quot;\n&quot; =~ /^$/;    # matches, &quot;\n&quot; is ignored</PRE></FONT>
+<FONT SIZE=3><PRE>
+    &quot;&quot;   =~ /./;      # doesn't match; it needs a char
+    &quot;&quot;   =~ /^.$/;    # doesn't match; it needs a char
+    &quot;\n&quot; =~ /^.$/;    # doesn't match; it needs a char other than &quot;\n&quot;
+    &quot;a&quot;  =~ /^.$/;    # matches
+    &quot;a\n&quot;  =~ /^.$/;  # matches, ignores the &quot;\n&quot;</PRE></FONT>
+<P>This behavior is convenient, because we usually want to ignore
+newlines when we count and match characters in a line.  Sometimes,
+however, we want to keep track of newlines.  We might even want <FONT FACE="Courier New,mono">^</FONT>
+and <FONT FACE="Courier New,mono">$</FONT> to anchor at the beginning and end of lines within the
+string, rather than just the beginning and end of the string.  Perl
+allows us to choose between ignoring and paying attention to newlines
+by using the <FONT FACE="Courier New,mono">//s</FONT> and <FONT FACE="Courier New,mono">//m</FONT> modifiers.  <FONT FACE="Courier New,mono">//s</FONT> and <FONT FACE="Courier New,mono">//m</FONT> stand for
+single line and multi-line and they determine whether a string is to
+be treated as one continuous string, or as a set of lines.  The two
+modifiers affect two aspects of how the regex is interpreted: 1) how
+the <FONT FACE="Courier New,mono">'.'</FONT> character class is defined, and 2) where the anchors <FONT FACE="Courier New,mono">^</FONT>
+and <FONT FACE="Courier New,mono">$</FONT> are able to match.  Here are the four possible combinations:</P>
+<UL>
+<LI><STRONG><A NAME="item_modifiers">no modifiers (//): Default behavior.  <FONT FACE="Courier New,mono">'.'</FONT> matches any character
+except <FONT FACE="Courier New,mono">&quot;\n&quot;</FONT>.  <FONT FACE="Courier New,mono">^</FONT> matches only at the beginning of the string and
+<FONT FACE="Courier New,mono">$</FONT> matches only at the end or before a newline at the end.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_modifier">s modifier (//s): Treat string as a single long line.  <FONT FACE="Courier New,mono">'.'</FONT> matches
+any character, even <FONT FACE="Courier New,mono">&quot;\n&quot;</FONT>.  <FONT FACE="Courier New,mono">^</FONT> matches only at the beginning of
+the string and <FONT FACE="Courier New,mono">$</FONT> matches only at the end or before a newline at the
+end.</A></STRONG><BR>
+
+<LI><STRONG>m modifier (//m): Treat string as a set of multiple lines.  <FONT FACE="Courier New,mono">'.'</FONT>
+matches any character except <FONT FACE="Courier New,mono">&quot;\n&quot;</FONT>.  <FONT FACE="Courier New,mono">^</FONT> and <FONT FACE="Courier New,mono">$</FONT> are able to match
+at the start or end of <EM>any</EM> line within the string.</STRONG><BR>
+
+<LI><STRONG>both s and m modifiers (//sm): Treat string as a single long line, but
+detect multiple lines.  <FONT FACE="Courier New,mono">'.'</FONT> matches any character, even
+<FONT FACE="Courier New,mono">&quot;\n&quot;</FONT>.  <FONT FACE="Courier New,mono">^</FONT> and <FONT FACE="Courier New,mono">$</FONT>, however, are able to match at the start or end
+of <EM>any</EM> line within the string.</STRONG><BR>
+
+</UL>
+<P>Here are examples of <FONT FACE="Courier New,mono">//s</FONT> and <FONT FACE="Courier New,mono">//m</FONT> in action:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;There once was a girl\nWho programmed in Perl\n&quot;;</PRE></FONT>
+<FONT SIZE=3><PRE>
+    $x =~ /^Who/;   # doesn't match, &quot;Who&quot; not at start of string
+    $x =~ /^Who/s;  # doesn't match, &quot;Who&quot; not at start of string
+    $x =~ /^Who/m;  # matches, &quot;Who&quot; at start of second line
+    $x =~ /^Who/sm; # matches, &quot;Who&quot; at start of second line</PRE></FONT>
+<FONT SIZE=3><PRE>
+    $x =~ /girl.Who/;   # doesn't match, &quot;.&quot; doesn't match &quot;\n&quot;
+    $x =~ /girl.Who/s;  # matches, &quot;.&quot; matches &quot;\n&quot;
+    $x =~ /girl.Who/m;  # doesn't match, &quot;.&quot; doesn't match &quot;\n&quot;
+    $x =~ /girl.Who/sm; # matches, &quot;.&quot; matches &quot;\n&quot;</PRE></FONT>
+<P>Most of the time, the default behavior is what is want, but <FONT FACE="Courier New,mono">//s</FONT> and
+<FONT FACE="Courier New,mono">//m</FONT> are occasionally very useful.  If <FONT FACE="Courier New,mono">//m</FONT> is being used, the start
+of the string can still be matched with <FONT FACE="Courier New,mono">\A</FONT> and the end of string
+can still be matched with the anchors <FONT FACE="Courier New,mono">\Z</FONT> (matches both the end and
+the newline before, like <FONT FACE="Courier New,mono">$</FONT>), and <FONT FACE="Courier New,mono">\z</FONT> (matches only the end):</P>
+<FONT SIZE=3><PRE>
+    $x =~ /^Who/m;   # matches, &quot;Who&quot; at start of second line
+    $x =~ /\AWho/m;  # doesn't match, &quot;Who&quot; is not at start of string</PRE></FONT>
+<FONT SIZE=3><PRE>
+    $x =~ /girl$/m;  # matches, &quot;girl&quot; at end of first line
+    $x =~ /girl\Z/m; # doesn't match, &quot;girl&quot; is not at end of string</PRE></FONT>
+<FONT SIZE=3><PRE>
+    $x =~ /Perl\Z/m; # matches, &quot;Perl&quot; is at newline before end
+    $x =~ /Perl\z/m; # doesn't match, &quot;Perl&quot; is not at end of string</PRE></FONT>
+<P>We now know how to create choices among classes of characters in a
+regex.  What about choices among words or character strings? Such
+choices are described in the next section.</P>
+<P>
+<H2><A NAME="matching this or that">Matching this or that</A></H2>
+<P>Sometimes we would like to our regex to be able to match different
+possible words or character strings.  This is accomplished by using
+the <STRONG>alternation</STRONG> metacharacter <FONT FACE="Courier New,mono">|</FONT>.  To match <FONT FACE="Courier New,mono">dog</FONT> or <FONT FACE="Courier New,mono">cat</FONT>, we
+form the regex <FONT FACE="Courier New,mono">dog|cat</FONT>.  As before, perl will try to match the
+regex at the earliest possible point in the string.  At each
+character position, perl will first try to match the first
+alternative, <FONT FACE="Courier New,mono">dog</FONT>.  If <FONT FACE="Courier New,mono">dog</FONT> doesn't match, perl will then try the
+next alternative, <FONT FACE="Courier New,mono">cat</FONT>.  If <FONT FACE="Courier New,mono">cat</FONT> doesn't match either, then the
+match fails and perl moves to the next position in the string.  Some
+examples:</P>
+<FONT SIZE=3><PRE>
+    &quot;cats and dogs&quot; =~ /cat|dog|bird/;  # matches &quot;cat&quot;
+    &quot;cats and dogs&quot; =~ /dog|cat|bird/;  # matches &quot;cat&quot;</PRE></FONT>
+<P>Even though <FONT FACE="Courier New,mono">dog</FONT> is the first alternative in the second regex,
+<FONT FACE="Courier New,mono">cat</FONT> is able to match earlier in the string.</P>
+<FONT SIZE=3><PRE>
+    &quot;cats&quot;          =~ /c|ca|cat|cats/; # matches &quot;c&quot;
+    &quot;cats&quot;          =~ /cats|cat|ca|c/; # matches &quot;cats&quot;</PRE></FONT>
+<P>Here, all the alternatives match at the first string position, so the
+first alternative is the one that matches.  If some of the
+alternatives are truncations of the others, put the longest ones first
+to give them a chance to match.</P>
+<FONT SIZE=3><PRE>
+    &quot;cab&quot; =~ /a|b|c/ # matches &quot;c&quot;
+                     # /a|b|c/ == /[abc]/</PRE></FONT>
+<P>The last example points out that character classes are like
+alternations of characters.  At a given character position, the first
+alternative that allows the regex match to succeed wil be the one
+that matches.</P>
+<P>
+<H2><A NAME="grouping things and hierarchical matching">Grouping things and hierarchical matching</A></H2>
+<P>Alternation allows a regex to choose among alternatives, but by
+itself it unsatisfying.  The reason is that each alternative is a whole
+regex, but sometime we want alternatives for just part of a
+regex.  For instance, suppose we want to search for housecats or
+housekeepers.  The regex <FONT FACE="Courier New,mono">housecat|housekeeper</FONT> fits the bill, but is
+inefficient because we had to type <FONT FACE="Courier New,mono">house</FONT> twice.  It would be nice to
+have parts of the regex be constant, like <FONT FACE="Courier New,mono">house</FONT>, and and some
+parts have alternatives, like <FONT FACE="Courier New,mono">cat|keeper</FONT>.</P>
+<P>The <STRONG>grouping</STRONG> metacharacters <FONT FACE="Courier New,mono">()</FONT> solve this problem.  Grouping
+allows parts of a regex to be treated as a single unit.  Parts of a
+regex are grouped by enclosing them in parentheses.  Thus we could solve
+the <FONT FACE="Courier New,mono">housecat|housekeeper</FONT> by forming the regex as
+<FONT FACE="Courier New,mono">house(cat|keeper)</FONT>.  The regex <FONT FACE="Courier New,mono">house(cat|keeper)</FONT> means match
+<FONT FACE="Courier New,mono">house</FONT> followed by either <FONT FACE="Courier New,mono">cat</FONT> or <FONT FACE="Courier New,mono">keeper</FONT>.  Some more examples
+are</P>
+<FONT SIZE=3><PRE>
+    /(a|b)b/;    # matches 'ab' or 'bb'
+    /(ac|b)b/;   # matches 'acb' or 'bb'
+    /(^a|b)c/;   # matches 'ac' at start of string or 'bc' anywhere
+    /(a|[bc])d/; # matches 'ad', 'bd', or 'cd'</PRE></FONT>
+<FONT SIZE=3><PRE>
+    /house(cat|)/;  # matches either 'housecat' or 'house'
+    /house(cat(s|)|)/;  # matches either 'housecats' or 'housecat' or
+                        # 'house'.  Note groups can be nested.</PRE></FONT>
+<FONT SIZE=3><PRE>
+    /(19|20|)\d\d/;  # match years 19xx, 20xx, or the Y2K problem, xx
+    &quot;20&quot; =~ /(19|20|)\d\d/;  # matches the null alternative '()\d\d',
+                             # because '20\d\d' can't match</PRE></FONT>
+<P>Alternations behave the same way in groups as out of them: at a given
+string position, the leftmost alternative that allows the regex to
+match is taken.  So in the last example at tth first string position,
+<FONT FACE="Courier New,mono">&quot;20&quot;</FONT> matches the second alternative, but there is nothing left over
+to match the next two digits <FONT FACE="Courier New,mono">\d\d</FONT>.  So perl moves on to the next
+alternative, which is the null alternative and that works, since
+<FONT FACE="Courier New,mono">&quot;20&quot;</FONT> is two digits.</P>
+<P>The process of trying one alternative, seeing if it matches, and
+moving on to the next alternative if it doesn't, is called
+<STRONG>backtracking</STRONG>.  The term 'backtracking' comes from the idea that
+matching a regex is like a walk in the woods.  Successfully matching
+a regex is like arriving at a destination.  There are many possible
+trailheads, one for each string position, and each one is tried in
+order, left to right.  From each trailhead there may be many paths,
+some of which get you there, and some which are dead ends.  When you
+walk along a trail and hit a dead end, you have to backtrack along the
+trail to an earlier point to try another trail.  If you hit your
+destination, you stop immediately and forget about trying all the
+other trails.  You are persistent, and only if you have tried all the
+trails from all the trailheads and not arrived at your destination, do
+you declare failure.  To be concrete, here is a step-by-step analysis
+of what perl does when it tries to match the regex</P>
+<FONT SIZE=3><PRE>
+    &quot;abcde&quot; =~ /(abd|abc)(df|d|de)/;</PRE></FONT>
+<OL>
+<LI><STRONG><A NAME="item_Start_with_the_first_letter_in_the_string_%27a%27%">Start with the first letter in the string 'a'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Try_the_first_alternative_in_the_first_group_%27ab">Try the first alternative in the first group 'abd'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Match_%27a%27_followed_by_%27b%27%2E_So_far_so_goo">Match 'a' followed by 'b'. So far so good.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%27d%27_in_the_regex_doesn%27t_match_%27c%27_in_t">'d' in the regex doesn't match 'c' in the string - a dead
+end.  So backtrack two characters and pick the second alternative in
+the first group 'abc'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Match_%27a%27_followed_by_%27b%27_followed_by_%27c">Match 'a' followed by 'b' followed by 'c'.  We are on a roll
+and have satisfied the first group. Set $1 to 'abc'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Move_on_to_the_second_group_and_pick_the_first_alt">Move on to the second group and pick the first alternative
+'df'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Match_the_%27d%27%2E">Match the 'd'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%27f%27_in_the_regex_doesn%27t_match_%27e%27_in_t">'f' in the regex doesn't match 'e' in the string, so a dead
+end.  Backtrack one character and pick the second alternative in the
+second group 'd'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%27d%27_matches%2E_The_second_grouping_is_satisfie">'d' matches. The second grouping is satisfied, so set $2 to
+'d'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_We_are_at_the_end_of_the_regex%2C_so_we_are_done%">We are at the end of the regex, so we are done! We have
+matched 'abcd' out of the string ``abcde''.</A></STRONG><BR>
+
+</OL>
+<P>There are a couple of things to note about this analysis.  First, the
+third alternative in the second group 'de' also allows a match, but we
+stopped before we got to it - at a given character position, leftmost
+wins.  Second, we were able to get a match at the first character
+position of the string 'a'.  If there were no matches at the first
+position, perl would move to the second character position 'b' and
+attempt the match all over again.  Only when all possible paths at all
+possible character positions have been exhausted does perl give give
+up and declare <FONT FACE="Courier New,mono">$string&nbsp;=~&nbsp;/(abd|abc)(df|d|de)/;</FONT>&nbsp; to be false.</P>
+<P>Even with all this work, regex matching happens remarkably fast.  To
+speed things up, during compilation stage, perl compiles the regex
+into a compact sequence of opcodes that can often fit inside a
+processor cache.  When the code is executed, these opcodes can then run
+at full throttle and search very quickly.</P>
+<P>
+<H2><A NAME="extracting matches">Extracting matches</A></H2>
+<P>The grouping metacharacters <FONT FACE="Courier New,mono">()</FONT> also serve another completely
+different function: they allow the extraction of the parts of a string
+that matched.  This is very useful to find out what matched and for
+text processing in general.  For each grouping, the part that matched
+inside goes into the special variables <FONT FACE="Courier New,mono">$1</FONT>, <FONT FACE="Courier New,mono">$2</FONT>, etc.  They can be
+used just as ordinary variables:</P>
+<FONT SIZE=3><PRE>
+    # extract hours, minutes, seconds
+    $time =~ /(\d\d):(\d\d):(\d\d)/;  # match hh:mm:ss format
+    $hours = $1;
+    $minutes = $2;
+    $seconds = $3;</PRE></FONT>
+<P>Now, we know that in scalar context,
+<FONT FACE="Courier New,mono">$time&nbsp;=~&nbsp;/(\d\d):(\d\d):(\d\d)/</FONT>&nbsp; returns a true or false
+value.  In list context, however, it returns the list of matched values
+<FONT FACE="Courier New,mono">($1,$2,$3)</FONT>.  So we could write the code more compactly as</P>
+<FONT SIZE=3><PRE>
+    # extract hours, minutes, seconds
+    ($hours, $minutes, $second) = ($time =~ /(\d\d):(\d\d):(\d\d)/);</PRE></FONT>
+<P>If the groupings in a regex are nested, <FONT FACE="Courier New,mono">$1</FONT> gets the group with the
+leftmost opening parenthesis, <FONT FACE="Courier New,mono">$2</FONT> the next opening parenthesis,
+etc.  For example, here is a complex regex and the matching variables
+indicated below it:</P>
+<FONT SIZE=3><PRE>
+    /(ab(cd|ef)((gi)|j))/;
+     1  2      34</PRE></FONT>
+<P>so that if the regex matched, e.g., <FONT FACE="Courier New,mono">$2</FONT> would contain 'cd' or 'ef'.
+For convenience, perl sets <FONT FACE="Courier New,mono">$+</FONT> to the highest numbered <FONT FACE="Courier New,mono">$1</FONT>, <FONT FACE="Courier New,mono">$2</FONT>,
+... that got assigned.</P>
+<P>Closely associated with the matching variables <FONT FACE="Courier New,mono">$1</FONT>, <FONT FACE="Courier New,mono">$2</FONT>, ... are
+the <STRONG>backreferences</STRONG> <FONT FACE="Courier New,mono">\1</FONT>, <FONT FACE="Courier New,mono">\2</FONT>, ... .  Backreferences are simply
+matching variables that can be used <EM>inside</EM> a regex.  This is a
+really nice feature - what matches later in a regex can depend on
+what matched earlier in the regex.  Suppose we wanted to look
+for doubled words in text, like 'the the'.  The following regex finds
+all 3-letter doubles with a space in between:</P>
+<FONT SIZE=3><PRE>
+    /(\w\w\w)\s\1/;</PRE></FONT>
+<P>The grouping assigns a value to \1, so that the same 3 letter sequence
+is used for both parts.  Here are some words with repeated parts:</P>
+<FONT SIZE=3><PRE>
+    % simple_grep '^(\w\w\w\w|\w\w\w|\w\w|\w)\1$' /usr/dict/words
+    beriberi
+    booboo
+    coco
+    mama
+    murmur
+    papa</PRE></FONT>
+<P>The regex has a single grouping which considers 4-letter
+combinations, then 3-letter combinations, etc.  and uses <FONT FACE="Courier New,mono">\1</FONT> to look for
+a repeat.  Although <FONT FACE="Courier New,mono">$1</FONT> and <FONT FACE="Courier New,mono">\1</FONT> represent the same thing, care should be
+taken to use matched variables <FONT FACE="Courier New,mono">$1</FONT>, <FONT FACE="Courier New,mono">$2</FONT>, ... only outside a regex
+and backreferences <FONT FACE="Courier New,mono">\1</FONT>, <FONT FACE="Courier New,mono">\2</FONT>, ... only inside a regex; not doing
+so may lead to surprising and/or undefined results.</P>
+<P>In addition to what was matched, Perl 5.6.0 also provides the
+positions of what was matched with the <FONT FACE="Courier New,mono">@-</FONT> and <FONT FACE="Courier New,mono">@+</FONT>
+arrays. <FONT FACE="Courier New,mono">$-[0]</FONT> is the position of the start of the entire match and
+<FONT FACE="Courier New,mono">$+[0]</FONT> is the position of the end. Similarly, <FONT FACE="Courier New,mono">$-[n]</FONT> is the
+position of the start of the <FONT FACE="Courier New,mono">$n</FONT> match and <FONT FACE="Courier New,mono">$+[n]</FONT> is the position
+of the end. If <FONT FACE="Courier New,mono">$n</FONT> is undefined, so are <FONT FACE="Courier New,mono">$-[n]</FONT> and <FONT FACE="Courier New,mono">$+[n]</FONT>. Then
+this code</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;Mmm...donut, thought Homer&quot;;
+    $x =~ /^(Mmm|Yech)\.\.\.(donut|peas)/; # matches
+    foreach $expr (1..$#-) {
+        print &quot;Match $expr: '${$expr}' at position ($-[$expr],$+[$expr])\n&quot;;
+    }</PRE></FONT>
+<P>prints</P>
+<FONT SIZE=3><PRE>
+    Match 1: 'Mmm' at position (0,3)
+    Match 2: 'donut' at position (6,11)</PRE></FONT>
+<P>Even if there are no groupings in a regex, it is still possible to
+find out what exactly matched in a string.  If you use them, perl
+will set <FONT FACE="Courier New,mono">$`</FONT> to the part of the string before the match, will set <FONT FACE="Courier New,mono">$&amp;</FONT>
+to the part of the string that matched, and will set <FONT FACE="Courier New,mono">$'</FONT> to the part
+of the string after the match.  An example:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;the cat caught the mouse&quot;;
+    $x =~ /cat/;  # $` = 'the ', $&amp; = 'cat', $' = ' caught the mouse'
+    $x =~ /the/;  # $` = '', $&amp; = 'the', $' = ' cat caught the mouse'</PRE></FONT>
+<P>In the second match, <FONT FACE="Courier New,mono">$`&nbsp;=&nbsp;''</FONT>&nbsp; because the regex matched at the
+first character position in the string and stopped, it never saw the
+second 'the'.  It is important to note that using <FONT FACE="Courier New,mono">$`</FONT> and <FONT FACE="Courier New,mono">$'</FONT>
+slows down regex matching quite a bit, and <FONT FACE="Courier New,mono"> $&amp; </FONT> slows it down to a
+lesser extent, because if they are used in one regex in a program,
+they are generated for &lt;all&gt; regexs in the program.  So if raw
+performance is a goal of your application, they should be avoided.
+If you need them, use <FONT FACE="Courier New,mono">@-</FONT> and <FONT FACE="Courier New,mono">@+</FONT> instead:</P>
+<FONT SIZE=3><PRE>
+    $` is the same as substr( $x, 0, $-[0] )
+    $&amp; is the same as substr( $x, $-[0], $+[0]-$-[0] )
+    $' is the same as substr( $x, $+[0] )</PRE></FONT>
+<P>
+<H2><A NAME="matching repetitions">Matching repetitions</A></H2>
+<P>The examples in the previous section display an annoying weakness.  We
+were only matching 3-letter words, or syllables of 4 letters or
+less.  We'd like to be able to match words or syllables of any length,
+without writing out tedious alternatives like
+<FONT FACE="Courier New,mono">\w\w\w\w|\w\w\w|\w\w|\w</FONT>.</P>
+<P>This is exactly the problem the <STRONG>quantifier</STRONG> metacharacters <FONT FACE="Courier New,mono">?</FONT>,
+<FONT FACE="Courier New,mono">*</FONT>, <FONT FACE="Courier New,mono">+</FONT>, and <FONT FACE="Courier New,mono">{}</FONT> were created for.  They allow us to determine the
+number of repeats of a portion of a regex we consider to be a
+match.  Quantifiers are put immediately after the character, character
+class, or grouping that we want to specify.  They have the following
+meanings:</P>
+<UL>
+<LI><STRONG><A NAME="item_a%3F_%3D_match_%27a%27_1_or_0_times"><FONT FACE="Courier New,mono">a?</FONT> = match 'a' 1 or 0 times</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%2A_%3D_match_%27a%27_0_or_more_times%2C_i%2Ee%2E"><FONT FACE="Courier New,mono">a*</FONT> = match 'a' 0 or more times, i.e., any number of times</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%2B_%3D_match_%27a%27_1_or_more_times%2C_i%2Ee%2E"><FONT FACE="Courier New,mono">a+</FONT> = match 'a' 1 or more times, i.e., at least once</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%7Bn%2Cm%7D_%3D_match_at_least_n_times%2C_but_not"><FONT FACE="Courier New,mono">a{n,m}</FONT> = match at least <FONT FACE="Courier New,mono">n</FONT> times, but not more than <FONT FACE="Courier New,mono">m</FONT>
+times.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%7Bn%2C%7D_%3D_match_at_least_n_or_more_times"><FONT FACE="Courier New,mono">a{n,}</FONT> = match at least <FONT FACE="Courier New,mono">n</FONT> or more times</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%7Bn%7D_%3D_match_exactly_n_times"><FONT FACE="Courier New,mono">a{n}</FONT> = match exactly <FONT FACE="Courier New,mono">n</FONT> times</A></STRONG><BR>
+
+</UL>
+<P>Here are some examples:</P>
+<FONT SIZE=3><PRE>
+    /[a-z]+\s+\d*/;  # match a lowercase word, at least some space, and
+                     # any number of digits
+    /(\w+)\s+\1/;    # match doubled words of arbitrary length
+    /y(es)?/i;       # matches 'y', 'Y', or a case-insensitive 'yes'
+    $year =~ /\d{2,4}/;  # make sure year is at least 2 but not more
+                         # than 4 digits
+    $year =~ /\d{4}|\d{2}/;    # better match; throw out 3 digit dates
+    $year =~ /\d{2}(\d{2})?/;  # same thing written differently. However,
+                               # this produces $1 and the other does not.</PRE></FONT>
+<FONT SIZE=3><PRE>
+    % simple_grep '^(\w+)\1$' /usr/dict/words   # isn't this easier?
+    beriberi
+    booboo
+    coco
+    mama
+    murmur
+    papa</PRE></FONT>
+<P>For all of these quantifiers, perl will try to match as much of the
+string as possible, while still allowing the regex to succeed.  Thus
+with <FONT FACE="Courier New,mono">/a?.../</FONT>, perl will first try to match the regex with the <FONT FACE="Courier New,mono">a</FONT>
+present; if that fails, perl will try to match the regex without the
+<FONT FACE="Courier New,mono">a</FONT> present.  For the quantifier <FONT FACE="Courier New,mono">*</FONT>, we get the following:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;the cat in the hat&quot;;
+    $x =~ /^(.*)(cat)(.*)$/; # matches,
+                             # $1 = 'the '
+                             # $2 = 'cat'
+                             # $3 = ' in the hat'</PRE></FONT>
+<P>Which is what we might expect, the match finds the only <FONT FACE="Courier New,mono">cat</FONT> in the
+string and locks onto it.  Consider, however, this regex:</P>
+<FONT SIZE=3><PRE>
+    $x =~ /^(.*)(at)(.*)$/; # matches,
+                            # $1 = 'the cat in the h'
+                            # $2 = 'at'
+                            # $3 = ''   (0 matches)</PRE></FONT>
+<P>One might initially guess that perl would find the <FONT FACE="Courier New,mono">at</FONT> in <FONT FACE="Courier New,mono">cat</FONT> and
+stop there, but that wouldn't give the longest possible string to the
+first quantifier <FONT FACE="Courier New,mono">.*</FONT>.  Instead, the first quantifier <FONT FACE="Courier New,mono">.*</FONT> grabs as
+much of the string as possible while still having the regex match.  In
+this example, that means having the <FONT FACE="Courier New,mono">at</FONT> sequence with the final <FONT FACE="Courier New,mono">at</FONT>
+in the string.  The other important principle illustrated here is that
+when there are two or more elements in a regex, the <EM>leftmost</EM>
+quantifier, if there is one, gets to grab as much the string as
+possible, leaving the rest of the regex to fight over scraps.  Thus in
+our example, the first quantifier <FONT FACE="Courier New,mono">.*</FONT> grabs most of the string, while
+the second quantifier <FONT FACE="Courier New,mono">.*</FONT> gets the empty string.   Quantifiers that
+grab as much of the string as possible are called <STRONG>maximal match</STRONG> or
+<STRONG>greedy</STRONG> quantifiers.</P>
+<P>When a regex can match a string in several different ways, we can use
+the principles above to predict which way the regex will match:</P>
+<UL>
+<LI><STRONG><A NAME="item_Principle_0%3A_Taken_as_a_whole%2C_any_regex_will">Principle 0: Taken as a whole, any regex will be matched at the
+earliest possible position in the string.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Principle_1%3A_In_an_alternation_C%3Ca%7Cb%7Cc%2E%">Principle 1: In an alternation <FONT FACE="Courier New,mono">a|b|c...</FONT>, the leftmost alternative
+that allows a match for the whole regex will be the one used.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Principle_2%3A_The_maximal_matching_quantifiers_C%">Principle 2: The maximal matching quantifiers <FONT FACE="Courier New,mono">?</FONT>, <FONT FACE="Courier New,mono">*</FONT>, <FONT FACE="Courier New,mono">+</FONT> and
+<FONT FACE="Courier New,mono">{n,m}</FONT> will in general match as much of the string as possible while
+still allowing the whole regex to match.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Principle_3%3A_If_there_are_two_or_more_elements_i">Principle 3: If there are two or more elements in a regex, the
+leftmost greedy quantifier, if any, will match as much of the string
+as possible while still allowing the whole regex to match.  The next
+leftmost greedy quantifier, if any, will try to match as much of the
+string remaining available to it as possible, while still allowing the
+whole regex to match.  And so on, until all the regex elements are
+satisfied.</A></STRONG><BR>
+
+</UL>
+<P>As we have seen above, Principle 0 overrides the others - the regex
+will be matched as early as possible, with the other principles
+determining how the regex matches at that earliest character
+position.</P>
+<P>Here is an example of these principles in action:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;The programming republic of Perl&quot;;
+    $x =~ /^(.+)(e|r)(.*)$/;  # matches,
+                              # $1 = 'The programming republic of Pe'
+                              # $2 = 'r'
+                              # $3 = 'l'</PRE></FONT>
+<P>This regex matches at the earliest string position, <FONT FACE="Courier New,mono">'T'</FONT>.  One
+might think that <FONT FACE="Courier New,mono">e</FONT>, being leftmost in the alternation, would be
+matched, but <FONT FACE="Courier New,mono">r</FONT> produces the longest string in the first quantifier.</P>
+<FONT SIZE=3><PRE>
+    $x =~ /(m{1,2})(.*)$/;  # matches,
+                            # $1 = 'mm'
+                            # $2 = 'ing republic of Perl'</PRE></FONT>
+<P>Here, The earliest possible match is at the first <FONT FACE="Courier New,mono">'m'</FONT> in
+<FONT FACE="Courier New,mono">programming</FONT>. <FONT FACE="Courier New,mono">m{1,2}</FONT> is the first quantifier, so it gets to match
+a maximal <FONT FACE="Courier New,mono">mm</FONT>.</P>
+<FONT SIZE=3><PRE>
+    $x =~ /.*(m{1,2})(.*)$/;  # matches,
+                              # $1 = 'm'
+                              # $2 = 'ing republic of Perl'</PRE></FONT>
+<P>Here, the regex matches at the start of the string. The first
+quantifier <FONT FACE="Courier New,mono">.*</FONT> grabs as much as possible, leaving just a single
+<FONT FACE="Courier New,mono">'m'</FONT> for the second quantifier <FONT FACE="Courier New,mono">m{1,2}</FONT>.</P>
+<FONT SIZE=3><PRE>
+    $x =~ /(.?)(m{1,2})(.*)$/;  # matches,
+                                # $1 = 'a'
+                                # $2 = 'mm'
+                                # $3 = 'ing republic of Perl'</PRE></FONT>
+<P>Here, <FONT FACE="Courier New,mono">.?</FONT> eats its maximal one character at the earliest possible
+position in the string, <FONT FACE="Courier New,mono">'a'</FONT> in <FONT FACE="Courier New,mono">programming</FONT>, leaving <FONT FACE="Courier New,mono">m{1,2}</FONT>
+the opportunity to match both <FONT FACE="Courier New,mono">m</FONT>'s. Finally,</P>
+<FONT SIZE=3><PRE>
+    &quot;aXXXb&quot; =~ /(X*)/; # matches with $1 = ''</PRE></FONT>
+<P>because it can match zero copies of <FONT FACE="Courier New,mono">'X'</FONT> at the beginning of the
+string.  If you definitely want to match at least one <FONT FACE="Courier New,mono">'X'</FONT>, use
+<FONT FACE="Courier New,mono">X+</FONT>, not <FONT FACE="Courier New,mono">X*</FONT>.</P>
+<P>Sometimes greed is not good.  At times, we would like quantifiers to
+match a <EM>minimal</EM> piece of string, rather than a maximal piece.  For
+this purpose, Larry Wall created the <STRONG>minimal&nbsp;match</STRONG>&nbsp; or
+<STRONG>non-greedy</STRONG> quantifiers <FONT FACE="Courier New,mono">??</FONT>,<FONT FACE="Courier New,mono">*?</FONT>, <FONT FACE="Courier New,mono">+?</FONT>, and <FONT FACE="Courier New,mono">{}?</FONT>.  These are
+the usual quantifiers with a <FONT FACE="Courier New,mono">?</FONT> appended to them.  They have the
+following meanings:</P>
+<UL>
+<LI><STRONG><A NAME="item_a%3F%3F_%3D_match_%27a%27_0_or_1_times%2E_Try_0_fi"><FONT FACE="Courier New,mono">a??</FONT> = match 'a' 0 or 1 times. Try 0 first, then 1.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%2A%3F_%3D_match_%27a%27_0_or_more_times%2C_i%2Ee"><FONT FACE="Courier New,mono">a*?</FONT> = match 'a' 0 or more times, i.e., any number of times,
+but as few times as possible</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%2B%3F_%3D_match_%27a%27_1_or_more_times%2C_i%2Ee"><FONT FACE="Courier New,mono">a+?</FONT> = match 'a' 1 or more times, i.e., at least once, but
+as few times as possible</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%7Bn%2Cm%7D%3F_%3D_match_at_least_n_times%2C_not_"><FONT FACE="Courier New,mono">a{n,m}?</FONT> = match at least <FONT FACE="Courier New,mono">n</FONT> times, not more than <FONT FACE="Courier New,mono">m</FONT>
+times, as few times as possible</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%7Bn%2C%7D%3F_%3D_match_at_least_n_times%2C_but_a"><FONT FACE="Courier New,mono">a{n,}?</FONT> = match at least <FONT FACE="Courier New,mono">n</FONT> times, but as few times as
+possible</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_a%7Bn%7D%3F_%3D_match_exactly_n_times%2E_Because_w"><FONT FACE="Courier New,mono">a{n}?</FONT> = match exactly <FONT FACE="Courier New,mono">n</FONT> times.  Because we match exactly
+<FONT FACE="Courier New,mono">n</FONT> times, <FONT FACE="Courier New,mono">a{n}?</FONT> is equivalent to <FONT FACE="Courier New,mono">a{n}</FONT> and is just there for
+notational consistency.</A></STRONG><BR>
+
+</UL>
+<P>Let's look at the example above, but with minimal quantifiers:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;The programming republic of Perl&quot;;
+    $x =~ /^(.+?)(e|r)(.*)$/; # matches,
+                              # $1 = 'Th'
+                              # $2 = 'e'
+                              # $3 = ' programming republic of Perl'</PRE></FONT>
+<P>The minimal string that will allow both the start of the string <FONT FACE="Courier New,mono">^</FONT>
+and the alternation to match is <FONT FACE="Courier New,mono">Th</FONT>, with the alternation <FONT FACE="Courier New,mono">e|r</FONT>
+matching <FONT FACE="Courier New,mono">e</FONT>.  The second quantifier <FONT FACE="Courier New,mono">.*</FONT> is free to gobble up the
+rest of the string.</P>
+<FONT SIZE=3><PRE>
+    $x =~ /(m{1,2}?)(.*?)$/;  # matches,
+                              # $1 = 'm'
+                              # $2 = 'ming republic of Perl'</PRE></FONT>
+<P>The first string position that this regex can match is at the first
+<FONT FACE="Courier New,mono">'m'</FONT> in <FONT FACE="Courier New,mono">programming</FONT>. At this position, the minimal <FONT FACE="Courier New,mono">m{1,2}?</FONT>
+matches just one <FONT FACE="Courier New,mono">'m'</FONT>.  Although the second quantifier <FONT FACE="Courier New,mono">.*?</FONT> would
+prefer to match no characters, it is constrained by the end-of-string
+anchor <FONT FACE="Courier New,mono">$</FONT> to match the rest of the string.</P>
+<FONT SIZE=3><PRE>
+    $x =~ /(.*?)(m{1,2}?)(.*)$/;  # matches,
+                                  # $1 = 'The progra'
+                                  # $2 = 'm'
+                                  # $3 = 'ming republic of Perl'</PRE></FONT>
+<P>In this regex, you might expect the first minimal quantifier <FONT FACE="Courier New,mono">.*?</FONT>
+to match the empty string, because it is not constrained by a <FONT FACE="Courier New,mono">^</FONT>
+anchor to match the beginning of the word.  Principle 0 applies here,
+however.  Because it is possible for the whole regex to match at the
+start of the string, it <EM>will</EM> match at the start of the string.  Thus
+the first quantifier has to match everything up to the first <FONT FACE="Courier New,mono">m</FONT>.  The
+second minimal quantifier matches just one <FONT FACE="Courier New,mono">m</FONT> and the third
+quantifier matches the rest of the string.</P>
+<FONT SIZE=3><PRE>
+    $x =~ /(.??)(m{1,2})(.*)$/;  # matches,
+                                 # $1 = 'a'
+                                 # $2 = 'mm'
+                                 # $3 = 'ing republic of Perl'</PRE></FONT>
+<P>Just as in the previous regex, the first quantifier <FONT FACE="Courier New,mono">.??</FONT> can match
+earliest at position <FONT FACE="Courier New,mono">'a'</FONT>, so it does.  The second quantifier is
+greedy, so it matches <FONT FACE="Courier New,mono">mm</FONT>, and the third matches the rest of the
+string.</P>
+<P>We can modify principle 3 above to take into account non-greedy
+quantifiers:</P>
+<UL>
+<LI><STRONG><A NAME="item_greedy">Principle 3: If there are two or more elements in a regex, the
+leftmost greedy (non-greedy) quantifier, if any, will match as much
+(little) of the string as possible while still allowing the whole
+regex to match.  The next leftmost greedy (non-greedy) quantifier, if
+any, will try to match as much (little) of the string remaining
+available to it as possible, while still allowing the whole regex to
+match.  And so on, until all the regex elements are satisfied.</A></STRONG><BR>
+
+</UL>
+<P>Just like alternation, quantifiers are also susceptible to
+backtracking.  Here is a step-by-step analysis of the example</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;the cat in the hat&quot;;
+    $x =~ /^(.*)(at)(.*)$/; # matches,
+                            # $1 = 'the cat in the h'
+                            # $2 = 'at'
+                            # $3 = ''   (0 matches)</PRE></FONT>
+<OL>
+<LI><STRONG><A NAME="item_Start_with_the_first_letter_in_the_string_%27t%27%">Start with the first letter in the string 't'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_The_first_quantifier_%27%2E%2A%27_starts_out_by_ma">The first quantifier '.*' starts out by matching the whole
+string 'the cat in the hat'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%27a%27_in_the_regex_element_%27at%27_doesn%27t_m">'a' in the regex element 'at' doesn't match the end of the
+string.  Backtrack one character.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_%27a%27_in_the_regex_element_%27at%27_still_doesn">'a' in the regex element 'at' still doesn't match the last
+letter of the string 't', so backtrack one more character.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Now_we_can_match_the_%27a%27_and_the_%27t%27%2E">Now we can match the 'a' and the 't'.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_Move_on_to_the_third_element_%27%2E%2A%27%2E_Since">Move on to the third element '.*'.  Since we are at the end of
+the string and '.*' can match 0 times, assign it the empty string.</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_We_are_done%21">We are done!</A></STRONG><BR>
+
+</OL>
+<P>Most of the time, all this moving forward and backtracking happens
+quickly and searching is fast.   There are some pathological regexs,
+however, whose execution time exponentially grows with the size of the
+string.  A typical structure that blows up in your face is of the form</P>
+<FONT SIZE=3><PRE>
+    /(a|b+)*/;</PRE></FONT>
+<P>The problem is the nested indeterminate quantifiers.  There are many
+different ways of partitioning a string of length n between the <FONT FACE="Courier New,mono">+</FONT>
+and <FONT FACE="Courier New,mono">*</FONT>: one repetition with <FONT FACE="Courier New,mono">b+</FONT> of length n, two repetitions with
+the first <FONT FACE="Courier New,mono">b+</FONT> length k and the second with length n-k, m repetitions
+whose bits add up to length n, etc.  In fact there are an exponential
+number of ways to partition a string as a function of length.  A
+regex may get lucky and match early in the process, but if there is
+no match, perl will try <EM>every</EM> possibility before giving up.  So be
+careful with nested <FONT FACE="Courier New,mono">*</FONT>'s, <FONT FACE="Courier New,mono">{n,m}</FONT>'s, and <FONT FACE="Courier New,mono">+</FONT>'s.  The book
+<EM>Mastering regular expressions</EM> by Jeffrey Friedl gives a wonderful
+discussion of this and other efficiency issues.</P>
+<P>
+<H2><A NAME="building a regex">Building a regex</A></H2>
+<P>At this point, we have all the basic regex concepts covered, so let's
+give a more involved example of a regular expression.  We will build a
+regex that matches numbers.</P>
+<P>The first task in building a regex is to decide what we want to match
+and what we want to exclude.  In our case, we want to match both
+integers and floating point numbers and we want to reject any string
+that isn't a number.</P>
+<P>The next task is to break the problem down into smaller problems that
+are easily converted into a regex.</P>
+<P>The simplest case is integers.  These consist of a sequence of digits,
+with an optional sign in front.  The digits we can represent with
+<FONT FACE="Courier New,mono">\d+</FONT> and the sign can be matched with <FONT FACE="Courier New,mono">[+-]</FONT>.  Thus the integer
+regex is</P>
+<FONT SIZE=3><PRE>
+    /[+-]?\d+/;  # matches integers</PRE></FONT>
+<P>A floating point number potentially has a sign, an integral part, a
+decimal point, a fractional part, and an exponent.  One or more of these
+parts is optional, so we need to check out the different
+possibilities.  Floating point numbers which are in proper form include
+123., 0.345, .34, -1e6, and 25.4E-72.  As with integers, the sign out
+front is completely optional and can be matched by <FONT FACE="Courier New,mono">[+-]?</FONT>.  We can
+see that if there is no exponent, floating point numbers must have a
+decimal point, otherwise they are integers.  We might be tempted to
+model these with <FONT FACE="Courier New,mono">\d*\.\d*</FONT>, but this would also match just a single
+decimal point, which is not a number.  So the three cases of floating
+point number sans exponent are</P>
+<FONT SIZE=3><PRE>
+   /[+-]?\d+\./;  # 1., 321., etc.
+   /[+-]?\.\d+/;  # .1, .234, etc.
+   /[+-]?\d+\.\d+/;  # 1.0, 30.56, etc.</PRE></FONT>
+<P>These can be combined into a single regex with a three-way alternation:</P>
+<FONT SIZE=3><PRE>
+   /[+-]?(\d+\.\d+|\d+\.|\.\d+)/;  # floating point, no exponent</PRE></FONT>
+<P>In this alternation, it is important to put <FONT FACE="Courier New,mono">'\d+\.\d+'</FONT> before
+<FONT FACE="Courier New,mono">'\d+\.'</FONT>.  If <FONT FACE="Courier New,mono">'\d+\.'</FONT> were first, the regex would happily match that
+and ignore the fractional part of the number.</P>
+<P>Now consider floating point numbers with exponents.  The key
+observation here is that <EM>both</EM> integers and numbers with decimal
+points are allowed in front of an exponent.  Then exponents, like the
+overall sign, are independent of whether we are matching numbers with
+or without decimal points, and can be 'decoupled' from the
+mantissa.  The overall form of the regex now becomes clear:</P>
+<FONT SIZE=3><PRE>
+    /^(optional sign)(integer | f.p. mantissa)(optional exponent)$/;</PRE></FONT>
+<P>The exponent is an <FONT FACE="Courier New,mono">e</FONT> or <FONT FACE="Courier New,mono">E</FONT>, followed by an integer.  So the
+exponent regex is</P>
+<FONT SIZE=3><PRE>
+   /[eE][+-]?\d+/;  # exponent</PRE></FONT>
+<P>Putting all the parts together, we get a regex that matches numbers:</P>
+<FONT SIZE=3><PRE>
+   /^[+-]?(\d+\.\d+|\d+\.|\.\d+|\d+)([eE][+-]?\d+)?$/;  # Ta da!</PRE></FONT>
+<P>Long regexs like this may impress your friends, but can be hard to
+decipher.  In complex situations like this, the <FONT FACE="Courier New,mono">//x</FONT> modifier for a
+match is invaluable.  It allows one to put nearly arbitrary whitespace
+and comments into a regex without affecting their meaning.  Using it,
+we can rewrite our 'extended' regex in the more pleasing form</P>
+<FONT SIZE=3><PRE>
+   /^
+      [+-]?         # first, match an optional sign
+      (             # then match integers or f.p. mantissas:
+          \d+\.\d+  # mantissa of the form a.b
+         |\d+\.     # mantissa of the form a.
+         |\.\d+     # mantissa of the form .b
+         |\d+       # integer of the form a
+      )
+      ([eE][+-]?\d+)?  # finally, optionally match an exponent
+   $/x;</PRE></FONT>
+<P>If whitespace is mostly irrelevant, how does one include space
+characters in an extended regex? The answer is to backslash it
+<FONT FACE="Courier New,mono">'\&nbsp;'</FONT>&nbsp; or put it in a character class <FONT FACE="Courier New,mono">[&nbsp;]</FONT>&nbsp;.  The same thing
+goes for pound signs, use <FONT FACE="Courier New,mono">\#</FONT> or <FONT FACE="Courier New,mono">[#]</FONT>.  For instance, Perl allows
+a space between the sign and the mantissa/integer, and we could add
+this to our regex as follows:</P>
+<FONT SIZE=3><PRE>
+   /^
+      [+-]?\ *      # first, match an optional sign *and space*
+      (             # then match integers or f.p. mantissas:
+          \d+\.\d+  # mantissa of the form a.b
+         |\d+\.     # mantissa of the form a.
+         |\.\d+     # mantissa of the form .b
+         |\d+       # integer of the form a
+      )
+      ([eE][+-]?\d+)?  # finally, optionally match an exponent
+   $/x;</PRE></FONT>
+<P>In this form, it is easier to see a way to simplify the
+alternation.  Alternatives 1, 2, and 4 all start with <FONT FACE="Courier New,mono">\d+</FONT>, so it
+could be factored out:</P>
+<FONT SIZE=3><PRE>
+   /^
+      [+-]?\ *      # first, match an optional sign
+      (             # then match integers or f.p. mantissas:
+          \d+       # start out with a ...
+          (
+              \.\d* # mantissa of the form a.b or a.
+          )?        # ? takes care of integers of the form a
+         |\.\d+     # mantissa of the form .b
+      )
+      ([eE][+-]?\d+)?  # finally, optionally match an exponent
+   $/x;</PRE></FONT>
+<P>or written in the compact form,</P>
+<FONT SIZE=3><PRE>
+    /^[+-]?\ *(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/;</PRE></FONT>
+<P>This is our final regex.  To recap, we built a regex by</P>
+<UL>
+<LI><STRONG><A NAME="item_specifying_the_task_in_detail%2C">specifying the task in detail,</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_breaking_down_the_problem_into_smaller_parts%2C">breaking down the problem into smaller parts,</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_translating_the_small_parts_into_regexs%2C">translating the small parts into regexs,</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_combining_the_regexs%2C">combining the regexs,</A></STRONG><BR>
+
+<LI><STRONG><A NAME="item_and_optimizing_the_final_combined_regex%2E">and optimizing the final combined regex.</A></STRONG><BR>
+
+</UL>
+<P>These are also the typical steps involved in writing a computer
+program.  This makes perfect sense, because regular expressions are
+essentially programs written a little computer language that specifies
+patterns.</P>
+<P>
+<H2><A NAME="using regular expressions in perl">Using regular expressions in Perl</A></H2>
+<P>The last topic of Part 1 briefly covers how regexs are used in Perl
+programs.  Where do they fit into Perl syntax?</P>
+<P>We have already introduced the matching operator in its default
+<FONT FACE="Courier New,mono">/regex/</FONT> and arbitrary delimiter <FONT FACE="Courier New,mono">m!regex!</FONT> forms.  We have used
+the binding operator <FONT FACE="Courier New,mono">=~</FONT> and its negation <FONT FACE="Courier New,mono">!~</FONT> to test for string
+matches.  Associated with the matching operator, we have discussed the
+single line <FONT FACE="Courier New,mono">//s</FONT>, multi-line <FONT FACE="Courier New,mono">//m</FONT>, case-insensitive <FONT FACE="Courier New,mono">//i</FONT> and
+extended <FONT FACE="Courier New,mono">//x</FONT> modifiers.</P>
+<P>There are a few more things you might want to know about matching
+operators.  First, we pointed out earlier that variables in regexs are
+substituted before the regex is evaluated:</P>
+<FONT SIZE=3><PRE>
+    $pattern = 'Seuss';
+    while (&lt;&gt;) {
+        print if /$pattern/;
+    }</PRE></FONT>
+<P>This will print any lines containing the word <FONT FACE="Courier New,mono">Seuss</FONT>.  It is not as
+efficient as it could be, however, because perl has to re-evaluate
+<FONT FACE="Courier New,mono">$pattern</FONT> each time through the loop.  If <FONT FACE="Courier New,mono">$pattern</FONT> won't be
+changing over the lifetime of the script, we can add the <FONT FACE="Courier New,mono">//o</FONT>
+modifier, which directs perl to only perform variable substitutions
+once:</P>
+<FONT SIZE=3><PRE>
+    #!/usr/bin/perl
+    #    Improved simple_grep
+    $regex = shift;
+    while (&lt;&gt;) {
+        print if /$regex/o;  # a good deal faster
+    }</PRE></FONT>
+<P>If you change <FONT FACE="Courier New,mono">$pattern</FONT> after the first substitution happens, perl
+will ignore it.  If you don't want any substitutions at all, use the
+special delimiter <FONT FACE="Courier New,mono">m''</FONT>:</P>
+<FONT SIZE=3><PRE>
+    $pattern = 'Seuss';
+    while (&lt;&gt;) {
+        print if m'$pattern';  # matches '$pattern', not 'Seuss'
+    }</PRE></FONT>
+<P><FONT FACE="Courier New,mono">m''</FONT> acts like single quotes on a regex; all other <FONT FACE="Courier New,mono">m</FONT> delimiters
+act like double quotes.  If the regex evaluates to the empty string,
+the regex in the <EM>last successful match</EM> is used instead.  So we have</P>
+<FONT SIZE=3><PRE>
+    &quot;dog&quot; =~ /d/;  # 'd' matches
+    &quot;dogbert =~ //;  # this matches the 'd' regex used before</PRE></FONT>
+<P>The final two modifiers <FONT FACE="Courier New,mono">//g</FONT> and <FONT FACE="Courier New,mono">//c</FONT> concern multiple matches.
+The modifier <FONT FACE="Courier New,mono">//g</FONT> stands for global matching and allows the the
+matching operator to match within a string as many times as possible.
+In scalar context, successive invocations against a string will have
+`<FONT FACE="Courier New,mono">//g</FONT> jump from match to match, keeping track of position in the
+string as it goes along.  You can get or set the position with the
+<FONT FACE="Courier New,mono">pos()</FONT> function.</P>
+<P>The use of <FONT FACE="Courier New,mono">//g</FONT> is shown in the following example.  Suppose we have
+a string that consists of words separated by spaces.  If we know how
+many words there are in advance, we could extract the words using
+groupings:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;cat dog house&quot;; # 3 words
+    $x =~ /^\s*(\w+)\s+(\w+)\s+(\w+)\s*$/; # matches,
+                                           # $1 = 'cat'
+                                           # $2 = 'dog'
+                                           # $3 = 'house'</PRE></FONT>
+<P>But what if we had an indeterminate number of words? This is the sort
+of task <FONT FACE="Courier New,mono">//g</FONT> was made for.  To extract all words, form the simple
+regex <FONT FACE="Courier New,mono">(\w+)</FONT> and loop over all matches with <FONT FACE="Courier New,mono">/(\w+)/g</FONT>:</P>
+<FONT SIZE=3><PRE>
+    while ($x =~ /(\w+)/g) {
+        print &quot;Word is $1, ends at position &quot;, pos $x, &quot;\n&quot;;
+    }</PRE></FONT>
+<P>prints</P>
+<FONT SIZE=3><PRE>
+    Word is cat, ends at position 3
+    Word is dog, ends at position 7
+    Word is house, ends at position 13</PRE></FONT>
+<P>A failed match or changing the target string resets the position.  If
+you don't want the position reset after failure to match, add the
+<FONT FACE="Courier New,mono">//c</FONT>, as in <FONT FACE="Courier New,mono">/regex/gc</FONT>.  The current position in the string is
+associated with the string, not the regex.  This means that different
+strings have different positions and their respective positions can be
+set or read independently.</P>
+<P>In list context, <FONT FACE="Courier New,mono">//g</FONT> returns a list of matched groupings, or if
+there are no groupings, a list of matches to the whole regex.  So if
+we wanted just the words, we could use</P>
+<FONT SIZE=3><PRE>
+    @words = ($x =~ /(\w+)/g);  # matches,
+                                # $word[0] = 'cat'
+                                # $word[1] = 'dog'
+                                # $word[2] = 'house'</PRE></FONT>
+<P>Closely associated with the <FONT FACE="Courier New,mono">//g</FONT> modifier is the <FONT FACE="Courier New,mono">\G</FONT> anchor.  The
+<FONT FACE="Courier New,mono">\G</FONT> anchor matches at the point where the previous <FONT FACE="Courier New,mono">//g</FONT> match left
+off.  <FONT FACE="Courier New,mono">\G</FONT> allows us to easily do context-sensitive matching:</P>
+<FONT SIZE=3><PRE>
+    $metric = 1;  # use metric units
+    ...
+    $x = &lt;FILE&gt;;  # read in measurement
+    $x =~ /^([+-]?\d+)\s*/g;  # get magnitude
+    $weight = $1;
+    if ($metric) { # error checking
+        print &quot;Units error!&quot; unless $x =~ /\Gkg\./g;
+    }
+    else {
+        print &quot;Units error!&quot; unless $x =~ /\Glbs\./g;
+    }
+    $x =~ /\G\s+(widget|sprocket)/g;  # continue processing</PRE></FONT>
+<P>The combination of <FONT FACE="Courier New,mono">//g</FONT> and <FONT FACE="Courier New,mono">\G</FONT> allows us to process the string a
+bit at a time and use arbitrary Perl logic to decide what to do next.</P>
+<P><FONT FACE="Courier New,mono">\G</FONT> is also invaluable in processing fixed length records with
+regexs.  Suppose we have a snippet of coding region DNA, encoded as
+base pair letters <FONT FACE="Courier New,mono">ATCGTTGAAT...</FONT> and we want to find all the stop
+codons <FONT FACE="Courier New,mono">TGA</FONT>.  In a coding region, codons are 3-letter sequences, so
+we can think of the DNA snippet as a sequence of 3-letter records.  The
+naive regex</P>
+<FONT SIZE=3><PRE>
+    # expanded, this is &quot;ATC GTT GAA TGC AAA TGA CAT GAC&quot;
+    $dna = &quot;ATCGTTGAATGCAAATGACATGAC&quot;;
+    $dna =~ /TGA/;</PRE></FONT>
+<P>doesn't work; it may match an <FONT FACE="Courier New,mono">TGA</FONT>, but there is no guarantee that
+the match is aligned with codon boundaries, e.g., the substring
+<FONT FACE="Courier New,mono">GTT&nbsp;GAA</FONT>&nbsp; gives a match.  A better solution is</P>
+<FONT SIZE=3><PRE>
+    while ($dna =~ /(\w\w\w)*?TGA/g) {  # note the minimal *?
+        print &quot;Got a TGA stop codon at position &quot;, pos $dna, &quot;\n&quot;;
+    }</PRE></FONT>
+<P>which prints</P>
+<FONT SIZE=3><PRE>
+    Got a TGA stop codon at position 18
+    Got a TGA stop codon at position 23</PRE></FONT>
+<P>Position 18 is good, but position 23 is bogus.  What happened?</P>
+<P>The answer is that our regex works well until we get past the last
+real match.  Then the regex will fail to match a synchronized <FONT FACE="Courier New,mono">TGA</FONT>
+and start stepping ahead one character position at a time, not what we
+want.  The solution is to use <FONT FACE="Courier New,mono">\G</FONT> to anchor the match to the codon
+alignment:</P>
+<FONT SIZE=3><PRE>
+    while ($dna =~ /\G(\w\w\w)*?TGA/g) {
+        print &quot;Got a TGA stop codon at position &quot;, pos $dna, &quot;\n&quot;;
+    }</PRE></FONT>
+<P>This prints</P>
+<FONT SIZE=3><PRE>
+    Got a TGA stop codon at position 18</PRE></FONT>
+<P>which is the correct answer.  This example illustrates that it is
+important not only to match what is desired, but to reject what is not
+desired.</P>
+<P><STRONG>search and replace</STRONG></P>
+<P>Regular expressions also play a big role in <STRONG>search and replace</STRONG>
+operations in Perl.  Search and replace is accomplished with the
+<FONT FACE="Courier New,mono">s///</FONT> operator.  The general form is
+<FONT FACE="Courier New,mono">s/regex/replacement/modifiers</FONT>, with everything we know about
+regexs and modifiers applying in this case as well.  The
+<FONT FACE="Courier New,mono">replacement</FONT> is a Perl double quoted string that replaces in the
+string whatever is matched with the <FONT FACE="Courier New,mono">regex</FONT>.  The operator <FONT FACE="Courier New,mono">=~</FONT> is
+also used here to associate a string with <FONT FACE="Courier New,mono">s///</FONT>.  If matching
+against <FONT FACE="Courier New,mono">$_</FONT>, the <FONT FACE="Courier New,mono">$_&nbsp;=~</FONT>&nbsp; can be dropped.  If there is a match,
+<FONT FACE="Courier New,mono">s///</FONT> returns the number of substitutions made, otherwise it returns
+false.  Here are a few examples:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;Time to feed the cat!&quot;;
+    $x =~ s/cat/hacker/;   # $x contains &quot;Time to feed the hacker!&quot;
+    if ($x =~ s/^(Time.*hacker)!$/$1 now!/) {
+        $more_insistent = 1;
+    }
+    $y = &quot;'quoted words'&quot;;
+    $y =~ s/^'(.*)'$/$1/;  # strip single quotes,
+                           # $y contains &quot;quoted words&quot;</PRE></FONT>
+<P>In the last example, the whole string was matched, but only the part
+inside the single quotes was grouped.  With the <FONT FACE="Courier New,mono">s///</FONT> operator, the
+matched variables <FONT FACE="Courier New,mono">$1</FONT>, <FONT FACE="Courier New,mono">$2</FONT>, etc.  are immediately available for use
+in the replacement expression, so we use <FONT FACE="Courier New,mono">$1</FONT> to replace the quoted
+string with just what was quoted.  With the global modifier, <FONT FACE="Courier New,mono">s///g</FONT>
+will search and replace all occurrences of the regex in the string:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;I batted 4 for 4&quot;;
+    $x =~ s/4/four/;   # doesn't do it all:
+                       # $x contains &quot;I batted four for 4&quot;
+    $x = &quot;I batted 4 for 4&quot;;
+    $x =~ s/4/four/g;  # does it all:
+                       # $x contains &quot;I batted four for four&quot;</PRE></FONT>
+<P>If you prefer 'regex' over 'regex' in this tutorial, you could use
+the following program to replace it:</P>
+<FONT SIZE=3><PRE>
+    % cat &gt; simple_replace
+    #!/usr/bin/perl
+    $regex = shift;
+    $replacement = shift;
+    while (&lt;&gt;) {
+        s/$regex/$replacement/go;
+        print;
+    }
+    ^D</PRE></FONT>
+<FONT SIZE=3><PRE>
+    % simple_replace regex regex perlretut.pod</PRE></FONT>
+<P>In <FONT FACE="Courier New,mono">simple_replace</FONT> we used the <FONT FACE="Courier New,mono">s///g</FONT> modifier to replace all
+occurrences of the regex on each line and the <FONT FACE="Courier New,mono">s///o</FONT> modifier to
+compile the regex only once.  As with <FONT FACE="Courier New,mono">simple_grep</FONT>, both the
+<FONT FACE="Courier New,mono">print</FONT> and the <FONT FACE="Courier New,mono">s/$regex/$replacement/go</FONT> use <FONT FACE="Courier New,mono">$_</FONT> implicitly.</P>
+<P>A modifier available specifically to search and replace is the
+<FONT FACE="Courier New,mono">s///e</FONT> evaluation modifier.  <FONT FACE="Courier New,mono">s///e</FONT> wraps an <FONT FACE="Courier New,mono">eval{...}</FONT> around
+the replacement string and the evaluated result is substituted for the
+matched substring.  <FONT FACE="Courier New,mono">s///e</FONT> is useful if you need to do a bit of
+computation in the process of replacing text.  This example counts
+character frequencies in a line:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;Bill the cat&quot;;
+    $x =~ s/(.)/$chars{$1}++;$1/eg;  # final $1 replaces char with itself
+    print &quot;frequency of '$_' is $chars{$_}\n&quot;
+        foreach (sort {$chars{$b} &lt;=&gt; $chars{$a}} keys %chars);</PRE></FONT>
+<P>This prints</P>
+<FONT SIZE=3><PRE>
+    frequency of ' ' is 2
+    frequency of 't' is 2
+    frequency of 'l' is 2
+    frequency of 'B' is 1
+    frequency of 'c' is 1
+    frequency of 'e' is 1
+    frequency of 'h' is 1
+    frequency of 'i' is 1
+    frequency of 'a' is 1</PRE></FONT>
+<P>As with the match <FONT FACE="Courier New,mono">m//</FONT> operator, <FONT FACE="Courier New,mono">s///</FONT> can use other delimiters,
+such as <FONT FACE="Courier New,mono">s!!!</FONT> and <FONT FACE="Courier New,mono">s{}{}</FONT>, and even <FONT FACE="Courier New,mono">s{}//</FONT>.  If single quotes are
+used <FONT FACE="Courier New,mono">s'''</FONT>, then the regex and replacement are treated as single
+quoted strings and there are no substitutions.  <FONT FACE="Courier New,mono">s///</FONT> in list context
+returns the same thing as in scalar context, i.e., the number of
+matches.</P>
+<P><STRONG>The split operator</STRONG></P>
+<P>The <STRONG><FONT FACE="Courier New,mono">split</FONT> </STRONG> function can also optionally use a matching operator
+<FONT FACE="Courier New,mono">m//</FONT> to split a string.  <FONT FACE="Courier New,mono">split /regex/, string, limit</FONT> splits
+<FONT FACE="Courier New,mono">string</FONT> into a list of substrings and returns that list.  The regex
+is used to match the character sequence that the <FONT FACE="Courier New,mono">string</FONT> is split
+with respect to.  The <FONT FACE="Courier New,mono">limit</FONT>, if present, constrains splitting into
+no more than <FONT FACE="Courier New,mono">limit</FONT> number of strings.  For example, to split a
+string into words, use</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;Calvin and Hobbes&quot;;
+    @words = split /\s+/, $x;  # $word[0] = 'Calvin'
+                               # $word[1] = 'and'
+                               # $word[2] = 'Hobbes'</PRE></FONT>
+<P>If the empty regex <FONT FACE="Courier New,mono">//</FONT> is used, the regex always matches and
+the string is split into individual characters.  If the regex has
+groupings, then list produced contains the matched substrings from the
+groupings as well.  For instance,</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;/usr/bin/perl&quot;;
+    @dirs = split m!/!, $x;  # $dirs[0] = ''
+                             # $dirs[1] = 'usr'
+                             # $dirs[2] = 'bin'
+                             # $dirs[3] = 'perl'
+    @parts = split m!(/)!, $x;  # $parts[0] = ''
+                                # $parts[1] = '/'
+                                # $parts[2] = 'usr'
+                                # $parts[3] = '/'
+                                # $parts[4] = 'bin'
+                                # $parts[5] = '/'
+                                # $parts[6] = 'perl'</PRE></FONT>
+<P>Since the first character of $x matched the regex, <FONT FACE="Courier New,mono">split</FONT> prepended
+an empty initial element to the list.</P>
+<P>If you have read this far, congratulations! You now have all the basic
+tools needed to use regular expressions to solve a wide range of text
+processing problems.  If this is your first time through the tutorial,
+why not stop here and play around with regexs a while...  Part&nbsp;2
+concerns the more esoteric aspects of regular expressions and those
+concepts certainly aren't needed right at the start.</P>
+<P>
+<HR COLOR="#FFCC66" SIZE=1>
+<H3><A NAME="part 2: power tools">Part 2: Power tools</A></H3>
+<P>OK, you know the basics of regexs and you want to know more.  If
+matching regular expressions is analogous to a walk in the woods, then
+the tools discussed in Part 1 are analogous to topo maps and a
+compass, basic tools we use all the time.  Most of the tools in part 2
+are are analogous to flare guns and satellite phones.  They aren't used
+too often on a hike, but when we are stuck, they can be invaluable.</P>
+<P>What follows are the more advanced, less used, or sometimes esoteric
+capabilities of perl regexs.  In Part 2, we will assume you are
+comfortable with the basics and concentrate on the new features.</P>
+<P>
+<H2><A NAME="more on characters, strings, and character classes">More on characters, strings, and character classes</A></H2>
+<P>There are a number of escape sequences and character classes that we
+haven't covered yet.</P>
+<P>There are several escape sequences that convert characters or strings
+between upper and lower case.  <FONT FACE="Courier New,mono">\l</FONT> and <FONT FACE="Courier New,mono">\u</FONT> convert the next
+character to lower or upper case, respectively:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;perl&quot;;
+    $string =~ /\u$x/;  # matches 'Perl' in $string
+    $x = &quot;M(rs?|s)\\.&quot;; # note the double backslash
+    $string =~ /\l$x/;  # matches 'mr.', 'mrs.', and 'ms.',</PRE></FONT>
+<P><FONT FACE="Courier New,mono">\L</FONT> and <FONT FACE="Courier New,mono">\U</FONT> converts a whole substring, delimited by <FONT FACE="Courier New,mono">\L</FONT> or
+<FONT FACE="Courier New,mono">\U</FONT> and <FONT FACE="Courier New,mono">\E</FONT>, to lower or upper case:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;This word is in lower case:\L SHOUT\E&quot;;
+    $x =~ /shout/;       # matches
+    $x = &quot;I STILL KEYPUNCH CARDS FOR MY 360&quot;
+    $x =~ /\Ukeypunch/;  # matches punch card string</PRE></FONT>
+<P>If there is no <FONT FACE="Courier New,mono">\E</FONT>, case is converted until the end of the
+string. The regexs <FONT FACE="Courier New,mono">\L\u$word</FONT> or <FONT FACE="Courier New,mono">\u\L$word</FONT> convert the first
+character of <FONT FACE="Courier New,mono">$word</FONT> to uppercase and the rest of the characters to
+lowercase.</P>
+<P>Control characters can be escaped with <FONT FACE="Courier New,mono">\c</FONT>, so that a control-Z
+character would be matched with <FONT FACE="Courier New,mono">\cZ</FONT>.  The escape sequence
+<FONT FACE="Courier New,mono">\Q</FONT>...<FONT FACE="Courier New,mono">\E</FONT> quotes, or protects most non-alphabetic characters.   For
+instance,</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;\QThat !^*&amp;%~&amp; cat!&quot;;
+    $x =~ /\Q!^*&amp;%~&amp;\E/;  # check for rough language</PRE></FONT>
+<P>It does not protect <FONT FACE="Courier New,mono">$</FONT> or <FONT FACE="Courier New,mono">@</FONT>, so that variables can still be
+substituted.</P>
+<P>With the advent of 5.6.0, perl regexs can handle more than just the
+standard ASCII character set.  Perl now supports <STRONG>Unicode</STRONG>, a standard
+for encoding the character sets from many of the world's written
+languages.  Unicode does this by allowing characters to be more than
+one byte wide.  Perl uses the UTF-8 encoding, in which ASCII characters
+are still encoded as one byte, but characters greater than <FONT FACE="Courier New,mono">chr(127)</FONT>
+may be stored as two or more bytes.</P>
+<P>What does this mean for regexs? Well, regex users don't need to know
+much about perl's internal representation of strings.  But they do need
+to know 1) how to represent Unicode characters in a regex and 2) when
+a matching operation will treat the string to be searched as a
+sequence of bytes (the old way) or as a sequence of Unicode characters
+(the new way).  The answer to 1) is that Unicode characters greater
+than <FONT FACE="Courier New,mono">chr(127)</FONT> may be represented using the <FONT FACE="Courier New,mono">\x{hex}</FONT> notation,
+with <FONT FACE="Courier New,mono">hex</FONT> a hexadecimal integer:</P>
+<FONT SIZE=3><PRE>
+    use utf8;    # We will be doing Unicode processing
+    /\x{263a}/;  # match a Unicode smiley face :)</PRE></FONT>
+<P>Unicode characters in the range of 128-255 use two hexadecimal digits
+with braces: <FONT FACE="Courier New,mono">\x{ab}</FONT>.  Note that this is different than <FONT FACE="Courier New,mono">\xab</FONT>,
+which is just a hexadecimal byte with no Unicode
+significance.</P>
+<P>Figuring out the hexadecimal sequence of a Unicode character you want
+or deciphering someone else's hexadecimal Unicode regex is about as
+much fun as programming in machine code.  So another way to specify
+Unicode characters is to use the <STRONG>named&nbsp;character</STRONG>&nbsp; escape
+sequence <FONT FACE="Courier New,mono">\N{name}</FONT>.  <FONT FACE="Courier New,mono">name</FONT> is a name for the Unicode character, as
+specified in the Unicode standard.  For instance, if we wanted to
+represent or match the astrological sign for the planet Mercury, we
+could use</P>
+<FONT SIZE=3><PRE>
+    use utf8;              # We will be doing Unicode processing
+    use charnames &quot;:full&quot;; # use named chars with Unicode full names
+    $x = &quot;abc\N{MERCURY}def&quot;;
+    $x =~ /\N{MERCURY}/;   # matches</PRE></FONT>
+<P>One can also use short names or restrict names to a certain alphabet:</P>
+<FONT SIZE=3><PRE>
+    use utf8;              # We will be doing Unicode processing</PRE></FONT>
+<FONT SIZE=3><PRE>
+    use charnames ':full';
+    print &quot;\N{GREEK SMALL LETTER SIGMA} is called sigma.\n&quot;;</PRE></FONT>
+<FONT SIZE=3><PRE>
+    use charnames &quot;:short&quot;;
+    print &quot;\N{greek:Sigma} is an upper-case sigma.\n&quot;;</PRE></FONT>
+<FONT SIZE=3><PRE>
+    use charnames qw(greek);
+    print &quot;\N{sigma} is Greek sigma\n&quot;;</PRE></FONT>
+<P>A list of full names is found in the file Names.txt in the
+lib/perl5/5.6.0/unicode directory.</P>
+<P>The answer to requirement 2), as of 5.6.0, is that if a regex
+contains Unicode characters, the string is searched as a sequence of
+Unicode characters.  Otherwise, the string is searched as a sequence of
+bytes.  If the string is being searched as a sequence of Unicode
+characters, but matching a single byte is required, we can use the <FONT FACE="Courier New,mono">\C</FONT>
+escape sequence.  <FONT FACE="Courier New,mono">\C</FONT> is a character class akin to <FONT FACE="Courier New,mono">.</FONT> except that
+it matches <EM>any</EM> byte 0-255.  So</P>
+<FONT SIZE=3><PRE>
+    use utf8;              # We will be doing Unicode processing
+    use charnames &quot;:full&quot;; # use named chars with Unicode full names
+    $x = &quot;a&quot;;
+    $x =~ /\C/;  # matches 'a', eats one byte
+    $x = &quot;&quot;;
+    $x =~ /\C/;  # doesn't match, no bytes to match
+    $x = &quot;\N{MERCURY}&quot;;  # two-byte Unicode character
+    $x =~ /\C/;  # matches, but dangerous!</PRE></FONT>
+<P>The last regex matches, but is dangerous because the string
+<EM>character</EM> position is no longer synchronized to the string <EM>byte</EM>
+position.  This generates the warning 'Malformed UTF-8
+character'.  <FONT FACE="Courier New,mono">\C</FONT> is best used for matching the binary data in strings
+with binary data intermixed with Unicode characters.</P>
+<P>Let us now discuss the rest of the character classes.  Just as with
+Unicode characters, there are named Unicode character classes
+represented by the <FONT FACE="Courier New,mono">\p{name}</FONT> escape sequence.  Closely associated is
+the <FONT FACE="Courier New,mono">\P{name}</FONT> character class, which is the negation of the
+<FONT FACE="Courier New,mono">\p{name}</FONT> class.  For example, to match lower and uppercase
+characters,</P>
+<FONT SIZE=3><PRE>
+    use utf8;              # We will be doing Unicode processing
+    use charnames &quot;:full&quot;; # use named chars with Unicode full names
+    $x = &quot;BOB&quot;;
+    $x =~ /^\p{IsUpper}/;   # matches, uppercase char class
+    $x =~ /^\P{IsUpper}/;   # doesn't match, char class sans uppercase
+    $x =~ /^\p{IsLower}/;   # doesn't match, lowercase char class
+    $x =~ /^\P{IsLower}/;   # matches, char class sans lowercase</PRE></FONT>
+<P>If a <FONT FACE="Courier New,mono">name</FONT> is just one letter, the braces can be dropped.  For
+instance, <FONT FACE="Courier New,mono">\pM</FONT> is the character class of Unicode 'marks'.  Here is
+the association between some Perl named classes and the traditional
+Unicode classes:</P>
+<FONT SIZE=3><PRE>
+    Perl class name  Unicode class name</PRE></FONT>
+<FONT SIZE=3><PRE>
+    IsAlpha          Lu, Ll, or Lo
+    IsAlnum          Lu, Ll, Lo, or Nd
+    IsASCII          $code le 127
+    IsCntrl          C
+    IsDigit          Nd
+    IsGraph          [^C] and $code ne &quot;0020&quot;
+    IsLower          Ll
+    IsPrint          [^C]
+    IsPunct          P
+    IsSpace          Z, or ($code lt &quot;0020&quot; and chr(hex $code) is a \s)
+    IsUpper          Lu
+    IsWord           Lu, Ll, Lo, Nd or $code eq &quot;005F&quot;
+    IsXDigit         $code =~ /^00(3[0-9]|[46][1-6])$/</PRE></FONT>
+<P>For a full list of Perl class names, consult the mktables.PL program
+in the lib/perl5/5.6.0/unicode directory.</P>
+<P><FONT FACE="Courier New,mono">\X</FONT> is an abbreviation for a character class sequence that includes
+the Unicode 'combining character sequences'.  A 'combining character
+sequence' is a base character followed by any number of combining
+characters.  An example of a combining character is an accent.   Using
+the Unicode full names, e.g., <FONT FACE="Courier New,mono">A&nbsp;+&nbsp;COMBINING&nbsp;RING</FONT>&nbsp; is a combining
+character sequence with base character <FONT FACE="Courier New,mono">A</FONT> and combining character
+<FONT FACE="Courier New,mono">COMBINING&nbsp;RING</FONT>&nbsp;, which translates in Danish to A with the circle
+atop it, as in the word Angstrom.  <FONT FACE="Courier New,mono">\X</FONT> is equivalent to <FONT FACE="Courier New,mono">\PM\pM*}</FONT>,
+i.e., a non-mark followed by one or more marks.</P>
+<P>As if all those classes weren't enough, Perl also defines POSIX style
+character classes.  These have the form <FONT FACE="Courier New,mono">[:name:]</FONT>, with <FONT FACE="Courier New,mono">name</FONT> the
+name of the POSIX class.  The POSIX classes are alpha, alnum, ascii,
+cntrl, digit, graph, lower, print, punct, space, upper, word, and
+xdigit.  If <FONT FACE="Courier New,mono">utf8</FONT> is being used, then these classes are defined the
+same as their corresponding perl Unicode classes: <FONT FACE="Courier New,mono">[:upper:]</FONT> is the
+same as <FONT FACE="Courier New,mono">\p{IsUpper}</FONT>, etc.  The POSIX character classes, however,
+don't require using <FONT FACE="Courier New,mono">utf8</FONT>.  The <FONT FACE="Courier New,mono">[:digit:]</FONT>, <FONT FACE="Courier New,mono">[:word:]</FONT>, and
+<FONT FACE="Courier New,mono">[:space:]</FONT> correspond to the familiar <FONT FACE="Courier New,mono">\d</FONT>, <FONT FACE="Courier New,mono">\w</FONT>, and <FONT FACE="Courier New,mono">\s</FONT>
+character classes.  To negate a POSIX class, put a <FONT FACE="Courier New,mono">^</FONT> in front of the
+name, so that, e.g., <FONT FACE="Courier New,mono">[:^digit:]</FONT> corresponds to <FONT FACE="Courier New,mono">\D</FONT> and under
+<FONT FACE="Courier New,mono">utf8</FONT>, <FONT FACE="Courier New,mono">\P{IsDigit}</FONT>.  The Unicode and POSIX character classes can
+be used just like <FONT FACE="Courier New,mono">\d</FONT>, both inside and outside of character classes:</P>
+<FONT SIZE=3><PRE>
+    /\s+[abc[:digit:]xyz]\s*/;  # match a,b,c,x,y,z, or a digit
+    /^=item\s[:digit:]/;        # match '=item',
+                                # followed by a space and a digit
+    use utf8;
+    use charnames &quot;:full&quot;;
+    /\s+[abc\p{IsDigit}xyz]\s+/;  # match a,b,c,x,y,z, or a digit
+    /^=item\s\p{IsDigit}/;        # match '=item',
+                                  # followed by a space and a digit</PRE></FONT>
+<P>Whew! That is all the rest of the characters and character classes.</P>
+<P>
+<H2><A NAME="compiling and saving regular expressions">Compiling and saving regular expressions</A></H2>
+<P>In Part 1 we discussed the <FONT FACE="Courier New,mono">//o</FONT> modifier, which compiles a regex
+just once.  This suggests that a compiled regex is some data structure
+that can be stored once and used again and again.  The regex quote
+<FONT FACE="Courier New,mono">qr//</FONT> does exactly that: <FONT FACE="Courier New,mono">qr/string/</FONT> compiles the <FONT FACE="Courier New,mono">string</FONT> as a
+regex and transforms the result into a form that can be assigned to a
+variable:</P>
+<FONT SIZE=3><PRE>
+    $reg = qr/foo+bar?/;  # reg contains a compiled regex</PRE></FONT>
+<P>Then <FONT FACE="Courier New,mono">$reg</FONT> can be used as a regex:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;fooooba&quot;;
+    $x =~ $reg;     # matches, just like /foo+bar?/
+    $x =~ /$reg/;   # same thing, alternate form</PRE></FONT>
+<P><FONT FACE="Courier New,mono">$reg</FONT> can also be interpolated into a larger regex:</P>
+<FONT SIZE=3><PRE>
+    $x =~ /(abc)?$reg/;  # still matches</PRE></FONT>
+<P>As with the matching operator, the regex quote can use different
+delimiters, e.g., <FONT FACE="Courier New,mono">qr!!</FONT>, <FONT FACE="Courier New,mono">qr{}</FONT> and <FONT FACE="Courier New,mono">qr~~</FONT>.  The single quote
+delimiters <FONT FACE="Courier New,mono">qr''</FONT> prevent any interpolation from taking place.</P>
+<P>Pre-compiled regexs are useful for creating dynamic matches that
+don't need to be recompiled each time they are encountered.  Using
+pre-compiled regexs, <FONT FACE="Courier New,mono">simple_grep</FONT> program can be expanded into a
+program that matches multiple patterns:</P>
+<FONT SIZE=3><PRE>
+    % cat &gt; multi_grep
+    #!/usr/bin/perl
+    # multi_grep - match any of &lt;number&gt; regexs
+    # usage: multi_grep &lt;number&gt; regex1 regex2 ... file1 file2 ...</PRE></FONT>
+<FONT SIZE=3><PRE>
+    $number = shift;
+    $regex[$_] = shift foreach (0..$number-1);
+    @compiled = map qr/$_/, @regex;
+    while ($line = &lt;&gt;) {
+        foreach $pattern (@compiled) {
+            if ($line =~ /$pattern/) {
+                print $line;
+                last;  # we matched, so move onto the next line
+            }
+        }
+    }
+    ^D</PRE></FONT>
+<FONT SIZE=3><PRE>
+    % multi_grep 2 last for multi_grep
+        $regex[$_] = shift foreach (0..$number-1);
+            foreach $pattern (@compiled) {
+                    last;</PRE></FONT>
+<P>Storing pre-compiled regexs in an array <FONT FACE="Courier New,mono">@compiled</FONT> allows us to
+simply loop through the regexs without any recompilation, thus gaining
+flexibility without sacrificing speed.</P>
+<P>
+<H2><A NAME="embedding comments and modifiers in a regular expression">Embedding comments and modifiers in a regular expression</A></H2>
+<P>Starting with this section, we will be discussing Perl's set of
+<STRONG>extended patterns</STRONG>.  These are extensions to the traditional regular
+expression syntax that provide powerful new tools for pattern
+matching.  We have already seen extensions in the form of the minimal
+matching constructs <FONT FACE="Courier New,mono">??</FONT>, <FONT FACE="Courier New,mono">*?</FONT>, <FONT FACE="Courier New,mono">+?</FONT>, <FONT FACE="Courier New,mono">{n,m}?</FONT>, and <FONT FACE="Courier New,mono">{n,}?</FONT>.  The
+rest of the extensions below have the form <FONT FACE="Courier New,mono">(?char...)</FONT>, where the
+<FONT FACE="Courier New,mono">char</FONT> is a character that determines the type of extension.</P>
+<P>The first extension is an embedded comment <FONT FACE="Courier New,mono">(?#text)</FONT>.  This embeds a
+comment into the regular expression without affecting its meaning.  The
+comment should not have any closing parentheses in the text.  An
+example is</P>
+<FONT SIZE=3><PRE>
+    /(?# Match an integer:)[+-]?\d+/;</PRE></FONT>
+<P>This style of commenting has been largely superseded by the raw,
+freeform commenting that is allowed with the <FONT FACE="Courier New,mono">//x</FONT> modifier.</P>
+<P>The modifiers <FONT FACE="Courier New,mono">//i</FONT>, <FONT FACE="Courier New,mono">//m</FONT>, <FONT FACE="Courier New,mono">//s</FONT>, and <FONT FACE="Courier New,mono">//x</FONT> can also embedded in
+a regex using <FONT FACE="Courier New,mono">(?i)</FONT>, <FONT FACE="Courier New,mono">(?m)</FONT>, <FONT FACE="Courier New,mono">(?s)</FONT>, and <FONT FACE="Courier New,mono">(?x)</FONT>.  For instance,</P>
+<FONT SIZE=3><PRE>
+    /(?i)yes/;  # match 'yes' case insensitively
+    /yes/i;     # same thing
+    /(?x)(          # freeform version of an integer regex
+             [+-]?  # match an optional sign
+             \d+    # match a sequence of digits
+         )
+    /x;</PRE></FONT>
+<P>Embedded modifiers can have two important advantages over the usual
+modifiers.  Embedded modifiers allow a custom set of modifiers to
+<EM>each</EM> regex pattern.  This is great for matching an array of regexs
+that must have different modifiers:</P>
+<FONT SIZE=3><PRE>
+    $pattern[0] = '(?i)doctor';
+    $pattern[1] = 'Johnson';
+    ...
+    while (&lt;&gt;) {
+        foreach $patt (@pattern) {
+            print if /$patt/;
+        }
+    }</PRE></FONT>
+<P>The second advantage is that embedded modifiers only affect the regex
+inside the group the embedded modifier is contained in.  So grouping
+can be used to localize the modifier's effects:</P>
+<FONT SIZE=3><PRE>
+    /Answer: ((?i)yes)/;  # matches 'Answer: yes', 'Answer: YES', etc.</PRE></FONT>
+<P>Embedded modifiers can also turn off any modifiers already present
+by using, e.g., <FONT FACE="Courier New,mono">(?-i)</FONT>.  Modifiers can also be combined into
+a single expression, e.g., <FONT FACE="Courier New,mono">(?s-i)</FONT> turns on single line mode and
+turns off case insensitivity.</P>
+<P>
+<H2><A NAME="noncapturing groupings">Non-capturing groupings</A></H2>
+<P>We noted in Part 1 that groupings <FONT FACE="Courier New,mono">()</FONT> had two distinct functions: 1)
+group regex elements together as a single unit, and 2) extract, or
+capture, substrings that matched the regex in the
+grouping.  Non-capturing groupings, denoted by <FONT FACE="Courier New,mono">(?:regex)</FONT>, allow the
+regex to be treated as a single unit, but don't extract substrings or
+set matching variables <FONT FACE="Courier New,mono">$1</FONT>, etc.  Both capturing and non-capturing
+groupings are allowed to co-exist in the same regex.  Because there is
+no extraction, non-capturing groupings are faster than capturing
+groupings.  Non-capturing groupings are also handy for choosing exactly
+which parts of a regex are to be extracted to matching variables:</P>
+<FONT SIZE=3><PRE>
+    # match a number, $1-$4 are set, but we only want $1
+    /([+-]?\ *(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?)/;</PRE></FONT>
+<FONT SIZE=3><PRE>
+    # match a number faster , only $1 is set
+    /([+-]?\ *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)/;</PRE></FONT>
+<FONT SIZE=3><PRE>
+    # match a number, get $1 = whole number, $2 = exponent
+    /([+-]?\ *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE]([+-]?\d+))?)/;</PRE></FONT>
+<P>Non-capturing groupings are also useful for removing nuisance
+elements gathered from a split operation:</P>
+<FONT SIZE=3><PRE>
+    $x = '12a34b5';
+    @num = split /(a|b)/, $x;    # @num = ('12','a','34','b','5')
+    @num = split /(?:a|b)/, $x;  # @num = ('12','34','5')</PRE></FONT>
+<P>Non-capturing groupings may also have embedded modifiers:
+<FONT FACE="Courier New,mono">(?i-m:regex)</FONT> is a non-capturing grouping that matches <FONT FACE="Courier New,mono">regex</FONT>
+case insensitively and turns off multi-line mode.</P>
+<P>
+<H2><A NAME="looking ahead and looking behind">Looking ahead and looking behind</A></H2>
+<P>This section concerns the lookahead and lookbehind assertions.  First,
+a little background.</P>
+<P>In Perl regular expressions, most regex elements 'eat up' a certain
+amount of string when they match.  For instance, the regex element
+<FONT FACE="Courier New,mono">[abc}]</FONT> eats up one character of the string when it matches, in the
+sense that perl moves to the next character position in the string
+after the match.  There are some elements, however, that don't eat up
+characters (advance the character position) if they match.  The examples
+we have seen so far are the anchors.  The anchor <FONT FACE="Courier New,mono">^</FONT> matches the
+beginning of the line, but doesn't eat any characters.  Similarly, the
+word boundary anchor <FONT FACE="Courier New,mono">\b</FONT> matches, e.g., if the character to the left
+is a word character and the character to the right is a non-word
+character, but it doesn't eat up any characters itself.  Anchors are
+examples of 'zero-width assertions'.  Zero-width, because they consume
+no characters, and assertions, because they test some property of the
+string.  In the context of our walk in the woods analogy to regex
+matching, most regex elements move us along a trail, but anchors have
+us stop a moment and check our surroundings.  If the local environment
+checks out, we can proceed forward.  But if the local environment
+doesn't satisfy us, we must backtrack.</P>
+<P>Checking the environment entails either looking ahead on the trail,
+looking behind, or both.  <FONT FACE="Courier New,mono">^</FONT> looks behind, to see that there are no
+characters before.  <FONT FACE="Courier New,mono">$</FONT> looks ahead, to see that there are no
+characters after.  <FONT FACE="Courier New,mono">\b</FONT> looks both ahead and behind, to see if the
+characters on either side differ in their 'word'-ness.</P>
+<P>The lookahead and lookbehind assertions are generalizations of the
+anchor concept.  Lookahead and lookbehind are zero-width assertions
+that let us specify which characters we want to test for.  The
+lookahead assertion is denoted by <FONT FACE="Courier New,mono">(?=regex)</FONT> and the lookbehind
+assertion is denoted by <FONT FACE="Courier New,mono">(?&lt;=fixed-regex)</FONT>.  Some examples are</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;I catch the housecat 'Tom-cat' with catnip&quot;;
+    $x =~ /cat(?=\s+)/;  # matches 'cat' in 'housecat'
+    @catwords = ($x =~ /(?&lt;=\s)cat\w+/g);  # matches,
+                                           # $catwords[0] = 'catch'
+                                           # $catwords[1] = 'catnip'
+    $x =~ /\bcat\b/;  # matches 'cat' in 'Tom-cat'
+    $x =~ /(?&lt;=\s)cat(?=\s)/; # doesn't match; no isolated 'cat' in
+                              # middle of $x</PRE></FONT>
+<P>Note that the parentheses in <FONT FACE="Courier New,mono">(?=regex)</FONT> and <FONT FACE="Courier New,mono">(?&lt;=regex)</FONT> are
+non-capturing, since these are zero-width assertions.  Thus in the
+second regex, the substrings captured are those of the whole regex
+itself.  Lookahead <FONT FACE="Courier New,mono">(?=regex)</FONT> can match arbitrary regexs, but
+lookbehind <FONT FACE="Courier New,mono">(?&lt;=fixed-regex)</FONT> only works for regexs of fixed
+width, i.e., a fixed number of characters long.  Thus
+<FONT FACE="Courier New,mono">(?&lt;=(ab|bc))</FONT> is fine, but <FONT FACE="Courier New,mono">(?&lt;=(ab)*)</FONT> is not.  The
+negated versions of the lookahead and lookbehind assertions are
+denoted by <FONT FACE="Courier New,mono">(?!regex)</FONT> and <FONT FACE="Courier New,mono">(?&lt;!fixed-regex)</FONT> respectively.
+They evaluate true if the regexs do <EM>not</EM> match:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;foobar&quot;;
+    $x =~ /foo(?!bar)/;  # doesn't match, 'bar' follows 'foo'
+    $x =~ /foo(?!baz)/;  # matches, 'baz' doesn't follow 'foo'
+    $x =~ /(?&lt;!\s)foo/;  # matches, there is no \s before 'foo'</PRE></FONT>
+<P>
+<H2><A NAME="using independent subexpressions to prevent backtracking">Using independent subexpressions to prevent backtracking</A></H2>
+<P>The last few extended patterns in this tutorial are experimental as of
+5.6.0.  Play with them, use them in some code, but don't rely on them
+just yet for production code.</P>
+<P><STRONG>Independent&nbsp;subexpressions</STRONG>&nbsp; are regular expressions, in the
+context of a larger regular expression, that function independently of
+the larger regular expression.  That is, they consume as much or as
+little of the string as they wish without regard for the ability of
+the larger regex to match.  Independent subexpressions are represented
+by <FONT FACE="Courier New,mono">(?&gt;regex)</FONT>.  We can illustrate their behavior by first
+considering an ordinary regex:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;ab&quot;;
+    $x =~ /a*ab/;  # matches</PRE></FONT>
+<P>This obviously matches, but in the process of matching, the
+subexpression <FONT FACE="Courier New,mono">a*</FONT> first grabbed the <FONT FACE="Courier New,mono">a</FONT>.  Doing so, however,
+wouldn't allow the whole regex to match, so after backtracking, <FONT FACE="Courier New,mono">a*</FONT>
+eventually gave back the <FONT FACE="Courier New,mono">a</FONT> and matched the empty string.  Here, what
+<FONT FACE="Courier New,mono">a*</FONT> matched was <EM>dependent</EM> on what the rest of the regex matched.</P>
+<P>Contrast that with an independent subexpression:</P>
+<FONT SIZE=3><PRE>
+    $x =~ /(?&gt;a*)ab/;  # doesn't match!</PRE></FONT>
+<P>The independent subexpression <FONT FACE="Courier New,mono">(?&gt;a*)</FONT> doesn't care about the rest
+of the regex, so it sees an <FONT FACE="Courier New,mono">a</FONT> and grabs it.  Then the rest of the
+regex <FONT FACE="Courier New,mono">ab</FONT> cannot match.  Because <FONT FACE="Courier New,mono">(?&gt;a*)</FONT> is independent, there
+is no backtracking and and the independent subexpression does not give
+up its <FONT FACE="Courier New,mono">a</FONT>.  Thus the match of the regex as a whole fails.  A similar
+behavior occurs with completely independent regexs:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;ab&quot;;
+    $x =~ /a*/g;   # matches, eats an 'a'
+    $x =~ /\Gab/g; # doesn't match, no 'a' available</PRE></FONT>
+<P>Here <FONT FACE="Courier New,mono">//g</FONT> and <FONT FACE="Courier New,mono">\G</FONT> create a 'tag team' handoff of the string from
+one regex to the other.  Regexs with an independent subexpression are
+much like this, with a handoff of the string to the independent
+subexpression, and a handoff of the string back to the enclosing
+regex.</P>
+<P>The ability of an independent subexpression to prevent backtracking
+can be quite useful.  Suppose we want to match a non-empty string
+enclosed in parentheses up to two levels deep.  Then the following
+regex matches:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;abc(de(fg)h&quot;;  # unbalanced parentheses
+    $x =~ /\( ( [^()]+ | \([^()]*\) )+ \)/x;</PRE></FONT>
+<P>The regex matches an open parenthesis, one or more copies of an
+alternation, and a close parenthesis.  The alternation is two-way, with
+the first alternative <FONT FACE="Courier New,mono">[^()]+</FONT> matching a substring with no
+parentheses and the second alternative <FONT FACE="Courier New,mono">\([^()]*\)</FONT>  matching a
+substring delimited by parentheses.  The problem with this regex is
+that it is pathological: it has nested indeterminate quantifiers
+ of the form <FONT FACE="Courier New,mono">(a+|b)+</FONT>.  We discussed in Part 1 how nested quantifiers
+like this could take an exponentially long time to execute if there
+was no match possible.  To prevent the exponential blowup, we need to
+prevent useless backtracking at some point.  This can be done by
+enclosing the inner quantifier as an independent subexpression:</P>
+<FONT SIZE=3><PRE>
+    $x =~ /\( ( (?&gt;[^()]+) | \([^()]*\) )+ \)/x;</PRE></FONT>
+<P>Here, <FONT FACE="Courier New,mono">(?&gt;[^()]+)</FONT> breaks the degeneracy of string partitioning
+by gobbling up as much of the string as possible and keeping it.   Then
+match failures fail much more quickly.</P>
+<P>
+<H2><A NAME="conditional expressions">Conditional expressions</A></H2>
+<P>A <STRONG>conditional&nbsp;expression</STRONG>&nbsp; is a form of if-then-else statement
+that allows one to choose which patterns are to be matched, based on
+some condition.  There are two types of conditional expression:
+<FONT FACE="Courier New,mono">(?(condition)yes-regex)</FONT> and
+<FONT FACE="Courier New,mono">(?(condition)yes-regex|no-regex)</FONT>.  <FONT FACE="Courier New,mono">(?(condition)yes-regex)</FONT> is
+like an <FONT FACE="Courier New,mono">'if&nbsp;()&nbsp;{}'</FONT>&nbsp; statement in Perl.  If the <FONT FACE="Courier New,mono">condition</FONT> is true,
+the <FONT FACE="Courier New,mono">yes-regex</FONT> will be matched.  If the <FONT FACE="Courier New,mono">condition</FONT> is false, the
+<FONT FACE="Courier New,mono">yes-regex</FONT> will be skipped and perl will move onto the next regex
+element.  The second form is like an <FONT FACE="Courier New,mono">'if&nbsp;()&nbsp;{}&nbsp;else&nbsp;{}'</FONT>&nbsp; statement
+in Perl.  If the <FONT FACE="Courier New,mono">condition</FONT> is true, the <FONT FACE="Courier New,mono">yes-regex</FONT> will be
+matched, otherwise the <FONT FACE="Courier New,mono">no-regex</FONT> will be matched.</P>
+<P>The <FONT FACE="Courier New,mono">condition</FONT> can have two forms.  The first form is simply an
+integer in parentheses <FONT FACE="Courier New,mono">(integer)</FONT>.  It is true if the corresponding
+backreference <FONT FACE="Courier New,mono">\integer</FONT> matched earlier in the regex.  The second
+form is a bare zero width assertion <FONT FACE="Courier New,mono">(?...)</FONT>, either a
+lookahead, a lookbehind, or a code assertion (discussed in the next
+section).</P>
+<P>The integer form of the <FONT FACE="Courier New,mono">condition</FONT> allows us to choose, with more
+flexibility, what to match based on what matched earlier in the
+regex. This searches for words of the form <FONT FACE="Courier New,mono">&quot;$x$x&quot;</FONT> or
+<FONT FACE="Courier New,mono">&quot;$x$y$y$x&quot;</FONT>:</P>
+<FONT SIZE=3><PRE>
+    % simple_grep '^(\w+)(\w+)?(?(2)\2\1|\1)$' /usr/dict/words
+    beriberi
+    coco
+    couscous
+    deed
+    ...
+    toot
+    toto
+    tutu</PRE></FONT>
+<P>The lookbehind <FONT FACE="Courier New,mono">condition</FONT> allows, along with backreferences,
+an earlier part of the match to influence a later part of the
+match.  For instance,</P>
+<FONT SIZE=3><PRE>
+    /[ATGC]+(?(?&lt;=AA)G|C)$/;</PRE></FONT>
+<P>matches a DNA sequence such that it either ends in <FONT FACE="Courier New,mono">AAG</FONT>, or some
+other base pair combination and <FONT FACE="Courier New,mono">C</FONT>.  Note that the form is
+<FONT FACE="Courier New,mono">(?(?&lt;=AA)G|C)</FONT> and not <FONT FACE="Courier New,mono">(?((?&lt;=AA))G|C)</FONT>; for the
+lookahead, lookbehind or code assertions, the parentheses around the
+conditional are not needed.</P>
+<P>
+<H2><A NAME="a bit of magic: executing perl code in a regular expression">A bit of magic: executing Perl code in a regular expression</A></H2>
+<P>Normally, regexs are a part of Perl expressions.
+<STRONG>Code&nbsp;evaluation</STRONG>&nbsp; expressions turn that around by allowing
+arbitrary Perl code to be a part of of a regex.  A code evaluation
+expression is denoted <FONT FACE="Courier New,mono">(?{code})</FONT>, with <FONT FACE="Courier New,mono">code</FONT> a string of Perl
+statements.</P>
+<P>Code expressions are zero-width assertions, and the value they return
+depends on their environment.  There are two possibilities: either the
+code expression is used as a conditional in a conditional expression
+<FONT FACE="Courier New,mono">(?(condition)...)</FONT>, or it is not.  If the code expression is a
+conditional, the code is evaluated and the result (i.e., the result of
+the last statement) is used to determine truth or falsehood.  If the
+code expression is not used as a conditional, the assertion always
+evaluates true and the result is put into the special variable
+<FONT FACE="Courier New,mono">$^R</FONT>.  The variable <FONT FACE="Courier New,mono">$^R</FONT> can then be used in code expressions later
+in the regex.  Here are some silly examples:</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;abcdef&quot;;
+    $x =~ /abc(?{print &quot;Hi Mom!&quot;;})def/; # matches,
+                                         # prints 'Hi Mom!'
+    $x =~ /aaa(?{print &quot;Hi Mom!&quot;;})def/; # doesn't match,
+                                         # no 'Hi Mom!'
+    $x =~ /abc(?{print &quot;Hi Mom!&quot;;})ddd/; # doesn't match,
+                                         # no 'Hi Mom!'
+    $x =~ /(?{print &quot;Hi Mom!&quot;;})/;       # matches,
+                                         # prints 'Hi Mom!'
+    $x =~ /(?{$c = 1;})(?{print &quot;$c&quot;;})/;  # matches,
+                                           # prints '1'
+    $x =~ /(?{$c = 1;})(?{print &quot;$^R&quot;;})/; # matches,
+                                           # prints '1'</PRE></FONT>
+<P>The bit of magic mentioned in the section title occurs when the regex
+backtracks in the process of searching for a match.  If the regex
+backtracks over a code expression and if the variables used within are
+localized using <FONT FACE="Courier New,mono">local</FONT>, the changes in the variables produced by the
+code expression are undone! Thus, if we wanted to count how many times
+a character got matched inside a group, we could use, e.g.,</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;aaaa&quot;;
+    $count = 0;  # initialize 'a' count
+    $c = &quot;bob&quot;;  # test if $c gets clobbered
+    $x =~ /(?{local $c = 0;})         # initialize count
+           ( a                        # match 'a'
+             (?{local $c = $c + 1;})  # increment count
+           )*                         # do this any number of times,
+           aa                         # but match 'aa' at the end
+           (?{$count = $c;})          # copy local $c var into $count
+          /x;
+    print &quot;'a' count is $count, \$c variable is '$c'\n&quot;;</PRE></FONT>
+<P>This prints</P>
+<FONT SIZE=3><PRE>
+    'a' count is 2, $c variable is 'bob'</PRE></FONT>
+<P>If we replace the <FONT FACE="Courier New,mono">&nbsp;(?{local&nbsp;$c&nbsp;=&nbsp;$c&nbsp;+&nbsp;1;})</FONT>&nbsp; with
+<FONT FACE="Courier New,mono">&nbsp;(?{$c&nbsp;=&nbsp;$c&nbsp;+&nbsp;1;})</FONT>&nbsp;, the variable changes are <EM>not</EM> undone
+during backtracking, and we get</P>
+<FONT SIZE=3><PRE>
+    'a' count is 4, $c variable is 'bob'</PRE></FONT>
+<P>Note that only localized variable changes are undone.  Other side
+effects of code expression execution are permanent.  Thus</P>
+<FONT SIZE=3><PRE>
+    $x = &quot;aaaa&quot;;
+    $x =~ /(a(?{print &quot;Yow\n&quot;;}))*aa/;</PRE></FONT>
+<P>produces</P>
+<FONT SIZE=3><PRE>
+   Yow
+   Yow
+   Yow
+   Yow</PRE></FONT>
+<P>The result <FONT FACE="Courier New,mono">$^R</FONT> is automatically localized, so that it will behave
+properly in the presence of backtracking.</P>
+<P>This example uses a code expression in a conditional to match the
+article 'the' in either English or German:</P>
+<FONT SIZE=3><PRE>
+    $lang = 'DE';  # use German
+    ...
+    $text = &quot;das&quot;;
+    print &quot;matched\n&quot;
+        if $text =~ /(?(?{
+                          $lang eq 'EN'; # is the language English?
+                         })
+                       the |             # if so, then match 'the'
+                       (die|das|der)     # else, match 'die|das|der'
+                     )
+                    /xi;</PRE></FONT>
+<P>Note that the syntax here is <FONT FACE="Courier New,mono">(?(?{...})yes-regex|no-regex)</FONT>, not
+<FONT FACE="Courier New,mono">(?((?{...}))yes-regex|no-regex)</FONT>.  In other words, in the case of a
+code expression, we don't need the extra parentheses around the
+conditional.</P>
+<P>If you try to use code expressions with interpolating variables, perl
+may surprise you:</P>
+<FONT SIZE=3><PRE>
+    $bar = 5;
+    $pat = '(?{ 1 })';
+    /foo(?{ $bar })bar/; # compiles ok, $bar not interpolated
+    /foo(?{ 1 })$bar/;   # compile error!
+    /foo${pat}bar/;      # compile error!</PRE></FONT>
+<FONT SIZE=3><PRE>
+    $pat = qr/(?{ $foo = 1 })/;  # precompile code regex
+    /foo${pat}bar/;      # compiles ok</PRE></FONT>
+<P>If a regex has (1) code expressions and interpolating variables,or
+(2) a variable that interpolates a code expression, perl treats the
+regex as an error. If the code expression is precompiled into a
+variable, however, interpolating is ok. The question is, why is this
+an error?</P>
+<P>The reason is that variable interpolation and code expressions
+together pose a security risk.  The combination is dangerous because
+many programmers who write search engines often take user input and
+plug it directly into a regex:</P>
+<FONT SIZE=3><PRE>
+    $regex = &lt;&gt;;       # read user-supplied regex
+    $chomp $regex;     # get rid of possible newline
+    $text =~ /$regex/; # search $text for the $regex</PRE></FONT>
+<P>If the <FONT FACE="Courier New,mono">$regex</FONT> variable contains a code expression, the user could
+then execute arbitrary Perl code.  For instance, some joker could
+search for <FONT FACE="Courier New,mono">system('rm&nbsp;-rf&nbsp;*');</FONT>&nbsp; to erase your files.  In this
+sense, the combination of interpolation and code expressions <STRONG>taints</STRONG>
+your regex.  So by default, using both interpolation and code
+expressions in the same regex is not allowed.  If you're not
+concerned about malicious users, it is possible to bypass this
+security check by invoking <FONT FACE="Courier New,mono">use&nbsp;re&nbsp;'eval'</FONT>&nbsp;:</P>
+<FONT SIZE=3><PRE>
+    use re 'eval';       # throw caution out the door
+    $bar = 5;
+    $pat = '(?{ 1 })';
+    /foo(?{ 1 })$bar/;   # compiles ok
+    /foo${pat}bar/;      # compiles ok</PRE></FONT>
+<P>Another form of code expression is the <STRONG>pattern&nbsp;code&nbsp;expression</STRONG>&nbsp;.
+The pattern code expression is like a regular code expression, except
+that the result of the code evaluation is treated as a regular
+expression and matched immediately.  A simple example is</P>
+<FONT SIZE=3><PRE>
+    $length = 5;
+    $char = 'a';
+    $x = 'aaaaabb';
+    $x =~ /(??{$char x $length})/x; # matches, there are 5 of 'a'</PRE></FONT>
+<P>This final example contains both ordinary and pattern code
+expressions.   It detects if a binary string <FONT FACE="Courier New,mono">1101010010001...</FONT> has a
+Fibonacci spacing 0,1,1,2,3,5,...  of the <FONT FACE="Courier New,mono">1</FONT>'s:</P>
+<FONT SIZE=3><PRE>
+    $s0 = 0; $s1 = 1; # initial conditions
+    $x = &quot;1101010010001000001&quot;;
+    print &quot;It is a Fibonacci sequence\n&quot;
+        if $x =~ /^1         # match an initial '1'
+                    (
+                       (??{'0' x $s0}) # match $s0 of '0'
+                       1               # and then a '1'
+                       (?{
+                          $largest = $s0;   # largest seq so far
+                          $s2 = $s1 + $s0;  # compute next term
+                          $s0 = $s1;        # in Fibonacci sequence
+                          $s1 = $s2;
+                         })
+                    )+   # repeat as needed
+                  $      # that is all there is
+                 /x;
+    print &quot;Largest sequence matched was $largest\n&quot;;</PRE></FONT>
+<P>This prints</P>
+<FONT SIZE=3><PRE>
+    It is a Fibonacci sequence
+    Largest sequence matched was 5</PRE></FONT>
+<P>Ha! Try that with your garden variety regex package...</P>
+<P>Note that the variables <FONT FACE="Courier New,mono">$s0</FONT> and <FONT FACE="Courier New,mono">$s1</FONT> are not substituted when the
+regex is compiled, as happens for ordinary variables outside a code
+expression.  Rather, the code expressions are evaluated when perl
+encounters them during the search for a match.</P>
+<P>The regex without the <FONT FACE="Courier New,mono">//x</FONT> modifier is</P>
+<FONT SIZE=3><PRE>
+    /^1((??{'0'x$s0})1(?{$largest=$s0;$s2=$s1+$s0$s0=$s1;$s1=$s2;}))+$/;</PRE></FONT>
+<P>and is a great start on an Obfuscated Perl entry :-) When working with
+code and conditional expressions, the extended form of regexs is
+almost necessary in creating and debugging regexs.</P>
+<P>
+<H2><A NAME="pragmas and debugging">Pragmas and debugging</A></H2>
+<P>Speaking of debugging, there are several pragmas available to control
+and debug regexs in Perl.  We have already encountered one pragma in
+the previous section, <FONT FACE="Courier New,mono">use&nbsp;re&nbsp;'eval';</FONT>&nbsp;, that allows variable
+interpolation and code expressions to coexist in a regex.  The other
+pragmas are</P>
+<FONT SIZE=3><PRE>
+    use re 'taint';
+    $tainted = &lt;&gt;;
+    @parts = ($tainted =~ /(\w+)\s+(\w+)/; # @parts is now tainted</PRE></FONT>
+<P>The <FONT FACE="Courier New,mono">taint</FONT> pragma causes any substrings from a match with a tainted
+variable to be tainted as well.  This is not normally the case, as
+regexs are often used to extract the safe bits from a tainted
+variable.  Use <FONT FACE="Courier New,mono">taint</FONT> when you are not extracting safe bits, but are
+performing some other processing.  Both <FONT FACE="Courier New,mono">taint</FONT> and <FONT FACE="Courier New,mono">eval</FONT> pragmas
+are lexically scoped, which means they are in effect only until
+the end of the block enclosing the pragmas.</P>
+<FONT SIZE=3><PRE>
+    use re 'debug';
+    /^(.*)$/s;       # output debugging info</PRE></FONT>
+<FONT SIZE=3><PRE>
+    use re 'debugcolor';
+    /^(.*)$/s;       # output debugging info in living color</PRE></FONT>
+<P>The global <FONT FACE="Courier New,mono">debug</FONT> and <FONT FACE="Courier New,mono">debugcolor</FONT> pragmas allow one to get
+detailed debugging info about regex compilation and
+execution.  <FONT FACE="Courier New,mono">debugcolor</FONT> is the same as debug, except the debugging
+information is displayed in color on terminals that can display
+termcap color sequences.  Here is example output:</P>
+<FONT SIZE=3><PRE>
+    % perl -e 'use re &quot;debug&quot;; &quot;abc&quot; =~ /a*b+c/;'
+    Compiling REx `a*b+c'
+    size 9 first at 1
+       1: STAR(4)
+       2:   EXACT &lt;a&gt;(0)
+       4: PLUS(7)
+       5:   EXACT &lt;b&gt;(0)
+       7: EXACT &lt;c&gt;(9)
+       9: END(0)
+    floating `bc' at 0..2147483647 (checking floating) minlen 2
+    Guessing start of match, REx `a*b+c' against `abc'...
+    Found floating substr `bc' at offset 1...
+    Guessed: match at offset 0
+    Matching REx `a*b+c' against `abc'
+      Setting an EVAL scope, savestack=3
+       0 &lt;&gt; &lt;abc&gt;             |  1:  STAR
+                               EXACT &lt;a&gt; can match 1 times out of 32767...
+      Setting an EVAL scope, savestack=3
+       1 &lt;a&gt; &lt;bc&gt;             |  4:    PLUS
+                               EXACT &lt;b&gt; can match 1 times out of 32767...
+      Setting an EVAL scope, savestack=3
+       2 &lt;ab&gt; &lt;c&gt;             |  7:      EXACT &lt;c&gt;
+       3 &lt;abc&gt; &lt;&gt;             |  9:      END
+    Match successful!
+    Freeing REx: `a*b+c'</PRE></FONT>
+<P>If you have gotten this far into the tutorial, you can probably guess
+what the different parts of the debugging output tell you.  The first
+part</P>
+<FONT SIZE=3><PRE>
+    Compiling REx `a*b+c'
+    size 9 first at 1
+       1: STAR(4)
+       2:   EXACT &lt;a&gt;(0)
+       4: PLUS(7)
+       5:   EXACT &lt;b&gt;(0)
+       7: EXACT &lt;c&gt;(9)
+       9: END(0)</PRE></FONT>
+<P>describes the compilation stage.  <FONT FACE="Courier New,mono">STAR(4)</FONT> means that there is a
+starred object, in this case <FONT FACE="Courier New,mono">'a'</FONT>, and if it matches, goto line 4,
+i.e., <FONT FACE="Courier New,mono">PLUS(7)</FONT>.  The middle lines describe some heuristics and
+optimizations performed before a match:</P>
+<FONT SIZE=3><PRE>
+    floating `bc' at 0..2147483647 (checking floating) minlen 2
+    Guessing start of match, REx `a*b+c' against `abc'...
+    Found floating substr `bc' at offset 1...
+    Guessed: match at offset 0</PRE></FONT>
+<P>Then the match is executed and the remaining lines describe the
+process:</P>
+<FONT SIZE=3><PRE>
+    Matching REx `a*b+c' against `abc'
+      Setting an EVAL scope, savestack=3
+       0 &lt;&gt; &lt;abc&gt;             |  1:  STAR
+                               EXACT &lt;a&gt; can match 1 times out of 32767...
+      Setting an EVAL scope, savestack=3
+       1 &lt;a&gt; &lt;bc&gt;             |  4:    PLUS
+                               EXACT &lt;b&gt; can match 1 times out of 32767...
+      Setting an EVAL scope, savestack=3
+       2 &lt;ab&gt; &lt;c&gt;             |  7:      EXACT &lt;c&gt;
+       3 &lt;abc&gt; &lt;&gt;             |  9:      END
+    Match successful!
+    Freeing REx: `a*b+c'</PRE></FONT>
+<P>Each step is of the form <FONT FACE="Courier New,mono">n&nbsp;&lt;x&gt;&nbsp;&lt;y&gt;</FONT>&nbsp;, with <FONT FACE="Courier New,mono">&lt;x&gt;</FONT> the
+part of the string matched and <FONT FACE="Courier New,mono">&lt;y&gt;</FONT> the part not yet
+matched.  The <FONT FACE="Courier New,mono">|&nbsp;&nbsp;1:&nbsp;&nbsp;STAR</FONT>&nbsp; says that perl is at line number 1
+n the compilation list above.  See
+<EM>perldebguts/``Debugging regular expressions''</EM> for much more detail.</P>
+<P>An alternative method of debugging regexs is to embed <FONT FACE="Courier New,mono">print</FONT>
+statements within the regex.  This provides a blow-by-blow account of
+the backtracking in an alternation:</P>
+<FONT SIZE=3><PRE>
+    &quot;that this&quot; =~ m@(?{print &quot;Start at position &quot;, pos, &quot;\n&quot;;})
+                     t(?{print &quot;t1\n&quot;;})
+                     h(?{print &quot;h1\n&quot;;})
+                     i(?{print &quot;i1\n&quot;;})
+                     s(?{print &quot;s1\n&quot;;})
+                         |
+                     t(?{print &quot;t2\n&quot;;})
+                     h(?{print &quot;h2\n&quot;;})
+                     a(?{print &quot;a2\n&quot;;})
+                     t(?{print &quot;t2\n&quot;;})
+                     (?{print &quot;Done at position &quot;, pos, &quot;\n&quot;;})
+                    @x;</PRE></FONT>
+<P>prints</P>
+<FONT SIZE=3><PRE>
+    Start at position 0
+    t1
+    h1
+    t2
+    h2
+    a2
+    t2
+    Done at position 4</PRE></FONT>
+<P>
+<HR COLOR="#FFCC66" SIZE=1>
+<H3><A NAME="bugs">BUGS</A></H3>
+<P>Code expressions, conditional expressions, and independent expressions
+are <STRONG>experimental</STRONG>.  Don't use them in production code.  Yet.</P>
+<P>
+<HR COLOR="#FFCC66" SIZE=1>
+<H3><A NAME="see also">SEE ALSO</A></H3>
+<P>This is just a tutorial.  For the full story on perl regular
+expressions, see the <EM>perlre</EM> regular expressions reference page.</P>
+<P>For more information on the matching <FONT FACE="Courier New,mono">m//</FONT> and substitution <FONT FACE="Courier New,mono">s///</FONT>
+operators, see <EM>perlop/``regex Quote-Like Operators''</EM>.  For
+information on the <FONT FACE="Courier New,mono">split</FONT> operation, see <EM>perlfunc/split</EM>.</P>
+<P>For an excellent all-around resource on the care and feeding of
+regular expressions, see the book <EM>Mastering Regular Expressions</EM> by
+Jeffrey Friedl (published by O'Reilly, ISBN 1556592-257-3).</P>
+<P>
+<HR COLOR="#FFCC66" SIZE=1>
+<H3><A NAME="author and copyright">AUTHOR AND COPYRIGHT</A></H3>
+<P>Copyright (c) 2000 Mark Kvale
+All rights reserved.</P>
+<P>This document may be distributed under the same terms as Perl itself.</P>
+<P>
+<H2><A NAME="acknowledgments">Acknowledgments</A></H2>
+<P>The inspiration for the stop codon DNA example came from the ZIP
+code example in chapter 7 of <EM>Mastering Regular Expressions</EM>.</P>
+<P>The author would like to thank Jeff Pinyan, Andrew Johnson, Peter
+Haworth, Ronald J Kimball, and Joe Smith for all their helpful
+comments.</P>
+</BODY>
+</HTML>
+

@@ -1,0 +1,37 @@
+<!- Adapted from http://www.javascriptkit.com/javatutors/form6.shtml
+
+<!--
+"return true" and "return false" are used to actually allow, or disallow, a
+form from submitting. By default, a form will return true (i.e. submit the
+form).  For example, you can stop a link from completing upon clicking.  E.g.:
+<a href="http://www.cssdrive.com" onclick="return false">Click here, it won't
+work!</a>
+-->
+
+<script type="text/javascript">
+<!--
+function validate(){
+  if ( (document.example2.naming.value=="") ||
+				     (document.example2.feed.value=="") ) {
+    alert ("You must fill in all of the required fields")
+    return false
+  } else {
+    return true
+ }
+}
+//-->
+</script>
+
+<!--
+A confusing point may be 'onsubmit="return validate()"' - why 'return
+validate()'? Wouldn't that be like a double return? No. Function validate()
+only returns "true/false". You need "return true/false" to actually decide
+whether a form submits or not. That's why we have to return validate(), as
+opposed to just validate().
+-->
+<form name="example2" onsubmit="return validate()">
+  <input type="text" size="20" name="naming"><strong>Feedback please: (*required)</strong><br>
+  <textarea name="feed" rows="3" cols="25"></textarea><strong>home address</strong><br>
+  <input type="text" size="35"><br>
+  <input type="submit" value="Sumbit">
+</form>

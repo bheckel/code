@@ -1,0 +1,885 @@
+<HTML>
+<HEAD>
+<TITLE>Seven Useful Uses of Local</TITLE>
+</HEAD>
+
+<BODY bgcolor=white>
+
+<h1>Seven Useful Uses of <tt>local</tt></h1>
+
+<p align=right><font size=-1>&copy; Copyright 1999 The Perl Journal.  Reprinted with permission.</font></p>
+
+<!-- INDEX BEGIN -->
+
+<img src="pics/medium-sigils.gif" align=right>
+
+<UL>
+
+	<LI><A HREF="#Introduction">Introduction</A>
+	<LI><A HREF="#1_Special_Variables">1. Special Variables</A>
+	<LI><A HREF="#2_Localized_Filehandles">2. Localized Filehandles</A>
+	<UL>
+
+		<LI><A HREF="#Localized_Filehandles_II">Localized Filehandles, II</A>
+		<LI><A HREF="#Marginal_Uses_of_Localized_Fileh">Marginal Uses of Localized Filehandles</A>
+		<LI><A HREF="#Dirhandles">Dirhandles</A>
+	</UL>
+
+	<LI><A HREF="#3_The_First_Class_Filehandle_Tr">3. The First-Class Filehandle Trick</A>
+	<LI><A HREF="#4_Aliases">4. Aliases</A>
+	<LI><A HREF="#5_Dynamic_Scope">5. Dynamic Scope</A>
+	<LI><A HREF="#6_Dynamic_Scope_Revisited">6. Dynamic Scope Revisited</A>
+	<UL>
+
+		<LI><A HREF="#Marginal_Uses_of_Dynamic_Scoping">Marginal Uses of Dynamic Scoping</A>
+	</UL>
+
+	<LI><A HREF="#7_Perl_4_and_Other_Relics">7. Perl 4 and Other Relics</A>
+	<LI><A HREF="#Summary">Summary</A>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+
+
+<H1><A NAME="Introduction">Introduction</A></H1>
+<P>
+In my article <a href="FAQs/Namespaces.html"><cite>Coping With Scoping</cite></a> I offered the advice ``Always use
+<CODE>my</CODE>; never use <CODE>local</CODE>.'' The most common use for both is to provide your subroutines with
+private variables, and for this application you should always use <CODE>my</CODE>, and never <CODE>local</CODE>. But many readers (and the tech editors) noted that <CODE>local</CODE> isn't entirely useless; there are cases in which <CODE>my</CODE> doesn't work, or doesn't do what you want. So I promised a followup article
+on useful uses for
+<CODE>local</CODE>. Here they are.
+
+<P>
+<HR>
+<H1><A NAME="1_Special_Variables">1. Special Variables</A></H1>
+<P>
+<CODE>my</CODE> makes most uses of <CODE>local</CODE> obsolete. So it's not surprising that the most common useful uses of <CODE>local</CODE> arise because of peculiar cases where <CODE>my</CODE> happens to be illegal.
+
+<P>
+The most important examples are the punctuation variables such as
+<CODE>$&quot;</CODE>, <CODE>$/</CODE>, <CODE>$^W</CODE>, and <CODE>$_</CODE>. Long ago Larry decided that it would be too confusing if you could <CODE>my</CODE> them; they're exempt from the normal package scheme for the same reason. So
+if you want to change them, but have the change apply to only part of the
+program, you'll have to use <CODE>local</CODE>.
+
+<P>
+As an example of where this might be useful, let's consider a function
+whose job is to read in an entire file and return its contents as a single
+string:
+
+<P>
+<PRE>        sub getfile {
+          my $filename = shift;
+          open F, &quot;&lt; $filename&quot; or die &quot;Couldn't open `$filename': $!&quot;;
+          my $contents = '';
+          while (&lt;F&gt;) {
+            $contents .= $_;
+          }
+          close F;
+          return $contents;
+        }
+</PRE>
+<P>
+This is inefficient, because the <CODE>&lt;F&gt;</CODE> operator makes Perl go to all the trouble of breaking the file into lines
+and returning them one at a time, and then all we do is put them back
+together again. It's cheaper to read the file all at once, without all the
+splitting and reassembling. (Some people call this <EM>slurping</EM> the file.) Perl has a special feature to support this: If the <CODE>$/</CODE> variable is undefined, the <CODE>&lt;...&gt;</CODE> operator will read the entire file all at once:
+
+<P>
+<PRE>        sub getfile {
+          my $filename = shift;
+          open F, &quot;&lt; $filename&quot; or die &quot;Couldn't open `$filename': $!&quot;;
+          $/ = undef;                 # Read entire file at once
+          $contents = &lt;F&gt;;            # Return file as one single `line'
+          close F;
+          return $contents;
+        }
+</PRE>
+<P>
+There's a terrible problem here, which is that <CODE>$/</CODE> is a global variable that affects the semantics of every <CODE>&lt;...&gt;</CODE> in the entire program. If <CODE>getfile</CODE> doesn't put it back the way it was, some other part of the program is
+probably going to fail disastrously when it tries to read a line of input
+and gets the whole rest of the file instead. Normally we'd like to use <CODE>my</CODE>, to make the change local to the functions. But we can't here, because <CODE>my</CODE> doesn't work on punctuation variables; we would get the error
+
+<P>
+<PRE>        Can't use global $/ in &quot;my&quot; ...
+</PRE>
+<P>
+if we tried. Also, more to the point, Perl itself knows that it should look
+in the global variable <CODE>$/</CODE> to find the input record separator; even if we could create a new private
+varible with the same name, Perl wouldn't know to look there. So instead,
+we need to set a temporary value for the global variable <CODE>$/</CODE>, and that is exactly what <CODE>local</CODE> does:
+
+<P>
+<PRE>        sub getfile {
+          my $filename = shift;
+          open F, &quot;&lt; $filename&quot; or die &quot;Couldn't open `$filename': $!&quot;;
+          local $/ = undef;           # Read entire file at once
+          $contents = &lt;F&gt;;            # Return file as one single `line'
+          close F;
+          return $contents;
+        }
+</PRE>
+<P>
+The old value of <CODE>$/</CODE> is restored when the function returns. In this example, that's enough for
+safety. In a more complicated function that might call some other functions
+in a library somewhere, we'd still have to worry that we might be
+sabotaging the library with our strange <CODE>$/</CODE>. It's probably best to confine changes to punctuation variables to the
+smallest possible part of the program:
+
+<P>
+<PRE>        sub getfile {
+          my $filename = shift;
+          open F, &quot;&lt; $filename&quot; or die &quot;Couldn't open `$filename': $!&quot;;
+          my $contents;
+          { local $/ = undef;     # Read entire file at once
+            $contents = &lt;F&gt;;      # Return file as one single `line'
+          }                       # $/ regains its old value
+          close F;
+          return $contents;
+        }
+</PRE>
+<P>
+This is a good practice, even for simple functions like this that don't
+call any other subroutines. By confining the changes to <CODE>$/</CODE>
+to just the one line we want to affect, we've prevented the possibility
+that someone in the future will insert some calls to other functions that
+will break because of the change. This is called
+<EM>defensive programming</EM>.
+
+<P>
+Although you may not think about it much, localizing <CODE>$_</CODE> this way can be very important. Here's a slightly different version of <CODE>getfile</CODE>, one which throws away comments and blank lines from the file that it
+gets:
+
+<P>
+<PRE>        sub getfile {
+          my $filename = shift;
+          local *F;
+          open F, &quot;&lt; $filename&quot; or die &quot;Couldn't open `$filename': $!&quot;;
+          my $contents;
+          while (&lt;F&gt;) {
+            s/#.*//;              # Remove comments
+            next unless /\S/;     # Skip blank lines
+            $contents .= $_;      # Save current (nonblank) line
+          }
+          return $contents;
+        }
+</PRE>
+<P>
+This function has a terrible problem. Here's the terrible problem: If you
+call it like this:
+
+<P>
+<PRE>        foreach (@array) {
+          ... 
+          $f = getfile($filename);
+          ...
+        }
+</PRE>
+<P>
+it clobbers the elements of <CODE>@array</CODE>. Why? Because inside a
+<CODE>foreach</CODE> loop, <CODE>$_</CODE> is aliased to the elements of the array; if you change <CODE>$_</CODE>, it changes the array. And <CODE>getfile</CODE>  <EM>does</EM> change
+<CODE>$_</CODE>. To prevent itself from sabotaging the <CODE>$_</CODE> of anyone who calls it, <CODE>getfile</CODE> should have <CODE>local $_</CODE> at the top.  
+
+<P>
+Other special variables present similar problems. For example, it's
+sometimes convenient to change <CODE>$&quot;</CODE>, <CODE>$,</CODE>, or <CODE>$\</CODE> to alter the way
+<CODE>print</CODE> works, but if you don't arrange to put them back the way they were before
+you call any other functions, you might get a big disaster: 
+
+<pre>
+	# Good style: 
+	{ local $&quot; = ')('; 
+	  print ''Array a: (@a)\n``; 
+	} 
+	# Program continues safely...
+</pre>
+
+<P>
+Another common situation in which you want to localize a special variable
+is when you want to temporarily suppress warning messages. Warnings are
+enabled by the <CODE>-w</CODE> command-line option, which in turn sets the variable <CODE>$^W</CODE> to a true value. If you reset <CODE>$^W</CODE> to a false value, that turns the warnings off. Here's an example: My
+<CODE>Memoize</CODE> module creates a front-end to the user's function and then installs it into
+the symbol table, replacing the original function. That's what it's for,
+and it would be awfully annyoying to the user to get the warning
+
+<P>
+<PRE>        Subroutine factorial redefined at Memoize.pm line 113
+</PRE>
+<P>
+every time they tried to use my module to do what it was supposed to do. So
+I have 
+
+<P>
+<PRE>  {
+    local $^W = 0;                    # Shut UP!
+    *{$name} = $tabent-&gt;{UNMEMOIZED}; # Otherwise this issues a warning
+  }
+</PRE>
+<P>
+which turns off the warning for just the one line. The old value of
+<CODE>$^W</CODE> is automatically restored after the chance of getting the warning is over.
+
+<P>
+<HR>
+<H1><A NAME="2_Localized_Filehandles">2. Localized Filehandles</A></H1>
+<P>
+Let's look back at that <CODE>getfile</CODE> function. To read the file, it opened the filehandle <CODE>F</CODE>. That's fine, unless some other part of the program happened to have
+already opened a filehandle named <CODE>F</CODE>, in which case the old file is closed, and when control returns from the
+function, that other part of the program is going to become very confused
+and upset. This is the `filehandle clobbering problem'.
+
+<P>
+This is exactly the sort of problem that local variables were supposed to
+solve. Unfortunately, there's no way to localize a filehandle directly in
+Perl.  
+
+<P>
+Well, that's actually a fib. There are three ways to do it:
+
+<OL>
+<LI>
+You can cast a magic spell in which you create an anonymous glob, extract
+the filehandle from it, and discard the rest of the glob.<p>
+
+<LI>
+You can use the <CODE>Filehandle</CODE> or <CODE>IO::Handle</CODE> modules, which cast the spell I just described, and present you with the
+results, so that you don't have to perform any sorcery yourself.<p>
+
+<LI>See below.<p>
+
+</OL>
+
+<P>
+The simplest and cheapest way to solve the `filehandle clobbering problem'
+is a little bit obscure. You can't localize the filehandle itself, but you
+can localize the entry in Perl's symbol table that associates the
+filehandle's name with the filehandle. This entry is called a `glob'. In
+Perl, variables don't have names directly; instead the glob has a name, and
+the glob gathers together the scalar, array, hash, subroutine, and
+filehandle with that name. In Perl, the glob named <CODE>F</CODE> is denoted with <CODE>*F</CODE>.
+
+<P>
+To localize the filehandle, we actually localize the entire glob, which is
+a little hamfisted:
+
+<P>
+<PRE>        sub getfile {
+          my $filename = shift;
+          local *F;
+          open F, &quot;&lt; $filename&quot; or die &quot;Couldn't open `$filename': $!&quot;;
+          local $/ = undef;           # Read entire file at once
+          $contents = &lt;F&gt;;            # Return file as one single `line'
+          close F;
+          return $contents;
+        }
+</PRE>
+<P>
+<CODE>local</CODE> on a glob does the same as any other <CODE>local</CODE>: It saves the current value somewhere, creates a new value, and arranges
+that the old value will be restored at the end of the current block. In
+this case, that means that any filehandle that was formerly attached to the
+old
+<CODE>*F</CODE> glob is saved, and the <CODE>open</CODE> will apply to the filehandle in the new, local glob. At the end of the
+block, filehandle <CODE>F</CODE> will regain its old meaning again.
+
+<P>
+This works pretty well most of the time, except that you still have the
+usual <CODE>local</CODE> worries about called subroutines changing the
+<CODE>local</CODE>ized values on you. You can't use <CODE>my</CODE> here because globs are all about the Perl symbol table; the lexical
+variable mechanism is totally different, and there is no such thing as a
+lexical glob. 
+
+<P>
+With this technique, you have the new problem that <CODE>getfile()</CODE> can't get at <CODE>$F</CODE>, <CODE>@F</CODE>, or <CODE>%F</CODE> either, because you localized them all, along with the filehandle. But you
+probably weren't using any global variables anyway. Were you? And <CODE>getfile()</CODE> won't be able to call
+<CODE>&amp;F</CODE>, for the same reason. There are a few ways around this, but the easiest
+one is that if <CODE>getfile()</CODE> needs to call <CODE>&amp;F</CODE>, it should name the local filehandle something other than <CODE>F</CODE>.
+
+<P>
+<CODE>use FileHandle</CODE> does have fewer strange problems. Unfortunately, it also sucks a few
+thousand lines of code into your program. Now someone will probably write
+in to complain that I'm exaggerating, because it isn't really 3,000 lines,
+some of those are white space, blah blah blah. OK, let's say it's only 300
+lines to use FileHandle, probably a gross underestimate. It's still only <EM>one</EM> line to localize the glob. For many programs, localizing the glob is a
+good, cheap, simple way to solve the problem.
+
+<P>
+<HR>
+<H2><A NAME="Localized_Filehandles_II">Localized Filehandles, II</A></H2>
+<P>
+When a localized glob goes out of scope, its open filehandle is
+automatically closed. So the <CODE>close F</CODE> in <CODE>getfile</CODE> is unnecessary:
+
+<P>
+<PRE>
+        sub getfile {
+          my $filename = shift;
+          local *F;
+          open F, &quot;&lt; $filename&quot; or die &quot;Couldn't open `$filename': $!&quot;;
+          local $/ = undef;           # Read entire file at once
+          return &lt;F&gt;;                 # Return file as one single `line'
+        }  # F is automatically closed here
+</PRE>
+<P>
+That's such a convenient feature that it's worth using even when you're not
+worried that you might be clobbering someone else's filehandle.
+
+<P>
+The filehandles that you get from <CODE>FileHandle</CODE> and <CODE>IO::Handle</CODE> do this also.
+
+<P>
+<HR>
+<H2><A NAME="Marginal_Uses_of_Localized_Fileh">Marginal Uses of Localized Filehandles</A></H2>
+<P>
+As I was researching this article, I kept finding common uses for
+<CODE>local</CODE> that turned out not to be useful, because there were simpler and more
+straightforward ways to do the same thing without using
+<CODE>local</CODE>. Here is one that you see far too often:
+
+<P>
+People sometimes want to pass a filehandle to a subroutine, and they know
+that you can pass a filehandle by passing the entire glob, like this:
+
+<P>
+<PRE>           $rec = read_record(*INPUT_FILE);
+</PRE>
+<P>
+<PRE>           sub read_record {
+             local *FH = shift;
+             my $record;
+             read FH, $record, 1024;
+             return $record;
+           }
+</PRE>
+<P>
+Here we pass in the entire glob <CODE>INPUT_FILE</CODE>, which includes the filehandle of that name. Inside of <CODE>read_record</CODE>, we temporarily alias <CODE>FH</CODE> to <CODE>INPUT_FILE</CODE>, so that the filehandle <CODE>FH</CODE> inside the function is the same as whatever filehandle was passed in from
+outside. The when we read from <CODE>FH</CODE>, we're actually reading from the filehandle that the caller wanted. But
+actually there's a more straightforward way to do the same thing:
+
+<P>
+<PRE>           $rec = read_record(*INPUT_FILE);
+</PRE>
+<P>
+<PRE>           sub read_record {
+             my $fh = shift;
+             my $record;
+             read $fh, $record, 1024;
+             return $record;
+           }
+</PRE>
+<P>
+You can store a glob into a scalar variable, and you can use such a
+variable in any of Perl's I/O functions wherever you might have used a
+filehandle name. So the <CODE>local</CODE> here was unnecessary.
+
+<P>
+<HR>
+<H2><A NAME="Dirhandles">Dirhandles</A></H2>
+<P>
+Filehandles and dirhandles are stored in the same place in Perl, so
+everything this article says about filehandles applies to dirhandles in the
+same way.
+
+<P>
+<HR>
+<H1><A NAME="3_The_First_Class_Filehandle_Tr">3. The First-Class Filehandle Trick</A></H1>
+<P>
+Often you want to put filehandles into an array, or treat them like regular
+scalars, or pass them to a function, and you can't, because filehandles
+aren't really first-class objects in Perl. As noted above, you can use the <CODE>FileHandle</CODE> or <CODE>IO::Handle</CODE> packages to construct a scalar that acts something like a filehandle, but
+there are some definite disadvantages to that approach.  
+
+<P>
+Another approach is to use a glob as a filehandle; it turns out that a glob
+will fit into a scalar variable, so you can put it into an array or pass it
+to a function. The only problem with globs is that they are apt to have
+strange and magical effects on the Perl symbol table. What you really want
+is a glob that has been disconnected from the symbol table, so that you can
+just use it like a filehandle and forget that it might once have had an
+effect on the symbol table. It turns out that there is a simple way to do
+that:
+
+<P>
+<PRE>        my $filehandle = do { local *FH };
+</PRE>
+<P>
+<CODE>do</CODE> just introduces a block which will be evaluated, and will return the value
+of the last expression that it contains, which in this case is <CODE>local *FH</CODE>. The value of <CODE>local *FH</CODE> is a glob. But what glob?
+
+<P>
+<CODE>local</CODE> takes the existing <CODE>FH</CODE> glob and temporarily replaces it with a new glob. But then it immediately
+goes out of scope and puts the old glob back, leaving the new glob without
+a name. But then it
+<EM>returns the new, nameless glob</EM>, which is then stored into
+<CODE>$filehandle</CODE>. This is just what we wanted: A glob that has been disconnected from the
+symbol table.
+
+<P>
+You can make a whole bunch of these, if you want:
+
+<P>
+<PRE>        for $i (0 .. 99) {
+          $fharray[$i] = do { local *FH };
+        }
+</PRE>
+<P>
+You can pass them to subroutines, return them from subroutines, put them in
+data structures, and give them to Perl's I/O functions like
+<CODE>open</CODE>, <CODE>close</CODE>, <CODE>read</CODE>, <CODE>print</CODE>, and <CODE>&lt;...&gt;</CODE> and they'll work just fine.
+
+<P>
+<HR>
+<H1><A NAME="4_Aliases">4. Aliases</A></H1>
+<P>
+Globs turn out to be very useful. You can assign an entire glob, as we saw
+above, and alias an entire symbol in the symbol table. But you don't have
+to do it all at once. If you say
+
+<P>
+<PRE>        *GLOB = $reference;
+</PRE>
+<P>
+then Perl only changes the meaning of part of the glob. If the reference is
+a scalar reference, it changes the meaning of <CODE>$GLOB</CODE>, which now means the same as whatever scalar the reference referred to;
+@GLOB, <CODE>%GLOB</CODE> and the other parts don't change at all. If the
+reference is a hash reference, Perl makes <CODE>%GLOB</CODE> mean the same as whatever hash the reference referred to, but the other
+parts stay the same. Similarly for other kinds of references.
+
+<P>
+You can use this for all sorts of wonderful tricks. For example, suppose
+you have a function that is going to do a lot of operations on <CODE>$_[0]{Time}[2]</CODE> for some reason. You can say
+
+<P>
+<PRE>        *arg = \$_[0]{Time}[2];
+</PRE>
+<P>
+and from then on, <CODE>$arg</CODE> is synonymous with <CODE>$_[0]{Time}[2]</CODE>, which might make your code simpler, and probably more efficient, because
+Perl won't have to go digging through three levels of indirection every
+time. But you'd better use <CODE>local</CODE>, or else you'll permanently clobber any <CODE>$arg</CODE> variable that already exists. (Gurusamy Sarathy's
+<CODE>Alias</CODE> module does this, but without the <CODE>local</CODE>.)
+
+<P>
+You can create locally-scoped subroutines that are invisible outside a
+block by saying
+
+<P>
+<PRE>        *mysub = sub { ... } ;
+</PRE>
+<P>
+and then call them with <CODE>mysub(...)</CODE>. But you must use <CODE>local</CODE>, or else you'll permanently clobber any <CODE>mysub</CODE> subroutine that already exists.  
+
+<P>
+<HR>
+<H1><A NAME="5_Dynamic_Scope">5. Dynamic Scope</A></H1>
+<P>
+<CODE>local</CODE> introduces what is called <EM>dynamic scope</EM>, which means that the `local' variable that it declares is inherited by
+other functions called from the one with the declaration. Usually this
+isn't what you want, and it's rather a strange feature, unavailable in many
+programming languages. To see the difference, consider this example:
+
+<P>
+<PRE>        first();
+</PRE>
+<P>
+<PRE>        sub first {
+          local $x = 1;
+          my    $y = 1;
+          second();
+        }
+</PRE>
+<P>
+<PRE>        sub second {
+          print &quot;x=&quot;, $x, &quot;\n&quot;;
+          print &quot;y=&quot;, $y, &quot;\n&quot;;
+        }
+</PRE>
+<P>
+The variable <CODE>$y</CODE> is a true local variable. It's available only from the place that it's
+declared up to the end of the enclosing block. In particular, it's
+unavailable inside of <CODE>second()</CODE>, which prints
+<CODE>&quot;y=&quot;</CODE>, not <CODE>&quot;y=1&quot;</CODE>. This is is called <EM>lexical scope</EM>.  
+
+<P>
+<CODE>local</CODE>, in contrast, does not actually make a local variable. It creates a new
+`local' value for a <EM>global</EM> variable, which persists until the end of the enclosing block. When control
+exits the block, the old <EM>value</EM> is restored. But the variable, and its new `local' value, are still global,
+and hence accessible to other subroutines that are called before the old
+value is restored.  <CODE>second()</CODE> above prints <CODE>&quot;x=1&quot;</CODE>, because <CODE>$x</CODE> is a <EM>global</EM> variable that temporarily happens to have the value 1. Once <CODE>first()</CODE> returns, the old value will be restored. This is called <EM>dynamic scope</EM>, which is a misnomer, because it's not really scope at all.
+
+<P>
+For `local' variables, you almost always want lexical scope, because it
+ensures that variables that you declare in one subroutine can't be tampered
+with by other subroutines. But every once in a strange while, you actually
+do want dynamic scope, and that's the time to get
+<CODE>local</CODE> out of your bag of tricks.
+
+<P>
+Here's the most useful example I could find, and one that really does bear
+careful study. We'll make our own iteration syntax, in the same family as
+Perl's <CODE>grep</CODE> and <CODE>map</CODE>. Let's call it `listjoin'; it'll combine two lists into one:
+
+<P>
+<PRE>        @list1 = (1,2,3,4,5);
+        @list2 = (2,3,5,7,11);
+        @result = listjoin { $a + $b } @list1, @list2;
+</PRE>
+<P>
+Now the <CODE>@result</CODE> is <CODE>(3,5,8,11,16)</CODE>. Each element of the result is the sum of the corresponding terms from <CODE>@list1</CODE> and <CODE>@list2</CODE>. If we wanted differences instead of sums, we could have put <CODE>{ $a - $b
+}</CODE>. In general, we can supply any code fragment that does something with <CODE>$a</CODE> and <CODE>$b</CODE>, and <CODE>listjoin</CODE> will use our code fragment to construct the elements in the result list.
+
+<P>
+Here's a first cut at <CODE>listjoin</CODE>:
+
+<P>
+<PRE>        sub listjoin (&amp;\@\@) {
+</PRE>
+<P>
+Ooops! The first line already has a lot of magic. Let's stop here and
+sightsee a while before we go on. The <CODE>(&amp;\@\@)</CODE> is a
+<EM>prototype</EM>. In Perl, a prototype changes the way the function is parsed and the way
+its arguments are passed.
+
+<P>
+In <CODE>(&amp;\@\@)</CODE>, The <CODE>&amp;amp;</CODE> warns the Perl compiler to expect to see a brace-delimited block of code as
+the first argument to this function, and tells Perl that it should pass <CODE>listjoin</CODE> a reference to that block. The block behaves just like an anonymous
+function. The <CODE>\@\@</CODE> says that <CODE>listjoin</CODE> should get two other arguments, which <EM>must</EM> be arrays; Perl will pass <CODE>listjoin</CODE> references to these two arrays. If any of the arguments are missing, or
+have the wrong type (a hash instead of an array, for example) Perl will
+signal a compile-time error.
+
+<P>
+The result of this little wad of punctuation is that we will be able to
+write
+
+<P>
+<PRE>        listjoin { $a + $b } @list1, @list2;
+</PRE>
+<P>
+and Perl will behave as if we had written
+
+<P>
+<PRE>        listjoin(sub { $a + $b }, \@list1, \@list2);
+</PRE>
+<P>
+instead. With the prototype, Perl knows enough to let us leave out the
+parentheses, the <CODE>sub</CODE>, the first comma, and the slashes. Perl has too much punctuation already,
+so we should take advantage of every opportunity to use less.
+
+<P>
+Now that that's out of the way, the rest of <CODE>listjoin</CODE> is straightforward:
+
+<P>
+<PRE>        sub listjoin (&amp;\@\@) {
+          my $code = shift;          # Get the code block
+          my $arr1 = shift;          # Get reference to first array
+          my $arr2 = shift;          # Get reference to second array
+          my @result;
+          while (@$arr1 &amp;&amp; @$arr2) {
+            my $a = shift @$arr1;    # Element from array 1 into $a
+            my $b = shift @$arr2;    # Element from array 2 into $b
+            push @result, &amp;$code();  # Execute code block and get result
+          }
+          return @result;
+        }
+</PRE>
+<P>
+<CODE>listjoin</CODE> simply runs a loop over the elements in the two arrays, putting elements
+from each into <CODE>$a</CODE> and <CODE>$b</CODE>, respectively, and then executing the code and pushing the result into <CODE>@result</CODE>. All very simple and nice, except that it doesn't work: By declaring <CODE>$a</CODE>
+and <CODE>$b</CODE> with <CODE>my</CODE>, we've made them lexical, and they're unavailable to the <CODE>$code</CODE>.
+
+<P>
+Removing the <CODE>my</CODE>'s from <CODE>$a</CODE> and <CODE>$b</CODE> makes it work:
+
+<P>
+<PRE>            $a = shift @$arr1;
+            $b = shift @$arr2;
+</PRE>
+<P>
+But this solution is boobytrapped. Without the <CODE>my</CODE> declaration,
+<CODE>$a</CODE> and <CODE>$b</CODE> are <EM>global</EM> variables, and whatever values they had before we ran <CODE>listjoin</CODE> are lost now.
+
+<P>
+The correct solution is to use <CODE>local</CODE>. This preserves the old values of the <CODE>$a</CODE> and <CODE>$b</CODE> variables, if there were any, and restores them when <CODE>listjoin()</CODE> is finished. But because of dynamic scoping, the values set by <CODE>listjoin()</CODE> are inherited by the code fragment. Here's the correct solution:
+
+<P>
+<PRE>        sub listjoin (&amp;\@\@) {
+          my $code = shift;
+          my $arr1 = shift;
+          my $arr2 = shift;
+          my @result;
+          while (@$arr1 &amp;&amp; @$arr2) {
+            local $a = shift @$arr1;
+            local $b = shift @$arr2;
+            push @result, &amp;$code();
+          }
+          return @result;
+        }
+</PRE>
+<P>
+You might worry about another problem: Suppose you had <CODE>strict
+'vars'</CODE> in force. Shouldn't <CODE>listjoin { $a + $b }</CODE> be illegal? It should be, because <CODE>$a</CODE> and <CODE>$b</CODE> are global variables, and the purpose of <CODE>strict 'vars'</CODE> is to forbid the use of unqualified global variables.
+
+<P>
+But actually, there's no problem here, because <CODE>strict 'vars'</CODE> makes a special exception for <CODE>$a</CODE> and <CODE>$b</CODE>. These two names, and no others, are exempt from <CODE>strict 'vars'</CODE>, because if they weren't,
+<CODE>sort</CODE> wouldn't work either, for exactly the same reason. We're taking advantage
+of that here by giving <CODE>listjoin</CODE> the same kind of syntax. It's a peculiar and arbitrary exception, but one
+that we're happy to take advantage of.
+
+<P>
+Here's another example in the same vein:
+
+<P>
+<PRE>        sub printhash (&amp;\%) {
+          my $code = shift;
+          my $hash = shift;
+          local ($k, $v);
+          while (($k, $v) = each %$hash) {
+            print &amp;$code();
+          }
+        }
+</PRE>
+<P>
+Now you can say
+
+<P>
+<PRE>        printhash { &quot;$k =&gt; $v\n&quot; } %capitals;
+</PRE>
+<P>
+and you'll get something like
+
+<P>
+<PRE>        Athens =&gt; Greece
+        Moscow =&gt; Russia
+        Helsinki =&gt; Finland
+</PRE>
+<P>
+or you can say 
+
+<P>
+<PRE>        printhash { &quot;$k,&quot; } %capitals;
+</PRE>
+<P>
+and you'll get
+
+<P>
+<PRE>        Athens,Moscow,Helsinki,
+</PRE>
+<P>
+Note that because I used <CODE>$k</CODE> and <CODE>$v</CODE> here, you might get into trouble with <CODE>strict 'vars'</CODE>. You'll either have to change the definition of <CODE>printhash</CODE> to use <CODE>$a</CODE> and <CODE>$b</CODE> instead, or you'll have to <CODE>use vars qw($k $v)</CODE>.
+
+<P>
+<HR>
+<H1><A NAME="6_Dynamic_Scope_Revisited">6. Dynamic Scope Revisited</A></H1>
+<P>
+Here's another possible use for dynamic scope: You have some subroutine
+whose behavior depends on the setting of a global variable. This is usually
+a result of bad design, and should be avoided unless the variable is large
+and widely used. We'll suppose that this is the case, and that the variable
+is called <CODE>%CONFIG</CODE>.
+
+<P>
+You want to call the subroutine, but you want to change its behavior.
+Perhaps you want to trick it about what the configuration really is, or
+perhaps you want to see what it would do <EM>if</EM> the configuration were different, or you want to try out a fake
+configuration to see if it works. But you don't want to change the real
+global configuration, because you don't know what bizarre effects that will
+have on the rest of the program. So you do
+
+<P>
+<PRE>        local %CONFIG = (new configuration here);
+        the_subroutine();
+</PRE>
+<P>
+The changed <CODE>%CONFIG</CODE> is inherited by the subroutine, and the original configuration is restored
+automatically when the declaration goes out of scope.
+
+<P>
+Actually in this kind of circumstance you can sometimes do better. Here's
+how: Suppose that the <CODE>%CONFIG</CODE> hash has lots and lots of members, but we only want to change <CODE>$CONFIG{VERBOSITY}</CODE>. The obvious thing to do is something like this:
+
+<P>
+<PRE>        my %new_config = %CONFIG;        # Copy configuration
+        $new_config{VERBOSITY} = 1000;   # Change one member
+        local %CONFIG = %new_config;     # Copy changed back, temporarily
+        the_subroutine();                # Subroutine inherits change
+</PRE>
+<P>
+But there's a better way:
+
+<P>
+<PRE>        local $CONFIG{VERBOSITY} = 1000; # Temporary change to one member!
+        the_subroutine();
+</PRE>
+<P>
+You can actually localize a single element of an array or a hash. It works
+just like localizing any other scalar: The old value is saved, and restored
+at the end of the enclosing scope.  
+
+<P>
+<HR>
+<H2><A NAME="Marginal_Uses_of_Dynamic_Scoping">Marginal Uses of Dynamic Scoping</A></H2>
+<P>
+Like local filehandles, I kept finding examples of dynamic scoping that
+seemed to require <CODE>local</CODE>, but on further reflection didn't. Lest you be tempted to make one of
+these mistakes, here they are.
+
+<P>
+One application people sometimes have for dynamic scoping is like this:
+Suppose you have a complicated subroutine that does a search of some sort
+and locates a bunch of items and returns a list of them. If the search
+function is complicated enough, you might like to have it simply deposit
+each item into a global array variable when its found, rather than
+returning the complete list from the subroutine, especially if the search
+subroutine is recursive in a complicated way:
+
+<P>
+<PRE>        sub search {
+          # do something very complicated here
+          if ($found) {
+            push @solutions, $solution;
+          }
+          # do more complicated things
+        }
+</PRE>
+<P>
+This is dangerous, because <CODE>@solutions</CODE> is a global variable, and you don't know who else might be using it.
+
+<P>
+In some languages, the best answer is to add a front-end to <CODE>search</CODE>
+that localizes the global <CODE>@solutions</CODE> variable:
+
+<P>
+<PRE>        sub search {
+          local @solutions;     
+          realsearch(@_);
+          return @solutions;
+        }
+</PRE>
+<P>
+<PRE>        sub realsearch {
+          # ... as before ...
+        }
+</PRE>
+<P>
+Now the real work is done in <CODE>realsearch</CODE>, which still gets to store its solutions into the global variable. But
+since the user of
+<CODE>realsearch</CODE> is calling the front-end <CODE>search</CODE> function, any old value that <CODE>@solutions</CODE> might have had is saved beforehand and restored again afterwards.
+
+<P>
+There are two other ways to accomplish the same thing, and both of them are
+better than this way. Here's one:  
+
+<P>
+<PRE>        { my @solutions;  # This is private, but available to both functions
+          sub search {
+            realsearch(@_);
+            return @solutions;
+          }
+</PRE>
+<P>
+<PRE>          sub realsearch {
+            # ... just as before ...
+            # but now it modifies a private variable instead of a global one.
+          } 
+        }
+</PRE>
+<P>
+Here's the other:
+
+<P>
+<PRE>        sub search {
+          my @solutions;        
+          realsearch(\@solutions, @_);
+          return @solutions;
+        }
+</PRE>
+<P>
+<PRE>        sub realsearch {
+          my $solutions_ref = shift;
+          # do something very complicated here
+          if ($found) {
+            push @$solutions_ref, $solution;
+          }
+          # do more complicated things
+        }
+</PRE>
+<P>
+One or the other of these strategies will solve most problems where you
+might think you would want to use a dynamic variable. They're both safer
+than the solution with <CODE>local</CODE> because you don't have to worry that the global variable will `leak' out
+into the subroutines called by <CODE>realsearch</CODE>.
+
+<P>
+One final example of a marginal use of <CODE>local</CODE>: I can imagine an error-handling routine that examines the value of some
+global error message variable such as <CODE>$!</CODE> or <CODE>$DBI::errstr</CODE> to decide what to do. If this routine seems to have a more general utility,
+you might want to call it even when there wasn't an error, because you want
+to invoke its cleanup behavor, or you like the way it issues the error
+message, or whatever. It <EM>should</EM> accept the message as an argument instead of examining some fixed global
+variable, but it was badly designed and now you can't change it. If you're
+in this kind of situation, the best solution might turn out to be something
+like this:
+
+<P>
+<PRE>        local $DBI::errstr = &quot;Your shoelace is untied!&quot;;
+        handle_error();
+</PRE>
+<P>
+Probably a better solution is to find the person responsible for the
+routine and to sternly remind them that functions are more flexible and
+easier to reuse if they don't depend on hardwired global variables. But
+sometimes time is short and you have to do what you can.
+
+<P>
+<HR>
+<H1><A NAME="7_Perl_4_and_Other_Relics">7. Perl 4 and Other Relics</A></H1>
+<P>
+A lot of the useful uses for <CODE>local</CODE> became obsolete with Perl 5; local was much more useful in Perl 4. The most
+important of these was that <CODE>my</CODE> wasn't available, so you needed <CODE>local</CODE> for private variables.
+
+<P>
+If you find yourself programming in Perl 4, expect to use a lot of
+<CODE>local</CODE>.  <CODE>my</CODE> hadn't been invented yet, so we had to do the best we could with what we
+had.
+
+<P>
+<HR>
+<H1><A NAME="Summary">Summary</A></H1>
+<P>
+Useful uses for <CODE>local</CODE> fall into two classes: First, places where you would like to use <CODE>my</CODE>, but you can't because of some restriction, and second, rare, peculiar or
+contrived situations.
+
+<P>
+For the vast majority of cases, you should use my, and avoid local whenever
+possible. In particular, when you want private variables, use my, because
+local variables aren't private.
+
+<P>
+Even the useful uses for <CODE>local</CODE> are mostly not very useful.
+
+<P>
+Revised rule of when to use <CODE>my</CODE> and when to use <CODE>local</CODE>:
+
+<OL>
+<LI><STRONG><A NAME="item__Beginners_and_intermediate_prog">(Beginners and intermediate programmers.)</A></STRONG>
+Always use <CODE>my</CODE>; never use <CODE>local</CODE> unless you get an error when you try to use <CODE>my</CODE>.
+<P>
+
+<LI><STRONG><A NAME="item__Experts_only_">(Experts only.)</A></STRONG>
+Experts don't need me to tell them what the real rules are.
+<P>
+
+</OL>
+
+<hr>
+
+<img src="pics/small-sigils.gif" align=right>
+<p>Return to: 
+<a href="../">Universe of Discourse main page</a> |
+<a href="../whatsnew.html">What's new page</a> |
+<a href="./">Perl Paraphernalia</a>
+</p>
+
+<p><a href="mailto:mjd-tpj-local-id-ipk+bkb2yic+@plover.com">mjd-tpj-local-id-ipk+bkb2yic+@plover.com</a></p>
+
+</BODY>
+
+</HTML>

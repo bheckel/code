@@ -1,0 +1,31 @@
+<SCRIPT LANGUAGE="JavaScript">
+
+  // eval takes a string and evaluates it.
+
+  var the_label = "five";
+  var five      = 5;
+  var the_sum   = 10 + eval(the_label);
+
+  alert("The sum is " + the_sum);
+  document.write("The sum is " + the_sum);
+
+</SCRIPT>
+
+
+
+
+<!--
+If the user types "parrot" into the prompt box, the second line creates a
+string that looks like window.document.parrot. Then the eval on the third line
+says, "Give me the object window.document.parrot" - which is the image object
+you want. And once you have that image object, you can change its source to
+ant.gif. Funky, no? It's actually pretty useful, and people do it a lot. 
+-->
+<SCRIPT LANGUAGE="JavaScript">
+  function simpleSwap() {
+    var the_image = prompt("change parrot or cheese","");
+    var the_image_name = "window.document." + the_image;
+    var the_image_object = eval(the_image_name);
+    the_image_object.src = "ant.gif";
+  }
+</SCRIPT>

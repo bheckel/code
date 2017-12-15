@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Determine browser version (two different approaches). -->
+<HTML>
+<BODY>
+  <SCRIPT LANGUAGE="JavaScript">
+    var isbrowserOK = (((navigator.appName == "Netscape") && 
+                      (parseInt(navigator.appVersion)>= 3 )) || 
+                      ((navigator.appName == "Microsoft Internet Explorer") && 
+                      (parseInt(navigator.appVersion)>= 4 )));
+      
+    if ( isbrowserOK ) {
+      document.write("Your browser should work because you have " + 
+                                    navigator.appName + navigator.appVersion);   
+    } else {
+      document.write("Your browser " + navigator.appName + " " +
+                                navigator.appVersion + " is not up to date.");
+    }
+  </SCRIPT>
+
+  <SCRIPT LANGUAGE="JavaScript">
+    if ( navigator.appName.indexOf("Microsoft") ) {
+      alert("not a microsoft product");
+    }
+  </SCRIPT>
+
+  <SCRIPT LANGUAGE="JavaScript">
+    if ( ! navigator.appName.indexOf("Microsoft") ) {
+      alert("bill will be pleased");
+    }
+  </SCRIPT>
+
+</BODY>
+</HTML>

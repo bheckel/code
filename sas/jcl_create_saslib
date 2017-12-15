@@ -1,0 +1,39 @@
+//BQH0UC56 JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=20,CLASS=J,REGION=0M
+//* Automatically allocates a new SAS library if it doesn't exist.
+//STEP1    EXEC SAS,OPTIONS='MSGCASE,MEMSIZE=0'
+//WORK     DD SPACE=(CYL,(450,450),,,ROUND)
+//MYNEWLIB DD DSN=BQH0.SASLIB2,
+//         DISP=(NEW,CATLG,DELETE),UNIT=NCHS,
+//         DCB=(DSORG=PS,RECFM=FS,LRECL=6144,BLKSIZE=6144),
+//         SPACE=(TRK,(50,50),RLSE)
+//SYSIN    DD *
+
+ /* Then run e.g. */
+data MYNEWLIB.tmp;
+  set SASHELP.shoes;
+run;
+
+
+                              Data Set Information                              
+ Command ===>                                                                   
+                                                                    More:     + 
+ Data Set Name . . . . : BQH0.SASLIB2                                           
+                                                                                
+ General Data                           Current Allocation                      
+  Management class . . : FILES           Allocated tracks  . : 2                
+  Storage class  . . . : BASE            Allocated extents . : 1                
+   Volume serial . . . : PRM022                                                 
+   Device type . . . . : 3390                                                   
+  Data class . . . . . : SAS6           Current Utilization                     
+   Organization  . . . : PS              Used tracks . . . . : 2                
+   Record format . . . : FS              Used extents  . . . : 1                
+   Record length . . . : 6144                                                   
+   Block size  . . . . : 6144                                                   
+   1st extent tracks . : 2                                                      
+   Secondary tracks  . : 50                                                     
+   Data set name type  :                 SMS Compressible  . : NO               
+                                                                                
+   Creation date . . . : 2004/08/05      Referenced date . . : 2004/08/05       
+   Expiration date . . : ***None***                                             
+                                                                                
+  F1=Help      F2=Split     F3=Exit      F7=Backward  F8=Forward   F9=Swap      

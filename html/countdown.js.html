@@ -1,0 +1,103 @@
+<html>
+<head>
+  <script language="JavaScript">
+    var timerID = null;
+    var timerRunning = false;
+
+    function startClock() {
+///      stopClock();
+      timeRemaining();
+    }
+
+///    function stopClock() {
+///      if (timerRunning)
+///        clearTimeout(timerID);
+///        timerRunning = false;
+///    }
+
+    function timeRemaining() {
+      var now = new Date();                                
+      ////var then = new Date(99, 8, 27, 08, 00, 00);    
+      // Month array is zero based.
+      var then = new Date(2000, 2, 13, 00, 00, 00);    
+      var yearsLeft;
+      var daysLeft;
+      var hoursLeft;
+      var minsLeft;
+      var secsLeft;
+
+      // Number of seconds left between now and then.
+      secsLeft = Math.round(then.getTime() - (now.getTime() + 1000)) / 1000;
+
+      yearsLeft = Math.floor(secsLeft / 31536000);  // # seconds in a year
+
+      secsLeft %= 31536000;
+
+      daysLeft = Math.floor(secsLeft / 86400);      // # seconds in a day
+
+      secsLeft %= 86400;
+
+      hoursLeft = Math.floor(secsLeft / 3600);      // # seconds in an hour
+
+      secsLeft %= 3600;
+
+      minsLeft = Math.floor(secsLeft / 60);         // # seconds in a minute
+
+      secsLeft %= 60;
+
+      secsLeft = Math.round(secsLeft);              // # seconds left over
+
+      document.redirect.elements[0].value = daysLeft;
+
+      document.redirect.elements[1].value = hoursLeft;
+
+      document.redirect.elements[2].value = minsLeft;
+
+      document.redirect.elements[3].value = secsLeft;
+
+      timerID = setTimeout("timeRemaining()", 1000);
+
+      timerRunning = true;
+    }
+  </script>
+</head>
+
+<title>The Final Countdown</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<body bgcolor="#ffffff" text="#000000" link="#054BBB" vlink="#006342" onLoad="startClock()">
+  <center>
+  <table border="1">
+  <div align="center"> 
+      <br>
+      <font face="Arial, Helvetica, sans-serif" size="4">Countdown to Mar 13, 2000<br>
+      <br>
+      <tr> 
+        <td><font face="Arial, Helvetica, sans-serif" size="2">Days Remaining</font></td>
+        <td><font face="Arial, Helvetica, sans-serif" size="2">Hours Remaining</font></td>
+        <td><font face="Arial, Helvetica, sans-serif" size="2">Minutes Remaining</font></td>
+        <td><font face="Arial, Helvetica, sans-serif" size="2">Seconds Remaining</font></td>
+      </tr>
+      <tr> 
+        <form name=redirect>
+          <td> 
+            <input type=text name=days value="" size=2>
+          </td>
+          <td> 
+            <input type=text name=hours value="" size=2>
+          </td>
+          <td> 
+            <input type=text name=minutes value="" size=2>
+          </td>
+          <td> 
+            <input type=text name=seconds value="" size=2>
+          </td>
+        </form>
+      </tr>
+    </table>
+  </center>
+  </div>
+</body>
+</html>
+

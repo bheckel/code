@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+if ( @ARGV != 3 ) {
+	print "Usage: dbm_modify database-name key value\n";
+	exit 1;
+}
+
+$dbname = $ARGV[0];
+$key    = $ARGV[1];
+$value  = $ARGV[2];
+
+dbmopen(%DB, $dbname, undef) || die "$0: cannot open database $dbname\n";
+
+$DB{$key} = $value;
+
+dbmclose %DB;

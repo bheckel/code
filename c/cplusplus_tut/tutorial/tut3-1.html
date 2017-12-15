@@ -1,0 +1,354 @@
+<html>
+<head>
+<title>C++ Tutorial: 3.1, Arrays</title>
+<META NAME="description" CONTENT="Declaring, initializing and accessing arrays and their elements. Multidimensional arrays. Arrays as parameters.">
+<META NAME="keywords" CONTENT="element bidimensional">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 3.1 </FONT><BR>
+ <FONT SIZE=5><B>Arrays</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+<p>
+Arrays are a series of elements (variables) of the same type placed consecutively in
+memory that can be individually referenced by adding an index to a unique name.
+<p>
+That means that, for example, we can store 5 values of type <tt><b>int</b></tt> without
+having to declare 5 different variables each one with a different identifier.
+Instead of that, using an <i>array</i>
+we can store 5 different values of the same type, <tt><b>int</b></tt> for example,
+with an unique identifier.
+<p>
+For example, an array to contain 5 integer values of type <tt><b>int</b></tt> called
+<i>billy</i> could be represented this way:<br>
+<blockquote><img src="imgarra1.gif"></blockquote>
+where each blank panel represents an <i>element</i> of the array, that in this case
+are integer values of type <tt><b>int</b></tt>.  These are numbered from
+<tt><b>0</b></tt> to <tt><b>4</b></tt> since in arrays the first index is <u>always</u> 
+<tt><b>0</b></tt>, independently of its length .
+<p>
+Like any other variable, an array must be declared before it is used.  A typical declaration
+for an array in C++ is:<br>
+<blockquote>
+<tt><i>type name</i> [<i>elements</i>];</tt><br>
+</blockquote>
+where <tt><i>type</i></tt> is a valid object type (<b>int</b>, <b>float</b>...),
+<tt><i>name</i></tt> is a valid variable <I>identifier</I> and the
+<TT><i>elements</i></TT> field, that goes enclosed within brackets <tt><B>[]</B></tt>,
+specifies how many of these elements does contain the array.
+<p>
+Thus, to declare <i>billy</i> as shown above it would be something as simple as the
+following sentence:<br>
+<blockquote>
+<tt>int billy [5];</tt>
+</blockquote>
+<p>
+<table><tr><td bgcolor="#BFBFFF">
+NOTE: The <i>elements</i> field within brackets <tt>[]</tt> when declaring an array
+must be a <U>constant</U> value,
+since arrays are blocks of static memory of a given size and the compiler must be able
+to determine exactly how much memory must assign to the array before any instruction
+is considered.
+</td></tr></table>
+
+<p>
+<h2>Initializing arrays.</h2>
+When declaring an array of <U>local</U> scope (within a function), if we do not specify
+otherwise, it will not be initialized, so its content is undetermined until we store
+some values in it.
+<P>
+If we declare a <U>global</U> array (outside any function) its content will be initialized
+with all its elements filled with zeros. Thus, if in the global scope we declare:<br>
+<blockquote>
+<tt>int billy [5];</tt><br>
+</blockquote>
+every element of <i>billy</i> will be set initialy to <tt><b>0</b></tt>:
+<blockquote><img src="imgarra4.gif"></blockquote>
+
+But additionally, when we declare an Array, we have the possibility to assign initial
+values to <u>each one</u> of its elements using curly brackets <tt>{ }</tt>.
+For example:<br>
+<blockquote>
+<tt><b>int billy [5] = { 16, 2, 77, 40, 12071 };</b></tt>
+</blockquote>
+this declaration would have created an array like the following one:
+<blockquote><img src="imgarra3.gif"></blockquote>
+The number of elements in the array that we initialized within curly brackets <tt>{ }</tt>
+must match the length in elements that we declared for the array enclosed within square
+brackets <tt>[ ]</tt>. For example, in the example of the <i>billy</i> array we have
+declared that it had 5 elements and in the list of initial values within curly brackets
+<tt>{ }</tt> we have set 5 different values, one for each element.
+<p>
+Because this can be considered an useless repetition, C++ includes the possibility of
+leaving empty the brackets <tt>[ ]</tt>, being the size of the Array defined by the
+number of values included between curly brackets <tt>{ }</tt>:<br>
+<blockquote><tt><b>int billy [] = { 16, 2, 77, 40, 12071 };</b></tt></blockquote>
+
+<p>
+<h2>Access to the values of an Array.</h2>
+In any point of the program in which the array is visible we can access individually
+anyone of its values for reading or modifying it as if it was a normal variable.
+The format is the following:
+<blockquote>
+<tt><i>name</i>[<i>index</i>]</tt><br>
+</blockquote>
+Following the previous examples in which <i>billy</i> had 5 elements and each of
+those elements was of type <tt><b>int</b></tt>, the name which we can use to refer to
+each element is the following one:
+<blockquote><img src="imgarra2.gif"></blockquote>
+For example, to store the value 75 in the third <i>element</i> of
+<i>billy</i> a suitable sentence would be:<br>
+<blockquote><tt><b>billy[2] = 75;</b></tt></blockquote>
+and, for example, to pass the value of the third element of billy to the variable
+<tt><b>a</b></tt>, we could write:
+<blockquote><tt><b>a = billy[2];</b></tt></blockquote>
+Therefore, for all the effects, the expression <tt><b>billy[2]</b></tt> is like any
+variable of type <tt><b>int</b></tt>. With the same properties.
+<p>
+Notice that the third element of <tt><b>billy</b></tt> is specified
+<tt><b>billy[2]</b></tt>, since first is <tt><b>billy[0]</b></tt>, second
+<tt><b>billy[1]</b></tt>, and therefore, third is <tt><b>billy[2]</b></tt>. 
+By this same reason, its last element is <tt><b>billy[4]</b></tt>. Since if we wrote
+<tt><b>billy[5]</b></tt>, we would be acceding to the <u>sixth</u> element of
+<i>billy</i> and therefore exceeding the size of the array.
+<p>
+In C++ it is perfectly valid to exceed the valid range of indices for an Array, which
+can cause certain difficultly detectable problems, since they do not cause compilation
+errors but they can cause unexpected results or serious errors during execution.
+The reason why this is allowed will be seen ahead when we begin to use pointers.
+<p>
+At this point it is important to be able to clearly distinguish between the two
+uses that brackets <tt>[ ]</tt> have related to arrays. They perform two differt
+tasks: one, is to set the size of arrays when declaring them; and second, to specify
+indices for a concrete array element when referring to it. We must simply take care
+of not confusing these two possible uses of brackets <TT>[ ]</TT> with arrays:
+<blockquote><tt><PRE>
+int billy[5];         <FONT COLOR="green"><i>// declaration of a new Array (begins with a type name)</i></FONT>
+billy[2] = 75;        <FONT COLOR="green"><i>// access to an element of the Array.</i></FONT>
+</PRE></tt></blockquote>
+<p>
+Other valid operations with arrays:<br>
+<blockquote>
+<tt>billy[0] = a;<br>
+billy[a] = 75;<br>
+b = billy [a+2];<br>
+billy[billy[a]] = billy[2] + 5;<br></tt>
+</blockquote>
+
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// arrays example</I>
+#include &lt;iostream.h&gt;
+
+int billy [] = {16, 2, 77, 40, 12071};
+int n, result=0;
+
+int main ()
+{
+  for ( n=0 ; n&lt;5 ; n++ )
+  {
+    result += billy[n];
+  }
+  cout &lt;&lt; result;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>12206</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+
+<p>
+<h2>Multidimensional Arrays</h2><br>
+Multidimensional arrays can be described as arrays of arrays. For example, a bidimensional
+array can be imagined as a bidimensional table of a uniform concrete data <I>type</I>.
+<blockquote><img src="imgarra5.gif"></blockquote>
+<tt>jimmy</tt> represents a bidimensional array of 3 per 5 values of type
+<tt><b>int</b></tt>.  The way to declare this array would be:
+<blockquote><tt>int jimmy [3][5];</tt></blockquote>
+and, for example, the way to reference the second element vertically and fourth horizontally
+in an expression would be:
+<blockquote>
+<tt><b>jimmy[1][3]</b></tt><br>
+<img src="imgarra6.gif"><br>
+(remember that array indices <u>always</u> begin by <tt><b>0</b></tt>).
+</blockquote>
+
+<i>Multidimensional arrays</i> are not limited to two indices (two dimensions).
+They can contain so many indices as needed, although it is rare to have to represent
+more than 3 dimensions. Just consider the amount of memory that an array
+with many indices may need. For example:<br>
+<blockquote><tt>char century [100][365][24][60][60];</tt><br></blockquote>
+assigns a <tt><b>char</b></tt> for each second contained in a century, that is
+more than 3 billion <tt><b>chars</b></tt>! What would consume about 3000
+<i>megabytes</i> of RAM memory if we could declare it.
+<p>
+Multidimensional arrays are nothing else than an abstraction, since we can simply obtain
+the same results with a simple array by putting a factor between its indices:<br>
+<blockquote>
+<tt><b>int jimmy [3][5];</b></tt> &nbsp; is equivalent to<br>
+<tt><b>int jimmy [15];</b></tt> &nbsp; (3 * 5 = 15)<br>
+</blockquote>
+with the only difference that the compiler remembers for us the depth of each imaginary
+dimension. Serve as example these two pieces of code, with exactly the same result,
+one using bidimensional arrays and the other using only simple arrays:
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// multidimensional array</I>
+#include &lt;iostream.h&gt;
+
+#define WIDTH 5
+#define HEIGHT 3
+
+int jimmy [HEIGHT][WIDTH];
+int n,m;
+
+int main ()
+{
+  for (n=0;n&lt;HEIGHT;n++)
+    for (m=0;m&lt;WIDTH;m++)
+    {
+      jimmy[n][m]=(n+1)*(m+1);
+    }
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// pseudo-multidimensional array</I>
+#include &lt;iostream.h&gt;
+
+#define WIDTH 5
+#define HEIGHT 3
+
+int jimmy [HEIGHT * WIDTH];
+int n,m;
+
+int main ()
+{
+  for (n=0;n&lt;HEIGHT;n++)
+    for (m=0;m&lt;WIDTH;m++)
+    {
+      jimmy[n * WIDTH + m]=(n+1)*(m+1);
+    }
+  return 0;
+}
+</PRE></TT>
+</TD></TR></TABLE>
+<P>
+none of the programs above produce any output on the screen, but both assign values to
+the memory block called <tt><b>jimmy</b></tt> in the following way:
+<blockquote><img src="imgarra7.gif"></blockquote>
+We have used defined constants (<tt><b>#define</b></tt>) to simplify possible future
+modifications of the program, for example, in case that we decided to enlarge the array
+to a height of <tt><b>4</b></tt> instead of <tt><b>3</b></tt> it would be enough by
+changing the line:
+<blockquote><tt>#define HEIGHT 3</tt></blockquote>
+by
+<blockquote><tt>#define HEIGHT 4</tt></blockquote>
+with no need to make any other modifications to the program.
+<p>
+
+<h2>Arrays as parameters</h2>
+At some moment we may need to pass an array to a function as a parameter. In C++ is not
+possible to pass by value a complete block of memory as a parameter, even if it is ordered
+as an array, to a function, but it is allowed to pass its address, which has almost
+the same practical effect and is a much faster and more efficient operation.
+<p>
+In order to admit arrays as parameters the only thing that we must do when declaring
+the function is to specify in the argument the base <tt><b>type</b></tt> for the array
+that it contains, an identifier and a pair of void brackets <tt><b>[]</b></tt>. For example,
+the following function:
+
+<blockquote><tt>void procedure (int arg[])</tt><br></blockquote>
+
+admits a parameter of type "Array of <tt><b>int</b></tt>" called <tt><b>arg</b></tt>.
+In order to pass to this function an array declared as:<br>
+<blockquote><tt>int myarray [40];</tt><br></blockquote>
+it would be enough with a call like this:<br>
+<blockquote><tt>procedure (myarray);</tt><br></blockquote>
+<p>
+Here you have a complete example:
+<P><CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// arrays as parameters</I>
+#include &lt;iostream.h&gt;
+
+void printarray (int arg[], int length) {
+  for (int n=0; n&lt;length; n++)
+    cout &lt;&lt; arg[n] &lt;&lt; " ";
+  cout &lt;&lt; "\n";
+}
+
+int main ()
+{
+  int firstarray[] = {5, 10, 15};
+  int secondarray[] = {2, 4, 6, 8, 10};
+  printarray (firstarray,3);
+  printarray (secondarray,5);
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<B><TT>5 10 15<BR>2 4 6 8 10</TT></B>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+As you can see, the first argument (<tt><b>int arg[]</b></tt>) admits any array of type
+<tt><b>int</b></tt>, wathever its length is, for that reason we have included
+a second parameter that says to the function the length of each array that we
+pass to it as the first parameter so that the <tt><b>for</b></tt> loop that
+prints out the array can know the range to check in the passed array.
+
+<p>
+In a function declaration is also possible to include multidimensional arrays.
+Its format for a <U>tri</U>dimensional one is:<br>
+<blockquote>
+<tt><i>base_type</i><b>[][</b><i>depth</i><b>][</b><i>depth</i><b>]</b></tt><br>
+</blockquote>
+for example, a function with a multidimensional array as argument could be:
+<blockquote><tt>
+void procedure (int myarray[][3][4])
+</tt></blockquote>
+notice that the first brackets <tt>[]</tt> are void and the following ones not.
+This must always be thus because the compiler must be able to determine within
+the function which is the depth of each additional dimension.
+<p>
+Arrays, both simple or multidimensional, passed as function parameters are a quite common
+source of errors for less experienced programmers. I recommend the reading of chapter
+<b>3.3, Pointers</b> for a better understanding of how <i>arrays</i> operate.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut2-2.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>2-3. Functions (II).</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut3-2.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>3-2. Strings of characters.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

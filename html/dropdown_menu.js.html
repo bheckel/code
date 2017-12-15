@@ -1,0 +1,92 @@
+<html>
+<!-- NEEDS SOME WORK -->
+<!-- DHTML tutorial for dropdown menus. -->
+<!-- Adapted: Fri 30 Mar 2001 16:56:59 (Bob Heckel -->
+<!-- http://hotwired.lycos.com/webmonkey/98/10/index3a_page4.html?tw=authoring) -->
+<head>
+  <script>
+    // Netscape.
+    if ( document.layers ) {
+      visible = 'show';
+      hidden = 'hide';
+    // IE.
+    } else if ( document.all ) {
+      visible = 'visible';
+      hidden = 'hidden';
+    }
+
+    function barTog(menu) {
+      if ( document.layers ) {
+        daMenu = document.layers[menu];
+      } else if ( document.all ) {
+        daMenu = document.all(menu).style;
+      }
+
+      if ( daMenu.visibility == visible ) {
+        daMenu.visibility = hidden;
+      } else {
+        daMenu.visibility = visible;
+      }
+      lastMenu = daMenu;
+    }
+
+    var lastItem = 'tim';
+
+    function menuItem(item) {
+      if ( document.layers ) {
+        daLast = document.layers[lastItem];
+        daItem = document.layers[item];
+      } else if ( document.all ) {
+        daLast = document.all(lastItem).style;
+        daItem = document.all(item).style;
+      }
+        daLast.visibility = hidden;
+        daItem.visibility = visible;
+        lastMenu.visibility = hidden;
+        lastItem = item;
+    }
+
+  </script>
+</head>
+<body>
+  <style type="text/css"> 
+    #menuBar { position: absolute; 
+               left: 7; 
+               top: 3; 
+               width: 70%; 
+               height: 22px; 
+               border: 2px solid #cccccc; 
+               background-color: #99ffff; 
+               layer-background-color: #00ffff;
+             }
+
+    .daMenu { position: relative;
+              top 0px;
+              width: 100px;
+              height: 22px;
+              border: 2px solid #00ef00;
+            }
+
+    .daOtherMenu { position: relative;
+                   left: 2; 
+                   width: 100px;
+                   border: 2px solid #f0ef00;
+                   layer-background-color: #ff0000;
+                   visibility: hidden;
+                 }
+  </style> 
+
+  <div id="menuBar"></div>
+  <!-- <div id="webmonkey" class="daMenu"> Webmonkey </div>  -->
+  <div id="webmonkey" class="daMenu">
+    <a href="#" class="itemAnchor" 
+     onclick="javascript: barTog('more_webmonkey');return false;">Webmonkey</a>
+  </div>
+  <div id="more_webmonkey" class="daOtherMenu">One<br>Two<br>Three<br>
+    <a href="#" class="itemAnchor" onclick="menuItem('tim');return false">Tim</a><br>
+    <a href="#" class="itemAnchor" onclick="menuItem('jeanPierre');return false">jeanPierre</a><br>
+  </div>
+  <div id="tim" class="monkey"><img src="tim01.gif"></div>
+  <div id="jeanPierre" class="monkey"><img src="jeanPierre.gif"></div>
+</body>
+</html>

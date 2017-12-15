@@ -1,0 +1,99 @@
+//BQH0CMBM JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=5,CLASS=V,REGION=0M
+//STEP1    EXEC SAS,OPTIONS='MSGCASE,MEMSIZE=0'
+//WORK     DD SPACE=(CYL,(450,450),,,ROUND)
+//IN       DD DSN=BQH0.BF19.DATASET,DISP=SHR
+//SYSIN    DD *
+
+options NOsource;
+ /**********************************************************************
+ * Name: COMBALLM        (Bob Heckel bqh0)              2003-06-10
+ *
+ * Generates a mortality dataset containing combined data from the most
+ * recent merge files in BF19.
+ *
+ * This dataset is used by the NCHS SAS IntrNet application for
+ * 'allstate' user queries.
+ *
+ * It is assumed that this code will be run once as part of the data
+ * year end process (as a closed year closes) and each night via JobTrac
+ * for open years.
+ *
+ * This code should be copied as BQH0CMBM for JobTrac purposes.
+ *
+ * Code must be manually updated each year at the data-yearend close
+ * to change the BYR and EYRs.
+ *
+ * Update Log:
+ * 
+ **********************************************************************/
+options source linesize=80 notes mprint mlogic symbolgen;
+
+%global BYR EYR MERGETYPE RPT;
+ /***** User configuration start *****/
+%let BYR=2002;
+ /* Max span (EYR-BYR) is 1 year for now. */
+%let EYR=2003;
+%let MERGETYPE=MORMER;
+%let RPT=0;
+ /***** User configuration end *****/
+
+%include 'BQH0.PGM.LIB(LATESHRT)';
+
+%let YRA=%substr(&BYR, 3, 2);
+%let YRB=%substr(&EYR, 3, 2);
+
+libname INTRNET 'DWJ2.INTRNLIB' DISP=OLD WAIT=30;
+
+%macro CreateDS;
+  /* Multiple year requested. */
+  %if &BYR ne &EYR %then
+    %do;
+      data work.tmpyr&YRA work.tmpyr&YRB;
+        set work.allyears;
+        if yr eq &YRA then 
+          output work.tmpyr&YRA;
+        if yr eq &YRB then 
+          output work.tmpyr&YRB;
+      run;
+    %end;
+  %else
+    /* Single year requested.  Arbitrarily choose YRA for naming purposes. */
+    %do;
+      data work.tmpyr&YRA;
+        set work.allyears;
+      run;
+    %end;
+
+    /* Concatenate all final mortality merge files into a dataset. */
+    %local i;
+    %do i=&YRA %to &YRB;
+      data _NULL_;
+        call symput('j', put(&i, Z2.));
+      run;
+      data INTRNET.allm&j;
+        set work.tmpyr&j;
+        /* Get new input filename each time variable fn (on work.allyears)
+         * changes. 
+         */
+        infile TMPIN FILEVAR=fn TRUNCOVER END=done;
+       
+        do while ( not done );
+          /* Read all input records from the currently opened input file. */
+          input @5 certno $char6.  @47 alias 1.  @48 sex $1.
+                @49 dmonth $char2.  @51 dday $char2.  @64 ageunit $char1.
+                @65 age $char2.  @67 bmonth $char2.  @69 bday $char2.
+                @74 stbirth $2.  @76 typlac $1.  @77 stocc $char2.
+                @82 marstat $1.  @89 stres $char2.  @94 hisp $char1.
+                @95 race $1.  @96 educ $2.  @117 injury $char1.
+                @135 yr $4.  @135 dyear $char4.  @139 byear $char4.
+                ;
+          output;
+        end;
+      run;
+    %end;
+%mend CreateDS;
+%CreateDS
+
+
+
+   /* vim: set tw=72 ft=sas ff=unix: */

@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+<head>
+	<title>Datapost Dynamic Graph</title>
+	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="t2.css" media="screen" />
+
+  <script language="javascript">
+    function addOption(selectbox,text,value ) {
+      var optn = document.createElement("OPTION");
+      optn.text = text;
+      optn.value = value;
+      selectbox.options.add(optn);
+    }
+
+    function addOption_list() {
+      var meth = new Array("Assay","Dissolution","Moisture");
+
+      for ( var i=0; i<meth.length;++i ) {
+        addOption(document.the_form.the_select, meth[i], meth[i]);
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="header">
+    <h1>Datapost Dynamic Graph</h1>
+  </div>
+  <div class="colmask threecol">
+    <div class="colmid">
+      <div class="colleft">
+        <div class="col1">
+          <!-- Column 1 start -->
+          <h3>Graph Criteria:</h3>
+          <dl>
+            <form action="http://rtpsawn321/sasweb/cgi-bin/broker.exe" method="GET" name="the_form">
+              <input type="hidden" name="_debug" value="131">
+              <input type="hidden" name="_service" value="default">
+              <input type="hidden" name="_program" value="dpdemo.t.sas">
+              <input type="hidden" name="the_type" value="42">
+
+              <p>Select Product</p>
+              <select name="cbofilename" id="cbofilename" style="width:300px;" onChange="addOption_list()";>
+                <option selected="selected" value=""></option>
+                <option value="\data\GSK\Zebulon\MDPI\AdvairDiskus">OLS_0016T_AdvairDiskus</option>
+                <option value="\data\GSK\Zebulon\MDI\AdvairHFA">OLS_0004T_AdvairHFA</option>
+                <option value="\data\GSK\Zebulon\MDI\Albuterol">OLS_0014T_Albuterol</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Avandamet">OLS_0023T_Avandamet</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Avandaryl">OLS_0024T_Avandaryl</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Bupropion">OLS_0002T_Bupropion</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Ezogabine">OLS_0013T_Ezogabine</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Lamictal">OLS_0006T_Lamictal</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Lotronex">OLS_0009T_Lotronex</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Lovaza">OLS_0007T_Lovaza</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Methylcellulose">OLS_0011T_Methylcellulose</option>
+                <option value="\data\GSK\Zebulon\SolidDose\RatioLamotrigine">OLS_0027T_Ratio_Lamotrigine</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Retigabine">OLS_0012T_Retigabine</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Retrovir">OLS_0020T_Retrovir</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Rosiglitazone">OLS_0025T_Rosiglitazone</option>
+                <option value="\data\GSK\Zebulon\MDPI\SereventDiskus">OLS_0017T_SereventDiskus</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Trizivir">OLS_0021T_Trizivir</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Valtrex">OLS_0018T_Valtrex</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Wellbutrin">OLS_0003T_Wellbutrin</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Zantac">OLS_0022T_Zantac</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Zofran">OLS_0008T_Zofran</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Zovirax">OLS_0010T_Zovirax</option>
+                <option value="\data\GSK\Zebulon\SolidDose\Zyban">OLS_0005T_Zyban</option>
+              </select>     
+
+              <p>Select Method</p>
+              <select name="the_select" style="width:300px;">
+                <option selected="selected" value=""></option>
+              </select>     
+
+              <p>
+              <p>Select Date Range</p>
+              <input type="radio" name="type" value="3mo" disabled>3 months
+              <input type="radio" name="type" value="6mo" disabled>6 months
+              <input type="radio" name="type" value="9mo" checked>9 months
+              <input type="radio" name="type" value="12mo" disabled>12 months
+              </p>
+
+              <p><input name="the_submit" type="submit" value="create graph"></p>
+            </form>
+          </dl>
+          <!-- Column 1 end -->
+        </div>
+        <div class="col2">
+          <!-- Column 2 start -->
+          <h2>col2</h2>
+          <!-- Column 2 end -->
+        </div>
+        <div class="col3">
+          <!-- Column 3 start -->
+          <div id="ads">
+          </div>
+          <h2>col3</h2>
+          <h3>h3</h3>
+          <ul>
+            <li>li</li>
+            <li>li</li>
+          </ul>
+          <!-- Column 3 end -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+</body>
+</html>

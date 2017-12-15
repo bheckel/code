@@ -1,0 +1,22 @@
+<!-- Created: Wed 30 May 2001 14:26:24 (Bob Heckel) -->
+<!-- Modified: Thu 10 Jun 2004 15:30:04 (Bob Heckel) -->
+
+<SCRIPT LANGUAGE="JavaScript">
+  // Dummy page from which to test Back button.
+  function pagegen() {
+    document.write('<BODY BGCOLOR="cccccc">foo page ');
+    document.write('<INPUT NAME="thesubmit2" TYPE="submit" VALUE="Go Back" ' +
+                   'onClick="history.go(-1)">');
+  }
+</SCRIPT>
+
+<FORM ACTION=" " METHOD="POST" NAME="theform">
+  <INPUT NAME="thesubmit1" TYPE="submit" onClick="pagegen()">
+</FORM>
+
+
+<!-- or probably best: -->
+<INPUT TYPE="button" VALUE="<Back" onClick="history.go(-1)">
+
+<!-- or, buttonless text -->
+<A HREF=# onClick='history.go(-1) ;'>Go Back</A>

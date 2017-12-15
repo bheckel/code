@@ -1,0 +1,56 @@
+See also: parent.bas
+
+Understanding Object Parents
+
+When working in VBA, it's important to understand the object model for the
+application you're using. More specifically, a good knowledge of how various
+objects relate to each other can often simplify your coding.  Excel's object
+model is a hierarchy - objects are contained in other objects. At the top of
+the hierarchy is the application objects (Excel itself). Excel contains other
+objects, and these objects contain other objects, and so on. The following
+depicts how a Range objects fits into this scheme. 
+
+Application Object (Excel)
+    Workbook Object
+        Worksheet Object
+            Range Object
+
+In the lingo of object-oriented programming, a Range object's parent is the
+Worksheet object that contains it. A Worksheet object's parent is the Workbook
+that contains the worksheet. And, a Workbook object's parent is the Application
+object. 
+
+
+The SheetName Function
+
+How can this information be put to use? Examine the VBA function below. This
+function, which can be used in a worksheet formula, accepts a single argument
+(a range) and returns the name of the worksheet that contains the range. It
+uses the Parent property of the Range object. The Parent property returns an
+object -- the object that contains the range object. 
+
+Function SheetName(ref) As String
+    SheetName = ref.Parent.Name
+End Function
+
+
+The WorkbookName Function
+
+The next function, WorkbookName, returns the name of the workbook. Notice that
+is uses the Parent property twice - the first Parent property returns a
+Worksheet object; the second Parent property returns a Workbook object. 
+
+Function WorkbookName(ref) As String
+    WorkbookName = ref.Parent.Parent.Name
+End Function
+
+
+The AppName Function
+
+The function below carries this to the next logical level, accessing the
+Parent property three times. This function returns the name of the Application
+object. 
+
+Function AppName(ref) As String
+ AppName = ref.Parent.Parent.Parent.Name
+End Function

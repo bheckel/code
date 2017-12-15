@@ -1,0 +1,43 @@
+<!-- Adapted: Mon 09 Apr 2001 12:46:56 (Bob Heckel) 
+     http://developer.netscape.com/docs/examples/javascript/rounding.html 
+  -->
+<html>
+<head>
+<title>Round off Long numbers</title>
+<script>
+  function roundOff(value, precision) {
+    value = "" + value    //convert value to string
+    precision = parseInt(precision);
+
+    var whole = "" + Math.round(value * Math.pow(10, precision));
+
+    var decPoint = whole.length - precision;
+
+    if ( decPoint != 0 ) {
+      result = whole.substring(0, decPoint);
+      result += ".";
+      result += whole.substring(decPoint, whole.length);
+    } else {
+      result = whole;
+    }
+
+    return result;
+  }
+</script>
+</head>
+
+<body>
+  <h3><center>Testing Rounding off Long floating point numbers</center></h3>
+  <form name=myForm><pre>
+    Enter a long number <input type=text name=text1
+                         value=5.199999999999999999 size=20>
+    Enter precision     <input type=text name=text2 value=2 size=2>
+    Result              <input type=text name=text3>
+    </pre>
+    <center>
+    <input type=button value=Calculate onClick="myForm.text3.value =
+                              roundOff(myForm.text1.value, myForm.text2.value)">
+    </center>
+  </form>
+</body>
+</html> 

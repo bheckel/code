@@ -1,0 +1,125 @@
+<html>
+<head>
+  <title>Time Manipulation Demo</title>
+  <!--
+    JavaScript by David Turley <dturley@pobox.com>
+    This JavaScript may be modified and used by anyone as long as this notice
+    remains intact. You may not sell or otherwise profit from this code without
+    my permission.
+
+    Adapted and added to on Tue Jun 08 1999 10:50:50 (Bob Heckel)
+  -->
+
+  <script language=JavaScript>
+    <!--
+    function makeArray() {
+         for (i = 0; i<makeArray.arguments.length; i++)
+             this[i] = makeArray.arguments[i];
+     }
+     
+    function getFullYear(d) {
+        var y = d.getYear();
+        if (y < 1000) {y += 1900};
+        return y;
+    }
+
+    function format_time(t) {
+       
+        var Hours = t.getHours();
+        var Minutes = t.getMinutes();
+        var Seconds = t.getSeconds();
+        var Day = t.getDay();
+        var Date = t.getDate();
+        var Month = t.getMonth();
+        var Year = getFullYear(t);
+        
+        var ampm = "AM";
+        if (Hours > 11) {ampm="PM";}
+        if (Hours > 12) {Hours -= 12;}
+            if (Hours == 0) {Hours = 12;}
+
+            if (Minutes < 10) {Minutes = "0"+Minutes;}
+            if (Seconds < 10) {Seconds = "0"+Seconds;}
+
+        timeString = "";
+        timeString += days[Day];
+        timeString += " ";
+        timeString += months[Month];
+        timeString += " ";
+        timeString += Date;
+        timeString += ", ";
+        timeString += Year;
+        timeString += " at ";
+        timeString += Hours;
+        timeString += ":";
+        timeString += Minutes;
+        timeString += ":";
+        timeString += Seconds;
+        timeString += " ";
+        timeString += ampm;
+        //timeString += " ";
+        //timeString += zone;
+       
+       return timeString;
+    }
+
+    //var zone = "EDT";
+    var days = new makeArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+    var months = new makeArray("January","February","March","April","May","June","July","August","September","October","November","December");
+
+    // -->
+  </script>
+</head>
+
+<body>
+  <H1 ALIGN="center">Date Formatting Demo</H1>
+  <script language=JavaScript>
+  <!--
+  //TODO make auto change ea. yr.
+  var nextyr = 1999;
+  specificdt = new Date(+nextyr, 4, 21);
+  // Her bday in seconds.
+  var bday = specificdt.getTime();
+  document.write("ERH bday in seconds since Jan1: "+bday+"<BR>");
+
+  d = new Date();
+  // Current seconds since '70.
+  var secstotoday = d.getTime();
+  document.write("Seconds since '70 epoch: "+secstotoday+"<br>");
+
+  var erh = bday - secstotoday;
+  // Elim milliseconds.
+  var erh = erh / 1000;
+  // Now have minutes.
+  var erh = erh / 60;
+  // Now have hours.
+  var erh = erh / 60;
+  // Now have days
+  var erh = erh / 24;
+  var erh = Math.round(erh);
+  document.write("Days since erh last bday: "+erh+"<br><br>");
+
+
+  m = new Date(document.lastModified);
+  var daynow = d.getDay();
+  document.write("The normal <I>document.lastModified</I> string: "+m+"<BR>");
+  document.write("The modification date after formatting: "+format_time(m)+"<P>");
+
+  document.write("Current time is : " +d+"<BR>");
+  document.write("Current time after formatting: "+format_time(d)+"<BR>");
+  document.write("time: "+x+"<BR>");
+  document.write("time: "+y+"<BR>");
+  document.write("xxxx: "+z+"<BR>");
+  document.write("time: "+erh+"<BR><br>");
+
+  document.write("daynow: "+daynow+"<BR>");
+
+  document.write("time: "+thisyr+"<BR>");
+  // -->
+  </script>
+
+  <HR>
+  <P><CENTER> <FORM><INPUT TYPE="BUTTON" VALUE="View Source" onClick= 'window.location = "view-source:" + window.location.href'></FORM></CENTER>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+
+This week's VBA Tip
+
+A quick macro to delete Excel rows
+
+Often, you'll want to delete entire rows in Excel spreadsheets if one or
+more key cells are blank. To accomplish this, create a loop that iterates
+through the Cells collection in the column or range you want to check for
+blank values. Then, use the Row property to delete the entire row. For
+example, if you want to delete rows that have empty cells in column D, use
+the following macro
+
+For Each cell In ActiveSheet.UsedRange.Columns(4).Cells
+     If IsEmpty(cell) Then
+          Rows(cell.Row).Delete
+     End If
+Next cell

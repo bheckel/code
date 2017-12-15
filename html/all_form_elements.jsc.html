@@ -1,0 +1,110 @@
+
+<!-- This example is from JavaScript: The Definitive Guide, 3rd Edition.   -->
+<!-- That book and this example were Written by David Flanagan.            -->
+<!-- They are Copyright (c) 1996, 1997, 1998 O'Reilly & Associates.        -->
+<!-- This example is provided WITHOUT WARRANTY either expressed or implied.-->
+<!-- You may study, use, modify, and distribute it for any purpose,        -->
+<!-- as long as this notice is retained.                                   -->
+<FORM NAME="everything">  <!-- A one-of-everything HTML form... -->
+ <TABLE BORDER CELLPADDING=5>   <!-- ...in a big HTML table. -->
+   <TR> <!-- XXX First row includes 2 tall cells on right side. -->
+     <TD>Username:<BR>[1]<INPUT TYPE=text NAME="username" SIZE=15></TD>
+     <TD>Password:<BR>[2]<INPUT TYPE=password NAME="password" SIZE=15></TD>
+     <TD ROWSPAN=4>Input Events[3]<BR>
+       <TEXTAREA NAME="textarea" ROWS=20 COLS=28></TEXTAREA></TD>
+     <TD ROWSPAN=4 ALIGN=center VALIGN=center>
+       [9]<INPUT TYPE=button NAME="clearbutton" VALUE="Clear"><BR>
+       [10]<INPUT TYPE=submit NAME="submitbutton" VALUE="Submit"><BR>
+       [11]<INPUT TYPE=reset NAME="resetbutton" VALUE="Reset"></TD></TR>
+   <!-- XXX End First row. -->
+   <TR> <!-- Filename: by itself on this row. -->
+     <TD COLSPAN=2>Filename: [4]<INPUT TYPE=file NAME="file" SIZE=15></TD></TR>
+   <TR>
+     <TD>My Computer Peripherals:<BR>
+       [5]<INPUT TYPE=checkbox NAME="peripherals" VALUE="modem">28.8K Modem<BR>
+       [5]<INPUT TYPE=checkbox NAME="peripherals" VALUE="printer">Printer<BR>
+       [5]<INPUT TYPE=checkbox NAME="peripherals" VALUE="tape">Tape Backup</TD>
+     <TD>My Web Browser:<BR>
+       [6]<INPUT TYPE=radio NAME="browser" VALUE="nn">Netscape Navigator<BR>
+       [6]<INPUT TYPE=radio NAME="browser" VALUE="ie">Internet Explorer<BR>
+       [6]<INPUT TYPE=radio NAME="browser" VALUE="other">Other</TD></TR>
+   <TR>
+     <TD>My Hobbies:[7]<BR>
+       <SELECT multiple NAME="hobbies" SIZE=4>
+         <OPTION VALUE="programming">Hacking JavaScript
+         <OPTION VALUE="surfing">Surfing the Web
+         <OPTION VALUE="caffeine">Drinking Coffee
+         <OPTION VALUE="annoying">Annoying my Friends
+       </SELECT></TD>
+     <!-- Dropdown. -->
+     <TD align=center valign=center>My Favorite Color:<BR>[8]
+       <SELECT NAME="color">
+         <OPTION VALUE="red">Red        <OPTION VALUE="green">Green
+         <OPTION VALUE="blue">Blue      <OPTION VALUE="white">White
+         <OPTION VALUE="violet">Violet  <OPTION VALUE="peach">Peach
+       </SELECT></TD></TR>
+ </TABLE>
+</FORM>
+
+<!-- Another table -the key to the one above. -->
+<DIV ALIGN=center>        
+  <TABLE BORDER=4 BGCOLOR=pink CELLSPACING=1 CELLPADDING=4>
+    <TR>
+      <TD ALIGN=center><B>Form Elements</B></TD>
+      <TD>[1] Text</TD>  <TD>[2] Password</TD>  <TD>[3] Textarea</TD>
+      <TD>[4] FileUpload</TD> <TD>[5] Checkbox</TD></TR>
+    <TR>
+      <TD>[6] Radio</TD>  <TD>[7] Select (list)</TD>
+      <TD>[8] Select (menu)</TD>  <TD>[9] Button</TD>
+      <TD>[10] Submit</TD>  <TD>[11] Reset</TD></TR>
+  </TABLE>
+</DIV>
+
+<SCRIPT LANGUAGE="JavaScript1.1">
+// This generic function appends details of an event to the big Textarea
+// element in the form above. It will be called from various event handlers.
+function report(element, event) {
+    var t = element.form.textarea;
+    var elmtname = element.name;
+    if ((element.type == "select-one") || (element.type == "select-multiple")){
+        value = " ";
+        for(var i = 0; i < element.options.length; i++)
+            if (element.options[i].selected) 
+                value += element.options[i].value + " ";
+    }
+    else if (element.type == "textarea") value = "...";
+    else value = element.value;
+    var msg = event + ": " + elmtname + ' (' + value + ')\n';
+    t.value = t.value + msg;
+}
+
+// This function adds a bunch of event handlers to every element in a form.
+// It doesnt bother checking to see if the element supports the event handler,
+// it just adds them all. Note that the event handlers call report() above.
+function addhandlers(f) {
+    var click_handler = new Function("report(this, 'Click')");
+    var change_handler = new Function("report(this, 'Change')");
+    var focus_handler = new Function("report(this, 'Focus')");
+    var blur_handler = new Function("report(this, 'Blur')");
+    var select_handler = new Function("report(this, 'Select')");
+        
+    for(var i = 0; i < f.elements.length; i++) {
+        var e = f.elements[i];
+        e.onclick = click_handler;
+        e.onchange = change_handler;
+        e.onfocus = focus_handler;
+        e.onblur = blur_handler;
+        e.onselect = select_handler;
+    }
+
+    // Special case handlers for the buttons:
+    f.clearbutton.onclick = 
+        new Function("this.form.textarea.value=''; report(this, 'Click');");
+    f.submitbutton.onclick = 
+        new Function("report(this, 'Click'); return false");
+    f.resetbutton.onclick = 
+        new Function("this.form.reset(); report(this, 'Click'); return false");
+}
+// Activate our form by adding all possible event handlers!
+addhandlers(document.everything);
+</SCRIPT>

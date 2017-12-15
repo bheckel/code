@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+  <TITLE>Testing cookies</TITLE>
+  <META NAME="author" CONTENT="Robert S. Heckel Jr.">
+  <SCRIPT LANGUAGE="JavaScript">
+    function init() {
+      document.cookie = "keybobh=testingcookie";
+      document.write("cookie written");
+
+      var allcookies = document.cookie;
+      var pos = allcookies.indexOf("keybobh=");
+
+      if ( pos != -1 ) {
+        var start = pos + 8;
+        var end = allcookies.indexOf(";", start);
+        if ( end == -1 ) end = allcookies.length;
+        var value = allcookies.substring(start, end);
+      }
+      alert(value);
+    }
+  </SCRIPT>
+</HEAD>
+
+<BODY ONLOAD="init()">
+</BODY>
+</HTML>

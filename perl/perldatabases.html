@@ -1,0 +1,256 @@
+<HTML>
+<HEAD>
+<TITLE>Perl and SQL Databases</TITLE>
+<!-- this is the description that will be placed on the cover -->
+<META NAME="description" CONTENT="Perl and SQL Databases">
+<!-- keywords should be entered so the file can be searchable -->
+<META NAME="keywords" CONTENT="Perl and SQL Databases CGI tutorial">
+<!-- don't worry about filling the rest of these out, I can get to them -->
+<META NAME="author" CONTENT="Brent Michalski">
+<META NAME="date" CONTENT="">
+<META NAME="editor" CONTENT="ct,sc">
+<META NAME="channel" CONTENT="programming">
+<META NAME="class" CONTENT="tutorial">
+<META NAME="type" CONTENT="Perl Workshop">
+<META NAME="topic" CONTENT="">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" LINK="#006699" VLINK="#99CC00" ALINK="#000000" TEXT="#000000">
+<H2>Perl and SQL Databases</H2>
+<!::field::id-author::before=by+::>
+<BR>
+<!::field::date::>
+<P>
+<P CLASS="intro">
+
+<!-- intro paragraph goes here -->
+I've been getting a lot of e-mail asking things like: "Brent, your simple database is great, can it handle a file with over a million entries?"  The answer to that question is simple, NO, don't do it! Flat-file text "databases" are nice for smaller projects, but what if you have a large database or want to maintain complex data structures?  Perl is <I>very</I> flexible and can be easily connected to just about any SQL database.
+</P>
+
+<!-- start article here -->
+
+<!-- sample subhead -->
+
+<H3 CLASS="subhead"> Perl and SQL Intro </H3>
+<P>
+In this article, I am not going to have any "live" examples.  I'll be talking about Perl and SQL databases, where you can get a SQL database, where to get the drivers needed for Perl to talk to the database and show you a few code snippets to get you going.
+
+<P>
+This article, and subsequent ones, will focus on the Perl/CGI aspect of databases.  Many of the techniques apply equally to non-CGI programs, but since my true "calling" is the web, the web is what I write about.
+</P>
+
+<P>
+Although I like my "simple" database program and what it can do, once you get the basics of using Perl with SQL databases, you may find that it is easier to use the SQL databases for all projects!  
+</P>
+
+<P>On a performance note, since regular CGI programs start a new process each time the program is accessed, they are not necessarily ideal for high traffic sites. The good news is that there are programs out there, like <A HREF="http://www.apache.org/perl/">mod_perl</A> or <A HREF="http://www.velocigen.com/velocigen/v1_1.vet">VelociGen</A>, that plug directly into the web server and speed everything up dramatically because they keep Perl running rather than start it each time it is needed.
+</P>
+
+<P>
+There are so many different databases and system configurations, it would not be possible to teach you how to install a database.  Most come with good documentation, make sure you follow along exactly with any installation instructions.  I had to re-install my SQL server because I forgot a step during installation, don't let this happen to you!
+</P>
+
+<H3 CLASS="subhead"> SQL Databases </H3>
+<P>
+SQL databases can be very gigantic, expensive entities or they can be smaller and more manageable.  You don't have to spend thousands to get the performance you need.  I've used Perl to connect to databases on both NT and Unix systems and it works great.  Actually, once you have it set up and working, I think it is easier to work with the SQL databases than my "simple" one.  Plus, creating new tables and queries is much easier if you know a little SQL.
+</P>
+
+<P>
+Here are some links to SQL databases.  By no means is this list complete, but should be a good starting point for you.
+<P>
+<UL>
+ <LI><A HREF="http://looking-glass.usask.ca/postgresql/">PostgreSQL</A> (Free)
+ <LI><A HREF="http://www.mysql.com">MySQL</A> (Free, depending on use.  See Reg. info)
+ <LI><A HREF="http://www.oracle.com">Oracle</A>
+ <LI><A HREF="http://www.microsoft.com">Microsoft SQL Server</A>
+</UL>
+</P>
+<P>
+You need to acquire, install, and configure the database before you will be able to access it with Perl.  I currently use MySQL on a Linux system and have had great success with it.
+</P>
+
+<H3 CLASS="subhead"> The Drivers </H3>
+<P>
+Once you have your database installed and working, you need to get the proper drivers/modules so that Perl will be able to talk to the database.  Normally there are two things you'll need, the <B>DBD</B> DataBase Driver module and a <B>DBI</B> DataBase Interface for the DBD.
+</P>
+<P>
+The most comprehensive place for getting these files is at the <A HREF="http://www.hermetica.com/technologia/DBI/">DBI Home Page</A>.  You will also find code samples and documentation.  Almost everything I've learned thus far about Perl and SQL databases was obtained from these pages, use them well!
+</P>
+
+<P>
+If you are on a Windows system, make sure that you have downloaded and installed the latest version of Perl from <A HREF="http://www.activestate.com/activeperl">ActiveState</A>.  Then, you can use the <A HREF="http://www.activestate.com/ActivePerl/docs/description.html#perl_package_manager">Perl Package Manager (PPM)</A> to load the modules needed for database connectivity.  The PPM is an <I>extremely</I> valuable resource for Windows Perl users, it downloads and installs modules for you!
+</P>
+
+<H3 CLASS="subhead"> Getting Started </H3>
+<P>
+Ok, once you have the database installed and the DBI/DBD drivers loaded - you can read past this point.  I am going to provide you with a few snippets of Perl code that I use all the time for calling SQL databases.  Play with these snippets to test your installation, then use them to build more powerful applications.
+</P>
+
+<H3 CLASS="subhead"> Snippets </H3>
+<P>
+
+<PRE><FONT SIZE=-1>(Snippet 1)</FONT>
+##########################################
+## Create a connection to the database. ##
+##########################################
+<FONT COLOR="#0000FF">1: </FONT>sub Create_DB_Connection{
+<FONT COLOR="#0000FF">2: </FONT>  use DBI;
+<FONT COLOR="#0000FF">3: </FONT>  $DSN  = "DBI:mysql:mydatabase";
+<FONT COLOR="#0000FF">4: </FONT>  $user = "dbuser";
+<FONT COLOR="#0000FF">5: </FONT>  $pw   = "dbpass";
+<FONT COLOR="#0000FF">6: </FONT>  $dbh  = DBI-&gt;connect($DSN,$user,$pw)
+<FONT COLOR="#0000FF">7: </FONT>    || die "Cannot connect: $DBI::errstr\n" unless $dbh;
+<FONT COLOR="#0000FF">8: </FONT>  return;
+<FONT COLOR="#0000FF">9: </FONT>} # End of Create_DB_Connection subroutine.
+##########################################
+</PRE>
+</P>
+
+<P>
+<B>Line 1:</B> Begins the subroutine.  This subroutine creates a connection to a database.
+
+<P>
+<B>Line 2:</B> Tells Perl to use the DBI module.  If things are not installed properly, you'll probably get an error at this point.
+
+<P>
+<B>Line 3:</B> Sets the variable <B>$DSN</B> to <CODE>DBI:mysql:mydatabase</CODE>  The "DSN" stands for <B>D</B>ata <B>S</B>ource <B>N</B>ame.
+
+<P>
+<B>Lines 4-5:</B> Set variables for username and password.  These are the username and password that will be used to access the database and are not necessarily the <I>system</I> username and password.
+
+<P>
+<B>Note:</B> Lines 3-5 can be set in your call to the subroutine.  You could set the variables to the values passed in <B>@_[0], @_[1],</B> and <B>@_[2]</B> respectively.  Remember that when you call a subroutine like so: <P>
+<CODE>&Create_DB_Connection("DBI:mysql:mydatabase","dbuser","dbpass");</CODE>
+<P>
+The values passed are stored in the array called <B>@_</B>.
+
+<P>
+<B>Line 6:</B> Calls the connect method in the DBI module and passes it the values of the variables we just created.  The results of this are stored in the <B>$dbh</B> variable.  This variable stands for <B>D</B>ata<B>B</B>ase <B>H</B>andle because it is how we access the database.
+
+<P>
+<B>Line 7:</B> This line is actually a continuation of line 6.  It generates an error message telling you that it was unsuccessful if there was a problem connecting to the database.  Many times the errors will be because the database name was misspelled or the user you are trying to connect as does not have sufficient rights.
+
+<P>
+<B>Line 8:</B> This line simply returns us back to the program.
+
+<P>
+<B>Line 9:</B> Ends the subroutine.
+<P>
+
+<PRE><FONT SIZE=-1>(Snippet 2)</FONT>
+##########################################
+## Executes the SQL command and then    ##
+## returns to the calling area of the   ##
+## program.                             ##
+##########################################
+<FONT COLOR="#0000FF">1: </FONT>sub Do_SQL{
+<FONT COLOR="#0000FF">2: </FONT>  eval{
+<FONT COLOR="#0000FF">3: </FONT>    $sth = $dbh-&gt;prepare($SQL);
+<FONT COLOR="#0000FF">4: </FONT>  }; # End of eval
+
+<FONT COLOR="#0000FF">5: </FONT>  # Check for errors.
+<FONT COLOR="#0000FF">6: </FONT>  if($@){
+<FONT COLOR="#0000FF">7: </FONT>    $dbh-&gt;disconnect;
+<FONT COLOR="#0000FF">8: </FONT>    print "Content-type: text/html\n\n";
+<FONT COLOR="#0000FF">9: </FONT>    print "An ERROR occurred! $@\n&lt;P&gt;";
+<FONT COLOR="#0000FF">10: </FONT>    exit;
+<FONT COLOR="#0000FF">11: </FONT>  } else {
+<FONT COLOR="#0000FF">12: </FONT>    $sth-&gt;execute;
+<FONT COLOR="#0000FF">13: </FONT>  } # End of if..else
+<FONT COLOR="#0000FF">14: </FONT>  return ($sth);
+<FONT COLOR="#0000FF">15: </FONT>} # End of Do_SQL subroutine
+##########################################
+</PRE>
+<P>
+<B>Line 1:</B> This line begins our next snippet.  This snippet is called <B>Do_SQL</B>.  Do_SQL takes a SQL statement stored in the variable <B>$SQL</B> and tries to execute it.
+
+<P>
+<B>Line 2:</B> Begins an <B><I>eval</I></B> block.  In Perl, whatever is in an <I>eval</I> block is treated like a separate Perl program.  Any errors generated in an <I>eval</I> block are passed to the <B>$@</B> variable. If there are no errors, <B>$@</B> will be not contain any value.
+
+<P>
+<B>Line 3:</B> Calls the <I>prepare</I> function of our database.  We call the database functions via the <I>statement handle</I>.  Prepare basically checks the SQL to make sure there are no errors in it.
+
+<P>
+<B>Line 4:</B> Ends the <I>eval</I> block.
+
+<P>
+<B>Line 5:</B> A Perl comment.
+
+<P>
+<B>Line 6:</B> Checks to see if there is anything in <B>$@</B>.  If there is, then we had an error and need to do something about it.
+
+<P>
+<B>Line 7:</B> Disconnects us from the database.  Whenever you are connected to the database, by creating a <B>$dbh</B> database handle, you should <I>disconnect</I> from the database before you exit the program.  This helps prevent open, unused database connections and possible errors.
+
+<P>
+<B>Line 8:</B> Prints the standard HTML header.  We need to print some text to the user and since we are programming a CGI application, we must tell the server what type of data we are sending.
+
+<P>
+<B>Line 9:</B> Prints an error message and also the contents of <B>$@</B> so that the user can see what error was generated.
+
+<P>
+<B>Line 10:</B> Exits the program.  We cannot go on because we are not connected to the database.
+
+<P>
+<B>Line 11:</B> Our <B><I>else</I></B> condition.  If there was no error, we should end up in this block.
+
+<P>
+<B>Line 12:</B> We use the <B><I>execute</I></B> method of the statement handle to actually execute the SQL statement in the database.
+
+<P>
+<B>Line 13:</B> Ends the <I>if..else</I> block.
+
+<P>
+<B>Line 14:</B> Returns the <B>$sth</B> (statement handle) so that we can do useful things with the data.
+
+<P>
+<B>Line 15:</B> Ends the subroutine.
+
+<P>
+
+<PRE><FONT SIZE=-1>(Snippet 3)</FONT>
+<FONT COLOR="#0000FF">1: </FONT>sub filter{
+<FONT COLOR="#0000FF">2: </FONT>  $_[0]=~s/\'/\\\'/g;
+<FONT COLOR="#0000FF">3: </FONT>  return $_[0];
+<FONT COLOR="#0000FF">4: </FONT>} # End of filter subroutine
+</PRE>
+
+<P>
+This snippet may be small, but I also find it very useful.  It takes any characters that may cause problems in your SQL statements and escapes the characters in question.  This snippet would need to be modified for your database since some characters cause errors in some databases and not others. 
+<P>
+To find out what characters cause errors, I normally run simple SQL statements through the database and use different characters each time to see which ones generate errors.  If I find one that generates an error, I add it to this subroutine.
+<P>
+This subroutine is called like this:
+<P>
+<CODE>$value_to_check = &filter($value_to_check);</CODE>
+
+<P>
+<B>Line 1:</B> Begins the subroutine.
+
+<P>
+<B>Line 2:</B> Takes the value passed to the subroutine and changes any <I>bad</I> characters by placing a backslash in front of them.  This <I>escapes</I> the characters so that the database can process them.
+
+<P>
+<B>Line 3:</B> Returns the value passed to the subroutine back to the calling variable.
+
+<P>
+<B>Line 4:</B> Ends the subroutine.
+
+</P>
+
+
+<H3 CLASS="subhead"> Wrapping It Up </H3>
+
+<P>
+Well, those are the snippets I use most often.  If you want to see a CGI program that actually does something, <A HREF="search.txt">here is some code</A> that I use.  Here are the <A HREF="common.txt">common subroutines</A> that I use too.
+<P>
+I am not going to go over each line of the search code yet.  We will be covering more of with SQL soon.  If you want some great documentation on the DBI/DBD modules, go to the <A HREF="http://mysql.turbolift.com/mysql/DBD_3.21.X.html">MySQL Perl DBI/DBD Manual</A>.  Although it is for MySQL, 95% if the information applies to other databases as well.
+<P>
+
+I hope I've provided you with enough snippets, code, and information to get you started down the read of Perl/SQL.  We'll be covering more about this soon!
+<P>
+<BR>
+Perl on!
+</BODY>
+
+</HTML>

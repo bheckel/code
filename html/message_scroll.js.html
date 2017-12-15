@@ -1,0 +1,242 @@
+<!-- http://www.onlamp.com/pub/a/onlamp/2007/07/05/writing-advanced-javascript.html?submit=Show+Message -->
+<!-- Keep a message on screen even during user scrolling down page -->
+<HTML>
+<HEAD>
+<SCRIPT>
+  var ie = document.all;
+  var moz = document.getElementById && !document.all; 
+  var intr;
+
+  function Message_UpdatePos(msg, dy) {
+      var el = document.getElementById(msg);
+      if (ie) {
+          el.style.pixelTop = document.body.scrollTop + dy;
+      }
+      else if (moz) {
+          el.style.top = window.pageYOffset + dy + 'px';
+      }
+  }
+
+  function Message_Display(msg, vis, dx, dy) {
+      // Retrieve a pointer to a tag
+      var el = document.getElementById(msg);
+
+      // Position Message
+      if (ie) {
+          el.style.pixelTop = document.body.scrollTop + dy;
+          el.style.pixelLeft = document.body.clientWidth - dx;
+      } else if (moz) {
+          el.style.top = window.pageYOffset + dy + 'px';
+          el.style.left = window.innerWidth - dx + 'px';
+      }
+
+      if (vis) {  // and display it
+          el.style.visibility = "visible";
+          // We must save the timer pointer in a global variable intr, since it
+          // must persist between several calls to Message_Display.
+          //
+          // Message_UpdatePos() essentially does the same thing as the
+          // beginning part of Message_Display--it gets a handle to the message
+          // and updates the y offset from the top of the page.
+          //
+          //       "sleep"
+          intr = setInterval("Message_UpdatePos('" + msg + "', " + dy + ")", 1);
+      }
+      else {  // or hide it
+          el.style.visibility = "hidden";
+          if (intr)
+              clearInterval(intr);
+      }
+  }
+</SCRIPT>
+</HEAD>
+<BODY>
+<!-- Both span and div tags are essentially "do nothing" tags, used to
+delineate blocks horizontally and vertically, respectively, in a document. They
+normally have no visible effect on a document, and so can be used to surround a
+block with a particular style without changing the overall appearance. -->
+<span id="testmsg" style="position: absolute;
+ visibility: hidden; background: red;">This is a test</span>
+
+<input type="button" value="Message On" 
+ onclick="Message_Display('testmsg', 1, 700, 50); return false;">
+<input type="button" value="Message Off" 
+ onclick="Message_Display('testmsg', 0, 700, 50); return false;">
+
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+dummy text to scroll thru<BR>
+</BODY>
+</HTML>

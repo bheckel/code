@@ -1,0 +1,988 @@
+.ContentTitle {font-family: ContentTitle}
+.ContentTitle
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #002288;
+  background-color: #B0B0B0;
+}
+.NoteContent {font-family: NoteContent}
+.NoteContent
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.FatalContent {font-family: FatalContent}
+.FatalContent
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.HeaderEmphasis {font-family: HeaderEmphasis}
+.HeaderEmphasis
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.Output {font-family: Output}
+.Output
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #F0F0F0;
+ border: 1px outset ;
+}
+.WarnContentFixed {font-family: WarnContentFixed}
+.WarnContentFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.Graph {font-family: Graph}
+.Graph
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+ border: 1px outset ;
+}
+.DataStrong {font-family: DataStrong}
+.DataStrong
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #000000;
+  background-color: #D3D3D3;
+}
+.Document {font-family: Document}
+.Document
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.BeforeCaption {font-family: BeforeCaption}
+.BeforeCaption
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #000000;
+  background-color: #E0E0E0;
+}
+.ContentsDate {font-family: ContentsDate}
+.ContentsDate
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+  width: 100%;
+}
+.Pages {font-family: Pages}
+.Pages
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+  margin-left: 8px;
+  margin-right: 8px;
+  list-style-type: decimal;
+}
+.TitlesAndFooters {font-family: TitlesAndFooters}
+.TitlesAndFooters
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: italic;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.NoteBanner {font-family: NoteBanner}
+.NoteBanner
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.IndexProcName {font-family: IndexProcName}
+.IndexProcName
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  list-style-type: decimal;
+}
+.ProcTitle {font-family: ProcTitle}
+.ProcTitle
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: italic;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.Data {font-family: Data}
+.Data
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #000000;
+  background-color: #D3D3D3;
+}
+.Table {font-family: Table}
+.Table
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #F0F0F0;
+ border: 1px outset ;
+}
+.IndexAction {font-family: IndexAction}
+.IndexAction
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.FooterEmpty {font-family: FooterEmpty}
+.FooterEmpty
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.SysTitleAndFooterContainer {font-family: SysTitleAndFooterContainer}
+.SysTitleAndFooterContainer
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+ border: 0 outset ;
+  width: 100%;
+}
+.RowFooterEmpty {font-family: RowFooterEmpty}
+.RowFooterEmpty
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.RowFooterEmphasis {font-family: RowFooterEmphasis}
+.RowFooterEmphasis
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.FooterFixed {font-family: FooterFixed}
+.FooterFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.RowFooterStrongFixed {font-family: RowFooterStrongFixed}
+.RowFooterStrongFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.ExtendedPage {font-family: ExtendedPage}
+.ExtendedPage
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #002288;
+  background-color: #E0E0E0;
+ border: 1pt outset ;
+}
+.ContentFolder {font-family: ContentFolder}
+.ContentFolder
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  margin-left: 6pt;
+  list-style-type: NONE;
+}
+.Container {font-family: Container}
+.Container
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.Date {font-family: Date}
+.Date
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+  width: 100%;
+}
+.RowFooterFixed {font-family: RowFooterFixed}
+.RowFooterFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.Caption {font-family: Caption}
+.Caption
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #000000;
+  background-color: #E0E0E0;
+}
+.WarnBanner {font-family: WarnBanner}
+.WarnBanner
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.Frame {font-family: Frame}
+.Frame
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.HeaderStrongFixed {font-family: HeaderStrongFixed}
+.HeaderStrongFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.IndexTitle {font-family: IndexTitle}
+.IndexTitle
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #002288;
+  background-color: #B0B0B0;
+}
+.NoteContentFixed {font-family: NoteContentFixed}
+.NoteContentFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.DataEmphasisFixed {font-family: DataEmphasisFixed}
+.DataEmphasisFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #000000;
+  background-color: #D3D3D3;
+}
+.Note {font-family: Note}
+.Note
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.Byline {font-family: Byline}
+.Byline
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.FatalBanner {font-family: FatalBanner}
+.FatalBanner
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.ProcTitleFixed {font-family: ProcTitleFixed}
+.ProcTitleFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.ByContentFolder {font-family: ByContentFolder}
+.ByContentFolder
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  margin-left: 6pt;
+  list-style-type: NONE;
+}
+.PagesProcLabel {font-family: PagesProcLabel}
+.PagesProcLabel
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  list-style-type: decimal;
+}
+.RowFooterEmphasisFixed {font-family: RowFooterEmphasisFixed}
+.RowFooterEmphasisFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.RowHeaderFixed {font-family: RowHeaderFixed}
+.RowHeaderFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.WarnContent {font-family: WarnContent}
+.WarnContent
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.DataEmpty {font-family: DataEmpty}
+.DataEmpty
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #000000;
+  background-color: #D3D3D3;
+}
+.Cell {font-family: Cell}
+.Cell
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.Header {font-family: Header}
+.Header
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.PageNo {font-family: PageNo}
+.PageNo
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.ContentProcLabel {font-family: ContentProcLabel}
+.ContentProcLabel
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  list-style-type: decimal;
+}
+.HeaderFixed {font-family: HeaderFixed}
+.HeaderFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.PagesTitle {font-family: PagesTitle}
+.PagesTitle
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #002288;
+  background-color: #B0B0B0;
+}
+.RowHeaderEmpty {font-family: RowHeaderEmpty}
+.RowHeaderEmpty
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.PagesProcName {font-family: PagesProcName}
+.PagesProcName
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  list-style-type: decimal;
+}
+.Batch {font-family: Batch}
+.Batch
+{
+  font-family: SAS Monospace, Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #000000;
+  background-color: #D3D3D3;
+ border: 1px outset ;
+}
+.ContentItem {font-family: ContentItem}
+.ContentItem
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  margin-left: 6pt;
+  list-style-type: NONE;
+}
+.Body {font-family: Body}
+.Body
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.PagesDate {font-family: PagesDate}
+.PagesDate
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+  width: 100%;
+}
+.HeaderEmpty {font-family: HeaderEmpty}
+.HeaderEmpty
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.FooterStrong {font-family: FooterStrong}
+.FooterStrong
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.FooterEmphasis {font-family: FooterEmphasis}
+.FooterEmphasis
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.ErrorContent {font-family: ErrorContent}
+.ErrorContent
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.DataFixed {font-family: DataFixed}
+.DataFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #000000;
+  background-color: #D3D3D3;
+}
+.HeaderStrong {font-family: HeaderStrong}
+.HeaderStrong
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.RowFooter {font-family: RowFooter}
+.RowFooter
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.TitleAndNoteContainer {font-family: TitleAndNoteContainer}
+.TitleAndNoteContainer
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+ border: 0 outset ;
+  width: 100%;
+}
+.DataEmphasis {font-family: DataEmphasis}
+.DataEmphasis
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #000000;
+  background-color: #D3D3D3;
+}
+.IndexItem {font-family: IndexItem}
+.IndexItem
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  margin-left: 6pt;
+  list-style-type: NONE;
+}
+.FatalContentFixed {font-family: FatalContentFixed}
+.FatalContentFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.BylineContainer {font-family: BylineContainer}
+.BylineContainer
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+ border: 0 outset ;
+  width: 100%;
+}
+.FooterEmphasisFixed {font-family: FooterEmphasisFixed}
+.FooterEmphasisFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.RowFooterStrong {font-family: RowFooterStrong}
+.RowFooterStrong
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.UserText {font-family: UserText}
+.UserText
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.BodyDate {font-family: BodyDate}
+.BodyDate
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+  width: 100%;
+}
+.HeadersAndFooters {font-family: HeadersAndFooters}
+.HeadersAndFooters
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.RowHeaderEmphasisFixed {font-family: RowHeaderEmphasisFixed}
+.RowHeaderEmphasisFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.ErrorBanner {font-family: ErrorBanner}
+.ErrorBanner
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.ContentProcName {font-family: ContentProcName}
+.ContentProcName
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  list-style-type: decimal;
+}
+.RowHeaderStrong {font-family: RowHeaderStrong}
+.RowHeaderStrong
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.Contents {font-family: Contents}
+.Contents
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+  margin-left: 8px;
+  margin-right: 8px;
+  list-style-type: decimal;
+}
+.FooterStrongFixed {font-family: FooterStrongFixed}
+.FooterStrongFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.PagesItem {font-family: PagesItem}
+.PagesItem
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #B0B0B0;
+  margin-left: 6pt;
+  list-style-type: NONE;
+}
+.RowHeader {font-family: RowHeader}
+.RowHeader
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.RowHeaderStrongFixed {font-family: RowHeaderStrongFixed}
+.RowHeaderStrongFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.AfterCaption {font-family: AfterCaption}
+.AfterCaption
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #000000;
+  background-color: #E0E0E0;
+}
+.RowHeaderEmphasis {font-family: RowHeaderEmphasis}
+.RowHeaderEmphasis
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.DataStrongFixed {font-family: DataStrongFixed}
+.DataStrongFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #000000;
+  background-color: #D3D3D3;
+}
+.Footer {font-family: Footer}
+.Footer
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.FolderAction {font-family: FolderAction}
+.FolderAction
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.HeaderEmphasisFixed {font-family: HeaderEmphasisFixed}
+.HeaderEmphasisFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: italic;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}
+.SystemTitle {font-family: SystemTitle}
+.SystemTitle
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 15pt;
+  font-weight: bold;
+  font-style: italic;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.ErrorContentFixed {font-family: ErrorContentFixed}
+.ErrorContentFixed
+{
+  font-family: Courier;
+  font-size: 6pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.SystemFooter {font-family: SystemFooter}
+.SystemFooter
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 15pt;
+  font-weight: bold;
+  font-style: italic;
+  color: #002288;
+  background-color: #E0E0E0;
+}
+.Index {font-family: Index}
+.Index
+{
+  font-family: Arial, Helvetica, Helv;
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: normal;
+  color: #0033AA;
+  background-color: #B0B0B0;
+}

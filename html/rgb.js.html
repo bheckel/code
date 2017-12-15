@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+  <TITLE>Color Selector</TITLE>
+  <META NAME="Author" CONTENT="Bob Heckel">
+  <SCRIPT LANGUAGE="JavaScript">
+    function TellColor() {
+      var colorchosen = prompt("color?", 'ffffff');
+      document.write("<BODY BGCOLOR=" + colorchosen + ">");
+      document.write("<H1>" + colorchosen + "</H1>");
+      document.write('<FORM NAME="submitform">');
+      document.write('<INPUT TYPE="submit" NAME="nextone" VALUE="View Another Color">');
+      document.write("</FORM>");
+      submitform.nextone.focus();
+    }
+  </SCRIPT>
+</HEAD>
+
+<BODY onLoad="TellColor()">
+<!--  TODO Break out of infinite loop to allow going Back -->
+  RGB Color Selector
+</BODY>
+</HTML>
+

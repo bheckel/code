@@ -1,0 +1,95 @@
+***********************************************************************;
+* Program Name CKFIPS        Bob Heckel                04 APR 2003     ;
+*                                                                      ;
+* Detect if the current IN card file is a FIPS state.                  ;
+*                                                                      ;
+* Returns 'y' for is a FIPS state, 'n' for not a FIPS state.           ;
+*                                                                      ;
+* Update Log                                                           ;
+*                                                                      ;
+***********************************************************************;
+%include 'c:/cygwin/home/bqh0/code/sas/connect_setup.sas';
+signon cdcjes2;
+rsubmit;
+
+
+ /* DEBUG */
+***filename IN 'BF19.NCX0201.NATMER';
+***filename IN 'BF19.NCX0301.NATMER';
+***filename IN 'BF19.CAX0301.NATMER';
+filename IN 'BF19.MAX0304.NATMER';
+
+data _NULL_;                                                                    
+  length name $80;
+
+  /* y if this a FIPS revisor, n if not. */
+  %global ISFIPSSTATE;
+
+  /* Only want to test a single, hopefully representative, line.  OK if
+   * stoccnew is not available.
+   */
+  infile IN OBS=1 MISSOVER FILENAME=name;                                                                     
+
+  if index(name, 'NATMER') > 0 then
+    do;
+      input stoccold 16-17  yr 224-227  stoccnew $ 256-257;
+    end;
+  else if index(name, 'MORMER') > 0 then
+    do;
+      input stoccold 77-78  yr 135-138  stoccnew $ 143-144;
+    end;
+  else if index(name, 'FETMER') > 0 then
+    do;
+      input stoccold 10-11  yr 200-203  stoccnew $ 230-231;
+    end;
+                                                                                 
+  /* If data year is less than or equal to 2002 then it is 
+   * automatically not a FIPS state.
+   */
+  if yr le 2002 then                                                       
+    do;
+      isfipsstate = 'n';
+      call symput('ISFIPSSTATE', isfipsstate);
+      stop;
+    end;
+
+  /* If state is not using FIPS it will have numbers in the state 
+   * field. 
+   */
+  if stoccold ge 01 and stoccold le 99 then
+    do;
+      isfipsstate = 'n';
+      call symput('ISFIPSSTATE', isfipsstate);
+    end;
+
+  /* If state is using FIPS it will hold an alpha string like 
+   * 'AL' in stoccnew otherwise it will be blank.
+   */
+  if stoccnew eq "" then
+    do;
+      isfipsstate = 'n';
+      call symput('ISFIPSSTATE', isfipsstate);
+    end;
+  else
+    do;
+      isfipsstate = 'y';
+      call symput('ISFIPSSTATE', isfipsstate);
+    end;
+run;
+
+ /* DEBUG */
+%macro Which;
+  %if &ISFIPSSTATE eq y %then
+    %put !!! yes it is: &ISFIPSSTATE;
+  %else
+    %put !!! no it is not: &ISFIPSSTATE;
+%mend;
+%Which
+
+
+
+  /* vim: set tw=72 ft=sas ff=unix: */
+
+
+endrsubmit;
+signoff cdcjes2;

@@ -1,0 +1,79 @@
+INIT:
+CONTROL LABEL;
+USERID = SYMGET('SYSJOBID');
+RETURN;
+
+
+MAIN:
+IF USERID EQ _BLANK_ THEN
+  DO;
+    _MSG_ = 'PLEASE ENTER THE USERID';
+    CURSOR USERID;
+    RETURN;
+  END;
+
+USR = USERID||'ANNU';
+
+CONTROL ASIS;
+
+
+SUBMIT;
+//*  Programmer: bqh0
+//*
+//*  Program:  FCBLD\ANN
+//*
+//*  Description: Run quarterly TSA under MVS
+//*
+//*  Update Log:
+//*
+//*
+//&USR JOB (BF00,BX21),&USERID,MSGCLASS=K,TIME=20,CLASS=J,
+//  REGION=0M
+/*ROUTE    PRINT &PRT
+//PRINT    OUTPUT FORMDEF=A10111,PAGEDEF=V06683,CHARS=GT15,
+//         COPIES=1
+//*** DJDE DUPLEX=YES,END;
+//STEP1    EXEC SAS90,OPTIONS='MSGCASE,MEMSIZE=0,ALTLOG=OUTLOG',
+//         WTR1=A
+//SASLIST  DD  SYSOUT=A,OUTPUT=*.PRINT,
+//             RECFM=FBA,LRECL=165,BLKSIZE=165
+//WORK     DD SPACE=(CYL,(450,450),,,ROUND)
+//OUTLOG   DD DISP=OLD,DSN=DWJ2.FCAST.&USERID.TSA.LOG
+//SYSIN    DD *
+
+%GLOBAL YEAR EVT TMPF FIX ODS PRINTDEST;
+ /* &YR4 is an AF mvar, &YEAR is a SAS mvar used by included pgm. */
+%LET EVT = &EV;
+%LET STABBR = &S;
+%LET YEAR = &YR4;
+
+%LET TMPF = 'SASAF';    /* for premail */
+%LET FIX = NO;          /* for premail */
+%LET UPD=NO;            /* for premail */
+%LET PRINTDEST = &PRT;  /* for premail */
+
+%INCLUDE 'BQH0.PGM.LIB(TSAAAAAT)';
+
+ENDSUBMIT;
+
+
+RC=FILENAME('FILEREF','A','','PGM=INTRDR RECFM=FB LRECL=80
+            SYSOUT=A');
+RC=PREVIEW('FILE','FILEREF');
+RC=PREVIEW('CLEAR');
+RC=FILENAME('FILEREF','');
+RC=RC;
+RETURN;
+
+
+STOP:
+CALL EXECCMD('BYE;');
+RETURN;
+
+
+GOBACK:
+CALL EXECCMD('END;');
+RETURN;
+
+TERM:
+RETURN;

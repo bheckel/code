@@ -1,0 +1,208 @@
+<html>
+<head>
+<title>C++ Tutorial: 1.4, Communication through console.</title>
+<META NAME="description" CONTENT="Input and output in text programs using streams cin and cout">
+<META NAME="keywords" CONTENT="cin cout iostream">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 1.4 </FONT><BR>
+ <FONT SIZE=5><B> Communication through console. </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<p>
+The <i>console</i> is the basic interface of computers, normally it is the set composed by
+the keyboard and the screen. The keyboard is generally the standard <I>input</I> device and
+the screen the standard <I>output</I> device.
+<p>
+In the <i>iostream</i> C++ library, standard <i>input</i> and <i>output</i> operations
+for a program are supported by two data streams: <tt><b>cin</b></tt> for input and
+<tt><b>cout</b></tt> for output. Additionally, there have also been implemented
+<tt><b>cerr</b></tt> and <tt><b>clog</b></tt> - these are two output streams specially
+designed to show error messages. They can be redirected to the standard output
+or to a log file.
+<p>
+Therefore <tt><b>cout</b></tt> (the standard output stream) is normally directed to the
+screen and <tt><b>cin</b></tt> (the standard input stream) is normally assigned to the
+keyboard.
+<p>
+By handling these two streams you will be able to interact with the user in your programs
+since you will be able to show messages in the screen and to receive his/her input
+from the keyboard.
+<p>
+<h2>Output (<tt>cout</tt>)</h2>
+The <tt><b>cout</b></tt> stream is used in conjunction with the overloaded operator
+<tt>&lt;&lt;</tt> (a pair of <i>"less than"</I> signs).
+<blockquote><tt><pre>
+cout &lt;&lt; "Output sentence"; <FONT COLOR="green"><i>// prints Output sentence on screen</i></FONT>
+cout &lt;&lt; 120;               <FONT COLOR="green"><i>// prints number 120 on screen</i></FONT>
+cout &lt;&lt; x;                 <FONT COLOR="green"><i>// prints the content of variable x on screen</i></FONT>
+</pre></tt></blockquote>
+The <tt>&lt;&lt;</tt> operator is known as <I>insertion operator</I> since it inserts the
+data that follows it into the stream that precedes it. In the examples above
+it inserted the constant string <tt>Output sentence</tt>, the numerical constant
+<tt>120</tt> and the variable <tt>x</tt> into the output stream <tt><b>cout</b></tt>.
+Notice that the first of the two sentences goes enclosed between double quotes (<tt>"</tt>)
+because it is a string of characters.  Whenever we want to use constant strings of
+characters we must enclose them between double quotes (<tt>"</tt>) so that they can be
+clearly distinguished from variables. For example, these two sentences are very
+different:
+<blockquote><tt><pre>
+cout &lt;&lt; "Hello";      <FONT COLOR="green"><i>// prints Hello on screen</i></FONT>
+cout &lt;&lt; Hello;        <FONT COLOR="green"><i>// prints the content of Hello variable on screen</i></FONT>
+</pre></tt></blockquote>
+The <I>insertion</I> operator (<tt>&lt;&lt;</tt>) may be used more than once in a same
+sentence:
+<blockquote><tt><pre>
+cout &lt;&lt; "Hello, " &lt;&lt; "I am " &lt;&lt; "a C++ sentence";
+</pre></tt></blockquote>
+this last sentence would print the message <tt><B>Hello, I am a C++ sentence</B></tt>
+on the screen. The utility of repeating the insertion operator (<tt>&lt;&lt;</tt>)
+is demonstrated when we want to print out a combination of variables and constants
+or more than one variable:
+<blockquote><tt><pre>
+cout &lt;&lt; "Hello, I am " &lt;&lt; age &lt;&lt; " years old and my zipcode is " &lt;&lt; zipcode;
+</pre></tt></blockquote>
+If we supose that variable <tt>age</tt> contains the number <tt>24</tt> and the variable
+<tt>zipcode</tt> contains <tt>90064</tt> the output of the previous sentence would be:
+<blockquote><tt>
+Hello, I am 24 years old and my zipcode is 90064
+</tt></blockquote>
+It is important to notice that <tt><b>cout</b></tt> does not add a line break
+after its output unless we explicitly indicate it, therefore, the following sentences:
+<blockquote><tt>
+cout &lt;&lt; "This is a sentence.";<br>cout &lt;&lt; "This is another sentence.";
+</tt></blockquote>
+will be shown followed in screen:
+<blockquote><tt>
+This is a sentence.This is another sentence.
+</tt></blockquote>
+even if we have written them in two different calls to <tt><b>cout</b></tt>.
+So, in order to perform a line break on output we must explicitly order it
+inserting a new-line character, that in C++ can be written as <tt><b>\n</b></tt>:
+<blockquote><tt>
+cout &lt;&lt; "First sentence.\n ";<br>
+cout &lt;&lt; "Second sentence.\nThird sentence.";
+</tt></blockquote>
+produces the following output:
+<blockquote><tt>
+First sentence.<br>Second sentence.<br>Third sentence.
+</tt></blockquote>
+Additionally, to add a new-line, you may also use the <TT><B>endl</B></TT>
+manipulator.  For example:
+<blockquote><tt>
+cout &lt;&lt; "First sentence."  &lt;&lt; endl;<br>
+cout &lt;&lt; "Second sentence."  &lt;&lt; endl;
+</tt></blockquote>
+would print out:
+<blockquote><tt>
+First sentence.<br>Second sentence.
+</tt></blockquote>
+The <TT><B>endl</B></TT> manipulator has a special behavior when it is used with buffered streams: they
+are flushed. But anyway <TT><B>cout</B></TT> is unbuffered by default.
+<P>
+You may use either the <tt><b>\n</b></tt> escape character or the
+<tt><b>endl</b></tt> manipulator in order to specify a line jump to <TT><B>cout</B></TT>.
+Notice the differences of use shown earlier.
+<p>
+<h2>Input (<tt>cin</tt>).</h2>
+Handling the standard input in C++ is done by applying the overloaded operator of
+<i>extraction</i> (<tt>&gt;&gt;</tt>) on the <tt><b>cin</b></tt> stream. This must go
+followed by the variable that will store the data that is going to be read.
+For example:
+<blockquote><tt>
+int age;<br>
+cin &gt;&gt; age;
+</tt></blockquote>
+declares the variable <tt>age</tt> as an <tt>int</tt> and then waits for an input
+from <tt>cin</tt> (keyborad) in order to store it in this integer variable.
+<p>
+<TT><B>cin</B></TT> can only process the input from the keyboard once the <TT>RETURN</TT>
+key has been pressed. Thus, even if you request a single character
+<tt><b>cin</b></tt> will not process the input until the user presses <TT>RETURN</TT>
+once the character has been introduced.
+<p>
+You must always consider which is the <i>type</i> of the variable that you are using
+as container with <tt><b>cin</b></tt> extraction. If you request an integer you will get
+an integer, if you request a character you will get
+a character and if you request a string of characters you will get a string of characters.
+
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// i/o example</I>
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  int i;
+  cout &lt;&lt; "Please enter an integer value: ";
+  cin &gt;&gt; i;
+  cout &lt;&lt; "The value you entered is " &lt;&lt; i;
+  cout &lt;&lt; " and its double is " &lt;&lt; i*2 &lt;&lt; ".\n";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>Please enter an integer value: </B>702<BR>
+<B>The value you entered is 702 and its double is 1404.</B>
+</TT>
+</TD></TR></TABLE>
+
+
+<p>
+The user of a program may be one of the reasons that provoke errors in the simplest
+programs that use <tt><b>cin</b></tt> (like the one we have just seen).  Since if you
+request an integer value and the user introduces its name (which is a string of characters)
+the result may bring your program to misoperate since it is not what we were expecting
+from the user. So when you use the data input provided by <tt><b>cin</b></tt> you will
+have to trust that the user of your program will be totally cooperative and that he will
+not introduce his name when an interger value is requested. More ahead, when we will see
+how to use strings of characters we will see possible solutions for the
+errors that can cause this type of user input.
+
+<p>
+You can also use <tt><b>cin</b></tt> to request more than one datum input from the
+user:
+<blockquote><tt>cin &gt;&gt; a &gt;&gt; b;</tt></blockquote>
+is equivalent to:
+<blockquote><tt>cin &gt;&gt; a;<br>cin &gt;&gt; b;</tt></blockquote>
+
+In both cases the user must give two data, one for variable <tt><b>a</b></tt> and
+another for variable <tt><b>b</b></tt> that may be separated by any valid blank
+separator: a space, a tab character or a newline.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut1-3.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>1-3. Operators.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut2-1.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>2-1. Control structures.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

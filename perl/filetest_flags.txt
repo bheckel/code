@@ -1,0 +1,17 @@
+Perl
+
+ -r -w -x  File is readable/writable/executable by effective uid/gid.
+ -R -W -X  File is readable/writable/executable by real uid/gid.
+ -o -O     File is owned by effective/real uid.
+ -e -z     File exists/has zero size.
+ -s        File exists and has non-zero size. Returns the size.
+ -f -d     File is a plain file/a directory.
+ -l -S -p  File is a symbolic link/a socket/a named pipe (FIFO).
+ -b -c     File is a block/character special file.
+ -u -g -k  File has setuid/setgid/sticky bit set.
+ -t        Tests if filehandle (STDIN by default) is opened to a tty.
+ -T -B     File is a text/non-text (binary) file. -T and -B return true on
+           a null file, or a file at EOF when testing a filehandle.
+ -M -A -C  File modification / access / inode-change time. Measured in
+           days. Value returned reflects the file age at the time the script
+           started.

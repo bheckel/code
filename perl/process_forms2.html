@@ -1,0 +1,224 @@
+<html>
+<head>
+<title>CGI Programming Class: Lesson 4
+</title>
+</head>
+<body bgcolor=#ffffff text=#000000 link=#0000ff>
+
+
+
+<h2>Lesson 4</h2>
+<ol>
+  <li><a href="#lk1">Advanced Form Processing</a>
+  <li><a href="#lk2">Handling Checkboxes</a>
+  <li><a href="#lk3">Handling Radio Buttons</a>
+</ol><p>
+
+<a name="lk1"><h3>Advanced Form Processing</h3></a>
+In the last lesson, you learned how to decode form data, and mail it
+to yourself.  However, one problem with the previous script is, it doesn't
+allow for any error-checking, or specialized processing.  You might not
+want to get blank forms, or you may want to require certain fields to
+be filled out.  You might also want to write a quiz or questionnaire,
+and have your script take different actions depending on the answers.  All
+of these things require some more advanced processing of the form data.<p>
+
+All that's required here is to know how to test conditions in Perl.
+Probably the main one you'll use in a form-handling script is the
+if-elsif condition:<p>
+<blockquote><pre>
+if ($varname eq "somestring") {
+   ...do stuff here if the condition is true
+}
+elsif ($varname eq "someotherstring") {
+   ...do other stuff
+}
+else {
+   ...do this if none of the other conditions are met
+}
+</pre></blockquote>
+<p>
+The <b>elsif</b> and <b>else</b> blocks are optional; if you are only
+testing whether a particular variable is true or not, you can just use
+a single <b>if</b> block.<p>
+
+In Perl there are different conditional test operators, depending on
+whether the variable you want to test is a string or a number.  Here's
+the list of them:<p>
+<center>
+<table border=1>
+<tr><th></th><th>Numbers</th><th>Strings</th></tr>
+<tr><td>$x is equal to $y</td><td>$x == $y</td><td>$x eq $y</td></tr>
+<tr><td>$x is not equal to $y</td><td>$x != $y</td><td>$x ne $y</td></tr>
+<tr><td>$x is greater than $y</td><td>$x > $y</td><td>$x gt $y</td></tr>
+<tr><td>$x is greater than or equal to $y</td><td>$x >= $y</td><td>$x ge $y</td></tr>
+<tr><td>$x is less than $y</td><td>$x < $y</td><td>$x lt $y</td></tr>
+<tr><td>$x is less than or equal to $y</td><td>$x <= $y</td><td>$x le $y</td></tr>
+</table>
+</center>
+<p>
+Basically, if it's a string test, you use the letter operators (eq, ne,
+lt, etc.), and if its a numeric test, you use the symbols (==, !=, etc.).
+Most form data is going to be string values, so you'll probably use the
+letter operators most of the time.<p>
+
+Let's try it.  Copy your form2.cgi to a new script called form3.cgi, and
+insert this conditional test before the open(MAIL) statement:<p>
+<blockquote><pre>
+if ($FORM{'name'} eq "") {
+   print "&lt;h2&gt;Error!&lt;/h2&gt;\n";
+   print "Please fill out the field for your name.&lt;p&gt;";
+   die;
+}
+</pre></blockquote>
+<p>
+Now try testing it.  Just push "submit" below, without filling out any
+of the fields:<p>
+
+<form action="http://www.io.com/~kira/form3.cgi" method="POST">
+<center><pre>
+       Your Name: <input type="text" name="name">
+   Email Address: <input type="text" name="email">
+             Age: <input type="text" name="age">
+  Favorite_Color: <input type="text" name="favorite_color">
+</pre>
+<input type="submit"><input type="reset">
+</center>
+</form>
+<p>
+A blank form submission will give you an error, but if you fill out the
+field for your name, it will succeed.<p>
+
+You can extend this to test for multiple fields at the same time:<p>
+<blockquote><pre>
+if ($FORM{'name'} eq "" || $FORM{'email'} eq "" || $FORM{'age'} eq "") {
+   print "&lt;h2&gt;Error!&lt;/h2&gt;\n";
+   print "Please fill out the field for your name.&lt;p&gt;";
+   die;
+}
+</pre></blockquote>
+<p>
+The above code will return an error if any of the name, email, or age
+fields are left blank.  The conditions are separated by the <b>||</b>
+operator, which is an OR statement - if any of (1 or 2 or 3) is true, then
+the condition is met.<p>
+
+<a name="lk2"><h3>Handling Checkboxes</h3></a>
+You may want to include checkboxes in your form, to allow the viewer
+to select one or more options.  But how do you decode these inside
+your CGI?<p>
+If you just want to display them in your email message, you can just
+print them like you would any text field; each checkbox has a different
+name.  Here's an example of the HTML form code for checkboxes:<p>
+<ul><pre>
+  &lt;input type="checkbox" name="red" value=1&gt; Red&lt;br&gt;
+  &lt;input type="checkbox" name="green" value=1&gt; Green&lt;br&gt;
+  &lt;input type="checkbox" name="blue" value=1&gt; Blue&lt;br&gt;
+  &lt;input type="checkbox" name="gold" value=1&gt; Gold&lt;br&gt;
+</ul></pre>
+<p>
+This example lets the viewer pick as many options as they want - or none,
+if they prefer.  While you can set the <b>value="whatever"</b> part of the
+checkbox field to any value you want, if you use integer 1's, it will mean
+less code is required inside the CGI.  Here's an example of the Perl code
+that would deal with the above checkboxes:<p>
+<ul><pre>
+  @colors = ("red","green","blue","gold");
+  foreach $x (@colors) {
+     if ($FORM{$x} == 1) {
+        print "You picked $x.\n";
+     }
+  }
+</ul></pre>
+<p>
+NOTE:  if you use <b>value=1</b>, then your Perl code can use
+<b>$FORM{$x} == 1</b>.  If you mistakenly put quotes around the 1, such as
+<b>value="1"</b>, then your Perl code will not work unless you change the
+<b> == </b> operator to an <b>eq</b>.  1 is an integer number, "1" is a
+string.<p>
+
+Here's the above code in action.<p>
+<form action="http://www.io.com/~kira/form4.cgi" method="POST">
+Choose the colors you like:<p>
+<ul>
+  <input type="checkbox" name="red" value=1> Red<br>
+  <input type="checkbox" name="green" value=1> Green<br>
+  <input type="checkbox" name="blue" value=1> Blue<br>
+  <input type="checkbox" name="gold" value=1> Gold<br>
+</ul>
+<input type="submit"><input type="reset"></form><p>
+
+<a name="lk3"><h3>Handling Radio Buttons</h3></a>
+Radio buttons differ from checkboxes in that you can have several buttons
+that share the same field name in the form itself - thus allowing the
+viewer to only select one of a series of options.  To distinguish each
+option, the buttons themselves must have different values.  For example:<p>
+<ul><pre>
+  &lt;input type="radio" name="color" value="red"&gt; Red&lt;br&gt;
+  &lt;input type="radio" name="color" value="green"&gt; Green&lt;br&gt;
+  &lt;input type="radio" name="color" value="blue"&gt; Blue&lt;br&gt;
+  &lt;input type="radio" name="color" value="gold"&gt; Gold&lt;br&gt;
+</ul></pre>
+<p>
+This is similar to our checkboxes example, only in this case, each radio
+button has the same field name, but a different <b>value</b>.  It's easiest
+to set the value to a relevant name of the thing being picked - in this case
+the values are set to the name of the color being picked.  Radio buttons can
+be handled in Perl fairly simply:<p>
+<ul><pre>
+  print "Your favorite color is: $FORM{'color'}&lt;br&gt;\n";
+</ul></pre>
+<p>
+You see here why it is best to set the <b>value</b> to something significant
+and meaningful - it lets you just print out the radio button and its value,
+without having to also store another list inside your cgi, to show what
+each button means.<p>
+
+Here's the above code in action.<p>
+<form action="http://www.io.com/~kira/form5.cgi" method="POST">
+Choose your favorite color:<p>
+<ul>
+  <input type="radio" name="color" value="red"> Red<br>
+  <input type="radio" name="color" value="green"> Green<br>
+  <input type="radio" name="color" value="blue"> Blue<br>
+  <input type="radio" name="color" value="gold"> Gold<br>
+</ul>
+<input type="submit"><input type="reset"></form><p>
+
+You could even take the above one step further.  Say you not only want to
+tell the viewer what color they picked, but you want to SHOW it to them also.
+In your perl script, you could do something like this:<p>
+<ul><pre>
+  %colors = ("red","ff0000",
+             "green","00ff00",
+             "blue","0000ff",
+             "gold","ffcc00");
+  print "&lt;html&gt;&lt;head&gt;&lt;title&gt;form6.cgi&lt;/title&gt;&lt;/head&gt;\n";
+  print "&lt;body bgcolor=$colors{$FORM{'color'}}&gt;\n";
+  print "&lt;h2&gt;Your favorite color is: $FORM{'color'}&lt;/h2&gt;&lt;br&gt;\n";
+  print "&lt;/body&gt;&lt;/html&gt;";
+</pre></ul><p>
+
+The above actually sets the background color to whatever color you picked.
+It's using an associative list, <b>%colors</b>, whose key values are the same
+as the data value of the radio buttons in the form itself.<p>
+
+Here's the example:<p>
+<form action="http://www.io.com/~kira/form6.cgi" method="POST">
+Choose your favorite color:<p>
+<ul>
+  <input type="radio" name="color" value="red" checked> Red<br>
+  <input type="radio" name="color" value="green"> Green<br>
+  <input type="radio" name="color" value="blue"> Blue<br>
+  <input type="radio" name="color" value="gold"> Gold<br>
+</ul>
+<input type="submit"><input type="reset"></form><p>
+
+<hr>
+<b>Copyright &copy; 1997 by Jacqueline D. Hamilton.
+All Rights Reserved.</b><p>
+<hr>
+
+<br>
+</body>
+</html>

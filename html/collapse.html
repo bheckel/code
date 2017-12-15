@@ -1,0 +1,53 @@
+<HTML>
+<HEAD>
+  <SCRIPT LANGUAGE="JavaScript1.2" SRC="list.js"></SCRIPT>
+
+  <SCRIPT LANGUAGE="JavaScript">
+  function init() {
+    // Dimensions of greybox.
+    var width = 350, height = 22;
+    var foo = "<FORM METHOD='POST' NAME='myform'>" +
+              "<INPUT NAME='mytextbox' TYPE='checkbox'>" +
+              "<A HREF='junk.html'>file.txt</A></FORM>"; 
+
+    myList = new List(true, width, height, "#CCCCCC");
+    myList.setFont("<FONT COLOR='red' SIZE=-1>","</FONT>");
+    myList.addItem("<A HREF='junk.html'>onefile.txt</A>");
+    myList.addItem("twofile.txt", "#00FF00");
+    myList.addItem(foo, "#00FF00");
+
+    subList = new List(false, width, height, "#CCCCCC");
+    subList.setFont("<FONT COLOR='red' SIZE=-1>","</FONT>");
+    subList.addItem("This is a subdir file!");
+    subList.addItem("This is a subdir file!");
+
+    myList.addList(subList, "subdirectory");
+    // x, y screen coordinates.
+    myList.build(100,20);
+  }
+  </SCRIPT>
+
+  <STYLE TYPE="text/css">
+  #lItem0 { position:absolute; } 
+  #lItem1 { position:absolute; } 
+  #lItem2 { position:absolute; } 
+  #lItem3 { position:absolute; } 
+  #lItem4 { position:absolute; } 
+  #lItem5 { position:absolute; } 
+  </STYLE>
+</HEAD>
+<BODY ONLOAD="init();">
+  <STYLE TYPE="text/css">
+  #spacer { position: absolute; height: 800; }
+  </STYLE>
+
+  <DIV ID="spacer"></DIV>
+  <DIV ID="lItem0" NAME="lItem0"></DIV>
+  <DIV ID="lItem1" NAME="lItem1"></DIV>
+  <DIV ID="lItem2" NAME="lItem2"></DIV>
+  <DIV ID="lItem3" NAME="lItem3"></DIV>
+  <DIV ID="lItem4" NAME="lItem4"></DIV>
+  <DIV ID="lItem5" NAME="lItem5"></DIV>
+</BODY>
+</HTML>
+

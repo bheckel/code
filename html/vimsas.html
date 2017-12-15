@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Vim and SAS</title>
+<meta name="author" content="Robert S. Heckel Jr.">
+<meta name="generator" content="vim"/>
+<link rel="stylesheet" type="text/css" href="vimsas.css">
+</head>
+<body>
+
+<div class=bodybox>
+ <div class="titlebox">
+   <span class="booktitle">
+    Combine the programming power of SAS with the editing power of Vim
+   </span>
+ </div>
+
+ <div class="mainbox">
+   <div class="menubox">
+    <h4>Resources</h4>
+    <a href="http://www.vim.org">Vim</a><br>
+    <a href="http://www.sas.com">SAS</a><br>
+    <a href="http://www.cygwin.com">Cygwin</a><br>
+  </div>
+
+  <P class=content>
+  Why:<br><br>
+  The Enhanced editor works great.  Why switch to Vim?  Your productivity will
+  increase.  You'll spend more time thinking about your code and less time
+  editing it.
+
+  <P class=content>
+  Vim benefits:<br>
+  <li>Syntax coloring
+  <li>Folding to allow you to see the logical flow of your code
+  <li>Macro actions like sequential numbering
+  <li>Regex searching of Log and List
+  <li>Many more items...depending on how much you want to learn
+
+  <P class=content>
+  Assumptions:
+  <li>You are familiar with Unix-like operating systems
+  <li>You prefer (or are willing to learn) the command
+  line over GUI IDEs.
+
+
+  <P class=content>
+  My Configuration:<br><br>
+  My syntax highlighting file--
+  <A HREF="sas.vim">sas.vim</A>
+
+  <P class=content>
+  My runsas bash shell script--
+  <A HREF="runsas.sh">runsas.sh</A>
+
+  <div class="example-code">
+    <pre>
+      Sample session
+      $ vi foo.sas
+
+      Press Ctrl-v to suspend
+
+      $ sasrun foo.sas
+    </pre>
+  </div>
+
+  <P class=content>
+  The job runs and produces output in two windows, positioning the cursor on any
+  WARNINGs or ERRORs.
+  <br><br>
+  <a href="mailto:&#98heckel&#64&#97&#116&#116&#46&#110&#101&#116">Bob Heckel</a>
+  <script language="JavaScript">
+    <!--
+    if ( Date.parse(document.lastModified) != 0 ) {
+      document.write('<P><HR><SMALL><I>Last Modified: '
+                     + document.lastModified
+                     + '</I></SMALL>')
+    }
+    //-->
+  </script>
+ </div>
+</body>
+</html>

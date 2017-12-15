@@ -1,0 +1,71 @@
+#!/usr/bin/perl -w
+##############################################################################
+#     Name: ck4suspend.pl
+#
+#  Summary: Determine if jobs in current tty are in the background.  Used by
+#           PROMPT_COMMAND.  Cygwin only (see bottom for Linux).
+#
+#           TODO adapt for sverige
+#
+#           TODO handle these cases where 3 S instead of 2 appear while using man:
+#                1856    1800    1856       2176    2 1001   Sep 10 /usr/bin/ssh
+#               10892    1612   10892      10908    0 1001 13:53:08 /usr/bin/vim
+#           S   10816    1708   10816      10804    1 1001 13:59:34 /usr/bin/perl
+#           S   10328   10816   10816      10328    1 1001 13:59:36 /usr/bin/sh
+#           S   10612   10328   10816      10612    1 1001 13:59:36 /usr/bin/less 
+#
+#  Created: Fri 23 Aug 2002 09:48:16 (Bob Heckel)
+# Modified: Thu 07 Nov 2002 09:38:27 (Bob Heckel -- allow $NOSUSP in shell to
+#                                     disable printing 'S') 
+##############################################################################
+use strict;
+
+my $this_tty = `tty`;
+my @psoutput = ();
+
+chomp $this_tty;
+my $ttynum = chop $this_tty;  # TODO only sees tty 0-9
+
+# Sample ps:
+#       6524    4636    6524       6396    2 1001 11:00:33 /usr/bin/ssh
+#  S    4236    1676    4236       7084    0 1001 17:02:40 /usr/bin/vim
+#       7108    1676    7108       5796    0 1001 17:02:55 /usr/bin/ps
+#
+# Same as:
+# $ ps | awk '{print $3}'
+foreach ( `ps` ) {
+  chomp;
+  my ($s, undef, undef, undef, undef, $ttyline) = split /\s+/, $_;
+  push @psoutput, [ $s, $ttyline ] if $s eq 'S';
+}
+
+foreach my $line ( @psoutput ) {
+  # DEBUG
+  ###print "@$line[0] and @$line[1]\n";
+  if ( @$line[1] =~ /^$ttynum$/o ) {
+    # Don't display 'S' if set.  Useful if need to edit a very long
+    # commandline.  The 'S' screws up set -o vi's editing abilities.
+    if ( !$ENV{NOSUSPEND} ) {
+      # At least one job is in the background.
+      print "$ENV{fg_yellow}S"; 
+    }
+  } # else no jobs are in the background
+}
+
+
+# Linux version difference:
+#
+# Same as:
+# 27074 pts/2    T      0:00 vi
+# foreach ( `ps S` ) {
+#   $_ =~ s/[\r\n]+$//;  # chomp
+#   $_ =~ s/^\s+//;  # some lines start with blanks if have small PID num
+#   my (undef, $ttyline, $s) = split /\s+/, $_;
+#   push @psoutput, [ $s, $ttyline ] if $s eq 'T';
+# }
+# foreach my $line ( @psoutput ) {
+#   if ( @$line[1] =~ /$ttynum/o ) {
+#     # At least one job is in the background.
+#     print "$ENV{fg_yellow}S";
+#   }
+# }

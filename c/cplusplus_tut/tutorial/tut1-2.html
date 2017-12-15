@@ -1,0 +1,507 @@
+<html>
+<head>
+<title>C++ Tutorial: 1.2, Variables. Data types. Constants.</title>
+<META NAME="description" CONTENT="Description of variables and data types: What they are, how to declare and identify them. Constants: literals, defined and declared.">
+<META NAME="keywords" CONTENT="var variable const constant floating point char short long int float long double bool scope identifier literal #define">
+</head>
+
+<body bgcolor="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 1.2 </FONT><BR>
+ <FONT SIZE=5><B> Variables. Data types. Constants. </B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+<P>
+
+The usefulness of the "Hello World" programs shown in the previous section are
+something more than questionable.  Since we have had to write several lines of code,
+compile them, and then execute the resulting program to obtain just a sentence on the
+screen as result.
+It is true, but programming is not limited only to print texts on screen,
+it would be much faster to simply write the output sentence by ourselves.
+In order to go a little further on
+and to become able to write programs that perform useful tasks that really save us work
+we need to introduce the concept of <B>variable</B>.
+<p>
+Let's think that I ask you to retain number 5 in your mental memory, and then
+I ask you to memorize also number 2. You have just stored two values in your memory.
+Now, if I ask you to add 1 to the first number I said, you should be retaining
+numbers 6 (that is 5+1) and 2 in your memory.  Values that now we could subtract
+and obtain 4 as result.
+<p>
+All this process that you have made is a simil of what a computer can do with two variables.
+This same process can be expressed in C++ with the following instruction set:
+<blockquote><tt><pre>
+a = 5;
+b = 2;
+a = a + 1;
+result = a - b;
+</pre></tt></blockquote>
+<p>
+Obviously this is a very simple example since we have only used two small integer values,
+but consider that your computer can store several million of numbers like these at the
+same time and conduct sophisticated mathematical operations with them.
+<p>
+Therefore, we can define a variable as a portion of memory to store a determined value.
+<p>
+Each variable needs an identifier that distinguishes it from the others, for example,
+in the previous code the variable identifiers were <b><tt>a</tt></b>,
+<b><tt>b</tt></b> and <b><tt>result</tt></b>, but we could have called the variables
+with any name we have wanted to invent, whenever they were valid identifiers.
+<p>
+<h2>Identifiers</h2>
+ A valid identifier is a sequence of one or more letters, digits or underline symbols
+( <tt>_</tt> ).  The length of an identifier is not limited, although for some compilers
+only the 32 first characters of an identifier are significant (the rest are not considered).
+<p>
+Neither spaces nor marked letters can be part of an identifier.
+Only letters, digits and underline characters are valid. In addition, variable identifiers
+should always begin with a letter. They can also begin with an underline character
+( <tt><b>_</b></tt> ), but this is usually reserved for external links. In no case
+they can begin with a digit.
+<p>
+Another rule that you have to consider when inventing your own <i>identifiers</i>
+is that they cannot match with any <B>language's key word</b> nor your compiler's specific ones
+since they could be confused with these, for example, the following expressions are always
+considered key words according to the ANSI-C++ standard and therefore they must not be used
+as identifiers:
+<blockquote><tt><b>
+asm, auto, bool, break, case, catch, char, class, const, const_cast, continue, default, delete, do, double, dynamic_cast, else, enum, explicit, extern, false, float, for, friend, goto, if, inline, int, long, mutable, namespace, new, operator, private, protected, public, register, reinterpret_cast, return, short, signed, sizeof, static, static_cast, struct, switch, template, this, throw, true, try, typedef, typeid, typename, union, unsigned, using, virtual, void, volatile, wchar_t
+</tt></b></blockquote>
+Additionally, alternative representations for some operators do not have to be used
+as identifiers since they are reserved words under some circumstances:
+<blockquote><tt><b>
+and, and_eq, bitand, bitor, compl, not, not_eq, or, or_eq, xor, xor_eq
+</b></tt></blockquote>
+your compiler may also include some more specific reserved keywords. For example, many
+compilers which generate 16bits code (like some compilers for DOS) include also
+<tt><b>far, huge</b></tt> and <tt><b>near</b></tt> as key words.
+<p>
+<B>Very important:</B> The C++ language is "case sensitive", that means that a same identifier
+written in capital letters is not equivalent to another one with the same name but
+written in small letters. Thus, for example the variable <tt><b>RESULT</b></tt>
+is not the same one that the variable <tt><b>result</b></tt> nor variable
+<tt><b>Result</b></tt>.
+
+<p>
+<h2>Data types</h2>
+When programming, we store the variables in our computer's memory, but the computer
+must know what we want to store in them since it is not going to occupy the same space
+in memory to store a simple number, a letter or a large number.
+<p>
+Our computer's memory is organized in bytes. A byte is the minimum amount of memory
+which we can manage. A byte can store a relatively small amount of data, usually an
+integer between 0 and 255 or one single character. But in addition, the computer
+can manipulate more complex data types that come from grouping several <i>bytes</i>,
+like long numbers or numbers with decimals. Next you have a list of the existing
+fundamental data types in C++, as well as the range of values that can be represented
+with each one of them:
+
+<p align="center">
+<center>
+<b>DATA TYPES</b>
+<table width="90%" cellspacing="1" border="1">
+<tr><td bgcolor="silver">Name</td>
+ <td bgcolor="silver">Bytes*</td>
+ <td bgcolor="silver">Description</td>
+ <td width="200" bgcolor="silver">Range*</td></tr>
+<tr><td><b>char</b></td>
+ <td>1</td>
+ <td>character or integer 8 bits length.</td>
+ <td width="200"><b>signed:</b> -128 to 127<br><b>unsigned:</b> 0 to 255</td></tr>
+<tr><td><b>short</b></td>
+ <td>2</td>
+ <td>integer 16 bits length.</td>
+ <td width="200"><b>signed:</b> -32768 to 32767<br><b>unsigned:</b> 0 to 65535</td></tr>
+<tr><td><b>long</b></td>
+ <td>4</td>
+ <td>integer 32 bits length.</td>
+ <td width="200"><b>signed:</b>-2147483648 to 2147483647<br><b>unsigned:</b> 0 to 4294967295</td></tr>
+<tr><td><b>int</b></td>
+ <td>*</td>
+ <td>Integer.  Its length traditionally depends on the length of the system's Word <b>type</b>, thus in MSDOS it is 16 bits long, whereas in 32 bit systems (like Windows 9x/2000/NT and systems that work under protected mode in x86 systems) it is 32 bits long (4 bytes).</td>
+ <td>See <b>short</b>, <b>long</b></td></tr>
+<tr><td><b>float</b></td>
+ <td>4</td>
+ <td>floating point number.</td>
+ <td>3.4e + / - 38 (7 digits)</td></tr>
+<tr><td><b>double</b></td>
+ <td>8</td>
+ <td>double precision floating point number.</td>
+ <td>1.7e + / - 308 (15 digits)</td></tr>
+<tr><td><b>long double</b></td>
+ <td>10</td>
+ <td>long double precision floating point number.</td>
+ <td>1.2e + / - 4932 (19 digits)</td></tr>
+<tr><td><b>bool</b></td>
+ <td>1</td>
+ <td>Boolean value.  It can take one of two values: <TT>true</TT> or <TT>false</TT>
+NOTE: this is a type recently added by the ANSI-C++ standard.
+Not all compilers support it. Consult section <a href="../ansi/bool.html">
+bool type</a> for compatibility information.</td>
+ <td><tt><b>true</b></tt> or <tt><b>false</b></tt></td></tr>
+<tr><td><b>wchar_t</b></td>
+ <td>2</td>
+ <td>Wide character.  It is designed as a type to store international characters of
+a two-byte character set.
+NOTE: this is a type recently added by the ANSI-C++ standard.
+Not all compilers support it.</td>
+ <td>wide characters</TD></tr>
+</table>
+</center>
+</p>
+* Values of columns Bytes and Range may vary depending on your system. The values included
+here are the most commonly accepted and used by almost all compilers.
+<P>
+In addition to these fundamental data types there also exist the pointers and
+the <B>void</B> parameter type specification, that we will see later.
+<p>
+<h2>Declaration of variables</h2>
+In order to use a variable in C++, we must first declare it specifying
+which of the data types above we want it to be. The syntax to declare a new variable
+is to write the data type specifier that we want (like <tt><B>int</B></tt>,
+<tt><B>short</B></tt>, <tt><B>float</B></tt>...) followed by a valid variable identifier.
+For example:<br>
+<blockquote><tt>
+int a;<br>
+float mynumber;<br>
+</tt></blockquote>
+Are valid declarations of variables.  The first one declares a variable of type
+<tt><b>int</b></tt> with the identifier <tt><b>a</b></tt>.  The second one declares a
+variable of type <tt><b>float</b></tt> with the identifier <tt><b>mynumber</b></tt>.
+Once declared, variables <tt><b>a</b></tt> and <tt><b>mynumber</b></tt> can be used
+within the rest of their scope in the program.
+<p>
+If you need to declare several variables of the same type and you want to save some
+writing work you can declare all of them in the same line separating the identifiers
+with commas.  For example:<br>
+<blockquote><tt>int a, b, c;</tt></blockquote>
+declares three variables (<TT><b>a</b></TT>, <TT><b>b</b></TT>
+and <TT><b>c</b></TT>) of type <TT><B>int</B></TT> , and has exactly the same meaning
+as if we had written:
+<blockquote><tt>int a;<br>int b;<br>int c;</tt></blockquote>
+
+<p>
+Integer data types (<TT><B>char</B></TT>, <TT><B>short</B></TT>, <TT><B>long</B></TT>
+and <TT><B>int</B></TT>) can be signed or unsigned according to the range of numbers
+that we need to represent. Thus to specify an integer data type we do it by putting
+the keyword <TT><B>signed</B></TT> or <TT><B>unsigned</B></TT> before the data type
+itself. For example:
+
+<blockquote><tt>
+unsigned short NumberOfSons;<br>
+signed int MyAccountBalance;<br>
+</tt></blockquote>
+By default, if we do not specify <tt><b>signed</b></tt> or <tt><b>unsigned</b></tt>
+it will be assumed that the type is <tt><b>signed</b></tt>, thus in the second declaration
+we could have written:<br>
+<blockquote><tt>int MyAccountBalance;</tt></blockquote>
+with exactly the same meaning and being this last one the most usual, in fact, few source
+codes include the keyword <b>signed</b> as part of a compound type name.
+<P>
+The only exception to this rule is the <TT><B>char</B></TT> type that exists by itself
+and it is considered a diferent type than <TT><B>signed char</B></TT> and
+<TT><B>unsigned char</B></TT>.
+<P>
+Finally, <TT><B>signed</B></TT> and <TT><B>unsigned</B></TT> may also be used as a simple
+types, meaning the same as <TT><B>signed int</B></TT> and <TT><B>unsigned int</B></TT>
+respectivelly. The following two declarations are equivalent:
+<blockquote><tt>
+unsigned MyBirthYear;<br>
+unsigned int MyBirthYear;<br>
+</tt></blockquote>
+
+<P>
+To see in action how looks like a declaration in a program, we are going to see the C++
+code of the example about your mental memory proposed at the beginning of this section:
+
+<P>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// operating with variables</I>
+
+#include &lt;iostream.h&gt;
+
+int main ()
+{
+  <I>// declaring variables:</I>
+  int a, b;
+  int result;
+
+  <I>// process:</I>
+  a = 5;
+  b = 2;
+  a = a + 1;
+  result = a - b;
+
+  <I>// print out the result:</I>
+  cout << result;
+
+  <I>// terminate the program:</I>
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TT><B>4</B></TT>
+</TD></TR></TABLE>
+
+<P>
+Do not worry if something out of the varibale declarations sounds a bit strange to you.
+You will see the rest in detail in coming sections.
+
+<P>
+<H2>Initialization of variables</H2>
+When declaring a local variable, its value is undetermined by default.
+But you may want that a variable stores a concrete value since the moment in which it is declared.
+In order to do that, you have to append an equal sign followed by the value wanted to the
+variable declaration:
+<BLOCKQUOTE><TT>
+<I>type identifier</I> <B>=</B> <I>initial_value</I> ;
+</TT></BLOCKQUOTE>
+For example, if we want to declare an <TT><B>int</B></TT> variable called <TT><B>a</B></TT>
+that contains the value <TT><B>0</B></TT> since the moment in which it is declared, we could
+write:
+<BLOCKQUOTE><TT>int a = 0;</TT></BLOCKQUOTE>
+<P>
+Additionally to this way of initializating variables (known as c-like), C++ has added a new
+way to initialize a variable: by enclosing the initial value between parenthesis
+<TT><B>()</B></TT>:
+<BLOCKQUOTE><TT>
+<I>type identifier</I> <B>(</B><I>initial_value</I><B>)</B> ;
+</TT></BLOCKQUOTE>
+For example:
+<BLOCKQUOTE><TT>
+int a (0);
+</TT></BLOCKQUOTE>
+Both ways are valid and equivalent in C++.
+
+<p>
+<H2>Scope of variables</H2>
+
+<IMG SRC="icoc-cpp.gif" ALIGN="left">
+All the variables that we are going to use must have been previously declared.
+An important difference between the C and C++ languages, is that in C++ we can declare
+variables anywhere in the source code, even between two executable sentences, and not only
+at the beginning of a block of instructions, like happens in C.
+
+<P>
+Anyway, it can be recommendable under some circumstances to follow the indications of the
+C language when declaring variables, since it can be useful at the time of debugging
+a program to have all the declarations grouped together.  Therefore, the traditional C-like
+way to declare variables is to include their declaration at the beginning of each
+function (for local variables) or directly in the body of the program
+outside any function (for global variables).
+<p>
+<table><tr><td>
+<img src="imgvars1.gif" align="left">
+<b>Global variables</b> can be referred anywhere in the code, within any function,
+whenever it is after its declaration.
+<p>
+The scope of the <b>local variables</b> is limited to the code level in which they are
+declared. If they are declared at the beginning of a function
+(like in <TT><B>main</B></TT>) its
+scope is the whole <TT><B>main</B></TT> function.  This means that if in the example above,
+moreover than the function <tt>main()</tt> another function existed, the local variables
+declared in <TT><B>main</B></TT> could not be used in the other function and vice versa.
+<P>
+In C++, the scope of a local variable is given by the block in which it is declared
+(a block is a group of instructions grouped together within curly brackets <TT><B>{}</B></TT>
+signs). If it is declared within a function it will be a variable with function scope,
+if it is declared in a loop its scope will be only the loop, etc...
+<p>
+In addition to <B>local</B> and <B>global</B> scopes exists the external scope, that
+causes a variable to be visible not only in the same source file but in all other files
+which will be linked together with.
+</td></tr></table>
+
+
+<p>
+<h2>Constants:  Literals.</h2>
+A constant is any expression that has a fixed value. They can be divided in
+Integer Numbers, Floating-Point Numbers, Characters and Strings.
+<P>
+<b>Integer Numbers</b><br>
+<blockquote><tt>
+1776<br>707<br>-273<br>
+</tt></blockquote>
+they are numerical constants that identify integer decimal numbers. Notice that to express
+a numerical constant we do not need to write quotes (<tt><b>"</b></tt>) nor any special
+character. There is no doubt that it is a constant: whenever we write <tt><b>1776</b></tt>
+in a program we will be referring to the value 1776.
+<p>
+In addition to decimal numbers (those that all of us already know) C++ allows the use
+as literal constants of octal numbers (base 8) and hexadecimal numbers (base 16).
+If we want to express an octal number we must precede it with a
+<tt><b>0</b></tt> character (zero character). And to express a hexadecimal number we have
+to precede it with the characters <tt><b>0x</b></tt> (zero, x).  For example, the following literal
+constants are all equivalent to each other:
+<blockquote><tt><PRE>
+75         <FONT COLOR="green"><I>// decimal</I></FONT>
+0113       <FONT COLOR="green"><I>// octal</I></FONT>
+0x4b       <FONT COLOR="green"><I>// hexadecimal</I></FONT>
+</PRE></TT></blockquote>
+All of them represent the same number: 75 (seventy five) expressed as a radix-10 number,
+octal and hexdecimal, respectively.
+<p>
+[ Note:  You can find more information on hexadecimal and octal representations in the
+document <a href="../papers/hex.html">Numerical radixes</a>]
+<p>
+<b>Floating Point Numbers</b><br>
+They express numbers with decimals and/or exponent. They can include a decimal point, an
+<tt><b>e</b></tt> character (that expresses "by ten at the Xth height", where X is the
+following integer value) or both.
+<blockquote><tt><PRE>
+3.14159    <FONT COLOR="green"><I>// 3.14159</I></FONT>
+6.02e23    <FONT COLOR="green"><I>// 6.02 x 10<SUP><SMALL>23</SMALL></SUP></I></FONT>
+1.6e-19    <FONT COLOR="green"><I>// 1.6 x 10<SUP><SMALL>-19</SMALL></SUP></I></FONT>
+3.0        <FONT COLOR="green"><I>// 3.0</I></FONT>
+</PRE></tt></blockquote>
+these are four valid numbers with decimals expressed in C++.
+The first number is PI, the second one is the number of Avogadro, the third is the electric
+charge of an electron (an extremely small number) -all of them approximated- and the last
+one is the number <tt>3</tt> expressed as a floating point numeric literal.
+<p>
+<b>Characters and strings</b><br>
+There also exist non-numerical constants, like:
+<blockquote><tt>
+'z'<br>'p'<br>"Hello world"<br>"How do you do?"
+</tt></blockquote>
+
+The first two expressions represent single characters,
+and the following two represent strings of several characters.
+Notice that to represent a single character we enclose it between single quotes (<tt>'</tt>)
+and to express a string of more than one character we enclose them between
+double quotes (<tt>"</tt>).
+<p>
+When writing both single characters and strings of characters in a constant way,
+it is necessary to put the quotation marks to distinguish them from possible
+variable identifiers or reserved words.  Notice this:
+<blockquote><tt>
+x<br>
+'x'
+</tt></blockquote>
+<tt><B>x</B></tt> refers to variable <tt><B>x</B></tt>, whereas <tt><B>'x'</B></tt>
+refers to the character constant <tt><B>'x'</B></tt>.
+<p>
+Character constants and string constants have certain peculiarities, like the
+<b>escape codes</b>. These are special characters that cannot be expressed otherwise
+in the sourcecode of a program, like <i>newline</i> (<tt>\n</tt>) or <i>tab</i>
+(<tt>\t</tt>). All of them are preceded by an inverted slash (<tt>\</tt>). Here you have
+a list of such escape codes:
+<blockquote>
+<table border="1">
+<tr><td width="50" align="center"><tt><b>\n</b></tt></td><td width="250">newline</t></tr>
+<tr><td width="50" align="center"><tt><b>\r</b></tt></td><td>carriage return</t></tr>
+<tr><td width="50" align="center"><tt><b>\t</b></tt></td><td>tabulation</t></tr>
+<tr><td width="50" align="center"><tt><b>\v</b></tt></td><td>vertical tabulation</t></tr>
+<tr><td width="50" align="center"><tt><b>\b</b></tt></td><td>backspace</t></tr>
+<tr><td width="50" align="center"><tt><b>\f</b></tt></td><td>page feed</t></tr>
+<tr><td width="50" align="center"><tt><b>\a</b></tt></td><td>alert (beep)</t></tr>
+<tr><td width="50" align="center"><tt><b>\'</b></tt></td><td>single quotes (<tt>'</tt>)</t></tr>
+<tr><td width="50" align="center"><tt><b>\"</b></tt></td><td>double quotes (<tt>"</tt>)</t></tr>
+<tr><td width="50" align="center"><tt><b>\</b></tt></td><td>question (<tt>?</tt>)</t></tr>
+<tr><td width="50" align="center"><tt><b>\\</b></tt></td><td>inverted slash (<tt>\</tt>)</t></tr>
+</table>
+</blockquote>
+For example:
+<blockquote><tt>
+'\n'<br>'\t'<br>"Left \t Right"<br>"one\ntwo\nthree"
+</tt></blockquote>
+Additionally, you can express any character by its numerical ASCII code by
+writing an inverted slash bar character (<tt>\</tt>) followed by the ASCII code expressed
+as an octal (radix-8) or hexadecimal (radix-16) number. In the first case (octal) the number
+must follow immediately the inverted slash (for example <tt><b>\23</b></tt> or
+<tt><b>\40</b></tt>), in the second case (hexacedimal), you must put an <tt><b>x</b></tt>
+character before the number (for example <tt><b>\x20</b></tt> or <tt><b>\x4A</b></tt>).<br>
+[Consult the document <a href="../papers/ascii.html">ASCII Code</a> for more information
+about this type of escape code].
+<p>
+coonstants of string of characters can be extended by more than a single code line
+if each code line ends with an inverted slash (<tt>\</tt>):
+<blockquote><tt>
+"string expressed in \<br>
+two lines"
+</tt></blockquote>
+You can also concatenate several string constants separating them by one or several
+blankspaces, tabulators, newline or any other valid blank character:
+<blockquote><tt><pre>
+"we form" "a single" "string" "of characters"
+</pre></tt></blockquote>
+
+<p>
+<h2>Defined constants (<i><tt>#define</tt></i>)</h2>
+You can define your own names for constants that you use quite often without having
+to resource to variables, simply by using the <TT><B>#define</B></TT>
+preprocessor directive. This is its format:
+<blockquote><tt>
+<b>#define </b><i>identifier value</i>
+</tt></blockquote>
+For example:
+<blockquote><tt>
+#define PI 3.14159265<br>
+#define NEWLINE '\n'<br>
+#define WIDTH 100<br>
+</tt></blockquote>
+they define three new constants. Once they are declared,
+you are able to use them in the rest of the code as
+any if they were any other constant, for example:
+<blockquote><tt>
+circle = 2 * PI * r;<br>
+cout &lt;&lt; NEWLINE;
+</tt></blockquote>
+In fact the only thing that the compiler does when it finds <tt><B>#define</B></tt>
+directives is to replace literally any occurrence of the them (in the previous example,
+<tt><B>PI</B></tt>, <tt><B>NEWLINE</B></tt> or <tt><B>WIDTH</B></tt>)
+by the code to which they have been defined (<tt><B>3.14159265</B></tt>,
+<tt><B>'n'</B></tt> and <tt>100</tt>, respectively).  For this reason,
+<tt>#define</tt> constants are considered <i>macro constants</i>.
+<p>
+The <tt>#define</tt> directive is not a code instruction, it is a directive
+for the preprocessor, reason why it assumes the whole line as the directive and
+does not require a semicolon (<tt>;</tt>) at the end of it.
+If you include a semicolon character (<tt>;</tt>) at the end, it will also be added
+when the preprocessor will substitute any occurence of the defined constant
+within the body of the program.
+<h2>declared constants (<tt>const</tt>)</h2>
+With the <tt><b>const</b></tt> prefix you can declare constants with a specific type
+exactly as you would do with a variable:
+<blockquote><tt>
+const int width = 100;<br>
+const char tab = '\t';<br>
+const zip = 12440;<br>
+</tt></blockquote>
+In case that the type was not specified (as in the last example) the compiler assumes
+that it is type <TT><B>int</B></TT>.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut1-1.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>1-1. Structure of a C++ program.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut1-3.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>1-3. Operators.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</body>
+</html>

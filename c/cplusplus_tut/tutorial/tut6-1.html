@@ -1,0 +1,386 @@
+<HTML>
+<HEAD>
+<TITLE>C++ tutorial: 6.1, Input/Output with files</TITLE>
+<META NAME="description" CONTENT="Use of file streams">
+<META NAME="keywords" CONTENT="fstream open close">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 6.1 </FONT><BR>
+ <FONT SIZE=5><B>Input/Output with files</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<P>
+C++ has support both for input and output with files through the following classes:
+<UL>
+<LI><TT><B>ofstream:</B></TT> File class for writing operations (derived from <TT>ostream</TT>)
+<LI><TT><B>ifstream:</B></TT> File class for reading operations (derived from <TT>istream</TT>)
+<LI><TT><B>fstream: </B></TT> File class for both reading and writing operations (derived from <TT>iostream</TT>)
+</UL>
+
+<P>
+<H2>Open a file</H2>
+The first operation generally done on an object of one of these classes is to associate it
+to a real file, that is to say, to open a file.  The open file is represented
+within the program by a stream object (an instantiation of one of these classes) and any
+input or output performed on this stream object will be applied to the physical file.
+<P>
+In order to open a file with a stream object we use its member function <TT><B>open()</B></TT>:
+<BLOCKQUOTE><TT><PRE>
+<B>void open (const char * </B><I>filename</I><B>, openmode</B><I> mode</I><B>);</B>
+</PRE></TT></BLOCKQUOTE>
+where <TT><I>filename</I></TT> is a string of characters representing the name of the
+file to be opened and <TT><I>mode</I></TT> is a combination of the following flags:<BR>
+<BLOCKQUOTE><TABLE BORDER=1>
+<TR><TD><TT><B>ios::in</B></TT></TD><TD>Open file for reading</TD></TR>
+<TR><TD><TT><B>ios::out</B></TT></TD><TD>Open file for writing</TD></TR>
+<TR><TD><TT><B>ios::ate</B></TT></TD><TD>Incial position:  end of file</TD></TR>
+<TR><TD><TT><B>ios::app</B></TT></TD><TD>Every output is appended at the end of file</TD></TR>
+<TR><TD><TT><B>ios::trunc</B></TT></TD><TD>If the file already existed it is erased</TD></TR>
+<TR><TD><TT><B>ios::binary</B></TT></TD><TD>Binary mode</TD></TR>
+</TABLE></BLOCKQUOTE>
+These flags can be combined using bitwise operator OR: <TT><B>|</B></TT>.
+For example, if we want to open the file "example.bin" in binary mode to add data
+we could do it by the following call to function-member <TT><B>open</B></TT>:
+<BLOCKQUOTE><TT>
+ofstream file;<BR>
+file.open ("example.bin", ios::out | ios::app | ios::binary);
+</TT></BLOCKQUOTE>
+The member functions <TT><B>open</B></TT> of classes
+<TT><B>ofstream</B></TT>, <TT><B>ifstream</B></TT> and <TT><B>fstream</B></TT>
+include all of them a default mode when opening files that varies from one to other:
+<BLOCKQUOTE><TABLE BORDER=1>
+<TR><TD BGCOLOR="silver">class</TD><TD BGCOLOR="silver">default <I>mode</I> to parameter</TD></TR>
+<TR><TD><TT><B>ofstream</B></TT></TD><TD><TT>ios::out | ios::trunc</TT></TD></TR>
+<TR><TD><TT><B>ifstream</B></TT></TD><TD><TT>ios::in</TT></TD></TR>
+<TR><TD><TT><B>fstream</B></TT></TD><TD><TT>ios::in | ios::out</TT></TD></TR>
+</TABLE></BLOCKQUOTE>
+The default value is only applied if the function is called <U>without</U> specifying a
+<TT><I>mode</I></TT> parameter. If the function is called with any value in that parameter
+the default mode is stepped on, not combined.
+
+<P>
+Since the first task that is performed on an object of classes
+<TT><B>ofstream</B></TT>, <TT><B>ifstream</B></TT> and <TT><B>fstream</B></TT>
+is frequently to open a file, these three classes include a constructor that calls directly
+to <TT><B>open</B></TT> member function and that has the same parameters as this.  This way,
+we could also have declared the previous object and conducted the same opening operation
+just writing:
+<BLOCKQUOTE><TT>
+ofstream file ("example.bin", ios::out | ios::app | ios::binary);
+</TT></BLOCKQUOTE>
+Both forms to open a file are valid.
+
+<P>
+You can check if a file has been correctly opened by calling to the member function
+<TT><B>is_open()</B></TT>:
+<BLOCKQUOTE><TT>bool is_open();</TT></BLOCKQUOTE>
+that returns a <TT><B>bool</B></TT> type value indicating <TT><B>true</B></TT> in case that
+indeed the object has been correctly associated with an open file or <TT><B>false</B></TT>
+otherwise.
+
+<P>
+<H2>Closing a file</H2>
+When reading, writing or consulting operations on a file are complete we must close it
+so that it become again available. In order to do that we shall call to member function
+<TT><B>close()</B></TT>, that is in charge of flushing the buffers and closing the file.
+Its form is quite simple:
+<BLOCKQUOTE><TT><B>void close ();</B></TT></BLOCKQUOTE>
+Once this member function is called, the stream object can be used to open another file,
+and the file is available again to be opened by other processes.
+<P>
+In case that an object is destructed while still associated with an open file,
+the destructor automatically calls to member function  <TT><B>close</B></TT>.
+<P>
+<H2>Text mode files</H2>
+Classes <TT><B>ofstream</B></TT>, <TT><B>ifstream</B></TT> and <TT><B>fstream</B></TT>
+are derived from <TT><B>ostream</B></TT>, <TT><B>istream</B></TT> and <TT><B>iostream</B></TT>
+respectively. That's why <I>fstream</I> objects can use the members of these parent classes
+to access data.
+<P>
+Generally, when using text files we shall use the same members of these classes that
+we used in communication with console (<TT><B>cin</B></TT> and <TT><B>cout</B></TT>).
+Like in the following example, where we use the overloaded insertion operator
+<TT><B>&lt;&lt;</B></TT>:
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// writing on a text file</I>
+#include &lt;fstream.h&gt;
+
+int main () {
+  ofstream examplefile ("example.txt");
+  if (examplefile.is_open())
+  {
+    examplefile &lt;&lt; "This is a line.\n";
+    examplefile &lt;&lt; "This is another line.\n";
+    examplefile.close();
+  }
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top">
+<TABLE WIDTH=100% CELLSPACING=5><TR><TD BGCOLOR="white"><FONT COLOR="green"><CENTER><TT>file <B>example.txt</B></TT></CENTER></FONT></TD></TR></TABLE>
+<TT><B>
+This is a line.<BR>
+This is another line.
+</B></TT>
+</TD></TR></TABLE>
+</CENTER>
+<P>
+Data input from file can also be performed in the same way that we did with
+<TT><B>cin</B></TT>:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// reading a text file</I>
+#include &lt;iostream.h&gt;
+#include &lt;fstream.h&gt;
+
+int main () {
+  char buffer[256];
+  ifstream examplefile ("example.txt");
+  if (! examplefile.is_open())
+  { cout &lt;&lt; "Error opening file"; exit (1); }
+
+  while (! examplefile.eof() )
+  {
+    examplefile.getline (buffer,100);
+    cout &lt;&lt; buffer &lt;&lt; endl;
+  }
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>This is a line.<BR>
+This is another line.</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+<P>
+This last example reads a text file and prints out its content on the screen.
+Notice how we have used a new member function, called <TT><B>eof</B></TT>
+that <TT><B>ifstream</B></TT> inherits from class <TT><B>ios</B></TT> and that
+returns <TT><B>true</B></TT> in case that the end of the file has been reached.
+
+<P>
+<H2>Verification of state flags</H2>
+Moreover than <TT><B>eof()</B></TT> other member functions
+to verify the state of the stream exist (all of them return a <TT><B>bool</B></TT> value):
+<DL>
+<DT><TT><B>bad()</B></TT>
+<DD>Returns <TT><B>true</B></TT> if a failure occurs in a reading or writing operation.
+For example in case we try to write to a file that is not open for writing or if the device
+where we try to write has no space left.
+<DT><TT><B>fail()</B></TT>
+<DD>Returns <TT><B>true</B></TT> in the same cases as <TT><B>bad()</B></TT> plus
+in case that a format error happens, as if you try to read an integer number and
+an alphabetical character is received.
+<DT><TT><B>eof()</B></TT>
+<DD>Returns <TT><B>true</B></TT> if a file opened for reading has reched the end.
+<DT><TT><B>good()</B></TT>
+<DD>It is the most generic: returns <TT><B>false</B></TT> in the same cases in which when
+calling to any of the previous function <TT><B>true</B></TT> would be returned.
+</DL>
+
+In order to reset the state flags checked by the previous member functions
+you can use member function <TT><B>clear()</B></TT>, with no parameters.
+
+<P>
+<H2><I>get</I> and <I>put</I> stream pointers</H2>
+All i/o streams objects have, at least, one stream pointer:<BR>
+<UL>
+<LI><TT><B>ifstream</B></TT>, like <TT><B>istream</B></TT>, has a pointer known as <I>get pointer</I> that points to the next element to be read.<BR>
+<LI><TT><B>ofstream</B></TT>, like <TT><B>ostream</B></TT>, has a pointer <I>put pointer</I> that points to the location where the next element has to be written.<BR>
+<LI>Finally <TT><B>fstream</B></TT>, like <TT><B>iostream</B></TT>, inherits both: <I>get</I> and <I>put</I>
+</UL>
+<P>
+These stream pointers that point to the reading or writing locations within a stream
+can be read and/or manipulated using the following member functions:
+<DL>
+<DT><TT><B>tellg()</B></TT> and <TT><B>tellp()</B></TT>
+<DD>
+These two member functions admit no parameters and return a value of type
+<TT><B>pos_type</B></TT> (according ANSI-C++ standard) that is an integer data type
+representing the current position of <I>get</I> stream pointer (in case of <TT>tellg</TT>)
+or <I>put</I> stream pointer (in case of <TT>tellp</TT>).
+<P>
+<DT><TT><B>seekg()</B></TT> and <TT><B>seekp()</B></TT>
+<DD>This pair of functions serve respectively to change the position of stream pointers
+<I>get</I> and <I>put</I>. Both functions are overloaded with two different prototypes: 
+<DL>
+ <P><DT><TT>
+  <B>seekg ( pos_type </B><I>position</I><B> );</B><BR>
+  <B>seekp ( pos_type </B><I>position</I><B> );</B><BR>
+  </TT>
+ <DD>
+Using this prototype the stream pointer is changed to an absolute position from the
+beginning of the file. The type required is of the same one than the returned by
+functions <TT><B>tellg</B></TT> and <TT><B>tellp</B></TT>. 
+
+<P><DT><TT>
+  <B>seekg ( off_type </B><I>offset</I><B>, seekdir </B><I>direction</I><B> );</B><BR>
+  <B>seekp ( off_type </B><I>offset</I><B>, seekdir </B><I>direction</I><B> );</B><BR>
+  </TT>
+ <DD>
+Using this prototype, an offset from a concrete point
+determined by parameter <I>direction</I> can be specified. It can be:
+<BLOCKQUOTE><TABLE BORDER=1>
+<TR><TD><TT><B>ios::beg</B></TT></TD><TD>offset specified from the beginning of the stream</TD></TR>
+<TR><TD><TT><B>ios::cur</B></TT></TD><TD>offset specified from the current position of the stream pointer</TD></TR>
+<TR><TD><TT><B>ios::end</B></TT></TD><TD>offset specified from the end of the stream</TD></TR>
+</TABLE></BLOCKQUOTE>
+
+ </DL>
+</DL>
+The values of both stream pointers <I>get</I> and <I>put</I>
+are counted in different ways for text files than for binary files, since in
+text mode files some modifications to the appearance of some special characters
+can occur. For that reason it is advisable to
+use only the first prototype of <TT><B>seekg</B></TT> and <TT><B>seekp</B></TT>
+with files opened in text mode
+and always using non-modified values returned by
+<TT><B>tellg</B></TT> or <TT><B>tellp</B></TT>.
+With binary files, you can freely use all the implementations for these functions.
+They should not have any unexpected behavior.
+
+<P>
+The following example uses the member functions just seen to obtain the size of a binary
+file:
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// obtaining file size</I>
+#include &lt;iostream.h&gt;
+#include &lt;fstream.h&gt;
+
+const char * filename = "example.txt";
+
+int main () {
+  long l,m;
+  ifstream file (filename, ios::in|ios::binary);
+  l = file.tellg();
+  file.seekg (0, ios::end);
+  m = file.tellg();
+  file.close();
+  cout &lt;&lt; "size of " &lt;&lt; filename;
+  cout &lt;&lt; " is " &lt;&lt; (m-l) &lt;&lt; " bytes.\n";
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>size of example.txt is 40 bytes.</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+<H2>Binary files</H2>
+In binary files inputting and outputting data with format, like operators
+<TT><B>&lt;&lt;</B></TT> and <TT><B>&gt;&gt;</B></TT> and functions like
+<TT><B>getline</B></TT> do, does not have too much sense, although they are
+perfectly valid.
+<P>
+File streams include two member functions specially thought for input
+and output of data sequentially: <B>write</B> and <B>read</B>. 
+The first one (<B>write</B>) is a member function of <TT><B>ostream</B></TT>,
+also inherited by <TT><B>ofstream</B></TT>. And <B>read</B> is member function of
+<TT><B>istream</B></TT> and it is inherited by <TT><B>ifstream</B></TT>.
+Objects of class <TT><B>fstream</B></TT> have both. Their prototypes are:
+<BLOCKQUOTE><TT>
+<B>write ( char * </B><I>buffer</I><B>, streamsize </B><I>size</I><B> );</B><BR>
+<B>&nbsp;read ( char * </B><I>buffer</I><B>, streamsize </B><I>size</I><B> );</B><BR>
+</TT></BLOCKQUOTE>
+Where <TT><I>buffer</I></TT> is the address of a memory block where read data are stored
+or where the data to be written are taken from.
+The <TT><I>size</I></TT> parameter is an integer value that specifies the number of
+characters to be read/written from/to <I>the buffer</I>.
+</DL>
+
+<P>
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=5 CELLSPACING=5><TR><TD BGCOLOR="#FFFFBF" WIDTH=50% VALIGN="top">
+<TT><PRE><I>// reading binary file</I>
+#include &lt;iostream.h&gt;
+#include &lt;fstream.h&gt;
+
+const char * filename = "example.txt";
+
+int main () {
+  char * buffer;
+  long size;
+  ifstream file (filename, ios::in|ios::binary|ios::ate);
+  size = file.tellg();
+  file.seekg (0, ios::beg);
+  buffer = new char [size];
+  file.read (buffer, size);
+  file.close();
+
+  cout &lt;&lt; "the complete file is in a buffer";
+
+  delete[] buffer;
+  return 0;
+}
+</PRE></TT>
+</TD><TD BGCOLOR="silver" WIDTH=50% VALIGN="top"><TT>
+<B>the complete file is in a buffer</B>
+</TT></TD></TR></TABLE>
+</CENTER>
+
+<P>
+<H2>Buffers and Synchronization</H2>
+When we operate with file streams, these are associated to a <I>buffer</I>
+of type <TT><B>streambuf</B></TT>.  This <I>buffer</I> is a memory block that
+acts as an intermediary between the stream and the physical file.
+For example, when having an out stream and repeatedly calls to member function
+<TT><B>put</B></TT> (write a single character), the character is not written
+directly to the physical file with which the stream is associated each time
+the function is called, instead of that, the character is inserted in the
+<I>buffer</I> for that stream.
+<P>
+When the buffer is flushed, all data that contains is written to the physic media
+(if it is an out stream) or simply erased (if it is an in stream).
+This process is called synchronization and it takes place under any of the following
+circumstances:
+<UL>
+<LI><B>When the file is closed:</B> before closing a file all buffers that have not yet been completely written or read are synchronized.
+<LI><B>When the <I>buffer</I> is full:</B>  <I>Buffers</I> have a certain size.  When the <I>buffer</I> is full it is automatically synchronized.
+<LI><B>Explicitly with manipulators:</B> When certain manipulators are used on streams a synchronization takes place.  These manipulators are: <TT><B>flush</B></TT> and <TT><B>endl</B></TT>.
+<LI><B>Explicitly with function <TT>sync()</TT>:</B> Calling member function <TT><B>sync()</B></TT> (no parameters) causes an immediate syncronization.  This function returns an <TT><B>int</B></TT> value equal to <TT><B>-1</B></TT> if the stream has no associated <I>buffer</I> or in case of failure.
+</UL>
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut5-5.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>5-5. Preprocessor directives.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><NOT-A HREF="tut6-2.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>6-2. Introduction to STL.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</BODY>
+</HTML>

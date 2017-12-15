@@ -1,0 +1,37 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: tvar
+#
+#      Summary: Return rate, based on FV, pmt ,n and a seed value.
+#               Usage: tvar
+# NOT WORKING>>>>>>>>
+#
+#      Created: Wed, 11 Aug 1999 18:48:40 (Bob Heckel)
+##############################################################################
+
+print "Program returns rate, based on FV, ,n and a seed value. Rate must
+return 1% or higher.\n";
+
+print "Enter FV\n";
+$myknownfva = <STDIN>;
+###print "Enter seed rate e.g 10%:\n";
+###$seed = <STDIN> / 100;
+print "Enter pmt\n";
+$pmt = <STDIN>;
+print "Enter n:\n";
+$n = <STDIN>;
+
+$seed = 0.01;
+
+$cumintf = ((1 + $seed)**$n);
+$cfa = (($cumintf - 1) / $seed);
+$fva = $pmt * $cfa;
+
+while($fva < $myknownfva) {
+  $seed = $seed + 0.01;
+  $cumintf = ((1 + $seed)**$n);
+  $cfa = (($cumintf - 1) / $seed);
+  $fva = $pmt * $cfa;
+}
+
+print "$seed is the rate\n";

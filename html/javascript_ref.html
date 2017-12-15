@@ -1,0 +1,4882 @@
+<html>
+
+<head>
+<title>Coolnerds Electronic JavaScript Reference</title>
+<meta NAME="Author" CONTENT="Alan Simpson">
+<meta NAME="Description" CONTENT="Electronic JavaScript Reference">
+<meta NAME="KeyWords" CONTENT="Alan Simpson, JavaScript Reference">
+</head>
+
+<body>
+
+<center><h2>JavaScript QuickRef</h2></center>
+<p><a NAME="top"></a></p>
+<div align="center"><center>
+
+<table ALIGN="CENTER">
+  <tr>
+    <td WIDTH="197"><a HREF="#about">about</a></td>
+    <td WIDTH="197"><a HREF="#escapefunc">escape() function</a> </td>
+    <td WIDTH="197"><a HREF="#optionsarray">options array</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#warnings">warnings</a></td>
+    <td WIDTH="197"><a HREF="#evalfunc">eval() function</a> </td>
+    <td WIDTH="197"><a HREF="#parsefloatfunction">parseFloat() function</a> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#comments">//, &lt;!&#133; comments</a> </td>
+    <td WIDTH="197"><a HREF="#eventhandlers">Event Handlers</a> </td>
+    <td WIDTH="197"><a HREF="#parseIntfunction">parseInt() function</a> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#characters">\<i>char</i> characters</a> </td>
+    <td WIDTH="197"><a HREF="#for">for statement</a></td>
+    <td WIDTH="197"><a HREF="#passwordobject">password object</a> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#operators">+, *, ...operators</a> </td>
+    <td WIDTH="197"><a HREF="#forin">for&#133;in statement</a> </td>
+    <td WIDTH="197"><a HREF="#radioobject">radio object</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#anchorobj">anchor object</a></td>
+    <td WIDTH="197"><a HREF="#formobject">form object</a></td>
+    <td WIDTH="197"><a HREF="#reservedwords">Reserved Words</a> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#anchorsarray"><i>anchors</i> array</a> </td>
+    <td WIDTH="197"><a HREF="#frameobject">frame object</a></td>
+    <td WIDTH="197"><a HREF="#resetobject">reset object</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#arithmeticoperators">arithmetic operators</a> </td>
+    <td WIDTH="197"><a HREF="#function">function statement</a> </td>
+    <td WIDTH="197"><a HREF="#return">return statement</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#assignoperators">assignment operators</a> </td>
+    <td WIDTH="197"><a HREF="#hiddenobject">hidden object</a></td>
+    <td WIDTH="197"><a HREF="#selectobject">select object</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#bitwiseoperators">bitwise operators</a> </td>
+    <td WIDTH="197"><a HREF="#historyobject">history object</a> </td>
+    <td WIDTH="197"><a HREF="#stringobject">string object</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#break">break statement</a></td>
+    <td WIDTH="197"><a HREF="#if">if statement</a> </td>
+    <td WIDTH="197"><a HREF="#stringoperators">string operators</a> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#buttonobj">Button object</a></td>
+    <td WIDTH="197"><a HREF="#isnanfunction">isNAN() function</a></td>
+    <td WIDTH="197"><a HREF="#submitobject">submit object</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#checkboxobj">Checkbox object</a></td>
+    <td WIDTH="197"><a HREF="#linkobject">link object</a></td>
+    <td WIDTH="197"><a HREF="#textobject">text object</a> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#colorvals">color values</a></td>
+    <td WIDTH="197"><a HREF="#linksarray">links array</a> </td>
+    <td WIDTH="197"><a HREF="#textareaobject">textarea object</a> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#comments">comments</a></td>
+    <td WIDTH="197"><a HREF="#locationobject">location object</a> </td>
+    <td WIDTH="197"><a HREF="#thiskeyword">this keyword</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#compoperators">comparison operators</a> </td>
+    <td WIDTH="197"><a HREF="#logicaloperators">logical operators</a> </td>
+    <td WIDTH="197"><a HREF="#unescapefunction">unescape() function</a> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#conditionaloperator">conditional operator</a> </td>
+    <td WIDTH="197"><a HREF="#mathobject">Math object</a></td>
+    <td WIDTH="197"><a HREF="#var">var statement</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#continue">continue statement</a></td>
+    <td WIDTH="197"><a HREF="#navigatorobject">Navigator object</a> </td>
+    <td WIDTH="197"><a HREF="#while">while statement</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#dateobj">Date object</a></td>
+    <td WIDTH="197"><a HREF="#new">new keyword</a> </td>
+    <td WIDTH="197"><a HREF="#windowobject">window object</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#documentobj">document object</a></td>
+    <td WIDTH="197"><a HREF="#operatorprecedence">operator precedence</a> </td>
+    <td WIDTH="197"><a HREF="#with">with statement</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><a HREF="#elementsarray">elements array</a> </td>
+    <td WIDTH="197"><a HREF="#operators">operators</a></td>
+    <td WIDTH="197"></td>
+  </tr>
+</table>
+</center></div>
+
+<p><br>
+<br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="operators"></a><font SIZE="+2" COLOR="#000080">+ - * / ? % ++ -- &amp;&amp;
+|| etc. operators </font></h2>
+
+<p>Operators &quot;operate&quot; on values. You deal with operators every day in your
+regular life - you probably just never heard them called that. For example, everyone knows
+that 1+1=2. In that statement, the + sign is the operator. JavaScript offers many
+operators beyond the basic ones used in arithmetic. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>Though specific rules of syntax vary with some operators, the typical syntax is </p>
+
+<p><i>variable</i> = <i>value</i> <i>operator value</i> </p>
+
+<p>where<i> variable </i>is the name of a variable used to store a value<i>, value </i>is
+a number, string, value, expression, or property of an object, and <i>operator</i> is one
+of the operators described here. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The sections that follow group JavaScript into classes based on the type of operation
+performed. </p>
+
+<h4><a name="arithmeticoperators"></a><font COLOR="#000080">Arithmetic operators </font></h4>
+
+<p>Arithmetic operators act on numbers. Table 1 lists the arithmetic operators offered in
+JavaScript and provides examples of each. </p>
+
+<p><b>Table 1: JavaScript's Arithmetic Operators.</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="148"><i>Operator</i></td>
+    <td WIDTH="148"><i>Used For</i> </td>
+    <td WIDTH="148"><i>Example</i></td>
+    <td WIDTH="148"><i>Equals</i> </td>
+  </tr>
+  <tr>
+    <td WIDTH="148">+</td>
+    <td WIDTH="148">Addition</td>
+    <td WIDTH="148">1+2 </td>
+    <td WIDTH="148">3</td>
+  </tr>
+  <tr>
+    <td WIDTH="148">-</td>
+    <td WIDTH="148">Subtraction</td>
+    <td WIDTH="148">12-10 </td>
+    <td WIDTH="148">2</td>
+  </tr>
+  <tr>
+    <td WIDTH="148">*</td>
+    <td WIDTH="148">Multiplication</td>
+    <td WIDTH="148">2*3 </td>
+    <td WIDTH="148">6</td>
+  </tr>
+  <tr>
+    <td WIDTH="148">/</td>
+    <td WIDTH="148">Division</td>
+    <td WIDTH="148">10/3 </td>
+    <td WIDTH="148">3.3333333333</td>
+  </tr>
+  <tr>
+    <td WIDTH="148">%</td>
+    <td WIDTH="148">Modulus</td>
+    <td WIDTH="148">10%3 </td>
+    <td WIDTH="148">1</td>
+  </tr>
+  <tr>
+    <td WIDTH="148">++</td>
+    <td WIDTH="148">Increment</td>
+    <td WIDTH="148">x=5 <br>
+    x++ </td>
+    <td WIDTH="148">x=6</td>
+  </tr>
+  <tr>
+    <td WIDTH="148">--</td>
+    <td WIDTH="148">Decrement</td>
+    <td WIDTH="148">x=5 <br>
+    x-- </td>
+    <td WIDTH="148">x=4</td>
+  </tr>
+  <tr>
+    <td WIDTH="148">-</td>
+    <td WIDTH="148">Unary negation</td>
+    <td WIDTH="148">-20 </td>
+    <td WIDTH="148">negative 20</td>
+  </tr>
+</table>
+
+<p>The <i>modulus</i> of a number is the remainder after the first division. For example,
+10/3 results in 3, remainder 1. The modulo (%) operator returns that remainder, 1. </p>
+
+<p>The increment operator, ++, is just a shortcut way of saying <i>variable</i> + 1. For
+example, the two statements that follow mean exactly the same thing. The latter one is
+just shorter and quicker to type: x = x + 1 <font SIZE="-1">x++ </font></p>
+
+<p>The same holds true for the decrement (--) operator. </p>
+
+<p>With the negation operator, if the minus sign is used in front of a value without being
+part of a larger expression, then JavaScript assumes it indicates a negative number, just
+as in day-to-day arithmetic. For example x= 5 y= -x results in x being equal to 5 and y
+being equal to -5. <br>
+<br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h4><a name="assignoperators"></a><font COLOR="#000080">Assignment operators </font></h4>
+
+<p>To assign a value to a variable, use the simple = operator with the syntax </p>
+
+<p><i>variablename</i> = <i>value</i> </p>
+
+<p>For example x=15 y=20 <font SIZE="-1">z=x+y </font></p>
+
+<p>After all three lines have been executed, the variable x contains the number 15, the
+variable y contains 20, and the variable z contains 35 (the sum of 15+20). </p>
+
+<p>Some shorthand operators exist that you can use to do some arithmetic and assign the
+result to a value in one fell swoop. Those operators are shown in Table 2. </p>
+
+<p><b>Table 2: JavaScript's Assignment Operators.</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="197"><i>Operator</i></td>
+    <td WIDTH="197"><i>Example</i> </td>
+    <td WIDTH="197"><i>Means</i></td>
+  </tr>
+  <tr>
+    <td WIDTH="197">+= </td>
+    <td WIDTH="197">x+=y </td>
+    <td WIDTH="197">x=x+y </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">-=</td>
+    <td WIDTH="197">x-=y</td>
+    <td WIDTH="197">x=x-y </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">*=</td>
+    <td WIDTH="197">x*=y</td>
+    <td WIDTH="197">x=x*y </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">/=</td>
+    <td WIDTH="197">x/=y</td>
+    <td WIDTH="197">x=x/y </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">%</td>
+    <td WIDTH="197">x%=y</td>
+    <td WIDTH="197">x=x%y </td>
+  </tr>
+</table>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h4><a name="compoperators"></a><font COLOR="#000080">Comparison and <a name="logicaloperators"></a>logical operators </font></h4>
+
+<p>Comparison and logical operators compare two values and return either <i>true</i> or <i>false</i>.
+Table 3 lists the comparison operators. Table 4 displays the logical operators: </p>
+
+<p><b>Table 3: JavaScript's Comparison Operators.</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="197"><i>Operator</i></td>
+    <td WIDTH="197"><i>Meaning</i> </td>
+    <td WIDTH="197"><i>Example</i></td>
+  </tr>
+  <tr>
+    <td WIDTH="197">==</td>
+    <td WIDTH="197">is equal to</td>
+    <td WIDTH="197">10==3 is <b>false</b> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">!=</td>
+    <td WIDTH="197">does not equal</td>
+    <td WIDTH="197">10!=3 is <b>true</b> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&gt;</td>
+    <td WIDTH="197">is greater than</td>
+    <td WIDTH="197">10&gt;3 is <b>true</b></td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&gt;=</td>
+    <td WIDTH="197">is greater than or equal to </td>
+    <td WIDTH="197">10&gt;=3 is <b>true</b></td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&lt;</td>
+    <td WIDTH="197">is less than</td>
+    <td WIDTH="197">10&lt;3 is <b>false</b> </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&lt;=</td>
+    <td WIDTH="197">is less than or equal to </td>
+    <td WIDTH="197">10&lt;=3 is <b>false</b></td>
+  </tr>
+</table>
+
+<p><b>Table 4: JavaScript's Logical Operators.</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="118"><i>Operator</i></td>
+    <td WIDTH="119"><i>Meaning</i> </td>
+    <td WIDTH="223"><i>If x=10 and y= 5 then&#133;y</i></td>
+  </tr>
+  <tr>
+    <td WIDTH="118">&amp;&amp;</td>
+    <td WIDTH="119">AND</td>
+    <td WIDTH="223">(x = 10) &amp;&amp; (y &lt; 10) is <b>true</b> </td>
+  </tr>
+  <tr>
+    <td WIDTH="118">||</td>
+    <td WIDTH="119">OR</td>
+    <td WIDTH="223">(x=10) || (y=10) is <b>true</b> </td>
+  </tr>
+  <tr>
+    <td WIDTH="118">!</td>
+    <td WIDTH="119">NOT</td>
+    <td WIDTH="223">x !=y is <b>true</b> </td>
+  </tr>
+</table>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h4><a name="stringoperators"></a><font COLOR="#000080">String operators </font></h4>
+
+<p>A string is a chunk of text, such as <i>hello</i>, rather than a number such as 10.
+Unlike numbers, you cannot add, subtract, multiply, and divide strings. Example: 2*3 = 6
+is fine. But what is &quot;Hello&quot; * &quot;There&quot;? The question makes no sense. </p>
+
+<p>You can, however, <i>concatenate</i> strings, which is a fancy name for &quot;stick
+them together.&quot; You use the + operator to concatenate strings. Here is an example
+where we create three variable, x, y, and z, all of which contains strings: </p>
+
+<p>x=&quot;Hello&quot; </p>
+
+<p>y=&quot;There&quot; </p>
+
+<p>z=x+y </p>
+
+<p>The result is that z now contains <i>HelloThere</i>. </p>
+
+<p>Why is there no space between the words? Because to a computer, strings are just
+meaningless strings of characters. To a computer, the string <i>hello </i>in no more
+meaningful than the string <i>ghfkredg. </i>They are both just strings. If you want to add
+a space between the words, you can pop a space into the expression. A <i>literal space </i>would
+be a space enclosed in quotation marks (&quot; &quot;). Hence, this series of commands
+x=&quot;Hello&quot; y=&quot;There&quot; </p>
+
+<p>z=x+&quot; &quot;+y<font SIZE="-1"> </font></p>
+
+<p>results in z containing <i>Hello There</i>. A shortcut operator also exists for string
+concatenation +=. For example x=&quot;Hello&quot; y=&quot;There&quot; </p>
+
+<p>x+=&quot; &quot;+y </p>
+
+<p>in which case <i>x</i> equals itself with a space and <i>y</i> tacked on. Ergo, <i>x</i>
+then contains <i>Hello There</i>. <br>
+<br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h4><a name="conditionaloperator"></a><font COLOR="#000080">Conditional operator </font></h4>
+
+<p>JavaScript also contains a conditional operator that assigns a value to a variable
+based on some condition. The operators for a conditional expression are ? and : using this
+syntax: </p>
+
+<p><i>myvar</i> = (<i>condition</i>) ? <i>value1</i> : <i>value2</i> </p>
+
+<p>For example, the conditional expression that follows is a shorthand way of saying
+&quot;If the variable named <i>gender</i> contains F, then put the string 'Ms.' in the
+variable named <i>salutation</i>. If the variable named <i>gender</i> does not contain F,
+then put the string 'Mr.' into the variable named <i>salutation</i>&quot;: </p>
+
+<p><i>salutation</i> = (gender==&quot;<i>F</i>&quot;) ? &quot;<i>Ms.</i>&quot; : &quot;<i>Mr</i>.&quot;
+<br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h4><a name="bitwiseoperators"></a><font COLOR="#000080">Bitwise operators</font> </h4>
+
+<p>Bitwise operators treat their values as binary numbers (1s and 0s) rather than as
+numeric values. You may never need to use these. I never have. I also have yet to see a
+JavaScript program that uses them. If I were you, I wouldn't waste any brain cell energy
+trying to memorize them. But just in case you do come across a bitwise operator, Table 5
+shows what each one does. </p>
+
+<p><b>Table 5: JavaScript's Bitwise Operators.</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="197"><i>Operator</i></td>
+    <td WIDTH="197"><i>Action</i> </td>
+    <td WIDTH="197"><i>Example</i></td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&amp;</td>
+    <td WIDTH="197">bitwise AND</td>
+    <td WIDTH="197">10&amp;3=2 </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">|</td>
+    <td WIDTH="197">bitwise OR</td>
+    <td WIDTH="197">10|3=11 </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">^</td>
+    <td WIDTH="197">bitwise exclusive OR</td>
+    <td WIDTH="197">10^3=9</td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&lt;&lt;</td>
+    <td WIDTH="197">left shift</td>
+    <td WIDTH="197">10&lt;&lt;3=80 </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&gt;&gt;</td>
+    <td WIDTH="197">Sign-propagating right shift </td>
+    <td WIDTH="197">10&gt;&gt;3=1</td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&gt;&gt;&gt;</td>
+    <td WIDTH="197">Zero-fill right shift </td>
+    <td WIDTH="197">10&gt;&gt;&gt;3=1</td>
+  </tr>
+</table>
+
+<p>Some shortcut operators also exist for bitwise assignments, as listed in Table 6. </p>
+
+<p><b>Table 6: JavaScript's Bitwise Assignment Operators.</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="197"><i>Operator</i></td>
+    <td WIDTH="197"><i>Example</i> </td>
+    <td WIDTH="197"><i>Means</i></td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&lt;&lt;=</td>
+    <td WIDTH="197">x&lt;&lt;=y</td>
+    <td WIDTH="197">x=x&lt;&lt;y</td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&gt;&gt;=</td>
+    <td WIDTH="197">x&gt;&gt;=y</td>
+    <td WIDTH="197">x=x&gt;&gt;y</td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&gt;&gt;&gt;=</td>
+    <td WIDTH="197">x&gt;&gt;&gt;=y </td>
+    <td WIDTH="197">x=x&gt;&gt;&gt;y</td>
+  </tr>
+  <tr>
+    <td WIDTH="197">&amp;=</td>
+    <td WIDTH="197">x&amp;=y</td>
+    <td WIDTH="197">x=x&amp;y </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">^=</td>
+    <td WIDTH="197">x^=y</td>
+    <td WIDTH="197">x=x^y </td>
+  </tr>
+  <tr>
+    <td WIDTH="197">|=</td>
+    <td WIDTH="197">x|=y</td>
+    <td WIDTH="197">x=x|y </td>
+  </tr>
+</table>
+
+<p><br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h3><a name="operatorprecedence"></a><font SIZE="+1" COLOR="#000080">Operator precedence </font></h3>
+
+<p>JavaScript operators follow the standard order of precedence. But you can override
+natural precedence with parentheses. For example </p>
+
+<p>5+3*10 </p>
+
+<p>equals 35 because the multiplication is naturally carried out first (according to the
+rules of precedence). That is, the machine first evaluates 10*3, which equals 30, and then
+adds 5 to that to get 35. </p>
+
+<p>This expression has a different result: </p>
+
+<p>(5+3)*10 </p>
+
+<p>This expression results in 80 because the parentheses force the addition to be carried
+out first (5+3 equals 8). That result then is multiplied by 10 to result in 80. Table 7
+shows the order of precedence of the operators, from highest to lowest, when you do not
+use parentheses in an expression. Operators at the same level of precedence within an
+expression are carried out in left-to-right order. </p>
+
+<p><b>Table 7: JavaScript Operators Order of Precedence.</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="295"><i>Action</i></td>
+    <td WIDTH="295"><i>Operator(s)</i> </td>
+  </tr>
+  <tr>
+    <td WIDTH="295">call, member</td>
+    <td WIDTH="295">(),[]</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">negation/increment</td>
+    <td WIDTH="295">! ~- ++ -- </td>
+  </tr>
+  <tr>
+    <td WIDTH="295">multiply/divide</td>
+    <td WIDTH="295">* / %</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">addition/subtraction</td>
+    <td WIDTH="295">+ -</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">bitwise shift</td>
+    <td WIDTH="295">&lt;&lt; &gt;&gt; &gt;&gt;&gt; </td>
+  </tr>
+  <tr>
+    <td WIDTH="295">comparison</td>
+    <td WIDTH="295">&lt; &lt;= &gt; &gt;= </td>
+  </tr>
+  <tr>
+    <td WIDTH="295">equality</td>
+    <td WIDTH="295">== !=</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">bitwiseAND</td>
+    <td WIDTH="295">&amp;</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">bitwise XOR</td>
+    <td WIDTH="295">^</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">bitwise OR</td>
+    <td WIDTH="295">|</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">logical AND</td>
+    <td WIDTH="295">&amp;&amp;</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">logical OR</td>
+    <td WIDTH="295">||</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">conditional</td>
+    <td WIDTH="295">?:</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">assignment</td>
+    <td WIDTH="295">= += -= *= /= %= &lt;&lt;= &gt;&gt;= &gt;&gt;&gt;= &amp;= ^= |= </td>
+  </tr>
+  <tr>
+    <td WIDTH="295">comma</td>
+    <td WIDTH="295">,</td>
+  </tr>
+</table>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="comments"></a><font SIZE="+2" COLOR="#000080">//, /*, */, &lt;! -- and
+//--&gt; comments </font></h2>
+
+<p>These comments identify commands within JavaScript code. To use them, you must place
+them between the &lt;SCRIPT&gt; ... &lt;/SCRIPT&gt; tags. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>This comment </p>
+
+<p>// <i>comment</i> </p>
+
+<p>is a single-line comment where <i>comment </i>is any one line of text, whereas </p>
+
+<p>/* <i>comment</i> */ </p>
+
+<p>is a multiple-line where <i>comment</i> is any amount of plain-English text. </p>
+
+<p>&lt;!-- <i>comment</i> </p>
+
+<p><i>code</i> </p>
+
+<p>// <i>comment</i> --&gt; </p>
+
+<p>This preceding example shows the hide comment, where <i>comment</i> is any (optional)
+text and <i>code</i> is JavaScript instructions. This comment hides JavaScript code from
+non-JavaScript browsers. </p>
+
+<h3><font SIZE="+1"><font COLOR="#000080">Example</font> </font></h3>
+
+<pre><font COLOR="#800080">&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+&lt;!-- This will start hiding code from non-JavaScript browsers.
+
+//This is a comment, and will be ignored.
+document.write (&quot;Hello World&quot;)
+
+/*Here's a two line comment that will 
+be ignored */
+document.write (&quot;Goodbye World&quot;)
+
+// and this stops the hiding --&gt;
+&lt;/SCRIPT&gt; </font>
+
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="characters"></a><font SIZE="+2" COLOR="#000080">\b \f \n \r \t \&quot;
+special characters </font></h2>
+
+<p>Special characters used to cause a string to perform some action when printed. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for special characters is </p>
+
+<p>variable = &quot;<i>text</i> \<i>specialcharacter text</i>&quot; </p>
+
+<p>or </p>
+
+<p>document.write (&quot;<i>text</i> \<i>specialcharacter text</i>&quot;) </p>
+
+<p>where <i>variable </i>is the name of a variable that stores the string, <i>text</i> is
+any text, and <i>specialcharacter</i> is b, f, n, r, t, or a quotation mark. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The special characters and the role played by each are listed in Table 8. However, be
+forewarned that only the \&quot; character appears to work in Windows browsers. </p>
+
+<p><b>Table 8: JavaScript Special Characters for String Literals.</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="295"><i>Character</i></td>
+    <td WIDTH="295"><i>Meaning</i> </td>
+  </tr>
+  <tr>
+    <td WIDTH="295">\b</td>
+    <td WIDTH="295">Backspace</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">\f</td>
+    <td WIDTH="295">Form feed</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">\n</td>
+    <td WIDTH="295">Newline</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">\r</td>
+    <td WIDTH="295">Carriage return</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">\t</td>
+    <td WIDTH="295">tab</td>
+  </tr>
+  <tr>
+    <td WIDTH="295">\&quot;</td>
+    <td WIDTH="295">quotation mark</td>
+  </tr>
+</table>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<pre><font COLOR="#800080">myQuote = &quot;Mary said \&quot;Hello Joe\&quot; as she rode by.&quot;
+document.write(myQuote) </font>
+
+
+
+
+
+
+</pre>
+
+<p>When executed, the document.write statement puts this on the screen: </p>
+
+<p>Mary said &quot;Hello Joe&quot; as she rode by. <br>
+<br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="anchorobj"></a><font SIZE="+2" COLOR="#000080">anchor object (<a name="anchorsarray"></a><i>anchors</i> array) </font></h2>
+
+<p>This is a built-in array that contains one element for every anchor in the current Web
+page. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the anchor object is </p>
+
+<p>document.anchor[<i>n</i>] </p>
+
+<p>where <i>n</i> is some number representing an item's position in the list.
+Alternatively, you can use </p>
+
+<p>document.anchor.length </p>
+
+<p>to identify the number of items in the list. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.length</b> identifies how many items are in the anchors array. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>When your page is displayed to a reader, the anchors array creates an element for each
+anchor in the page. The first anchor is anchor[0], the next is anchor[1], and so forth.
+The anchors.length value reflects the number of items in the array. </p>
+
+<p>The actual name of the anchor is always null. That is, you cannot use the anchors array
+to discover an anchor's name. You also cannot create an anchor programatically. For
+example, the statement <i>anchor[0]=&quot;howdy&quot;</i> does nothing. </p>
+
+<p>The anchor object is a property of the larger document object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The custom function in the following listing returns <i>true</i> if the current page
+has at least one anchor in it. It returns <i>false</i> if the page contains no anchors. </p>
+
+<pre><font COLOR="#800080">function hasAnchors() {
+     retval = true 
+     if (<b>document.anchors.length</b> == 0) {
+          retval = false 
+     } return retval 
+}</font>
+
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="break"></a><font SIZE="+2" COLOR="#000080">break statement </font></h2>
+
+<p>This statement immediately terminates an ongoing <i>for</i> or <i>while</i> loop. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the break statement is </p>
+
+<p>break </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The break statement can be used only within the curly braces following a<i> for </i>or <i>while
+</i>loop. When executed, break terminates the loop and passes execution to the first
+statement after the loop's closing curly brace (}). </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The custom contains() function that follows looks at each character in a string (<i>lstring</i>).
+If it finds a character that matches the character stored in <i>onechar</i>, it sets the
+variable retval to<i><b> </b>true</i><b> </b>and stops looking. </p>
+
+<pre><font COLOR="#800080">function contains(onechar,lstring) {
+     retval = false
+     for (var i=1;i&lt;=lstring.length;i++) {
+          if (lstring.substring(i,i+1)==onechar) {
+               retval=true <b>break</b> 
+          } 
+     } 
+     return retval
+}</font>
+
+
+
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="buttonobj"></a><font SIZE="+2" COLOR="#000080">Button object </font></h2>
+
+<p>This object refers to a clickable button on a form. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the button object is </p>
+
+<p>&lt;INPUT type=&quot;button&quot; value=&quot;<i>button text</i>&quot;&gt; </p>
+
+<p>where <i>button text</i> is the text that appears on the button face. The
+&lt;INPUT...&gt; tag must be placed within a pair of &lt;FORM&gt;...&lt;/FORM&gt; tags.
+The INPUT tag can also contain other INPUT attributes, including JavaScript event
+handlers. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.name</b> reflects the NAME attribute in the &lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> reflects the VALUE attribute in the &lt;INPUT&gt;
+tag <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.click()</b> Clicks the button <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onClick</b> Triggered when the reader clicks the button. <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>Use <i>button </i>and the <i>onClick</i> event handler<i> </i>in the &lt;INPUT&gt; tag
+of a form - not in JavaScript code. The &lt;SCRIPT&gt;...&lt;/SCRIPT&gt; tags are not
+required but the &lt;FORM&gt;...&lt;/FORM&gt; tags are. </p>
+
+<p>The button object is a property of the larger form object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The following example displays on a button on the reader's Web page that says <i>Click
+Me</i> on its face. When the reader clicks the button, an alert message says <i>Howdy!</i>
+</p>
+
+<pre><font COLOR="#800080">&lt;FORM name=&quot;OneButt&quot;&gt;
+&lt;INPUT <b>type=&quot;button&quot;</b> value=&quot;Click Me&quot; onClick = &quot;alert('Howdy!')&quot;&gt;
+&lt;/FORM&gt;</font>
+
+
+
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="checkboxobj"></a><font SIZE="+2" COLOR="#000080">Checkbox object </font></h2>
+
+<p>In an &lt;INPUT&gt; tag, this object specifies a checkbox form field. In JavaScript, it
+refers to a checkbox on a form. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The following line </p>
+
+<p>&lt;INPUT type=&quot;checkbox&quot;&gt; </p>
+
+<p>when placed between a pair of &lt;FORM&gt; tags, puts a checkbox on the current form.
+The statement also can contain other INPUT attributes, including the CHECKED, NAME, and
+VALUE attributes, and a JavaScript onClick event handler. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.checked</b> <i>true</i> if box is checked, <i>false</i> if box is clear </p>
+
+<p><b>.defaultchecked</b> Reflects the CHECKED attribute of the &lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.name</font></b> Reflects the NAME attribute of the &lt;INPUT&gt;
+tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> Reflects the VALUE attribute of the &lt;INPUT&gt;
+tag <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.click()</b> Programatically clicks on the checkbox. <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onClick</b> Triggered when the reader clicks on the checkbox <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>To create a checkbox in Word IA, choose <u>I</u>nsert &gt; For<u>m</u> Field &gt; <u>C</u>heck
+box.) To create a checkbox manually, use the <i>TYPE=&quot;checkbox&quot;</i> attribute in
+an &lt;INPUT&gt; tag between a pair of &lt;FORM&gt;...&lt;/FORM&gt; tags. </p>
+
+<p>Use event handlers within the &lt;INPUT&gt; tag to trigger a script when the reader
+clicks on the checkbox. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>In the following example, the areyasure() custom function displays a custom alert
+message. However, that function is called up only if the reader opts to pay now by credit
+card when presented with the form. Note the &lt;INPUT ... TYPE=&quot;checkbox&quot;&gt;
+tag and its onClick property that calls up areyasure only if the checkbox is checked. </p>
+
+<pre><font SIZE="-1">&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+     <b>function areyasure()</b> {
+     alert(&quot;Think twice. This is not a secure web site!&quot;)
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt; 
+
+&lt;BODY&gt;
+&lt;FORM NAME=&quot;payment_method&quot;&gt;
+     &lt;INPUT TYPE=&quot;<b>checkbox</b>&quot; NAME=&quot;creditcard&quot; <b>onClick=&quot;if (this.checked) {areyasure()}&quot;</b>&gt;
+     Pay now by credit card
+&lt;/FORM&gt;
+&lt;BODY&gt; </font>
+
+
+
+
+
+
+</pre>
+
+<p>Here's another example where a custom function named clearCheckbox() automatically
+removes the checkmark from a checkbox by settings its .checked property to false. The
+function is called when the reader clicks the button defined by the &lt;INPUT
+type='button'&gt; tag: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt; 
+function clearCheckbox() {
+     if (<b>document.cake.eat.checked</b>) {
+          <b>document.cake.eat.checked = false
+          </b>alert (&quot;Can't have cake and eat it too&quot;) 
+     }
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;FORM name=&quot;cake&quot;&gt;
+     &lt;INPUT <b>type=&quot;checkbox&quot;</b> name=&quot;eat&quot;&gt; I want to eat my cake.&lt;P&gt;
+     &lt;INPUT type='button' value = 'I want to keep my cake' onClick = 'clearCheckbox()'&gt; 
+&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/cake.htm">Try it</a> </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="colorvals"></a><font SIZE="+2" COLOR="#000080">Color values </font></h2>
+
+<p>You can <a href="../author/jscript/colorval.htm">click here</a> to see the color names and triplets. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>You can change the background color of a document at any time by setting
+document.bgColor to a new color. However, you cannot change any foreground colors -
+fgColor (TEXT), alinkcolor, and so on - if the page has already been written and is
+displayed on the screen. To change foreground colors, you need to close the input stream
+to the document (document.close()), open a new document (document.open(), and rewrite the
+entire page with new color values in the &lt;BODY&gt; tag of the page. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>This little page shows a button that, when clicked, changes the background color of the
+current page from pink to purple or vice versa. Note that the JavaScript if() statement
+still requires the triplet with a pound sign - '#ffc0cb' rather than 'pink'. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+function reversecolor() { 
+     // The if statement still requires the triplet. 
+     if (document.bgColor == '<b>#ffc0cb</b>') { 
+          document.bgColor = '<b>purple</b>'}
+     else {
+          document.bgColor = '<b>pink</b>'
+     }
+}
+&lt;/SCRIPT&gt;
+&lt;BODY bgColor = '<b>pink</b>'&gt;
+&lt;FORM&gt;
+     &lt;INPUT type = &quot;button&quot; value=&quot;click me&quot; onclick=&quot;reversecolor()&quot;&gt;
+&lt;/FORM&gt; 
+&lt;/BODY&gt;
+&lt;/HTML&gt; </font>
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/reverse.htm">Try it</a> <br>
+</p>
+
+<p>See also the <a href="../author/alancolr.htm">Color Schemer</a> page (alancolr.htm) which
+presents an example that lets you select both a background and foreground (TEXT) color. </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="continue"></a><font SIZE="+2" COLOR="#000080">continue statement </font></h2>
+
+<p>This statement terminates the remaining statements in a <i>for</i> or <i>while</i> loop
+and continues execution at the top of the loop (the next iteration of the loop). </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this statement is </p>
+
+<p>continue </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The continue statement makes sense only within the curly braces of a <i>for</i> or <i>while</i>
+loop. Unlike the break statement, <i>continue</i> passes control back to the top of the
+loop. It does not terminate the loop. In a <i>for</i> loop, <i>continue</i> jumps back to
+and executes the <i>increment-expression</i>. In a while loop, continue jumps back to and
+evaluates the <i>condition</i> statement. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>Opening the following page </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+i=0
+while (i &lt; 10) {
+     i++
+     if (i/3 == parseInt(i/3)){
+          <b>continue
+     </b>}
+     document.write (&quot;i=&quot;,i,&quot;&lt;BR&gt;&quot;)
+}
+&lt;/SCRIPT&gt;
+&lt;/BODY&gt; </font>
+
+
+
+
+
+
+
+
+</pre>
+
+<p>displays this on the Web browser screen. </p>
+
+<p>i=1 </p>
+
+<p>i=2 </p>
+
+<p>i=4 </p>
+
+<p>i=5 </p>
+
+<p>i=7 </p>
+
+<p>i=8 </p>
+
+<p>i=10 </p>
+
+<p align="center"><a href="../author/jscript/continu.htm">Try it</a> </p>
+
+<p>Numbers that are evenly divisible by three (3, 6, 9) are omitted because the if()
+statement in the while loop forces the loop to start over, without getting to the
+document.write() statement, when the value of i is evenly divisible by 3. </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="dateobj"></a><font SIZE="+2" COLOR="#000080">Date object </font></h2>
+
+<p>This object defines a date/time as the number of milliseconds since January 1, 1970. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To create a new date object, use the following syntax: </p>
+
+<p><i>dateObjectName</i> = new Date() </p>
+
+<p>or </p>
+
+<p><i>dateObjectName</i> = new Date(<i>year</i>,<i> month</i>, <i>day</i>) </p>
+
+<p>or </p>
+
+<p><i>dateObjectName </i>= new Date(<i>year</i>, <i>month</i>, <i>day</i>, <i>hours</i>, <i>minutes</i>,
+<i>seconds</i>) </p>
+
+<p>or </p>
+
+<p><i>dateObjectName</i> = new Date(&quot;<i>month day</i>, <i>year hours</i>:<i>minutes</i>:<i>seconds</i>&quot;)
+</p>
+
+<p>where <i>dateObjectName</i> is either the name of a new object or a property of an
+existing object, <i>month, day, year, hours, minutes, and seconds</i> are integers or, in
+the last form, strings. </p>
+
+<p>To use Date methods, follow this syntax </p>
+
+<p><i>dateObjectName</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>dateObjectName</i> is either the name of an existing Date object or a property
+of an existing object and <i>methodName</i> is one of the methods listed in the following
+section. </p>
+
+<h4><font COLOR="#000080">Methods </font><br>
+</h4>
+
+<p><b>.getDate()</b> Returns the day of month (1 to 31) </p>
+
+<p><b>.getDay()</b> Returns the day of the week from 0 (Sunday) to 6 (Saturday) </p>
+
+<p><b>.getHours()</b> Returns the hour from 0 (midnight) to 23 (11:00 PM) </p>
+
+<p><b>.getMinutes()</b> Returns the minute from 0 to 59 </p>
+
+<p><b>.getMonth()</b> Returns the month from 0 (January) to 11 (December) </p>
+
+<p><b>.getSeconds()</b> Returns the seconds (0 to 59) </p>
+
+<p><b>.getTime()</b> Returns the milliseconds transpired since 1/1/70 </p>
+
+<p><b>.getTimezoneOffset()</b> Returns the difference between local time and GMT (meridian
+time) </p>
+
+<p><b>.getYear()</b> Returns the two-digit year, such as 97 for 1997 </p>
+
+<p><b>.parse(<i>string</i>)</b> Converts a <i>string</i> in <i>Dec 25, 1997 </i>to the
+number of milliseconds transpired since 1/1/70 </p>
+
+<p><b>.setDate(<i>num</i>)</b> Sets the day of an existing object to <i>num </i>where <i>num
+</i>is a value between 1 and 31 </p>
+
+<p><b>.setHours(<i>num</i>)</b> Sets the hour of an existing object to <i>num </i>where <i>num
+</i>is a value between 0 and 23 </p>
+
+<p><b>.setMinutes(<i>num</i>)</b> Sets the minutes of an existing object to <i>num </i>where
+<i>num </i>is a value between 0 and 59 </p>
+
+<p><b>.setMonth(<i>num</i>)</b> Sets the month of an existing object to <i>num </i>where <i>num
+</i>is a value between 0 and 11 </p>
+
+<p><b>.setSeconds(<i>num</i>)</b> Sets the seconds of an existing object to <i>num </i>where
+<i>num </i>is a value between 0 and 59 </p>
+
+<p><b>.setTime(<i>num</i>)</b> Sets the date and time of an existing object to <i>num </i>where
+<i>num </i>represents the number of milliseconds transpired from 1/1/70 </p>
+
+<p><b>.setYear(<i>num</i>)</b> Sets the year of an existing object to <i>num </i>where <i>num
+</i>is a value between 70 and 99 </p>
+
+<p><b>.toGMTString(<i>dateobject</i>)</b> Converts the <i>dateobject</i> to a string
+expressed in Internet GMT format </p>
+
+<p><b>.toLocaleString(<i>dateobject</i>)</b> Converts the <i>dateobject</i> to a string
+expressed in local date/time format </p>
+
+<p><b>.UTC(<i>year</i>, <i>month</i>, <i>day</i> [, <i>hrs</i>] [, <i>min</i>] [, <i>sec</i>])</b>
+Converts date/time values expressed in Universal Coordinated Time values to the number of
+milliseconds transpired since 1/1/70 <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The way JavaScript handles dates is very similar to the way Java handles dates. Both
+languages store dates internally as the number of milliseconds that have elapsed since
+January 1, 1970 00:00:00. Dates prior to 1970 are not allowed. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>Opening the following page on March 31, 1997, at approximately 4:30 pm </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;SCRIPT Language=&quot;JavaScript&quot;&gt; 
+today = <b>new Date()
+</b>document.write ('today = ',today,'&lt;br&gt;')
+document.write ('today.getDate() = ',<b>today.getDate()</b>,'&lt;br&gt;')
+document.write ('today.getHours() = ',<b>today.getHours()</b>,'&lt;br&gt;')
+document.write ('today.toGMTString() = ',<b>today.toGMTString()</b>,'&lt;br&gt;')
+document.write ('today.toLocaleString() = ',<b>today.toLocaleString()</b>)
+&lt;/SCRIPT&gt;
+
+&lt;/BODY&gt;
+&lt;/HTML&gt; </font>
+
+
+
+
+
+
+</pre>
+
+<p>would display this in the Web browser document: <br>
+</p>
+
+<p>today = Mon Mar 31 16:30:01 PST 1997 <br>
+today.getDate() = 31 <br>
+today.getHours() = 16 <br>
+today.toGMTString() = Tue, 01 Apr 1997 00:30:01 GMT <br>
+today.toLocaleString() = 03/31/97 16:30:01 <br>
+<br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="documentobj"></a><font SIZE="+2" COLOR="#000080">document object </font></h2>
+
+<p>The document object represents the entire page currently on display in the Web browser.
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the document object is </p>
+
+<p>document.<i>propertyName</i> </p>
+
+<p>or </p>
+
+<p>document.<i>methodName</i>(<i>parameters</i>) <br>
+</p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.alinkColor</b> Reflects the ALINK attribute of the document's &lt;BODY&gt; tag </p>
+
+<p><b><font SIZE="-1">anchors</font></b> An array reflecting all anchors in a document </p>
+
+<p><b><font SIZE="-1">.bgColor</font></b> Reflects the BGCOLOR attribute of the document's
+&lt;BODY&gt; tag </p>
+
+<p><b><font SIZE="-1">.cookie</font></b> Specifies a cookie </p>
+
+<p><b><font SIZE="-1">.forms</font></b> An array reflecting all forms defined within the
+page using &lt;FORM&gt; tags </p>
+
+<p><b><font SIZE="-1">.lastModified</font></b> The date/time that the page was last
+modified </p>
+
+<p><b><font SIZE="-1">.linkColor</font></b> Reflects the LINK attribute of the document's
+&lt;BODY&gt; tag </p>
+
+<p><b><font SIZE="-1">.links</font></b> An array reflecting all links in a document </p>
+
+<p><b><font SIZE="-1">.location</font></b> Reflects the complete URL of the current page </p>
+
+<p><b><font SIZE="-1">.referrer</font></b> Reflects the URL of the calling page </p>
+
+<p><b><font SIZE="-1">.title</font></b> Reflects the contents of the &lt;TITLE&gt; tag </p>
+
+<p><b><font SIZE="-1">.vlinkColor</font></b> Reflects the VLINK attribute in the
+document's &lt;BODY&gt; tag <br>
+</p>
+
+<p>The anchor object, form object, history object, and link object are also properties of
+the document object. <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.clear()</b> Removes the page from the browser window </p>
+
+<p><b>.close()</b> Terminates the input stream to the page, but leaves the page displayed
+on the screen </p>
+
+<p><b>.open(<i>mimetype</i>)</b> Opens the input stream to a page to collect incoming
+write() and writeln(). If ommitted, <i>mimetype</i> is standard text/html </p>
+
+<p><b>.write(<i>string_expression</i>)</b> Writes <i>string_expression</i> directly to the
+page </p>
+
+<p><b>.writeln(<i>string_expression</i>)</b> Writes <i>string_expression</i> directly to
+the page and sends a line break (Unix only) <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onLoad</b> When used in the &lt;BODY&gt; tag, specifies JavaScript code to be
+executed as soon as the page is opened. </p>
+
+<p><b><font SIZE="-1">onUnload</font></b> When used in the &lt;BODY&gt; tag, specifies
+JavaScript code to be executed as soon as the page is unloaded. </p>
+
+<p>Though onLoad() and onUnload() technically are event handlers for the larger window
+object, you place them within the &lt;BODY&gt; tag of the current page. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>JavaScript's document object provides access to the entire Web page, including the
+&lt;HEAD&gt; section, &lt;BODY&gt; definition, and various objects within the page, such
+as anchors, forms, and links. </p>
+
+<p>The document object is a property of the larger window object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+<font COLOR="#800080">
+
+<pre>
+&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt;JavaScript Document Object&lt;/TITLE&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;P&gt;
+Hello, my name is JavaScript Document Object and I'll be your
+web page. I have two hyperlinks in me, one to &lt;A HREF=&quot;http://www.coolnerds.com&quot; &gt;Alan's Coolnerds site&lt;/A&gt;.
+The other to &lt;A HREF=&quot;http://home.netscape.com&quot; &gt;Netscape's home page&lt;/A&gt;.
+Below are some of the properties about me.&lt;BR&gt;
+
+&lt;P&gt;
+&lt;SCRIPT LANGUAGE = &quot;JavaScript&quot;&gt; 
+        document.write (&quot;document.bgColor = &quot;,document.bgColor,&quot;&lt;BR&gt;&quot;) 
+	document.write (&quot;document.fgColor = &quot;,document.fgColor,&quot;&lt;BR&gt;&quot;)
+	document.write (&quot;document.linkColor = &quot;,document.linkColor,&quot;&lt;BR&gt;&quot;)
+	document.write (&quot;document.alinkColor = &quot;,document.alinkColor,&quot;&lt;BR&gt;&quot;)
+	document.write (&quot;document.vlinkColor = &quot;,document.vlinkColor,&quot;&lt;BR&gt;&quot;) 
+	document.write (&quot;document.location = &quot;,document.location,&quot;&lt;BR&gt;&quot;)
+	document.write (&quot;document.lastModified = &quot;,document.lastModified,&quot;&lt;BR&gt;&quot;)
+	document.write (&quot;document.title = &quot;,document.title,&quot;&lt;BR&gt;&quot;)
+&lt;/SCRIPT&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+
+</pre>
+</font>
+
+<p align="center"><a href="../author/jscript/documob.htm">Try it</a> </p>
+
+<p><br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="elementsarray"></a><font SIZE="+2" COLOR="#000080">elements array </font></h2>
+
+<p>The elements arrary is an array of objects corresponding to each field within a form.
+The first item in the array, elements[0], is the first form field. The second item,
+elements[1], is the second form field, and so on. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the elements array is </p>
+
+<p>document.<i>formName</i>.elements[<i>index</i>] </p>
+
+<p>or </p>
+
+<p>document<i>.formName</i>.elements.length </p>
+
+<p>where <i>formName</i> is either the name of a form or an element in the forms array and
+<i>index</i> is an integer representing the object's position in the array. <br>
+</p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.length</b> Reflects the number of fields on the form </p>
+
+<p><b>.value</b> Reflects the contents of one form field </p>
+
+<p>The value returned by .value reflects either the contents of the field or the VALUE
+attribute of the field's INPUT tag, depending on the type of field being referred to. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The elements array is a list that contains one item for each object (button, checkbox,
+hidden, password, radio, reset, select, submit, text, or textarea object) in a form. This
+provides an way to refer to fields in a form without using the name. For example, suppose
+that your document contains a form named UserInput. The first field in that form is named
+ReaderName. You can refer to the contents of the field using either of the following
+JavaScript statements: </p>
+
+<p>document.UserInput.ReaderName.value </p>
+
+<p>or </p>
+
+<p>document.UserInput.elements[0].value </p>
+
+<p>where <i>elements[0]</i> is the generic term for &quot;the first field in the
+form.&quot; </p>
+
+<p>The elements array is a property of the larger form object </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The following script displays a form with a final button titled Show Facts. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+function showElements() {
+     msgWindow=window.open(&quot;&quot;,&quot;displayWindow&quot;) 
+     msgWindow.document.write (&quot;&lt;H1&gt;&lt;CENTER&gt;FORM FACTS&lt;/CENTER&gt;&lt;/H1&gt;&lt;P&gt;&quot;) 
+     for (var i=0; i &lt;= <b>document.survey.elements.length</b>-1;i++) {
+       msgWindow.document.write (&quot;document.survey.elements[&quot;,i,&quot;].value&quot;,                                                  <b>document.survey.elements[i].value</b>,&quot;&lt;BR&gt;&quot;)
+     }
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;<b>FORM name = &quot;survey&quot;</b>&gt; 
+     &lt;! hidden form field&gt; 
+     &lt;INPUT NAME=&quot;hidden&quot; VALUE=&quot;surveyform&quot; TYPE=HIDDEN&gt;&lt;BR&gt;
+
+     &lt;! text form field&gt;
+     Your Name: &lt;INPUT NAME=&quot;ReaderName&quot; VALUE=&quot;&quot; MAXLENGTH=&quot;25&quot; SIZE=25&gt;&lt;P&gt; 
+     
+     &lt;! checkbox form field&gt;
+     You like JavaScript: &lt;INPUT TYPE=&quot;CHECKBOX&quot; NAME=&quot;LikesJavaScript&quot; VALUE=&quot;true&quot; CHECKED&gt;&lt;P&gt; 
+
+     &lt;! selection box form field&gt;
+     Which Browser do your use?:
+     &lt;SELECT NAME=&quot;WhichBrowser&quot;&gt; 
+          &lt;OPTION SELECTED VALUE=&quot;InternetExplorer&quot;&gt;Internet Explorer 
+          &lt;OPTION VALUE=&quot;Navigator2&quot;&gt;Navigator 2.0 
+          &lt;OPTION VALUE=&quot;other&quot;&gt;Other 
+     &lt;/SELECT&gt;
+     &lt;P&gt;
+     &lt;! radio button group form field&gt;
+     What kind of server do you use? : 
+     &lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;Server&quot; VALUE=&quot;Own Server&quot;&gt;Own Server 
+     &lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;Server&quot; VALUE=&quot;National ISP&quot;&gt;National ISP 
+     &lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;Server&quot; VALUE=&quot;Local ISP&quot;&gt;Local ISP 
+
+     &lt;! Submit and Reset buttons&gt;
+     &lt;P&gt;
+     &lt;INPUT TYPE=SUBMIT VALUE=&quot;Submit&quot; NAME=&quot;submitbutton&quot;&gt; 
+     &lt;INPUT TYPE=RESET VALUE=&quot;Reset&quot;&gt;
+     &lt;P&gt;&lt;P&gt;
+
+     &lt;! button to trigger showElements() custom function&gt; 
+     &lt;INPUT TYPE=&quot;button&quot; VALUE=&quot;Show Facts&quot; onClick = &quot;showElements()&quot;&gt;
+     &lt;/FORM&gt;
+     &lt;/BODY&gt;&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/elarray.htm">Try it</a> </p>
+
+<p>Suppose that you now open this script and fill in the form that appears with the
+following information/selections: Name=Freddie Lame, You Like JavaScript is checked, Which
+Browser Do You Use is Navigator 2.0, and the Server option is Own Server. Then you click
+the Show Facts button. A new window appears showing the the following facts: </p>
+
+<p>document.survey.elements[0].value = surveyform </p>
+
+<p>document.survey.elements[1].value = Freddie Lame </p>
+
+<p>document.survey.elements[2].value = true </p>
+
+<p>document.survey.elements[3].value = null </p>
+
+<p>document.survey.elements[4].value = Own Server </p>
+
+<p>document.survey.elements[5].value = National ISP </p>
+
+<p>document.survey.elements[6].value = Local ISP </p>
+
+<p>document.survey.elements[7].value = Submit </p>
+
+<p>document.survey.elements[8].value = Reset </p>
+
+<p>document.survey.elements[9].value = Show Facts </p>
+
+<p>Here you can see how the .value property depends on the type of form field being
+referenced. For the first two items, which are a text box and hidden text box, the value
+is the actual stuff in the field. Note that each radio button is considered a single
+object, and hence there are three elements (4-6) in the elements array. The .value of the
+buttons are the button titles because the button titles are defined by using the VALUE
+attribute in the &lt;INPUT type='button'...&gt; tag. <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="escapefunc"></a><font SIZE="+2" COLOR="#000080">escape() function </font></h2>
+
+<p>This function returns the ASCII encoding of an argument in the ISO Latin-1 character
+set, useful for writing cookies to the cookies.txt file. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the escape() function is </p>
+
+<p>escape(&quot;<i>string</i>&quot;) </p>
+
+<p>where <i>string</i> is any string. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The escape function is not a method associated with any object but it is part of the
+JavaScript language. The value returned by escape() is the same string with
+non-alphanumeric characters encoded in the form &quot;%<i>xx</i>&quot;, where <i>xx</i> is
+the ASCII encoding of a character in the string. </p>
+
+<h4><font COLOR="#000080">Example </font></h4>
+
+<p>When you run this script </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+     mystring = &quot;Don't go away!!&quot;document.write (<b>escape(mystring)</b>) 
+&lt;/SCRIPT&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt; </font>
+
+
+
+
+
+
+</pre>
+
+<p>the screen displays </p>
+
+<p><font SIZE="-1">Don%27t%20go%20away%21%21 </font></p>
+
+<p>which is &quot;Don't go away!&quot; with all the non-alphanumeric characters
+&quot;escaped&quot; into %<i>xx</i> format. </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="evalfunc"></a><font SIZE="+2" COLOR="#000080">eval() function </font></h2>
+
+<p>The eval() function executes a string as through it were a JavaScript statement. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for using the eval function is </p>
+
+<p>eval(<i>string</i>) </p>
+
+<p>where <i>string</i> is any string representing a JavaScript expression, statement, or
+sequence of statements. The expression can include variables and properties of existing
+objects. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The argument of the eval() function must be a string that can also be executed as a
+valid JavaScript statement. If the string represents an expression, eval() evaluates the
+expression. If the string is a numeric sring character, eval() returns the number. If the
+argument represents one or more JavaScript statements, eval() performs the statements. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>When executed, this script </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+     var string1 = &quot;5 * 10&quot;
+     var string2 = &quot;Howdy&quot;
+     var executable = &quot;document.write('&lt;H1&gt;&lt;CENTER&gt;&quot;+string2executable += &quot;&lt;/CENTER&gt;&lt;/H1&gt;')&quot;
+     document.write (&quot;eval(string1) = &quot;,<b>eval(string1)</b>,&quot;&lt;BR&gt;&quot;)
+     document.write (&quot;eval(executable) produces &quot;)
+     <b>eval(executable)</b> 
+&lt;/SCRIPT&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+
+
+</pre>
+
+<p>displays this on the screen: </p>
+
+<p>eval(string1) = 50 </p>
+
+<p>eval(executable) produces <br>
+</p>
+
+<h1 align="center">Howdy </h1>
+
+<p align="center"><a href="../author/jscript/eval.htm">Try it</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="eventhandlers"></a><font SIZE="+2" COLOR="#000080">Event handlers </font></h2>
+
+<p>Event handlers are used in HTML tags, such as &lt;INPUT&gt; and &lt;BODY&gt;, to
+execute JavaScript code in response to some event that occurs in the reader's page. Table
+9 summarizes the event handlers, what actions trigger them, and the tags that can use
+them. </p>
+
+<p><b>Table 9: Summary of JavaScript Event Handlers</b> </p>
+
+<table BORDER="1">
+  <tr>
+    <td WIDTH="120"><i>Event Handler</i></td>
+    <td WIDTH="288"><i>When Triggered</i> </td>
+    <td WIDTH="192"><i>Used in Tags of These Objects</i></td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onBlur</td>
+    <td WIDTH="288">When the reader moves the insertion point out of a field </td>
+    <td WIDTH="192">select, text, textarea</td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onChange</td>
+    <td WIDTH="288">After the reader changes the contents of a field and moves on to another
+    field </td>
+    <td WIDTH="192">select, text, textarea</td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onClick</td>
+    <td WIDTH="288">When the reader clicks on an item </td>
+    <td WIDTH="192">button, checkbox, radio, link, reset, submit </td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onFocus</td>
+    <td WIDTH="288">When the reader moves the insertion point into a field </td>
+    <td WIDTH="192">select, text, textarea</td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onLoad</td>
+    <td WIDTH="288">When a document is loaded into view window </td>
+    <td WIDTH="192"><font SIZE="-2">&lt;BODY&gt;, &lt;FRAMESET&gt;</font> </td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onMouseOver</td>
+    <td WIDTH="288">When reader points to a hyperlink link </td>
+    <td WIDTH="192"><font SIZE="-1">&lt;A&gt;</font><font SIZE="-2">...</font><font SIZE="-1">&lt;/A&gt;</font>
+    </td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onSelect</td>
+    <td WIDTH="288">When the reader selects text within a text or text area field </td>
+    <td WIDTH="192">text, textarea</td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onSubmit</td>
+    <td WIDTH="288">When the reader submits a form form </td>
+    <td WIDTH="192">&lt;FORM&gt;</td>
+  </tr>
+  <tr>
+    <td WIDTH="120">onUnload</td>
+    <td WIDTH="288">When the reader exits a document window </td>
+    <td WIDTH="192"><font SIZE="-1">&lt;BODY&gt;</font><font SIZE="-2">, </font><font SIZE="-1">&lt;FRAMESET&gt;</font> </td>
+  </tr>
+</table>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="for"></a><font SIZE="+2" COLOR="#000080">for statement </font></h2>
+
+<p>This statement defines a loop that repeats a series of commands as long as some
+condition holds true. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax of for statements isfor ([<i>intial-expression</i>;] [<i>condition</i>;] [<i>increment-expression</i>])
+{ <i>statements</i> <font SIZE="-1">} </font></p>
+
+<p>where <i>intial-expression</i> is an expression that sets the starting value, <i>condition</i>
+is an expression that proves true or false, <i>increment-expression</i> is an expression
+that incrememts the initial expression, and <i>statements</i> are Javascript statements
+that are executed with each pass through the loop as long as <i>condition </i>proves true.
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The <i>for</i> loop is generally used to set up a loop and create a counter that is
+incremented with each pass through the loop. The <i>initial-expression</i> is evaluated
+first, followed by the condition. If the condition proves true, then all statements within
+the curly braces that follow are executed once. Next, the <i>increment-expression</i> is
+executed and the <i>condition</i> is re-tested. When the <i>condition</i> proves false,
+the loop terminates and execution resumes just after the closing curly brace (}). </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>When this Web page is opened in a browser </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+     <b>for (var i=1; i &lt;= 10; i++) {
+          document.write ('i = ',i,'&lt;br&gt;')
+     }
+</b>&lt;/SCRIPT&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>it displays: </p>
+
+<p>i = 1 </p>
+
+<p>i = 2 </p>
+
+<p>i = 3 </p>
+
+<p>i = 4 </p>
+
+<p>i = 5 </p>
+
+<p>i = 6 </p>
+
+<p>i = 7 </p>
+
+<p>i = 8 </p>
+
+<p>i = 9 </p>
+
+<p>i = 10 </p>
+
+<p>because for each pass through the loop, the document.write statement writes &quot;i =
+&quot; followed by the current value of i. It then i++ increments the value in i by 1 and
+the loop continues as long as i is less than or equal to 10. <br>
+</p>
+
+<p align="center"><a href="../author/jscript/forloop.htm">Try It</a> </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="forin"></a><font SIZE="+2" COLOR="#000080">for ... in statement </font></h2>
+
+<p>This statement iterates a value over all properties of an object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this statement isfor (<i>variable</i> in <i>object</i>) { <i>statements</i>
+<font SIZE="-1">} </font></p>
+
+<p>where <i>variable</i> is any valid variable name, <i>object</i> is the name of any
+existing object, and <i>statements</i> are Javascript statements that are executed as long
+as <i>variable</i> is less than or equal to the number of properties assigned to an
+object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>All objects have properties. The for...in loop can get at those properties without
+using specific property names. For example, if <i>i </i>is the <i>variable</i> defined in
+the for...in loop, the first pass through the loop references the object's first property.
+The second pass through the loop references the object's second property and so on until
+all properties for that object have been referenced. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>In the following page, the custom function named dump_props writes out all properties
+for any object (<i>obj</i>) passed to it. It displays the name of the object as well via
+the passed obj_name argument: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+function dump_props(obj, obj_name) {
+     msgWindow=window.open(&quot;&quot;,&quot;displayWindow&quot;) 
+     var result = &quot;&quot;
+     <b>for (var i in obj) {
+          msgWindow.document.write (obj_name + &quot;.&quot; + i + &quot; = &quot; + obj[i] + &quot;&lt;BR&gt;&quot;) }
+     </b>}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;FORM name = 'testform'&gt;
+     &lt;TEXTAREA NAME=&quot;SomeText&quot; ROWS=3 COLS=25&gt; type something here&lt;/TEXTAREA&gt;
+     &lt;INPUT type=&quot;button&quot; value=&quot;Click Me&quot; onClick =
+     dump_props(document.testform.SomeText,'SomeText')&quot;&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>When executed, the BODY of this script displays a form with a textarea form field and a
+button. Clicking that buttons calls up the dump_props function to display all properties
+for the document.testform.SomeText object, writing the name SomeText with each pass
+through the loop. The result, which is shown in the following example, is a catalog of all
+properties associated with the form fields. The <i>null </i>properties typically are
+properties that are not associated with this particular type of form field: </p>
+
+<p>SomeText.defaultChecked = null </p>
+
+<p>SomeText.checked = null </p>
+
+<p>SomeText.selectedIndex = null </p>
+
+<p>SomeText.options = null </p>
+
+<p>SomeText.length = null </p>
+
+<p>SomeText.defaultValue = type something here </p>
+
+<p>SomeText.value = (<i>whatever the reader types into the box)</i> </p>
+
+<p>SomeText.form = </p>
+
+<p>SomeText.name = SomeText <br>
+</p>
+
+<p align="center"><a href="../author/jscript/forin.htm">Try It</a> </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="formobject"></a><font SIZE="+2" COLOR="#000080">form object (<i>forms</i>
+array) </font></h2>
+
+<p>The form object refers to a single form within a Web page. The forms array is a list
+that contains one element for every form in the Web page (one element for every
+&lt;FORM&gt; tag.) </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>You create a form by using Insert &gt; Form Field in Word IA or by manually typing
+&lt;FORM&gt;...&lt;/FORM&gt; tags into a page. To refer to a form, property, or method
+from within JavaScript code. you can use any of these syntaxes: </p>
+
+<p>document.<i>formName</i>.<i>propertyName</i> </p>
+
+<p>document.<i>formName</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>document.forms[<i>index</i>].<i>propertyName</i> </p>
+
+<p>document.forms[<i>index</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>document.forms.length </p>
+
+<p>where formName is the value of the NAME attribute in the &lt;FORM&gt; tag, propertyName
+is one of the pre-defined form properties, methodName is one of the pre-defined methods of
+forms, index is an integer representing a form object where forms[0] is the first form in
+the page, forms[1] is the second form in the page, and so on. The last syntax,
+document.forms.lengths, returns the number of forms defined within the current page (such
+as 1 if the page contains one form). </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.action</b> Reflects the ACTION attribute as defined in the &lt;FORM&gt; tag </p>
+
+<p><b><font SIZE="-1">.elements</font></b> An array reflecting all the elements (fields)
+in the form </p>
+
+<p><b><font SIZE="-1">.encoding</font></b> Reflects the ENCTYPE attribute as defined in
+the &lt;FORM&gt; tag </p>
+
+<p><b><font SIZE="-1">.length</font></b> Reflects the number of elements in a single form </p>
+
+<p><b><font SIZE="-1">.method</font></b> Reflects the METHOD attribute as defined in the
+&lt;FORM&gt; tag </p>
+
+<p><b><font SIZE="-1">.target</font></b> Reflects the TARGET attribute as defined in the
+&lt;FORM&gt; tag <br>
+</p>
+
+<p>The following JavaScript objects are also properties of the form object. Each of these
+objects is created with &lt;INPUT&gt; tags that are placed between a pair of
+&lt;FORM&gt;...&lt;/FORM&gt; tags: </p>
+
+<p><b>button object</b> A clickable button on the form </p>
+
+<p><b>checkbox object</b> A checkbox on the form </p>
+
+<p><b>hidden object</b> A hidden text field </p>
+
+<p><b>password object</b> A password box on the form </p>
+
+<p><b>radio object</b> A radio button on the form </p>
+
+<p><b>reset object</b> The form's Reset button </p>
+
+<p><b>select object</b> A select box (drop-list) on the form </p>
+
+<p><b>submit object</b> The form's Submit button </p>
+
+<p><b>text object</b> A text box form field </p>
+
+<p><b>textarea object</b> A multi-line text box form field <br>
+</p>
+
+<p>The <i>forms</i> array has one property, .length, which reflects the number of forms in
+a document. <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.submit()</b> When executed, it submits the form as though the reader had clicked
+the Submit button <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onSubmit</b> Triggered when the reader clicks the Submit button <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>Each form in a document is a distinct object with a name, as defined in the NAME
+attribute of the form, and a number. The number is assigned automatically when the page is
+opened. So, for example, if the current page contains one form, but that form's
+&lt;FORM&gt; tag doesn't contain a NAME attribute, you can still refer to the form from
+within JavaScript code as document.forms[0]. </p>
+
+<p>The form object is a property of the larger document object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The page that follows illustrates the use of a form's submit() method to check the
+validity of entered data before submitting a form. When the reader clicks the Done button,
+that button's onClick event handler calls upon the checkData() function. CheckData() uses
+the custom contains() function to see if the reader's entry (which is supposed to be an
+email address) contains an @ character. If the entry doesn't contain an @ character, only
+the message <i>This doesn't look like an email address to me! </i>Nothing is submitted. If
+the entry does contain an @ character, the <i>document.myform.submit() </i>submits the
+form. </p>
+
+<p>(This is just an example. For the submission to really happen, the &lt;FORM&gt; tag
+needs to specify where to send the submitted form.) <br>
+</p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+var dataOK=false
+function contains(onechar,lstring) { 
+     retval = false 
+     for (var i=1;i&lt;=lstring.length;i++) {
+          if (lstring.substring(i,i+1)==onechar) {
+          retval=true 
+          break 
+          } 
+     } 
+     return retval
+}
+<b>function checkData</b> (){
+     if (contains(&quot;@&quot;,document.myform.eaddress.value)) {
+          <b>document.myform.submit()</b>} //submit myform.}
+     else {
+          alert(&quot;This doesn't look like an email address to me!&quot;)
+          return false
+     }
+}
+&lt;/SCRIPT&gt;
+&lt;BODY&gt;
+&lt;FORM NAME=&quot;myform&quot;&gt;
+&lt;B&gt;Enter your email address:&lt;/B&gt;
+     &lt;INPUT TYPE=&quot;text&quot; NAME=&quot;eaddress&quot;&gt;&lt;P&gt;
+     &lt;INPUT TYPE=&quot;button&quot; VALUE=&quot;Done&quot; NAME=&quot;button1&quot; <b>onClick=&quot;checkData()&quot;</b>&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/formobj.htm">Try it</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="frameobject"></a><font SIZE="+2" COLOR="#000080">frame object (<i>frames
+array)</i> </font></h2>
+
+<p>A frame is a smaller window within the larger browser window. Each frame can display a
+different document or URL and each frame is independently scrollable. Each frame also has
+its own history list. For example, to go back in a frame, the reader right-clicks the
+frame and chooses Back In Frame from the menu that appears. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>Frames are defined by the HTML tags &lt;FRAMESET&gt; and &lt;FRAME&gt;. See Chapters 25
+and 30. You may include JavaScript onLoad and onUnload() event handlers in the
+&lt;FRAMESET&gt; tag. In JavaScript code, you can refer to frames using any of these
+syntaxes: </p>
+
+<p>[<i>windowReference</i>.]<i>frameName</i>.<i>propertyName</i> </p>
+
+<p>[<i>windowReference</i>.]frames[<i>index</i>].<i>propertyName</i> </p>
+
+<p>window.<i>propertyName</i> </p>
+
+<p>self.<i>propertyName</i> </p>
+
+<p>parent.<i>propertyName</i> </p>
+
+<p>where frameName is the value of the NAME attribute in the &lt;FRAME&gt; tag of a frame
+definition, index is an integer representing a frame as a number, and propertyName is any
+of the valid properties for frames, as follows. </p>
+
+<p>The optional windowReference is a window name as defined by a var x = window.open(...)
+statement, or one of the synonyms top or parent.. </p>
+
+<p>The frames array has a length property that identifies how many child frames are in a
+window or frame. To access that value use either of these syntaxes: </p>
+
+<p>[<i>windowReference</i>.].frames.length </p>
+
+<p>[<i>frameReference</i>.].frames.length </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.frames</b> An array reflecting all the frames in a window </p>
+
+<p><b>.name</b> Reflects the NAME attribute as defined in the &lt;FRAME&gt; tag </p>
+
+<p><b><font SIZE="-1">.length</font></b> Reflects the number of child frames within a
+frame </p>
+
+<p><b><font SIZE="-1">parent</font></b> A synonym for the window or frame containing the
+current frameset </p>
+
+<p><b><font SIZE="-1">self</font></b> A synonym for the current frame </p>
+
+<p><b><font SIZE="-1">window</font></b> A synonym for the current frame </p>
+
+<p>The<i> frames</i> array has one property: </p>
+
+<p><b>.length</b> Reflects the number of child frames within a frame <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.clearTimeout()</b> Cancels an ongoing timer set by the .setTimeout() method </p>
+
+<p><b>.setTimeout()</b> Evaluates an expression after a specified amount of time <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p>Although they are (technically) event handlers of the window object, you can use the
+onLoad and onUnload event handlers in a &lt;FRAMESET&gt; tag. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The &lt;FRAMESET&gt; tag is used in a special Web page whose sole purpose is to define
+a set of frames that can display documents independently of one another. Each is, to
+JavaScript, an independent window object. </p>
+
+<p>If a &lt;FRAME&gt; tag contains SRC and NAME attributes, you can refer to that frame
+from a sibling frame by using the synonym parent to refer to the page that defined both
+frames - that is, the parent frame that contains the &lt;FRAMESET&gt; and &lt;FRAME&gt;
+tags. For example, if the third frame in a set is named mainFrame, neighboring sibling
+frames can refer to that frame using parent.mainframe. </p>
+
+<p>JavaScript also maintains an array of frames so that you can refer to unnamed frames by
+number. The first frame is frames[0], the second frame is frames[1], and so on. Referring
+back to the preceding example, if the third frame was not given a name in its
+&lt;FRAME&gt; tag, JavaScript can still refer to it as parent.frames[2]. </p>
+
+<p>The top property also is a synonym that can be used in place of the frame name. The top
+property refers to the top-most window that contains frames or nested framesets. Thus, if
+one &lt;FRAMESET&gt; page creates another &lt;FRAMESET&gt; page and you are in the
+bottommost page, then parent refers to the page that created the frame you are in and top
+refers to the &lt;FRAMESET&gt; page that created the frames above the parent. </p>
+
+<p>The self and window properties are synonyms for the current frame, and you can
+optionally use them to refer to the current frame (not the parent or the top frame). </p>
+
+<p>The frame object is a property of the larger window object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>Suppose that the following Web page is named <i>index.html</i> and is the first page
+that opens when a reader comes to this site. The page splits the browser window into a
+narrow window named toc (for table of contents) and a larger window named main. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;! Set up the frames &gt;
+&lt;! ----- Split into two columns&gt;
+&lt;FRAMESET COLS= &quot;130,*&quot;&gt;
+     &lt;FRAME NAME=&quot;toc&quot; SRC = &quot;places.htm&quot; MARGINWIDTH = &quot;0&quot; MARGINHEIGHT=&quot;0&quot;&gt;
+     &lt;<b>FRAME NAME=&quot;main&quot;</b> SRC = &quot;home.htm&quot; MARGINWIDTH = &quot;10&quot; MARGINHEIGHT=&quot;10&quot;&gt;
+&lt;/FRAMESET&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>The places.htm page, which is displayed in the narrower toc frame, can control
+documents in the larger main frame by referring to parent.main as in the examples that
+follows: </p>
+
+<pre><font COLOR="#800080">&lt;FORM&gt;
+&lt;! Go back in main frame&gt;
+&lt;INPUT type=&quot;button&quot; onClick = &quot;<b>parent.main.history.back()</b>&quot;&gt;
+&lt;! Go forward in main frame&gt;
+&lt;INPUT type=&quot;button&quot; onClick = &quot;<b>parent.main.history.forward()</b>&quot;&gt;
+&lt;/FORM&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="function"></a><font SIZE="+2" COLOR="#000080">function statement </font></h2>
+
+<p>A statement that declares a user-defined JavaScript function, typically in the
+&lt;HEAD&gt; of a Web page. </p>
+
+<h3><font SIZE="+1"><font COLOR="#000080">Syntax</font> </font></h3>
+
+<p>The syntax for the function statement is </p>
+
+<p>function <i>name</i>([<i>param]</i> [, <i>param</i>] [..., <i>param</i>]) { </p>
+
+<p><i>statements</i> </p>
+
+<p>} </p>
+
+<p>where <i>name</i> is the name that you assign to the function (cannot contain spaces,
+cannot be a reserved word) and the optional <i>param</i> statements are names that you
+assign to parameters that will be passed to the function with any call to the function.
+The <i>params </i>can be any combination of strings, numbers, and objects. </p>
+
+<h3><font SIZE="+1"><font COLOR="#000080">Description</font> </font></h3>
+
+<p>The function() statement defines a custom JavaScript function that, once defined, can
+be called by any JavaScript code or event handler on the Web page. To ensure that a
+function is defined before it is called up, define all custom functions between the
+&lt;HEAD&gt; and &lt;/HEAD&gt; tags of the Web page. </p>
+
+<p>If you want the function to return a value, the function must include a return
+statement that specifies the value to return. </p>
+
+<p>You cannot nest a function statement within another statement or within itself. </p>
+
+<p>All parameters are passed to the function by value and any changes to the value are
+local to the function. In other words, if the function changes the value of the parameter,
+the change is not reflected globally or in the calling function. The only changed value
+that comes out of a function is the value specified in the return statement. </p>
+
+<h3><font SIZE="+1"><font COLOR="#000080">Example</font> </font></h3>
+
+<p>The following Web page contains two custom functions named strToZero() and validate().
+The strToZero takes any value, ensures that it is a number (not a string), and returns a
+number. If a non-numeric string value is passed to the function, the function returns the
+number 0. </p>
+
+<p>The second function, validate(), does not return a value. Instead, it checks to see if
+the value passed to it is a number between 1 and 10. If the number is not between 1 and
+10, the validate() function just displays the message<i> Please enter a number between 1
+and 10</i>. </p>
+
+<p>Both functions are called by the onClick event handler of a form field. Note that the
+strToZero() function first ensures that the user's entry is indeed a number (not a string)
+and that the validate() function operates upon that number. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+//function convert any non-numeric value to a zero.
+<b>function strToZero(anyval) { 
+     anyval = &quot;&quot;+anyval 
+     if (anyval.substring(0,1) &lt; &quot;0&quot; || anyval.substring(0,1) &gt; &quot;9&quot;) {
+          anyval = &quot;0&quot;
+     }
+     return eval(anyval)
+} 
+
+</b>//function to ensure that number is between 1 and 10.
+<b>function validate(anynum) {
+     if (anynum &lt;1 || anynum &gt; 10) {
+          alert (&quot;Please enter a number between 1 and 10.&quot;) 
+     }
+}
+</b>&lt;/SCRIPT&gt;
+&lt;/HEAD&gt; 
+
+&lt;BODY&gt;
+&lt;FORM&gt;
+Enter your rating:
+&lt;INPUT NAME = &quot;Rating&quot; SIZE = 2 onChange = &quot;<b>validate(strToZero(</b>this.value<b>))</b>&quot;&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/function.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="hiddenobject"></a><font SIZE="+2" COLOR="#000080">hidden object </font></h2>
+
+<p>A hidden object is a form field that is not visible to the reader. This object is
+generally used to pass information to yourself as the recipient of the form. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To create a hidden object in a form in Word IA, select <u>I</u>nsert &gt; For<u>m</u>
+Field &gt; H<u>i</u>dden. To manually create a hidden form field, use <i>type=&quot;hidden&quot;</i>
+within an input tag, between a pair of &lt;FORM&gt; ...&lt;/FORM&gt; tags. </p>
+
+<p>To refer to a hidden object from within JavaScript code, use either of these syntaxes: </p>
+
+<p>document.<i>formName</i>.<i>hiddenName</i>.<i>propertyName</i> </p>
+
+<p>or </p>
+
+<p>document.<i>formName</i>.elements[<i>index</i>].<i>propertyName</i> </p>
+
+<p>where hiddenName is the value of the NAME attribute as defined in the hidden object's
+&lt;INPUT&gt; tag, formName is either the value of the NAME attribute of a form object or
+an element in the forms array, index is an integer representing the fields position in the
+elements array, and propertyName is one of the properties listed below. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.name</b> reflects the NAME attribute as defined in the hidden object's
+&lt;INPUT&gt; tag. </p>
+
+<p><b><font SIZE="-1">.value</font></b> reflects the current value of the hidden form
+field </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>A hidden object is a form element and must be defined within a &lt;FORM&gt; tag. It is
+totally invisible on the Web page - and visible only in the document source view. Use a
+hidden field when you want to pass private information, such as the name of the form, to
+yourself along with the reader's responses to for fields. </p>
+
+<p>You can programmatically change the value of the hidden object by changing its .value
+property. </p>
+
+<p>A hidden object is a property of the larger form object. </p>
+
+<h3><font SIZE="+1"><font COLOR="#000080">Example</font> </font></h3>
+
+<p>This page shows how to place a hidden field on a form using an &lt;INPUT&gt; tag, and
+then programmatically change the contents of the field. In this example, the script named
+stampForm() places the current date/time in the hidden field named timestamp. The function
+is executed as soon as the page is loaded, thanks to the onLoad event handler in the body
+tag. </p>
+
+<p>Of course, you cannot see the contents of a hidden field, so this page has a little
+button that lets you peek at the hidden field's contents (your reader will never need that
+button). When you click the button, the showSecret() function is called up to reveal the
+contents of the hidden field. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+function stampForm() { 
+     rightnow = new Date() 
+     <b>document.myForm.timestamp.value = rightnow
+</b>} 
+
+function showSecret() {
+     msg = &quot;hidden field contains &quot; 
+     msg += document.myForm.timestamp.value 
+     alert (msg)
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt; 
+&lt;BODY onLoad = &quot;stampForm()&quot;&gt;
+&lt;FORM name = &quot;myForm&quot;&gt;
+     <b>&lt;INPUT type = &quot;hidden&quot; name = &quot;timestamp&quot;&gt;
+     </b>&lt;INPUT type = &quot;button&quot; value = &quot;Try Me&quot; onClick = &quot;showSecret()&quot;&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+
+</pre>
+
+<p>Notice that the actual object name, hidden, is specified only in the &lt;INPUT&gt; tag.
+To the rest of the JavaScript code, the hidden field is just another form field. </p>
+
+<p align="center"><a href="../author/jscript/hidden.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="historyobject"></a><font SIZE="+2" COLOR="#000080">history object </font></h2>
+
+<p>This object contains information on the URLs that the reader has visited within the
+current window. In Netscape Navigator, the history list is visible at the bottom of the Go
+menu. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>In JavaScript, you can use either of these syntaxes to refer to the history object: </p>
+
+<p>history.<i>propertyName</i> </p>
+
+<p>history.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>propertyName</i> is one of the properties and <i>methodName</i> is one of the
+methods that follows. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.length</b> Reflects the number of entries in the history object <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.back()</b> Displays the previous page in the history list, if any </p>
+
+<p><b>.forward()</b> Displays the next page in the listory list, if any </p>
+
+<p><b>.go(<i>n</i>)</b> Displays the page that is <i>n </i>pages from the current list in
+the page </p>
+
+<p>In the last example, <i>n </i>can be either a positive or negative number. For example,
+history.go(4) moves four pages ahead in the history list, whereas history.go(-4) moves
+four pages back in the history list. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The history object is a list of URLs that the user has visited in the current session
+and also in the current frame, if multiple frames are displayed on the screen. The
+properties and methods of this object let you move through the history list
+programmatically via JavaScript code. </p>
+
+<p>The history object is a property of the larger document object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The following statements display a button labeled Back in the current Web page. When
+the reader clicks that button, the previous page in the frame named main is displayed.
+This example assumes that a prior page has used the &lt;FRAMESET&gt; and &lt;FRAME&gt;
+tags to define a frame named main. </p>
+
+<pre><font COLOR="#800080">&lt;FORM&gt;
+&lt;INPUT type = &quot;button&quot; value = &quot;Back&quot; onClick = &quot;<b>parent.main.history.back()</b>&quot;) 
+&lt;/FORM&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="if"></a><font SIZE="+2" COLOR="#000080">if statement </font></h2>
+
+<p>This statement makes a decision within a script. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The general syntax for the if statement is </p>
+
+<p>if {<i>condition</i>) { <i>statements1</i> }[else { <font SIZE="-1"><i>statements2</i>}]
+</font></p>
+
+<p>where <i>condition</i> is any expression that results in a true or false outcome and <i>statements1</i>
+and <i>statements2</i> are JavaScript code. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>When executed, the condition is evaluated and must return a<i> true</i> or <i>false</i>
+value. If the result is true, then the code within the first pair of curly braces ({}) (<i>statements1</i>)
+is executed. If the condition proves false, that code is ignored. </p>
+
+<p><i>Else</i> is optional. If included, the code within the second pair of curly braces (<i>statements2</i>)
+is executed if (and only if) the condition proves false. </p>
+
+<p>You can nest if() statements, which means that either <i>statements1</i> or <i>statements2</i>
+can contain more if() statements. </p>
+
+<p>When checking to see if a variable <i>equals</i> some value in an if() condition, be
+sure to use the double equal signs operator (==) rather than the single equal sign (=). To
+specify AND in an if() condition, use the &amp;&amp; operator. To specify OR in an if()
+condition, use the || operator. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>In the following Web page, the genderOK() custom function converts the value passed to
+it to uppercase (using the toUppercase() method of the string object). The if() statement
+then checks to see if that string is letter M or the letter F. If it is, the function does
+not do anything. If the string is neither M or F, then the function displays the message <i>Please
+enter M or F in the Gender box</i>. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+
+&lt;HEAD&gt;
+
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+
+function genderOK(anystring) {
+
+   anystring = anystring.toUpperCase()<b> 
+
+   if (anystring == &quot;M&quot; || anystring == &quot;F&quot;){ 
+
+      //do nothing } 
+
+   else { 
+
+      alert (&quot;Please enter M or F&quot;) }
+
+   }
+
+</b>&lt;/SCRIPT&gt;
+
+&lt;/HEAD&gt; </font>
+</pre>
+
+<p><font COLOR="#800080">&lt;BODY&gt; <br>
+&lt;FORM&gt; <br>
+Gender:&lt;INPUT name='Gender' Size = 2 <b>onChange = &quot;genderOK(this.value)</b>&quot;&gt;
+<br>
+Name:&lt;INPUT name='ReaderName' Size = 20&gt; <br>
+&lt;/FORM&gt; <br>
+&lt;/BODY&gt;&lt;/HEAD&gt; </font><br>
+</p>
+
+<p align="center"><a href="../author/jscript/ifstate.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="isnanfunction"></a><font SIZE="+2" COLOR="#000080">isNAN function </font></h2>
+
+<p>On Unix platforms, this function evaluates an argument to determine if it is <i>NaN</i>
+(not a number). </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this function is </p>
+
+<p>isNaN(<i>testValue</i>) </p>
+
+<p>where <i>testValue</i> is the value you want to evaluate. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>isNaN is available on Unix platforms only. To convert a non-numeric value to a number 0
+in the Windows platform, use the custom strToZero() function shown here: </p>
+
+<pre><font COLOR="#800080">function strToZero(anyval) { 
+     anyval = &quot;&quot;+anyval 
+     if (anyval.substring(0,1) &lt; &quot;0&quot; || anyval.substring(0,1) &gt; &quot;9&quot;) { 
+          anyval = &quot;0&quot; 
+     } 
+     return eval(anyval) 
+}</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>Once this function is defined in the head of a Web page, you can use the syntax
+strToZero(<i>anyvalue</i>) to ensure that <i>anyvalue</i> is a number. See &quot;function
+statement&quot; in this appendix for an example. </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="linkobject"></a><font SIZE="+2" COLOR="#000080">link object <a name="linksarray"></a>(<i>links</i> array) </font></h2>
+
+<p>A link object is a piece of text or an image identified as a hypertext link within the
+current Web page, via &lt;A HREF...&gt;...&lt;/A&gt; tags. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>Within a Web page, you use the &lt;A HREF...&gt;...&lt;/A&gt; tags to define a
+hyperlink (that is, a link). To determine how many links are in the Web page, use the
+syntax </p>
+
+<p>document.links.length </p>
+
+<p>To refer to a specific link in the page using JavaScript code, use the syntax </p>
+
+<p>document.links[<i>index</i>].<i>propertyName</i> </p>
+
+<p>where <i>index</i> is an integer representing the link's position in the links array
+and <i>propertyName</i> is one of the valid properties for the link object. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.hash</b> Specifies an anchor name in the URL </p>
+
+<p><b>.host</b> Specifies the hostname:port portion of the URL </p>
+
+<p><b>.hostname</b> Specifies the host and domain name, or IP address, of a network host </p>
+
+<p><b>.href</b> Specifies the entire URL </p>
+
+<p><b>.pathname</b> Specifies the URL-path portion of the URL </p>
+
+<p><b>.port</b> Specifies the communications port that the server uses for communications </p>
+
+<p><b>.protocol</b> Specifies the beginning of the URL, including the colon </p>
+
+<p><b>.search</b> Specifies a query target reflects the TARGET attribute <br>
+</p>
+
+<h4><font COLOR="#000080">Event Handlers </font></h4>
+
+<p>Event handlers for hyperlinks are specified in the &lt;A HREF...&gt; tag that defines
+the link. Two event handlers are available: </p>
+
+<p><b>onClick</b> Triggered when the user clicks on the link </p>
+
+<p><b>onMouseOver</b> Triggered when the user points to the link <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>When a page is opened, JavaScript automatically creates a list (array) of all
+hyperlinks in the page. The first hyperlink is links[0], the second one is links[1], and
+so on. Each link object within that array is a location object - a complete URL. Each item
+in the links array has the same properties as a location object. If a link object also is
+an anchor object, the object has entries in both the anchors and links arrays. </p>
+
+<p>The link object is a property of the larger document object </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The most common use of link properties is simply to assign a custom status bar message
+to a hyperlink by specifying a custom onMouseOver() event handler. For example, in this
+page, when the reader points to the link to coolnerds, the status bar shows <i>Go on - Go
+For It! </i>rather than the customary hyperlink address: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt; 
+Go to &lt;A HREF=&quot;http://www.coolnerds.com&quot; <b>onMouseOver=&quot;window.status='Go on - Go For It!';return true&quot;</b>&gt; coolnerds&lt;/A&gt; now.
+
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>The <i>;return true</i> statement is required to complete the statement and make sure
+that the message appears the moment that the mouse pointer touches the hyperlink. </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="locationobject"></a><font SIZE="+2" COLOR="#000080">location object </font></h2>
+
+<p>This object contains information on the current document's URL. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this object is </p>
+
+<p>[<i>windowReference</i>.]location[.<i>propertyName</i>] </p>
+
+<p>where <i>propertyName</i> is one of the properties for the location object as listed in
+the following &quot;Properties&quot; section. Omitting the property name is equivalent to
+specifying the href property (the complete URL). The optional <i>windowReference</i> is a
+window name as defined by a <i>var x = window.open(...)</i> statement or one of the
+synonyms <i>top </i>or <i>parent.</i>. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p>Most properties of the location object represent a different portion of the URL, in the
+general order of </p>
+
+<p><i>protocol</i>//<i>hostname</i>:<i>port pathname search hash</i> </p>
+
+<p>The full set of properties is summarized here: </p>
+
+<p><b>.hash</b> Specifies an anchor name in the URL </p>
+
+<p><b>.host</b> Specifies the hostname:port portion of the URL </p>
+
+<p><b>.hostname</b> Specifies the host and domain name, or IP address, of a network host </p>
+
+<p><b>.href</b> Specifies the entire URL </p>
+
+<p><b>.pathname</b> Specifies the URL-path portion of the URL </p>
+
+<p><b>.port</b> Specifies the communications port that the server uses for communications </p>
+
+<p><b>.protocol</b> Specifies the beginning of the URL, including the colon </p>
+
+<p><b>.search</b> Specifies a query <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The location object represents the Location window in the browser window. Initially,
+its value is equal to the complete URL of the current document. But unlike the location <i>property</i>,
+which just returns the URL, the location <i>object </i>can be changed programmatically to
+display a new page in the window or frame. </p>
+
+<p>The location object is contained by the window object. In a framed site, each frame has
+its own unique location object, which is the URL of the page being displayed within that
+frame (window). If you reference a location object without specifying a window, the
+location object represents the current location. If you reference a location object and
+specify a window name - for example, windowReference.location.propertyName - the location
+object represents the location of the specified window. </p>
+
+<p>The location object is a property of the larger window object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The sample Web page that follows contains an anchor (bookmark) named Top just after the
+opening body tag. Near the bottom of the page is a button labeled Go To Top that, when
+clicked, adds the hash #Top to the Location box. When the reader clicks the button, he or
+she is taken back to the top of the page: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+<b>&lt;A NAME = &quot;Top&quot;&gt;&lt;/A&gt;
+</b>&lt;H1&gt;&lt;CENTER&gt;I Have a Top&lt;/H1&gt;&lt;/CENTER&gt;
+Scroll down to bottom of this page to find a button
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt; 
+for (var i=1; i&lt;=40;i++) {
+     document.write (&quot;keep going&lt;p&gt;&quot;) 
+}
+&lt;/SCRIPT&gt;
+&lt;FORM name=&quot;mini1&quot;&gt;
+     &lt;CENTER&gt;
+     &lt;INPUT type=&quot;button&quot; value=&quot;Go To Top&quot; <b>onClick = &quot;self.location.hash = 'Top'&quot;</b>&gt;
+     &lt;/CENTER&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/location.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="mathobject"></a><font SIZE="+2" COLOR="#000080">Math object </font></h2>
+
+<p>The math object is a built-in object that has properties and methods for mathematical
+constants and functions. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To use a Math object, follow the syntax </p>
+
+<p>Math.<i>propertyName</i> </p>
+
+<p>or </p>
+
+<p>Math.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>propertyName</i> is one of the properties of the Math object, <i>methodName</i>
+is one of the methods of the Match object, and <i>parameters</i> are appropriate values
+for the method. </p>
+
+<h4><font COLOR="#000080">Properties </font><br>
+</h4>
+
+<p><b>.E</b> Euler's constant (approximately 2.718). </p>
+
+<p><b>.LN2</b> The natural logarithm of 2 (approximately 0.693). </p>
+
+<p><b>.LN10</b> The natural logarithm of 10 (approximately 2.302). </p>
+
+<p><b>.LOG2E</b> The base 2 logarithm of e (approximately 1.442). </p>
+
+<p><b>.LOG10E</b> The base 10 logarithm of e (approximately 0.434). </p>
+
+<p><b>.PI</b> The ratio of the circumference of a circle to its diameter (approximately
+3.14159). </p>
+
+<p><b>.SQRT1_2</b> The square root of one-half; equivalently, one over the square root of
+two (approximately 0.707). </p>
+
+<p><b>.SQRT2</b> The square root of 2 (approximately 1.414). <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.abs(<i>n</i>)</b> Returns the absolute value of <i>n.</i> </p>
+
+<p><b>.acos (<i>n</i>)</b> Returns the arcosine (in radians) of <i>n</i>. </p>
+
+<p><b>.asin(<i>n</i>)</b> Returns the arcsine (in radians) of <i>n</i>. </p>
+
+<p><b>.atan(<i>n</i>)</b> Returns the arc tangent (in radians) of <i>n</i>. </p>
+
+<p><b>.ceil(<i>n</i>)</b> Returns the least integer greater than or equal to <i>n</i>. </p>
+
+<p><b>.cos(<i>n</i>)</b> Returns the cosine of <i>n</i>. </p>
+
+<p><b>.exp(<i>n</i>)</b> Returns e<sup>n</sup>, where <i>n</i> is the argument and e is
+Euler's constant. </p>
+
+<p><b>.floor(<i>n</i>)</b> Returns the greatest integer less than or equal to <i>n</i>. </p>
+
+<p><b>.log(<i>n</i>)</b> Returns the natural logarithm (base e) of <i>n</i>. </p>
+
+<p><b>.max(<i>x</i>,<i>y</i>)</b> Returns either <i>x </i>or or <i>y</i>, whichever is
+greater. </p>
+
+<p><b>.min (<i>x</i>,<i>y</i>)</b> Returns either <i>x </i>or or <i>y</i>, whichever is
+smaller. </p>
+
+<p><b>.pow(<i>x</i>,<i>y</i>)</b> returns<i> x</i> to the exponent power, that is, <i>x<sup>y</sup></i>.
+</p>
+
+<p><b>.random()</b> Returns a random number between 0 and 1 (Unix only). See example for
+Windows equivalent. </p>
+
+<p><b>.round(<i>n</i>)</b> Returns the value of a <i>n</i> rounded to the nearest integer.
+</p>
+
+<p><b>.sin(<i>n</i>)</b> Returns the sine of <i>n</i>. </p>
+
+<p><b>.sqrt(<i>n</i>)</b> Returns the square root of <i>n.</i> </p>
+
+<p><b>.tan(<i>n</i>)</b> Returns the tangent of <i>n</i>. <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The Math object is a built-in JavaScript object. Note the use of the uppercase M in
+Math and the use of uppercase letters in all properties. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>Because the random() method doesn't work in Windows, you can create a custom randnum()
+function that returns a random number. The following Web page shows the randnum() function
+and includes a small form and button to test the custom function: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT language = &quot;JavaScript&quot;&gt;
+function randnum(lowest,highest) {
+     retval = 0
+     while ((retval &lt; lowest) || (retval &gt; highest)) {
+          now = new Date()
+          retval = <b>Math.abs(Math.sin(</b>now.getTime()<b>))</b> 
+          retval = parseInt(retval * (highest+1)) 
+     }
+     return retval
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+Let's test the random number custom function, using numbers between 1 and 10.&lt;P&gt;
+&lt;FORM name=&quot;testForm&quot;&gt;
+     &lt;INPUT name = &quot;randomnum&quot; size = 3&quot;&gt;&lt;P&gt;
+     &lt;INPUT type=&quot;button&quot; value = &quot;Click for random number&quot;onclick =
+      &quot;document.testForm.randomnum.value = randnum(1,10)&quot;&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HRML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/mathobj.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="navigatorobject"></a><font SIZE="+2" COLOR="#000080">Navigator object </font></h2>
+
+<p>This object contains information about the version of Netscape Navigator in use. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this object is </p>
+
+<p>navigator.<i>propertyName</i> </p>
+
+<p>where <i>propertyName</i> is one of the properties of the navigator object listed in
+the next section. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.appCodeName</b> Returns the code name of the browser </p>
+
+<p><b>.appName</b> Returns the name of the browser </p>
+
+<p><b>.appVersion</b> Returns the version information for Navigator </p>
+
+<p><b>.userAgent</b> Specifies the user-agent header <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>You can use the navigator object to determine information about which version of
+Netscape Navigator your reader is currently using. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>Opening this little page with Netscape Navigator Gold </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;CENTER&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+     document.write (&quot;Hey, I see you're using &lt;b&gt;&quot;)
+     document.write (<b>navigator.appName</b>,&quot; &quot;,<b>navigator.appVersion</b>)
+     document.write (&quot;&lt;/b&gt; aka &quot;,<b>navigator.appCodeName</b>,&quot;. &quot;)
+     document.write (&quot;Good for you!&quot;)
+&lt;/SCRIPT&gt;
+&lt;/CENTER&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>causes the following message to display on the screen: Hey, I see you're using Netscape
+2.01Gold (Win95; I) aka Mozilla. Good for you! </p>
+
+<p align="center"><a href="../author/jscript/navigat.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="new"></a><font SIZE="+2" COLOR="#000080">New statement </font></h2>
+
+<p>This statement creates a new instance of an object type. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the new statement is </p>
+
+<p><i>objectname</i> = new <i>objecttype</i> (<i>parameter1</i> [,<i>parameter2</i>] ...[,<i>parameterN</i>])
+</p>
+
+<p>where <i>objectname</i> is the name you assign to the specific object being created, <i>objecttype</i>
+is the type of object you are creating, and <i>parameters</i> are properties of the
+object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>Use the new keyword to create a new instance of an object in much the same way you
+would create a variable. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>In this example, you create a new date object named <i>rightnow </i>that reflects the
+system date and time when the page is opened. You then use the toLocaleString() method of
+the date object to display a message in the format <i>Your visit begins at 04/02/97
+12:30:00.</i> </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;SCRIPT language = &quot;JavaScript&quot;&gt; 
+     rightnow = <b>new</b> Date() 
+     document.write (&quot;Your visit begins at &quot;) 
+     document.write (rightnow.toLocaleString())
+&lt;/SCRIPT&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="parsefloatfunction"></a><font SIZE="+2" COLOR="#000080">parseFloat() function
+</font></h2>
+
+<p>This function converts a string containing numeric characters to a floating point
+number. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this function is </p>
+
+<p>parseFloat(<i>string</i>) </p>
+
+<p>where <i>string</i> is a string that represents the value you want to parse. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>parseFloat() parses its argument, a string, and returns a floating point number. If it
+finds a character other than a sign ( + or -), numeral (0-9), a decimal point, or an
+exponent, then it returns the value up to that point and ignores that character and all
+succeeding characters. </p>
+
+<p>If the first character cannot be converted to a number, parseFloat returns 0 (zero) on
+Windows platforms and NaN on any other platform, indicating that the value is not a
+number. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>When this small Web page is opened <br>
+</p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+     string1 = &quot;123 Oak Tree Lane&quot;
+     string2 = &quot;P.O. Box 630&quot;
+     document.write ('parseFloat(string1) = ',<b>parseFloat(string1)</b>)
+     document.write ('&lt;BR&gt;')
+     document.write ('parseFloat(string2) = ',<b>parseFloat(string2)</b>)
+ &lt;/SCRIPT&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>it displays the following on the screen: </p>
+
+<p>parseFloat(string1) = 123 </p>
+
+<p>parseFloat(string2) = 0 </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="parseIntfunction"></a><font SIZE="+2" COLOR="#000080">parseInt() function </font></h2>
+
+<p>This function parses a string and returns an integer of the specified radix or base. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the function is </p>
+
+<p>parseInt(<i>string</i> [,<i>radix</i>]) </p>
+
+<p>where <i>string</i> is a string that represents the value that you want to parse and <i>radix</i>
+is an integer that represents the radix of the return value. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The parseInt function parses its first argument, a string, and attempts to return an
+integer of the specified radix (base). A radix of 10 indicates to convert to a decimal
+number, 8 octal, 16 hexadecimal, and so on. For radixes greater than 10, the letters of
+the alphabet indicate numerals greater than 9. For example, for hexadecimal numbers (base
+16), A through F are used. </p>
+
+<p>If parseInt encounters a character that is not a numeral in the specified radix, it
+ignores all characters from that point on. Floating point numbers are truncated to integer
+values. If the radix is not specified or is specified as 0, JavaScript assumes the
+following: 
+
+<ul>
+  <li>If the input string begins with 0x, the radix is 16 (hexadecimal). </li>
+  <li>If the input string begins with 0, the radix is 8 (octal). </li>
+  <li>If the input string begins with any other value, the radix is 10 (decimal). </li>
+</ul>
+
+<p>If the first character of the string cannot be converted to a number, parseInt returns
+one of the following values: 
+
+<ul>
+  <li>0 on Windows platforms. </li>
+  <li>NaN on any other platform, indicating that the value is not a number. </li>
+</ul>
+
+<p><font SIZE="+1" COLOR="#000080">Example </font></p>
+
+<p>Opening this small page </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+     string1 = &quot;-1.987654321&quot;
+     string2 = &quot;$500.00&quot;
+     document.write ('parseInt(string1) = ',<b>parseInt(string1)</b>)
+     document.write ('&lt;BR&gt;')
+     document.write ('parseInt(string2) = ',<b>parseInt(string2)</b>)
+&lt;/SCRIPT&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>displays this in the Web browser screen: </p>
+
+<p>parseInt(string1) = -1 </p>
+
+<p>parseInt(string2) = 0 </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="passwordobject"></a><font SIZE="+2" COLOR="#000080">password object </font></h2>
+
+<p>In a form, a password object is a text field that hides the reader's entry by
+displaying an asterisk (*) for each character typed. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To create a password object in Word IA, use Insert &gt; Form Field &gt; Text &gt;
+Password. To create a password field manually, place an &lt;INPUT type='password'...&gt;
+tag between a pair of &lt;FORM&gt;...&lt;/FORM&gt; tags. </p>
+
+<p>To refer to a password object's properties and methods via JavaScript code, use any of
+these syntaxes: </p>
+
+<p><i>passwordName</i>.<i>propertyName</i> </p>
+
+<p><i>passwordName</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>propertyName</i> </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>passwordName</i> is the NAME attribute as defined in the password object's
+&lt;INPUT&gt; tag, <i><font SIZE="-1">formName</font></i> is either the NAME attribute as
+defined in the &lt;FORM&gt; tag, or an element in the forms array, index is an integer
+representing the password field's position in the elements array, <i><font SIZE="-1">propertyName</font></i>
+and <i><font SIZE="-1">methodName</font></i> are any valid property/method for the
+password object, as listed in the next section, and parameters are any parameters that are
+acceptable to the method. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.defaultValue</b> reflects the VALUE attribute as defined in the &lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.name</font></b> reflects the NAME attribute as defined in the
+&lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> reflects the VALUE attribute is set
+programmatically, but not a user's entry <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.focus()</b> moves the insertion point into the password field </p>
+
+<p><b>.blur()</b> moves the focus out of the password field so nothing can be typed there </p>
+
+<p><b>.select()</b> selects the contents of the password field. <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>A password object is a form element that must be defined with an &lt;INPUT&gt; tag
+between a pair of &lt;FORM&gt;...&lt;/FORM&gt; tags. The password object is a property of
+the larger form object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>Oddly, there appears to be no way to test and validate a user's entry in a password
+field. Perhaps this is a bug that will be fixed. You still can create a password field
+using <i>password </i>in an input tag, as in the following example shows: </p>
+
+<pre><font COLOR="#800080">&lt;FORM &gt;
+&lt;INPUT <b>TYPE=&quot;password&quot;</b> NAME=&quot;ReaderPassword&quot;VALUE=&quot;&quot; MAXLENGTH=&quot;16&quot; SIZE=16 &gt;
+&lt;/FORM&gt;</font>
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="radioobject"></a><font SIZE="+2" COLOR="#000080">radio object </font></h2>
+
+<p>This object is a single radio button (aka option button) on a form. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>In Word IA, you can choose Insert &gt; Form Field &gt; Radio Button Group to create a
+group of radio buttons on a form. Or, you can manually enter &lt;INPUT type='radio'...&gt;
+tags between a pair of &lt;FORM&gt;...&lt;/FORM&gt; tags. </p>
+
+<p>To access a radio button's properties and methods via JavaScript, use any of these
+syntaxes: </p>
+
+<p><i>radioName</i>[<i>index1</i>].<i>propertyName</i> </p>
+
+<p><i>radioName</i>[<i>index1</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p><i>formName</i>.elements[<i>index2</i>].<i>propertyName</i> </p>
+
+<p><i>formName</i>.elements[<i>index2</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>radioName</i> is the NAME attribute as defined in the &lt;INPUT&gt; tag, <i><font SIZE="-1">index1</font></i> is an integer representing a radio button in a radio group, <i><font SIZE="-1">formName</font></i> is either the NAME attribute of a form object or an element
+in the forms array, <i><font SIZE="-1">index2</font></i> is an integer representing a
+radio button on a form. The elements array contains an entry for each radio button in a
+radio object. The <i><font SIZE="-1">propertyName</font></i>, <i><font SIZE="-1">methodName</font></i>,
+and <i><font SIZE="-1">parameters</font></i> represent any of the valid
+properties/methods/parameters for the radio object, as listed in the following sections. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.checked</b> Lets you see if a button is selected and programatically select a radio
+button </p>
+
+<p><b>.default</b> Reflects the CHECKED attribute of the button's &lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.length</font></b> Reflects the number of radio buttons in a radio
+button group </p>
+
+<p><b><font SIZE="-1">.name</font></b> Reflects the NAME attribute as defined in the
+button's &lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> Reflects the VALUE attribute as defined in the
+button's &lt;INPUT&gt; tag <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.click()</b> Programatically clicks on the radio button <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onClick</b> Triggered when the reader clicks on the radio button <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>All of the radio buttons in a radio button group use the same name property. To access
+the an individual radio button via JavaaScript, follow the object name with an index
+starting from 0, indicating the button's position in the group. But be aware that (for
+some totally counterintuitive reason) the items are numbered backwards. For example, take
+a look at the radio buttons defined in the following form: </p>
+
+<pre><font SIZE="-1">&lt;FORM name = &quot;flashy&quot;&gt;
+&lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;flashers&quot; VALUE=&quot;first&quot;&gt;first
+&lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;flashers&quot; VALUE=&quot;second&quot;&gt;second
+&lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;flashers&quot; VALUE=&quot;third&quot;&gt;third
+&lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;flashers&quot; VALUE=&quot;fourth&quot;&gt;fourth
+&lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;flashers&quot; VALUE=&quot;fifth&quot;&gt;fifth 
+&lt;/FORM&gt; </font>
+
+
+
+
+</pre>
+
+<p>For some odd reasone, <i>document.flashy.flashers[0].value </i>returns <i>fifth,
+document.flashy.flashers[1].value </i>returns <i>fourth </i>and <i>document.flashy.flashers[4].value
+</i>returns <i>first</i>. Go figure. </p>
+
+<p>The radio object is a property of the larger form object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>Opening the sample Web page that follows shows a simple form with two checkboxes, one
+labeled Female, the other labeled Male. Below the checkboxes appears a button labeled
+&quot;Click Me&quot;: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt; 
+function showChoice() {
+     var msg = &quot;&quot; 
+     if (document.ReaderInfo.gender[1].checked) {
+          msg = 'Female'
+     } 
+     if (document.ReaderInfo.gender[0].checked) {
+          msg = 'Male'
+     } 
+     alert (&quot;You chose &quot;+msg)
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;FORM name = &quot;ReaderInfo&quot;&gt;
+     &lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;gender&quot; VALUE=&quot;Female&quot;&gt;Female&lt;BR&gt;
+     &lt;INPUT TYPE=&quot;RADIO&quot; NAME=&quot;gender&quot; VALUE=&quot;Male&quot;&gt;Male&lt;BR&gt;&lt;P&gt;
+     &lt;INPUT type=&quot;button&quot; value=&quot;Click Me&quot; onClick=&quot;showChoice()&quot;&gt; 
+&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p>When the reader clicks on the button, an alert message shows which choice he/she made
+in the radio buttons. The showMessage() custom function determines which choice was made
+by inspecting the .checked property of each radio button and assigning a value to the
+variable named msg when it finds the checked button. The alert() property just shows that
+message on the screen. </p>
+
+<p align="center"><a href="../author/jscript/radio.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="reservedwords"></a><font SIZE="+2" COLOR="#000080">Reserved words </font></h2>
+
+<p>These words have special meaning in JavaScript and cannot be used as variable names,
+function names, methods, or object names. Some are not used in current JavaScript but are
+reserved for future use. </p>
+
+<table ALIGN="CENTER">
+  <tr>
+    <td WIDTH="197"><p align="center">Abstract </td>
+    <td WIDTH="197"><p align="center">float </td>
+    <td WIDTH="197"><p align="center">public </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">boolean </td>
+    <td WIDTH="197"><p align="center">for </td>
+    <td WIDTH="197"><p align="center">return </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">break </td>
+    <td WIDTH="197"><p align="center">function </td>
+    <td WIDTH="197"><p align="center">short </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">byte </td>
+    <td WIDTH="197"><p align="center">goto </td>
+    <td WIDTH="197"><p align="center">static </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">case </td>
+    <td WIDTH="197"><p align="center">if </td>
+    <td WIDTH="197"><p align="center">super </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">catch </td>
+    <td WIDTH="197"><p align="center">implements </td>
+    <td WIDTH="197"><p align="center">switch </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">char </td>
+    <td WIDTH="197"><p align="center">import </td>
+    <td WIDTH="197"><p align="center">synchronized </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">class </td>
+    <td WIDTH="197"><p align="center">in </td>
+    <td WIDTH="197"><p align="center">this </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">const </td>
+    <td WIDTH="197"><p align="center">instanceof </td>
+    <td WIDTH="197"><p align="center">throw </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">continue </td>
+    <td WIDTH="197"><p align="center">int </td>
+    <td WIDTH="197"><p align="center">throws </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">default </td>
+    <td WIDTH="197"><p align="center">interface </td>
+    <td WIDTH="197"><p align="center">transient </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">do </td>
+    <td WIDTH="197"><p align="center">long </td>
+    <td WIDTH="197"><p align="center">true </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">double </td>
+    <td WIDTH="197"><p align="center">native </td>
+    <td WIDTH="197"><p align="center">try </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">else </td>
+    <td WIDTH="197"><p align="center">new </td>
+    <td WIDTH="197"><p align="center">var </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">extends </td>
+    <td WIDTH="197"><p align="center">null </td>
+    <td WIDTH="197"><p align="center">void </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">false </td>
+    <td WIDTH="197"><p align="center">package </td>
+    <td WIDTH="197"><p align="center">while </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">final </td>
+    <td WIDTH="197"><p align="center">private </td>
+    <td WIDTH="197"><p align="center">with </td>
+  </tr>
+  <tr>
+    <td WIDTH="197"><p align="center">finally </td>
+    <td WIDTH="197"><p align="center">protected </td>
+    <td WIDTH="197"></td>
+  </tr>
+</table>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="resetobject"></a><font SIZE="+2" COLOR="#000080">Reset object </font></h2>
+
+<p>This object refers to the Reset button on a form. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To define a Reset button on a form, use the standard HTML &lt;INPUT&gt; tag with the
+type attribute set to Reset. You can add an onClick handler to trigger some JavaScript
+code when the user clicks the Reset button. </p>
+
+<p>To access a Reset button's properties and methods from JavaScript, use any or these
+syntaxes: </p>
+
+<p><i>resetName</i>.<i>propertyName</i> </p>
+
+<p><i>resetName</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p><i>formName</i>.<i>elements</i>[<i>index</i>].<i>propertyName</i> </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>resetName</i> is the NAME attribute as defined in the button's &lt;INPUT&gt;
+tag, <i><font SIZE="-1">formName</font></i> is the name of the form as defined in the NAME
+attribute of the &lt;FORM&gt; tag (or an element in the forms array), <i><font SIZE="-1">index</font></i>
+is an integer representing the reset button's position in the forms array, and <i><font SIZE="-1">propertyName</font></i>, <i><font SIZE="-1">methodName</font></i>, and <i><font SIZE="-1">parameters</font></i> is any valid property, method, or parameter listed in the
+following sections. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.name</b> Reflects the NAME attribute defined in the button's &lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> Reflects the VALUE attribute defined in the
+button's &lt;INPUT&gt; tag <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.click()</b> Programmatically clicks the Reset button <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onClick</b> Triggered when the reader clicks on the Reset button <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>When the Reset button is clicked, all fields in the form are emptied or returned to
+their default values. There is no way to stop this from happening. The onClick event
+handler cannot prevent a form from being reset. </p>
+
+<p>The reset object is a property of the larger form object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>This little Web page contains a regular form and Reset button. But when the reader
+clicks the Reset button, a small message appears telling the reader that all fields have
+been returned to their default values. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;FORM name = &quot;ReaderInfo&quot;&gt;
+&lt;INPUT NAME=&quot;Your Name:&quot; VALUE=&quot;type your name here&quot;MAXLENGTH=&quot;50&quot; SIZE=50&gt;
+&lt;P&gt;
+&lt;INPUT NAME=&quot;EmailAdd&quot; VALUE=&quot;type email address here&quot;MAXLENGTH=&quot;40&quot; SIZE=40&gt;
+&lt;P&gt;
+&lt;INPUT <b>type=&quot;reset&quot; onClick=&quot;alert ('Returned all fields to default values')&quot;</b>&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font>
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/reset.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="return"></a><font SIZE="+2" COLOR="#000080">return statement </font></h2>
+
+<p>This statement returns a value to a statement that called a custom function. Used only
+within a custom function. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for a return statement is </p>
+
+<p>return <i>value</i> </p>
+
+<p>where <i>value </i>is a value to return, or the name of a variable that contains the
+value to return. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The return statement returns a value to whatever statement called it. If you want to
+base the return value on a decision, store the return value in a variable and return the
+variable at the end of the function. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The following custom function sets a variable named retval to false. Then it loops
+through a large string (largestr) to see if one of its characters matches the character
+passed as onechar. If so, it changes the value of retval to true. When the function is
+finished, it returns the value of the retval variable to the calling statement. </p>
+
+<pre><font COLOR="#800080">&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+function contains (onechar,largestr) {
+retval = false 
+     for (var i=0;i&lt;=largestr.length-1;i++) { 
+          if (largestr.charAt(i) == onechar) { 
+               retval = true break 
+          }
+     }
+return retval
+}
+&lt;/SCRIPT&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="selectobject"></a><font SIZE="+2" COLOR="#000080">select object (<a name="optionsarray"></a><i>options</i> array) </font></h2>
+
+<p>A select object is one selection box (drop-down list) on a form. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To access a select box's object's properties and methods from JavaScript, use any one
+of these syntaxes: </p>
+
+<p><i>selectName</i>.<i>propertyName</i> </p>
+
+<p><i>selectName</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>propertyName</i> </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>selectName</i> is the NAME attribute as defined in the &lt;SELECT&gt; tag, <i><font SIZE="-1">formName</font></i> is the NAME attribute as defined in the &lt;FORM&gt; tag (or
+an element in the forms array), <i><font SIZE="-1">index</font></i> is an integer
+representing the fields position in the elements array, <i><font SIZE="-1">propertyName</font></i>,
+<i><font SIZE="-1">methodName</font></i>, and <i><font SIZE="-1">parameters</font></i> are
+any valid options for the Select object as defined in the next sections. </p>
+
+<p>To get to the specific options within a select box, use one of these syntaxes: </p>
+
+<p><i>selectName</i>.options[<i>index1</i>].<i>propertyName</i> </p>
+
+<p><i>formName</i>.elements[<i>index2</i>].options[<i>index1</i>].<i>propertyName</i> </p>
+
+<p>where <i>selectName</i> is the NAME attribute as defined in the &lt;SELECT&gt; tag, <i><font SIZE="-1">index1</font></i> is the option's position within the &lt;SELECT &gt; tag
+(starting at 0), <i><font SIZE="-1">formName</font></i> is the NAME attribute as defined
+in the &lt;FORM&gt; tag (or an element in the forms array), <i><font SIZE="-1">index2</font></i>
+is an integer representing the select field's position in the form, and <i><font SIZE="-1">propertyName</font></i>
+is one of the valid properties for the options array as defined in the following sections.
+</p>
+
+<p>You can refer to options in the &lt;SELECT&gt; tag's options list using any of these
+syntaxes: </p>
+
+<p><i>selectName</i>.options </p>
+
+<p><i>selectName</i>.options[index] </p>
+
+<p><i>selectName</i>.options.<i>length</i> <br>
+</p>
+
+<p>where <i>selectName</i> is the NAME attribute as defined in the &lt;SELECT&gt; tag, <i><font SIZE="-1">index</font></i> is the option's position in the &lt;OPTION&gt; list. The
+.length property returns the total number of options within the &lt;SELECT&gt; tag. <br>
+</p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p>The select object has the following properties: </p>
+
+<p><b>.length</b> Reflects the number of options in a select object </p>
+
+<p><b>.name</b> Reflects the NAME attribute as defined in the &lt;SELECT&gt; tag </p>
+
+<p><b><font SIZE="-1">.options</font></b> Reflects the &lt;OPTION&gt; tags </p>
+
+<p><b><font SIZE="-1">.selectedIndex</font></b> Reflects the numeric index of the selected
+option, or the first selected option if multiple options are selected </p>
+
+<p>The <i>options</i> array has the following properties: </p>
+
+<p><b>.defaultSelected</b> Reflects the SELECTED attribute as defined in the
+&lt;OPTIONS&gt; list </p>
+
+<p><b><font SIZE="-1">.index</font></b> Reflects the position of an option within the list
+</p>
+
+<p><b><font SIZE="-1">.length</font></b> Reflects the number of options in the select box </p>
+
+<p><b><font SIZE="-1">.name</font></b> Reflects the NAME attribute as defined in the
+&lt;SELECT&gt; tag. </p>
+
+<p><b><font SIZE="-1">.selected</font></b> Lets you programatically select an option </p>
+
+<p><b><font SIZE="-1">.selectedIndex</font></b> Reflects the position of the selected
+option in the options list </p>
+
+<p><b><font SIZE="-1">.text</font></b> Reflects the textToDisplay that follows an
+&lt;OPTION&gt; tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> Reflects the VALUE attribute as defined in the
+&lt;OPTION&gt; tag <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.blur()</b> Removes the focus from the select box </p>
+
+<p><b>.focus()</b> Moves the focus to the select box <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onBlur</b> Triggered when the reader moves the insertion point out of the select
+box. </p>
+
+<p><b>onChange</b> Triggered when the reader moves the insertion point out the to select
+box after having changed the contents of the select box </p>
+
+<p><b>onFocus</b> Triggered when the reader first puts the insertion point into the select
+box <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>To create a select box in Word IA, choose Insert &gt; Form Field &gt; Selection. To
+create a selection box manually, type in a complete &lt;SELECT&gt;...&lt;/SELECT&gt; tag
+between a pair of &lt;FORM&gt;...&lt;/FORM&gt; tags. </p>
+
+<p>You can reference the options of a select object in your code by using the options
+array. This array contains an entry for each &lt;OPTION&gt; option in the &lt;SELECT&gt;
+tag, where the first item is .options[0]. </p>
+
+<p>Even though each element in the options array represents a select option, the value of
+options[index] is always null. The value returned by selectName.options represents the
+full HTML statement for the selectName object. Elements in the options array are
+read-only. For example, the statement myDrop.options[0]=&quot;pick me&quot; has no effect.
+</p>
+
+<p>The select object is a property of the form object. The options array is a property of
+select object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The following Web page defines a custom function named showFacts() whose sole purpose
+is to display a bunch of information about a select box named mySelect in a form named
+test. The select box itself is defined in &lt;FORM&gt; tags in the body of the page. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+function showFacts() {
+  factswindow = window.open(&quot;&quot;,&quot;Facts&quot;) 
+  factswindow.document.write(&quot;&lt;b&gt;Facts about the Select Box&lt;/b&gt;&lt;p&gt;&quot;) 
+  factswindow.document.write ('document.test.mySelect.name =
+      ',<b>document.test.mySelect.name</b>,'&lt;br&gt;')   
+  factswindow.document.write ('document.test.mySelect.length =
+      ',<b>document.test.mySelect.length</b>,'&lt;br&gt;')
+  factswindow.document.write ('document.test.mySelect.options =
+      ',<b>document.test.mySelect.options</b>,'&lt;br&gt;') 
+  factswindow.document.write ('document.test.mySelect.selectedIndex =
+     ',<b>document.test.mySelect.selectedIndex</b>, '&lt;p&gt;') 
+  factswindow.document.write(&quot;&lt;b&gt;Facts about the Options Array&lt;/b&gt;&lt;p&gt;&quot;) 
+  var howmany = <b>document.test.mySelect.options.length</b> 
+  var biggest = howmany - 1 
+  factswindow.document.write ('document.test.mySelect.options.length = ',howmany,'&lt;p&gt;') 
+  for (var i=0; i&lt;= biggest; i++) { 
+     factswindow.document.write ('document.test.mySelect.options[',i,'].selected = 
+      ',<b>document.test.mySelect.options[i].selected</b>, '&lt;br&gt;')
+     factswindow.document.write ('document.test.mySelect.options[',i,'].defaultSelected = 
+      ',<b>document.test.mySelect.options[i].defaultSelected</b>,'&lt;br&gt;') 
+     factswindow.document.write ('document.test.mySelect.options[',i,'].index = 
+      ',<b>document.test.mySelect.options[i].index</b>, '&lt;br&gt;')
+     factswindow.document.write ('document.test.mySelect.options[',i,'].value = 
+      ',<b>document.test.mySelect.options[i].value</b>,'&lt;br&gt;') factswindow.document.write ('&lt;p&gt;') 
+   }
+factswindow.document.close()
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;<b>FORM name = &quot;test&quot;</b>&gt;
+<b>&lt;SELECT NAME=&quot;mySelect&quot; &gt; 
+&lt;OPTION SELECTED VALUE=&quot;1&quot;&gt;first choice 
+&lt;OPTION VALUE=&quot;2&quot;&gt;second choice 
+&lt;OPTION VALUE=&quot;3&quot;&gt;third choice 
+&lt;OPTION VALUE=&quot;4&quot;&gt;fourth choice
+&lt;/SELECT&gt;
+</b>&lt;P&gt;
+&lt;INPUT type=&quot;button&quot; value = &quot;Click me for Facts&quot; onClick = &quot;showFacts()&quot;&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+</pre>
+
+<p>When you open this page, just the select box and a button are displayed. You can make a
+choice from the select box, then click the button. Clicking the button triggers the
+showFacts() function which displays lots of information about the current status of the
+select box. For example, if you choose <i>third choice </i>from the select box, then click
+on the button, the screen displays all information about the select box, and its options
+array. </p>
+
+<p><b>Facts about the Select Box <br>
+</b>document.test.mySelect.name = mySelect <br>
+document.test.mySelect.length = 4 <br>
+document.test.mySelect.options = first choice second choice third choice fourth choice <br>
+document.test.mySelect.selectedIndex = 2 <br>
+<br>
+<b>Facts about the Options Array <br>
+</b>document.test.mySelect.options.length = 4 <br>
+document.test.mySelect.options[0].selected = false <br>
+document.test.mySelect.options[0].defaultSelected = true <br>
+document.test.mySelect.options[0].index = 0 <br>
+document.test.mySelect.options[0].value = 1 <br>
+document.test.mySelect.options[1].selected = false <br>
+document.test.mySelect.options[1].defaultSelected = false <br>
+document.test.mySelect.options[1].index = 1 <br>
+document.test.mySelect.options[1].value = 2 <br>
+document.test.mySelect.options[2].selected = true <br>
+document.test.mySelect.options[2].defaultSelected = false <br>
+document.test.mySelect.options[2].index = 2 <br>
+document.test.mySelect.options[2].value = 3 <br>
+document.test.mySelect.options[3].selected = false <br>
+document.test.mySelect.options[3].defaultSelected = false <br>
+document.test.mySelect.options[3].index = 3 <br>
+document.test.mySelect.options[3].value = 4 <br>
+</p>
+
+<p align="center"><a href="../author/jscript/selectob.htm">Try it</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="stringobject"></a><font SIZE="+2" COLOR="#000080">string object </font></h2>
+
+<p>A string is any series of characters, such as &quot;Joan Doe,&quot; as opposed to a
+number like 123.45. All strings, in JavaScript, are string objects. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To use the properties and methods of the string object, use either of these syntaxes: </p>
+
+<p><i>stringName</i>.<i>propertyName</i> </p>
+
+<p>or </p>
+
+<p><i>stringName</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>stringName</i> is the name of a string variable that contains a string, and <i>propertyName</i>,<i>
+methodName</i>, and<i> parameters </i>are any of the valid options listed below. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.length</b> Reflects the length of the string </p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.anchor(<i>name</i>)</b> Programatically creates an anchor </p>
+
+<p><b>.big()</b> Displays string in big font size </p>
+
+<p><b>.blink()</b> Causes the string to blink </p>
+
+<p><b>.bold()</b> Displays string in boldface </p>
+
+<p><b>.charAt(<i>n</i>)</b> Displays the character at position <i>n </i>in the string,
+where the first charater is number 0 </p>
+
+<p><b>.fixed()</b> Displays string in fixed-pitch font </p>
+
+<p><b>.fontcolor(<i>color</i>)</b> Displays string in color where <i>color </i>is any
+valid Color Value </p>
+
+<p><b>.fontsize(<i>n</i>)</b> Displays string in relative font size <i>n </i>where <i>n </i>is
+a value between 1 and 7 </p>
+
+<p><b>.indexOf(<i>smallstring</i>,<i>start</i>)</b> Returns the position of the first
+occurrence of <i>smallstring </i>within the larger string, beginning the search at the <i>start
+</i>value </p>
+
+<p><b>.italics()</b> Displays the string in italics </p>
+
+<p><b>.lastIndexOf()</b> Returns the position of the last occurrence of <i>smallstring </i>within
+the larger string, beginning the search at the <i>start </i>value </p>
+
+<p><b>.link(<i>URL</i>)</b> Converts string to a hyperlink with the target specified in <i>URL</i>
+</p>
+
+<p><b>.small()</b> Displays string in small text size </p>
+
+<p><b>.strike()</b> Displays string in strikeout font </p>
+
+<p><b>.sub()</b> Displays string as a subscript </p>
+
+<p><b>.substring(<i>x</i>,<i>y</i>)</b> Displays a portion of string starting at character
+<i>x </i>going to character <i>y </i>where the first character is number 0. </p>
+
+<p><b>.sup()</b> Displays string as a superscript </p>
+
+<p><b>.toLowerCase()</b> Displays string in all lowercase letters </p>
+
+<p><b>.toUpperCase()</b> Displays string in all uppercase letters <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>A string can be represented as a literal enclosed by single or double quotes. For
+example, both of the following statements assign the string <i>Howie Doone</i> to a
+variable named UserName: </p>
+
+<p>var UserName = &quot;Howie Doone&quot; </p>
+
+<p>var UserName = 'Howie Doone' </p>
+
+<p>You can alternate single and double quotation marks to place one type of quotation mark
+within the string. For example, these two JavaScript statements </p>
+
+<p>var msg = 'I said &quot;Hello&quot; but you ignored me.' </p>
+
+<p>document.write (msg) </p>
+
+<p>display this on the screen: </p>
+
+<p>I said &quot;Hello&quot; but you ignored me. </p>
+
+<p>Strings can be concatenated (stuck together) and you can mix variables and literals
+using a plus (+) operator. For example, these commands <br>
+</p>
+
+<p>var x = &quot;Hello&quot; <br>
+var y = &quot;There&quot; <br>
+var z = x + &quot; &quot; + y + &quot;!&quot; <br>
+document.write (x) </p>
+
+<p>will display this on the screen: </p>
+
+<p>Hello There! </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>Opening the following Web page </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;&lt;BODY&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+<b>var fullname = &quot;Angie Myma</b>&quot;
+document.write (&quot;fullname = &quot;,fullname,'&lt;br&gt;')
+document.write (&quot;fullname.length = &quot;,<b>fullname.length</b>,'&lt;br&gt;')
+document.write (&quot;fullname.bold() = &quot;,<b>fullname.bold()</b>,'&lt;br&gt;')
+document.write (&quot;fullname.italics() = &quot;,<b>fullname.italics()</b>,'&lt;br&gt;')
+document.write (&quot;fullname.charAt(6) = &quot;,<b>fullname.charAt(6)</b>,'&lt;br&gt;')
+document.write (&quot;fullname.toLowerCase() = &quot;,<b>fullname.toLowerCase()</b>,'&lt;br&gt;')
+document.write (&quot;fullname.toUpperCase() = &quot;,<b>fullname.toUpperCase()</b>,'&lt;br&gt;')
+&lt;/SCRIPT&gt; 
+&lt;/BODY&gt;&lt;/HTML&gt; </font>
+
+
+</pre>
+
+<p>displays the following on the screen: </p>
+
+<p>fullname = Angie Myma </p>
+
+<p>fullname.length = 10 </p>
+
+<p>fullname.bold() = <b>Angie Myma</b> </p>
+
+<p>fullname.italics() = <i>Angie Myma</i> </p>
+
+<p>fullname.charAt(6) = M </p>
+
+<p>fullname.toLowerCase() = angie myma </p>
+
+<p>fullname.toUpperCase() = ANGIE MYMA </p>
+
+<p align="center"><a href="../author/jscript/strobj.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="submitobject"></a><font SIZE="+2" COLOR="#000080">submit object </font></h2>
+
+<p>The submit object refers to the Submit button on a form. Clicking the button causes the
+form to be submitted to whatever address is specified in the button's &lt;FORM&gt; tag. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To create a Submit button in Word IA, choose Insert &gt; Form Field &gt; Submit Button.
+To create a Submit button, manually use the TYPE=&quot;submit&quot; attribute in an
+&lt;INPUT&gt; tag between a pair for &lt;FORM&gt;...&lt;/FORM&gt; tags. </p>
+
+<p>To get at a Submit button's properties and methods from JavaScript code, use any one of
+these syntaxes: </p>
+
+<p><i>submitName</i>.<i>propertyName</i> </p>
+
+<p><i>submitName</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>propertyName</i> </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>submitName</i> is the NAME attribute of the button as defined in its
+&lt;INPUT&gt; tag, <i><font SIZE="-1">formName</font></i> is the name of the form as
+defined in the &lt;FORM&gt; tag (or an element in the forms array), <i><font SIZE="-1">index</font></i>
+is an integer representing the submit button's position on the form, and <i><font SIZE="-1">propertyName</font></i>, <i><font SIZE="-1">methodName</font></i> and <i><font SIZE="-1">parameters</font></i> are valid options for the submit object as listed below. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.name</b> Reflects the NAME attribute as defined in the button's &lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> Reflects the VALUE attribute as defined in the
+button's &lt;INPUT&gt; tag <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.click()</b> Programatically clicks the button <br>
+</p>
+
+<h4><font COLOR="#000080">Event Handlers </font></h4>
+
+<p><b>onClick</b> Triggered when the reader clicks the Submit button <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>A form's Submit button must be defined with an &lt;INPUT&gt; tag within the form's
+&lt;FORM&gt;...&lt;/FORM&gt; tags. Clicking the Submit button submits a form to the URL
+specified by the form's ACTION action attribute. </p>
+
+<p>The onClick event handler for a Submit button cannot prevent a form from being
+submitted. However, the form's onSubmit event handler, and the form's submit method, can
+be used to submit an object from a regular button. </p>
+
+<p>The submit object is a property of the larger form object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The Submit button gets information on where to send the form's data from the ACTION,
+METHOD, and ENCTYPE attributes of &lt;FORM&gt; tag that houses the button. In the example
+below, clicking the Submit button will send the data from the form to my e-mail address at
+alan@coolnerds.com. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;FONT SIZE=6 COLOR=#0000FF&gt;Ask Alan&lt;/FONT&gt;&lt;BR&gt;
+<b>&lt;FORM METHOD=POST ACTION=&quot;/cgi-bin/mailto?alan@coolnerds.com:Ask_Alan&quot;&gt;
+</b>&lt;P&gt;
+Question:&lt;TEXTAREA NAME=&quot;01Question&quot; ROWS=5 COLS=80&gt;&lt;/TEXTAREA&gt;
+&lt;P&gt;
+My e-mail address is: &lt;INPUT NAME=&quot;02ReturnAdd&quot;VALUE=&quot;&quot; MAXLENGTH=&quot;70&quot; SIZE=70&gt;
+&lt;P&gt;
+&lt;<b>INPUT TYPE=&quot;SUBMIT&quot;</b> VALUE=&quot;Submit&quot;&gt;
+&lt;INPUT TYPE=&quot;RESET&quot;&gt;
+&lt;BR&gt;
+<b>&lt;/FORM&gt;
+</b>&lt;/BODY&gt;&lt;/HTML&gt; </font>
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="textobject"></a><font SIZE="+2" COLOR="#000080">text object </font></h2>
+
+<p>A text object is a single text field in a form. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To create a text field in Word IA, choose Insert &gt; Form Field &gt; Text from Word
+IA's menu bar. To create a form field manually, type an &lt;INPUT&gt; tag between a pair
+of &lt;FORM&gt;...&lt;/FORM&gt; tags. To refer to a text box field from JavaScript code
+use any of these syntaxes: </p>
+
+<p><i>textName</i>.<i>propertyName</i> </p>
+
+<p><i>textName</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>propertyName</i> </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>textName</i> is the NAME attribute as defined in the &lt;INPUT&gt; tag, <i><font SIZE="-1">formName</font></i> is the NAME attribute as defined in the &lt;FORM&gt; tag,
+(or an element in the forms array), <i><font SIZE="-1">index</font></i> is an integer
+representing the field's position on the form, <i><font SIZE="-1">propertyName</font></i>,
+<i><font SIZE="-1">methodName</font></i>, and <i><font SIZE="-1">parameters</font></i> are
+the valid options listed in the next sections. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.defaultValue</b> Reflects the VALUE attribute as defined in the field's
+&lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.name</font></b> Reflects the NAME attribute as defined in the
+field's &lt;INPUT&gt; tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> Reflects the current value (contents) of the text
+field <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.focus()</b> Moves the focus into the text field </p>
+
+<p><b>.blur()</b> Moves the focus out of the text field </p>
+
+<p><b>.select()</b> Selects the contents of the text field <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onBlur</b> Triggered when the reader leaves the text field </p>
+
+<p><b>onChange</b> Triggered when the reader makes a change then leaves the text field </p>
+
+<p><b>onFocus</b> Triggered when the reader enters the text field </p>
+
+<p><b>onSelect</b> Triggered when the reader selects text in the text field <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>You can use JavaScript code to test and to change text in a text form field. </p>
+
+<p>The text object is a property of the larger form object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>In the following Web page, a custom function named pcase() is defined. This function
+accepts any string and converts it to proper-noun case (that is, converts wAndA bEA nOId
+to Wanda Bea Noid. The first text box in the form, located down in the body of the page,
+calls up the pcase() function to change whatever the reader types into the fullname field
+to proper case: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT LANGUAGE = &quot;JavaScript&quot;&gt;
+//custom function to convert text to proper-noun case (initial caps).
+<b>function pcase(str)</b> { 
+   strlen = str.length 
+   jj = str.substring(0,1).toUpperCase() 
+   jj = jj + str.substring(1,strlen).toLowerCase() 
+   for (i = 2; i &lt;= strlen; i++) { 
+      if (jj.charAt(i)==&quot; &quot;) { 
+         lefthalf = jj.substring(0,i+1) 
+         righthalf = jj.substring(i+1,strlen) 
+         righthalf = righthalf.substring(0,1).toUpperCase()+righthalf.substring(1,strlen) 
+         jj=lefthalf+righthalf 
+      } 
+   } 
+   return jj
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+<b>&lt;FORM&gt;</b>Type your full name: 
+<b>&lt;INPUT NAME=&quot;fullname&quot; VALUE=&quot;&quot; MAXLENGTH=&quot;50&quot; SIZE=50 
+   onChange = &quot;this.value = pcase(this.value)&quot;&gt;
+</b>&lt;P&gt; 
+Type your address: &lt;INPUT NAME=&quot;address&quot; VALUE=&quot;&quot; MAXLENGTH=&quot;50&quot; SIZE=50&gt;
+&lt;P&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;&lt;/HTML&gt; </font>
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/textobj.htm">Try it</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="textareaobject"></a><font SIZE="+2" COLOR="#000080">textarea object </font></h2>
+
+<p>A textarea object is one multiline text field in a form. </p>
+
+<h3><font SIZE="+1"><font COLOR="#000080">Syntax</font> </font></h3>
+
+<p>To create a textarea field on a form using Word IA, choose Insert &gt; Form Field &gt;
+Text &gt; OK &gt; Multiple Line. To manually create a textarea field, type HTML
+&lt;TEXTAREA&gt;...&lt;/TEXTAREA&gt; tags within a pair of &lt;FORM&gt;...&lt;/FORM&gt;
+tags. To access a textarea field from JavaScript code, use any one of these syntaxes: </p>
+
+<p><i>textareaName.propertyName</i> </p>
+
+<p><i>textareaName.methodName(parameters)</i> </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>propertyName</i> </p>
+
+<p><i>formName</i>.elements[<i>index</i>].<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>textareaName</i> is the NAME attribute as defined in the &lt;TEXTAREA&gt; tag,
+<i><font SIZE="-1">formName</font></i> is the name of the form as defined in the NAME
+attribute of the &lt;FORM&gt; tag (or an element in the forms array), <i><font SIZE="-1">index</font></i>
+is an integer representing a textarea field's position on the form, and <i><font SIZE="-1">propertyName</font></i>,
+<i><font SIZE="-1">methodName</font></i>, and <i><font SIZE="-1">parameters</font></i> are
+any of the valid options listed in the next sections. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.defaultValue</b> Reflects the VALUE attribute as defined in the &lt;TEXTAREA&gt;
+tag </p>
+
+<p><b><font SIZE="-1">.name</font></b> Reflects the NAME attribute as defined in the
+&lt;TEXTAREA&gt; tag </p>
+
+<p><b><font SIZE="-1">.value</font></b> Reflects the current value of the textarea object <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.focus()</b> moves the focus into the textarea field </p>
+
+<p><b>.blur()</b> moves the focus out of the textarea field </p>
+
+<p><b>.select()</b> selects the text in the texarea field <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onBlur</b> Triggered when the reader leaves the textarea field </p>
+
+<p><b>onChange</b> Triggered when the reader changes the contents of the textarea field
+then leaves the field </p>
+
+<p><b>onFocus</b> Triggered when the reader moves the insertion point into the textarea
+field </p>
+
+<p><b>onSelect</b> Triggered when the reader selects text in the field <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>With JavaScript code, you can test the value of a textarea field and change its
+contents. When writing to a textarea field, you can begin a new line using the newline
+character. In Windows, the newline character is \r\n. In Unix and Macintosh, it is \n. You
+can use the .appVersion property of the navigator object to test for the operating system
+in use. </p>
+
+<p>The textarea object is a property of the larger form object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The following page first defines a custom function named noBlanksAllowed that tests the
+value of <i>anyval</i> passed to it. If <i>anyval </i>is blank (&quot;&quot;), it displays
+a warning and moves the focus into a form field named <i>question</i> on a form named <i>askme</i>.
+</p>
+
+<p>The form and field are created in the body of the document and two events are used to
+trigger the noBlanksAllowed function: when the reader leaves the field named <i>question</i>
+and when the reader clicks on the button labeled Click Me. In either case, if the <i>question
+</i>textarea field is empty when the event occurs, the <i>Please don't leave the question
+blank!</i> alert message appears. <br>
+</p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+function noBlanksAllowed(anyval) {
+   if (anyval == &quot;&quot;) {
+      <b>document.askme.question.setFocus</b> alert (&quot;Please don't leave the question blank!&quot;) 
+   }
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+<b>&lt;FORM name = &quot;askme&quot;&gt;
+</b>Question:&lt;BR&gt;
+<b>&lt;TEXTAREA NAME=&quot;question&quot; ROWS=4 COLS=25 onChange = &quot;noBlanksAllowed(this.value)&quot;&gt;
+&lt;/TEXTAREA&gt;</b>&lt;P&gt;
+Your Name:
+&lt;INPUT NAME = &quot;readername&quot;&gt;&lt;P&gt;
+&lt;INPUT TYPE=&quot;button&quot; value = &quot;Click Me&quot; <b>onClick =
+   noBlanksAllowed(document.askme.question.value)&quot;</b>&gt;
+&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt; </font>
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/textarea.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="thiskeyword"></a><font SIZE="+2" COLOR="#000080">this keyword </font></h2>
+
+<p>The keyword <i>this</i> is a synonym for the current object and can be used with
+properties. For example, <i>this.value</i> can mean the data currently in this form field.
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for <i>this </i>is </p>
+
+<p>this.[<i>propertyname</i>] </p>
+
+<p>where <i>propertyname</i> is a valid property of the current object type. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The keyword this actually refers to the entire HTML tag for the object to which it
+refers. For example, if used in an event handler of an &lt;INPUT&gt; tag, the term this
+refers to the entire HTML &lt;INPUT...&gt; tag. </p>
+
+<p>In the preceding example for the textarea object, we used the keyword this. to refer to
+the contents of the textarea field when calling the noBlanksAllowed function. However, we
+couldn't use this. when calling that function from the Click Me button - in the
+&lt;INPUT&gt; tag for the Click Me button, this. would refer to the button, not to the
+textarea field. Rather than using this., we had to spell out the reference using document.<i><font SIZE="-1">formname</font></i>.<i><font SIZE="-1">fieldname </font></i>as below: </p>
+
+<pre><font SIZE="-1"><font COLOR="#000000">&lt;FORM name = &quot;askme&quot;&gt;
+Question:&lt;BR&gt;
+&lt;TEXTAREA NAME=&quot;question&quot;<b> </b>ROWS=4 COLS=25<b> </b>onChange = &quot;<b>noBlanksAllowed(this.value)</b>&quot;<b>&gt;
+&lt;/TEXTAREA&gt;
+</b>&lt;!..other tags..&gt;
+&lt;INPUT TYPE=&quot;button&quot; value = &quot;Click Me&quot; onClick =
+ &quot;<b>noBlanksAllowed(document.askme.question.value)</b>&quot;&gt; 
+&lt;/FORM&gt;</font><font COLOR="#800080"> </font></font>
+
+
+
+
+
+</pre>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>The next page we could call WhatsTheMeaningOfThis.htm because all it really does is
+show the meaning of <i>this.</i> in an alert box. It is not very practical, but it does
+provide some insight. </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT LANGUAGE = &quot;JavaScript&quot;&gt;
+//custom function just to display the meaning of 'this.'
+<b>function showme(obj)</b> { 
+     //show what's in obj 
+   var msg = &quot;obj = &quot;+obj 
+   alert (msg) 
+   //show what's in obj.name 
+   var msg = &quot;obj.name = &quot;+obj.name 
+   alert (msg) 
+   //show what's in obj.value 
+   var msg = &quot;obj.value = &quot;+obj.value 
+   alert (msg)
+}
+&lt;/SCRIPT&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;FORM&gt;
+<b>&lt;INPUT type=&quot;button&quot; name = &quot;Fred&quot; value=&quot;Click Me&quot; onClick = &quot;showme(this)&quot;&gt;
+</b>&lt;/FORM&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+</pre>
+
+<p>When the reader clicks on the button, the &lt;INPUT&gt; tag calls up the showme()
+function, sending it the keyword <i><font SIZE="-1">this</font></i> as its parameter. The
+function stores that parameter in a local variable named obj. Then a series of alert boxes
+show some information about the obj variable. The first alert box shows </p>
+
+<p align="center">obj = &lt;input type=&quot;button&quot; name=&quot;Fred&quot;
+value=&quot;Click Me&quot; onClick = 'showme(this)';&gt; </p>
+
+<p>because obj currently contains the entire definition of the object passed as this.
+Subsequent alert boxes show individual properties of this larger object. For instance, the
+second alert box shows </p>
+
+<p align="center">obj.name = Fred </p>
+
+<p>because Fred is indeed the NAME attribute as defined in this object. The next alert box
+shows </p>
+
+<p align="center">obj.value=Click Me </p>
+
+<p>because the VALUE attribute in this object is defined as Click Me. </p>
+
+<p align="center"><a href="../author/jscript/testthis.htm">Try It</a> </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="unescapefunction"></a><font SIZE="+2" COLOR="#000080">unescape() function </font></h2>
+
+<p>This function returns the ASCII string for an escaped character. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this function is </p>
+
+<p>unescape(&quot;<i>string</i>&quot;) </p>
+
+<p>where <i>string</i> is a string containing characters in either of the following forms:
+</p>
+
+<p>&quot;<i>%integer</i>&quot;, where <i>integer</i> is a number between 0 and 255
+(decimal) </p>
+
+<p>&quot;<i>hex</i>&quot;, where <i>hex</i> is a number between 0x0 and 0xFF (hexadecimal)
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The unescape function generally is used to convert a string that has been escaped using
+the escape() function to normal text. For example, you might escape a string to store it
+in a document cookie. Upon retrieving that string, you'd use the unescape() function to
+convert the string back to regular English. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>This small page stores an escaped string in a variable named Encoded and displays that
+text on the screen. A second document.write statement then displays the unescaped version
+of the Encoded variable: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;BODY&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+var English = &quot;Howdy Folks!&quot;
+var Encoded = escape(English)
+document.write (&quot;Encoded = &quot;,Encoded,'&lt;br&gt;')
+document.write (&quot;unescape(Encoded) = &quot;,unescape(Encoded)) 
+&lt;/SCRIPT&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</font><font SIZE="-1"> </font>
+
+
+
+
+</pre>
+
+<p>The result on the screen is <br>
+</p>
+
+<p>Encoded = Howdy%20Folks%21 <br>
+unescape(Encoded) = Howdy Folks! <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="var"></a><font SIZE="+2" COLOR="#000080">var statement </font></h2>
+
+<p>This statement is an optional statement used to create a new variable. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this statement is </p>
+
+<p>var <i>varname</i> [= <i>value</i>] [..., <i>varname</i> [= <i>value</i>] ] </p>
+
+<p>where <i>varname</i> is a variable name you create (it cannot contain spaces and cannot
+be a Reserved Word) and <i>value </i>is a value to store in the variable, or an expression
+that results in some value. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>In most cases, the var statement is optional. For example, these two statements are
+equivalent:var x = 10 <font SIZE="-1">x = 10 </font></p>
+
+<p>Both put the value 10 in a variable named x. If x does not already exist, it is created
+on the spot. </p>
+
+<p>The scope of a variable is local to the function in which it is created. For example,
+if a custom function creates a variable <i>y</i>, that variable exists only while the
+function is being executed. When the function completes its task, the variable <i>y</i>
+ceases to exist. </p>
+
+<p>To create a global variable - one that is accessible to multiple functions in a page,
+you must declare that variable outside of any function. Typically, you do so just under
+the &lt;SCRIPT&gt; tag in the head of a page before the first custom function is defined. </p>
+
+<p>All variables are local to the current page. To extend a variable's scope to other
+pages, you need to copy the variable to a document cookie. See Chapter 31 in HTML
+Publishing Bible for more information on local and global variables, and cookies. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>This code snippet, taken from the sample form described in Chapter 32 of <i>HTML
+Publishing Bible</i>, declares several global variables near the top of the first script
+in this page's &lt;HEAD&gt; section: </p>
+
+<pre><font COLOR="#800080">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+//Global Variables
+var RowsInForm = 5
+var ProductsInList = 10
+var SalesTaxRate = 0.0775
+var TaxableState = &quot;CA&quot;
+var ProdSubscript = 0</font><font SIZE="-1"> </font>
+
+
+
+
+
+</pre>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="while"></a><font SIZE="+2" COLOR="#000080">while statement </font></h2>
+
+<p>This statement defines a loop that is executed until some condition proves false.
+Generally used when no incrementing counter is needed. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for the while statement is as follows: </p>
+
+<p>while (<i>condition</i>) { </p>
+
+<p><i>statements</i> </p>
+
+<p>} </p>
+
+<p>where <i>condition</i> is an expression that evaluates to true or false and <i>statements</i>
+are any number of Javascript statements. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>A <i>while </i>loop is similar to a <i>for </i>loop except that there is no
+automatically incremented counter in the loop. The <i>condition</i> statement is evaluated
+once at the start of the loop, then each time execution passes through the loop. If <i>condition</i>
+proves true, code within the curly braces is executed. If <i>condition</i> proves false,
+code within the curly braces is ignored and execution resumes with the first statement
+after the closing curly brace (}). </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>In the following code snippet, a <i>while</i> loop repeats a series of JavaScript
+statements until they come up with a random number that's between 1 and 10 (inclusive): </p>
+
+<pre><font COLOR="#800080">&lt;SCRIPT Language = &quot;JavaScript&quot;&gt;
+randomNumber = 0
+while ((randomNumber &lt; 1) || (randomNumber &gt; 10)) { 
+     now = new Date() 
+     randomNumber = Math.abs(Math.sin(now.getTime())) 
+     randomNumber = parseInt(randomNumber * 10.5) }
+     document.write ('random number = ',randomNumber) 
+&lt;/SCRIPT&gt; </font>
+
+
+
+
+</pre>
+
+<p align="center"><a href="../author/jscript/while.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="windowobject"></a><font SIZE="+2" COLOR="#000080">window object </font></h2>
+
+<p>A window object is the top-level object for each document, location, and history
+object. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>To open a new window, use the following syntax: </p>
+
+<p>[<i>windowVar</i> = ][window].open(&quot;<i>URL</i>&quot;, &quot;<i>windowName</i>&quot;,
+[&quot;windowFeatures&quot;]) </p>
+
+<p>where <i>windowVar</i> is a name that you create for the new window and also the name
+you will use when referring to a window's properties, methods, and containership in
+JavaScript code. <i>URL</i> specifies the URL to open in the new window. It can be null
+(&quot;&quot;) to open a window with no document. The <i>windowName</i> portion represents
+the window name to use in the TARGET attribute of a &lt;FORM&gt; or &lt;A&gt; tag. The
+optional <i><font SIZE="-1">windowFeatures</font></i> is a comma-separated list of any of
+the following options and values: </p>
+
+<p><b>toolbar[=yes|no]| or [=1|0]</b> Display Navigator window toolbar? </p>
+
+<p><b>location[=yes|no] or [=1|0]</b> Display Navigator window Location: box? </p>
+
+<p><b>directories[=yes|no] or [=1|0]</b> Display Navigator window directory buttons? </p>
+
+<p><b>status[=yes|no] or [=1|0]</b> Display Navigator window status bar? </p>
+
+<p><b>menubar[=yes|no] or [=1|0]</b> Display Navigator window menu bar? </p>
+
+<p><b>scrollbars[=yes|no] or [=1|0]</b> Display Navigator window scrollbars? </p>
+
+<p><b>resizable[=yes|no] or [=1|0]</b> Make window resizeable? </p>
+
+<p><b>width=<i>pixels</b> </i>Width of the window </p>
+
+<p><b>height=<i>pixels</b> </i>Height of the window </p>
+
+<p>where <i>pixels</i> is a positive integer specifying the dimension in pixels. You may
+use any subset of these options. Separate options with a comma. Do not put spaces between
+the options. Enclose the entire set of options in a pair of single quotation marks. </p>
+
+<p>To refer to an opened window's properties and methods in JavaScript code, use any of
+these syntaxes: </p>
+
+<p>window.<i>propertyName</i> </p>
+
+<p>window.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>self.<i>propertyName</i> </p>
+
+<p>self.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>top.<i>propertyName</i> </p>
+
+<p>top.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p>parent.<i>propertyName</i> </p>
+
+<p>parent.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p><i>windowVar.propertyName</i> </p>
+
+<p><i>windowVar</i>.<i>methodName</i>(<i>parameters</i>) </p>
+
+<p><i>propertyName</i> </p>
+
+<p><i>methodName</i>(<i>parameters</i>) </p>
+
+<p>where <i>windowVar</i> is the variable created when the window was opened, <i>propertyName</i>,<i>
+methodName</i>, and<i> parameters </i>are valid options for the window object as listed in
+the following sections. </p>
+
+<h4><font COLOR="#000080">Properties </font></h4>
+
+<p><b>.defaultStatus</b> Reflects the default message displayed in the window's status bar
+</p>
+
+<p><b>.frames</b> An array reflecting all the frames in a window </p>
+
+<p><b>.length</b> Reflects the number of frames in a parent window </p>
+
+<p><b>.name</b> Reflects the <i>windowName</i> argument </p>
+
+<p><b>.parent</b> Refers to a window containing a &lt;FRAMESET&gt; tags </p>
+
+<p><b><font SIZE="-1">.self </font></b>Refers to the current window </p>
+
+<p><b><font SIZE="-1">.status</font></b> Specifies message to display in the window's
+status bar </p>
+
+<p><b><font SIZE="-1">.top</font></b> Refers to the top-most Navigator window </p>
+
+<p><b><font SIZE="-1">.window</font></b> Refers to the current window </p>
+
+<p><b><font SIZE="-1">.document</font></b> Refers to the document on display within the
+window </p>
+
+<p><b><font SIZE="-1">.frame</font></b> Refers to an independently-scollable frame created
+with a &lt;FRAME&gt; tag </p>
+
+<p><b><font SIZE="-1">.location</font></b> Contains information on the URL of the document
+displayed in the window <br>
+</p>
+
+<h4><font COLOR="#000080">Methods </font></h4>
+
+<p><b>.alert(&quot;<i>msg</i>&quot;)</b> Displays a JavaScript alert message box with <i>msg</i>
+and OK button </p>
+
+<p><b>.close()</b> Closes the window </p>
+
+<p><b>confirm(&quot;<i>msg</i>&quot;)</b> Displays a JavaScript confirm message box with <i>msg</i>
+and OK and Cancel buttons </p>
+
+<p><b>.open(&quot;<i>URL</i>&quot;, &quot;<i>windowName</i>&quot;, [&quot;<i>windowFeatures</i>&quot;])</b>
+Opens a window displaying <i>URL </i>with <i>windowName</i> as target name and optional <i>windowFeatures</i>
+</p>
+
+<p><b>prompt(&quot;<i>msg</i>&quot;,[&quot;<i>default</i>&quot;])</b> Displays a
+JavaScript prompt box with <i>msg</i> and optional <i>default</i> text </p>
+
+<p><b><i>timerID</i> = setTimeout(<i>exp</i>,<i>msec</i>)</b> Delays execution of <i>exp</i>ression
+<i>msec </i>milliseconds </p>
+
+<p><b>clearTimeout(<i>timerid</i>)</b> Cancels <i>timerid</i> created by setTimeOut() <br>
+</p>
+
+<h4><font COLOR="#000080">Event handlers </font></h4>
+
+<p><b>onLoad</b> Defined in a &lt;BODY&gt; or &lt;FRAMESET&gt; tag </p>
+
+<p><b><font SIZE="-1">onUnload</font></b> Defined in a &lt;BODY&gt; or &lt;FRAMESET&gt;
+tag <br>
+</p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>The window object is the top-level object in the JavaScript object hierarchy. Frame
+objects are also windows. The <i>self</i> and <i>window</i> properties are synonyms for
+the current window, and you can use them to refer to the current window. For example, you
+can close the current window by calling either <i>window.close()</i> or <i>self.close()</i>.
+</p>
+
+<p>The <i>top</i> and <i>parent</i> properties also are synonyms that can be used in place
+of the window name. The <i>top</i> property refers to the top-most Navigator window and <i>parent</i>
+refers to a window containing a frameset. </p>
+
+<p>Because the existence of the current window is assumed, you do not have to reference
+the name of the window when you call its methods and assign its properties. For example,
+even though the document is an object of the larger window object, it is not necessary to
+precede every document statement with a window name. For example, <i>document.write(&quot;Howdy&quot;)
+</i>is valid. The omission of a window name before the document name just assumes that the
+document object being referred to is the document in the current window. </p>
+
+<p>On the other hand, when using the open() and close() methods in event handlers, you
+should always specify <i>window </i>or <i>self</i>. Otherwise, close() by itself just
+closes the input stream to the current document. For example, if you want a button to
+close the entire window that houses the button, the onClick event handler for that button
+should be <i>self.close() </i>rather than <i>close()</i>. </p>
+
+<p>Although technically, the onLoad and onUnload event handlers are part of the window
+object, the window object has no event handler until an HTML &lt;BODY&gt; or
+&lt;FRAMESET&gt; tag is written to the window. The onLoad and onUnload event handlers can
+be specified within those tags. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>In the following example, the myMsgBox() custom function is capable of displaying a
+small window that shows a message and OK button. This window can be used as an alternative
+to the JavaScript alert() message box. The body of the page contains a button that tests
+the custom function by calling upon it to display the message <i>Howdy World!</i>: </p>
+
+<p><font COLOR="#800080">&lt;HTML&gt; <br>
+&lt;HEAD&gt; <br>
+&lt;SCRIPT Language = &quot;JavaScript&quot;&gt; <br>
+function myMsgBox(<b>msg</b>) { <br>
+<b>//set up window options <br>
+stats='toolbar=no,location=no,directories=no,status=no,menubar=no,' <br>
+stats += 'scrollbars=no,resizable=no,width=200,height=100' <br>
+//open the window <br>
+MsgBox = window.open (&quot;&quot;,&quot;msgWindow&quot;,stats) <br>
+</b>//set window back color, text color, show msg, and OK button. <br>
+<b>MsgBox.document.write</b> (&quot;&lt;BODY bgColor='black' text='white'&gt;&quot;) <br>
+<b>MsgBox.document.write</b> (&quot;&lt;H2&gt;&lt;CENTER&gt;&quot;,<b>msg</b>,&quot;&lt;/CENTER&gt;&lt;/H2&gt;&quot;)
+<br>
+<b>MsgBox.document.write</b> (&quot;&lt;FORM&gt;&lt;CENTER&gt;&quot;) <br>
+//when reader clicks the OK button in this message window, close the message window. <br>
+<b>MsgBox.document</b>.<b>write</b> (&quot;&lt;INPUT type='button' value='OK' <b>onClick =
+'self.close()'</b>&gt;&quot;) <br>
+<b>MsgBox.document.write</b> (&quot;&lt;/CENTER&gt;&lt;/FORM&gt;&quot;) <br>
+} <br>
+&lt;/SCRIPT&gt; <br>
+&lt;/HEAD&gt;</font> </p>
+
+<p><font COLOR="#800080">&lt;BODY&gt; <br>
+&lt;FORM&gt; <br>
+&lt;! Call upon myMsgBox to display a &quot;Howdy World&quot; message.&gt; <br>
+&lt;INPUT type='button' value = 'Click me to see a custom message window' <br>
+<b>onClick = 'myMsgBox(&quot;Howdy World&quot;)'</b>&gt; <br>
+&lt;/FORM&gt; <br>
+&lt;/BODY&gt; <br>
+&lt;/HTML&gt;</font> <br>
+</p>
+
+<p align="center"><a href="../author/jscript/window.htm">Try It</a> <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="with"></a><font SIZE="+2" COLOR="#000080">with statement </font></h2>
+
+<p>This statement sets up a default object for a set of statements. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Syntax </font></h3>
+
+<p>The syntax for this statement is as follows: </p>
+
+<p>with (<i>object</i>) { </p>
+
+<p><i>statements</i> </p>
+
+<p>} </p>
+
+<p>where <i>object</i> is the name of a specific object and <i>statements</i> are
+Javascript statements to be executed. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Description </font></h3>
+
+<p>Use <i>with</i> as an alternative to a series of lengthy object names or <i>this.</i>
+keywords. </p>
+
+<h3><font SIZE="+1" COLOR="#000080">Example </font></h3>
+
+<p>As an alternative to restating the Math. object name repeatedly in the statements, as
+shown here: <br>
+</p>
+
+<p>radius = 5.4 <br>
+area = Math.PI * (radius*radius) <br>
+cosinePI = Math.cos(Math.PI/2) <br>
+sinePIdiv2 = Math.sin(Math.PI/2) </p>
+
+<p>You can just use with(Math) and enclose the statements in a pair of curly braces, as
+shown in the following example: </p>
+
+<p>radius = 5.4 <br>
+with (Math) { <br>
+area = PI * (radius*radius) <br>
+cosinePI = cos(PI/2) <br>
+sinePIdiv2 = sin(PI/2) <br>
+} <br>
+</p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+
+<h2><a name="about"></a><font SIZE="+2" COLOR="#000080">About this Document</font> </h2>
+
+<p>This Coolnerds JavaScript Reference (c)Alan Simpson, 1998. Email to <a href="mailto:alan@coolnerds.com">alan@coolnerds.com</a> or stop by <a href="http://www.coolnerds.com">www.coolnerds.com<a/>.</p>
+
+<p align="center"></a><a href="#top">Top</a></p>
+
+<hr align="center">
+
+<h2><a name="warnings"></a><font SIZE="+2" COLOR="#000080">Warnings</font> </h2>
+
+<p><b><font COLOR="#FF0000">JavaScript is Case Sensitive!</font> </b>Everything in
+JavaScript is case sensitive. So you have to be very careful about upper / lowercase
+letters in statements, variable names, properties, methods, and so forth. For example,
+this statement: </p>
+<div align="center"><center>
+
+<pre><font SIZE="+1">Document.write(&quot;Hello World&quot;)</font>
+</pre>
+</center></div>
+
+<p>results in the puzzling error message &quot;Document object does not exist.&quot;
+However, the only problem is the uppercase D. This statement: </p>
+<div align="center"><center>
+
+<pre><font SIZE="+1">document.write(&quot;Hello World&quot;)</font>
+</pre>
+</center></div>
+
+<p>works fine. </p>
+
+<p><b><font COLOR="#FF0000">&lt;IMG&gt; tags in same document can cause total weirdness!</font></b>
+Many people have reported that if a page contains pictures (i.e. &lt;IMG SRC&gt; tags),
+and JavaScript code, the code behaves very strangely. The (peculiar) fix is to make sure
+that every &lt;IMG SRC&gt; tag contains a HEIGHT and WIDTH attribute. </p>
+
+<p><b><font COLOR="#FF0000">JavaScript changes!</font></b> Like everything else on the
+Internet, JavaScript is always evolving and changing. Therefore, the Internet itself is
+your best resource for current information.</p>
+
+<p><b><font COLOR="#FF0000">Try It's Can Fail</font></b> You can browse the JavaScript
+reference with any web browsers. But the <i>Try It</i> options will work only in
+JavaScript-capable browsers. They will act very weird (or not at all) in non-JavaScript
+capable browsers! </p>
+
+<p align="center"><a href="#top">Top</a> </p>
+
+<hr align="center">
+</body>
+</html>

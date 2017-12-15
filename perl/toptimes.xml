@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml-stylesheet type="text/xsl" href="toptimes.xsl"?>
+<TOP_TEN_TIMES>
+   <EVENT NAME="200 Freestyle">
+      <SWIMMER NUMBER="1" TIME="1:51.49" DATE="2/21/98" NAME="Chris Miller"/>
+      <SWIMMER NUMBER="2" TIME="1:54.19" DATE="2/17/01" NAME="Peter Myers"/>
+      <SWIMMER NUMBER="3" TIME="1:59.78" DATE="2/17/01" NAME="Nate Grawey"/>
+      <SWIMMER NUMBER="4" TIME="2:01.12" DATE="1/9/99" NAME="Trent Jackson"/>
+      <SWIMMER NUMBER="5" TIME="2:03.42" DATE="1/26/01" NAME="Chris Slevin"/>
+      <SWIMMER NUMBER="6" TIME="2:03.95" DATE="1/24/98" NAME="Nathan Jackson"/>
+      <SWIMMER NUMBER="7" TIME="2:07.16" DATE="1/22/99" NAME="Quinn Brennan"/>
+      <SWIMMER NUMBER="8" TIME="2:11.13" DATE="1/12/01" NAME="Ian Jordan"/>
+      <SWIMMER NUMBER="9" TIME="2:15.46" DATE="1/15/00" NAME="Brian Pearson"/>
+      <SWIMMER NUMBER="10" TIME="2:19.31" DATE="12/8/00" NAME="Andrew Johnson"/>
+   </EVENT>
+   <EVENT NAME="200 IM">
+      <SWIMMER NUMBER="1" TIME="2:08.77" DATE="2/20/99" NAME="Nathan Jackson"/>
+      <SWIMMER NUMBER="2" TIME="2:08.85" DATE="" NAME="Jack Negro"/>
+      <SWIMMER NUMBER="3" TIME="2:12.92" DATE="12/22/99" NAME="Chris Miller"/>
+      <SWIMMER NUMBER="4" TIME="2:15.47" DATE="2/17/01" NAME="Chris Slevin"/>
+      <SWIMMER NUMBER="5" TIME="2:18.06" DATE="2/10/98" NAME="Trent Jackson"/>
+      <SWIMMER NUMBER="6" TIME="2:20.69" DATE="2/17/01" NAME="Andrew Cunningham"/>
+      <SWIMMER NUMBER="7" TIME="2:31.36" DATE="2/20/99" NAME="Bill Chambers"/>
+      <SWIMMER NUMBER="8" TIME="2:33.29" DATE="2/6/99" NAME="Jon Lontai"/>
+      <SWIMMER NUMBER="9" TIME="2:34.07" DATE="1/23/99" NAME="Dan Tarabori"/>
+      <SWIMMER NUMBER="10" TIME="2:34.66" DATE="12/22/99" NAME="Nate Grawey"/>
+   </EVENT>
+   <EVENT NAME="50 Freestyle">
+      <SWIMMER NUMBER="1" TIME="22.62" DATE="2/20/99" NAME="Trent Jackson"/>
+      <SWIMMER NUMBER="2" TIME="23.76" DATE="2/20/99" NAME="Nathan Jackson"/>
+      <SWIMMER NUMBER="3" TIME="24.16" DATE="2/6/99" NAME="Quinn Brennan"/>
+      <SWIMMER NUMBER="4" TIME="24.54" DATE="1/22/00" NAME="Nate Grawey"/>
+      <SWIMMER NUMBER="5" TIME="24.74" DATE="1/24/01" NAME="Peter Myers"/>
+      <SWIMMER NUMBER="6" TIME="25.03" DATE="2/3/01" NAME="Ian Jordan"/>
+      <SWIMMER NUMBER="7" TIME="25.43" DATE="1/15/99" NAME="Jon Lontai"/>
+      <SWIMMER NUMBER="8" TIME="25.57" DATE="2/17/01" NAME="Joe Radosevich"/>
+      <SWIMMER NUMBER="9" TIME="26.56" DATE="1/24/01" NAME="Phillipe Hevesy"/>
+      <SWIMMER NUMBER="10" TIME="26.83" DATE="2/7/98" NAME="Dan Tarabori"/>
+   </EVENT>
+   <EVENT NAME="100 Butterfly">
+      <SWIMMER NUMBER="1" TIME="55.07" DATE="" NAME="Jack Negro"/>
+      <SWIMMER NUMBER="2" TIME="55.63" DATE="2/19/00" NAME="Chris Miller"/>
+      <SWIMMER NUMBER="3" TIME="59.62" DATE="1/15/99" NAME="Trent Jackson"/>
+      <SWIMMER NUMBER="4" TIME="59.90" DATE="2/17/01" NAME="Peter Myers"/>
+      <SWIMMER NUMBER="5" TIME="1:02.25" DATE="12/22/99" NAME="Nathan Jackson"/>
+      <SWIMMER NUMBER="6" TIME="1:06.74" DATE="2/17/01" NAME="Andrew Johnson"/>
+      <SWIMMER NUMBER="7" TIME="1:09.39" DATE="1/26/01" NAME="Andrew Cunningham"/>
+      <SWIMMER NUMBER="8" TIME="1:10.91" DATE="2/20/99" NAME="Bill Chambers"/>
+      <SWIMMER NUMBER="9" TIME="1:11.36" DATE="2/9/99" NAME="Nate Grawey"/>
+      <SWIMMER NUMBER="10" TIME="1:11.75" DATE="12/22/99" NAME="Chris Slevin"/>
+   </EVENT>
+   <EVENT NAME="100 Freestyle">
+      <SWIMMER NUMBER="1" TIME="49.54" DATE="2/20/99" NAME="Trent Jackson"/>
+      <SWIMMER NUMBER="2" TIME="51.81" DATE="2/20/99" NAME="Nathan Jackson"/>
+      <SWIMMER NUMBER="3" TIME="52.01" DATE="2/19/00" NAME="Chris Miller"/>
+      <SWIMMER NUMBER="4" TIME="54.73" DATE="1/20/01" NAME="Nate Grawey"/>
+      <SWIMMER NUMBER="5" TIME="55.43" DATE="2/3/01" NAME="Ian Jordan"/>
+      <SWIMMER NUMBER="6" TIME="55.73" DATE="1/15/99" NAME="Quinn Brennan"/>
+      <SWIMMER NUMBER="7" TIME="57.17" DATE="2/9/99" NAME="Bill Chambers"/>
+      <SWIMMER NUMBER="8" TIME="57.33" DATE="1/15/99" NAME="Jon Lontai"/>
+      <SWIMMER NUMBER="9" TIME="57.66" DATE="2/20/99" NAME="Andy Caruso"/>
+      <SWIMMER NUMBER="10" TIME="58.11" DATE="2/3/99" NAME="Andrew Cunningham"/>
+   </EVENT>
+   <EVENT NAME="500 Freestyle">
+      <SWIMMER NUMBER="1" TIME="4:55.47" DATE="2/21/98" NAME="Chris Miller"/>
+      <SWIMMER NUMBER="2" TIME="5:23.26" DATE="2/17/01" NAME="Chris Slevin"/>
+      <SWIMMER NUMBER="3" TIME="5:28.79" DATE="2/20/99" NAME="Dan Tarabori"/>
+      <SWIMMER NUMBER="4" TIME="5:30.07" DATE="2/10/98" NAME="Trent Jackson"/>
+      <SWIMMER NUMBER="5" TIME="5:33.85" DATE="1/24/98" NAME="Nathan Jackson"/>
+      <SWIMMER NUMBER="6" TIME="5:37.77" DATE="1/12/01" NAME="Peter Myers"/>
+      <SWIMMER NUMBER="7" TIME="5:46.00" DATE="1/26/01" NAME="Nate Grawey"/>
+      <SWIMMER NUMBER="8" TIME="5:53.54" DATE="1/29/99" NAME="Bill Chambers"/>
+      <SWIMMER NUMBER="9" TIME="5:57.94" DATE="2/6/99" NAME="Jon Lontai"/>
+      <SWIMMER NUMBER="10" TIME="6:00.12" DATE="1/28/00" NAME="Brian Pearson"/>
+   </EVENT>
+   <EVENT NAME="100 Backstroke">
+      <SWIMMER NUMBER="1" TIME="57.71" DATE="2/21/98" NAME="Trent Jackson"/>
+      <SWIMMER NUMBER="2" TIME="59.72" DATE="2/6/99" NAME="Nathan Jackson"/>
+      <SWIMMER NUMBER="3" TIME="1:03.74" DATE="2/17/01" NAME="Andrew Cunningham"/>
+      <SWIMMER NUMBER="4" TIME="1:05.59" DATE="12/22/99" NAME="Chris Miller"/>
+      <SWIMMER NUMBER="5" TIME="1:07.61" DATE="2/17/01" NAME="Ross Cover"/>
+      <SWIMMER NUMBER="6" TIME="1:08.73" DATE="2/20/99" NAME="Jon Lontai"/>
+      <SWIMMER NUMBER="7" TIME="1:09.19" DATE="2/6/99" NAME="Andy Caruso"/>
+      <SWIMMER NUMBER="8" TIME="1:09.61" DATE="1/26/01" NAME="Andrew Johnson"/>
+      <SWIMMER NUMBER="9" TIME="1:09.90" DATE="1/26/01" NAME="Chris Slevin"/>
+      <SWIMMER NUMBER="10" TIME="1:12.40" DATE="12/22/99" NAME="Nate Grawey"/>
+   </EVENT>
+   <EVENT NAME="100 Breaststroke">
+      <SWIMMER NUMBER="1" TIME="1:09.87" DATE="12/22/99" NAME="Chris Miller"/>
+      <SWIMMER NUMBER="2" TIME="1:10.10" DATE="1/9/98" NAME="Nathan Jackson"/>
+      <SWIMMER NUMBER="3" TIME="1:12.91" DATE="2/20/99" NAME="Dan Tarabori"/>
+      <SWIMMER NUMBER="4" TIME="1:13.68" DATE="2/17/01" NAME="Kevin Mahieu"/>
+      <SWIMMER NUMBER="5" TIME="1:14.07" DATE="12/22/99" NAME="Nate Grawey"/>
+      <SWIMMER NUMBER="6" TIME="1:15.30" DATE="1/7/00" NAME="Joe McMillan"/>
+      <SWIMMER NUMBER="7" TIME="1:16.13" DATE="1/26/01" NAME="Andrew Cunningham"/>
+      <SWIMMER NUMBER="8" TIME="1:16.42" DATE="2/3/01" NAME="Robert Kelly"/>
+      <SWIMMER NUMBER="9" TIME="1:17.06" DATE="12/8/00" NAME="Chris Slevin"/>
+      <SWIMMER NUMBER="10" TIME="1:18.21" DATE="2/17/01" NAME="Andy Vance"/>
+   </EVENT>
+</TOP_TEN_TIMES>
+

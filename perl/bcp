@@ -1,0 +1,42 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: bc
+#
+#      Summary: Extremely simple calculator.
+#        Usage: bc 5 + 10
+#
+#         TODO allow more than 2 operands & more than just MDAS.
+#
+#      Created: Wed, 25 Aug 1999 15:43:17 (Bob Heckel)
+##############################################################################
+
+if ($ARGV[1] eq '+') {
+ $calctype = 'add';
+} 
+elsif ($ARGV[1] eq '-'){ 
+$calctype = 'subtract';
+}
+elsif ($ARGV[1] eq '/'){ 
+$calctype = 'division';
+}
+elsif ($ARGV[1] eq 'x'){ 
+$calctype = 'multiplication';
+}
+
+$x = $ARGV[0];
+$y = $ARGV[2];
+if ($calctype eq 'add') {
+  $z = $x + $y;
+}
+elsif ($calctype eq 'subtract'){
+  $z = $x - $y;
+}
+elsif ($calctype eq 'division'){
+  $z = $x / $y;
+}
+elsif ($calctype eq 'multiplication'){
+  $z = $x * $y;
+}
+
+print "$z\n";
+

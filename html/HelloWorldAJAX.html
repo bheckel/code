@@ -1,0 +1,67 @@
+<!--
+  This is the source file for the "Hello World of AJAX" tutorial
+  
+  You may use this code in your own projects as long as this 
+  copyright is left in place.  All code is provided AS-IS.
+  This code is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  
+  Please visit http://www.DynamicAJAX.com for more great AJAX
+  source code and tutorials.
+  
+  Copyright 2006 Ryan Smith / 345 Technical / 345 Group.
+
+  Adapted: Wed, May 12, 2010 13:28:35 (Bob Heckel)
+-->
+<html>
+  <head>
+    <title>The Hello World of AJAX</title>
+    <script language="JavaScript" type="text/javascript">
+
+      //Gets the browser-specific XmlHttpRequest Object
+      function getXmlHttpRequestObject() {
+        if (window.XMLHttpRequest) {
+          return new XMLHttpRequest(); //Not IE
+        } else if(window.ActiveXObject) {
+          return new ActiveXObject("Microsoft.XMLHTTP"); //IE
+        } else {
+          alert("Your browser doesn't support the XmlHttpRequest object.");
+        }
+      }     
+
+      //Initiate the asyncronous request.
+      function sayHello() {
+        //If our XmlHttpRequest object is not in the middle of a request, start the new asyncronous call.
+        if (receiveReq.readyState == 4 || receiveReq.readyState == 0) {
+          //Setup the connection as a GET call to SayHello.html.
+          //True explicity sets the request to asyncronous (default).
+          receiveReq.open("GET", 'SayHello.html', true);
+          //Set the function that will be called when the XmlHttpRequest objects state changes.
+          receiveReq.onreadystatechange = handleSayHello; 
+          //Make the actual GET request.
+          receiveReq.send(null);
+        }     
+      }
+
+      //Called every time our XmlHttpRequest objects state changes.
+      function handleSayHello() {
+        //Check to see if the XmlHttpRequests state is finished.
+        if (receiveReq.readyState == 4) {
+          //Set the contents of our span element to the result of the asyncronous call.
+          document.getElementById('span_result').innerHTML = receiveReq.responseText;
+        }
+      }
+
+      //Get our browser-specific XmlHttpRequest object.
+      var receiveReq = getXmlHttpRequestObject();   
+
+    </script>
+  </head>
+  <body>
+    <!-- Clicking this link initiates the asyncronous request -->
+    <a href="javascript:sayHello();">Say Hello</a><br />
+    <!-- used to display the results of the asyncronous request -->
+    <span id="span_result">this SPAN (could also be DIV) data will be overwritten w/o a page reload</span>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+ *     Name: popup_balloon.js.html
+ *  Summary: Demo of using popup balloons (tooltips).  See balloon.js.html 
+ *           for a much better version.  This one requires space under each
+ *           link in which to display the "balloon" (but it is simpler than
+ *           balloon.js.html).
+ *  Created: Tue 05 Nov 2002 10:08:09 (Bob Heckel)
+ * Modified: Thu 14 Nov 2002 10:39:19 (Bob Heckel)
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<html>
+<head>
+<title>DHTML PopUp Balloons</title>
+<script language="JavaScript">
+  ns4 = (document.layers) ? true : false
+  ie4 = (document.all) ? true : false
+
+  // Show/Hide functions for non-pointer layer/objects
+  function show(id) {
+    if (ns4) document.layers[id].visibility = "show"
+    else if (ie4) document.all[id].style.visibility = "visible"
+  }
+
+  function hide(id) {
+    if (ns4) document.layers[id].visibility = "hide"
+    else if (ie4) document.all[id].style.visibility = "hidden"
+  }
+</script>
+
+<style type="text/css">
+  .menutext {
+    font-family: Arial, Helvetica, sans-serif; font-size: 11px; 
+    font-weight: bold; color: #0C00C0; text-decoration: none; 
+  }
+</style>
+</head>
+
+<body bgcolor="#CCCCCC">
+  <a href="#" OnMouseover="show('one');" OnMouseout="hide('one');" 
+    class="menutext">A string</a>
+  <div id="one" style="position:relative;  padding: 3px; width: 200px;
+    background-color:#00FF33; layer-background-color:#00FF33; z-index: 1;
+    visibility: hidden" class="menutext">
+    <div id="subone" style="position:absolute; z-index:2; padding: 6px;"></div>
+    <a href="#" class="menutext">Description of string</a>
+  </div>
+  <br>
+  <br>
+  <a href="#" OnMouseover="show('two');" OnMouseout="hide('two');" 
+    class="menutext">Second string</a>
+  <div id="two" style="position:relative;  padding: 3px; width: 200px;
+    background-color:#00FF33; layer-background-color:#00FF33; z-index: 1;
+    visibility: hidden" class="menutext">
+    <div id="subtwo" style="position:absolute; z-index:2; padding: 6px;"></div>
+    <a href="#" class="menutext">lkjDescription of string</a>
+  </div>
+  <br>
+  <br>
+  <a href="#" OnMouseover="show('xtwo');" OnMouseout="hide('xtwo');" 
+    class="menutext">dont use this one</a>
+  <div id="xtwo" style="position:absolute; left:10px; top:42px;
+    width:80px; height:300px; padding: 6px; clip:rect(0px 80px 100px 0px);
+    background-color:#00FF33; layer-background-color:#00FF33; z-index: 1;
+    visibility: hidden" class="menutext">
+    <div id="xsubtwo" style="position:absolute; left:0px; top:0px;
+      height:12px; z-index:2; padding: 6px;; visibility: inherit">
+    </div>
+    <a href="#" class="menutext">dont use escription of string</a>
+  </div>
+</body>
+</html>

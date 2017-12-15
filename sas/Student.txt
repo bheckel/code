@@ -1,0 +1,8 @@
+1|"studna"|30
+2|"studnb"|98
+3|"studnc"|98
+4|"studnd"|22
+5|"studne"|18
+32|"takeemall"|39
+88|"studnfnoclass"|18
+99|"gretzky"|38

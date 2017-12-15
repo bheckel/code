@@ -1,0 +1,223 @@
+<HTML>
+<HEAD>
+<TITLE>C++ Tutorial: 5.5, Preprocessor directives</TITLE>
+<META NAME="description" CONTENT="#define, #undef, #ifdef, #ifndef, #if, #endif, #else, #elif, #line, #error, #include and #pragma">
+<META NAME="keywords" CONTENT="preprocessor # tags instructions">
+</HEAD>
+
+<BODY BGCOLOR="white">
+
+<!--captut-->
+<CENTER>
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=1 BORDER=0>
+<TR><TD WIDTH=90%>
+ <FONT SIZE=4> Section 5.5 </FONT><BR>
+ <FONT SIZE=5><B>Preprocessor directives</B></FONT>
+</TD><TD VALIGN="bottom"><A HREF="http://www.cplusplus.com/doc/tutorial/">
+ <IMG SRC="head.gif" ALT="cplusplus.com" BORDER=0></A></TD></TR>
+<TR><TD BGCOLOR="#0000FF" ALIGN="center" COLSPAN=2>
+ <IMG SRC="head0.gif" WIDTH=2 HEIGHT=2 BORDER=0></TD></TR>
+</TABLE>
+</CENTER>
+<!--/captut-->
+
+<P>
+Preprocessor directives are orders that we include within the code of our programs
+that are not instructions for the program itself but for the preprocessor.
+The preprocessor is executed automatically by the compiler when we compile a program in
+C++ and is the one in charge to make the first verifications and digestions of the
+program's code.
+<P>
+All these directives must be specified in a single line of code
+and they do not have to include an ending semicolon <TT><B>;</B></TT>.
+<H2>#define</H2>
+At the beginning of this tutorial we already spoken about a preprocessor directive:
+<TT><B>#define</B></TT>, that serves to generate what we called
+<I>defined constantants</I> or <I>macros</I> and whose form is the following:
+<BLOCKQUOTE><TT>
+<B>#define</B> <I>name</I> <I>value</I>
+</TT></BLOCKQUOTE>
+Its function is to define a macro called <I>name</I> that whenever it is found in some
+point of the code is replaced by <I>value</I>.  For example:
+<BLOCKQUOTE><TT>
+#defines MAX_WIDTH 100<BR>
+char str1[MAX_WIDTH];<BR>
+char str2[MAX_WIDTH];
+</TT></BLOCKQUOTE>
+It defines two strings to store up to 100 characters.
+<P>
+<TT>#define</TT> can also be used to generate macro functions:
+<BLOCKQUOTE><TT>
+#define getmax(a,b) a&gt;b?a:b<BR>
+int x=5, y;<BR>
+y = getmax(x,2);
+</TT></BLOCKQUOTE>
+after the execution of this code <TT><B>y</B></TT> would contain <TT>5</TT>.
+<P>
+<H2>#undef</H2>
+<TT><B>#undef</B></TT> fulfills the inverse functionality than <TT><B>#define</B></TT>.
+What it does is to eliminate from the list of defined constants the one that has the
+name passed as parameter to <TT><B>#undef</B></TT>:
+<BLOCKQUOTE><TT>
+#define MAX_WIDTH 100<BR>
+char str1[MAX_WIDTH];<BR>
+#undef MAX_WIDTH<BR>
+#define MAX_WIDTH 200<BR>
+char str2[MAX_WIDTH];<BR>
+</TT></BLOCKQUOTE>
+
+<P>
+<H2>#ifdef, #ifndef, #if, #endif, #else and #elif</H2>
+These directives allow to discard part of the code of a program if a certain condition
+is not fulfilled.
+<P>
+<TT><B>#ifdef</B></TT> allows that a section of a program is compiled only if the
+<I>defined constant</I> that is specified as parameter has been defined, independently
+of its value.  Its operation is:
+<BLOCKQUOTE><TT>
+<B>#ifdef </B><I>name</I><BR>
+// code here<BR>
+<B>#endif</B>
+</TT></BLOCKQUOTE>
+For example:
+<BLOCKQUOTE><TT>
+#ifdef MAX_WIDTH<BR>
+char str[MAX_WIDTH];<BR>
+#endif
+</TT></BLOCKQUOTE>
+In this case, the line <TT><B>char str[MAX_WIDTH];</B></TT> is only considered by the
+compiler if the <I>defined constant</I> <TT><B>MAX_WIDTH</B></TT> has been previously
+defined, independently of its value. If it has not been defined, that line will not be
+included in the program.
+<P>
+<TT><B>#ifndef</B></TT> serves for the opposite:  the code between the
+<TT><B>#ifndef</B></TT> directive and the <TT><B>#endif</B></TT> directive
+is only compiled if the constant name that is specified has <U>not</U> been defined
+previously.  For example:
+<BLOCKQUOTE><TT>
+#ifndef MAX_WIDTH<BR>
+#define MAX_WIDTH 100<BR>
+#endif<BR>
+char str[MAX_WIDTH];
+</TT></BLOCKQUOTE>
+In this case, if when arriving to this piece of code
+the <I>defined constant</I> <TT><B>MAX_WIDTH</B></TT> has not yet been defined
+it would be defined with a value of <TT>100</TT>.
+If it already existed it would maintain the value that it had (because the
+<TT>#define</TT> statement won't be executed).
+<P>
+The <TT><B>#if</B></TT>, <TT><B>#else</B></TT> and <TT><B>#elif</B></TT>
+(<I>elif</I> = <I>else if</I>) directives serve for that the portion of code that follows
+is compiled only if the specified condition is met.
+The condition can only serve to evaluate constant expressions.
+For example:
+<BLOCKQUOTE><TT>
+#if MAX_WIDTH&gt;200<BR>
+#undef MAX_WIDTH<BR>
+#define MAX_WIDTH 200<BR>
+&nbsp;<BR>
+#elsif MAX_WIDTH&lt;50<BR>
+#undef MAX_WIDTH<BR>
+#defines MAX_WIDTH 50<BR>
+&nbsp;<BR>
+#else<BR>
+#undef MAX_WIDTH<BR>
+#defines MAX_WIDTH 100<BR>
+#endif<BR>
+&nbsp;<BR>
+char str[MAX_WIDTH];
+</TT></BLOCKQUOTE>
+Notice how the structure of chained directives <TT><B>#if</B></TT>,
+<TT><B>#elsif</B></TT> and <TT><B>#else</B></TT> finishes with <TT><B>#endif</B></TT>.
+
+<P>
+<H2>#line</H2>
+When we compile a program and there happens any errors during the compiling process,
+the compiler shows the error that have happened preceded by the name of the file
+and the line within the file where it has taken place.
+<P>
+The <TT><B>#line</B></TT> directive allows us to control both things, the line numbers
+within the code files as well as the file name that we want that it appears
+when an error takes place.  Its form is the following one:
+<BLOCKQUOTE><TT>
+<B>#line</B> <I>number</I> <B>"</B><I>filename</I><B>"</B>
+</TT></BLOCKQUOTE>
+Where <TT><I>number</I></TT> is the new line number that will be assigned to the next
+code line. The line number of successive lines will be increased one by one from this.
+<P>
+<TT><I>filename</I></TT> is an <U>optional</U> parameter that serves to replace the file name
+that will be shown in case of error from this directive until other one changes
+it again or the end of the file is reached. For example:
+<BLOCKQUOTE><TT>
+#line 1 "assigning variable"<BR>
+int a?;
+</TT></BLOCKQUOTE>
+This code will generate an error that will be shown as error in file
+<TT>"assigning variable"</TT>, line <TT>1</TT>.
+
+<P>
+<H2>#error</H2>
+This directive aborts the compilation process when it is found returning the error
+that is specified as parameter:
+
+<BLOCKQUOTE><TT>
+#ifndef __cplusplus<BR>
+#error A C++ compiler is required<BR>
+#endif<BR>
+</TT></BLOCKQUOTE>
+
+This example aborts the compilation process if the <I>defined constant</I>
+<TT><B>__cplusplus</B></TT> is not defined.
+
+<P>
+<H2>#include</H2>
+This directive has also been used assiduously in other sections of this tutorial.
+When the preprocessor finds an <TT><B>#include</B></TT> directive it replaces it
+by the whole content of the specified file. There are two ways to specify a file to be
+included:
+<BLOCKQUOTE><TT>
+<B>#include "</B><I>file</I><B>"</B><BR>
+<B>#include &lt;</B><I>file</I><B>&gt;</B><BR>
+</TT></BLOCKQUOTE>
+The only difference between both expressions is in the directories in which the compiler is
+going to look for the file.  In the first case in that the file is specified between
+quotes the file is looked for from the same directory in which the file that includes
+the directive is, and only in case that it is not there the compiler looks for in the
+default directories where it is configured to look for the standard header
+files.
+<P>
+In case that the file name is included enclosed between angle-brackets
+<TT><B>&lt;&gt;</B></TT> the file is directly looked for in the default directories
+where the compiler is configured to look for the standard header files.
+
+<P>
+<H2>#pragma</H2>
+This directive is used to specify diverse options to the compiler.
+These options are specific for the platform and the compiler you use.
+Consult the manual or the reference of your compiler for more information on the possible
+parameters that you can define with <TT><B>#pragma</B></TT>.
+
+<!--cuatut-->
+<P>
+<CENTER><TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0>
+ <TR><TD BGCOLOR="#0000FF"><IMG SRC="head0.gif" WIDTH=2 HEIGHT=2></TD></TR>
+ <TR><TD ALIGN="right"><FONT FACE="arial,helvetica" SIZE=1>&copy; The C++ Resources Network, 2000-2001 - All rights reserved</FONT></TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE CELLPADDING=0 WIDTH=100%>
+<TR><TD ALIGN="right" WIDTH=45%><A HREF="tut5-4.html">
+ <IMG SRC="butnback.gif" ALIGN="right" BORDER=0>
+ Previous:<BR><B>5-4. Advances classes type casting.</B></A></TD>
+<TD ALIGN="center" WIDTH=10%><A HREF="index.html">
+ <IMG SRC="butnindx.gif" BORDER=0><BR>
+ index</A></TD>
+<TD ALIGN="left" WIDTH=45%><A HREF="tut6-1.html">
+ <IMG SRC="butnnext.gif" ALIGN="left" BORDER=0>
+ Next:<BR><B>6-1. Input/Output with files.</B></A>
+</TD></TR></TABLE>
+</CENTER>
+<!--/cuatut-->
+
+</BODY>
+</HTML>

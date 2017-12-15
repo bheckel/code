@@ -1,0 +1,27 @@
+#!/usr/bin/perl -w
+##############################################################################
+# Program Name: tvaf
+#
+#      Summary: Return FVA, based on pmt, r, n
+#               Usage: tvaf
+#
+#      Created: Mon, 09 Aug 1999 20:32:52 (Bob Heckel)
+##############################################################################
+
+print "Program returns FVA, based on pmt, r, n\n";
+
+print "Enter payment\n";
+$pmt = <STDIN>;
+print "Enter rate e.g 10%:\n";
+$rate = <STDIN>;
+$frac = ($rate / 100);
+print "Enter n:\n";
+$n = <STDIN>;
+
+$x = (1 + $frac)**$n;
+$y = $x - 1; 
+
+$retme = ($pmt * $y / $frac);
+
+print "$retme is the future value of the annuity.\n";
+

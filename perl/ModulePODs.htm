@@ -1,0 +1,245 @@
+<html><head>
+<TITLE>Module PODs</TITLE>
+</head>
+<body bgcolor="#fffff8" text="#000000">
+
+<H1><CENTER>Module PODs</CENTER></H1>
+
+The documentation for Perl modules is written in a simple markup
+language called POD (Plain Old Documentation).
+ <P>
+This page shows how to write a POD for a Perl module.
+If you adhere to this style,
+then it will be easier for others to read and understand your documentation.
+ <P>
+<CODE>h2xs</CODE> puts a skeleton POD at the end of the <CODE>.pm</CODE>
+file that it writes.
+Read the PODs in existing modules for additional examples.
+ <P>
+<table border>
+
+<tr valign=top><td>
+<PRE>
+=head1 NAME
+
+Geometry::Circle - manages a circle
+</PRE>
+</td><td>
+The <CODE>NAME</CODE> section gives the name of the module and a 
+one-line description.
+ <P>
+The name and description are separated by a dash.
+It is important to adhere to this format so that the POD
+can be converted to a proper man page.
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 SYNOPSIS
+
+  use Geometry::Circle
+
+  $circle  = new Geometry::Circle $x, $y, $r
+
+  ($x, $y) = $circle-&gt;center;
+  $radius  = $circle-&gt;radius;
+  $area    = $circle-&gt;area
+
+  $pi      = $Geometry::Circle::PI;
+</PRE>
+</td><td>
+The <CODE>SYNOPSIS</CODE> 
+section shows the essential steps in using the module:
+the use statement, any subroutines, class methods or variables, and 
+all object methods.  
+Method calls should indicate their parameters and return values.
+ <P>
+Indent each line in the synopsis.
+This makes it a verbatim paragraph, 
+and ensures that your alignment will be preserved.
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 REQUIRES
+
+Perl5.004, Exporter, Geometry::Point
+</PRE>
+</td><td>
+The <CODE>REQUIRES</CODE> 
+section tells the user what they will need in order to use the module.
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 EXPORTS
+
+Nothing
+</PRE>
+</td><td>
+The <CODE>EXPORTS</CODE> 
+section tells the user what the module will do to their namespace if they 
+<CODE>use</CODE> it.
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 DESCRIPTION
+
+Geometry::Circle manages circles.  
+Methods are provided for creating 
+circles and computing their areas.
+</PRE>
+</td><td>
+This is a description of the module.
+ <P>
+It should be written in terms that are relevant to the user,
+rather than the programmer.
+<UL>
+<LI> What does it do for the user?
+<LI> How do you use it?
+<LI> What objects does it support?
+<LI> What routines does it provide?
+</UL>
+</PRE>
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 METHODS
+
+=head2 Creation
+
+=over 4
+
+=item new Geometry::Circle $x, $y, $radius
+
+Creates and returns a 
+new Geometry::Circle object 
+with center ($x, $y) and radius $radius.
+
+=back
+
+=head2 Access
+
+=over 4
+
+=item $circle-&gt;center
+
+Returns a list of the x,y coordinates 
+of the center of the circle.
+
+In scalar context, 
+returns an array reference.
+
+=item $circle-&gt;radius
+
+Returns the radius of the circle.
+
+=item $circle-&gt;area
+
+Returns the area of the circle.
+
+=back
+</PRE>
+</td><td>
+The <CODE>METHODS</CODE> section lists and describes each method in the class.
+ <P>
+You may further organize methods under level-2 headings, 
+such as <CODE>Creation</CODE>, <CODE>Access</CODE> and <CODE>Utility</CODE>.
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 CLASS VARIABLES
+
+=over 4
+
+=item $Geometry::Circle::PI
+
+The ratio of the circumference 
+of a circle to its diameter.
+
+=back
+</PRE>
+</td><td>
+The <CODE>CLASS VARIABLES</CODE> section lists any package variables
+in the API.
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 DIAGNOSTICS
+
+=over 4
+
+=item Negative radius
+
+(F) A circle may not be created with a negative radius.
+
+=back
+</PRE>
+</td><td>
+The <CODE>DIAGNOSTICS</CODE> section gives the text of every error
+message the the module may generate,
+and explains its meaning.
+ <P>
+Error messages are classified as follows:
+
+<DL compact>
+<DT> (W)
+<DD> A warning (optional)
+<DT> (D)
+<DD> A deprecation (optional)
+<DT> (S)
+<DD> A severe warning (mandatory)
+<DT> (F)
+<DD> A fatal error (trappable)
+<DT> (X)
+<DD> A very fatal error (non-trappable)
+</DL>
+
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 AUTHOR
+
+A. U. Thor, a.u.thor@a.galaxy.far.far.away
+</PRE>
+</td><td>
+You should include your name and email address,
+in case anyone needs to contact you regarding the module.
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=head1 SEE ALSO
+
+perl(1), Geometry::Square
+</PRE>
+</td><td>
+This is the usual list of related programs and modules.
+</td></tr>
+
+<tr valign=top><td>
+<PRE>
+=cut
+</PRE>
+</td><td>
+The <CODE>=cut</CODE> line denotes the end of POD text.
+ <P>
+Some people distribute POD sections throughout their source code.
+Perl recognizes the POD sections and ignores them.
+</td></tr>
+
+</table>
+
+<ADDRESS> 
+<a href="../index.html">Steven McDougall</a> / 
+<A HREF="mailto:swmcd@world.std.com"> swmcd@world.std.com</A> / 
+<a href="../swm.asc"> pgp key </a> /
+1997 June 2
+</ADDRESS>
+
+</body></html>

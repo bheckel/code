@@ -1,0 +1,28 @@
+<!doctype html>
+<head>
+  <title>Load Event Sample</title>
+  <script type="text/javascript">
+  function doLoad() {
+     alert( "The load event is executing" );
+  }
+  function doLoad2() {
+     alert( "xThe load event is executing" );
+  }
+  if ( window.addEventListener ) { 
+     window.addEventListener( "load", doLoad, false );
+  }
+  else 
+    if ( window.attachEvent ) { 
+        window.attachEvent( "onload", doLoad );
+    } else 
+        if ( window.onLoad ) {
+           window.onload = doLoad;
+    }
+  </script>
+</head>
+<body>
+  <h1>Load Event Sample</h1>
+  <p>This sample demonstrates how to execute 
+     an event while the document is loading.</p>
+</body>
+</html>

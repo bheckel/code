@@ -1,0 +1,48 @@
+NOT FULLY FUNCTIONING...
+<html>
+<head>
+</head>
+
+<body>
+<script language="JavaScript">
+function rotatead() {
+    rnd.today=new Date();
+    rnd.seed=rnd.today.getTime();
+
+  function rnd() {
+    rnd.seed = (rnd.seed*9301+49297) % 233280;
+    return rnd.seed/(233280.0);
+  };
+
+  function rand(number) {
+    return Math.ceil(rnd()*number);
+  };
+
+  var adnum;
+  adnum=rand(3);  // number of ads: 3
+  document.write("<CENTER>");
+
+  if (adnum==1) {
+   document.write("<A HREF='http://triweb'> <IMG SRC=bg.gif WIDTH=460 HEIGHT=60></A>");
+   }
+
+  if (adnum==2) {
+   document.write("<A target=_top HREF='http://www.webtechniques.com'> <IMG SRC=ad2.gif WIDTH=460 HEIGHT=60></A>");
+   }
+
+  if (adnum==3) {
+   document.write("<A target=_top HREF='http://www.al-williams.com/awc/wd5gnr'> <IMG SRC=ad3.gif WIDTH=460 HEIGHT=60></A>");
+   }
+
+  document.write("</CENTER>");
+
+}
+
+</script>
+
+<form>
+<input type="button" value="clickme" onClick="rotatead()">
+</form>
+</body>
+</html>
+

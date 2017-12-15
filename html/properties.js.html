@@ -1,0 +1,285 @@
+<HTML>
+<HEAD>
+  <TITLE>Properties of Objects</TITLE>
+  <SCRIPT LANGUAGE="JavaScript">
+  function getListValue(list) { 
+    var listValue = ""; 
+
+    if (list.selectedIndex != -1) { 
+       listValue = list.options[list.selectedIndex].value; 
+    } 
+    return (listValue); 
+  } 
+
+  function getProperties(obj) {
+    var properties = ""; 
+    properties = '<HTML><BODY><TABLE BORDER="2" WIDTH="90%" COLS="2">';
+    properties += '<TR ALIGN="left" BGCOLOR="lightgrey"><TH>Property</TH><TH>Value</TH></TR>';
+    
+    for (var propName in obj) { 
+      properties +="<TR><TD>"+propName+"</TD><TD>"+obj[propName]+"&nbsp;</TD></TR>";
+    } 
+    properties +="</TABLE></BODY></HTML>";
+    return properties; 
+  } 
+
+  function whichObject(list) {
+    var object = "";
+    var listValue = getListValue(list);
+    
+    var newWindow = window.open("","","HEIGHT=400,WIDTH=350,status=1,resizable=1,scrollbars=1");
+    
+    newWindow.document.write("<HTML><HEAD><TITLE>"+listValue+"</TITLE></HEAD></HTML>")
+    switch (listValue) {
+         case "Window":
+              object = window;
+              break;
+         case "Document":
+              object = window.document;
+              break;
+         case "Form":
+              object = window.document.propForm;
+              break;
+         case "Image":
+              object = window.document.someImage;
+              break;
+         case "Link":
+              object = window.document.links;
+              break;
+         case "Navigator":
+              object = navigator;
+              break;
+    }
+    newWindow.document.write(getProperties(object));
+    newWindow.document.close();
+}
+  </SCRIPT>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+  <FONT FACE="Arial, Helvetica" SIZE=-1>
+  <CENTER><H2> Properties of Objects Sample Code</H2> </CENTER>
+  <TABLE>
+  <TR>
+  <TD VALIGN=TOP>
+  <FONT FACE="Arial, Helvetica" SIZE=-1><DIV ALIGN=right><B>Name</B>:&nbsp;</DIV>
+  </TD>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>ObjectInfo</TD>
+  </TR>
+  <TR>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>
+  <DIV ALIGN=right><B>Level</B>:</DIV>
+  </TD>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>Beginner</TD>
+  </TR>
+  <TR>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>
+  <DIV ALIGN=right><B>Language</B>:</DIV>
+  </TD>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>JavaScript 1.2</TD>
+  </TR>
+  <TR>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>
+  <DIV ALIGN=right><B>Functionality</B>:</DIV>
+  </TD>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>Lets the user choose a JavaScript object from a select list,
+  and find out what properties are associated with that object.</TD>
+  </TR>
+  <TR>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>
+  <DIV ALIGN=right><B>Use</B>:</DIV>
+  </TD>
+  <TD VALIGN=TOP><FONT FACE="Arial, Helvetica" SIZE=-1>Demonstration of how to get the information given when an
+  object is created.</TD>
+  </TR>
+  </TABLE>
+
+  <BR>
+  <HR SIZE=1>
+  <BR>
+  <FORM NAME="propForm">
+    Please select an object from the list:
+    <SELECT NAME="objectList">
+    <OPTION VALUE="Window" SELECTED>Window
+    <OPTION VALUE="Document">Document
+    <OPTION VALUE="Form">Form
+    <OPTION VALUE="Image">Image
+    <OPTION VALUE="Link">Link
+    <OPTION VALUE="Navigator">Navigator
+    </SELECT>
+    <INPUT TYPE="button" VALUE="Click for Properties" onClick="whichObject(this.form.objectList)">
+  </FORM>
+  <P><CENTER>
+  Random Objects on the Page:
+  <BR>
+  <IMG SRC="desk.gif" NAME="someMozImage" ALT="Mozilla at desk" HEIGHT=138 WIDTH=171>
+  <BR>
+  <A HREF="http://developer.netscape.com" TARGET="_top">This is a link</A> - 
+  <A HREF="http://www.netscape.com"  TARGET="_top">This is another link</A>&nbsp; - 
+  <A HREF="http://www.midwinter.com/lurk/lurker.html"  TARGET="_top">Thisis yet another link</A>
+  </CENTER>
+  <BR>
+
+  <HR SIZE=1>
+  <BR>This sample code example demonstrates how to access all of the properties
+  of an object.&nbsp; If you select an object from the
+  preceeding form and click on the "Click for Properties" button, a window
+  will appear that shows all of the properties associated
+  with the given object.&nbsp; The following is a description of the
+  code involved in this example.
+
+  <P>
+  <CENTER><TABLE CELLPADDING=10 BGCOLOR="#30C030" >
+  <TR>
+  <TD BGCOLOR="#CCFFFF"><TT>&lt;form name="propForm">&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>Please select an object from the list:&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;select name = "objectList">&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;option selected value="Window">Window&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;option value="Date">Date&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;option value="Document">Document&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;option value="Form">Form&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;option value="Image">Image&nbsp;&nbsp;</TT>&nbsp;<TT>&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;option value="Link">Link&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;option value="Navigator">Navigator&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;/select>&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;input type=button value="click me" onClick=whichObject(this.form.objectList)>&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&lt;/form></TT></TD>
+  </TR>
+  </TABLE></CENTER>
+  <P>The HTML code for the form is shown above.&nbsp; The form is named <I>propForm</I>,
+  and contains a selection list with the names of different objects.&nbsp;
+  When the button is clicked, the select list object is passed as a parameter
+  to the <I>whichObject</I> function.
+  <BR><BR>
+  <CENTER>
+  <TABLE CELLPADDING=10 BGCOLOR="#30C030" >
+  <TR>
+  <TD BGCOLOR="#CCFFFF"><TT>function whichObject(list) {</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var object = "";</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var listValue = getListValue(list);</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var newWindow = window.open("","","HEIGHT=400,WIDTH=350,status=1,resizable=1,scrollbars=1")</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newWindow.document.write("&lt;HTML>&lt;HEAD>&lt;TITLE>"+listValue+"&lt;/TITLE>&lt;/HEAD>&lt;/HTML>")</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; switch (listValue) {</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  case "Window":</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  object = window;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  break;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  case "Document":</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  object = window.document;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  break;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  case "Form":</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  object = window.document.propForm;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  break;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  case "Image":</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  object = window.document.someImage;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  break;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  case "Link":</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  object = window.document.links;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  break;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  case "Navigator":</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  object = navigator;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  break;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newWindow.document.write(getProperties(object));</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newWindow.document.close();</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>}</TT>&nbsp;
+  <BR>&nbsp;</TD>
+  </TR>
+
+  <TR>
+  <TD></TD>
+  </TR>
+  </TABLE>
+  </CENTER>
+  The <I>whichObject</I> function is the main function of the script.&nbsp;
+  It gets called after the user selects an object from the form and clicks
+  on the submit button.&nbsp; The select list object is passed to the <I>getListValue</I>
+  function which in turn returns the value of the object selected by the
+  user.&nbsp;&nbsp; The function next creates a new window using <I>window.open.&nbsp;
+  </I>A <I>switch</I> statement is used to determine which object we need
+  to get property information for, and that object is then stored in the
+  <I>object</I> variable.&nbsp; Passing this variable into the getProperties
+  function, we are returned an HTML table containing the property names and
+  corresponding values for that object.&nbsp; This table is then written
+  to our new subwindow.
+  <BR>&nbsp;
+  <TABLE BGCOLOR="#30C030" >
+  <TR>
+  <TD BGCOLOR="#CCFFFF"><TT>function getListValue(list)&nbsp;</TT>&nbsp;
+  <BR><TT>{&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp; var listValue = "";&nbsp;</TT>&nbsp;
+
+  <P><TT>&nbsp;&nbsp; if (list.selectedIndex != -1) {&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; listValue = list.options[list.selectedIndex].value;&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp; }&nbsp;</TT>&nbsp;
+
+  <P><TT>&nbsp;&nbsp; return (listValue);&nbsp;</TT>&nbsp;
+  <BR><TT>}&nbsp;</TT></TD>
+  </TR>
+  </TABLE>
+  &nbsp;
+  <BR>The <I>list</I> variable which is passed in is actually the <I>select</I>
+  list from the form.&nbsp; Since there are multiple items on the list, and
+  only one can be selected, we need to find out which one the user chose.&nbsp;
+  We do this by checking the <I>selectedIndex</I> property which should be
+  equal to something besides -1 if the item has been selected.&nbsp; We put
+  the value of the selected item in a variable called <I>listvalue</I>, which
+  is then returned to the calling function.
+  <BR>&nbsp;
+  <TABLE BGCOLOR="#30C030" >
+  <TR>
+  <TD BGCOLOR="#CCFFFF"><TT>function getProperties(obj) {&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp; var properties = "";&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp; properties = '&lt;HTML>&lt;BODY>&lt;TABLE BORDER="2"
+  WIDTH="90%" COLS="2">';</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp; properties += '&lt;TR ALIGN="left" BGCOLOR="lightgrey">&lt;TH>Property&lt;/TH>&lt;TH>Value&lt;/TH>&lt;/TR>';</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp;&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp; for (var propName in obj) {&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp; properties +="&lt;TR>&lt;TD>"+propName+"&lt;/TD>&lt;TD>"+obj[propName]+"&amp;nbsp;&lt;/TD>&lt;/TR>";</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp; }&nbsp;</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp; properties +="&lt;/TABLE>&lt;/BODY>&lt;/HTML>";</TT>&nbsp;
+  <BR><TT>&nbsp;&nbsp;&nbsp; return properties;&nbsp;</TT>&nbsp;
+  <BR><TT>}&nbsp;</TT></TD>
+  </TR>
+  </TABLE>
+  &nbsp;
+  <BR>The <I>getProperties</I>&nbsp; function actually gets and returns all
+  the properties for an object(obj).&nbsp; We use HTML to format the property
+  name and the corresponding value in a table.&nbsp; The main part of the
+  function is the <I>for...in </I>loop.&nbsp; The <I>for...in</I> loop enables
+  you to get the names and values of any property of an object that the browser
+  currently knows about.&nbsp; The propName variable contains
+  an array of property names in the object (creating using the for...in
+  statement).&nbsp; By dereferencing the object property
+  obj[propName] we get the actual value for the property.&nbsp; Note
+  that the <I>obj</I> variable passed into the function is the actual object,
+  and not the string name of the object.
+
+  <P>
+  <CENTER><FONT FACE="Arial, Helvetica" SIZE=-1>For more Internet development resources, try <A HREF="http://home.netscape.com/computing/techsearch/index.html?cp=dev01bnts" TARGET="_top">Netscape TechSearch</A>.</FONT></CENTER>
+  <HR SIZE=1><CENTER><TABLE WIDTH=460 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+  <TR><TD WIDTH=15></TD><TD WIDTH=165 VALIGN=TOP ALIGN=LEFT><FONT FACE="Arial, Helvetica" SIZE=-2><A HREF="/support/faqs/index.html?content=deofaq.html" TARGET="_top">DevEdge Online FAQ</A><BR><A HREF="/program/index_frame.html?content=contact.html" TARGET="_top">Developer Response Center</A><BR><A HREF="/program/index.html" TARGET="_top">Join DevEdge Program</A></FONT></TD>
+  <TD WIDTH=5></TD><TD WIDTH=280 VALIGN=TOP ALIGN=LEFT><FONT FACE="Arial, Helvetica" SIZE=-2><NOBR>Copyright &copy; 1999 <A HREF="http://home.netscape.com/misc/trademarks.html" TARGET="_top">Netscape Communications Corporation</A></NOBR>.<BR>This site powered by: <A HREF="http://home.netscape.com/servers/index.html" TARGET="_top">Netscape Enterprise Server</A> and <A HREF="http://home.netscape.com/compass/v3.0/index.html" TARGET="_top">Netscape Compass Server</A>.</FONT><BR><BR></TD><TD WIDTH=25></TD></TR>
+  </TABLE></CENTER>
+
+  </BODY>
+</HTML>

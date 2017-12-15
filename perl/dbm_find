@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+
+# Modified: Thu 01 Apr 2004 13:48:41 (Bob Heckel)
+
+# Assumes ./dbm_create or equivalent has been run first.
+
+if ( @ARGV != 2 ) {
+	print "usage: dbm_find database-name key\n";
+	exit 1;
+}
+
+$dbname = $ARGV[0];
+$fkey   = $ARGV[1];
+
+dbmopen(%DB, $dbname, undef) || die "$0: cannot open database $dbname\n";
+
+while ( ($key,$value) = each %DB ) {
+	print "$key = $value\n" if ( $key =~ /^$fkey$/i );
+}
+
+dbmclose %DB;

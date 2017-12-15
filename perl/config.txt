@@ -1,0 +1,12 @@
+
+## This array is the names of the fields that you want in your database.
+@fields = ("Name","E-mail","Phone","Notes");
+
+## This variable is the location of the database that this
+## configuration file points to.
+$database = "data/database.txt";
+
+## This variable is the "relative path" to the database.cgi program.
+###$form_action="/98/10/23/perl/database.cgi";
+$form_action="./database.cgi";
+ 

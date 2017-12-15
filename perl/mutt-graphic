@@ -1,0 +1,33 @@
+#!/usr/pkg/bin/perl -w
+
+# Created: Tue Mar 18 14:07:29 2003 (Bob Heckel)
+
+# Determine how we were called:
+if ( $0 =~ /mutt-jpg$/ ) {
+  $tmpfile = "tmpmutt$$.jpg";
+  $ext = 'jpg';
+} elsif ( $0 =~ /mutt-gif$/ ) {
+  $tmpfile = "tmpmutt$$.gif";
+  $ext = 'gif';
+} else {
+  print "Possible error.  Unknown file type.  Edit ~/bin/mutt-graphic." .
+        "  Exiting.\n";
+}
+
+print "$0 is processing the attachment into $tmpfile...\n\n";
+
+open ENCODED, ">$tmpfile" || die "$0: can't open $tmpfile: $!\n";
+
+# Passed in from mutt, already decoded!
+while ( <STDIN> ) {
+  print ENCODED $_;
+}
+
+close ENCODED;
+
+# TODO not sure about the die()
+system "mv $tmpfile ~/html/tmp.$ext" || die "$0: can't mv $tmpfile: $!\n";
+system "chmod 755 ~/html/tmp.$ext";
+print "finished\n http://bheckel.freeshell.org/tmp.$ext\n";
+
+exit 0;

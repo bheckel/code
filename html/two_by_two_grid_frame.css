@@ -1,0 +1,48 @@
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+#a1, #b1, #a2, #b2 {
+    width: 50%;
+    height: 50%;
+    float: left;
+}
+
+#c1 {
+  /*border: dashed green;*/
+  height: 200px;
+}
+
+#ifrm {
+  /*border: 2px dotted;*/
+  width: 100%;
+  height: 100%;
+}
+
+div:nth-of-type(1) {
+    background: #ccc;
+}
+
+div:nth-of-type(2) {
+    background: #bbb;
+    border-left: 1px solid #f00;
+}
+
+div:nth-of-type(3) {
+    background: #aaa;
+    border-top: 1px solid #f00;
+}
+
+div:nth-of-type(4) {
+    background: #ddd;
+    border-top: 1px solid #f00;
+    border-left: 1px solid #f00;
+}

@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<BatchData xmlns="Aspentech.Batch21">
+  <Area name="SDMAN">
+    <Batch>
+      <Handle>ZEB01.388</Handle>
+      <Characteristic name="END TIME" instance="1">
+        <Value isUTC="-1">2007-07-16T23:01:33</Value>
+        <Timestamp isUTC="-1">2007-07-16T23:01:33</Timestamp>
+      </Characteristic>
+      <Characteristic name="START TIME" instance="1">
+        <Value isUTC="-1">2007-07-16T19:52:09</Value>
+        <Timestamp isUTC="-1">2007-07-16T19:52:09</Timestamp>
+      </Characteristic>
+      <Characteristic name="Batch Number" instance="1">
+        <Value>7zm1413</Value>
+        <Timestamp isUTC="-1">2007-07-16T19:52:25</Timestamp>
+      </Characteristic>
+      <Subbatch name="Solvent Granulation" instance="1">
+        <Characteristic name="END TIME" instance="1">
+          <Value isUTC="-1">2007-07-16T23:01:33</Value>
+          <Timestamp isUTC="-1">2007-07-16T23:01:33</Timestamp>
+        </Characteristic>
+        <Characteristic name="START TIME" instance="1">
+          <Value isUTC="-1">2007-07-16T19:52:09</Value>
+          <Timestamp isUTC="-1">2007-07-16T19:52:09</Timestamp>
+        </Characteristic>
+        <Characteristic name="Process Cell" instance="1">
+          <Value>RM 4391</Value>
+          <Timestamp isUTC="-1">2007-07-16T19:52:09</Timestamp>
+        </Characteristic>
+        <Subbatch name="FBD Granulation" instance="1">
+          <Characteristic name="END TIME" instance="1">
+            <Value isUTC="-1">2007-07-16T23:01:33</Value>
+            <Timestamp isUTC="-1">2007-07-16T23:01:33</Timestamp>
+          </Characteristic>
+          <Characteristic name="START TIME" instance="1">
+            <Value isUTC="-1">2007-07-16T19:52:09</Value>
+            <Timestamp isUTC="-1">2007-07-16T19:52:09</Timestamp>
+          </Characteristic>
+          <Characteristic name="Recipe Name" instance="1">
+            <Value>VALTREX CAPLETS</Value>
+            <Timestamp isUTC="-1">2007-07-16T19:52:09</Timestamp>
+          </Characteristic>
+          <Characteristic name="Unit" instance="1">
+            <Value>NIROMP8</Value>
+            <Timestamp isUTC="-1">2007-07-16T19:52:09</Timestamp>
+          </Characteristic>
+          <Subbatch name="Precondition" instance="1">
+            <Characteristic name="END TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T20:22:09</Value>
+              <Timestamp isUTC="-1">2007-07-16T20:22:09</Timestamp>
+            </Characteristic>
+            <Characteristic name="START TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T19:52:09</Value>
+              <Timestamp isUTC="-1">2007-07-16T19:52:09</Timestamp>
+            </Characteristic>
+          </Subbatch>
+          <Subbatch name="Warmup" instance="1">
+            <Characteristic name="END TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T20:39:38</Value>
+              <Timestamp isUTC="-1">2007-07-16T20:39:38</Timestamp>
+            </Characteristic>
+            <Characteristic name="START TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T20:22:09</Value>
+              <Timestamp isUTC="-1">2007-07-16T20:22:09</Timestamp>
+            </Characteristic>
+          </Subbatch>
+          <Subbatch name="Dry" instance="1">
+            <Characteristic name="END TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T20:44:35</Value>
+              <Timestamp isUTC="-1">2007-07-16T20:44:35</Timestamp>
+            </Characteristic>
+            <Characteristic name="START TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T20:39:38</Value>
+              <Timestamp isUTC="-1">2007-07-16T20:39:38</Timestamp>
+            </Characteristic>
+          </Subbatch>
+          <Subbatch name="Dry" instance="2">
+            <Characteristic name="END TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T20:49:33</Value>
+              <Timestamp isUTC="-1">2007-07-16T20:49:33</Timestamp>
+            </Characteristic>
+            <Characteristic name="START TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T20:44:36</Value>
+              <Timestamp isUTC="-1">2007-07-16T20:44:36</Timestamp>
+            </Characteristic>
+          </Subbatch>
+          <Subbatch name="Dry" instance="3">
+            <Characteristic name="END TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T22:42:01</Value>
+              <Timestamp isUTC="-1">2007-07-16T22:42:01</Timestamp>
+            </Characteristic>
+            <Characteristic name="START TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T20:49:33</Value>
+              <Timestamp isUTC="-1">2007-07-16T20:49:33</Timestamp>
+            </Characteristic>
+          </Subbatch>
+          <Subbatch name="Dry" instance="4">
+            <Characteristic name="END TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T23:01:33</Value>
+              <Timestamp isUTC="-1">2007-07-16T23:01:33</Timestamp>
+            </Characteristic>
+            <Characteristic name="START TIME" instance="1">
+              <Value isUTC="-1">2007-07-16T22:42:01</Value>
+              <Timestamp isUTC="-1">2007-07-16T22:42:01</Timestamp>
+            </Characteristic>
+          </Subbatch>
+        </Subbatch>
+      </Subbatch>
+    </Batch>
+  </Area>
+</BatchData>

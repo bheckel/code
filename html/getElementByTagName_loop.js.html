@@ -1,0 +1,17 @@
+<!-- http://www.w3schools.com/htmldom/dom_nodes_access.asp -->
+<html>
+  <body>
+
+  <p>Hello World!</p>
+  <p>The DOM is very useful!</p>
+
+  <script type="text/javascript">
+    x=document.getElementsByTagName("p");
+    for ( i=0;i<x.length;i++ ) { 
+      document.write(x[i].innerHTML);
+      document.write("<br />");
+      }
+  </script>
+
+  </body>
+</html>

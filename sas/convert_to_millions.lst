@@ -1,0 +1,20 @@
+ 
+                                                                                
+ 
+                                                                               1
+
+Obs    idnum    name       qtr1    qtr2    qtr3    qtr4
+
+ 1      aaa     Rearden     10      12      14      20 
+ 2      bbb     Taggart      .       .      10      10 
+ 3      ccc     Galt        22      14       3      25 
+ 
+                                                                                
+ 
+                                                                               2
+
+idnum    name               qtr1            qtr2            qtr3            qtr4
+
+ aaa     Rearden      10,000,000      12,000,000      14,000,000      20,000,000
+ bbb     Taggart               .               .      10,000,000      10,000,000
+ ccc     Galt         22,000,000      14,000,000       3,000,000      25,000,000
