@@ -1,0 +1,122 @@
+Adapted: Tue 29 May 2001 14:17:51 (Bob Heckel -- Unix Hints and Hacks)
+
+ ed QuickRef
+ ===========
+
+!! Must immediately use 'a' if no lines yet exist (will always see "No such 
+   file or directory" warning) !!
+
+Bare-bones sample session on an existing file:
+  ,n            <---number/list all lines; doesn't matter which line you're on 
+  ,p            <---list all lines; doesn't matter which line you're on 
+  a             <---append after last line (or 1i to insert above current line)
+  I am entering foo text
+  and this is the next line
+  .            <---since we're in insert mode, it will escape to command mode
+  ,n           <---confirm the lines have been added
+  %s/foo/bar
+  .            <---since we're in command mode, it will print current line
+  3            <---go to line 3
+  n            <---same as . but also show line number
+  w
+  q            <---or Q to do a vi :q!
+
+
+==============================================================================
+                                   Details
+==============================================================================
+There are only two ways to move the cursor position in the ed editor:
+up and down. Enter the line number you want and you are there.
+
+.    <---Displays the current line the cursor is positioned on (default
+         start line is the last one in the file)
+
+.n   <---Displays the current line AND LINE NUMBER the cursor is positioned on
+
+1    <---Positions then displays the cursor to the first line (pressing
+        enter after that should "scroll" downward)
+
+3    <---Positions then displays the cursor to the third line
+
+-2   <---Positions then displays line 2 lines up from current position
+
++2   <---Positions then displays line 2 lines down from current position
+
+$    <---Positions then displays the cursor on the last line
+
+,p   <---List all the lines in the file (some flavors allow %p, %l, %n)
+,l
+,n   <---Lists all the lines in the file, numbered (BETTER)
+1,$p 
+1,$l 
+1,$n 
+
+.,$n <---Lists the current line and all lines to last line with line numbers
+
+Single question mark means you screwed up.
+
+
+==============================================================================
+There are two ways to add text: the insert command and the append command.
+Whether you choose to insert or append the text is up to you. Except for the
+first line (you cannot insert above line 1 b/c in ed, there is no line 0. If
+you are at the top of a new file you must start by APPENDING text), the only
+difference is where the text gets written, above or below the current line.
+
+(! The line number goes BEFORE the 'i', unlike vi and MVS !)
+2i <---Appends text before line 2
+
+5a <---Appends text after line 5
+
+i <---Inserts text above the line
+
+a <---Appends text to the current line  (MUST USE 'a' IF CREATING A NEW FILE)
+
+c <---Completely change the current line
+
+Then to leave insert mode, enter a period ( . ) on a line by itself. 
+
+
+==============================================================================
+Because there is no way to move from side to side across a line, the only way
+to make changes to the line is to use a find/replace command.  Wow.
+
+s/regex1/regex2          <---Performs a one-time search on the current line on 
+                            regex and replaces it with pattern2
+
+1,$s/regex1/regex2/g     <---Searches globally for all occurrences of regex1
+                            and replaces it with regex2
+
+g/regex                  <---Searches globally for regex and prints the whole
+                            line if found
+
+
+==============================================================================
+The concept of deletion is the same as insert mode or moving up and down
+through the file. You pass the line number and the d:
+
+(Line number goes BEFORE the 'i', unlike vi)
+
+1d            <---deletes the first line of the file
+
+2,6d          <---deletes line 2-6
+
+.,$d          <---deletes from the current position to the end of the file
+
+/replicant/d  <---delete next line containing regex
+g/replicant/d <---delete all lines containing regex
+
+
+==============================================================================
+Unlike vi, there is no way to perform a write and a quit in one command. It is
+a two-step process. You have to first write the file out, and then quit the
+editor.
+
+w [filename] <---Writes out the file if a filename is provided, but does
+                not quit the file
+
+q            <---Quits the file if unmodified
+Q            <---Quits the file and discard changes (not q!)
+
+
+Probably want to use -s if on Cygwin to avoid the [PRESS ENTER]s

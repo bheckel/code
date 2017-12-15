@@ -1,0 +1,47 @@
+#!/bin/sh
+##############################################################################
+#     Name: bfp
+#
+#  Summary: Front-end to ~/bin/bftp to simplify transfers from PC to 
+#           mainframe (MVS or HFS).
+#
+#           TODO combine bfg and bfp into one pgm depending on how called
+#           TODO centralize password storage a la .netrc
+#           TODO use getops to use -d switch
+#
+#           Assumes a symlink to bfpd (for debug)
+#
+#  Created: Tue 03 Feb 2004 12:54:28 (Bob Heckel)
+# Modified: Thu 12 May 2005 13:26:50 (Bob Heckel)
+##############################################################################
+  
+PW=`getpw`;
+
+Usage() {
+  echo "Usage: `basename $0` LOCALNAME REMOTENAME 
+  Calls ~/bin/bftp to transfer from MF to PC
+  Note: - parens require that the file be quoted
+        - can call as bfpd for debugging
+  E.g. bfp PCfoo.txt 'bqh0.pgm.lib(junk)'
+       bfp register.html /websrv/sasweb/nchs/registers/register.html
+       bfp .vimrc.more '/u/bqh0/code/misccode/.vimrc.more'
+
+  or the super-bulk-uploader:
+while read f; do bfp \$f \"bqh0.pgm.lib(\`basename \$f .sas\`)\"; done <filelist.txt
+       "
+  exit 1
+}
+
+N_EXPECTED_ARGS=2
+
+if [ "$#" -ne $N_EXPECTED_ARGS ]; then 
+  Usage
+fi
+
+date
+
+if [ $0 = "$HOME/bin/bfp" ];then
+  bftp -p "$1" "'$2'" bqh0 mainframe $PW
+else
+  bftp -pd "$1" "'$2'" bqh0 mainframe $PW
+fi

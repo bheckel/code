@@ -1,0 +1,15 @@
+#!/usr/bin/expect
+
+# Violate the spirit of sFTP when you aren't allowed to have your pubkey added to their authorized_keys
+
+lassign $argv arg1
+send_user "arg1: $arg1\n"
+
+spawn sftp user@data.com
+expect "password:"
+send "thepw\n"
+expect "sftp>"
+send "put /Drugs/Cron/Daily/FredsImm/Freds_Imm_PHI_${arg1}.gpg\n"
+expect "sftp>"
+send "exit\n"
+interact

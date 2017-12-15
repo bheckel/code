@@ -1,0 +1,16 @@
+xor true (i.e. 1) if either is nonzero but not both. E.g. $soup xor $salad is
+true if you choose soup only or salad only as your meal.
+
+Important side effect  is if you XOR two values and then XOR the result with
+either of the original values, you get back to the other original value
+e.g. 74 xor 110 = 36
+36 xor 110 = 74
+Repeat that for all bytes in the text and you've encrypted and decrypted your
+text.
+
+
+xor(int a, int b) {
+   return (a || b) && !(a && b)
+}
+
+a or b but not both

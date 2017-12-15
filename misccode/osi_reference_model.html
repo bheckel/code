@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0061)http://www.msic.com/technical/network_protocol/osi_info.shtml -->
+<HTML><HEAD><TITLE>OSI Reference Model</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<META 
+content="OSI model osi reference model osi protocol network layer diagram osi layer model refrence model diagram" 
+name=keywords><!--Keywords used most often in order: osi model, osi, osi reference model, osi model tutorial, osi protocol, osi network layer, osi layer diagram, osi network model, osi seven layer model, osi tutorial, osi network, osi layer model, osi and model, osi transport layer, osi refrence model, osi model networking, osi model diagram.-->
+<BODY>
+<PRE>
+added by bobh Mon Feb 23 13:25:31 2004
+
+The Application layer (7) (HTTP/SMTP/POP/FTP) communicates the received
+                          information (such as files) to the user.
+
+Presentation layer (6) e.g. encryption methods, character sets, etc.
+
+The Session layer (5) e.g. warehouse managers talking on phone about how many
+                           packages they want per day (slow up or speed up).
+                           Gateways live here.
+
+The Transport layer (4) (TCP/UDP) creates connections to the program on that
+                        destination machine. e.g. shipping clerk in the 
+                        warehouse sending mail to employees in 
+                        different buildings
+
+The Network layer (3) (IP) sends packets as far as the network segment
+                      e.g. 203.24.13 (not down to the device number
+                      203.24.13.84) using the Internet. 
+                      Routers work at this level.
+                      e.g. like a bad postal svc, mailman walks down Mill
+                      Ridge with the package in his hand asking the
+                      residents to see if it's for them b/c all he knows
+                      to deliver to is a street address, not a house
+                      address
+
+The Data Link layer (2) (Ethernet/PPP) sends frames as far as the next hop.
+                        Only understands the ethernet ip of
+                        the host computer.
+                        e.g. doesn't know what a street address 
+                        is, only what a house address is, only
+                        picks up mail from mailman with '7212'
+                        on it.
+
+The Physical layer (1) sends bits onto the wire at standard voltage, bits
+                       per second, etc.
+</PRE>
+Compare OSI with TCP/IP Models:<BR>
+<IMG SRC="osi_vs_tcp.gif" BORDER="0">
+end bobh
+<BR><BR><BR>
+<H3 align=center>UNDERSTANDING THE OSI REFERENCE MODEL</H3>
+<P>The OSI reference model describes modular building blocks of 
+various functions that must be provided to have program to program 
+communications between similar or dissimilar hosts. Each functional 
+area describes certain tasks that must be performed by network 
+hardware or software in order for these network communications to 
+take place. Not all methods of network communication extend to all 
+the layers of the full OSI reference model. For example, 
+internetwork communications between programs on differing hosts 
+using reliable TCP/IP communications might use all layers of the OSI 
+model, while local Windows for Workgroups communications within the 
+same network using the NetBEUI protocol might have communications 
+occurring only at the Data Link Layer and Physical Layer levels. 
+<P>One important thing to understand is that the OSI reference model 
+describes what must transpire for <B>program to program 
+communications</B> to occur between even dissimilar computer 
+systems. Each layer is responsible to provide information and 
+pointers to the next higher layer in the OSI model. The Application 
+Layer (which is the highest layer in the OSI model) makes available 
+network services to actual software application programs. 
+<P>In describing the various functional areas of the OSI reference 
+model, I will start from the bottom up. However, when we describe 
+communications between two computer systems, we describe the 
+communications beginning at one computer system at the highest layer 
+that communications occur, going down through to the Physical Layer, 
+through the transmission media and network, over to the other 
+computer at the Physical Layer, then up through to the highest layer 
+of communications on the other computer system. These communications 
+are usually symmetrical. In the case of this type of communications 
+occurring through a routed internetwork, the network portion of the 
+diagram (between the OSI reference layers on each computer system), 
+may also extend on through the Physical, Datalink, and to the 
+Network Layer.<BR><BR><CENTER><IMG height=262 alt="osi reference model communications" src="osicomm.gif" width=435 border=0> </CENTER>
+<P>In the diagram above, the left stack of the OSI reference model 
+represents computer number one, the middle two stacks indicate the 
+actual routed internetwork, and the rightmost stack indicates 
+computer number two. The arrows indicate the path taken by data sent 
+from a program on computer number one to a program on computer 
+number two, through the routed internetwork. 
+<P>The lowest layer of the OSI reference model is the <B>Physical 
+Layer</B>. It is the foundation of communications between any 
+computer systems. The Physical Layer specifies the transmission 
+media, transmission devices, network structures, and the actual data 
+signals across the transmission media. The transmission media 
+provides the physical path through which data signals flow. The 
+transmission media consists of either bound media (usually some type 
+of cable) which have a central conductor of data signals surrounded 
+by a physical outer jacket, or unbound media which rely on radio 
+waves, microwaves, and infrared signaling. 
+<P>In most LAN network communications, the Physical Layer describes 
+some type of cabling system as the transmission media. The Physical 
+Layer also describes the transmission devices that attach to the 
+media, the physical connector specifications, and the electrical or 
+optical signaling characteristics (analog or digital, signal levels, 
+and signal encoding methods). The Physical Layer lastly describes 
+the network topology, and how the Physical Layer transmission media 
+is to be distributed (i.e., in a bus, star, ring, mesh, etc., 
+topology). 
+<P>The most simple type of communications between computer systems 
+(serial or parallel) occurs at the Physical Layer, where the 
+Physical Layer would consist of the transmission media, transmission 
+devices, a simple point-to-point network structure, and network 
+signaling and interface specifications (such as an RS-232 serial 
+communications). 
+<P>The second layer in the OSI reference model is the <B>Datalink 
+Layer</B>. This layer describes the functions that must occur for 
+LAN communications within a local network. The Datalink Layer 
+provides the first level of organization of the data bits into a 
+rudimentary structure called a Datalink frame. This frame is 
+organized into fields of information that convey the beginning and 
+ending of the frame, the address of the sender, the address of the 
+receiver, a method to ensure that the frame does not contain errors 
+that may have occurred in the course of being transmitted through 
+the transmission media, and an area to provide some basic 
+administrative function (such as flow control, frame length 
+calculations, and protocol decisions). Datalink Layer flow control 
+manages how much data the destination system can handle. 
+<P>The Datalink Layer is broken into two logical areas, the <B>Media 
+Access Control (MAC)</B> sublayer, and the <B>Logical Link Control 
+(LLC)</B> Sublayer. The MAC sublayer refers to the Media Access 
+Protocol (how do stations on a network gain access to the media and 
+permission to transmit their data - contention, token passing, 
+polling), and the physical addressing of stations on the network. 
+This would include the Source and Destination address sections of 
+the Datalink frame. The LLC sublayer includes portions of the 
+Datalink frame administrative or control fields and CRC fields that 
+are responsible for the frame synchronization, flow control, and 
+error checking within the frame.<BR><BR><CENTER><IMG height=244 
+alt="Datalink Frame of the osi model" src="dlink.gif" width=435 border=0> </CENTER>
+<P>The physical addressing at the Datalink layer (used for source 
+and destination addressing in a Datalink Layer frame) is called a 
+physical address because this address (also called a MAC-layer 
+address) is hard coded into the network interface in their computer 
+or workstation. This addressing is useful for conveying all the 
+information necessary to direct information to and from stations 
+within a local network. The addressing is usually assigned by the 
+manufacturer of the network interface at the time of manufacture, 
+and the first half of the address contains hex address information 
+that is unique to each manufacturer. The last half of the MAC layer 
+address is unique to that individual NIC card. Networks with 
+duplicate addresses can have problem s in knowing where to properly 
+deliver their data. This is why all manufacturers purchase unique 
+identifiers and blocks of unique addresses for all the network 
+interfaces that they manufacture. 
+<P>When we refer to Ethernet, or Token Ring, or other LAN Networking 
+systems (ARCNET, LocalTalk, FDDI, etc.), we are referring to the 
+Physical and Datalink layer descriptions of these networks. For 
+example, an Ethernet workstation will construct datalink layer 
+frames that may conform to the IEEE 802.3 specification for Ethernet 
+frames, and which follow that specifications requirements for 
+signaling types, levels, media, physical connectors, etc. The 
+Physical and Datalink Layers also specify the Media Access Control 
+methodology (CSMA/CD), Ethernet topologies, and other rules 
+necessary for ensuring a functional network design. The <B>Network 
+Layer</B> is responsible for the internetworking process that needs 
+to occur to reliably send and receive data between networks. It 
+provides logical addressing at the Network Layer (as this addressing 
+is usually specified in software, and is not hard coded into network 
+interfaces as it is at the Datalink Layer), and provides for network 
+routing, flow control, sequencing, and translation functions. 
+Network Layer flow control monitors network connection. Network 
+layer addressing provides addressing that is specific to the logical 
+addressing assigned to a particular network protocol. For example, 
+the Ethernet workstation described in the previous paragraph may 
+have Ethernet as the Physical and Datalink layer network type, and 
+may run both TCP/IP and Novell IPX/SPX as different network layer 
+protocols. Each network layer protocol will have a different logical 
+addressing scheme to enable communication between networks. 
+<P>This brings up an interesting issue involving network protocols. 
+Without going too deep into the subject, there are some common 
+protocols used in LAN networking that do not extend to the network 
+layer. These include DEC LAT, NetBIOS, NetBEUI, and others. Because 
+they have no provisions for network layer addressing and routing, 
+connecting these protocols between different LAN's must be done with 
+MAC layer devices such as LAN bridges or LAN switches. Protocols 
+that operate at the network layer (such as TCP/IP, IPX/SPX, DECNET, 
+etc.) utilize routers to interconnect networks. Most routers have 
+the ability to route routeable protocols and to bridge non-routeable 
+traffic. 
+<P>The <B>Transport Layer</B> provides reliable end-to-end 
+communications by providing service addressing, flow control, 
+datagram segmentation, and end-to-end error checking. The Transport 
+layer is the second of three error checking levels in the OSI model 
+(error checking occurs at the DataLink Layer, Transport, and Session 
+Layer). While the Network Layer is responsible for transporting data 
+from Network A to Network B, the transport layer ensures that 
+packets arrives (or is reassembled) in one piece, and make sure that 
+the data is directed to the appropriate service. While I have 
+explained physical MAC-Layer addressing which occurs at the Datalink 
+Layer, and the logical addressing at the network layer, we will now 
+see that the Transport Layer concerns it self with the next layer of 
+addressing described in the OSI model, which is Service Addressing. 
+Service addressing identifies addresses or ports which point to 
+upper layer network services. The transport level addressing also 
+keeps track of multiple connections or conversations which might 
+occur on a network attached computer system. It does this by 
+tracking a connection identifier (connection ID, port, or socket), 
+or by a transaction identifier (which would track each request, as 
+opposed to tracking a conversation). The Transport Layer is also 
+responsible for breaking larger units of data sent down from higher 
+layers into smaller pieces that can be transported across the 
+network. These pieces would then be reassembled at the Transport 
+Layer of the receiving computer system and passed on to that 
+computers higher layers. This is accomplished by assigning segment 
+numbers to fragments of a common conversation. The Transport Layer 
+accomplishes it's contribution to the flow control process by 
+negotiating window sizes. 
+<P>The <B>Session Layer</B> is responsible for connection 
+establishment, data transfer, and for connection release. In this 
+way the Session Layer provides mechanisms which establish, maintain, 
+synchronize, and manage communications between computer systems. The 
+Session layer is responsible for the establishment of connection ID 
+numbers, and relies on the transport layer to provide the 
+information which identifies the correct services. The Session Layer 
+is responsible for the coordination of acknowledgement numbering and 
+retransmission procedures. It tracks who initially initiated a 
+conversation. Session layer is responsible for re-establishing a 
+logical communications session between computers should that session 
+be prematurely terminated (due to failure at a lower layer in the 
+communications process). The Session layer would either resume the 
+interrupted dialog, or initiates another new session to the other 
+computer system. The Session Layer also manages planned connection 
+release of a communications session. 
+<P>The <B>Presentation Layer</B> is responsible for translating data 
+into formats that can be readily understood by each computer system. 
+The Presentation Layer concerns itself with translating differences 
+at the bit level, byte level, or character level, and with file 
+syntax. An example of this might be translating data formats between 
+two different computer systems using the TCP/IP protocol, that have 
+different data conventions. One host might use ASCII code and may 
+have the left-most bit be the highest order bit (or most significant 
+bit) in a byte of data, while the other host system utilizes EBCDIC 
+and for which the left most bit is the lowest order bit (least 
+significant bit). Computers need to agree the method of identifying 
+how many bits equals a whole character and what file syntax is used 
+by each system (file organization, beginning and ending boundaries, 
+naming conventions, read and write access security, and file storage 
+methods). The Presentation Layer also concerns itself with data 
+compression and encryption. 
+<P>Probably the most misunderstood layer of the OSI model is the 
+<B>Application Layer</B>. Contrary to what many people think, this 
+<B>IS NOT</B> the layer where the software application (such as your 
+spreadsheet or word processing program) resides. It is the layer 
+where network applications that facilitate network connectivity 
+reside (file transfer/FTP, virtual terminal/Telnet, and electronic 
+mail, for example), and where service advertisement and service 
+availability are managed. Service Advertisement is the process of 
+letting systems know which services are available on the network. 
+Once it has been made advertised, it must be made available to the 
+computers local operating system. 
+<P>Network services include file services, print services, message 
+services, application services, and database services. Network 
+services are provided at the Application Layer. The Application 
+Layer makes network services available to a computers local 
+operating system. This is accomplished through Operating System call 
+interception, remote operation, or via collaborative availability. 
+In OS call interception, the local operating system is completely 
+unaware of the existence of network services. In remote operation 
+the local system is aware of the network, but the network server is 
+unaware of the client. In collaborative systems, both the server and 
+the client are aware of each other and work together to coordinate 
+service availability. This method is typically used in peer-to-peer 
+network operating systems. <BR><BR><BR><BR>
+<P>
+<CENTER><I>Copyright Somera 2000</I></CENTER></FONT><BR></FONT>
+<CENTER></CENTER></FONT>
+</BODY></HTML>

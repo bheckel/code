@@ -1,0 +1,20 @@
+This goes in .netrc.  The blank line is important.  
+I don't know how to use comments.
+$ ftp 158.111.2.21 
+or
+54 * * * * ftp 158.111.2.21
+will kick it off without user intervention.
+
+-----------
+machine 158.111.2.21 login bqh0 password the9Fisu
+macdef init
+bin
+hash
+cd "PGM.TRASH"
+lcd /home/bqh0/tmp/testing/
+prompt off
+mget TESTDAT TESTSAS
+bye
+
+-----------
+

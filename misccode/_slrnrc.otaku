@@ -1,0 +1,498 @@
+OLD, GET NEW ONE FROM FREESHELL
+
+
+
+
+% -*- slang -*-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     Name: $HOME/.slrnrc
+%
+%  Summary: otaku slrn config file.  Symlinked to each NNTPSERVER config 
+%           directory.
+%
+%  Created: Sat 16 Mar 2002 08:23:39 (Bob Heckel)
+% Modified: Sun 06 Oct 2002 09:59:42 (Bob Heckel)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Note OS/2 and Win32 users: 
+%  Single backslashes are not supported.  For example, use
+%  "C:\\home\\file.txt" or "C:/home/file.txt" but NOT "C:\home\file.txt"
+
+% SERVER to NEWSRC mapping
+%server "news.uni-stuttgart.de" ".jnewsrc-stuttgart"
+server "news.nwlink.com" "slrn/news.nwlink.com/jnewsrc"
+server "news.gmane.org" "slrn/news.gmane.org/jnewsrc"
+
+% The next line is for those servers that require a password.
+%nnrpaccess "HOSTNAME" "USERNAME" "PASSWORD"
+%nnrpaccess "HOSTNAME" "USERNAME" ""         % Prompt for password
+%nnrpaccess "HOSTNAME" ""         ""         % Prompt for username and password
+%%%nnrpaccess "news.cis.dfn.de" "bheckel" ""
+
+% Must be fully qualified but hostname HECKEL isn't, so do this here.
+% End up with a line like this: 
+% From: usenet1.10.bheckel@spamgourmet.com (Bob Heckel)
+% Spoofing is usually ok except on Worldnet.
+%%%set hostname "worldnet.att.net"
+set hostname "spamgourmet.com"
+set username "slrn.20.bheckel"
+set realname "Bob Heckel"
+%%%set replyto  "slrn.20.bheckel@spamgourmet.com"
+
+% Name of signature file to use
+%%%set signature "/arpa/ag/b/bheckel/slrn/signature"
+
+% The quote string will be used when following up/replying
+set quote_string ">"
+
+% If non-zero, signature will not be included in quoted text of followups
+set followup_strip_signature 1
+
+% If set to 1, slrn will not allow you to post articles that contain 
+% non-quoted lines whose length exceeds 80 characters.  If set to 2, a warning
+% will be generated.
+set reject_long_lines 2
+
+% This regular expression defines lines that are consider to be quoted lines.
+% It says that any lines beginning with 0-2 spaces followed by a either
+% a >, <, :, |, or = character is a quoted line.
+ignore_quotes "^ ? ?[><:=|]"
+
+set overview_date_format "%b %d"
+
+% All 5 of these must be included or slrn barfs.
+header_display_format 0 "%F%D %13r%t%s"
+header_display_format 1 "%F%G%-5l:[%12r]%t%s"
+header_display_format 2 "%F%-5l:%t%s"
+header_display_format 3 "%F%-5S%-5l:%t%50s %r"
+header_display_format 4 "%F%-5S [%10r]:%t%49s %-19g[%17d]"
+
+% This sets the follow-up and reply strings.  Here, the following format 
+% specifiers are recognized: 
+%    %d:date, %r:real name, %f:email address, %s:subject,
+%    %m:msgid, %n:newsgroups, %%: percent 
+set followup_string "* On %d, %r wrote:"
+set reply_string "In %n, you wrote:"
+
+%Custom headers to add to NEW posts
+%set custom_headers "X-Whatever: bla\nX-Misc: bla bla"
+%%%set custom_headers "X-IHateGUInewsreaders: Yes"
+set custom_headers "Mail-Copies-To: never"
+%%%set custom_headers "X-Editor: VIM - Vi IMproved 5.7 (2000 Jun 24, compiled Jul 11 2000 14:08:36)"
+%%%set custom_headers "X-Operating System: CYGWIN_NT-5.0 1.3.6(0.47/3/2) i686"
+
+% Headers to show when viewing an articles.  This is a comma-separated
+% list of strings that specify what headers to show.  Note that these 
+% strings are not regular expressions.  However, one may use, e.g.,
+% "X-" to match any header beginning with "X-".  Similarly, "F" will 
+% match "From:" and "Followup".
+% DO NOT ADD SPACE AFTER COMMAS.
+visible_headers "Newsgroups:,Subject:,From:,Date:,Reply-To:,User-Agent:"
+
+% WWW browser to use.  The 'U' key in article mode searches the current article
+% for a URL and then calls X browser if slrn appears to be run in X windows
+% and non_Xbrowser otherwise.  Note: The second Xbrowser form assumes that
+% netscape is already running.
+%set non_Xbrowser "lynx '%s'"
+%%%set Xbrowser "netscape '%s' &"
+%set Xbrowser            "netscape -remote 'openURL(%s)' &"
+%%%set non_Xbrowser "start \"c:\\Program Files\\Netscape\\Communicator\\Program\\netscape\" %s"
+% Fully qualified b/c I normally use a links.sh to run links.
+set non_Xbrowser "$HOME/bin/links %s"
+
+% if non-zero, display first article when entering article-mode.
+set show_article 0
+
+% If non-zero, backups of the newsrc file are not performed.
+set no_backups 1
+
+% If 0, do not beep terminal.  If 1, send audible beep.  If 2, send only 
+% visible bell.  If 3, send both.
+set beep 2
+
+% If non-zero, slrn will automatically un-subscribe new groups.  
+% The default is 0.
+set unsubscribe_new_groups 1
+
+% If non-zero, all subject titles will be displayed even though many are
+% duplicated.  A zero value makes the screen look less busy.
+set show_thread_subject 0
+
+% If non-zero, slrn will draw the thread tree using simple ascii characters
+set simulate_graphic_chars 0
+
+% Enable xterm/win32 mouse support: 1 to enable, 0 to disable
+% This also changes the menu at line 1 of screens.
+set mouse 0
+
+set top_status_line "slrn %v  %-30s  %-25g%d %t"
+
+set group_status_line "-%D- %s -- %d %L (%P)"
+
+% Draw cursor bar ala tin instead of slrn "->" cursor?
+set display_cursor_bar 1
+
+% Set to 1 to have slrn scroll by full page instead of by line.
+set scroll_by_page 0
+
+% Setting this to 1 will cause an article to automatically be marked as read
+% when viewed.  Setting this to zero means that it is up to the user to 
+% explicitly mark an article as read.
+set auto_mark_article_as_read 1
+
+% Setting either of these to 0 will enable you to move directly to the
+% next article/group without confirmation
+set query_next_group 1
+set query_next_article 1
+
+% if zero, you will not see the "next group:" prompt.  This is NOT the same
+% as the 'query_next_group' variable.
+% slrnrc-conv: The variable prompt_next_group is obsolete.
+% The feature controlled by this variable has been removed.
+% set prompt_next_group 1
+
+% Set this to 0 for no-confirmation on follow, reply, quit, etc...
+set confirm_actions 0
+
+% If 0, do not display the name of the author.  If 1, display subject then
+% name.  If 2, display name then subject.
+% slrnrc-conv: The variable author_display is obsolete.
+% Please use the %f escape of header_display_format.
+% set author_display 2
+
+% If 1, display author realname, if 0, display full address
+% slrnrc-conv: The variable display_author_realname is obsolete.
+% Please use the %r escape of header_display_format.
+% set display_author_realname 1
+
+% If 0, save all groups when writing newsrc file
+% If 1, do not save any unsubscribed groups
+% If 2, do not save any unread-unsubscribed groups
+% Use 0 or never get to search newly added groups via 'L'
+set write_newsrc_flags 0
+
+% If non-zero, you will be prompted whether or not a Cc header will be
+% generated on the followup.
+set cc_followup 0
+set cc_followup_string "[This message has also been posted.]"
+
+% Set to 0 to turn off display of ~ at end of article
+set use_tilde 1
+
+set save_posts "/arpa/ag/b/bheckel/Mail/usenet/nntp_posts"
+set save_replies "/arpa/ag/b/bheckel/Mail/usenet/nntp_posts"
+% Where failed posts are appended.  Use "" to disable saving.
+%%%set failed_posts_file "nnews/dead.letter"
+set failed_posts_file "/arpa/ag/b/bheckel/slrn/dead.letter"
+% TODO leaving out /arpa/ag/b/bheckel fails to work
+set scorefile "/arpa/ag/b/bheckel/slrn/score"
+
+% Directory where decoded files are placed
+set decode_directory "/arpa/ag/b/bheckel/slrn/binaries"
+% Directory where all other files are saved.
+set save_directory "/arpa/ag/b/bheckel/slrn"
+% Directory where postponed articles are placed.  (Make sure it exists)
+set postpone_directory "/arpa/ag/b/bheckel/slrn/postponed"
+
+% Articles scoring min_high_score and above constitute a high scoring article.
+% Articles scoring below max_low_score define a low scoring article.
+% Articles scoring at or below kill_score will be killed.
+set min_high_score 1
+set max_low_score 0
+set kill_score -9999
+
+% The sendmail command allows you to substitute another mailer.  Be sure that 
+% it implements the same interface as sendmail!
+%set sendmail_command "/usr/lib/sendmail -oi -t -oem -odb"
+% For Cygwin.
+%%%set sendmail_command "/usr/sbin/ssmtp -oi -t -oem -odb"
+% TODO better?
+set sendmail_command "/usr/sbin/ssmtp"
+
+% If non-zero, abort posting or email operation if the file was not modified
+% by the editor.
+set abort_unmodified_edits 1
+
+% If  non-zero, files used for posting, followup and reply will be regarded as
+% temporary files in the directory specified by the TMP environment % variable
+% or /tmp.
+set use_tmpdir 1
+
+% If 0, do not sort.  If 1, perform threading.  If 2, sort by subject
+% If 3, thread then sort result by subject
+% If 4, sort by score.  
+% If 5, thread then sort by score.
+% If 6, sort by score and subject
+% If 7, thread, then sort by score and subject
+% If 8, sort by date with most recent first
+% If 9, thread, then sort by date with most recent first
+% If 10, sort by date with most recent last
+% If 11, thread then sort by date with most recent last
+set sorting_method 5
+% slrnrc-conv: The variable display_score is obsolete.
+% Please use the %S escape of header_display_format.
+% set display_score 0
+
+% If 1, a header with a new subject will start a new thread.
+set new_subject_breaks_threads 0
+
+% If non-zero, threads will be uncollapsed when a group is entered
+set uncollapse_threads 0
+
+% If non-zero, slrn will read the active file when starting.   This may lead to
+% faster startup times IF your network connection is fast.  If it slow, 
+% DO NOT USE IT.  If you can, I recommend setting it to 1.
+%set read_active 1
+set read_active 0
+
+% If non-zero and read_active is zero, slrn will attempt to use the NNTP
+% XGTITLE command when listing unsubscribed groups.
+%%%set use_xgtitle 0
+
+% What to wrap when wrapping an article:
+%  0 or 4 ==> wrap body
+%  1 or 5 ==> wrap headers, body
+%  2 or 6 ==> wrap quoted text, body
+%  3 or 7 ==> wrap headers, quoted text, body
+% The higher number indicates that every article will be automatically 
+% wrapped.
+set wrap_flags 4
+
+% Maximum number of articles to read before slrn will prompt.  Default is 100.
+% Set this to zero to turn of prompting.
+set query_read_group_cutoff 350
+
+% Numes of lines to read from the server between percentage counter updates
+% This number will vary with the speed of the connection to your server
+set lines_per_update 100
+
+%---------------------------------------------------------------------------
+% Mime support
+%---------------------------------------------------------------------------
+set use_mime 1
+set mime_charset "iso-8859-1"
+% If non-zero, call metamail for mime formats that slrn does not handle
+set use_metamail 0
+set metamail_command "metamail"
+
+% If non-zero, header numbers will be displayed in the left-margin of the
+% header window.  These numbers may be used as ``thread selectors''.
+set use_header_numbers 1
+
+% If non-zero, prompt for reconnection if the NNTP connection drops.  If zero,
+% attempt reconnection without asking user.
+% slrnrc-conv: The variable query_reconnect is obsolete.
+% There is no need to confirm reconnects anymore.
+% set query_reconnect 1
+
+% Character to use to hide spoiler text:
+set spoiler_char '*'
+
+% set to 0 to keep the display still, and just reveal the spoiler
+% set to 1 to start a new page when spoiler is revealed
+% set to 2 to keep the display still, and reveal ALL spoilers
+% set to 3 to start new page and reveal ALL spoilers
+set spoiler_display_mode 1
+ 
+% Help text to be displayed at bottom of screen in various modes:
+set art_help_line "SPACE-msgfwd b-msgback n-next P-postnew f-followup r-emailposter o-saveart U-url"
+set header_help_line "j-down k-up P-postnew h-hidetogl x-delreadarts s-subjsrch /-fullsrch :-decode"
+set group_help_line "L-searchgroups c-catchup ESC+u-uncatchupgroup l-togglenounreads G-getnews"
+
+set highlight_urls 1
+
+set netiquette_warnings 1
+
+% Message-ID no longer will disclose otaku.freeshell.org
+set generate_message_id 0
+
+%---------------------------------------------------------------------------
+%  Local spool configuration
+%---------------------------------------------------------------------------
+% set spool_inn_root "/var/lib/news"
+% set spool_root "/var/spool/news"
+% set spool_nov_root "/var/spool/news/over.view"
+%
+%% -- The following filenames are relative to spool_inn_root unless they
+%%    start with "/".
+% set spool_active_file "data/active"
+% set spool_activetimes_file "data/active.times"
+% set spool_newsgroups_file "data/newsgroups"
+
+%% -- The following filenames are relative to spool_nov_root
+% set spool_nov_file ".overview"
+
+%If set to 1, then spool.c will actually check each article file exists when
+%reading an overview file.  This adds a perceptible delay (especially in a
+%large spool directory), so I've made it an option.  With some servers it is
+%almost redundant, whereas with others which don't expire entries from
+%overview files regularly, it's almost vital.  If the users sees a lot of
+%"article not available" errors, they should probably try turning it on.
+set spool_check_up_on_nov 0
+
+
+%---------------------------------------------------------------------------
+%  GroupLens Support
+%---------------------------------------------------------------------------
+%set use_grouplens 1
+%color grouplens_display blue white
+%set grouplens_host          "grouplens.cs.umn.edu"
+%set grouplens_port          9000
+%set grouplens_pseudoname     "YOUR_PSEUDONAME"
+%grouplens_add "rec.cooking.recipes"
+%grouplens_add "comp.os.linux.misc"
+
+
+%---------------------------------------------------------------------------
+% Colors
+% The foreground and background colors have to be set to one of the following:
+%
+%     black                gray
+%     red                  brightred
+%     green                brightgreen
+%     brown                yellow
+%     blue                 brightblue
+%     magenta              brightmagenta
+%     cyan                 brightcyan
+%     lightgray            white (actually bold white)
+%---------------------------------------------------------------------------
+%      object         foreground  background
+color article        "lightgray" "black"
+color author         "cyan" "black"
+color cursor         "black" "green"
+color description    "lightgray" "black"
+color error          "white" "red"
+color group          "lightgray" "black"
+color header_name    "green" "black"
+color header_number  "brown" "black"
+color headers        "green" "black"
+color italicstext    "cyan" "black"
+color high_score     "green" "black"
+color menu           "green" "blue"
+color neg_score      "magenta" "black"
+color pos_score      "green" "black"
+color normal         "lightgray" "black"
+color quotes         "cyan" "black"
+color response_char  "green" "black"
+color signature      "blue" "black"
+color status         "green" "blue"
+color subject        "lightgray" "black"
+color thread_number  "blue" "black"
+color tilde          "blue" "black"
+color tree           "blue" "black"
+%%%color url            "green" "black"
+
+%-----------------------------------------------------
+% Monochrome attributes for monochrom terminals.   One or more attributes
+% may be specified.
+%-----------------------------------------------------
+mono normal         "none"
+mono header_number  "none"
+mono header_name    "none"
+mono error          "blink"   "bold"
+mono status         "reverse"
+mono group          "none"
+mono article        "none"
+mono cursor         "bold"    "reverse"
+mono author         "none"
+mono subject        "none"
+mono headers        "none"
+mono menu           "reverse"
+mono menu_press     "none"
+mono tree           "none"
+mono quotes         "underline"
+mono thread_number  "bold"
+mono high_score     "none"
+mono signature      "none"
+mono description    "none"
+mono response_char  "bold"
+
+%------------------------  Group keymap------------------------------------
+
+setkey group     post_postponed     "\eP"
+setkey group     add_group     "A"    %  add a new newsgroup
+setkey group     catchup          "C"    %  mark group as read
+setkey group     line_down          "j"
+setkey group     group_search_forward     "/"
+setkey group     help          "?"
+setkey group     post          "P"
+setkey group     quit          "Q"
+setkey group     redraw          "^L"
+setkey group     redraw          "^R"
+setkey group     refresh_groups     "G"
+setkey group     save_newsrc     "X"
+setkey group     select_group     "\r"   %  read articles from group
+setkey group     select_group     " "
+setkey group     subscribe     "S"    %  subscribe to group (See unsubscribe)
+setkey group     suspend          "^Z"
+setkey group     toggle_group_formats     "\033A"
+setkey group     toggle_scoring     "K"
+setkey group     toggle_hidden     "l"
+setkey group     toggle_list_all     "L"
+setkey group     unsubscribe     "U"    %  unsubscribe
+setkey group     line_up          "k"
+
+%---------------- Article mode keymap -------------------------------------
+
+setkey article article_bob "<"     % goto the beginning of the article
+setkey article article_eob ">"     % goto the end of the article
+setkey article article_left "\eOD"
+setkey article article_left "\e[D"
+setkey article article_left "\xE0K"
+setkey article article_line_down "^E"    % "vim" like
+setkey article article_line_up "^Y"    % "vim" like
+setkey article article_pg_dn "x"     % scroll to next page of article or select article
+setkey article article_page_up "b"     % (scroll_up or article_pageup)
+setkey article article_right "\e[C"
+setkey article article_right "\eOC"
+setkey article article_right "\xE0M"
+setkey article article_search "/"     % Search forward through article
+setkey article author_search_backward "A"     % Search backward for an author
+setkey article author_search_forward "a"     % Search forward for an author
+setkey article cancel "\e^C"     % Cancel the article
+setkey article catchup "\eC"
+setkey article catchup_all "c"
+setkey article delete "d"     % Mark current article as read and move to the next unread one
+setkey article enlarge_article_window "^"     % Shift-6 or just ^     % Enlarge header window
+setkey article exchange_mark ","     % Set the mark and return to the location of the previous mark.
+setkey article followup "f"     % Followup on the article
+setkey article forward "F"     % Forward the article to someone
+setkey article get_parent_header "\ep"
+setkey article header_bob "\e<"     % Move to first article in list
+setkey article header_bob "^@G"
+setkey article header_eob "\e>"     % Move to last article in list
+setkey article header_eob "^@O"
+setkey article header_line_down "^N"     % Move to the next article
+setkey article header_line_down "j"
+setkey article header_line_up "k"
+setkey article help "?"     % Show help screen
+setkey article hide_article "H"     % Hide the article window.
+setkey article mark_spot ";"     % Set mark at current article
+setkey article next "n"     % next unread article
+setkey article next_high_score "!"
+setkey article post "P"
+setkey article post_postponed "\eP"
+setkey article pipe "|"
+setkey article previous "p"     % previous unread article
+setkey article print "y"
+setkey article quit "qq"     % Quit back to group mode.
+setkey article redraw "^L"     % Redraw the display
+setkey article redraw "^R"
+setkey article reply "r"     % Reply to the author of the current article
+setkey article save "O"     % append to a file in Unix mail format
+setkey article shrink_article_window "^^"     % Ctrl-6 or Ctrl-^     % Shrink header window
+setkey article skip_quotes "\t"
+setkey article skip_to_next_group "N"     % next group
+setkey article subject_search_backward "S"
+setkey article suspend "^Z"     % Suspend the newsreader
+setkey article toggle_collapse_threads "\et"
+setkey article toggle_headers "t"     % Toggle the display of some headers on and off
+setkey article toggle_quotes "T"
+setkey article toggle_rot13 "\eR"
+setkey article toggle_sort "\eS"
+setkey article toggle_header_formats "\ea"
+setkey article undelete "u"     % Mark the current article as unread
+setkey article uncatchup_all "\eu"
+setkey article uncatchup "\eU"
+setkey article wrap_article "W"    %  toggle wrapping
+setkey article zoom_article_window "z"   % Zoom/UnZoom article window

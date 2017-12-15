@@ -1,0 +1,185 @@
+JCL /J-C-L/ n.
+
+1. IBM's supremely rude Job Control Language. JCL is the script language used
+to control the execution of programs in IBM's batch systems. JCL has a very
+fascist syntax, and some versions will, for example, barf if two spaces appear
+where it expects one. Most programmers confronted with JCL simply copy a
+working file (or card deck), changing the file names. Someone who actually
+understands and generates unique JCL is regarded with the mixed respect one
+gives to someone who memorizes the phone book. It is reported that hackers at
+IBM itself sometimes sing "Who's the breeder of the crud that mangles you and
+me? I-B-M, J-C-L, M-o-u-s-e" to the tune of the "Mickey Mouse Club" theme to
+express their opinion of the beast. 2. A comparative for any very rude
+software that a hacker is expected to use. "That's as bad as JCL." As with
+COBOL, JCL is often used as an archetype of ugliness even by those who haven't
+experienced it. See also IBM, fear and loathing.
+
+http://www.tuxedo.org/~esr/jargon/jargon.html#JCL
+
+-----
+
+Sample JCL inserted prior to SAS code.  Describes to OS/390 the work you want
+done and the resources you'll need to do it:
+
+
+Max 71 char width (therefore the comment below is actually a syntax error),
+use a comma or type something in col 72 (yikes!!) to continue at next line.
+
+//BQH0X  JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=(2),CLASS=D,
+//       REGION=0M
+//* Next line is NOT a comment (like this, case-insensitive, one).
+/*ROUTE  PRINT R343
+//* Automatically fire output queue output to printer.
+//PRINT  OUTPUT FORMDEF=A10111,PAGEDEF=V06683,CHARS=GT15,COPIES=1
+//STEP1  EXEC SAS,TIME=100,OPTIONS='MSGCASE,MEMSIZE=0'
+//WORK   DD SPACE=(CYL,(100,100),,,ROUND)
+//IN     DD DISP=SHR,DSN=BF19.NJX0124.MORMER
+//OUT    DD DISP=(NEW,CATLG,DELETE),                  Comments can go here too
+//       DSN=BQH0.DCINFANT.D06MAY02,
+//       DCB=(LRECL=142,RECFM=FB),
+//       SPACE=(CYL,(10,2),RLSE)
+//* Does not have to be called 'SYSIN'.
+//SYSIN  DD *
+
+...sas code goes code here...
+
+/*      <---this is the end of lines delimiter, not sure when to use it...
+//      <---this is a null statement marking the end of job
+
+
+-----
+JOB is used for major tasks.
+
+  EXEC is used for subtasks (always preceded by a linename (e.g. //STEP1).  If
+  linenames are the same for jobs submitted back-to-back, they will run
+  sequentially.
+
+    DD is used to define data needs ("data definition") for a subtask (there
+    may be multiple DD statements).
+    DD ...
+
+JOB ...
+  EXEC ...
+    DD ...
+    DD ...
+-----
+
+
+Can only use A-Z, @, # and $ in names you define (e.g. linename userid //BQH0).
+
+Positional parameters come before keyword parameters.
+
+CLASS= input job grouping
+MSGCLASS= output job grouping (A is usually the printer)
+
+//  <---by itself is a null statement which indicates end of a job
+
+DSN is an alias for DSNAME
+Temporary data set:
+//DEFINE1 DSNAME=&&MYTEMP
+or
+//DEFINE1 DSNAME=&&MYTEMP(MYMEMBER)
+
+Status subparameter:
+DISP=NEW   <---new data set will be created (the default if you don't specify)
+DISP=OLD   <---preexisting, exclusive access by you
+DISP=SHR   <---preexisting, no lock, others can access simultaneously, only to
+               be used when reading input data sets (best to use for all
+               reading)
+DISP=MOD   <---append to end of file (with exclusive access if preexisting)
+               Use this if you don't know if the file already exists, but it
+               will do locking like OLD so if you know it exists, use SHR.
+               Must code UNIT and SPACE if used.  These work for any file:
+               UNIT=SYSDA SPACE=(TRK,0)
+(no DISP)  <---defaults to DISP=(NEW,DELETE,DELETE)
+
+Normal termination subparameter (what to do after successful completion):
+DISP=(start-status, end-status-normal, end-status-abend)
+DISP=(,DELETE)
+DISP=(,KEEP)
+DISP=(,PASS)    <---pass to next Step (n/a in abnormal termination subparm)
+DISP=(,CATLG)   <---create a pointer
+DISP=(,UNCATLG) <---delete a pointer
+
+If don't specify abnormal subparameter, defaults to the normal subparameter
+(or it'll default to DELETE for NEW, KEEP for OLD on a normal term PASS).
+
+                                    ??cyl??
+SPACE=(CYL,(10,2)) says allocate 10 blocks (10MB I think), 2 more later if
+needed.
+
+DD * says in-stream data (usually SAS code) follows up to the first /*
+In-stream datasets are best terminated by /* (or another job's first // line).
+
+
+
+                account code               ------
+                 ^                         e.g. (2,30) is 2 min 30 sec
+linename         ^   box  username         max CPU in mins. (max 1439 -- 1440
+_______         ____ ---   ____            ------            is unlimited)
+//BQH0X    JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=2,CLASS=D,  <---no spaces betw
+  ^^^^     ^^^                  ^^^^^^^^^^        ^^^^^^^       commas!!
+  userid   keyword              SYSOUT class      CPU time&tape access usually
+      ^                         JCL log verbosity
+      placeholder, up to 4 char
+  ^^^^^
+  jobname
+       ^^^^
+       one or more space
+
+//  REGION=0M <---line continuation is ok if previous line ended with a comma
+    ^^^^^^^^^
+    controls memory, this says want the max, same as 0K
+
+//* comment
+            keyword
+            ----
+//STEP1     EXEC SAS,TIME=100,OPTIONS='MSGCASE,MEMSIZE=0'
+  ^^^^^^         ^^^
+  step name      proc name
+  up to 255 allowed
+
+//WORK DD SPACE=(CYL,(100,100),,,ROUND)
+
+       data definition
+       --
+//IN   DD DISP=SHR,DSN=BF19.NJX0124.MORMER
+  ^^
+  unique filehandle accessible by SAS
+
+//OUT DD DISP=(NEW,CATLG,DELETE),
+//       DSN=BQH0.DCINFANT.D06MAY02,
+//       DCB=(LRECL=142,RECFM=FB),
+              ^^^^^^^^^       ^^
+              line length     fixed block
+//       SPACE=(CYL,(10,2),RLSE)
+                     ^^^^  ^^^^
+                     10 x 1MB roughly.  Get 2 more if needed.  Release space
+                                                               when done.
+
+//SYSIN     DD *
+
+//* Place your code here:
+data foo;
+  ...
+run;
+/*
+
+
+
+Misc:
+====
+MSGLEVEL=(jcl,alloc)
+minimal is MSGLEVEL=(0,0)
+0 print job statement
+1 print all
+2 print input stream JCL/JES statements
+allocations
+0 print JCL messages
+1 print all messages
+
+CDC JCL:
+MSGCLASS=A  print
+MSGCLASS=K  hold queue
+SYSOUT=A  print
+SYSOUT=0  hold queue

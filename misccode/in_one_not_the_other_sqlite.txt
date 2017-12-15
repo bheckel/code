@@ -1,0 +1,8 @@
+-- Save a column of data in cfg.txt and gdm.txt then
+-- $ sqlite3
+sqlite> .tables
+sqlite> create table cfg (mat text);
+sqlite> .import cfg.txt cfg
+sqlite> create table gdm (mat text);
+sqlite> .import gdm.txt gdm
+sqlite> select * from cfg a left join gdm b on a.mat=b.mat where b.mat is null;

@@ -1,0 +1,29 @@
+#!/bin/sh
+##############################################################################
+# Multiline grep.
+# Adapted: Thu, 10 Feb 2000 16:26:47 (Sed & Awk Oreilly)
+#
+# TODO why displays last line regardless of search pattern??
+##############################################################################
+
+search=$1
+shift
+for file
+do
+  sed '
+  /'"$search"'/b
+  N
+  h
+  s/.*\n//
+  /'"$search"'/b
+  g
+  s/ *\n/ /
+  /'"$search"'/ {
+  g
+  b
+  }
+  g
+  D' $file
+done
+
+echo 'Bug alert--ignore the last line--bobh'

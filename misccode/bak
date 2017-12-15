@@ -1,0 +1,72 @@
+#!/bin/bash
+##############################################################################
+#     Name: bak.sh
+#
+#  Summary: Simple backup/restore of file(s).
+#
+#           Should be aliased in .bashrc:
+#           alias bak="$HOME/code/misccode/bak"
+#           alias unbak="$HOME/code/misccode/bak -u "
+#
+#           This only makes a backup, leaving the original file intact but
+#           overwriting any prior .bak instances.
+#           Also can reverse itself via -u
+#
+#           TODO bak -v to backup then edit (:w%.bak in vim might be as easy)
+#           TODO verbose switch
+#
+#  Created: Wed 18 Apr 2001 16:15:07 (Bob Heckel)
+# Modified: Sat 02 Dec 2006 10:58:25 (Bob Heckel)
+##############################################################################
+
+BAKEXT='.bak'
+ME=`basename $0`
+
+Usage() {
+  echo "Usage: $ME myfile1 myfile2 these* ..."
+  echo "       $ME [-u] myfile1"
+  echo
+  echo " Makes backup (extension $BAKEXT) for file(s) listed."
+  echo
+  echo " Use -u to replace a single trashed file with its $BAKEXT file."
+  echo " To unbak more than one file use:"
+  echo "   for f in *.bak; do cp \$f \${f%.*}; done"
+}
+
+if [ $# -lt 1 ]; then
+  Usage;
+  exit 1;
+fi
+
+while getopts uU the_option; do
+  case "$the_option" in
+    # If a file has been maimed, but backed up initially, allow reversion to
+    # its .bak file then remove the .bak
+    u | U )  echo -n "Replace file $2 with its .bak? y/[n] "
+             read yesno;
+             if [ "$yesno" = 'y' ]; then
+               unset yesno
+               ###cp -fv $2'.bak' $2 && mv $2'.bak' $HOME/tmp && exit 0
+               ###cp -f $2$BAKEXT $2 && mv $2$BAKEXT $HOME/tmp && exit 0
+							 # If we retain the .bak, this pgm can run repeatedly during
+							 # debugging sessions.
+               cp -f $2$BAKEXT $2 && exit 0
+             else 
+               unset yesno
+               echo 'Cancelled'
+               exit 1
+             fi
+            ;;
+       *  ) echo 'Unknown switch' 
+            Usage
+            exit 1
+            ;;
+  esac
+done
+
+# No switches passed
+for F in "$@"; do
+  cp -v $F $F$BAKEXT
+done;
+
+exit 0

@@ -1,0 +1,76 @@
+
+The last step before creating an .htaccess file is to give it permission to
+override previous directives. We'll do this by adding a Directory directive in
+httpd.conf right after the directive specifying the UserDir.
+
+Add these lines to httpd.conf (parts may already exist):
+
+<IfModule mod_userdir.c>
+    UserDir public_html
+</IfModule>
+
+<Directory /home/*/public_html>
+  AllowOverride Limit
+</Directory>
+
+Now we can go into our public_html directory and create a .htaccess file.
+
+After the command prompt, type the following commands:
+
+
+bubble12:~/public_html$ emacs .htaccess
+
+Type the following lines into .htaccess
+
+
+Order deny,allow
+deny from all
+
+Now if you check the website again, you'll notice that permission is denied.
+
+###############
+
+Adding Password Authentication
+
+    You've probably come across a website or two that asked for a username and
+    password before you are allowed to continue. We have to give .htaccess the
+    authority to change the AuthConfig in order to get this working. su and
+    edit httpd.conf again.
+
+    Change this line in httpd.conf
+
+<Directory /home/*/public_html>
+  AllowOverride Limit AuthConfig
+</Directory>
+
+    Restart the webserver.
+
+    Exit back to your normal user and change .htaccess. Don't forget to remove
+    the previous access control lines.
+
+    Change .htaccess to contain only these lines
+
+AuthType Basic
+AuthName "This Page"
+AuthUserFile /home/xinu/.htpasswd
+require valid-user
+
+    These lines specify the type of authentication we want to use. The AuthUserFile is the file that will contain the user names and encrypted passwords once they are created. Having .htpasswd in a location not within public_html, means that it isn't accessible via a web browser even if the server configuration changes allowing access to files that start with ".ht". To create users we use the htpasswd command. It is located in the bin subdirectory of the server root directory tree.
+
+    After the command prompt, type the following commands:
+
+
+bubble12:~/public_html$ /usr/local/apache/bin/htpasswd -c /home/xinu/.htpasswd username
+New password: 
+Re-type new password: 
+Adding password for user username
+
+    After the first user, you don't have to include the -c flag which creates
+    the .htpasswd file. Let's add another user.
+
+    After the command prompt, type the following commands:
+
+bubble12:~/public_html$ /usr/local/apache/bin/htpasswd /home/username/.htpasswd user2
+New password: 
+Re-type new password: 
+Adding password for user user2

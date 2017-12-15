@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="A Dhammapada for Contemplation" 
+               directory_title="A Dhammapada for Contemplation" 
+               title_url="http://bobheckel.googlepages.com/dhammapada.html"
+               description="A randomly rotating text string of Ajahn Munindo's translation of The Buddhist Dhammapada, 'A Dhammapada for Contemplation'"
+               author="Bob Heckel"
+               author_email="dhammapada.bheckel@xoxy.net"
+               author_link="http://www.ratanagiri.org.uk"
+               author_quote="Aruna Ratanagiri Buddhist Monastery"
+               screenshot="http://bobheckel.googlepages.com/TODOrecollections_gadget.jpg"
+               thumbnail="http://bobheckel.googlepages.com/TODOrecollections_gadget_thumb.jpg"
+               >
+    <Require feature="dynamic-height"/>
+    <Require feature="setprefs"/> 
+    <Require feature="settitle"/> 
+<!--     <Require feature="analytics"/> -->
+  </ModulePrefs>
+
+  <!--
+   * dhammapada.xml - a Buddhist Google Gadget
+   * Copyright (C) 2008 Aruna Publications
+   *
+   * 2008-12-27 added footer and related user pref
+  -->
+  <UserPref name="myfont" display_name="Font" default_value="Arial" datatype="enum" >
+     <EnumValue value="Arial" />
+     <EnumValue value="Arial Narrow" />
+     <EnumValue value="Book Antiqua" />
+     <EnumValue value="Calisto MT" />
+     <EnumValue value="Courier" />
+     <EnumValue value="Courier New" />
+     <EnumValue value="Garamond" />
+     <EnumValue value="Lucida Console" />
+     <EnumValue value="Pristina" />
+     <EnumValue value="Tahoma" />
+     <EnumValue value="Times New Roman" />
+     <EnumValue value="Trebuchet MS" />
+     <EnumValue value="Verdana" />
+  </UserPref> 
+
+  <UserPref name="myweight" display_name="Bold" datatype="bool" default_value="false" />
+
+  <UserPref name="mysize" display_name="Size Percentage" default_value="65" datatype="enum" >
+     <EnumValue value="5" />
+     <EnumValue value="10" />
+     <EnumValue value="20" />
+     <EnumValue value="40" />
+     <EnumValue value="45" />
+     <EnumValue value="50" />
+     <EnumValue value="55" />
+     <EnumValue value="60" />
+     <EnumValue value="65" />
+     <EnumValue value="70" />
+     <EnumValue value="75" />
+     <EnumValue value="80" />
+     <EnumValue value="85" />
+     <EnumValue value="90" />
+     <EnumValue value="100" />
+     <EnumValue value="120" />
+     <EnumValue value="140" />
+     <EnumValue value="160" />
+     <EnumValue value="180" />
+  </UserPref> 
+
+  <UserPref name="mycase" display_name="Case" default_value="normal" datatype="enum" >
+     <EnumValue value="upper" />
+     <EnumValue value="lower" />
+     <EnumValue value="normal" />
+  </UserPref> 
+
+  <UserPref name="mytitle" display_name="Title" default_value="normal" datatype="enum" >
+     <EnumValue value="normal" />
+     <EnumValue value="use verse title" />
+  </UserPref> 
+
+  <UserPref name="myfooter" display_name="Footer" default_value="normal" datatype="enum" >
+     <EnumValue value="normal" />
+     <EnumValue value="no verse info in footer" />
+  </UserPref> 
+
+  <UserPref name="counter" default_value="0" datatype="hidden"/>
+
+  <Content type="html">
+    <![CDATA[
+
+    <div id="content_div"></div>
+    <div id="debug_div" style="font-size:9pt; padding:5px; color: red;"></div>
+
+    <script type="text/javascript">
+      var debug=0; var debug_html = "";
+      var prefs = new _IG_Prefs(__MODULE_ID__);
+      var someStringPref = prefs.getString("myfont");
+      var someWeightPref = prefs.getBool("myweight");
+      var someSizePref = prefs.getInt("mysize");
+      var someCasePref = prefs.getString("mycase");
+      var someTitlePref = prefs.getString("mytitle");
+      var someFooterPref = prefs.getString("myfooter");
+
+      function print(msg) {      
+        if ( debug ) {
+          debug_html += msg;
+          _gel("debug_div").innerHTML = debug_html;
+        }
+      }
+
+      // Future use
+      function incrementCounter() {  
+         var count = prefs.getInt("counter");
+         ///alert("The count is " + count + ".");       
+         prefs.set("counter", count+1);
+      }
+
+      function changeTitle(str) {
+         _IG_SetTitle(str);
+      }
+
+      _IG_FetchContent('http://bheckel.multics.org/DHAMMAPA.txt', function (responseText) {
+         if ( someWeightPref ) {
+           var html = "<div style='padding: 5px;font-family:" + someStringPref + "; text-align:left;font-size:" + someSizePref + "%; font-weight:bold'>"; 
+         } else {
+           var html = "<div style='padding: 5px;font-family:" + someStringPref + "; text-align:left;font-size:" + someSizePref + "%; font-weight:normal'>"; 
+         }
+
+         var verses = responseText.split("\n");
+
+         var e = -1;
+         // 0 based array
+         var lowelem = 0;
+         // adjust to highest element number
+         var highelem = verses.length-2;
+         print("hi " + highelem);
+
+         while ( (e < lowelem) || (e > highelem) ) {
+           now = new Date()
+           e = Math.abs(Math.sin(now.getTime())) 
+           e = parseInt(e * (highelem+1)) 
+         }
+
+         // TODO for minimsg display
+         incrementCounter();
+         print("c " + prefs.getInt("counter"));
+
+         print("e " + e);
+
+         v = verses[e].split(/\|/);
+         print("v " + v[0] + "v2 " + v[1]);
+
+         var versebody = v[0];
+         var verseinfo = v[1];
+
+         if ( someTitlePref == 'use verse title' ) {
+           changeTitle(verseinfo);
+         }
+
+         html += versebody; 
+
+         if ( someFooterPref == 'normal' ) {
+           html += "<BR><BR>" + verseinfo; 
+         }
+
+         html += "</div>";
+
+         if ( someCasePref == 'lower' ) {
+           html = html.toLowerCase();
+         } else if ( someCasePref == 'upper' ) {
+           html = html.toUpperCase();
+         }
+
+         document.getElementById('content_div').innerHTML = html;
+
+         _IG_AdjustIFrameHeight();
+       });
+
+    </script>
+
+    <!-- Future use -->
+    <!--  <input type=button value="Count" name="count" onClick="incrementCounter()"> -->
+     ]]>
+  </Content>
+</Module>
+

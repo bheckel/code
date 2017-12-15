@@ -1,0 +1,17 @@
+total 3455
+lrwxrwxrwx 1      15 Mar 23 15:48 blink -> ../code/c/blink*
+lrwxrwxrwx 1       5 Aug  4  2010 chat -> chats*
+lrwxrwxrwx 1      34 May 21  2010 chats -> /cygdrive/u/code/misccode/chats.sh*
+lrwxrwxrwx 1      35 Apr 20  2010 check_004 -> /cygdrive/u/code/misccode/check_004*
+lrwxrwxrwx 1      35 Apr 20  2010 check_005 -> /cygdrive/u/code/misccode/check_005*
+lrwxrwxrwx 1      38 Mar 23 15:50 check_pam -> /home/rsh86800/code/misccode/check_pam*
+lrwxrwxrwx 1      32 Mar 23 15:52 doi -> /home/rsh86800/code/misccode/doi*
+lrwxrwxrwx 1      32 Mar 23 15:52 doo -> /home/rsh86800/code/misccode/doo*
+lrwxrwxrwx 1      37 Mar 18 09:13 dpcfg -> /home/rsh86800/code/misccode/dpcfg.sh*
+lrwxrwxrwx 1      38 Apr 20  2010 gsk -> /cygdrive/u/code/misccode/gsk_check.sh*
+lrwxrwxrwx 1      48 Mar 23 15:51 hide_to_taskbar.exe -> /home/rsh86800/code/misccode/hide_to_taskbar.exe*
+-rwxrwxrwx 1 3520552 Aug  6  2008 procexp.exe*
+lrwxrwxrwx 1      35 Apr 27  2010 sasrun -> /home/rsh86800/code/misccode/sasrun*
+lrwxrwxrwx 1      47 Dec  8 13:57 uls -> /home/rsh86800/code/sas/ultimate_log_scanner.sh*
+lrwxrwxrwx 1      21 Apr 22  2010 vscp -> ../code/misccode/vscp
+lrwxrwxrwx 1      43 Mar 23 15:55 wantsampid -> /home/rsh86800/code/misccode/wantsampid.sql*

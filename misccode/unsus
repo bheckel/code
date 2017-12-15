@@ -1,0 +1,61 @@
+#!/bin/sh
+# 
+# Solaris 8 includes some re-write of the "clock/timer" code (this
+# explains why I had no problem with bios suspend mode in solaris 7).
+# On intel pentium systems, the new clock/timer code makes use of the
+# pentium time stamp counter (TSC) register.  To convert from time
+# intervals measured in (fractions of) seconds to a number of TSC based
+# clock cycles, solaris 8 uses "tsc_hz", a value computed as the
+# "average number of TSC increments per second", using the formula
+# 
+#  tsc_hz = (tsc_last - tsc_first) / tsc_seconds;
+# 
+# Where:
+# tsc_first:
+#  initial value found in the TSC register when the clock/
+#  timer code is initialized
+# tsc_last:
+#  the current (or last) value read from the TSC register
+# tsc_seconds:
+#  incremented once every second;  the "one second" timing is
+#  derived from the pc's timer interrupt HW (IRQ#0).
+#  Initially contains 0, at that time tsc_first is
+#  initialized.
+# tsc_hz:
+#  computed average number of TSC increments per second
+#  (Basically the cpu's clock frequency)
+#  recomputed at the same time tsc_seconds is incremented
+# 
+# 
+# Now the problem with this ASUS P2B/Pentium II system is, that during
+# suspend mode the CPU still executes clock cycles (CPU's TSC register
+# keeps incrementing) but at the same time the interrupt timer HW stops
+# generating IRQ#0 [*] (that is, kernel variable tsc_seconds is not
+# incremented during suspend mode)!
+# 
+# The result is an inflated value for tsc_hz after the system wakes up
+# from a long suspend mode period, and this messes up the timing for
+# timer events in the kernel.
+# 
+# [*] CPU instruction execution speed seems to drop to 0 in suspend
+#     mode, too.  So, maybe the pc timer hw is still sending IRQ#0s,
+#     but the CPU cannot serve ("count") these interrupts in suspend
+#     mode.
+# 
+# 
+# 
+# I was *not* able to observe this effect on an older ASUS T2P4 system: On
+# that system
+# - the TSC register was increment during suspend mode
+# - tsc_seconds was increment during suspend mode, too (pc timer HW
+#   generates IRQ#0 during suspend mode!)
+# - CPU instruction execution speed was decreased by a factor of 2 (or
+#   was it 4?) in suspend mode
+# 
+# 
+# WORKAROUND: Disable BIOS suspend mode.  Or use the following adb hack
+# to reset the clock/timer code after a long suspend period.  After
+# applying the patch, timer related system calls immediatelly start
+# delaying for the correct amount of time.
+
+echo 'tsc_seconds/W 0 0' | adb -wk

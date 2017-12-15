@@ -1,0 +1,30 @@
+
+export EDITOR=vi
+export HISTFILESIZE=1000000
+###export PATH=$PATH:/usr/local/bin
+export PATH=/u/bqh0/bin:$PATH:/tools/bin:/usr/local/bin
+export PS1=`echo "$LOGNAME@CDCJES2$ " | tr A-Z a-z `
+
+alias be="vi $HOME/.profile"
+alias bye=exit
+alias cdt='cd ~/tmp/testing'
+alias f=fg
+alias l='ls -F'
+alias ls='ls -F'
+alias la='ls -aF'
+alias ll='ls -lF'
+alias lt='ls -ltF | head -n20'     # latest twenty
+alias m=more
+alias ve="vi $HOME/.vimrc"
+alias vi=vim
+alias h='history | tail -n10'
+
+umask 022
+
+set -o vi
+
+###stty erase ^H intr ^C
+
+###tcsh
+bash
+exit

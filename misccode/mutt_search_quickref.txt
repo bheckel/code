@@ -1,0 +1,64 @@
+¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø#
+¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø#
+
+ l foo       <--- case insensitive searching via mutt's "limit" command
+ l ~s mysubj
+ l .         <---remove the last limit
+ l ~p ~U     <---can combine for e.g. messages to you that you haven't read yet
+
+¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø#
+¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø#
+
+ ~A              all messages
+ ~b EXPR         messages which contain EXPR in the message body
+ ~B EXPR         messages which contain EXPR in the whole message
+ ~c USER         messages carbon-copied to USER
+ ~C EXPR         message is either to: or cc: EXPR
+ ~D              deleted messages
+ ~d [MIN]-[MAX]  messages with ``date-sent'' in a Date range
+ ~E              expired messages
+ ~e EXPR         message which contains EXPR in the ``Sender'' field
+ ~F              flagged messages
+ ~f USER         messages originating from USER (can use partial name)
+ ~g              PGP signed messages
+ ~G              PGP encrypted messages
+ ~h EXPR         messages which contain EXPR in the message header
+ ~k              message contains PGP key material
+ ~i ID           message which match ID in the ``Message-ID'' field
+ ~L EXPR         message is either originated or received by EXPR
+ ~l              message is addressed to a known mailing list
+ ~m [MIN]-[MAX]  message in the range MIN to MAX *)
+ ~n [MIN]-[MAX]  messages with a score in the range MIN to MAX *)
+ ~N              new messages
+ ~O              old messages
+ ~p              message is addressed to you (consults $alternates)
+ ~P              message is from you (consults $alternates)
+ ~Q              messages which have been replied to
+ ~R              read messages
+ ~r [MIN]-[MAX]  messages with ``date-received'' in a Date range
+ ~S              superseded messages
+ ~s SUBJECT      messages having SUBJECT in the ``Subject'' field.
+ ~T              tagged messages
+ ~t USER         messages addressed to USER
+ ~U              unread messages
+ ~v              message is part of a collapsed thread.
+ ~x EXPR         messages which contain EXPR in the `References' field
+ ~z [MIN]-[MAX]  messages with a size in the range MIN to MAX *)
+
+!(~f slhecke)    messages NOT from slheckel@hotmeal.com
+# Mutt body search (~B for entire message search):
+~b findme
+# Mutt date range search:
+~d 20/1/95-31/10
+# Mutt date specific date search:
+~d 20/1/95
+# Mutt date range after this date search:
+~d 20/1/95-
+# Mutt date range before this date search:
+~d -31/10/95
+# Mutt date range less than one month old search:
+~d <1m
+# Delete all email in a mutt folder:
+T .*
+d
+

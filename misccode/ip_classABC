@@ -1,0 +1,261 @@
+Created: Fri, 12 Jan 2001 13:48:08 (Bob Heckel)
+Modified: Thu 12 Jun 2003 09:14:41 (Bob Heckel)
+
+
+Four bytes (a.k.a. octets) i.e. 32 bits available in each IP Address.
+0.0.0.0   <---"dotted quad" notation
+2^32 gives around 4 billion potential addresses.
+
+Technically, an IP address refers to the machine's *interface card* (e.g. eth0
+has address 158.111.2.21), not the box itself.  If you have more than one card
+(e.g. a gateway machine with a /dev/fddi), you can have more than one IP
+address.
+
+
+In each layer, the information units are given different names:
+Application --> Message
+Transport   --> Segment
+Network     --> Datagram
+Data Link   --> Frame (also called packet)
+Physical    --> Bit
+
+
+Restrictions:
+  0, as used in the network number, is reserved for machines that don't know
+their address.
+  255 is reserved for broadcast.  E.g. 128.6.4.255 broadcasts to all machines 
+on network 128.6.4 (could also use 255.255.255.255).
+  127.0.0.0 is reserved as the loopback interface.
+
+
+-----
+Summary of IP Address Ranges:
+Class            Addresses               Netmask
+A     0.x.x.x to 126.x.x.x
+B   128.0.x.x to 191.255.x.x
+C   192.0.0.x to 223.255.255.x
+D   224.0.0.1 to 239.255.255.255
+E   240.x.x.x to 255.255.255.255
+
+Summary of IP Address Ranges Reserved for "Private" Use:
+Class            Addresses               Netmask
+A     10.0.0.0 to  10.255.255.255     255.0.0.0
+B   172.16.0.0 to  172.31.255.255     255.255.0.0
+C  192.168.0.0 to 192.168.255.255     255.255.255.0
+-----
+
+
+                                                              Therefore
+                 xxx                      ---               Host Addresses 
+Class   Range of Network Numbers  Range of Host Numbers   per Network Address
+=====   ========================  ===================== =======================
+A       1 to 126 (0,127 reserved) 0.0.0 to 255.255.254   2^24-2 or 16,777,214
+                                                                    
+0xxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx  binary
+NNNNNNNN HHHHHHHH HHHHHHHH HHHHHHHH  network vs. host
+11111111 00000000 00000000 00000000  default subnet mask
+
+
+B       128.1 to 191.254          0.0 to 255.254         2^16-2 or 65,534
+                                                                    
+10xxxxxx xxxxxxxx xxxxxxxx xxxxxxxx  binary
+NNNNNNNN NNNNNNNN HHHHHHHH HHHHHHHH  network vs. host
+11111111 11111111 00000000 00000000  default subnet mask
+
+
+C       192.0.1 to 223.255.254    0 to 254               2^8-2  or 254 
+                                                                    
+110xxxxx xxxxxxxx xxxxxxxx xxxxxxxx  binary
+NNNNNNNN NNNNNNNN NNNNNNNN HHHHHHHH  network vs. host
+11111111 11111111 11111111 00000000  default subnet mask
+
+
+D       224.0.0 to 239.255.254    0 to 254               2^8-2  or 254
+                                                                    
+
+
+E       240.0.0 to 240.255.254    0 to 254               2^8-2  or 254
+         (experimental)                                           
+                                                                 
+
+
+SUBNETTING
+==========
+Setting a subnet mask is a matter of determining where the network address
+ends and the host address begins. 
+
+The subnet mask contains all 1s in the network field and 0s in the host field.
+
+----
+E.g.
+The campus network of Groucho Marx University has a class B network number of
+149.76.0.0, and its netmask is therefore 255.255.0.0
+
+Internally, GMU's campus network consists of several smaller networks, such
+various departments' LANs. So the range of IP addresses is broken up into 254
+subnets, 149.76.1.0 through 149.76.254.0. For example, the department of
+Physics has been assigned 149.76.12.0. The campus backbone is a network in its
+own right, and is given 149.76.1.0. These subnets share the same IP network
+number, while the third octet is used to distinguish between them.
+
+Thus, their network administrator has chosen to use a subnet mask of
+255.255.255.0 instead of accepting the subnet-less 255.255.0.0 approach (for
+class B's).  
+
+This structure affects only the network's internal behavior, and is completely
+invisible to the outside world.
+----
+
+255 decimal is 1111 1111 binary.
+Subnet mask (netmask) is always 32 bits.
+Mask uses 1 bits for network, 0 bits for host
+
+
+                                        0, 127 reserved
+Network portion for A is is 0.0.0 (2^24-2 or 16,777,214)
+Netmask for A 255.0.0.0 (Nortel was 255.255.240.0)
+or             11111111.00000000.00000000.00000000
+
+                                      0, 127 reserved
+Network portion for B is is 0.0 (2^16-2 or 65,534)
+Netmask for B 255.255.0.0
+or             11111111.11111111.00000000.00000000
+
+                                   0, 127 reserved
+Network portion for C is is 0 (2^8-2 or 254)
+Netmask for C 255.255.255.0
+or             11111111.11111111.11111111.00000000
+
+
+
+E.g. Do a logical AND on Class B address 191.70.55.130 and mask 255.255.0.0,
+retaining the default 16 network and 16 host bits.  Think opaque for "0".
+
+1011 1111   1000 0110   0011 0111   1000 0010
+1111 1111   1111 1111   0000 0000   0000 0000
+_____________________________________________
+1011 1111   1000 0110   0000 0000   0000 0000
+                        ^^^^ ^^^^   ^^^^ ^^^^
+                        2^16-2=65534 as expected (and mentioned above)
+
+
+Now try subnet mask 255.255.192.0
+1011 1111   1000 0110   0011 0111   1000 0010
+                        ***192***
+1111 1111   1111 1111   1100 0000   0000 0000
+_____________________________________________
+1011 1111   1000 0110   0000 0000   0000 0000
+                          ^^ ^^^^   ^^^^ ^^^^
+                              2^14-2=16382
+                        ^^
+                        So these two bits allow for 2^2-2 subnets.
+
+
+192 = 1100 0000
+224 = 1110 0000
+240 = 1111 0000
+and so on
+
+Class B Subnetting: 
+# Mask Bits   Subnet Mask          # Subnets        # Hosts
+===========   ===========          =========        =======
+2             255.255.192.0        2 (2^2-2)        16382 (2^14-2)
+3             255.255.224.0        6 (2^3-2)        8190 (2^13-2)
+4             255.255.240.0        14 (2^4-2)       4094 (2^12-2)
+5             255.255.248.0        30               2046
+6             255.255.252.0        62               1022
+7             255.255.254.0        126              510
+8             255.255.255.0        254              254
+9             255.255.255.128      510              126
+10            255.255.255.192      1022             62
+11            255.255.255.224      2046             30
+12            255.255.255.240      4094             14
+13            255.255.255.248      8190             6
+14            255.255.255.252      16382            2
+
+Class C Subnetting: 
+# Mask Bits   Subnet Mask          # Subnets        # Hosts
+===========   ===========          =========        =======
+2             255.255.255.192      2                62
+3             255.255.255.224      6                30
+4             255.255.255.240      14               14
+5             255.255.255.248      30               6
+6             255.255.255.252      62               2
+
+
+
+===================
+To convert a decimal number to a binary octet, follow these steps: 
+
+Compare the decimal number (e.g. 207) to the number 128. If the decimal number
+is greater than or equal to 128, subtract 128, otherwise, subtract 0 to create
+a new decimal number. 
+
+Is 207 >= 128
+  Answer = Yes
+  207 - 128 = 79
+
+Take the result from step 2 (in this case 79) and compare it to the number 64.
+If the decimal number is greater than or equal to 64, subtract 64; otherwise,
+subtract 0 to create a new decimal number. 
+
+Is 79 >= 64
+  Answer = Yes
+  79 - 64 = 15
+ 
+Take the result from step 3 (in this case 15) and compare it to the number 32.
+If the decimal number is greater than or equal to 32, subtract 32; otherwise,
+subtract 0 to create a new decimal number. 
+
+Is 15 >= 32
+  Answer = No
+  15 - 0 = 15
+
+Compare the result from step 4 to each successively smaller power of 2 (as you
+have been doing so far). If the answer in the comparison is Yes, subtract the
+power of 2; if the answer is No, subtract 0. 
+
+Is 15 >= 16
+  Answer = No
+  15 - 0 = 15
+ 
+Is 15 >= 8
+  Answer = Yes
+  15 - 8 = 7
+ 
+Is 7 >= 4
+  Answer = Yes
+  7 - 4 = 3 
+ 
+Is 3 >= 2
+  Answer = Yes
+  3 - 2 = 1
+ 
+Is 1 >= 1
+  Answer = Yes
+  1 - 1 = 0
+
+Write down Y for Yes and N for No to create a pattern of eight Ys and Ns that
+match the eight comparisons you performed. 
+
+YYNNYYYY 
+
+Convert each Y to a 1 and each N to a 0. 
+
+11001111 
+
+
+
+Routing:
+Due to the structure of IP addressing, hosts can only communicate with other
+hosts on the same network. To overcome this limitation, we add routing and
+gateways to the networking equation. 
+
+Routing is the mechanism that determines the path a packet takes from its
+source to its destination. 
+
+This path, or route, is established by looking up the destination IP address
+in a routing table. If the address is found, the packets are delivered to the
+network; if the address is not found, the packets are forwarded to an entry
+termed the default route, which is the IP where all addresses "unknown" to
+that machine or device are forwarded.

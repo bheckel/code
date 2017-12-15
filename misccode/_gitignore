@@ -1,0 +1,13 @@
+.gitignore
+_misc/*
+data/*
+*.swp
+*.swo
+*.bak
+*.bak2
+*.lst
+_*.xml
+# except for this xml
+!_foo.xml
+# ignore objects and archives
+*.[oa]

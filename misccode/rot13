@@ -1,0 +1,21 @@
+#!/bin/sh
+##############################################################################
+#     Name: rot13
+#
+#  Summary: Classic rot13 algorithm, encryption that might fool a 3-year old.
+#
+#           Use same command twice to decode.
+#
+#           Usage: ./rot13.sh filename
+#              or: ./rot13.sh < filename
+#              or: ./rot13.sh and supply keyboard input (stdin)
+#
+# Adapted: Wed 12 Sep 2001 14:31:07 (Bob Heckel--
+#                        http://www.linuxdoc.org/LDP/abs/html/internal.html)
+##############################################################################
+
+# The 'cat "$@"' construction permits getting input either from stdin or from
+# files.
+cat "$@" | tr 'a-zA-Z' 'n-za-mN-ZA-M'   # "a" goes to "n", "b" to "o", etc.
+
+exit 0

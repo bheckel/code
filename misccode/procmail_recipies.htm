@@ -1,0 +1,4183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <TITLE>Timo's procmail tips and recipes</TITLE>
+   <META NAME="Description"  CONTENT="procmail tips and recipes">
+   <META NAME="Robots"       CONTENT="index, follow">
+   <META NAME="Author"       CONTENT="Timo Salmi">
+   <META NAME="Owner"        CONTENT="Timo Salmi">
+   <META NAME="Distribution" CONTENT="global">
+   <META NAME="Keywords"     CONTENT="procmail, email filtering, filtering, recipes">
+   <META NAME="Copyright"    CONTENT="Copyright (c) 1999-2001 by Prof. Timo Salmi">
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+
+<!-- Other colors used: orange        #E69900
+                        light green   #00CC00
+                        dark green    #008080
+                        red           #FF0000
+                        Faded Yellow  #FFFFCC
+                        Faded Blue    #CCFFFF
+-->
+
+<TABLE BORDER=0>
+  <TR>
+    <TD VALIGN=bottom>
+      <A HREF="../index.html"><IMG SRC="../gifst/tsalmi1.gif" WIDTH="141" HEIGHT="71"
+      ALT="Prof. Timo Salmi, Department of Accounting and Finance, University of Vaasa, Finland"></A>
+    </TD>
+    <TD VALIGN=top>
+      <FONT SIZE="-1">&lt;http://www.uwasa.fi/~ts/info/proctips.html&gt;</FONT><BR>
+      <FONT SIZE="-1">Copyright &copy; 1999-2001 by Prof. Timo Salmi</FONT><BR>
+      <FONT SIZE="-1">Last modified Mon 19-Nov-2001 08:04:24
+      </FONT><BR>
+    </TD>
+    <TD VALIGN=bottom>
+      <A HREF="../guestbk.html">
+      <IMG SRC="../gifst/tsgstbk.gif" WIDTH="89" HEIGHT="33"
+       ALT="Sign guestbook"></A>
+    </TD>
+  </TR>
+</TABLE>
+
+<HR>
+
+Visits to this page (with images on) since Oct 7 1999:
+<IMG SRC="../../cgi-bin/Count.cgi?ft=9|frgb=69;139;50|tr=0|trgb=0;0;0|wxh=15;20|md=6|dd=A|st=1|sh=1|df=TimoSalmiProctips.dat"
+ALIGN="middle" WIDTH="108" HEIGHT="38" ALT="(Visits counter image)">
+<!-- Turned off for the moment -->
+
+
+<HR>
+
+<CENTER>
+<TABLE BORDER="1" BGCOLOR="#CCFFFF" WIDTH="100%"><TR><TD>
+<CENTER>
+<H1>
+<IMG SRC="../gifsb/tsalmi34.gif" WIDTH="34" HEIGHT="34" ALT="Timo Salmi"><BR>
+<IMG SRC="../gifst2/tspcmlg.gif" WIDTH="59" HEIGHT="44" ALT="">
+<FONT COLOR="#E69900">Timo's procmail tips and recipes
+</FONT></H1>
+</CENTER>
+</TD></TR></TABLE>
+</CENTER>
+
+<P>
+
+Although there already is an abundance of <A
+HREF="../http/http2.html#procmail">procmail material</A> on the net,
+here are some of my own tips and observations. This tips page is a
+companion of my <A HREF="spamfoil.html">Foiling Spam with an Email
+Password System</A> page. The items on this page are in no
+particular order.<P>
+
+<OL>
+
+<LI><A HREF="#start">I want to filter my email automatically. How do
+I get started with procmail?</A>
+
+<LI><A HREF="#testbench">Building a testbench. How can I test
+individual procmail recipes?</A>
+
+<LI><A HREF="#orrules">I know how to make "and" rules in procmail
+recipes, but how do I make "or" rules?</A>
+
+<LI><A HREF="#multcom">How can one perform multiple shell commands
+on the action line?</A>
+
+<LI><A HREF="#subject">How can I find out what the subject of a
+posting is?</A>
+
+<LI><A HREF="#headers">How do I get a copy of the headers of all the
+incoming email into a separate file?</A>
+
+<LI><A HREF="#spam">Would you give some further hints for spam
+foiling recipes?</A>
+
+<LI><A HREF="#truncate">I have limited disk space. How can I
+truncate long messages?</A>
+
+<LI><A HREF="#regexptest">How can I quickly test if my rules with
+regular expressions match?</A>
+
+<LI><A HREF="#domain">How can I detect if the email comes, say, from
+the .com domain?</A>
+
+<LI><A HREF="#from">What alternatives do I have to detect a sender
+all through the various header-fields?</A>
+
+<LI><A HREF="#replyto">How can I extract a valid address from the
+Reply-To field?</A>
+
+<LI><A HREF="#postmaster">How can I extract the address of the
+sender's postmaster?</A>
+
+<LI><A HREF="#weedto">How can I weed out an inordinately long
+recipient list?</A>
+
+<LI><A HREF="#scoring">What is this procmail scoring? How can I
+utilize it?</A>
+
+<LI><A HREF="#nosubj">How can I test if the subject is empty or if
+the subject field is missing altogether?</A>
+
+<LI><A HREF="#tofield">How can I modify the "To:" field of the email
+I received?</A>
+
+<LI><A HREF="#flist">I have a long list of spammers in a separate
+file. How can I utilize it?</A>
+
+<LI><A HREF="#forward">How do I forward certain messages that I get,
+and preserve myself a copy?</A>
+
+<LI><A HREF="#fwdtwo">How do I forward certain messages to two
+different addresses?</A>
+
+<LI><A HREF="#reject">How do I automatically return certain email
+messages?</A>
+
+<LI><A HREF="#newaddr">My address has changed. How do I forward a
+copy to myself and tell the sender?</A>
+
+<LI><A HREF="#setvar">How can I set variable values based on the
+text in the body of the email message?</A>
+
+<LI><A HREF="#insert">How can I insert some token text in front of
+the body of incoming email?</A>
+
+<LI><A HREF="#regexptips">Do you have any useful tips for regular
+expression matching?</A>
+
+<LI><A HREF="#twovar">How can I test if two procmail variables have
+the same contents?</A>
+
+<LI><A HREF="#lessthan">I am having difficulties with "&lt;". How
+does one match it?</A>
+
+<LI><A HREF="#subjid">How can I insert identification text to the
+beginning of the subject line?</A>
+
+<LI><A HREF="#fail">I tried out your tips, but some of them failed
+on my system. What next?</A>
+
+<LI><A HREF="#echo">Is there a cure for the echo and grep blues?</A>
+
+<LI><A HREF="#which">How do I know which of my many procmail recipes
+has been enacted?</A>
+
+<LI><A HREF="#korean">How can I detect Korean, Cyrillic, or Chinese
+to avoid such frequent spam?</A>
+
+<LI><A HREF="#body">How can I change the subject line and include
+part of the message body into it?</A>
+
+<LI><A HREF="#delsig">How can I remove the signature from the
+incoming email?</A>
+
+<LI><A HREF="#manuals">What unix manuals relating to procmail should
+I get?</A>
+
+<LI><A HREF="#vacation">Is it possible to use procmail to call the
+vacation program?</A>
+
+<LI><A HREF="#help">Could you please solve for me this procmail
+problem of mine?</A>
+
+<LI><A HREF="#more">I liked this material. Do you have anything else
+on programming?</A>
+
+<LI><A HREF="#exercise">Exercises</A>
+
+<LI><A HREF="#ackn">Acknowledgements for useful advice and/or
+feedback</A>
+
+</OL>
+
+<HR>
+
+<A NAME="start">
+<IMG SRC="../gifst/tsroad.gif" WIDTH="52" HEIGHT="33" ALT=""></A>
+<I>I want to filter my email automatically. How do I get started
+with procmail?</I><P>
+
+Unix email can conveniently be preprocessed with automatic filters
+such as procmail, the "Autonomous mail processor". This item repeats
+what already is presented about getting started in many of the other
+FAQs, including <A HREF="spamfoil.html#setup">mine on
+spamfoiling</A>. Nevertheless, this is so crucial that I'll try to
+give the essential outline also here.<P>
+
+Find out what your email directory is. Go ("<FONT
+COLOR="#00CC00"><B>cd</B></FONT>") to the directory where your email
+folders are located and type "<FONT
+COLOR="#00CC00"><B>pwd</B></FONT>". Assume in this item that you get
+"<FONT COLOR="#008080"><B>/home/myid/Mail</B></FONT>". Further
+assume in the example that "/home/myid" is your home directory so
+that you can use the variable "<FONT
+COLOR="#008080"><B>${HOME}</B></FONT>" to denote it.<P>
+
+Find out where your system's Bourne shell is located by typing
+"<FONT COLOR="#00CC00"><B>which&nbsp;sh</B></FONT>". Assume that you
+get "<FONT COLOR="#008080"><B>/usr/bin/sh</B></FONT>".<P>
+
+Prepare a "<FONT COLOR="#E69900"><B>~/.procmailrc</B></FONT>" file
+with a suitable editor. For example you might use "<FONT
+COLOR="#00CC00"><B>emacs&nbsp;~/.procmailrc</B></FONT>". To start
+with, put something like this into the ~/.procmailrc file:
+
+<PRE>
+#Preliminaries
+SHELL=/usr/bin/sh               #Use the Bourne shell (check your path!)
+MAILDIR=${HOME}/Mail            #First check what your mail directory is!
+LOGFILE=${MAILDIR}/procmail.log
+LOG="--- Logging ${LOGFILE} for ${LOGNAME}, "
+
+#Whatever recipes you'll use
+#The order of the recipes is significant
+:0
+* ^From: scam@cyberspam\.com
+/dev/null
+
+# Accept all the rest to your default mailbox
+:0:
+${DEFAULT}
+</PRE>
+
+For the "~/.procmailrc" file a read permission for the user
+him/herself will be sufficient. To ensure, give the command "<FONT
+COLOR="#00CC00"><B>chmod&nbsp;u+r&nbsp;~/.procmailrc</B></FONT>".<P>
+
+Find out where the "<FONT COLOR="#E69900"><B>procmail</B></FONT>"
+program is located on your system by typing "<FONT
+COLOR="#00CC00"><B>which&nbsp;procmail</B></FONT>". Assume below
+that you get "<FONT
+COLOR="#008080"><B>/usr/local/bin/procmail</B></FONT>". Also check
+what your id is: "<FONT COLOR="#00CC00"><B>whoami</B></FONT>".
+Assume that you get "<FONT COLOR="#008080"><B>myid</B></FONT>".<P>
+
+Next comes the crucial step. Put the following line in your "<FONT
+COLOR="#E69900"><B>~/.forward</B></FONT>" file. Include the quotes
+(") into the ~/.forward file contents.
+
+<PRE>
+"|IFS=' ' && exec /usr/local/bin/procmail || exit 75 #myid"
+</PRE>
+
+Set adequate permissions for accessing the "~/.forward" file: "<FONT
+COLOR="#00CC00"><B>chmod&nbsp;644&nbsp;~/.forward</B></FONT>".
+Lastly, check ("<FONT
+COLOR="#00CC00"><B>ls&nbsp;-lFd&nbsp;~/</B></FONT>") that your main
+directory permissions are at least (the equivalent of) "<FONT
+COLOR="#008080"><B>drwx--s--x</B></FONT>". If not, "<FONT
+COLOR="#00CC00"><B>chmod&nbsp;u+rwx&nbsp;~/</B></FONT>" and "<FONT
+COLOR="#00CC00"><B>chmod&nbsp;og+x&nbsp;~/</B></FONT>".<P>
+
+You should now be set to go. To check, send an email to yourself to
+see if it gets through. If there is a problem see the <A
+HREF="#fail">advice on troubleshooting</A>.
+
+
+<HR>
+
+<A NAME="testbench">
+<IMG SRC="../gifst/tsbinar1.gif" WIDTH="24" HEIGHT="27" ALT=""></A>
+<I>How can I test individual procmail recipes? I do not wish to
+disturb my regular ~/.procmailrc recipes file in the process.</I><P>
+
+There are several options. One method is building a simple test
+environment as follows. It is a very convenient method. If you apply
+it right, it allows the testing without affecting your normal flow
+of email in any way. Create the following "<FONT
+COLOR="#E69900"><B>proctest</B></FONT>" file, preferably at your
+path. Make it executable using "<FONT
+COLOR="#00CC00"><B>chmod&nbsp;u+x&nbsp;proctest</B></FONT>". Thus
+you'll have a new command "<FONT
+COLOR="#00CC00"><B>proctest</B></FONT>" available.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#The executable file named "proctest"<BR>
+#!/bin/sh<BR>
+#<BR>
+# You need a test directory.<BR>
+TESTDIR=/home/myid/test/<BR>
+if [ ! -d ${TESTDIR} ] ; then<BR>
+  &nbsp;&nbsp;echo "Directory ${TESTDIR} does not exist; First create it"<BR>
+  &nbsp;&nbsp;exit 0<BR>
+fi<BR>
+#<BR>
+#Feed an email message to procmail. Apply proctest.rc recipes file.<BR>
+#First prepare a mail.msg email file which you wish to use for the<BR>
+#testing.<BR>
+procmail ${TESTDIR}/proctest.rc &lt; mail.msg<BR>
+#<BR>
+#Show the results.<BR>
+less ${TESTDIR}/Proctest.log<BR>
+clear<BR>
+less ${TESTDIR}/Proctest.mail<BR>
+#<BR>
+#Clean up.<BR>
+rm -i ${TESTDIR}/Proctest.log<BR>
+rm -i ${TESTDIR}/Proctest.mail<BR>
+</FONT>
+<P>
+
+The beauty of this method is that besides "<FONT
+COLOR="#E69900"><B>proctest.rc</B></FONT>" you can easily edit also
+"<FONT COLOR="#E69900"><B>mail.msg</B></FONT>" for testing different
+kinds of incoming mail and the behavior of your recipes in various
+situations. Note, however, that it is best to test only for <B>one
+email message at a time</B>. In other words, do not put more than
+one email message into the mail.msg test file.<P>
+
+A question remains. Where does one get the structure of a posting
+for the "mail.msg" test posting? Easy. Invoke <FONT
+COLOR="#00CC00"><B>elm</B></FONT>, select a suitable, existing
+posting, and make a copy of it to "mail.msg" by pressing C (capital
+C) and reply mail.msg to "Copy message to:". Other mail programs
+probably have similar options.<P>
+
+Below is the proctest.rc recipe file which I used in preparing for
+this item:
+
+<PRE>
+SHELL=/bin/sh
+TESTDIR=/home/myid/test
+MAILDIR=${TESTDIR}
+LOGFILE=${TESTDIR}/Proctest.log
+LOG="--- Logging for ${LOGNAME}, "
+
+#Troubleshooting:
+VERBOSE=yes
+LOGABSTRACT=all
+
+#Let's test stripping lines from the email message's header
+:0 fwh
+| egrep -vi "(^Content-|^MIME-Version:.)"
+
+#If it is from myself, store the email message
+:0:
+* $ ^From:.*${LOGNAME}
+${TESTDIR}/Proctest.mail
+
+#Otherwise, discard the email message
+:0
+/dev/null
+</PRE>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+<I>The header stripping does not work if any of those header lines
+is continued. It is almost always an error to use grep/egrep/fgrep
+when filtering a message header. A better recipe would be the
+following, utilizing formail:</I><P>
+
+<PRE>
+#Let's test stripping lines from the email message's header,
+#but only when they're there
+:0 fwh
+* ^(Mime-Version:|Content-)
+| formail -IMime-Version: -IContent-
+</PRE>
+
+To continue myself. The flags are as follows: "f" use the pipe as a
+filter, "w" execute before proceeding, "h" it is about the header of
+the email message.<P>
+
+The formail -I switch means that if the field is found it is to be
+replaced with a similar field with and "Old-" prefix, provided that
+the field is not empty (if it is empty the field is removed).
+
+
+<HR>
+
+<A NAME="orrules">
+<IMG SRC="../gifst/tsruler.gif" WIDTH="45" HEIGHT="13" ALT=""></A>
+<I>I know how to make "and" rules in procmail recipes, but how do I make
+"or" rules? </I><P>
+
+Just in case, let's first revisit an "and" rule by a common example:<P>
+
+<PRE>
+#Trivial catching of potential spam towards the end of a ~/.procmailrc
+#Place only after accepting all the mailing lists you want to receive
+:0:
+* ! ^TO_ts@([-a-z0-9_]+\.)*uwasa\.fi
+* ! ^TO_timo\.salmi
+${HOME}/.mail/PotentialSpam.mail
+</PRE>
+
+For entering an "or" rule, consider the following example:
+
+<PRE>
+#Accept email from Era Eriksson, the author of the major procmail FAQ
+:0:
+* ^From:.*reriksso@([-a-z0-9_]+\.)*helsinki\.fi|\
+  ^From:.*era@iki\.fi
+${DEFAULT}
+</PRE>
+
+Let's look at a few details:
+
+<UL>
+
+<LI>The "^TO_" in the first recipe is a procmail reserved predefined
+special expression "which should catch all destination
+specifications containing a specific address." It must be written in
+upper case.<P>
+
+<LI>The "!" in the first recipe is the familiar operator indicating
+a negation.<P>
+
+<LI>If "${HOME}/.mail" is your mail directory you don't need to
+spell out the entire path "${HOME}/.mail/PotentialSpam.mail". Just
+"PotentialSpam.mail" will be sufficient.<P>
+
+<LI>The first detail of the "or" example is complicated and is per
+se unrelated to the "or" issue at hand. The "([-a-z0-9_]+\.)*"
+expression in "reriksso@([-a-z0-9_]+\.)*helsinki\.fi" sees to it
+that if Era has several machines in his domain (as I do under mine),
+all will be matched by the recipe. The "[-a-z0-9_]" matches any of
+the characters within the brackets "[]", the trailing "+" tells that
+there must be at least one repeat of those characters, the "\."
+matches a dot, and the "*" tells that there has to be zero or more
+repeats if the preceding expression within the parentheses "()".
+[This item owes heavily to Era's friendly guidance.]<P>
+
+<LI>The backslash "\" in "helsinki\.fi" sees to it that the the
+actual dot (.) is matched. This is because if the "quote next
+character" "\" is omitted, the "." is taken as a regular expression
+matching any (exactly one) character.<P>
+
+<LI>The "|" in the "|\" indicates an "or" condition, and the "\"
+quotes the embedded end of line, i.e. tells that the rule is
+continued on the next line.<P>
+
+<LI>The "|" or condition sees to it that the recipe matches email
+coming from Era either from the "helsinki.fi" or the "iki.fi"
+domain.<P>
+
+<LI>The "${DEFAULT}" puts the email in the regular mailbox.<P>
+
+<LI>The trailing ":" in the recipe start line ":0:" tells procmail
+to use temporary file locking to avoid writing simultaneously
+arriving potential email on top of each other at your "${DEFAULT}"
+mailbox. Since no lock file name is given after the ":0:", procmail
+will provide the lockfile name. Always use this format when
+delivering to a mail folder, unless the target folder is /dev/null.
+That is, unless you want the email is discarded.<P>
+
+</UL>
+
+There are alternatives. <A HREF="#scoring">Scoring</A> could be used
+for the same purpose
+
+<PRE>
+:0:
+* 1^0 ^From:.*reriksso@([-a-z0-9_]+\.)*helsinki\.fi
+* 1^0 ^From:.*era@iki\.fi
+${DEFAULT}
+</PRE>
+
+
+Likewise, you could alternatively use ( ) grouping
+
+<PRE>
+:0:
+* ^From:.*(\
+reriksso@([-a-z0-9_]+\.)*helsinki\.fi|\
+era@iki\.fi)
+${DEFAULT}
+</PRE>
+
+
+<HR>
+
+<A NAME="multcom">
+<IMG SRC="../gifst/tsmenu3.gif" WIDTH="54" HEIGHT="30" ALT=""></A>
+<I>How can one perform multiple shell commands on the action
+line?</I><P>
+
+See the action line below (i.e. the one starting with the "|" pipe).
+Separate the commands with "&amp;&amp;". If you wish to continue on
+a second line for readability, apply "\" Alternatively, just one
+long line could have been used. The recipe below is from a test with
+the <A HREF="#testbench">testbench</A>, so it's purpose is just to
+show this method of giving multiple commands.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Test if the message has a "Subject:" header and has a subject in it<BR>
+#(The brackets [] contain a space and a tab)<BR>
+:0:${TESTDIR}/Proctest.mail.lock<BR>
+* ^Subject:<BR>
+* ^Subject:[  ]*\/[^  ].*<BR>
+| echo "A ^Subject: header found with" &gt;&gt; ${TESTDIR}/Proctest.mail &amp;&amp;\<BR>
+&nbsp;&nbsp;echo "${MATCH}" &gt;&gt; ${TESTDIR}/Proctest.mail<BR>
+</FONT>
+<P>
+
+Likewise, a single command can be subdivided for easier
+documentation:<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+| echo "A ^Subject: header found but there is no subject"  \<BR>
+&nbsp;&nbsp;&gt;&gt; ${TESTDIR}/Proctest.mail<BR>
+</FONT><P>
+
+<A NAME="zip">Below</A> is another example with a slightly different
+syntax using the semicolon ";" as the separator. The example also
+demonstrates how to save diskspace by zipping email from a
+particular source. You'll need Info-ZIP's zip and unzip in order to
+be able to apply it. (They are available from the <A
+HREF="http://garbo.uwasa.fi/unix/arcers.html">proper Unix
+section</A> of <A HREF="http://garbo.uwasa.fi/">Garbo program
+archives</A> at the <A
+HREF="http://www.uwasa.fi/index-en.html">University of Vaasa</A>,
+Finland.)<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0w:Test.mail.lock<BR>
+* ^From:.*test<BR>
+| unzip ${HOME}/mail/Test.zip; \<BR>
+  &nbsp;&nbsp;cat &gt;&gt; Test.mail; \<BR>
+  &nbsp;&nbsp;zip -oj9 ${HOME}/mail/Test.zip Test.mail; \<BR>
+  &nbsp;&nbsp;rm -f Test.mail<BR>
+</FONT><P>
+
+What happens on the action line is this:
+
+<OL>
+
+  <LI>The potentially existing "Test.zip" zip-file is unzipped to
+obtain the earlier email messages that already might be within
+Test.zip.<P>
+
+  <LI>The incoming email is appended to the extracted Test.mail file.<P>
+
+  <LI>The updated Test.mail file is compressed back into the
+Test.zip zip-file.<P>
+
+  <LI>The uncompressed Test.mail is deleted.
+
+</OL>
+
+To be on the safe side procmail is told to wait (the "w" flag in
+":0w:Test.mail.lock") until the pipe ("|") has been performed.
+
+
+<HR>
+
+<A NAME="subject">
+<IMG SRC="../gifst/tsplierb.gif" WIDTH="15" HEIGHT="37" ALT=""></A>
+<I>How can I find out what the subject of a posting is?</I><P>
+
+Now is a good time to utilize my <A HREF="#testbench">testbench</A>
+in order to find out if a logic works. Build a
+/home/myid/test/proctest.rc file.
+
+<PRE>
+SHELL=/bin/sh
+TESTDIR=/home/myid/test
+MAILDIR=${TESTDIR}
+LOGFILE=${TESTDIR}/Proctest.log
+LOG="--- Logging for ${LOGNAME}, "
+</PRE>
+
+First, a few environment variables are included.
+
+<PRE>
+#Troubleshooting:
+VERBOSE=yes
+LOGABSTRACT=all
+</PRE>
+
+The above means: Use full reporting for the debugging.
+
+<PRE>
+#An auxiliary regular expression to detect text,
+#The brackets [] contain a space and a tab
+GETTEXT="[  ]*\/[^  ].*"
+</PRE>
+
+If the same expression is used several times in a recipe file, it is
+convenient to put the expression into an environment variable
+instead of writing it out repeatedly.
+
+<UL>
+
+  <LI>The first part "[ ]*" of the regular expression matches any
+number of spaces and tabs (even the case of none) which can lead the
+subject.<P>
+
+  <LI>The "\/" is a special procmail-only operand which puts a
+(possible) match found by the rest of the expression into a variable
+named MATCH.<P>
+
+  <LI> "[^ ]" means all other characters but the one's within the
+brackets. The ".*" means that a match of non-tab, non-space characters
+is sought for.
+
+</UL>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Test if the message has a "Subject:" header and has a subject in it<BR>
+:0c:${TESTDIR}/Proctest.mail.lock<BR>
+* ^Subject:<BR>
+* $ ^Subject:${GETTEXT}<BR>
+| echo "A ^Subject: header found with" &gt;&gt; ${TESTDIR}/Proctest.mail &amp;&amp;\<BR>
+  &nbsp;&nbsp;echo "${MATCH}" &gt;&gt; ${TESTDIR}/Proctest.mail<BR>
+</FONT><P>
+
+<UL>
+
+  <LI>The "c" flag in ":0wc" tells that the processing should
+continue also after this particular recipe has been acted upon.
+(When the "c" flag is not present, the all the rest of the recipes
+in proctest.rc are all skipped.) The "w" tells to wait until the
+"|" pipe has finished.<P>
+
+  <LI>The ":${TESTDIR}/Proctest.mail.lock" tells which lockfile to
+use in order to avoid the confusion from the possibility of
+simultaneous arrival of several email messages. Note that since we
+use a pipe "|" in the actions part, it is prudent to explicitly give
+the name of the lock.<P>
+
+  <LI>Note the first "$" on the "$&nbsp;^Subject:${GETTEXT}"
+condition line. It tells that the environment variables (in this
+case "GETTEXT") on the line are to be expanded, not to be taken as
+literal text.<P>
+
+</UL>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Test if the message has a "Subject:" header but has no subject in it<BR>
+:0c:${TESTDIR}/Proctest.mail.lock<BR>
+* ^Subject:<BR>
+* $ !^Subject:${GETTEXT}<BR>
+| echo "A ^Subject: header found but there is no subject" \<BR>
+  &nbsp;&nbsp;&gt;&gt; ${TESTDIR}/Proctest.mail<P>
+
+#Test if the message has a "Subject:" at all<BR>
+:0c:${TESTDIR}/Proctest.mail.lock<BR>
+* !^Subject:<BR>
+| echo "No ^Subject: header was found"  &gt;&gt; ${TESTDIR}/Proctest.mail<P>
+
+#Otherwise, discard the message<BR>
+:0<BR>
+/dev/null<BR>
+</FONT><P>
+
+After the recipes above have been testbenched and cleared, you know
+that the methods used in them will work for you in your own
+environment.<P>
+
+Of course, there are other options for extracting the subject into
+an environment variable. One is to utilize "formail" which is a
+companion to the procmail program. If you include the following
+expression at the beginning of your ~/.procmailrc recipes file, you
+will have the variable ${SUBJECT} available for the rest of the
+recipes file.
+
+<PRE>
+#Environment variables for procmail
+#
+#Get the subject
+#Discard some dangerous special chars + any leading and trailing blanks
+SUBJECT=`formail -xSubject: \
+         | sed -e 's/[;\`\\]/ /g' \
+         | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+</PRE>
+
+For an <A HREF="spamfoil.html#password">example of usage</A> see the
+Foiling Spam with an Email Password System page.<P>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+<I>Extracting the header from inside procmail using the \/ token is
+_much_ faster than the formail solution.</I>
+
+<HR>
+
+<A NAME="headers">
+<IMG SRC="../gifst/tsflist4.gif" WIDTH="23" HEIGHT="32" ALT=""></A>
+<I>How do I get a copy of the headers of all the incoming email into
+a separate file?</I><P>
+
+You can use<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Header&nbsp;logging<BR>
+:0hc:${HOME}/.mail/Procmail.head.lock<BR>
+|&nbsp;cat&nbsp;&gt;&gt;&nbsp;${HOME}/.mail/Procmail.head<BR>
+</FONT><P>
+
+<UL>
+
+  <LI>The "h" flag in ":0hc" tells that the header should be
+accessed.<P>
+
+  <LI>The "c" flag in ":0hc" orders the processing to continue also
+after this recipe. In other words, you put your other recipes, after
+the header-catching, in the ordinary fashion. The email will reach
+them.<P>
+
+  <LI>The ":${HOME}/.mail/Procmail.head.lock" tells which particular
+lockfile to use.<P>
+
+  <LI>Since there are no condition lines (lines starting with *)
+this item will always be acted upon when it is reached. You wanted
+to log the headers from <U>all</U> the incoming email, right?<P>
+
+  <LI>The "|&nbsp;cat&nbsp;&gt;&gt;&nbsp;${HOME}/.mail/Procmail.head" appends
+the headers to the ${HOME}/.mail/Procmail.head file.
+
+</UL>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+
+<I>Since appending to a file is the result of a normal mailbox
+delivery, that can be more efficiently written as simply:<P></I>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0 hc:<BR>
+$HOME/headers.cut<BR>
+</FONT>
+<P>
+
+<I>That eliminates a cat and a shell process, plus the pipe and
+extra reads and writes.<P>
+
+Now, if you want to overwrite the file with each new message [or do
+some further shell operations within the pipe], then the cat command
+is a reasonable choice.<P> 
+
+[A further point] That would have been an odd name for the lockfile.
+ Why not $HOME/headers.cut.$LOCKEXT?
+</I><P>
+
+<HR>
+
+<A NAME="spam">
+<IMG SRC="../gifst2/tsnospx3.gif" WIDTH="42" HEIGHT="32" ALT=""></A>
+<I>Would you give some further hints for spam foiling recipes?</I><P>
+
+Besides what is on my page <A HREF="spamfoil.html">Foiling Spam with
+an Email Password System</A> and a separate item on <A
+HREF="#from">detecting the sender</A>, below are some instructive
+little tricks.<P>
+
+Perhaps the strongest generic trick against spam is to shirk any
+email that is not addressed to you directly, since most spam is
+addressed to some kind of mailing lists. Of course, you first will
+have to accept email from any legitimate mailing list which you have
+subscribed to. If you put a suitable recipe after your recipes that
+accept the legitimate email lists much of the incoming spam will be
+caught. Below is a simplified And a bit munged) version of what I do
+in my own ~/.procmailrc:<P>
+
+<PRE>
+#Catch potential spam
+:0
+* !^TO_(ts|timo\.salmi)@([-a-z0-9_]+\.)*uwasa\.fi
+{
+  :0 fwh
+  * ^Content-Length:
+  | formail -IContent-Length:
+  :0:
+  Spam.mail
+}
+</PRE>
+
+If you look carefully through this page, you'll find explanations
+for all the details in the above recipe. It will be a good exercise
+to do so. :-)<P>
+
+Since so much, if not practically all spam comes from forged sender
+addresses it is much more effective to block certain suspect email
+routes than to try to match the elusive spammers. The <A
+HREF="#scoring">scoring</A> recipe example below treats as spam all
+email that is routed via dialsprint.net and that is not addressed to
+"me" personally.
+
+<PRE>
+#Spam avoidance of certain routes and if not for me personally
+:0:
+* -1^0
+*  1^0 ? formail -x"Received:" | egrep -is "dialsprint\.net"
+*  1^0 ! ^TO_(myid|myFirstName[ _\.]myLastName)@([-a-z0-9_]+\.)*myhost\.mydom
+Spam.mail
+</PRE>
+
+<UL>
+
+  <LI>The "?" at the start of the condition executes and evaluates
+what is on the condition line instead of searching for a literal
+match.<P>
+
+  <LI>Procmail's companion program formail is used to extract all
+the "Received:" routing information from the posting's header. Then
+"dialsprint.net" is sought for using Unix egrep via the "|" pipe.<P>
+
+  <LI>This is a sideline, but the simpler, less general form of the
+last condition line would, of course, be just "<FONT FACE="Courier
+New,Courier" SIZE="-1">*&nbsp;&nbsp;1^0&nbsp;!&nbsp;^TO_myid@myhost\.mydom</FONT>"<P>
+
+  <LI>The <A HREF="#scoring">scoring</A> system is explained
+elsewhere on this page, but in brief the score is initialized at -1.
+Each explicit condition is given a weight of 1. If the total score
+is at least 1 (i.e. positive) then the action (storing to the
+Spam.mail file) is initiated.<P>
+
+</UL>
+
+Fairly often there is a tell-tale exhortation to email to a remove@
+or a removeme@ address within the actual message. As you may know,
+these are just common ploys of the spammers to get your address
+confirmed to make matters even worse for you.<P>
+
+<PRE>
+:0B:
+* (remove@|removeme@)
+PotentialSpam.mail
+</PRE>
+
+<UL>
+
+  <LI>The "B" flag tells the recipe to search through the body of
+the email message.<P>
+
+  <LI>Note the "or" testing on the conditions line.<P>
+
+  <LI>Note again the file locking (the trailing : in ":0B:"). Since
+the email message is directed to a folder, we do not need explicitly
+to name the lockfile. We can let procmail do it. As a default it
+will use the name PotentialSpam.mail.lock<P>
+
+</UL>
+
+The subject line of the allegedly more respectable [sic] unsolicited
+advertising has an "ADV" marker in upper case on the subject line.
+(For an imaginary legitimacy such spammers occasionally attach some
+xenophobic quibble about U.S legislation, not very relevant on the
+international Internet.)<P>
+
+<PRE>
+:0D:
+* ^Subject:.*ADV
+PotentialSpam.mail
+</PRE>
+
+<UL>
+
+  <LI>The "D" flag tells to distinguish between the lower and the
+upper case in testing for a match.
+
+</UL>
+
+There are some obvious code words that tend to appear on the subject
+line, such as "make money fast" and "$$$".<P>
+
+<PRE>
+:0:
+* (^Subject:.*make.*money.*fast|^Subject:.*\$\$\$)
+PotentialSpam.mail
+</PRE>
+
+<UL>
+
+  <LI>Note, not "^Subject:.*$$$", but "^Subject:.*\$\$\$" because,
+if not quoted with "\", a "$" is taken as a regular expression
+indicating the end of line.<P>
+
+  <LI>Other typical subjects which you might wish to
+catch include such as
+
+  <UL>
+    <LI>cable descrambler
+    <LI>FOR SALE
+    <LI>laser printer toner
+    <LI>million email addresses
+    <LI>ONLY $
+    <LI>Quit Your Job
+  </UL>
+
+  <LI>Other typical contents include such as
+  <UL>
+    <LI>absolutely no obligation
+    <LI>call now 24 h
+    <LI>to be taken off our list
+  </UL>
+
+</UL>
+
+Don't overdo it, though, lest you end up weeding also some
+legitimate email.<P>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+
+<I>The regexp:</I>
+
+<PRE>
+(remove@|removeme@)
+</PRE>
+
+<I>is much slower than</I>
+
+<PRE>
+remove(me)?@
+</PRE>
+
+<I>Having the 'top-level' of the regexp be a alternation (via '|')
+slows down matching by quite a bit. The more that can be factored
+out at the beginning of the regexp, the better. The same goes for
+the recipe that matches against the Subject: header field:</I>
+
+<PRE>
+^Subject:.*(make.*money.*fast|\$\$\$)
+</PRE>
+
+<I>is faster than:</I>
+
+<PRE>
+(^Subject:.*make.*money.*fast|^Subject:.*\$\$\$)
+</PRE>
+
+My comment: Of course it is commendable to be efficient, especially
+where easy understanding is not compromised. However, if the two
+clash, I often prefer clarity of expression and convenience over a
+strict maximization of code efficiency. Don't we have our powerful
+modern computers to perform our tasks for us, not vice versa :-).
+(This is not about the particular feedback above. The improvements
+are useful. They are both legible and instructive.)<P>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>More feedback</U>:</B>
+<I>The "*&nbsp;^Subject:.*ADV" rule is overly simplistic and catches
+many non-spam subjects. Maybe rather something like
+"*&nbsp;^Subject:\&lt;*ADV\&gt;"</I><P>
+
+My comment. Ok. Let's try<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0D:<BR>
+#(The brackets [] start with a space and a tab)<BR>
+* ^Subject:.*([  \{&lt;]+)ADV([  :\}&gt;]+|$) |\<BR>
+  &nbsp;&nbsp;^Subject:.*(\[+)ADV(:)?(\]+|$)<BR>
+PotentialSpam.mail<BR>
+</FONT><P>
+
+It is far from perfect, but it should work reasonably well for regular
+purposes. Spam detection requires experimenting anyway. Regular
+expressions are not easy. They are quite a large subject area of their
+own.<P>
+
+The above assumes that the is (at least) one space after the
+"Subject:" header before the subject begins. This can be ensured by
+first applying "formail -z" which you can have high up your
+~/.procmailrc. For example I have the upper two lines in mine.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0 fwh<BR>
+| formail -z -iContent-Length:<P>
+
+:0D:<BR>
+* ^Subject:.*([  \{&lt;]+)ADV([  :\}&gt;]+|$) |\<BR>
+  &nbsp;&nbsp;^Subject:.*(\[+)ADV(:)?(\]+|$)<BR>
+PotentialSpam.mail<BR>
+</FONT><P>
+
+See the other items in this tips file for an explanation of the
+"fwh" flags. The formail program with the "-z" switch will insert
+the desired blanks into the header. The "-iContent-Length:" switch
+(which is outside the theme of the current item) will replace the
+Content-Length: headers with Old-Content-Length: headers.<P>
+
+I use a slightly different recipe in my own ~/.procmailrc recipes
+file:<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0D<BR>
+* ^Subject:.*([  ]|&lt;|\[)ADV([  ]|&gt;|:|\]|$)<BR>
+{<BR>
+  &nbsp;&nbsp;:0<BR>
+  &nbsp;&nbsp;{ RULE="Catch potential spam by detecting an ADV keyword" }<BR>
+  &nbsp;&nbsp;:0<BR>
+  &nbsp;&nbsp;/dev/null<BR>
+}<BR>
+</FONT><P>
+
+If you wonder about the "RULE" variable, see the <A
+HREF="#which">item</A> about logging which rules have been used.<P>
+
+On to a different facet. Some ISPs (Internet Service Providers) do
+now allow numbers in the email addresses. Thus, you may identify
+some of the forged spam by catching a violation in this respect. The
+following recipe catches email with numbers in the user id before
+the @ mark from the all the various nodes on "respectable.net".
+
+<PRE>
+:0:
+* ^From:.*[0-9].+@([-a-z0-9_]+\.)*respectable.net
+PotentialSpam.mail
+</PRE>
+
+
+<HR>
+
+<A NAME="truncate">
+<IMG SRC="../gifst/tszip.gif" WIDTH="38" HEIGHT="38" ALT=""></A>
+<I>I have limited disk space. How can I truncate long
+messages?</I><P>
+
+Before we proceed any further, there is a <FONT COLOR="#FF0000">very
+important</FONT> email feature to observe. If you alter the
+content-length of a message it is highly advisable first to discard
+any "Content-Length:" lines from the email's header. If you fail to
+do that, there is the danger that next time you read the relevant
+email folder your email program will break your folder because of
+erroneous length information. Many email programs are brain-dead
+that way.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Truncate messages longer than 4000 bytes to 100 lines<BR>
+:0<BR>
+* &gt; 4000<BR>
+{<BR>
+  &nbsp;&nbsp;:0 fwh<BR>
+  &nbsp;&nbsp;* ^Content-Length:<BR>
+  &nbsp;&nbsp;| formail -IContent-Length:<P>
+
+  &nbsp;&nbsp;:0:Truncated.mail.lock<BR>
+  &nbsp;&nbsp;| head -100 &gt;&gt; Truncated.mail<BR>
+}<BR>
+</FONT><P>
+
+Some details:
+
+<UL>
+
+  <LI>The "*&nbsp;&gt;&nbsp;4000" matches email messages longer than
+4000 bytes.<P>
+
+  <LI>The already familiar set of flags "fwh" tells to treat the
+email's header.<P>
+
+  <LI>Use formail to ensure removing even complicated
+"Content-Length:" lines.<P>
+
+  <LI>The above also serves as an example of "block nesting", i.e
+the rules and actions between the braces "{ }".<P>
+
+</UL>
+
+
+Let's expand the recipe a bit.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Truncate messages longer than 4000 bytes to 100 + 10 lines<BR>
+:0<BR>
+* &gt; 4000<BR>
+{<BR>
+  :0 fwh<BR>
+  &nbsp;&nbsp;* ^Content-Length:<BR>
+  &nbsp;&nbsp;| formail -IContent-Length:<P>
+
+  &nbsp;&nbsp;:0c:Truncated.mail.lock<BR>
+  &nbsp;&nbsp;| head -100 &gt;&gt; Truncated.mail &amp;&amp;\<BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;echo "-:-:-:- (snip) -:-:-:-" &gt;&gt; Truncated.mail<P>
+
+  &nbsp;&nbsp;:0:Truncated.mail.lock<BR>
+  &nbsp;&nbsp;| tail +101 | tail -10 &gt;&gt; Truncated.mail<BR>
+}<BR>
+</FONT><P>
+
+A few observations:
+
+<UL>
+
+  <LI>The first 100 lines are included. So are the last 10.<P>
+
+  <LI>The above also exemplifies giving multiple commands. Recall that
+a standard recipe only allows one action line.<P>
+
+</UL>
+
+Another option is to <A HREF="#zip">compress the incoming email</A>
+instead of truncating it.
+
+
+<HR>
+
+<A NAME="regexptest">
+<IMG SRC="../gifst/tszig3.gif" WIDTH="55" HEIGHT="25" ALT=""></A>
+
+<I>How can I quickly test if my rules with regular expressions match?
+The fuller procmail <A HREF="#testbench">testbench</A> is a bit
+heavy a machinery for quick testing.</I><P>
+
+Let's see. A lite version of the testbench could be the following.
+Put the rules you wish to try out in a "greptest" file of your rules
+with egrep since procmail matching closely (but not quite!) follows
+egrep's.  Make the file executable with "<FONT
+COLOR="#00CC00"><B>chmod&nbsp;u+x&nbsp;greptest</B></FONT>". Then
+make a "<FONT COLOR="#00CC00"><B>mail.msg</B></FONT>" file with the
+texts you wish to try to match (or not to match). Thus you might
+have:
+
+<PRE>
+#The executable file named "greptest"
+#!/bin/sh
+egrep -i '(ts|timo\.salmi)@([-a-z0-9_]+\.)*uvasa\.fi' mail.msg
+#
+#Allow a quick visual comparison on the screen
+echo ""
+cat mail.msg
+
+
+#The mail.msg target file with the trial text for the matching
+ts@uvasa.Fi
+ts@loisto.uvasa.fi
+Timo.Salmi@uvasa.Fi
+Timo.Salmi
+null@uvasa.fi
+</PRE>
+
+Then, just give the command "<FONT
+COLOR="#00CC00"><B>greptest</B></FONT>" and visually compare the
+outputs.<P>
+
+Miscellaneous notes:
+
+<UL>
+
+  <LI>There are some special differences between procmail extended
+matching rules and the egrep expressions. Thus under special
+circumstances they do not match the regular expressions quite the
+same way. This might raise occasional confusion. See "<FONT
+COLOR="#00CC00"><B>man&nbsp;procmailrc</B></FONT>" for the
+details.<P>
+
+  <LI>You can also test egrep regular expressions on your PC since
+egrep clones are available from the <A
+HREF="http://garbo.uwasa.fi/">Garbo program archives</A>. For
+example you might try <A
+HREF="ftp://garbo.uwasa.fi/pc/unix/gnuegrep.arc">gnuegrep.zip</A>,
+<A HREF="ftp://garbo.uwasa.fi/pc/fileutil/egrep.zip">egrep.zip</A>
+and <A
+HREF="ftp://garbo.uwasa.fi/pc/unix/dgrep.arc">dgrep.zip</A>.<P>
+
+</UL>
+
+
+<HR>
+
+<A NAME="domain">
+<IMG SRC="../gifst/tscandla.gif" WIDTH="25" HEIGHT="40" ALT=""></A>
+<I>How can I detect if the email comes, say, from the .com
+domain?</I><P>
+
+I have been baffling over this item myself, because it is not as
+trivial as it first appears. The catch is that the ".com" is exactly
+at the end of the address. The problem naturally is that in the
+email headers there can be text after the email address, such as the
+sender's name. E.g.
+
+<PRE>
+From: scam@cyberspam.com (The Big Bad Spammer)
+</PRE>
+
+The first solution that comes to mind is the following, but it is
+not entirely accurate.
+
+<PRE>
+:0:
+* ^From:.*\.com
+* !^From:.*\.com\.
+* !^TO_(ts|timo\.salmi)@([-a-z0-9_]+\.)*uwasa\.fi
+ProbableComSpam.mail
+</PRE>
+
+<UL>
+
+  <LI>The first condition line matches a ".com" anywhere on the
+"From:" address line. It would match, for example, email from
+"someone@my.company.net".<P>
+
+  <LI>The second condition line tries narrow the condition down, but
+it still would match e.g. "someone@my.ispcom.net". (Or would it?
+Anyway, the recipe is not quite accurate.)<P>
+
+  <LI>The third condition line is just standard spam avoidance, not
+necessarily related to the task at hand. It is just that much, if
+not the majority of spam appears to involve .com addresses.<P>
+
+</UL>
+
+Quite possibly there are better solutions, but below is what I came
+up with for hopefully an accurate match:
+
+<PRE>
+# Get the sender's address
+# Discard any leading and trailing whitespaces
+FROMADDR_=`formail -rt -xTo: \
+           | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+
+# Test if the email came from the .com domain
+:0:
+* $ ? echo ${FROMADDR_} | egrep -is '\.com$'
+ComDomain.mail
+</PRE>
+
+<UL>
+
+  <LI>Let formail take care of finding out from the headers what the
+sender's address is. Get rid of any leading and/or trailing white
+spaces using "expand" for tabs and "sed" for the remaining spaces.
+You should have this definition high up in your ~/.procmailrc<P>
+
+  <LI>The "$" on the condition line tells to expand any variables on
+the line. In this case the "${FROMADDR_}" instead of taking in
+literally.<P>
+
+  <LI>As far as I understand, the "?" executes a line (and tells to
+transmit an exit code, but that is beside the current point). BTW,
+if you have the procmail extended diagnostics on ("VERBOSE=yes") you
+can get in your procmail logfile a sinister looking "<FONT
+COLOR="#008080"><B>Program failure (1)</B></FONT>". Don't panic. It
+just is egrep's exit code telling that no match was found for that
+particular email message, i.e. that it was not from the ".com"
+domain.<P>
+
+  <LI>The condition line echoes the stripped email address to
+"egrep" in order to test if there is a match. The "-i" switch is
+used since email addresses are case insensitive. The essence of the
+"egrep" is the trailing "$" matching the end of the extracted
+address. The "-s" switch tells egrep to work silently, i.e. only to
+give the return code.<P>
+
+</UL>
+
+There is one small convenience in the first, inaccurate recipe
+version. It is easy to include several domains into the same recipe.
+For example:
+
+<PRE>
+:0:
+* ^From:.*\.hk|\
+  ^From:.*\.kr|\
+  ^From:.*\.tr
+* !^From:.*\.hk\.|\
+  !^From:.*\.kr\.|\
+  !^From:.*\.tr\.
+* !^TO_myid@([-a-z0-9_]+\.)*myhost\.mydom
+ProbableSpam.mail
+</PRE>
+
+An aside: You could also utilize a more condensed format:
+<PRE>
+* ^From:.*\.(hk|kr|tr)
+</PRE>
+
+(Condensing the rest of the above recipe is left as an exercise.)<P>
+
+Using <A HREF="#scoring">scoring</A> is one option. The recipe could
+also be rewritten as
+
+<PRE>
+#Define getting the sender's address
+#Discard any leading and trailing whitespaces
+FROM_=`formail -rt -xTo: \
+         | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+
+#Whatever other recipes in between.
+
+#Spam screening of certain susceptible domains
+:0:
+* -1^0
+*  1^0 $ ? echo ${FROM_} | egrep -is '\.hk$'
+*  1^0 $ ? echo ${FROM_} | egrep -is '\.kr$'
+*  1^0 $ ? echo ${FROM_} | egrep -is '\.tr$'
+*  1^0 !^TO_myid@([-a-z0-9_]+\.)*myhost\.mydom
+ProbableSpam.mail
+</PRE>
+
+There also is the option<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0:<BR>
+* ^From:.*\.hk([  &gt;]|$)|\<BR>
+  &nbsp;&nbsp;^From:.*\.kr([  &gt;]|$)|\<BR>
+  &nbsp;&nbsp;^From:.*\.tr([  &gt;]|$)<BR>
+* ! ^TO_myid@([-a-z0-9_]+\.)*myhost\.mydom<BR>
+ProbableSpam.mail<BR>
+</FONT>
+
+
+<HR>
+
+<A NAME="from">
+<IMG SRC="../gifst/tsbinoc5.gif" WIDTH="39" HEIGHT="36" ALT=""></A>
+<I>What alternatives do I have to detect a sender all through the
+various header-fields?</I><P>
+
+If we only look at the "From:" field in the header we have the
+familiar:
+
+<PRE>
+#Accept all email from myself, weed out autoreplies
+:0:
+* ^From:.*myid@([-a-z0-9_]+\.)*myhost\.mydom
+* ! ^X-Loop: myid@myhost\.mydom
+${DEFAULT}
+</PRE>
+
+Next, let's extend the matching to more fields in the header:
+
+<PRE>
+:0
+* ? formail -x"From" -x"From:" -x"Reply-To:" -x"Errors-To:"\
+    | egrep -i "scam@cyberspam\.com"
+/dev/null
+</PRE>
+
+<UL>
+
+  <LI>The "?" at the start of the condition executes and evaluates
+what is on the condition line instead of searching for a literal
+match.<P>
+
+  <LI>Use formail to extract from the headers.<P>
+
+  <LI>The "-x" switch means extract the contents a headerfield from
+the header. Formail is convenient (also) because it can concatenate
+the potential continuation lines in a headerfield.<P>
+
+  <LI>Pipe the results to "egrep" regular expression search. The
+"-i" switch tells egrep to ignore the lower/uppercase status of the
+target string.<P>
+
+  <LI>Incidentally: Since we discard the email message to
+"/dev/null", file locking ":0<FONT COLOR="#FF0000"><B>:</B></FONT>"
+must not be used.<P>
+
+</UL>
+
+We can utilize a predefined expression to match the header fields.
+The clever "FROM" expression below comes from Jari Aaltonen's
+<A HREF="../http/http2.html#procmail">procmail material</A>.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+FROM="^(From[   ]|(Old-|X-)?(Resent-)?(From|Reply-To|Sender):)(.*\&lt;)?"<BR>
+#(whatever else in between)<BR>
+:0<BR>
+* $ ${FROM}scam@cyberspam\.com<BR>
+/dev/null<BR>
+</FONT>
+<P>
+
+<UL>
+
+  <LI>The first "$" on the condition line tells that the environment
+variable(s) on the line are to be expanded, instead of taking all
+the text on the condition line literally.<P>
+
+</UL>
+
+You may go even further in your detective work and include the
+information from the header's "Received:" lines. That is, you also
+can detect if something what you wish to avoid is along the route
+where the email came from.
+
+<PRE>
+:0
+* ? formail -x"Received:"\
+    | egrep -i "cyberspam\.com"
+/dev/null
+</PRE>
+
+Spam email is sometimes indicated by a missing or an empty "From:"
+line in the header. Furthermore, the "From:" line might contain an
+empty &lt;&gt; instead of having a proper address within the
+&lt;&gt;. Using <A HREF="#scoring">scoring</A> we might have
+something like<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0:<BR>
+* 1^0 ^From:([  ]$|$)<BR>
+* 1^0 ! ^From:<BR>
+#A catch: Don't use here the word-boundary operators \&lt; \&gt;<BR>
+#Use just the plain &lt;&gt;<BR>
+* 1^0 ^From:.*&lt;&gt;<BR>
+NoFrom.mail<BR>
+</FONT>
+<P>
+
+Under a worst-case scenario, the various sender headers might all be
+empty. To test for this unlikely eventuality we can utilize the fact
+that formail would put a "foo@bar" into the "FROM_" under such
+circumstances.
+
+<PRE>
+# Define getting the sender's address
+# Discard any leading and trailing whitespaces
+FROM_=`formail -rt -xTo: \
+         | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+
+# Test if the sender could not be identified at all
+:0:
+* FROM_ ?? foo@bar
+NoSender.mail
+</PRE>
+
+As always, there are several alternatives to solving a problem.
+Consider a potential case where a spammer poses as the mailer-daemon
+but the "From:" header is either missing or total gibberish. How to
+detect this situation? The second condition in the recipe below
+ensures that there is "From:" line in the header, and that it has
+some elementary validity.
+
+<PRE>
+:0:
+* ^From[  ]*MAILER-DAEMON
+* ! ? formail -x"From:" | egrep -is "[a-z]"
+ProbableSpam.mail
+</PRE>
+
+<UL>
+
+  <LI>The first condition is to check the first From line in the
+header.<P>
+
+  <LI>The [] contains a space and a tab.<P>
+
+  <LI>In the second condition the "!" is the familiar operator
+indicating a negation.<P>
+
+  <LI>The "?" tells to execute and evaluate what is on the condition
+line instead of searching for a literal match.<P>
+
+  <LI>formail's <FONT COLOR="#E69900"><B>-x"From:"</B></FONT>
+extracts the <FONT COLOR="#008080"><B>From:</B></FONT> header
+contents (without the field name).<P>
+
+  <LI>Unix egrep is used to test whether the "From:" field exists
+and contains at least one ordinary letter, upper or lower case
+("i"), working silently ("s").<P>
+
+</UL>
+
+
+<HR>
+
+<A NAME="replyto">
+<IMG SRC="../gifst/tsspect2.gif" WIDTH="51" HEIGHT="26" ALT=""></A>
+<I>How can I extract a valid address from the Reply-To field, and
+that field only?</I><P>
+
+One trick is to utilize the following variable definition letting
+formail do the worrying about the proper address format.
+
+<PRE>
+REPLYTO_=`egrep "^Reply-To:" | head -1 \
+         | formail -c -rt -xTo: \
+         | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+</PRE>
+
+<UL>
+
+  <LI> Assume that indeed you strictly want the address from a
+"Reply-To:" header. No address in any other header will do. Use
+<FONT COLOR="#E69900"><B>egrep</B></FONT> to extract the "Reply-To:"
+header field from the incoming email. <P>
+
+  <LI> <FONT COLOR="#E69900"><B>head -1</B></FONT> ensures that only
+the first occurrence of a "Reply-To:" in the message counts.<P>
+
+  <LI> <FONT COLOR="#E69900"><B>formail -c -rt -xTo:</B></FONT> is a
+standard, special trick to form a return address.  The key is the
+<FONT COLOR="#E69900"><B>-r</B></FONT> switch which "generates an
+autoreply header". The "-c" switch concatenates any continued fields
+in the header.<P>
+
+  <LI> If no "Reply-To:" header is found in the email message, <FONT
+COLOR="#008080"><B>foo@bar</B></FONT> will be returned as the
+address.<P>
+
+  <LI> The last line removes any leading and trailing tabs and
+blanks from the address.<P>
+
+</UL>
+
+If you put the REPLYTO_ definition high up in your ~/.procmailrc you
+will have the variable available to the rest of your recipes.<P>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+<I>Let me suggest this:<BR>
+
+<DL>
+  <DD>REPLYTO_=`formail -cXReply-To: | head -1 | formail -rtzxTo:`</DD>
+</DL>
+
+<UL>
+
+  <LI>"formail -cX" rather than "egrep" in case the header has a
+different capitalization -- or if the real address is on a
+continuation line.<P>
+
+  <LI>formail "-z" flag to avoid "expand" and "sed".
+
+</UL>
+</I>
+
+Timo's further comments:
+
+<UL>
+
+  <LI>The "-c" switch concatenates continuation lines.<P>
+
+  <LI>The "-X" switch extracts the header field, preserving the
+field name.<P>
+
+  <LI>The "-rt", "-x" and "To:" trick prepare a return address.<P>
+
+  <LI>The "-z" switch ensures that a whitespace exists between field
+name and content.<P>
+
+  <LI>If the Reply-To: header field is empty or missing, the value
+of the REPLYTO_ variable will be foo@bar
+
+</UL>
+
+
+<HR>
+
+<A NAME="postmaster">
+<IMG SRC="../gifst/tsstamp2.gif" WIDTH="29" HEIGHT="40" ALT=""></A>
+<I>How can I extract the address of the sender's postmaster?</I><P>
+
+Put these definitions high up in your ~/.procmailrc :
+
+<PRE>
+#Get the sender's address, the generic version
+FROM_=`formail -rt -xTo: \
+         | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+
+#Get the sender's host
+FHOST_=`echo "${FROM_}" | awk -F@ '{ print $2 }'`
+
+#Build the postmaster's address
+FMAST_="postmaster@${FHOST_}"
+</PRE>
+
+Thus, you have the postmaster's alleged address available as
+${FMAST_} from this point on in your recipes file. Note, however,
+that all validity testing of the address is missing.<P>
+
+What happens in the FROM_ formula:
+
+<UL>
+
+  <LI>At e quick glance it may appear that the "From:" header and
+the "To:" header have been confused in the formula, but this is not
+the case. The formail program is asked to ("-r") to prepare a reply
+header to send email back to the sender. Then that return address is
+extracted. That is why we have a "-xTo:" since we want to extract
+where the reply would be sent. That is where we assume that the
+email came from.<P>
+
+  <LI>In the pipe "expand" is used to replace potential tabs with
+spaces, and "sed" is used to omit any leading and trailing white
+spaces.<P>
+
+</UL>
+
+Formail uses a certain priority order in preparing the reply header.
+If there is a "Reply-To:" field in the header, the "FROM_" variable
+will contain that address. In same cases one may wish to ignore that
+field for example to prevent malicious relaying. Here is the how:
+
+<PRE>
+#Get the sender's address, ignore Reply-To:
+FROM_=`formail -I"Reply-To:" -rt -xTo: \
+         | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+</PRE>
+
+
+<HR>
+
+<A NAME="weedto">
+<IMG SRC="../gifst/tsaudien.gif" WIDTH="41" HEIGHT="39" ALT=""></A>
+<I>How can I weed out an inordinately long recipient list? I am one
+of the recipients of a very useful professional mailing list, but it
+lists in its "To: " header field all the recipients to the list.
+Furthermore, it repeats the messages in HTML format. The text format
+is sufficient for me.</I><P>
+
+The (only slightly modified) example below is based on a true
+situation from my own ~/.procmailrc.
+
+<PRE>
+#Ensure a whitespace exists between field name and content
+#Comment "Old-" the Content-Length field from all the headers
+:0 fwh
+| formail -z -i"Content-Length:"
+
+#(whatever else in between)
+
+:0
+* From:.*the-mailing-list-maintainer
+* ^TO_the@first\.recipient\.edu
+{
+  :0 fw
+  | formail -I"To:" -I"X-" -I"Content-Type:" -I"MIME-Version:"\
+    -A "To: Maintainer's long recipient list suppressed" \
+  | sed -e '/^This is a multi-part /,/^Content-Transfer-Encoding: /d' \
+        -e '/------=_NextPart_/,$d'
+
+  :0:
+  ${DEFAULT}
+}
+</PRE>
+
+<UL>
+
+  <LI>There are two condition lines.
+  <UL>
+    <LI>Match if it is from the mailing list maintainer.
+    <LI>Match if it is for the full mailing list and not only to me
+        personally from the maintainer.<P>
+  </UL>
+
+  <LI>Feed ("f") the email message to a pipe of several lines. Tell
+      procmail to wait ("w") for the pipe to finish.
+
+  <UL>
+    <LI>Let formail weed out superfluous fields.
+    <LI>Append a very brief "To:"-field for your information.
+    <LI>Let sed take out any special format information.
+    <LI>Let sed weed from the start of the HTML part to the end of
+        the message<P>
+  </UL>
+
+  <LI>This example shows the principles, but it is based on the
+established format of the postings on the particular mailing list.
+Therefore it is not applicable as such, but you'll have to customize
+and test it for your own situation. (See the items on test methods
+on this page.)
+
+</UL>
+
+
+<HR>
+
+<A NAME="scoring">
+<IMG SRC="../gifst/tscount1.gif" WIDTH="33" HEIGHT="33" ALT=""></A>
+<I>What is this procmail scoring? How can I utilize it?</I><P>
+
+This is a somewhat complicated subject with material dispersed
+throughout the various procmail FAQs. Basically scoring is a method
+to count how many of the conditions are fulfilled in a recipe and if
+the "score" is positive, that is the score is 1 or more, the action
+line in the recipe will be performed. There is much, much more to
+scoring, but this is a good starting point.<P>
+
+Consider the following simple spam foiling recipe. It will put the
+email into the ProbableSpam.mail file if the score adds up to at
+least to one. If the first condition is met, 1 is added to the
+score. Ditto for the second condition. Thus if either of the
+tell-tale spam signals occur, the score will be positive (that is
+greater than zero) and the action (storing the email message into
+the ProbableSpam.mail file) will be enacted.
+
+<PRE>
+:0:
+* 1^0 ^Subject:.*make money fast
+* 1^0 ^Subject:.*\$\$\$
+ProbableSpam.mail
+</PRE>
+
+The example above uses equally-weighted scoring. One can also have
+unequal scores. Below, a hit of the second condition gives two
+points while a hit of the first only gives one.
+
+<PRE>
+* 1^0 ^Subject:.*make money fast
+* 2^0 ^Subject:.*\$\$\$
+</PRE>
+
+Scoring can be used to build some extremely trivial artificial
+intelligence into the recipes. Consider the following
+
+<PRE>
+:0:
+* -1^0
+*  1^0 ^Subject:.*money
+*  1^0 ^Subject:.*fast
+*  1^0 ^Subject:.*\$\$\$
+ProbableSpam.mail
+</PRE>
+
+<UL>
+
+  <LI>The initial score is set at -1. Thus <U>at least two</U> of
+the subsequent conditions have to be met in order for the entire
+recipe to match. If none or only one of the conditions is met, the
+score will not rise above zero.
+
+</UL>
+
+An alternative formulation of scoring to foil spam is given below.
+This time it is required that at least three of the score-condition
+lines match. (The [] contain a space and a tab, as usual.)<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0:<BR>
+* ^Subject:[ ]*\/[^  ].*<BR>
+* -2^0<BR>
+* 1^0 MATCH ?? ()\&lt;easy\&gt;<BR>
+* 1^0 MATCH ?? ()\&lt;fast\&gt;<BR>
+* 1^0 MATCH ?? ()\&lt;(cash|money)\&gt;<BR>
+* 1^0 MATCH ?? \$\$\$<BR>
+ProbableSpam.mail<BR>
+</FONT>
+<P>
+
+<UL>
+
+  <LI>procmail \/ operand is used to extract the subject of the
+email into the reserved MATCH variable.<P>
+
+  <LI>Variables testing "??" is used.<P>
+
+  <LI>Word matching is used applying the word boundaries "\&lt;".
+Thus "fast" would be matched, but not "faster".<P>
+
+  <LI>If both the words "cash" and "money" appear on the subject
+line no more than one score point will be awarded.
+
+</UL>
+
+Further, simple examples
+
+<PRE>
+#Catch potential spam by examining the email route
+:0:
+* 1^0 ? formail -x"Received:" | egrep -i "157\.161\.140\.2"
+* 1^0 ? formail -x"Received:" | egrep -i "199\.217\.231\.46"
+* 1^0 ? formail -x"Received:" | egrep -i "212\.106\.213\.36"
+* 1^0 ? formail -x"Received:" | egrep -i "216\.154\.1\.82"
+ProbableSpam.mail
+</PRE>
+
+<UL>
+
+  <LI>As usual, the "?" executes and evaluates what is on the rest of
+the condition line instead of searching for a literal match. Note the
+syntax order.<P>
+
+  <LI>Incidentally, there is a subtle catch in using the IP numbers.
+Assume that you wish to detect the nodes from 216.154.1.74 through
+to 216.154.1.86. This rule won't work quite right:
+"216\.154\.1\.[74-86]". Why? The "[74-86]" will match 4-8. (The 7
+and 6 would be superfluous since they already are within the 4-8
+range.) The rule would find matches outside the intended range. E.g.
+"216\.154\.1\.72" would be matched. Instead, applying both
+"216\.154\.1\.7[4-9]" and "216\.154\.1\.8[0-6]" would match
+correctly.
+
+</UL>
+
+This 'precision' recipe checks in the message header both the
+"From:" field and the "Received:" path of a forgery spam.
+
+<PRE>
+#Avoid a specific forgery spam
+:0:
+* -1^0
+*  1^0 ^From:.*mikerobbins2000@hotmail\.com
+*  1^0 ? formail -x"Received:" | egrep -is "psi\.net"
+Spam.mail
+</PRE>
+
+Scoring and ordinary conditions can be mixed in the rules. For
+example the two recipes below achieve roughly the same thing, but
+the latter option produces less steps if the email is for you.
+
+<PRE>
+:0:
+* -1^0
+*  1^0 ? formail -c -x"Received:" | fgrep -is 'alladvantage.com'
+*  1^0 ? formail -c -x"Received:" | fgrep -is 'ameritech.net'
+*  1^0 ? formail -c -x"Received:" | fgrep -is 'bellatlantic.net'
+*  1^0 ! ^TO_(myid)@([-a-z0-9_]+\.)*myhost\.mydom
+ProbableSpam.mail
+
+:0:
+* ! ^TO_(myid)@([-a-z0-9_]+\.)*myhost\.mydom
+* 1^0 ? formail -c -x"Received:" | fgrep -is 'alladvantage.com'
+* 1^0 ? formail -c -x"Received:" | fgrep -is 'ameritech.net'
+* 1^0 ? formail -c -x"Received:" | fgrep -is 'bellatlantic.net'
+ProbableSpam.mail
+</PRE>
+
+The formail switches in the above are
+
+<UL>
+
+  <LI> -c Concatenate continued fields in the header.
+
+  <LI> -x Get the contents of the said header field. Do not include
+          the field name.
+
+</UL>
+
+The fgrep (search a file for a fixed-character string) switches in
+the above are
+
+<UL>
+
+  <LI> -i Ignore upper/lower case distinction during comparisons.
+
+
+  <LI> -s Silent (only produce error messages) in order to check
+          the return status without any output.
+
+</UL>
+
+The above example could also be written more efficiently without
+scoring as
+
+<PRE>
+:0:
+* ! ^TO_(myid)@([-a-z0-9_]+\.)*myhost\.mydom
+* ^Received:.*(\
+alladvantage\.com|\
+ameritech\.net|\
+bellatlantic\.net)
+ProbableSpam.mail
+</PRE>
+
+
+<HR>
+
+<A NAME="nosubj">
+<IMG SRC="../gifst/tspoof.gif" WIDTH="41" HEIGHT="41" ALT=""></A>
+<I>How can I test if the subject is empty or if the subject field is
+missing altogether?</I><P>
+
+<A HREF="#scoring">Scoring</A> seems to be the answer:
+
+<PRE>
+:0:
+* 1^0 ^Subject:([  ]$|$)
+* 1^0 !^Subject:
+NoSubject.mail
+</PRE>
+
+As usual, the brackets [] contain a space and a tab.<P>
+
+There are other options to test for an empty "Subject:" or an
+entirely missing "Subject:" field. The one below puts the subject
+contents in a variable. The actual recipe then tests if the value of
+the "SUBJ_" variable is empty.
+
+<PRE>
+#Get the subject discarding any leading and trailing blanks
+SUBJ_=`formail -xSubject: \
+       | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+
+#Test for an empty or missing subject
+:0:
+* SUBJ_ ?? ^^^^
+NoSubject.mail
+</PRE>
+
+<UL>
+
+  <LI>^^^^ denotes empty contents. The trick is adopted from <A
+HREF="../http/http2.html#procmail">procmail material</A> of some
+other authors where the ^^ anchor is better explained than what I
+can do. Also see <A HREF="#manuals">procmarc.man</A> for it.<P>
+
+  <LI>Likewise, see <A HREF="#manuals">procmarc.man</A> for the ??
+definition.
+
+</UL>
+
+
+<HR>
+
+<A NAME="tofield">
+<IMG SRC="../gifst/tsdrive.gif" WIDTH="32" HEIGHT="34" ALT=""></A>
+<I>How can I modify the "To:" field of the email I received?</I><P>
+
+I am not exactly sure why you wish to do this, but here is how to
+replace the "To:" header field of a message using formail.  Choose
+the formail "-i" option to rename the old "To:" field to be
+"old-To:" and to insert the new "To:" header field. The flags in the
+recipe are as follows: "f" use the pipe as a filter,  "h" it is
+about the header of the email message, "w" execute before proceeding
+down the rest of the "~/.procmailrc".
+
+<PRE>
+:0 fhw
+* To.*myoldid@myoldhost.myolddom
+| formail -i "To: mynewid@mynewhost.mynewdom"
+</PRE>
+
+
+<HR>
+
+<A NAME="flist">
+<IMG SRC="../gifst/tslistb.gif" WIDTH="30" HEIGHT="30" ALT=""></A>
+<I>I have a long list of spammers and other Internet lowlife in a
+separate file. How can I utilize it?</I><P>
+
+The technique is fairly simple. Put this in your "<FONT
+COLOR="#E69900"><B>~/.procmailrc</B></FONT>" file:
+
+<PRE>
+MAILDIR=/home/myid/Mail   #The location of your own mail directory
+# Whatever other preliminaries
+
+# Whatever other recipes
+
+# Test if the email's sender is in the blacklisted
+:0
+* ? formail -x"From" -x"From:" -x"Sender:" \
+    -x"Reply-To:" -x"Return-Path:" -x"To:" \
+    | egrep -is -f black.lst
+/dev/null
+</PRE>
+
+<UL>
+
+  <LI>All the common email sender headers are covered.<P>
+
+  <LI>Also the "To:" field is covered in the recipe, since spammers
+often name their mailing lists as phony addresses.<P>
+
+  <LI>Continuation lines ("\") are utilized. Incidentally, ensure
+that there are no trailing whitespaces after the "\" on a line.<P>
+
+  <LI>The "-i" option in egrep tells to ignore upper/lower case
+distinction. The "-s" is for silence. The "-f&nbsp;file" option
+tells to take the list of the regular expressions from file.<P>
+
+</UL>
+
+Prepare a "<FONT
+COLOR="#E69900"><B><I>/home/myid/Mail/</I>black.lst</B></FONT>" file
+with contents something like:
+
+<PRE>
+abc23@airnewz.ccn
+abdu@advis.com.tr
+adexec@mail.com
+dinner@dine.com
+friend@public.com
+helpingyou@mail.com
+mk1977@ms1.kingnet.com.tw
+nb8MAMxhq@mail.com
+no@body.com
+owieuj@peterlink.ru
+patkline00@usa.net
+promotions@web-vertise.com
+unknown@unknown.com
+</PRE>
+
+<UL>
+
+  <LI>The black.lst file should reside in your "<FONT
+COLOR="#008080"><B>${MAILDIR}</B></FONT>" mail directory (unless you
+explicitly include the path in your "~/.procmailrc").<P>
+
+  <LI>The problem with such lists is that most of the spam related
+addresses are very transient by nature. I do not think such lists
+alone are a very effective method, as I have explained in my <A
+HREF="spamfoil.html#comments">Foiling Spam with an Email Password
+System</A> measures medley.<P>
+
+  <LI>For an exact matching you might wish to use e.g.
+"no@body\.com" instead of "no@body.com".<P>
+
+<P>
+
+</UL>
+
+
+<HR>
+
+<A NAME="forward">
+<IMG SRC="../gifst/tsshutl.gif" WIDTH="50" HEIGHT="27" ALT=""></A>
+<I>How do I forward certain messages that I get, and preserve a
+myself copy?</I><P>
+
+Below is an example:
+
+<PRE>
+#Get the sender's bare email address from the first "From" line
+FROM_=`formail -c -x"From " \
+         | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g' \
+         | awk '{ print $1 }'`
+
+#Get the original subject of the email
+#Discard superfluous tabs and spaces
+SUBJ_=`formail -c -xSubject: \
+         | expand \
+         | sed -e 's/  */ /g' \
+         | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+
+#Whatever other recipes you'll use
+
+:0
+* ^From:.*infolist@([-a-z0-9_]+\.)*infohost\.infodom
+# Avoid email loops
+* ! ^X-Loop: myid@myhost\.mydom
+{
+  :0c:   #Preserve a copy of the email
+  Infolist.mail
+  :0fwh  #Adjust some headers before forwarding
+  | formail -A"X-Loop: myid@myhost.mydom" \
+            -A"X-From-Origin: ${FROM_}" \
+            -i"Subject: $SUBJ_ (fwd)"
+  # Forward the email
+  :0
+  !mydept@myhost.mydom
+}
+</PRE>
+
+
+<HR>
+
+<A NAME="fwdtwo">
+<IMG SRC="../gifst/tsmonit2.gif" WIDTH="29" HEIGHT="31" ALT=""></A>
+<I>How do I forward certain messages to two different addresses?
+</I><P>
+
+<I>I have the following recipe in my ~/.procmailrc file, but the
+email does not get forwarded to the myid2@myhost.mydom
+address.</I><BR>
+
+<FONT FACE="Courier New,Courier" SIZE="-1"><I>
+  &nbsp;&nbsp;:0 c<BR>
+  &nbsp;&nbsp;*^From.*info.gov<BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;! friend@somehost.domain myid2@myhost.mydom
+</I></FONT><P>
+
+I am not sure what is wrong with that, but at least the solution
+below should work:<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+* ^From.*info.gov<BR>
+* ! ^X-Loop: myid@myhost\.mydom<BR>
+{<BR>
+  &nbsp;&nbsp;:0fwh<BR>
+  &nbsp;&nbsp;| formail -A"X-Loop: myid@myhost.mydom"<BR>
+  &nbsp;&nbsp;:0c<BR>
+  &nbsp;&nbsp;! friend@somehost.domain<BR>
+  &nbsp;&nbsp;:0<BR>
+  &nbsp;&nbsp;! myid2@myhost.mydom<BR>
+}<BR>
+</FONT><P>
+
+The X-Loop is not relevant from the point of the stated problem, but
+using it as a safeguard is always advisable.<P>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+
+<I>The reason that the first one does not work is that the
+recipients' addresses are separated by space while they should be
+separated by a comma</I> [as in]<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+  &nbsp;&nbsp;:0<BR>
+  &nbsp;&nbsp;! friend@somehost.domain,myid2@myhost.mydom<BR>
+</FONT><P>
+
+(I have not tested this one.)
+
+<HR>
+
+<A NAME="reject">
+<IMG SRC="../gifst2/tsnocar.gif" WIDTH="32" HEIGHT="33" ALT=""></A>
+<I>How do I automatically return certain email messages?
+</I><P>
+
+Ah! Another potential case of spam avoidance? (This is a companion
+page to <A HREF="spamfoil.html">Foiling Spam with an Email Password
+System</A>, remember.) Below is an example. But be sensible in using
+the method, since most spam has forged senders.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Define getting the sender's address<BR>
+#Discard any leading and trailing whitespaces<BR>
+FROM_=`formail -rt -xTo: \<BR>
+  &nbsp;&nbsp;| expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`<P>
+
+#Whatever other recipes in between.<P>
+
+#Return certain email<BR>
+:0<BR>
+#<BR>
+# Is the email from a frequent spam domain?<BR>
+# (Note: fgrep takes no regular expressions)<BR>
+* ? formail -c -x"Received:" | fgrep -is 'cyperspam.com'<BR>
+#<BR>
+# Is it for a mailing list rather than to me?<BR>
+* ! ^TO_(myid|myFirst\.mySecond)@([-a-z0-9_]+\.)*myhost\.mydom<BR>
+#<BR>
+# Avoid forgeries that pretend to be from my own site<BR>
+* ! $ ? echo ${FROM_} | fgrep -is 'myhost.mydom'<BR>
+* $ ? echo ${FROM_} | fgrep -is '.'<BR>
+* $ ? echo ${FROM_} | fgrep -is '@'<BR>
+#<BR>
+# Avoid email loops<BR>
+* ! ^X-Loop: myid@myhost\.mydom<BR>
+{<BR>
+  &nbsp;&nbsp;# Make a temporary file of the message to be returned<BR>
+  &nbsp;&nbsp;:0c:formail.lock<BR>
+  &nbsp;&nbsp;# Discard whitespaces, insert a leading blank<BR>
+  &nbsp;&nbsp;| expand | sed -e 's/[ ]*$//g' | sed -e 's/^/ /' &gt; return.tmp<BR>
+  &nbsp;&nbsp;# Prepare and send the rejection<BR>
+  &nbsp;&nbsp;# Be sure to customize your sendmail path<BR>
+  &nbsp;&nbsp;:0:formail.lock<BR>
+  &nbsp;&nbsp;| (formail -r -I"Subject: Rejected mail: Recipient refusal" \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;-A"X-Loop: myid@myhost.mydom" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;echo "--- begin rejected mail ---" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;cat return.tmp ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;echo "--- end rejected mail ---" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;rm -f return.tmp) \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;| /usr/lib/sendmail -t<BR>
+}<BR>
+</FONT><P>
+
+<UL>
+
+  <LI>The spamfoiling page has <A HREF="spamfoil.html#procpass">a
+further example</A>.<P>
+
+  <LI>The "-r" option tells formail to generate an auto-reply
+header.<P>
+
+</UL>
+
+There can be many variants of detecting and returning email which
+one does not wish to get. Below is a fictitious example utilizing
+variables to enhance the flexibility of the return address handling.
+(If you are baffled by the "RULE" variable, which is just a sideline
+here, see the <A HREF="#which">item on identifying executed
+recipes</A>.)<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+* ^From:.*(charpie|charpie5266)@mydeja\.com<BR>
+{ REJECT="charpie5266@mydeja.com" }<BR>
+:0<BR>
+* ^From:.*umidextr@([-a-z0-9_]+\.)*mindfall\.com<BR>
+{ REJECT="umidextr@mindfall.com" }<BR>
+:0<BR>
+* ^From:.*(rasch|Greg.*\.Rasch)@([-a-z0-9_]+\.)*millkirn\.com<BR>
+{ REJECT="rasch@millkirn.com" }<BR>
+:0<BR>
+* ^From:.*(daren|Daren[_\.]Risenthal)@([-a-z0-9_]+\.)*slunet\.org<BR>
+{ REJECT="daren@slunet.org" }<P>
+
+:0<BR>
+* ! REJECT ?? ^^^^<BR>
+{<BR>
+  &nbsp;&nbsp;:0<BR>
+  &nbsp;&nbsp;{ RULE="These users I do not want to talk with" }<BR>
+  &nbsp;&nbsp;:0cw<BR>
+  &nbsp;&nbsp;| expand | sed -e 's/[ ]*$//g' | sed -e 's/^/ /' &gt; return.tmp<BR>
+  &nbsp;&nbsp;:0:procmail.lock<BR>
+  &nbsp;&nbsp;| (formail -r -I"To: ${REJECT}" \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;-I"Subject: Rejected mail: Recipient refusal" \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;-A"X-Loop: myid@myhost.mydom" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;echo "--- begin rejected mail ---" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;cat return.tmp ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;echo "--- end rejected mail ---" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;rm -f return.tmp) \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;| /usr/lib/sendmail -t<BR>
+}<P>
+</FONT>
+
+Note how the above set of rules has two parts, the actual detection
+plus the return address definition, and the return action. The
+latter could be written in many alternative ways, including<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+* ! REJECT ?? ^^^^<BR>
+{<BR>
+  &nbsp;&nbsp;:0cw<BR>
+  &nbsp;&nbsp;| expand | sed -e 's/[ ]*$//g' | sed -e 's/^/ /' &gt return.tmp<BR>
+  &nbsp;&nbsp;:0 fwh<BR>
+  &nbsp;&nbsp;|  formail -r \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;-A"Subject: Rejected mail: Recipient refusal" \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;-A"From: myid@myhost.mydom" \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;-A"X-Loop: myid@myhost.mydom" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;echo "--- begin rejected mail ---" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;cat return.tmp ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;echo "--- end rejected mail ---" ; \<BR>
+     &nbsp;&nbsp;&nbsp;&nbsp;rm -f return.tmp<BR>
+  &nbsp;&nbsp;:0<BR>
+  &nbsp;&nbsp;! ${REJECT}<BR>
+}<BR>
+</FONT><P>
+
+
+<HR>
+
+<A NAME="newaddr">
+<IMG SRC="../gifst/tstower.gif" WIDTH="40" HEIGHT="65" ALT=""></A>
+<I>My address has changed. How do I forward a copy to myself and
+tell the sender?</I><P>
+
+This is a theme whose constituents already are covered throughout
+this material. But also take a look at "<FONT
+COLOR="#00CC00"><B>man&nbsp;procmailex</B></FONT>" for the "vacation
+database" idea even if a better name here would be something like
+"dejatold database".
+
+<PRE>
+SUBJ_=`formail -c -xSubject: \
+       | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+
+:0
+# Was it to me
+* ^TO_myoldid@myoldhost\.myolddom
+# Ignore messages for daemons
+* ! ^FROM_DAEMON
+# Avoid email loops
+* ! ^X-Loop: myid@myhost\.mydom
+{
+  :0 c
+  ! myid@myhost.mydom
+  :0:dejatold.lock
+  | formail -rD 8192 dejatold.cache
+  :0 eh
+  | (formail -r \
+     -A"X-Loop: myid@myhost.mydom" \
+     -I"Subject: Changed email address" ; \
+     echo "Dear Sender," ; \
+     echo "" ; \
+     echo "Thank you for your email about" ; \
+     echo "\"${SUBJ_}\"" ; \
+     echo "" ; \
+     echo "My email address has changed." ; \
+     echo "Old: myoldid@myoldhost.myolddom" ; \
+     echo "New: myid@myhost.mydom" ; \
+     echo "Your email has been forwarded to my new address." ) \
+     | /usr/lib/sendmail -oi -t
+}
+</PRE>
+
+Some explanations:
+
+<UL>
+
+  <LI>The "-r" switch prepares s reply header for sending email back
+to the sender.<P>
+
+  <LI>The "-D maxlen idcache" switch in "-rD" controls the message
+identification cache. For more see "<FONT
+COLOR="#00CC00"><B>man&nbsp;formail</B></FONT>"<P>
+
+  <LI>The "c" flag in ":0 c" tells that the processing should
+continue also after this particular recipe has been acted upon.<P>
+
+  <LI>The "e" flag in ":0 eh" decrees that recipe only executes if
+the immediately preceding recipe failed<P>
+
+  <LI>The "h" flag in ":0 eh" tell to feed the header to the pipe.
+Put since it is the default, it is not compulsory.<P>
+
+</UL>
+
+Naturally, the recipe does not stand alone in the ~/.procmairc but
+is a part of it. Thus you would e.g. have previous recipes that
+takes care of email that is not to you, and email that was for
+mailer daemons.
+
+
+<HR>
+
+<A NAME="setvar">
+<IMG SRC="../gifst/tsfngrg2.gif" WIDTH="37" HEIGHT="35" ALT=""></A>
+<I>How can I set variable values based on the text in the body of
+the email message?</I><P>
+
+Let's start with another, much simpler question:<P>
+
+From: ts@UWasa.Fi (Timo Salmi)<BR>
+Newsgroups: <A HREF="news:comp.mail.misc">comp.mail.misc</A><BR>
+Subject: Re: Procmail: How do I filter by the body<BR>
+Date: Sun Apr 23 09:34:38 EET DST 2000<BR>
+X-Comment: Slightly modified<P>
+
+<I>I am trying to save all the messages that come to me with
+"mypassword" in the body to a folder called password. How do I do
+that?</I><P>
+
+As the manuals state:<BR>
+<DL>
+  <DD>Flags can be any of the following:</DD>
+  <DD>B&nbsp;&nbsp;&nbsp;Egrep the body.</DD>
+</DL>
+<P>
+
+Hence, all there is to it is
+
+<PRE>
+:0 B:
+* mypassword
+password
+</PRE>
+
+If you want your password case sensitive then use
+"<B>:0 BD:</B>".<P>
+
+<DL>
+   <DD>All the best, Timo</DD><P>
+</DL>
+
+<IMG SRC="../gifst/tspen.gif" WIDTH="36" HEIGHT="11" ALT=".."><P>
+
+From: ts@UWasa.Fi (Timo Salmi)<BR>
+Newsgroups: <A HREF="news:comp.mail.misc">comp.mail.misc</A><BR>
+Subject: Re: Question of procmail newbie<BR>
+Date: Tue Nov 23 23:09:41 EET 1999<BR>
+X-Comment: Slightly modified<P>
+
+<I>
+How could I solve the following problem with procmail: I receive
+e-mails with a body like this:<BR>
+
+<DL>
+  <DD>Category: aaa</DD>
+  <DD>Subcategory: bbb</DD>
+  <DD>File: ccc</DD>
+</DL><BR>
+
+I need to store this mail to the folder aaa/bbb/ccc, so procmail
+should create directories aaa/bbb . What kind of .procmailrc should
+I write?<P>
+</I>
+
+The trick is to extract the appropriate text from the body of the
+email message and to set procmail variable values on the basis of
+the results. This is how it can be done.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Preliminaries<BR>
+SHELL=/usr/bin/sh   #Use the Bourne shell (check your path!)<P>
+
+CATE=`cat | egrep "^Category:" | awk '{ print $2 }'`<BR>
+SCAT=`cat | egrep "^Subcategory:" | awk '{ print $2 }'`<BR>
+FILE=`cat | egrep "^File:" | awk '{ print $2 }'`<P>
+
+#Whatever other recipes<P>
+
+:0B:Procmail.lock<BR>
+* ^Category:[  ].+[a-z0-9]<BR>
+* ^Subcategory:[  ].+[a-z0-9]<BR>
+* ^File:[  ].+[a-z0-9]<BR>
+| mkdir ${CATE} ; mkdir ${CATE}/${SCAT} ;\<BR>
+  &nbsp;&nbsp;cat &gt;&gt; ${CATE}/${SCAT}/${FILE}<P>
+
+#Whatever other recipes<BR>
+</FONT><P>
+
+As a validity check the condition lines require that all the
+key-lines are present in the email message body and that the lines
+contain names.<P>
+
+<DL>
+   <DD>All the best, Timo</DD><P>
+</DL>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+<I>It would be much more efficient rewriting these definitions using
+awk's pattern matching, such as:</I>
+
+<PRE>
+CATE=`cat | awk '/^Category:/ { print $2 }'`
+etc
+</PRE>
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+Next, let's consider a more tricky task. Find from the body of the
+text the <U>last</U> line that potentially contains the string
+"mailto:". Insert the contents of that line into a MAILTO_
+variable.<P>
+
+<PRE>
+:0
+* ^Subject:.*Whatever
+{
+  :0
+  {
+  MAILTO_=`sed -e '1,/^$/ d' \
+           | egrep "mailto:" \
+           | tail -1 \
+           | expand \
+           | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g' \
+           | sed -e 's/[^o]://g' -e 's/^://g' \
+           | awk -F: '{ print $2 }' | awk '{ print $1 }'`
+  }
+  :0:
+  WhichEverFolderYouWant
+}
+</PRE>
+
+Consider the MAILTO_ construct. (The test of the recipe should be
+self-explanatory.)
+
+<UL>
+
+  <LI>The <FONT COLOR="#E69900"><B>sed -e '1,/^$/ d'</B></FONT>
+extracts the body of the email message (i.e. the headers are
+ignored).<P>
+
+  <LI>The <FONT COLOR="#E69900"><B>egrep "mailto:"</B></FONT> finds
+all the lines containing <FONT
+COLOR="#008080"><B>mailto:</B></FONT>.<P>
+
+  <LI>If there are several mailto: lines the <FONT
+COLOR="#E69900"><B>tail&nbsp;-1</B></FONT> gets the last of
+them.<P>
+
+  <LI>The <FONT COLOR="#E69900"><B>expand</B></FONT> expands any TAB
+characters to SPACE characters.<P>
+
+  <LI>The <FONT COLOR="#E69900"><B>sed&nbsp;-e&nbsp;'s/^[&nbsp;]*//g'&nbsp;-e&nbsp;'s/[&nbsp;]*$//g'</B></FONT>
+omits any leading and trailing blanks.<P>
+
+  <LI>The <FONT
+COLOR="#E69900"><B>sed&nbsp;-e&nbsp;'s/[^o]://g'&nbsp;-e&nbsp;'s/^://g'</B></FONT>
+weeds out from the same line the possible preceding colons (:) which
+might cause confusion. It is not perfect, though.<P>
+
+  <LI>The <FONT
+COLOR="#E69900"><B>awk&nbsp;-F:&nbsp;'{&nbsp;print&nbsp;$2&nbsp;}'</B></FONT>
+gets the rest (until the end of line or the next colon) after the
+colon (<FONT COLOR="#008080"><B>:</B></FONT>), i.e. the email
+address from the <FONT COLOR="#008080"><B>mailto:</B></FONT> line
+and what may come after it. The <FONT
+COLOR="#E69900"><B>awk&nbsp;'{&nbsp;print&nbsp;$1&nbsp;}'</B></FONT>
+discards the potential rest of the line starting with the first
+blank after the address. What should thus be left is the email
+address in the <FONT COLOR="#008080"><B>mailto:</B></FONT> field.<P>
+
+</UL>
+
+Should you wish to get the entire line with the "<FONT
+COLOR="#008080"><B>mailto:</B></FONT>" into the MAILTO_ variable
+instead of just the email address there, simply leave out the last
+two lines from the MAILTO_ definition.
+
+<HR>
+
+<A NAME="insert">
+<IMG SRC="../gifst/tscrdrva.gif" WIDTH="40" HEIGHT="11" ALT=""></A>
+<I>How can I insert some token text in front of the body of incoming
+email?</I><P>
+
+<I>I have a really simple procmail question.  All I want to do is add a
+line "======= Forwarded Mail ==========" to the top of the body of all
+incoming messages, and forward them to another account.</I><P>
+
+Let start by considering the first part of the question only. This
+is how it is done. The solution owes heavily to Philip Guenther.
+
+<PRE>
+:0
+{
+  :0 fhw
+  | cat - ; \
+  echo "===== Filtered email ====="
+  :0:
+  ${DEFAULT}
+}
+</PRE>
+
+So far so good. Next let's add the forwarding so that the token will
+only appear in the forwarded message. (If you wish to change that,
+adjust the order of the rules.)
+
+<PRE>
+:0
+{
+  :0c:
+  ${DEFAULT}
+  :0 fhw
+  | cat - ; \
+  echo "======= Forwarded Mail =========="
+  :0
+  !forward@myhost.mydom
+}
+</PRE>
+
+Finally, let's add avoiding email loops.
+
+<PRE>
+# Discard loops
+:0
+* ^X-Loop: myid@myhost\.mydom
+/dev/null
+
+:0
+{
+  :0c:
+  ${DEFAULT}
+  :0 fhw
+  | cat - ; \
+  echo "======= Forwarded Mail =========="
+  :0 fhw
+  | formail -A"X-Loop: myid@myhost.mydom"
+  :0
+  !forward@myhost.mydom
+}
+</PRE>
+
+
+<HR>
+
+<A NAME="regexptips">
+<IMG SRC="../gifst2/tsace.gif" WIDTH="29" HEIGHT="38" ALT=""></A>
+<I>Do you have any useful tips for regular expression
+matching?</I><P>
+
+<IMG SRC="../gifst/tspen.gif" WIDTH="36" HEIGHT="11" ALT=".."><BR>
+This is a terribly complicated subject involving many many features
+which I do not know. Let's nevertheless look at some further example
+recipes.
+
+<PRE>
+# Matching a few undelivery and such reports
+:0:
+* ^Subject:.*Undeliver(ed|able) (e)?mail|\
+  ^Subject:.*Returned (spam )?(e)?mail
+* ^TO_(myid|firstname\.lastname)@([-a-z0-9_]+\.)*myhost\.mydom
+Returned.mail
+</PRE>
+
+Consider the first rule of the recipe above. It will match all email
+with the following on the "Subject:" line in the header:
+
+<UL>
+  <LI>Undelivered mail
+  <LI>Undeliverable mail
+  <LI>Undelivered email
+  <LI>Undeliverable email
+  <LI>Re: Undelivered mail
+  <LI>etc...
+</UL>
+
+The continuation line will match
+
+<UL>
+  <LI>Returned mail
+  <LI>Returned email
+  <LI>Returned spam mail
+  <LI>Returned spam email
+  <LI>Re: Returned mail
+  <LI>etc...
+</UL>
+
+What if you don't want to match "Re: Undelivered mail"? The
+following condition gives a more exact match
+
+<PRE>
+* ^Subject:[  ]+Undeliver(ed|able) (e)?mail
+</PRE>
+
+In other words only spaces and/or tabs are allowed between
+"Subject:" and the start of the actual subject.<P>
+
+<IMG SRC="../gifst/tspen.gif" WIDTH="36" HEIGHT="11" ALT=".."><BR>
+Let's consider another example. Say that we have two hosts
+
+<UL>
+  <LI>cyber.com
+  <LI>cyber.com.au
+</UL>
+
+How to catch email from the former, but not the latter:
+
+<PRE>
+:0:
+* ^From:.*cyber.com([^\.]|$)
+ProbableSpam.mail
+</PRE>
+
+That is, do not allow a dot after the .com or alternatively require
+that the line ends there. However, cyber.comet would be matched!
+Thus, depending on what you want to achieve, you might have e.g.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0:<BR>
+* ^From:.*cyber.com( |"|&gt;|$)<BR>
+ProbableSpam.mail<BR>
+</FONT><P>
+
+<IMG SRC="../gifst/tspen.gif" WIDTH="36" HEIGHT="11" ALT=".."><BR>
+What is the difference between the rules below?
+
+<PRE>
+* ^From:.*myid@([-a-z0-9_]+\.)*myhost.mydom
+* ^From:.*myid@([-a-z0-9_]+\.)?myhost.mydom
+* ^From:.*myid@([-a-z0-9_]+\.)+myhost.mydom
+</PRE>
+
+The first one matches any of
+<OL>
+  <LI>myid@myhost.mydom
+  <LI>myid@subhost1.myhost.mydom
+  <LI>myid@mypc.subhost1.myhost.mydom
+</OL>
+
+<UL>
+  <LI>The first one does not match
+     myid@<FONT COLOR="#FF0000"><B>.</B></FONT>myhost.mydom
+     (and neither should it!).
+  <LI>The second one matches 1 and 2, but not 3.
+  <LI>The third one matches 2 and 3, but not 1.
+</UL>
+
+<IMG SRC="../gifst/tspen.gif" WIDTH="36" HEIGHT="11" ALT=".."><BR>
+To recount the purpose of the main special regexp symbols:<P>
+
+<TABLE BORDER="1" BGCOLOR="#FFFFCC"> <!-- Faded Yellow -->
+  <TR BGCOLOR="#CCFFFF">             <!-- Faded Blue -->
+    <TH>Symbol</TH>
+    <TH>Interpretation</TH>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       *
+     </TD>
+     <TD>
+       Match <FONT COLOR="#0000FF">zero</FONT> or
+       <FONT COLOR="#0000FF">more</FONT> times
+     </TD>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       ?
+     </TD>
+     <TD>
+       Match <FONT COLOR="#0000FF">zero</FONT>
+       or <FONT COLOR="#FF0000">one</FONT> times
+     </TD>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       +
+     </TD>
+     <TD>
+       Match <FONT COLOR="#FF00FF">one</FONT>
+       or <FONT COLOR="#FF00FF">more</FONT> times
+     </TD>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       <B>.</B>
+     </TD>
+     <TD>
+       Any character
+     </TD>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       [ ]
+     </TD>
+     <TD>
+       Match from the list within the backets
+     </TD>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       ^
+     </TD>
+     <TD>
+       The start of the line (within [] however, a negation)
+     </TD>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       $
+     </TD>
+     <TD>
+       The end of the line
+     </TD>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       \
+     </TD>
+     <TD>
+       Quote the next character to take it literally
+     </TD>
+  </TR>
+  <TR>
+     <TD ALIGN="center">
+       ( )
+     </TD>
+     <TD>
+       Grouping
+     </TD>
+  </TR>
+</TABLE>
+<P>
+
+
+<HR>
+
+<A NAME="twovar">
+<IMG SRC="../gifst/tsmonit3.gif" WIDTH="49" HEIGHT="42" ALT=""></A>
+<I>How can I test if two procmail variables have the same contents?</I><P>
+
+Basically the syntax for variable value tests is
+
+<PRE>
+VAR1_=Whichever expression you devise
+:0:
+* VAR1_ ?? regexp
+wherever
+</PRE>
+
+But you can build rules like
+
+<PRE>
+VAR1_=Whichever expression you devise
+VAR2_=whatever
+:0:
+* $ VAR1_ ?? ${VAR2_}
+wherever
+</PRE>
+
+Note, however, that the above still is regular expression matching,
+not an equality.<P>
+
+The blank after the first $ is significant. It tells that the
+variable references on the line (${VAR2_}) are to be expanded, not
+to be taken as a literal text.<P>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+
+<I>That's easily resolved using $\var expansion and anchoring both ends
+of the regexp:</I>
+
+<PRE>
+        * VAR1_ ?? $ ^^$\VAR2_^^
+</PRE>
+
+<I>That condition will succeed if and only if VAR1_ and VAR2_ have
+the same contents, with the possible exception of VAR1_ having one
+more trailing newline than VAR2_.</I>
+
+<HR>
+
+<A NAME="lessthan">
+<IMG SRC="../gifst2/tsdarts.gif" WIDTH="32" HEIGHT="32" ALT=""></A>
+<I>I am having difficulties with "&lt;". How does one match
+it?</I><P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+Date: 09 Dec 1999 23:06:41 -0600<BR>
+From: Philip Guenther<BR>
+Newsgroups: <A HREF="news:comp.mail.misc">comp.mail.misc</A><BR>
+Subject: Re: procmail, trivial html detection, and a quirk<P>
+
+ts@UWasa.Fi (Timo Salmi) wrote:<BR>
+&gt; I just noted that, at least in procmail v3.13.1 1999/04/05<BR>
+&gt;<BR>
+&gt; :0B:<BR>
+&gt; * &lt;/body&gt;<BR>
+&gt; * &lt;/html&gt;<BR>
+&gt;<BR>
+&gt; does not work. Instead one has to apply<BR>
+&gt;<BR>
+&gt; :0B:<BR>
+&gt; * [&lt;]/body&gt;<BR>
+&gt; * [&lt;]/html&gt;<P>
+</FONT>
+
+Yep.  A leading '&lt;' or '&gt;' on a condition causes procmail to
+interpret the condition as a size test.  If you want a normal regexp
+condition that starts by matching a literal '&lt;' or '&gt;'
+character you have to protect the leading character from such
+interpretation.  There are several ways of doing so.  The most
+efficient are to use parens or a backslash:<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+<DL>
+  <DD>* ()&lt;/body&gt;</DD>
+  <DD>or</DD>
+  <DD>* (&lt;)/body&gt;</DD>
+  <DD>or</DD>
+  <DD>* (&lt;/body&gt;)</DD>
+  <DD>or</DD>
+  <DD>* \&lt;/body&gt;</DD>
+</DL>
+</FONT>
+
+That last one is generally avoided because it looks like you're
+using the \&lt; regexp special when you really aren't.  Putting the
+'&lt;' or '&gt;' in brackets also works, as you did above, but it
+slows down the matching ever so slightly as a character class is
+slower to match than a single normal character.  Thus, one of the
+above four methods is usually preferred.<P>
+
+Philip Guenther<P>
+
+(Timo's addendum: As far as I understand \&lt; is a word-boundary in
+procmail. Hence \&lt; is best avoided, when not used as an actual
+boundary.)
+
+
+<HR>
+
+<A NAME="subjid">
+<IMG SRC="../gifst/tsorg2.gif" WIDTH="57" HEIGHT="34" ALT=""></A>
+<I>How can I insert identification text to the beginning of the
+subject line?</I><P>
+
+<I>I know how to sort my incoming email with procmail into different
+folders, but how do I use formail to automatically add some suitable
+identification text to the subject line of the email that I
+receive?</I><P>
+
+The general idea is this
+
+<PRE>
+#Get the subject discarding any leading and trailing blanks
+SUBJ_=`formail -xSubject: \
+       | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+
+* YourFirstSelectionCriterion
+{
+  :0 fwh
+  | formail -I"Subject: WhateverYouAdd_1 ${SUBJ_}"
+  :0:
+  YourFirstFolder
+}
+
+* YourSecondSelectionCriterion
+{
+  :0 fwh
+  | formail -I"Subject: WhateverYouAdd_2 ${SUBJ_}"
+  :0:
+  YourSecondFolder
+}
+</PRE>
+
+The flags are as follows: "f" use the pipe as a filter, "w" execute
+before proceeding, "h" it is about the header of the email
+message.<P>
+
+The -I option in formail removes and replaces the old header. Should
+you wish to retain the old subject header with an "Old-" prefix
+added, use -i instead.
+
+
+<HR>
+
+<A NAME="fail">
+<IMG SRC="../gifst2/tsnosml2.gif" WIDTH="45" HEIGHT="45" ALT=""></A>
+<I>I tried out your tips, but some of them failed on my system. What
+next?</I><P>
+
+Here are a few ideas:
+
+<OL>
+
+  <LI>Have you copied right? For example:<P>
+
+  <UL>
+
+    <LI>If you cut and paste, the brackets [] containing tabs will
+    not be copied correctly, since on this page the assumed tabs
+    aren't true tabs.<P>
+
+    <LI> Make sure that you have not misinterpreted the meaning of
+    the quotation (") marks anywhere in the advice.<P>
+
+    <LI>If you have a backslash \ at the end of the line to continue
+    the line, it is very important to ensure that you do not have
+    white spaces after the \ backslash.<P>
+
+  </UL>
+
+  <LI>Have you customized <B>all</B> your file-paths right? Some of
+the recipes may require a slightly different setup in your
+environment than assumed in this FAQ.<P>
+
+  <LI>Check that procmail is getting your proper path. Try "<FONT
+COLOR="#00CC00"><B>echo&nbsp;${PATH}</B></FONT>" and then include
+"<B><FONT COLOR="#E69900">PATH=</FONT><I><FONT
+COLOR="#008080">WhatYouGot</FONT></I></B>" high up in your
+~/.procmailrc recipe file.<P>
+
+  <LI>Include "<FONT COLOR="#E69900"><B>VERBOSE=yes</B></FONT>" high
+up in your ~/.procmailrc recipe file. Then see what is in the
+logfile procmail produced for debugging. The <A
+HREF="#testbench">testbench</A> is a useful aid in the debugging.<P>
+
+  <LI>The shell you use may affect some actions. Check where your
+Bourne shell sh is with "<FONT
+COLOR="#00CC00"><B>which&nbsp;sh</B></FONT>". If it is e.g. /bin/sh
+then include "<FONT COLOR="#E69900"><B>SHELL=/bin/sh</B></FONT>" at
+the beginning ~/.procmailrc recipe file and see if anything changes.
+Bourne shell is the shell I have used in preparing this tips
+page.<P>
+
+  <LI>Work systematically. Try to pinpoint which particular line is
+causing the offense and how. If the problem is with the condition
+part make general enough a version to get it match. Then narrow it
+down towards what you wanted until the recipe fails. If the problem
+is with an action, try to separate whether the problem is with the
+actual action or your procmail syntax. For example if you pipe the
+email to a program, try to separate if it is the call syntax that is
+in error (e.g. do you manage to convey the parameters right) or if
+it the actual program you called that fails.<P>
+
+  <LI>If you have a procmail problem which you can't solve after
+trying properly, post your problem to the <A
+HREF="news:comp.mail.misc">comp.mail.misc</A> Usenet newsgroup
+and/or your corresponding local newsgroup. If you have genuine
+feedback about my procmail tips, your email is most welcome, but <A
+HREF="../garbinfo/garb3020.html">please refrain from using email</A>
+for private consultation requests.
+
+</OL>
+
+
+<HR>
+
+<A NAME="echo">
+<IMG SRC="../gifst/tsunix.gif" WIDTH="45" HEIGHT="37" ALT=""></A>
+<I>Echo and grep blues. I am having difficulties with echo and grep
+usages in procmail.</I><P>
+
+The combination of quoting and regular expressions can cause some
+subtle problems when the Unix <FONT
+COLOR="#E69900"><B>echo</B></FONT> and one of the <FONT
+COLOR="#E69900"><B>grep</B></FONT>s (grep, fgrep, egrep) is used in
+the procmail recipes.<P>
+
+Consider
+
+<PRE>
+SUBJ_=`formail -c -xSubject:`
+
+# Responses to filter reports
+:0:
+* -1^0
+*  1^0 $ ? echo \"${SUBJ_}\" | fgrep -is 'Re: Filter report'
+*  1^0 ^TO_myid@([-a-z0-9_]+\.)*myhost\.mydom
+Response.mail
+</PRE>
+
+<UL>
+
+  <LI>In the example the email's subject header is put into a
+"SUBJ_" variable utilizing formail "-x" option.<P>
+
+  <LI>The "-c" option is used to concatenate the potential
+continuation lines, since occasionally the headers are divided onto
+several lines. This is more common on the "Received:" line, but can
+also occur on the "Subject:" line.<P>
+
+  <LI>If the quoted quotes (\") are not used in the echo, the
+special characters on the email's Subject line in the header will be
+processed as shell related operators. This must not be allowed,
+since it will result in errors that may be hard to trace. For
+example operators such as "<FONT COLOR="#E69900"><B>(</B></FONT>",
+"<FONT COLOR="#E69900"><B>)</B></FONT>", "<FONT
+COLOR="#E69900"><B>`</B></FONT>", "<FONT
+COLOR="#E69900"><B>'</B></FONT>", "<FONT
+COLOR="#E69900"><B>&lt;</B></FONT>", "<FONT
+COLOR="#E69900"><B>&gt;</B></FONT>" and "<FONT
+COLOR="#E69900"><B>|</B></FONT>" all have a special meaning to the
+shell.<P>
+
+  <LI>It is safer to use fgrep (the fixed-character expression
+search) because fgrep interprets also the regular expression special
+characters literally. For example, for fgrep you could use <FONT
+COLOR="#008080"><B>fgrep&nbsp;<FONT
+COLOR="#FF0000">'</FONT>myhost.mydom<FONT
+COLOR="#FF0000">'</FONT></B></FONT> instead of <FONT
+COLOR="#008080"><B>egrep&nbsp;<FONT
+COLOR="#FF0000">"</FONT>myhost\.mydom<FONT
+COLOR="#FF0000">"</FONT></B></FONT>. BTW, as you gather from the
+example above, procmail uses egrep-like syntax.<P>
+
+</UL>
+
+Consider a more complicated expression to extract the subject:
+
+<PRE>
+SUBJ_=`formail -c -xSubject: \
+         | expand | sed -e 's/[;|\$\`\\]/ /g' \
+         | sed -e 's/  */ /g' \
+         | sed -e 's/(/\\\(/g' -e 's/)/\\\)/g' \
+         | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`
+</PRE>
+
+<UL>
+
+  <LI>The potential tabs are expanded.<P>
+
+  <LI>Some of the problem special characters are substituted with
+spaces.<P>
+
+  <LI>Multiple spaces are substituted with a single space.<P>
+
+  <LI>Parentheses are covered with backslashes "\". Here things can
+get really complicated, since the number of backslashes must be
+compatible with the number of interpretation rounds through procmail
+and the shell.<P>
+
+  <LI>The last sed gets rid of any leading and trailing
+whitespaces.<P>
+
+</UL>
+
+There is much more to the echo and grep interactions with the shell
+and the regular expressions. That is why sufficient trials using the
+<A HREF="#testbench">testbench</A> are advisable before including
+the more complicated recipes into one's "~/.procmailrc" file.
+
+
+<HR>
+
+<A NAME="which">
+<IMG SRC="../gifst2/tsdice.gif" WIDTH="30" HEIGHT="31" ALT=""></A>
+<I>How do I know which of my many procmail recipes has been enacted?</I><P>
+
+To get a log of what happens you set at the beginning of your <FONT
+COLOR="#E69900"><B>~/.procmailrc</B></FONT> recipes file
+
+<PRE>
+SHELL=/usr/bin/sh                 # Use Bourne shell
+MAILDIR=${HOME}/Mail              # Customize as appropriate
+LOGFILE=${MAILDIR}/procmail.log   # Your procmail log
+VERBOSE=yes                       # Produce full information
+LOGABSTRACT=all                   #       - " -
+</PRE>
+
+However, this produces so much information that it is not convenient
+for a routine checking by a visual examination. But you can include
+a suitable (dummy) variable definition in each one of your recipes
+and then search the log file for occurrences of that variable. Here
+is an example demonstrating how it goes. Consider a recipe that
+originally is
+
+<PRE>
+# Discard probable spam mail, set 1
+:0:
+* ! ^TO_(myid)@([-a-z0-9_]+\.)*myhost\.mydom
+* 1^0 ^From:.*alladvantage.com
+* 1^0 ^From:.*ameritech.net
+* 1^0 ^From:.*bellatlantic.net
+ProbableSpam.mail
+</PRE>
+
+Change this to be
+
+<PRE>
+:0
+* ! ^TO_(myid)@([-a-z0-9_]+\.)*myhost\.mydom
+* 1^0 ^From:.*alladvantage.com
+* 1^0 ^From:.*ameritech.net
+* 1^0 ^From:.*bellatlantic.net
+{
+  :0
+  { RULE="Discard probable spam mail, set 1" }
+  :0:
+  ProbableSpam.mail
+}
+</PRE>
+
+Apply the same principle for all your recipes in your <FONT
+COLOR="#E69900"><B>~/.procmailrc</B></FONT> file. Then, as email has
+arrived, you can check which rules have been used by searching the
+log file with the command <FONT
+COLOR="#00CC00"><B>grep&nbsp;"RULE="&nbsp;${HOME}/Mail/procmail.log</B></FONT>.
+If you need this regularly, make the grep search one of your Unix
+scripts:<P>
+
+<PRE>
+#!/usr/bin/sh
+grep "Assigning \"RULE=" ${HOME}/Mail/procmail.log
+</PRE>
+
+In the altered procmail recipe, further up, carefully note some of
+the syntax
+
+<UL>
+
+  <LI>The location of the lockfile invocation "<FONT
+COLOR="#E69900"><B>:</B></FONT>".<P>
+
+  <LI>Above the RULE="..." line there is no cloning "c" flag in
+":0" since setting a variable is a non-delivering action. The next
+line will be reached anyway. In fact, it would be a mistake to use a
+"c" there. It would lead to complications.<P>
+
+  <LI>In setting the RULE variable ensure that there is space after
+the "{" and prior the "}". Otherwise the email will go to a folder
+with rather a long and complicated name.<P>
+
+</UL>
+
+Procmail recipes nesting can get fairly complicated. Consider the
+following example involving setting the RULE variable and prcomail
+else if conditions ":0E".
+
+<PRE>
+:0
+* ^TO_my-mailing-list
+{
+  :0
+  * ^From:.*@([-a-z0-9_]+\.)*myhost\.mydom
+    {
+      :0
+      { RULE="To my-mailing-list, probably legitimate" }
+      :0:
+      ${DEFAULT}
+    }
+  :0E
+    {
+      :0
+      { RULE="To my-mailing-list, probably spam" }
+      :0:
+      Spam.mail
+    }
+}
+</PRE>
+
+
+<HR>
+
+<A NAME="korean">
+<IMG SRC="../gifst2/tsmboxx.gif" WIDTH="31" HEIGHT="28" ALT=""></A>
+<I>How can I detect Korean, Cyrillic, or Chinese to avoid such
+frequent spam?</I><P>
+
+There is a very good <A
+HREF="http://www.waltdnes.org/email/chinese/index.html">page</A> by
+Walter Dnes explaining the method. So for once I'll direct you
+elsewhere. The method relies on ad-hoc approximation. In brief,
+scoring is used to detect if more than 5 per cent of the characters
+in the body of the message are high-bit characters typical of the
+said language codes. If you have gone through the items in my
+procmail FAQ, it should be easy to understand the inventive method
+given on Walter's page. Also see the exercise at the end of the
+current FAQ involving detecting Korean.
+
+
+<HR>
+
+<A NAME="body">
+<IMG SRC="../gifst/tscellu.gif" WIDTH="17" HEIGHT="45" ALT=""></A>
+<I>How can I change the subject line and include part of the message
+body into it?</I><P>
+
+<I>I have a cellular phone. I want to save the incoming email
+normally and also to send a modified copy to my second account (a
+Short Message Service). The forwarded copy should include the
+original subject AND five lines of the original message text. The
+original body should not be included. Is this possible with
+procmail?</I><P>
+
+Well yes, it is. It takes some figuring out needing many of the
+principles presented in the other items in my proctips collection.
+It also needs a few tricks with Bourne shell programming. Perhaps
+most importantly, this item demonstrates how to put the body of the
+message into a variable. <P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+# Customize these paths if they do not match yours<BR>
+SHELL=/usr/bin/sh<BR>
+SENDMAIL=/usr/lib/sendmail<BR>
+&nbsp;<BR>
+:0<BR>
+* ^Subject:.*Timo testing<BR>
+{<BR>
+&nbsp;&nbsp;# Put the email intact in the default folder<BR>
+&nbsp;&nbsp;:0c:<BR>
+&nbsp;&nbsp;${DEFAULT}<BR>
+&nbsp;&nbsp;# The "c" flag above tells the recipe to continue<BR>
+&nbsp;&nbsp;# Now we prepare a different version of the message<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;# Get the subject into a variable<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;# Expand the possible tabs into blanks<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;# Discard any leading and trailing blanks<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;SUBJ_=`formail -xSubject: \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;# Get the body of the message into a variable<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;# Accept only the first five lines<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;# Discard newlines, i.e. put everything on one line<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;BODY_=`sed -e '1,/^$/ d' | head -5 | tr -d '\n'`<BR>
+&nbsp;&nbsp;}<BR>
+&nbsp;&nbsp;# Prepare and send a message with no body<BR>
+&nbsp;&nbsp;# -X "" extracts just the header (discards the body)<BR>
+&nbsp;&nbsp;# Plug in the new subject<BR>
+&nbsp;&nbsp;# Content fields might cause problems if not discarded<BR>
+&nbsp;&nbsp;# Change to To: address<BR>
+&nbsp;&nbsp;:0:proc.lock<BR>
+&nbsp;&nbsp;| formail -X "" \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-I"Subject: ${SUBJ_} ${BODY_}" \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-i"Content-Type:" \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-i"Content-Length:" \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-I"To: your@second.address" \<BR>
+&nbsp;&nbsp;| ${SENDMAIL} -t<BR>
+}<BR>
+</FONT><P>
+
+The line<BR>
+
+<PRE>
+BODY_=`sed -e '1,/^$/ d' | head -5 | tr -d '\n'`
+</PRE>
+
+retrieves the first five lines from the body of the text. It would
+be more useful to retrieve a specified number of characters from it.
+Say we wish to retrieve 160 characters. This is how to do that.<BR>
+
+<PRE>
+BODY_=`sed -e '1,/^$/ d' | tr -d '\n' | dd bs=1 count=160`
+</PRE>
+
+Solving the alternative of having a maximum of 160 characters in the
+concatenated SUBJ_ and BODY_ is left as an exercise to the reader.<P>
+
+There also is another, more important improvement that can be made
+in the action above. Replace <FONT
+COLOR="#FF0000"><B>tr&nbsp;-d&nbsp;'\n'</B></FONT> with <FONT
+COLOR="#008080"><B>tr&nbsp;'\n'&nbsp;'&nbsp;'</B></FONT> so that
+when the lines are concatenated a space is put in between them.
+
+
+<HR>
+
+<A NAME="delsig">
+<IMG SRC="../gifst2/tspadsgx.gif" WIDTH="49" HEIGHT="35" ALT=""></A>
+<I>How can I remove the signature from the incoming email?</I><P>
+
+The recipe below assumes that the signature properly adheres to the
+Internet "--&nbsp;" convention to denote where the signature
+starts.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+* ^Subject: Whatever<BR>
+{<BR>
+&nbsp;&nbsp;:0&nbsp;fbw<BR>
+&nbsp;&nbsp;|&nbsp;sed&nbsp;-e&nbsp;'/^--&nbsp;/,$&nbsp;d'<BR>
+&nbsp;&nbsp;:0:<BR>
+&nbsp;&nbsp;${DEFAULT}<BR>
+}<BR>
+</FONT>
+<P>
+
+Let's look at what we've got:<P>
+
+<UL>
+
+  <LI>The <FONT COLOR="#E69900"><B>b</B></FONT> flag means feed the
+body to the pipe.
+
+  <LI>The <FONT COLOR="#E69900"><B>f</B></FONT> flag means use the
+pipe as a filter.
+
+  <LI>The <FONT COLOR="#E69900"><B>w</B></FONT> flag means wait for
+the filter or program to finish.
+
+  <LI>This is not a <FONT COLOR="#00CC00"><B>sed</B></FONT> FAQ, but
+  in brief:
+
+  <UL>
+
+    <LI>In the sed script the <FONT
+    COLOR="#E69900"><B>/^--&nbsp;/</B></FONT> matches the first
+    occurrence of the signature designator string "--&nbsp;".
+
+    <LI>In sed, a lone <FONT COLOR="#E69900"><B>$</B></FONT> stands
+    for the last line.
+
+    <LI>The <FONT COLOR="#E69900"><B>d</B></FONT> denotes deleting
+    the "pattern space" found.
+
+  </UL>
+
+
+</UL>
+
+In the above the sed script will delete everything in the message
+body starting from the "--&nbsp;" until the end of the incoming
+message. Substituting<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+sed&nbsp;-e&nbsp;'/^--&nbsp;/,<FONT COLOR="#E69900"><B>$</B></FONT>&nbsp;d'
+</FONT><P>
+
+with<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+sed&nbsp;-e&nbsp;'/^--&nbsp;/,<FONT COLOR="#E69900"><B>/^$/</B></FONT>&nbsp;d'
+</FONT><P>
+
+will instead delete everything starting from the "--&nbsp;" until
+the first encountered empty line. Thus if there is e.g. an
+attachment after the signature, the attachment will not be thrown
+away.<P>
+
+<HR>
+
+<A NAME="manuals">
+<IMG SRC="../gifst/tsbook2.gif" WIDTH="33" HEIGHT="29" ALT=""></A>
+<I>What unix manuals relating to procmail should I get?</I><P>
+
+Unix manuals are not very helpful as starting points, but after you
+have got the rudiments under your belt, you may wish to browse the
+following manuals for additional information. Below is a simple
+"<FONT COLOR="#E69900"><B>manuals</B></FONT>" Bourne shell script. It
+prepares plain text format files of some of the essential Unix man
+manuals for a procmail user, especially suited for offline
+reading.<P>
+
+Note that the "^H" is not a "^" and an "H", but a CTRL-H, i.e. ASCII
+8 (the backspace character). To make the "manuals" file executable
+type "<FONT
+COLOR="#00CC00"><B>chmod&nbsp;u+x&nbsp;manuals</B></FONT>".<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#!/bin/sh<BR>
+TODIR=${HOME}/myman<BR>
+echo ${TODIR}<BR>
+man egrep&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | sed -e 's/_^H//g' &gt; ${TODIR}/egrep.man<BR>
+man formail&nbsp;&nbsp;&nbsp;           | sed -e 's/_^H//g' &gt; ${TODIR}/formail.man<BR>
+man procmail&nbsp;&nbsp;                | sed -e 's/_^H//g' &gt; ${TODIR}/procmail.man<BR>
+man procmailex                          | sed -e 's/_^H//g' &gt; ${TODIR}/procmaex.man<BR>
+man procmailrc                          | sed -e 's/_^H//g' &gt; ${TODIR}/procmarc.man<BR>
+man regexp&nbsp;&nbsp;&nbsp;&nbsp;      | sed -e 's/_^H//g' &gt; ${TODIR}/regexp.man<BR>
+man sendmail&nbsp;&nbsp;                | sed -e 's/_^H//g' &gt; ${TODIR}/sendmail.man<BR>
+ls -lF ${TODIR}<BR>
+</FONT><P>
+
+<A NAME="sedawk">Many</A> of the recipes in this FAQ utilize sed
+and/or awk. Some useful links (note, however, as is common with
+links, I can't guarantee that they still are current):
+
+<UL>
+
+  <LI><A HREF="http://www.cornerstonemag.com/sed/sedfaq.html">The
+  sed FAQ</A> Eric Pement
+
+  <LI><A HREF="http://www.inf.fu-berlin.de/~guckes/sed/">SED - the
+  stream editor</A> Sven Guckes
+
+  <LI><A HREF="http://www.unet.univie.ac.at/aix/aixprggd/genprogc/manip_strings_sed.htm">Manipulating
+  Strings with sed</A>
+
+  <LI><A HREF="http://sparky.rice.edu/~hartigan/sed.html">SED</A>
+  Patrick Hartigan
+
+  <P>
+
+  <LI><A HREF="http://www.faqs.org/faqs/computer-lang/awk/faq/">comp.lang.awk
+  FAQ</A> Russell Schulz
+
+  <LI><A HREF="http://www.softlab.ece.ntua.gr/facilities/documentation/unix/docs/awk.txt">Awk
+  -- A Pattern Scanning and Processing Language</A> Aho, Kernighan, Weinberger
+
+  <LI><A HREF="http://www.ucs.ed.ac.uk/fmd/unix/learn/usail/library/programing.html#awk">Awk
+  programming links</A> The University of Edinburgh
+
+  <LI><A HREF="http://sparky.rice.edu/~hartigan/awk.html">How to Use
+  AWK</A> Patrick Hartigan
+
+</UL>
+<P>
+
+
+<HR>
+
+<A NAME="vacation">
+<IMG SRC="../gifst/tsmount.gif" WIDTH="36" HEIGHT="36" ALT=""></A>
+<I>Is it possible to use procmail to call the vacation program?</I><P>
+
+Yes, it is, but it is not quite as straight-forward as one would
+expect.<P>
+
+Since this is a procmail, not the vacation program advice collection
+I'll assume that you are reasonably familiar with the vacation
+program. If not, start with "<FONT
+COLOR="#00CC00"><B>man&nbsp;vacation</B></FONT>". You have to use
+procmail to customize the <FONT
+COLOR="#E69900"><B>~/.vacation.msg</B></FONT> file because when
+invoked via procmail, the vacation $SUBJECT variable is not
+necessarily set.<P>
+
+Usually, when vacation is used, it is first called interactively to
+crate the <FONT COLOR="#E69900"><B>~/.vacation.msg</B></FONT> file
+and to replace the <FONT COLOR="#E69900"><B>~/.forward</B></FONT>
+file. If you are going to use the procmail solution it is very
+important not to do this. In particular, the <FONT
+COLOR="#E69900"><B>~/.forward</B></FONT> file must <FONT
+COLOR="#FF0033"><B>not</B></FONT>  be touched in any way. The reason
+is that in this solution it is used to to invoke procmail, not
+vacation. (The vacation program is, of course, called by procmail
+now.)<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#&nbsp;Set&nbsp;a&nbsp;number&nbsp;of&nbsp;variables&nbsp;high&nbsp;up&nbsp;in&nbsp;your&nbsp;~/.procmailrc<BR>
+#<BR>
+VACATION=/usr/bin/vacation<BR>
+ONVACAT=yes<BR>
+VACFREQ=5d<BR>
+VACMSG=${HOME}/.vacation.msg<BR>
+MYNAME_="MyFirstName&nbsp;MyLastName"<BR>
+MYEMAIL_=myid@myhost.mydom<P>
+
+#&nbsp;Get&nbsp;the&nbsp;subject&nbsp;discarding&nbsp;any&nbsp;leading&nbsp;and&nbsp;trailing&nbsp;blanks<BR>
+#<BR>
+SUBJ_=`formail&nbsp;-xSubject:&nbsp;\<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;expand&nbsp;|&nbsp;sed&nbsp;-e&nbsp;'s/^[&nbsp;]*//g'&nbsp;-e&nbsp;'s/[&nbsp;]*$//g'`<P>
+
+#&nbsp;Prepare&nbsp;the&nbsp;vacation&nbsp;message's&nbsp;base<BR>
+#&nbsp;This&nbsp;is&nbsp;done&nbsp;only&nbsp;once&nbsp;in&nbsp;~/.procmailrc<BR>
+#<BR>
+:0&nbsp;cwi<BR>
+*&nbsp;ONVACAT&nbsp;??&nbsp;^^yes^^<BR>
+|&nbsp;echo&nbsp;"From:&nbsp;${MYEMAIL_}"&nbsp;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;echo&nbsp;"Subject:&nbsp;${MYNAME_},&nbsp;away&nbsp;from&nbsp;my&nbsp;mail"&nbsp;&gt;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;echo&nbsp;"X-Loop:&nbsp;myid@myhost.mydom"&nbsp;&gt;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;echo&nbsp;""&nbsp;&gt;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;echo&nbsp;"Thank&nbsp;you&nbsp;for&nbsp;your&nbsp;email&nbsp;about:"&nbsp;&gt;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;echo&nbsp;"\"$SUBJ_\""&nbsp;&gt;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;echo&nbsp;""&nbsp;&gt;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;echo&nbsp;"Your&nbsp;email&nbsp;will&nbsp;be&nbsp;seen&nbsp;to&nbsp;when&nbsp;I&nbsp;return."&nbsp;&gt;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;echo&nbsp;""&nbsp;&gt;&gt;&nbsp;${VACMSG}&nbsp;;\<BR>
+&nbsp;&nbsp;cat&nbsp;${HOME}/.signature&nbsp;&gt;&gt;&nbsp;${VACMSG}<P>
+
+#&nbsp;Here&nbsp;we&nbsp;go&nbsp;ivoking&nbsp;vacation&nbsp;and&nbsp;also&nbsp;saving&nbsp;the&nbsp;email<BR>
+#&nbsp;You&nbsp;might&nbsp;have&nbsp;serveral,&nbsp;different&nbsp;of&nbsp;these&nbsp;recipes<BR>
+#<BR>
+:0<BR>
+*&nbsp;^Subject:.*Whatever<BR>
+{<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{&nbsp;RULE="Testing"&nbsp;}<BR>
+&nbsp;&nbsp;:0&nbsp;cwi<BR>
+&nbsp;&nbsp;*&nbsp;ONVACAT&nbsp;??&nbsp;^^yes^^<BR>
+&nbsp;&nbsp;*&nbsp;!&nbsp;^X-Loop:.*myid@myhost\.mydom<BR>
+&nbsp;&nbsp;|&nbsp;${VACATION}&nbsp;-t${VACFREQ}&nbsp;myid<BR>
+&nbsp;&nbsp;:0:<BR>
+&nbsp;&nbsp;WhateverFolder<BR>
+}<BR>
+</FONT>
+<P>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+<I>Maybe I [Collin Park] can add one more comment: I think you need
+a global LOCKFILE to cover the area from when you generate the
+vacation message to the place where you invoke $VACATION.<P>
+
+Otherwise, message #N may generate .vacation.msg, then
+message #N+1 overwrites it before #N invokes $VACATION.</I>
+
+
+<HR>
+
+<A NAME="help">
+<IMG SRC="../gifst2/tsbid2.gif" WIDTH="36" HEIGHT="36" ALT=""></A>
+<I>Could you please solve for me this procmail problem of
+mine?</I><P>
+
+It is nice that you have found my proctips so useful that you ask
+for my personal advice. Nevertheless, if you ask me by email for
+individualized procmail consultation my response has to be similar
+to <A HREF="../garbo.html#faqtimo">that as in asking me for any
+programming advice</A>. Briefly, the response is that I do not do
+email consultation. If you have a procmail related problem please
+post your question to the Usenet news to a newsgroup like <A
+HREF="news:comp.mail.misc">comp.mail.misc</A>. The added advantage
+of posting is that in a newsgroup both the question and the
+potential answers will have a wider forum. That way everyone will
+benefit.<P>
+
+On rare occasions I have also been asked to email my own personal
+~/.procmailrc or my own spamfoiling scripts. The answer is a
+definite no. There are two main reasons. First, that material is
+private. Second, I have neither the willingness nor the time to send
+out material to users on individual requests. If and when I want to
+share my material I make it available for the users to themselves
+retrieve it via WWW or FTP.
+
+<HR>
+
+<A NAME="more">
+<IMG SRC="../gifst/tsflowe2.gif" WIDTH="34" HEIGHT="46" ALT=""></A>
+<I>I liked this material. Do you have anything else on
+programming, etc?</I><P>
+
+Yes, notably this:<P>
+
+<TABLE BORDER="1">
+  <TR>
+    <TH BGCOLOR="#99FFFF" COLSPAN=2>
+      Programming
+    </TH>
+  </TR>
+  <TR>
+    <TD VALIGN="middle">
+      <IMG SRC="../gifst2/tstp.gif" WIDTH="56" HEIGHT="27" ALT="">
+    </TD>
+    <TD VALIGN="middle">
+      <A HREF="../http/http2.html#programming">Turbo Pascal
+      programming material</A><P>
+    </TD>
+  </TR>
+  <TR>
+    <TD VALIGN="middle">
+      <IMG SRC="../gifst2/tsbatch.gif" WIDTH="59" HEIGHT="31" ALT="">
+    </TD>
+    <TD VALIGN="middle">
+      <A HREF="../http/http2.html#batch">MS-DOS batch programming
+      material</A><P>
+    </TD>
+  </TR>
+  <TR>
+    <TD VALIGN="middle">
+      <IMG SRC="../gifst/tsunix.gif" WIDTH="45" HEIGHT="37" ALT="">
+    </TD>
+    <TD VALIGN="middle">
+      <A HREF="http://garbo.uwasa.fi/unix/ts.html">Unix Bourne
+      shell scripts programming material</A><P>
+    </TD>
+  </TR>
+  <TR>
+    <TH BGCOLOR="#99FFFF" COLSPAN=2>
+      Etc
+    </TH>
+  </TR>
+  <TR>
+    <TD VALIGN="middle">
+      <IMG SRC="../gifst/tsfaq2.gif" WIDTH="51" HEIGHT="28" ALT="">
+    </TD>
+    <TD VALIGN="middle">
+      <A HREF="../http/tsfaq.html">More links to Timo's FAQ materials</A><P>
+    </TD>
+  </TR>
+</TABLE>
+<P>
+
+<HR>
+
+<A NAME="exercise">
+<IMG SRC="../gifst2/tsques5.gif" WIDTH="34" HEIGHT="28" ALT=""></A>
+<B>Some exercises</B><P>
+
+Let's see if we can put to work the methods presented in this FAQ to
+solve some tasks, part of them having come up on the Usenet news.<P>
+
+<FONT COLOR="#000099"><I>Ex.1) Keep a copy of incoming email, and at
+the same time, get only the first five lines from the message body
+and forward it to another account.</I></FONT><P>
+
+<PRE>
+# Discard potential email loops
+:0
+* ^X-Loop: myid@myhost\.mydom
+/dev/null
+
+:0
+* Any rule(s) you might wish to have
+{
+  # Keep a copy, but don't stop yet ( the c )
+  :0c:
+  ${DEFAULT}
+
+  # Comment with "Old-" the Content-Length field from the header
+  # Ensure that a whitespace exists between field name and content
+  :0 fwh
+  * ^Content-Length:
+  | formail -z -i"Content-Length:"
+
+  # Add the loop avoidance
+  # ( f for piping; w for waiting for completion; h for headers )
+  :0 fwh
+  | formail -A"X-Loop: myid@myhost.mydom"
+
+  # Truncate the body ( the b ) to five lines
+  :0 fwb
+  | head -5
+
+  # Forward to the other account
+  :0
+  ! myid2@myhost.mydom
+}
+</PRE>
+
+It is important to handle the content-length header-field when the
+length of the email is altered. This is done to ensure that the
+receiving email program will not break the forwarded message when it
+is read. The -i switch is used to retain the information about the
+original message length to the attention of the receiver.<P>
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.2) Forward the first 10 lines of the
+message body to the user's second account while preserving all the
+<B>original</B> message headers -- I.e, at the receiving side, the
+user wants to see all the message travel history and only first 10
+line of the message body.</I></FONT><P>
+
+This is a more complicated version of the first exercise. The
+transformed task is not trivial, since when you forward, the
+original message headers will be replaced by your forwarding
+headers. Therefore, you'll have to see to preserving also the
+original headers. Below is how I would solve the problem based on
+several items in this FAQ.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+# A trick to extract the subject into a variable<BR>
+SUBJ_=`formail -c -xSubject: | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`<P>
+
+# The actual recipe to solve the exercise starts here<BR>
+:0<BR>
+* Whatever condition(s) you wish to select the messages for forwarding<BR>
+# Avoid email loops<BR>
+* ! ^X-Loop: myid@myhost\.mydom<BR>
+{<BR>
+  &nbsp;&nbsp;:0c:   #If you want to, preserve a full copy of the email, else omit<BR>
+  &nbsp;&nbsp;${DEFAULT}<BR>
+  &nbsp;&nbsp;:0fwh  #Preserve the information about the original content length<BR>
+  &nbsp;&nbsp;* ^Content-Length:<BR>
+  &nbsp;&nbsp;| formail -z -i"Content-Length:"<BR>
+  &nbsp;&nbsp;:0fwb  #Truncate the body of the message to ten lines<BR>
+  &nbsp;&nbsp;| head -10<BR>
+  &nbsp;&nbsp;:0fwh  #Insert a blank line at the beginning of the body for clarity<BR>
+  &nbsp;&nbsp;| cat - ; echo ""<BR>
+  &nbsp;&nbsp;:0fwh  #Store the original headers, quoting them to avoid problems<BR>
+  &nbsp;&nbsp;| sed -e 's/^/\&gt; /'<BR>
+  &nbsp;&nbsp;:0fwh  #Insert some of your own information before forwarding<BR>
+  &nbsp;&nbsp;| formail -A"X-Loop: myid@myhost.mydom" \<BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;-A"X-Info: Forwarded body truncated to 10 lines" \<BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;-i"Subject: $SUBJ_ (fwd)"<BR>
+  &nbsp;&nbsp;#Finally, forward the adjusted email<BR>
+  &nbsp;&nbsp;:0<BR>
+  &nbsp;&nbsp;!my2dnId@myhost.mydom<BR>
+}<P>
+
+# Discard potential email loops<BR>
+:0<BR>
+* ^X-Loop: myid@myhost\.mydom<BR>
+/dev/null<BR>
+</FONT><P>
+
+<IMG SRC="../gifst/tspen30.gif" WIDTH="31" HEIGHT="21" ALT="">
+<B><U>Feedback</U>:</B>
+
+<I>The recipe with head probably needs an "i" on the flags line, as:
+
+<DL>
+<DD>:0 fwbi</DD>
+<DD>| head -10</DD>
+</DL>
+
+since write errors on the pipe are likely for messages larger than a
+certain size.  (I've seen numbers like 4096 and 10240... it apparently
+varies with the system.)</I><P>
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.3) Match a potential [TS999] identification
+in the Subject header, such as "[TS001] Timo testing". If found,
+insert a "Subject id: [TS999]" as the first line in the body of the
+message. (The rest of the original subject line must not reappear in
+the id.)</I></FONT> <P>
+
+<PRE>
+:0
+* ^Subject:.*\/\[TS[0-9]+\]
+{
+  :0 fhw
+  | cat - ; \
+  echo "Subject id: ${MATCH}"
+  :0:
+  ${DEFAULT}
+}
+</PRE>
+
+But what if you <B>do</B> want to include the rest of the original
+subject line? In that case use<P>
+
+<PRE>
+* ^Subject:.*\/\[TS[0-9]+\].*
+</PRE>
+<P>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.4) Multi-part messages (which typically
+include attachments) have in their headers a field like the two
+examples below:<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+Content-Type: multipart/mixed; boundary=ELM965173874-25050-0_<BR>
+
+Content-Type: multipart/mixed;
+boundary="------------BA45271FBDAA479CECA7E20A"<BR>
+</FONT><P>
+
+Write a recipe that inserts into a variable (call it BOUND) the
+boundary string. Note that the potential quotes (") are not to be
+part of that string. Also note that the header might be divided on
+multiple lines as in<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+<DL>
+  <DD>Content-Type: multipart/mixed;</DD>
+    <DD>&nbsp;&nbsp;boundary=ELM965173874-25050-0_</DD>
+</DL>
+</FONT>
+</I></FONT><P>
+
+There are alternative solutions, which not necessarily are quite
+equivalent. The first one is putting high up in your ~/.procmailrc
+recipe file the line(s)<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+BOUND1=`formail -z -x"Content-Type:" \<BR>
+  &nbsp;&nbsp;| awk -F= '{ print $2 }' \<BR>
+  &nbsp;&nbsp;| sed -e 's/\"//g' | tr -d '\n'`<BR>
+</FONT><P>
+
+A second one is:<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0h<BR>
+* ^Content-Type:<BR>
+{ BOUND2=`egrep -i 'boundary=' \<BR>
+  &nbsp;&nbsp;| awk -F= '{ print $2 }' | sed -e 's/\"//g'` }<BR>
+</FONT><P>
+
+This was not in the exercise, but you can then have recipes like<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0:<BR>
+* ! BOUND2 ?? ^^^^<BR>
+WhateverFolder<BR>
+</FONT><P>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.5) Identify if the arriving email is in
+Korean. If so, return the message to the sender and his/her
+postmaster. Ignore a potential Reply-To: field in the header. Avoid
+email loops. Avoid forgeries which appear to come from your own
+host. Avoid forgeries which lack a host name. Be careful not to take
+Finnish/Swedish or French as Korean.</I></FONT><P>
+
+This is quite a difficult exercise with many details involved.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+# Get the sender's address, ignore Reply-To:<BR>
+FROM_=`formail -c -I"Reply-To:" -rt -xTo: \<BR>
+&nbsp;&nbsp;| expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`<P>
+
+# Get the sender's host<BR>
+FHOST_=`echo "${FROM_}" | awk -F@ '{ print $2 }'`<P>
+
+# Your path to sendmail<BR>
+SENDMAIL="/usr/lib/sendmail"<P>
+
+# Reject probable Korean email using character scoring<BR>
+:0<BR>
+* ! ^X-Loop:.*myid@myhost\.mydom<BR>
+* ! $ ? echo ${FHOST_} | fgrep -is 'myhost.mydom'<BR>
+* $ ? echo ${FHOST_} | fgrep -is '.'<BR>
+{<BR>
+&nbsp;&nbsp;:0BD<BR>
+&nbsp;&nbsp;*&nbsp;&nbsp;-1^1 .<BR>
+&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;2^1 =[0-9A-F][0-9A-F]<BR>
+&nbsp;&nbsp;*&nbsp;&nbsp;20^1 [&iexcl;&cent;&pound;&curren;&yen;&brvbar;&sect;&uml;&copy;&ordf;&laquo;&not;&shy;&reg;&macr;&deg;&plusmn;&sup2;&sup3;&acute;&micro;&para;&middot;&cedil;&sup1;&ordm;&raquo;&frac14;&frac12;&frac34;&iquest;]<BR>
+&nbsp;&nbsp;*&nbsp;&nbsp;20^1 [&Agrave;&Aacute;&Acirc;&Atilde;&Auml;&Aring;&AElig;&Ccedil;&Egrave;&Eacute;&Ecirc;&Euml;&Igrave;&Iacute;&Icirc;&Iuml;&ETH;&Ntilde;&Ograve;&Oacute;&Ocirc;&Otilde;&Ouml;&times;&Oslash;&Ugrave;&Uacute;&Ucirc;&Uuml;&Yacute;&THORN;&szlig;]<BR>
+&nbsp;&nbsp;*&nbsp;&nbsp;20^1 [&agrave;&aacute;&acirc;&atilde;&auml;&aring;&aelig;&ccedil;&egrave;&eacute;&ecirc;&euml;&igrave;&iacute;&icirc;&iuml;&eth;&ntilde;&ograve;&oacute;&ocirc;&otilde;&ouml;&divide;&oslash;&ugrave;&uacute;&ucirc;&uuml;&yacute;&thorn;&yuml;]<BR>
+&nbsp;&nbsp;*&nbsp;&nbsp;20^1 =[89A-F][0-9A-F]<BR>
+&nbsp;&nbsp;*&nbsp;-20^1 [&aring;&Aring;&auml;&Auml;&ouml;&Ouml;&agrave;&aacute;&acirc;&ccedil;&egrave;&eacute;&ecirc;&euml;]<BR>
+&nbsp;&nbsp;*&nbsp;-20^1 =(E5|C5|E4|C4|F6|D6|E0|E1|E2|E7|E8|E9|EA|EB)<BR>
+&nbsp;&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;{ RULE="Probable Korean email" }<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;#<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;:0c:${HOME}/procmail.lock<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;| expand | sed -e 's/[ ]*$//g' \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| sed -e 's/^/ /' > ${HOME}/procmail.reject.korean<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;#<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;:0:${HOME}/procmail.lock<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;| (formail -r -I"Subject: Autorejected email" \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-I"To: ${FROM_}" \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-I"Cc: postmaster@${FHOST_}" \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-A"X-Loop: myid@myhost.mydom" ; \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo "--- begin rejected probable Korean email ---" ; \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo "" ; \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cat ${HOME}/procmail.reject.korean ; \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo "--- end of rejected probable Korean email ---" ; \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rm -f ${HOME}/procmail.reject.korean) \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| ${SENDMAIL} -t<BR>
+&nbsp;&nbsp;}<BR>
+}<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.6) If the subject of the email contains the
+identifier [INFO], in capitals, put the body of the incoming email into
+a temporary file. Ensure that the name of the temporary file is unique.
+Insert the full subject line at the top of the temporary file. (Why, and
+what then is beyond this exercise.)</I></FONT><P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Get the subject discarding any leading and trailing blanks<BR>
+SUBJ_=`formail -xSubject: \<BR>
+       | expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`<P>
+
+# Assign a temporary file name<BR>
+TMPFILE_=proctemp.$$<P>
+
+:0D<BR>
+* ^Subject.*\[INFO\]<BR>
+{<BR>
+&nbsp;&nbsp;:0 fwbi<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;| echo "Subject: ${SUBJ_}" > ${TMPFILE_}; \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;echo >> ${TMPFILE_}; \<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;cat >> ${TMPFILE_}<BR>
+}<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.7) If the email comes from a certain
+sender, check if the time-zone information is present in the Date
+header. If not, add it assuming +3 hours.</I></FONT><P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+#Get the date discarding any leading and trailing blanks<BR>
+DATE_=`formail -xDate: \<BR>
+&nbsp;&nbsp;| expand | sed -e 's/^[ ]*//g' -e 's/[ ]*$//g'`<P>
+
+:0<BR>
+* ^From:.*TheCertainSender<BR>
+* ! ^Date:.*(EET|DST|GMT)<BR>
+{<BR>
+&nbsp;&nbsp;:0 fwhi<BR>
+&nbsp;&nbsp;| formail -i"Date: ${DATE_} +0300 (EET DST)"<BR>
+&nbsp;&nbsp;:0:<BR>
+&nbsp;&nbsp;${DEFAULT}<BR>
+}<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<I><FONT COLOR="#000099">Ex.8) The simple spamfoling recipe below
+won't work. Correct it.<P>
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0:<BR>
+* !^TO$USER@xxxxxxx.xxx<BR>
+ProbableSpam.mail<P>
+</FONT></FONT></I>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+{<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{&nbsp;<B>USER=`whoami`</B>&nbsp;}<BR>
+&nbsp;&nbsp;:0:<BR>
+&nbsp;&nbsp;*&nbsp;<B>$</B>&nbsp;!&nbsp;^TO_${USER}@([-a-z0-9_]+\.)*xxxxxxx\.xxx<BR>
+&nbsp;&nbsp;ProbableSpam.mail<BR>
+}<P>
+</FONT>
+
+The <I>([-a-z0-9_]+\.)*</I> is optional.<P>
+
+Another solution:<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0:<BR>
+*&nbsp;<B>$</B>&nbsp;!&nbsp;^TO_${<B>LOGNAME</B>}@([-a-z0-9_]+\.)*xxxxxxx\.xxx<BR>
+ProbableSpam.mail<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<I><FONT COLOR="#000099">Ex.9) Insert at the beginning of the
+subject the date/time of receiving the incoming message in the
+YYYYMMDD HHMMSS format.<P>
+</FONT></I>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+*&nbsp;Whatever&nbsp;rules<BR>
+{<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{&nbsp;SUBJ_=`formail&nbsp;-c&nbsp;-xSubject:&nbsp;\<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;sed&nbsp;-e&nbsp;'s/^[&nbsp;]*//g'&nbsp;-e&nbsp;'s/[&nbsp;]*$//g'`&nbsp;}<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{&nbsp;DATETIME_=`date&nbsp;"+%Y%m%d&nbsp;%k%M%S"`&nbsp;}<BR>
+&nbsp;&nbsp;:0&nbsp;fhwi<BR>
+&nbsp;&nbsp;|&nbsp;formail&nbsp;-I"Subject:&nbsp;${DATETIME_}&nbsp;${SUBJ_}"<BR>
+&nbsp;&nbsp;:0:<BR>
+&nbsp;&nbsp;${DEFAULT}<BR>
+}<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.10) This partly is based on an actual
+incident. Consider the follwing recipe with three small, but crucial
+syntax errors, and one omission. Find them.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+*&nbsp;^From:.*(\<BR>
+(abuse(-news)?|acct_closed)@<BR>
+(pacificnet\.net|\<BR>
+mindspring\.net|\<BR>
+InfoAve\.net|\<BR>
+netcom\.com\|<BR>
+yahoo\.com|\<BR>
+alladvantage\.com|\<BR>
+hotmail\.com))<BR>
+*&nbsp;^TO_(myid|myFirstName\.mySecondName)@([-a-z0-9_]+\.)*myhost\.mydom<BR>
+{<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{RULE="Abuse&nbsp;reception&nbsp;notes"}<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;ReceivedNotes<BR>
+}<BR>
+</FONT>
+</I>
+</FONT>
+<P>
+
+<FONT COLOR="#E69900">
+The answer is a bit further down<BR>
+<B>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<BR>
+&nbsp;&nbsp;:<P>
+</B>
+</FONT>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+*&nbsp;^From:.*(\<BR>
+(abuse(-news)?|acct_closed)@<FONT COLOR="#FF0000"><U>\</U></FONT><BR>
+(pacificnet\.net|\<BR>
+mindspring\.net|\<BR>
+InfoAve\.net|\<BR>
+netcom\.com<FONT COLOR="#FF0000"><U>|\</U></FONT><BR>
+yahoo\.com|\<BR>
+alladvantage\.com|\<BR>
+hotmail\.com))<BR>
+*&nbsp;^TO_(myid|myFirstName\.mySecondName)@([-a-z0-9_]+\.)*myhost\.mydom<BR>
+{<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{<FONT COLOR="#FF0000"><U>&nbsp;</U></FONT>RULE="Abuse&nbsp;reception&nbsp;notes"<FONT COLOR="#FF0000"><U>&nbsp;</U></FONT>}<BR>
+&nbsp;&nbsp;:0<FONT COLOR="#FF0000"><U>:</U></FONT><BR>
+&nbsp;&nbsp;ReceivedNotes<BR>
+}<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.11) Write a recipe to match the subject
+line below. The (RECENT) may or may not be there, and the numbers
+will change from posting to posting. <BR>
+<FONT FACE="Courier New,Courier" SIZE="-1">
+Subject:&nbsp;Re:&nbsp;[SpamCop:(RECENT)38.204.225.29,id:16135684]&nbsp;Make&nbsp;lotsof&nbsp;$$$<BR>
+</FONT>
+</I>
+</FONT>
+
+<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0:<BR>
+*&nbsp;^Subject:&nbsp;Re:&nbsp;\[SpamCop:(\(RECENT\))?[0-9\.]+,id:[0-9]+\]<BR>
+WhateverFolder<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.12) It is fairly common that spam email
+has the same sender and recipient in the From: and To: fields.
+Device a recipe that detects such postings.<BR></I></FONT>
+
+<P>
+
+This is not quite as simple as it first sounds, since it is
+advisable to take into the account the fact that the contents of the
+two fields may not be quite identical even in the case of the actual
+addresses being the same. Thus I would use regular expression
+matching both ways as below as one of the optional solutions. By
+default, variable comparisons are regular expression matching, not
+strict equalities. Also note avoiding email loops and falsely
+targeting email which one may have sent to oneself.<P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+WHOFROM=`formail&nbsp;-xFrom:&nbsp;\<BR>
+&nbsp;&nbsp;|&nbsp;expand&nbsp;\<BR>
+&nbsp;&nbsp;|&nbsp;sed&nbsp;-e&nbsp;'s/&nbsp;&nbsp;*/&nbsp;/g'&nbsp;\<BR>
+&nbsp;&nbsp;|&nbsp;sed&nbsp;-e&nbsp;'s/^[&nbsp;]*//g'&nbsp;-e&nbsp;'s/[&nbsp;]*$//g'`<P>
+
+WHOTO=`formail&nbsp;-xTo:&nbsp;\<BR>
+&nbsp;&nbsp;|&nbsp;expand&nbsp;\<BR>
+&nbsp;&nbsp;|&nbsp;sed&nbsp;-e&nbsp;'s/&nbsp;&nbsp;*/&nbsp;/g'&nbsp;\<BR>
+&nbsp;&nbsp;|&nbsp;sed&nbsp;-e&nbsp;'s/^[&nbsp;]*//g'&nbsp;-e&nbsp;'s/[&nbsp;]*$//g'`<P>
+
+:0:<BR>
+*&nbsp;-100^0&nbsp;^X-Loop:&nbsp;myid@myhost\.mydom<BR>
+*&nbsp;-100^0&nbsp;^TO_(myid|myFirst\.mySecond)@([-a-z0-9_]+\.)*myhost\.mydom<BR>
+*&nbsp;-100^0&nbsp;^From:.*LegitimateMailingList<BR>
+*&nbsp;1^0&nbsp;$&nbsp;WHOFROM&nbsp;??&nbsp;${WHOTO}<BR>
+*&nbsp;1^0&nbsp;$&nbsp;WHOTO&nbsp;??&nbsp;${WHOFROM}<BR>
+ProbableSpam.mail<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.13) Write a (spam avoidance) recipe to
+detect email with more than seven recipients in the "To:" header
+field. Assume for simplicity that each address will have exactly one
+"@" character in it.<BR></I></FONT><P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+*&nbsp;^Subject:.*The&nbsp;information&nbsp;you&nbsp;requested<BR>
+{<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;WHOTO=`formail&nbsp;-z&nbsp;-xTo:`<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;COUNT=`echo&nbsp;${WHOTO}&nbsp;|&nbsp;sed&nbsp;-e&nbsp;'s/[^@]//g'&nbsp;|&nbsp;wc&nbsp;-c`<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;COUNT1=`expr&nbsp;${COUNT}&nbsp;-&nbsp;1`<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;ISGT=`expr&nbsp;${COUNT1}&nbsp;\&gt;&nbsp;7`<BR>
+&nbsp;&nbsp;}<BR>
+&nbsp;&nbsp;:0:<BR>
+&nbsp;&nbsp;*&nbsp;ISGT&nbsp;??&nbsp;^^1^^<BR>
+&nbsp;&nbsp;ProbableSpam.mail<BR>
+}<BR>
+</FONT>
+
+
+<CENTER><HR WIDTH="30%"></CENTER><P>
+
+<FONT COLOR="#000099"><I>Ex.14) Make procmail forward email that
+arrives between 9am and 5pm to a predefined daytime email address.
+<BR></I></FONT><P>
+
+<FONT FACE="Courier New,Courier" SIZE="-1">
+:0<BR>
+#&nbsp;Omit&nbsp;the&nbsp;condition&nbsp;line&nbsp;below&nbsp;if&nbsp;this&nbsp;is&nbsp;for&nbsp;all&nbsp;email<BR>
+*&nbsp;^Subject:.*Whatever<BR>
+{<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;TIME=`date&nbsp;+%H%M`<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;ISGT=`expr&nbsp;${TIME}&nbsp;\>&nbsp;0900`<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;ISLT=`expr&nbsp;${TIME}&nbsp;\<&nbsp;1700`<BR>
+&nbsp;&nbsp;}<BR>
+&nbsp;&nbsp;:0<BR>
+&nbsp;&nbsp;*&nbsp;ISGT&nbsp;??&nbsp;^^1^^<BR>
+&nbsp;&nbsp;*&nbsp;ISLT&nbsp;??&nbsp;^^1^^<BR>
+&nbsp;&nbsp;!&nbsp;daytime_forward_address<BR>
+}<BR>
+</FONT>
+
+
+<HR>
+
+<A NAME="ackn">
+<IMG SRC="../gifst/tsmedals.gif" WIDTH="36" HEIGHT="31" ALT=""></A>
+<B><U>Acknowledgements for useful advice and/or feedback</U>:</B><P>
+&nbsp;Davey, David<BR>
+&nbsp;Dnes, Walter<BR>
+&nbsp;Eriksson, Era<BR>
+&nbsp;Guenther, Philip<BR>
+&nbsp;Hebeisen, Christoph<BR>
+&nbsp;Hirvonen, Hannu<BR>
+&nbsp;Menezes, Evandro<BR>
+&nbsp;Park, Collin<BR>
+&nbsp;Van Steenkist, Vernon<BR>
+<P>
+
+Any errors and inadequacies are, however, solely my own responsibility.
+<P>
+
+<IMG SRC="../gifst/tsparay5.gif" WIDTH="16" HEIGHT="25" ALT="">
+A legal note: The author shall not be liable to the user, the reply
+target or any third party for any direct, indirect or consequential
+loss or damage arising from using, abusing, or a failure to be able
+to use, the information in this message/file howsoever caused. No
+warranty is given that all the information contained is correct, or
+that it is current.<P>
+
+
+<HR>
+
+<P>
+
+<FONT SIZE="-1">
+[<A HREF="../index.html">ts@uwasa.fi</A>]
+[<A HREF="../timo97.html">Photo</A>]
+[<A HREF="http://garbo.uwasa.fi/pc/ts.html">Programs</A>]
+[<A HREF="../publicat/publicat.html">Research</A>]
+[<A HREF="../opas/opas.html">Lectures</A>]
+[<A HREF="../../ktt/lasktoim/">Department</A>]
+[<A HREF="../../ktt/">Faculty</A>]
+[<A HREF="../../">University</A>]
+</FONT>
+<P>&nbsp;
+
+</BODY>
+</HTML>

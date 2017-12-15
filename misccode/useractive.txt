@@ -1,0 +1,976 @@
+Includes subnets, DNS, Sendmail and Apache info from my 4/2004 UserActive Unix
+certification courses.
+
+
+-----
+Network, Broadcast, and Subnets
+
+Let's give ourselves a class C network of 192.168.1.xxx. Two of the addresses
+are automatically used up -- the network address of 192.168.1.0 and the
+broadcast address of 192.168.1.255. The network address is used when referring
+to the network itself, and the broadcast address is used to refer to all of
+the hosts on that network. This means you can have 254 hosts on the network.
+That's quite a few hosts to connect on the same IP network! We need a way to
+split up the network into smaller parts.
+
+All classes also have what's called a subnet mask. By default a class C
+network has a subnet mask of 255.255.255.0. (Note that the "on" bits are the
+same ones represented by red x's in the table above.) In fact, this default
+mask is really the only thing the old class structure is used for anymore. By
+changing the subnet mask we can split up the large IP network into two or more
+smaller networks. The subnet mask is then used to determine which portion of
+an IP address defines the network and which defines the host. Looks look at
+our network again:
+
+11111111 11111111 11111111 00000000 subnet mask (255.255.255.0) 11000000
+10101000 00000001 00000001 ip address of the first host (192.168.1.1)
+
+Now let's split it into two subnets instead of one. We'll do this by
+converting one of the host bits into an additional network bit. The new subnet
+mask would be as follows:
+
+11111111 11111111 11111111 10000000 (255.255.255.128)
+
+But now, we have two networks and two broadcast addresses as well. This is
+because the green number, although part of the network portion, can be either
+a one or a zero. For the network addresses, all of the host bits are 0 and for
+the broadcast addresses, all of the host bits are 1.
+
+11000000 10101000 00000001 00000000 1st network address (192.168.1.0) 11000000
+10101000 00000001 01111111 1st broadcast address (192.168.1.127)
+
+11000000 10101000 00000001 10000000 2nd network address (192.168.1.128)
+11000000 10101000 00000001 11111111 2nd broadcast address (192.168.1.255)
+
+The usefulness of the subnet mask is that, when coupled with a host IP
+address, it provides all of the information necessary about a subnet. Let's
+say we're given the following pair:
+
+subnet mask: 255.255.255.128 host address: 192.168.1.140
+
+The subnet mask let's us determine the network and host parts of the IP
+address. From this IP address and subnet mask we know the network and
+broadcast addresses for all of the subnets, as well as which subnet the host
+is a part of (which happen to be the second set from above).
+
+The subnet mask is like a filter telling us which parts are for the network
+and which are for the hosts. But why not just give the IP address and network
+address... isn't that enough to describe it? Not really.
+
+network address: 192.168.1.0 host address: 192.168.1.22
+
+From this pair we know that the host is on the 192.168.1.0 network. However,
+there is no way of knowing whether or not that network is split into multiple
+subnets or not. We don't know if 192.168.1.140 is on the same subnet as
+192.168.1.22.
+
+
+
+Subnet Mask Example
+
+A slightly more complicated example would be as follows:
+
+subnet mask: 255.255.255.224
+host address: 192.168.1.163
+
+Let's break it down, piece by piece. The subnet mask ends in 224, which looks
+like 11100000 in binary. This gives us eight separate subnets.
+
+Subnet	Binary		Network				Broadcast
+1	    	00000000	192.168.1.0		192.168.1.31
+2	    	00100000	192.168.1.32	192.168.1.63
+3		    01000000	192.168.1.64	192.168.1.95
+4		    01100000	192.168.1.96	192.168.1.127
+5		    10000000	192.168.1.128	192.168.1.159
+6		    10100000	192.168.1.160	192.168.1.191
+7		    11000000	192.168.1.192	192.168.1.223
+8		    11100000	192.168.1.224	192.168.1.255
+
+So now we can look at our IP address, 192.168.1.163, and see that it's part of
+the 6th subnet. We got all of this information just from using the subnet
+mask.
+
+    NOTE: Having too many subnets can severely reduce the amount of IPs
+    available for hosts since a network and broadcast address is necessary for
+    each subnet. In the previous example, we've already reduced it by 14
+    additional addresses.
+
+
+Quiz example
+============
+subnet mask: 255.255.255.192
+host address: 64.5.96.66
+
+192 is 11000000 so we have 4 subnets available:
+00 -- 0
+01 -- 64
+10 -- 128
+11 -- 192
+
+Subnet	Binary		Network	  		Broadcast
+1	    	00000000	64.5.96.0 		64.5.96.63
+2	    	01000000	64.5.96.64		64.5.96.127   <---we're part of the 6th subnet
+3	    	10000000	64.5.96.128		64.5.96.191
+4	    	11000000	64.5.96.192		64.5.96.255
+
+
+or using Prefix Length Notation: 
+11111111 11111111 11111111 11000000
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         <---26
+64.5.96.66/26
+
+
+-----
+
+Add a default gateway:
+$ /sbin/route add default gw 10.0.0.1
+Remove a default gateway:
+$ /sbin/route del default
+Bring down Ethernet card
+$ /sbin/ifconfig eth0 down
+Bring up Ethernet card
+$ /sbin/ifconfig eth0 10.0.0.137 netmask 255.255.0.0
+
+
+-----
+
+
+DNS
+
+hottub:~$ head -n 25 /var/named/pz/private.useractive.com
+
+Observe the following line(s)
+
+
+@        IN      SOA ns1.private.useractive.com. root.private.useractive.com. (
+         5        ;serial
+         21600    ;refresh  6 hours
+         3600     ;retry    1 hour
+         1209600  ;expire   2 weeks
+         172800   ;ttl      2 days
+         )
+
+The @ symbol is shorthand for the domain itself: private.useractive.com. This
+is an Internet class record so we include the IN. Next is the type of record
+we're dealing with, in this case, SOA. SOA stands for start of authority. The
+authoritative nameserver for a domain is always going to have an SOA record in
+the zone file.
+
+ns1.private.useractive.com. is the name of the primary DNS server for this
+domain. Notice that the name ends in a period. This is because named will
+attempt to append the .private.useractive.com domain to the end of any name
+that doesn't end in a period. It seems silly now, but it saves a lot of hassle
+for the other records down below.
+
+After the primary nameserver entry is the email address of the person in
+charge of maintaining the zone information. root.private.useractive.com. (note
+the period) doesn't look like a typical email address, but that's because you
+would need to replace the first period with @. In then becomes,
+root@private.useractive.com.
+
+Inside of the parenthesis are a bunch of numbers. The first of which is called
+the serial number. This acts as a sort of version number for the zone
+information. It is used by secondary nameservers to determine if their
+information is up-to-date or not. It's for this reason that you need to
+increase the serial value whenever you change the information in your zone
+files.
+
+The rest of the numbers indicate a length of time (in seconds). The refresh
+number is how often the secondary nameservers are supposed to contact the
+primary nameserver to check and see if their information is correct. If for
+some reason the secondary nameserver can't connect it will try again after the
+retry period has passed. It will continue to keep trying until it can connect
+to the primary server. If the expire time passes without the secondary server
+being able to connect to the primary server, the secondary server will stop
+responding to information about that zone. It decides that the information is
+so old that it probably isn't accurate anymore. Finally, the ttl number is the
+time to live number we discussed earlier. It tells machines how long they
+should cache data from this server.
+
+All of these times can be changed depending on the typical frequency of domain
+updates and the tradeoff of load on the primary nameserver.
+
+    NOTE: Comments in a zone file begin with a semi-colon. 
+
+
+The rest of the entries in the zone file are all a lot easier than the SOA
+record.
+
+Observe the following line(s)
+
+
+             IN NS      ns1.private.useractive.com.
+
+This is an NS or nameserver record. This specifies the name of a nameserver
+for this domain. This entry starts with a blank space because the origin
+domain (private.useractive.com) is implied for NS entries (though we could
+have written it out if we wanted). This is the primary nameserver for this
+domain, but secondary nameservers would be listed here as well.
+
+Observe the following line(s)
+
+
+             IN MX      5 mail.private.useractive.com.
+
+Here we have a mail exchanger (MX) record. This is the mail exchanger record
+for the entire domain. The blank at the beginning of this line is not
+automatically assumed to be the origin domain as with the NS records. Here,
+the blank simply repeats the name from the line above it. It just so happens
+that the line above was for the origin domain. mail.private.useractive.com.
+is the name of our mail exchanger, but what's this 5 all about? MX records
+also have a preference value. It's simply a way of listing several mail
+exchangers for redundancy purposes, while keeping track of which one would
+be the best to use. Typically, two or more would be listed and the one with
+the lowest preference would be used first. Any mail sent to someone at this
+domain (ie bob@private.useractive.com) will be directed to the mail
+exchanger.
+
+Mail sent to hosts instead of to the domain itself (ie
+bob@hottub.private.useractive.com) will be delivered to that host unless the
+host has it's own MX entries.
+
+
+Observe the following line(s)
+
+
+; This machine
+ns1          IN A       10.0.0.1 
+hottub       IN A       10.0.0.1
+mail         IN A       10.0.0.1
+
+These are address records. They're probably the easiest to understand and
+they're really the whole point of DNS. Address records define a name to be
+mapped to an IP address. Since the names here don't end in a period the domain
+is added to the end. The first one, for example, says that
+ns1.private.useractive.com has an address of 10.0.0.1. Notice though, that all
+three of these entries have the same IP address. This is because ns1 is also
+known as hottub and mail. A single machine can have multiple names. It's also
+possible for a hostname to have multiple IP addresses (in the case of routers
+or load balancing applications).
+
+    NOTE: The host listed as the mail exchanger must have an address entry. In
+    this case it's mail.private.useractive.com. 
+
+Observe the following line(s)
+
+
+; Cnames
+whirlpool    IN CNAME   hottub
+bathtub      IN CNAME   hottub
+
+CNAME stands for canonical name. These are aliases for other hostnames. CNAME
+records are often used when the hostname of a machine is changed. Typically
+you still want the old name to work until everyone knows it has changed.
+During a nameserver lookup, the alias will be replaced by the real hostname.
+Let's check this out.
+
+After the command prompt, type the following commands:
+
+hottub:~$ host whirlpool        
+whirlpool.private.useractive.com is a nickname for hottub.private.useractive.com
+hottub.private.useractive.com has address 10.0.0.1
+
+Finally we have a lot more address records.
+
+Observe the following line(s)
+
+
+; The bubbles
+bubble2      IN A       10.0.0.2
+bubble3      IN A       10.0.0.3
+bubble4      IN A       10.0.0.4
+bubble5      IN A       10.0.0.5
+bubble6      IN A       10.0.0.6
+
+These are the hostnames and IP addresses for all of the bubbles. Obviously we
+could have named them anything we want, but we named them in numerical order
+to help keep things neat.
+
+
+in-addr.arpa Zone Files
+
+    We've covered the format of a zone file for a primary domain, but what
+    about the reverse lookup of IP addresses. We'll need to take a look at the
+    zone file for 0.0.10.in-addr.arpa. I don't remember the location of the
+    zone file though, so let's take a look back in /etc/named.conf. We could
+    open up the file and search for it, but I bet we could make a quick guess
+    with a little more information.
+
+    After the command prompt, type the following commands:
+
+
+hottub:~$ cat /etc/named.conf |grep file
+        file "root.cache";
+        file "pz/127.0.0";
+        file "pz/10.0.0";
+        file "pz/private.useractive.com";
+
+    This is a list of all of the zone files from /etc/named.conf. If you
+    remember from the previous lesson that all of these files are under
+    /var/named it's not much of a stretch to assume that /var/named/pz/10.0.0
+    is the file we want to look at.
+
+    After the command prompt, type the following commands:
+
+
+hottub:~$ head -n 15 /var/named/pz/10.0.0
+@               IN      SOA ns1.private.useractive.com. root.private.useractive.com. (
+                                5       ; Serial
+                                21600   ; Refresh
+                                3600    ; Retry
+                                1209600  ; Expire
+                                172800)  ; Minimum TTL
+        IN NS      ns1.private.useractive.com.
+
+; this machine
+1       IN PTR     ns1.private.useractive.com.
+
+; the bubbles
+2       IN PTR     bubble2.private.useractive.com.
+3       IN PTR     bubble3.private.useractive.com.
+4       IN PTR     bubble4.private.useractive.com.
+
+    As you can see, the first thing we have again is an SOA record. The
+    primary nameserver is ns1.private.useractive.com and if you have a problem
+    you should email root@private.useractive.com (substituting an @ for the
+    first period). The NS record is still the same as well.
+
+    The only new things are all these PTR or pointer entries. These are pretty
+    much the exact opposite of the address records we saw in the
+    private.useractive.com zone file. On the left side is the "hostname" which
+    is actually the host part of the IP address. On the far right is the
+    hostname that it points to. We have to include the full domain name with a
+    trailing period. The reason for this is that this is the zone file for
+    0.0.10.in-addr.arpa. If we didn't include our domain name, the origin
+    would be appended to it. For example, if we just said bubble2, it would
+    end up as bubble2.0.0.10.in-addr.arpa, which is complete nonsense.
+
+    One thing we should take note of is that 10.0.0.1 only points to
+    ns1.private.useractive.com. In the zone file for the domain, ns1, hottub,
+    and mail all had an address of 10.0.0.1. This is because ns1 is the "real"
+    name of the machine as far as the rest of the Internet is concerned and a
+    reverse lookup is only going to return one hostname.
+
+
+The localhost zone file
+
+    DNS servers are only going to have reverse lookup zone files for IP ranges
+    that they are in charge of. There is usually a zone file for the 127.0.0.0
+    range of local IP addresses as well. Since nobody can own that range, DNS
+    servers will always keep track of the local loopback IP range.
+
+    After the command prompt, type the following commands:
+
+
+hottub:~$ cat /var/named/pz/127.0.0
+@               IN      SOA     ns.linux.bogus. hostmaster.linux.bogus. (
+                                1       ; Serial
+                                28800   ; Refresh
+                                7200    ; Retry
+                                604800  ; Expire
+                                86400)  ; Minimum TTL
+         IN NS      ns.linux.bogus.
+1        IN PTR     localhost.
+
+
+    The localhost range is for internal use only, so the information contained
+    in the zone file is typically useless for all practical purposes. For
+    example, if you have a problem you're supposed to contact
+    hostmaster@linux.bogus. That's obviously not going to work.
+
+
+-----
+
+
+hottub:~:$ nslookup -type=MX useractive.com
+Server:  ns1.private.useractive.com
+Address:  10.0.0.1
+
+useractive.com  preference = 10, mail exchanger = sink.useractive.com
+useractive.com  preference = 20, mail exchanger = plunger.useractive.com
+useractive.com  nameserver = ns1.useractive.com
+useractive.com  nameserver = ns2.useractive.com
+
+hottub:~$ nslookup -type=MX sink.useractive.com
+Server:  ns1.private.useractive.com
+Address:  10.0.0.1
+
+hottub:~$ nslookup -type=MX sink.useractive.com
+Server:  ns1.private.useractive.com
+Address:  10.0.0.1
+
+useractive.com
+        origin = ns1.useractive.com
+        mail addr = nic.useractive.com
+        serial = 2002043001
+        refresh = 21600 (6H)
+        retry   = 10800 (3H)
+        expire  = 2592000 (4w2d)
+        minimum ttl = 60 (1M)
+
+
+-----
+
+
+Determining the Destination
+
+    The first thing an MTA does, is determine the destination for the email
+    message. This is done by looking at the email address. Let's say the email
+    address is cousin@alaska.com. The destination for this message would be
+    alaska.com. In this case, the destination is a domain. That's not really
+    good enough. We need to know the name of a server on which this domain
+    resides. To do this, we can use DNS zone files.
+
+    Many DNS zone files contain an entry for an MX record.
+
+    Take a look at this DNS zone file:
+
+
+@               IN      SOA ns1.private.useractive.com. root.private.useractive.com. (
+                        5        ;serial
+                        21600    ;refresh
+                        3600     ;retry
+                        1209600  ;expire
+                        172800   ;ttl
+                        )
+                     IN NS      ns1.private.useractive.com.
+                     IN MX      5 mail.private.useractive.com.
+
+    In this case, any email whose destination is private.useractive.com will
+    be sent to mail.private.useractive.com.
+
+    The alaska.com domain from our example will have at least one MX record as
+    well. The MTA will determine the mail exchanger with the lowest preference
+    number and attempt to transfer the message to it. This will normally be
+    something like mail.alaska.com.
+
+    What if your cousin's email address was cousin@host123.alaska.com instead
+    of cousin@alaska.com? The destination is now a specific host within a
+    domain. It's possible for hosts within a domain to have a specified mail
+    exchanger. If an MX isn't listed, the MTA will attempt to deliver the
+    email directly to host123. Let's look at an example from our zone file.
+
+    Observe the following:
+
+
+; The bubbles
+bubble2      IN A       10.0.0.2
+bubble3      IN A       10.0.0.3
+
+    Here are just a couple of simple address records from the private.useractive.com zone file. Neither one of these have MX records, so any mail directed to bubble2 or bubble3 will be sent directly to these machines. However, we could have done the following:
+
+    Observe the following:
+
+
+; The bubbles
+bubble2      IN A       10.0.0.2
+             IN MX      5  mail.private.useractive.com.
+             IN MX      10 mail2.private.useractive.com.
+bubble3      IN A       10.0.0.3
+
+    In this case, mail sent to bubble2 will be delivered to
+    mail.private.useractive.com, while mail can still be sent directly to
+    bubble3.
+
+
+Who is my MX?
+
+    How can we find out the mail exchanger for a domain if we don't host the
+    domain ourselves? It turns out it's pretty simple. All we have to do is a
+    special kind of query using nslookup.
+
+    After the command prompt, type the following commands:
+
+
+hottub:~:$ nslookup -type=MX useractive.com
+Server:  ns1.private.useractive.com
+Address:  10.0.0.1
+
+useractive.com  preference = 10, mail exchanger = sink.useractive.com
+useractive.com  preference = 20, mail exchanger = plunger.useractive.com
+useractive.com  nameserver = ns1.useractive.com
+useractive.com  nameserver = ns2.useractive.com
+...
+
+    Changing the query type to MX on the command line gives us the information
+    we need. Here we see two mail exchangers and their preference.
+    Alternatively, if we query a machine specifically (for instance, one of
+    the mail exchangers) an MX won't be listed if the host is set to receive
+    mail.
+
+    After the command prompt, type the following commands:
+
+
+hottub:~$ nslookup -type=MX sink.useractive.com
+Server:  ns1.private.useractive.com
+Address:  10.0.0.1
+
+useractive.com
+        origin = ns1.useractive.com
+        mail addr = nic.useractive.com
+        serial = 2002043001
+        refresh = 21600 (6H)
+        retry   = 10800 (3H)
+        expire  = 2592000 (4w2d)
+        minimum ttl = 60 (1M)
+
+
+-----
+
+
+hottub:~$ telnet localhost 25
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+220 hottub.useractive.com ESMTP Sendmail 8.11.6/8.11.6; Fri, 4 May
+2001 15:15:17 -0500
+
+MAIL FROM: youremail@address.com
+250 2.1.0 youremail@address.com... Sender ok
+
+RCPT TO: youremail@address.com
+250 2.1.5 youremail@address.com... Recipient ok
+
+DATA
+354 Enter mail, end with "." on a line by itself
+this is my test message
+.
+250 2.0.0 g48GSu013680 Message accepted for delivery
+quit
+221 2.0.0 hottub.useractive.com closing connection
+Connection closed by foreign host.
+
+
+-----
+
+
+
+Sendmail
+
+    When creating a Linux mail server, there are several different MTA's from
+    which to choose. The most popular MTA is sendmail (the runner up is
+    qmail). Sendmail is known for being difficult to set up and configure. In
+    most cases we won't need to use any of its many specialized configuration
+    options. sendmail is usually installed on the server as part of the base
+    system when you install Linux.
+
+    Let's begin our investigation into sendmail. First we need to connect to a
+    Let's look at the main sendmail configuration file. Configuration options for sendmail are called rules. Things may look pretty confusing in sendmail.cf, but luckily we don't need to change anything. Open /etc/sendmail.cf using an editor or pager such as less. Scroll down a few lines until you see this:
+
+    Observe the following:
+
+
+##################
+#   local info   #
+##################
+
+Cwlocalhost
+# file containing names of hosts for which we receive email
+Fw/etc/mail/local-host-names
+
+    These two rules specify machines that are in charge of receiving mail.
+    What this means is that if sendmail receives a message bound for one of
+    the machines listed, it will accept the message for delivery as long as
+    that user exists on the server. The first Cw line specifies that we
+    receive mail for the localhost. The Fw line gives a file where other
+    hostnames are contained. Older versions of sendmail had these listed in a
+    file called sendmail.cw.
+
+    Continue scrolling down through sendmail.cf to get idea about the number
+    and complexity of some of sendmail's options.
+
+    We need to add our bubble's hostname to /etc/mail/local-host-names so that
+    we can receive mail. We're going to need root access so let's go ahead and
+    su.
+
+    After the command prompt, type the following commands:
+
+
+bubble12:~$ su suusername
+Password:
+bubble12:~# 
+
+    You need to figure out the hostname of your bubble before you can add it
+    to the local-host-names file. Recall from the last course that you do that
+    by looking at the /etc/sysconfig/network file:
+
+    After the command prompt, type the following commands:
+
+
+bubble12:~# cat /etc/sysconfig/network
+NETWORKING=yes
+FORWARD_IPV4=false
+HOSTNAME=bubble12.private.useractive.com
+
+
+
+    YOUR hostname is at the bottom. It will be of the form
+    bubble12.private.useractive.com. The number may be different than the one
+    showed here.  Edit /etc/mail/local-host-names and add the following line:
+
+    Add this line to /etc/mail/local-host-names
+
+
+bubble12.private.useractive.com
+
+    Remember, your bubble's hostname is probably different.
+
+        NOTE: You'll need to change this file whenever you login to a new
+        bubble. If you fail to do so, any email sent to the server will be
+        bounced back to the sender. This is only necessary when you're using
+        or testing sendmail. 
+
+
+Sendmail at Startup
+
+    Sendmail is typically started when the system boots up, either with a
+    script in /etc/rc.d/init.d or inside of an rc script in /etc/rc.d. Looking
+    at the man page for sendmail will reveal a ton of different options, but
+    the most common command line options for sendmail are as follows:
+
+    sendmail -bd -q 15m
+
+    Email messages that, for one reason or another, haven't been delivered are
+    kept in a queue. The -q 15m option tells sendmail to try and send those
+    messages every 15 minutes. Find out for yourself what the -bd option
+    means.
+
+
+Testing Sendmail
+
+    Sendmail is probably already running. We'll need to restart it so it will
+    reread it's config files.
+
+    After the command prompt, type the following commands:
+
+
+bubble12:~# ps auxw |grep sendmail
+root     415  0.0  6.1  5052 1968 ?        S    12:22   0:00 sendmail: accepting connections
+root     551  0.0  1.4  1432  472 pts/0    S    13:01   0.00 grep sendmail
+bubble12:~# kill -HUP 415
+
+    We can use kill -HUP on the process ID to cause sendmail to restart. Now
+    we'll check to make sure it restarted okay. Your PID will be different.
+
+    After the command prompt, type the following commands:
+
+
+bubble12:~# tail -n 2 /var/log/maillog
+May  8 10:08:59 bubble12 sendmail[415]: restarting on signal /usr/sbin/sendmail
+May  8 10:08:59 bubble12 sendmail[554]: starting daemon (8.11.2): SMTP+queueing@01:00:00
+
+
+#########################
+DNS Objective:
+
+In the lesson we setup a secondary nameserver on a bubble for the
+private.useractive.com domain. Keeping the secondary information, add primary
+zone information for fakezone.net. It must contain the following, plus any
+additional information you want to include:
+
+The IP network for the domain is in 10.0.2.0 with a subnet mask of
+255.255.255.0.
+
+A primary nameserver named "ns1" who's IP address is 10.0.2.130.
+
+An MX entry for mail.fakezone.net
+
+Address entries for:
+ns1.fakezone.net
+gateway.fakezone.net at 10.0.2.129
+www.fakezone.net at 10.0.2.133
+mail.fakezone.net at 10.0.2.135
+ws140.fakezone.net at 10.0.2.140
+
+"ns1" used to be called "nameserver", include a CNAME entry indicating the
+change.
+
+
+Here are the contents of the file you handed in:
+
+=======================================================
+Command:  /bin/cat /etc/named.conf
+// named.conf for bubble.private.useractive.com
+
+options {
+
+        directory "/var/named";
+
+};
+
+
+// root level
+
+zone "." {
+
+        type hint;
+        file "root.cache";
+
+};
+
+
+// localhost
+
+zone "0.0.127.in-addr.arpa" {
+        type master;
+        file "pz/127.0.0";
+
+};
+
+
+// 
+
+// Our Primaries
+
+// 
+
+zone "2.0.10.in-addr.arpa" {
+        type master;
+        file "pz/10.0.2";
+
+};
+
+
+
+zone "fakezone.net" {
+        type master;
+        file "pz/fakezone.net";
+
+};
+
+
+// 
+
+// Our Secondaries
+
+// 
+
+zone "0.0.10.in-addr.arpa" {
+        type slave;
+        file "sz/10.0.0";
+        masters {10.0.0.1;};
+};
+
+
+zone "private.useractive.com" {
+        type slave;
+        file "sz/private.useractive.com";
+        masters {10.0.0.1;};
+};
+
+
+
+=======================================================
+Command:  /bin/cat /var/named/pz/fakezone.net
+ @               IN      SOA ns1.fakezone.net. root.fakezone.net. (
+                5        ;serial
+                21600    ;refresh
+                3600     ;retry
+                1209600  ;expire
+                172800   ;ttl
+                )
+
+             IN NS      ns1.fakezone.net.
+             IN MX      5 mail.fakezone.net.
+
+
+; This machine
+ns1          IN A       10.0.2.130 
+mail         IN A       10.0.0.130
+
+
+; Cnames
+nameserver   IN CNAME   ns1
+
+
+; The others
+gateway      IN A       10.0.2.129
+www          IN A       10.0.2.133
+mail         IN A       10.0.2.135
+ws140        IN A       10.0.2.140
+
+=======================================================
+Command:  host ns1.fakezone.net localhost
+ Using domain server:
+
+Name: localhost.useractive.com
+
+Address: 127.0.0.1
+
+Aliases:
+
+
+
+ns1.fakezone.net has address 10.0.2.130
+
+=======================================================
+Command:  host gateway.fakezone.net localhost
+ Using domain server:
+
+Name: localhost.useractive.com
+
+Address: 127.0.0.1
+
+Aliases:
+
+
+
+gateway.fakezone.net has address 10.0.2.129
+
+=======================================================
+Command:  host www.fakezone.net localhost
+ Using domain server:
+
+Name: localhost.useractive.com
+
+Address: 127.0.0.1
+
+Aliases:
+
+
+
+www.fakezone.net has address 10.0.2.133
+
+=======================================================
+Command:  host mail.fakezone.net localhost
+ Using domain server:
+
+Name: localhost.useractive.com
+
+Address: 127.0.0.1
+
+Aliases:
+
+
+
+mail.fakezone.net has address 10.0.0.130
+
+mail.fakezone.net has address 10.0.2.135
+
+=======================================================
+Command:  host ws140.fakezone.net localhost
+ Using domain server:
+
+Name: localhost.useractive.com
+
+Address: 127.0.0.1
+
+Aliases:
+
+ws140.fakezone.net has address 10.0.2.140
+
+
+
+#########################
+
+
+Allowing CGI for Users
+
+    If you recall, when we were discussing the Directory directive, there was
+    an Options directive as well. One of the possible options was ExecCGI. So
+    what we need to do is add this option to all of the users' own cgi-bin
+    directories.
+
+    Edit httpd.conf (be sure to su first).
+
+    Add these lines to httpd.conf:
+
+
+<Directory /home/*/public_html>
+  AllowOverride Limit AuthConfig
+</Directory>
+
+<Directory /home/*/public_html/cgi-bin>
+  Options +ExecCGI
+</Directory>
+
+    Since these directories aren't part of a ScriptAlias, we need to tell
+    Apache which files to treat as CGI scripts. The "+" symbol simply
+    indicates that we want to add the ExecCGI option in addition to the ones
+    that might already apply to the directory.
+
+    Much further down in httpd.conf you will find an AddHandler line that is
+    commented out. We need to uncomment this line.
+
+    Uncomment this line in httpd.conf:
+
+
+
+     AddHandler cgi-script .cgi
+
+    This directive specifies that files ending with .cgi will be treated as
+    CGI scripts. More extensions can be added after this separated by spaces
+    (.pl is another common extension).
+
+    Save the changes to httpd.conf and restart your webserver.
+
+    Try to reload the previous URL and see what happens. Nothing right? It's
+    still displaying the contents of the CGI script. Hhmm... Let's look at the
+    AddHandler line a little closer. We're treating all files ending in .cgi
+    as CGI scripts. However, our sample script is called test-cgi. We need to
+    change this so Apache will recognize it correctly.
+
+    After the command prompt, type the following commands:
+
+
+bubble12:/usr/local/apache/conf# exit
+bubble12:/usr/local/apache/conf$ cd ~username/public_html/cgi-bin
+bubble12:~/public_html/cgi-bin$ mv test-cgi test.cgi
+
+    Test that URL one more time and make sure that it's working okay.
+
+
+Changing the Missing File Page
+
+    When you try to access a webpage that doesn't exist on a server it will
+    give you a "404 Not Found" error page. Access your bubble's webserver with
+    a URL like the following:
+
+    lynx http://bubble12/asdf
+
+    What you see is an extremely boring error page.
+
+    Su again and open httpd.conf one more time.
+
+    Far down in the file, even below the AddHandler directive we previously
+    uncommented, are three commented ErrorDocument directives. Below is one
+    that we're going to be changing.
+
+    Observe the following in httpd.conf
+
+
+#    2) local redirects
+#ErrorDocument 404 /missing.html
+#  to redirect to local URL /missing.html
+
+    The ErrorDocument directive specifies a file to be displayed to the client
+    when a specific error code comes up. A "404" error means that the client
+    requested a page that cannot be found on the server. Without an error
+    document specified, Apache will just generate the very basic one. Let's
+    uncomment this line and create our own error page.
+
+    Uncomment this line in httpd.conf
+
+
+#    2) local redirects
+ErrorDocument 404 /missing.html
+#  to redirect to local URL /missing.html
+
+    Save httpd.conf and restart your webserver. Reload the fake URL we
+    attempted previously.
+
+    Notice the additional line saying the error document wasn't found either.
+    This is because we told Apache that we wanted to use our own missing.html
+    file, but we never created the file.
+
+    Go into the document root directory and create a file called missing.html.
+
+    Type these lines in missing.html
+
+
+<html>
+<body>
+This is our new missing file page.
+</body>
+</html>
+

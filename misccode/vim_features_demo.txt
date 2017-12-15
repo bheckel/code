@@ -1,0 +1,95 @@
+
+* and # jumping
+
+
+50%
+
+
+:sp
+g!/NEXUS/d
+
+
+c-a c-x increment 100
+
+a = 1;
+b = 1;
+c = 1;
+d = 1;
+
+
+. repeat
+
+
+I insert or substitute middle of text
+
+
+:%s/\(NEXUS 6\)$/\1\1\1/gc
+
+
+vgq reflow
+
+
+,x rot13
+
+
+:Align , 
+1,  2,3,4,5
+66,77,  88,99,100
+
+= sort
+5
+3
+6
+2
+1
+
+
+abbreviations YdC 
+
+
+q: edit history
+
+
+tab completion
+
+
+inter-terminal communication ;r ;w
+
+
+qa macro
+
+
+:undol
+:earlier 10m
+
+
+
+
+   Early in the 22st Century, THE TYRELL
+CORPORATION advanced Robot evolution
+into the NEXUS phase -- a being
+virtually identical to a human -- known
+as a replicant.  The NEXUS 6 Replicants
+were superior in strength and agility,
+and at least equal in intelligence, to
+the genetic engineers who created them.
+Replicants were used Off-world as slave
+labor, in the hazardous exploration and
+colonization of other planets.
+
+   After a bloody mutiny by a NEXUS 6
+combat team in an Off-world colony,
+they were declared illegal on
+earth -- under penalty of death.
+Special police squads -- BLADE RUNNER
+UNITS -- had orders to shoot to kill,
+upon detection, any trespassing
+Replicants.
+
+This was not called execution.
+
+It was called retirement.
+
+
+LOS ANGELES
+NOVEMBER, 2019

@@ -1,0 +1,205 @@
+<HTML>
+
+<!--
+	The Programmers Vault
+	Copyright (c) Antony Chesworth
+	E-Mail: antony@chesworth.com
+-->
+
+<HEAD>
+	<TITLE>The Programmers Vault</TITLE>
+	<STYLE>
+		<!--
+		A:hover { color: #EE0000 }
+		-->
+	</STYLE>
+</HEAD>
+
+<!-- Header Insert -->
+<script language="JavaScript" src="header.js"></script>
+
+<BR>
+<CENTER>
+	<TABLE BORDER=0 WIDTH=95% BGCOLOR="#000000" CELLSPACING=2>
+		<TR>
+			<!-- Color Setting Insert -->
+			<SCRIPT LANGUAGE="JavaScript" SRC="../content_colour.js"></SCRIPT>
+				<BR>
+				<BLOCKQUOTE>
+					<FONT FACE="verdana, arial" SIZE=3><B><A HREF="../index.html">Programmers Vault</A> > <A HREF="index.html">Languages</A> > </FONT><BR><FONT FACE="verdana,arial" SIZE=5>What Language Do I Use?</B></FONT>
+
+
+					<BLOCKQUOTE>
+						<FONT FACE="arial" SIZE=2><BR>
+<!-- ****************************************************************************************************************************************************************************************************************** -->
+
+
+	<H3>Introduction</H3>
+
+	<BLOCKQUOTE>
+		This is a question that belongs in every game programming FAQ. It seems to be asked in a game development forum several times a week. It's a good question, though, and not one with an easy answer. There are computer languages that work better for some applications than others. Here is a list of the major programming languages used to write games along with descriptions, advantages, and disadvantages. Hopefully this list will help you make a decision. 
+	</BLOCKQUOTE>
+
+	<CENTER>
+		[<A HREF="#c">C</A>]
+		[<A HREF="#c++">C++</A>]
+		[<A HREF="#corc++">C or C++</A>]
+		[<A HREF="#assembly">Assembly</A>]
+		[<A HREF="#pascal">Pascal</A>]<BR>
+
+		[<A HREF="#vb">Visual Basic</A>]
+		[<A HREF="#java">Java</A>]
+		[<A HREF="#author">Authoring Tools</A>]
+		[<A HREF="#conclusion">Conclusion</A>]
+	</CENTER>
+
+
+	<BR><BR>
+	<A NAME="c"></A>
+	<H3>C</H3>
+	<BLOCKQUOTE>
+		If FORTRAN and COBOL were the first compiled high-level languages, then C is their grandchild. It was created in the 70's by Dennis Ritchie as a tighter and more coherent successor to ALGOL, which was a structured successor to COBOL and FORTRAN. It was designed to be a smaller and simpler version of its predecessors, suitable for writing system-level programs, like operating systems. Before then, operating systems were hand-coded in assembly and were not portable. C was the first programming language that made portability a reality for system-level code.
+		<P>C is a language that supports structured programming. That is to say that C programs are written as collections of disconnected function calls that run top-down rather than a single monolithic block of code with program control-flow happening via GOTO statements. Hence, C programs are generally easier to follow than monolithic FORTRAN and COBOL spaghetti-code. Actually, C still has a GOTO statement, but its functionality is limited and it is only recommended as a last resort if structured solutions are much more complicated.
+		<P>True to its system-programming roots, it is fairly easy to interface C with assembly languages. The function-calling interface is very simple, and assembly language instructions can be embedded within C code, so linking in separate assembly-language modules is not necessary.
+		<P><B>Advantages:</B> Good for writing small fast programs. Easy to interface with assembly language. Very standardized, so versions on other platforms are similar.
+		<P><B>Disadvantages:</B> Does not easily support object-oriented techniques. Syntax can be difficult and lends itself to abuse.
+		<P><B>Portability:</B> While the core of the language and the ANSI function calls are very portable, they are limited to control-flow, memory management, and simple file-handling. Everything else is platform-specific. Making a program that's portable between Windows and the Mac, for instance, requires that the user-interface portions be using system-specific function calls. This generally means that you need to write the user-interface code twice. There are libraries, though, that make the process a bit easier.
+		<P><B>Games Written in C:</B> Lots and lots.
+		<P><B>Resources:</B> The classic book about C is The C Programming Language. It's gone through several iterations and has expanded to about three times its original size, but it's still a good introduction to the language. An excellent tutorial is The Waite Group's C Primer Plus.
+	</BLOCKQUOTE>
+
+	<BR><BR>
+	<A NAME="c++"></A>
+	<H3>C++</H3>
+	<BLOCKQUOTE>
+		C++ is the object-oriented successor to C. Object-oriented, or OO, programs are the next step beyond structured programming. OO programs are built out of objects, which are packages of data and functions collected into discrete units. There are many libraries of objects available that make writing programs as simple as pulling together a collection of program "building blocks" (at least in theory). For example, there are many GUI and database libraries that are implemented as collections of objects.
+		<P>C++ is the subject of controversy, especially in the game development community. There are features of C++, like virtual functions, that add an extra layer of decision-making to function calls, and critics are quick to point out that C++ programs can be larger and slower than C counterparts. C++ advocates point out, however, that coding the equivalent of a virtual function in C requires the same overhead. It's an on-going debate that's not likely to be decided soon.
+		<P>In my opinion, the overhead of C++ is simply the price you pay for a better language. This same debate went on in the 60's when high-level programming languages like COBOL and FORTRAN started to displace hand-coded assembly as the language of choice. Critics correctly pointed out that programs written in high-level languages were inherently slower than hand-tuned assembly and always would be. High-level language advocates pointed out, however, that the slight performance hit was worth it because COBOL and FORTRAN programs were much easier to write and maintain.
+		<P><B>Advantages:</B> Much better than C for organizing large programs. Supports the object-oriented paradigm nicely. Libraries of common data structures, like linked lists and grow-able arrays, can remove much of the burden of having to deal with low-level details.
+		<P><B>Disadvantages:</B> Extremely large and complicated. Like C, the syntax lends itself to abuse. Can be slower than C. Not many compilers implement the entire language correctly.
+		<P><B>Portability:</B> Better than C, but still not great. While it shares the same disadvantage as C, most of the portable user-interface libraries are implemented as collections of C++ objects.
+		<P><B>Games Written in C++:</B> Lots and lots. Almost all commercial games are written in C or C++.
+		<P><B>Resources:</B> The latest edition of The C++ Programming Language is excellent. As for tutorials, there are two camps, ones that assume you know C, and ones you don't. By far the best ground-up C++ tutorials are Who's Afraid of C++ and Who's Afraid of More C++. If you already know C, try Teach Yourself C++.
+	</BLOCKQUOTE>
+
+
+	<BR><BR>
+	<A NAME="corc++"></A>
+	<H3>Should I learn C++, or should I start with C?</H3>
+	<BLOCKQUOTE>
+		I thought this bore mentioning, as it's the second most commonly asked question next to "which programming language should I use?"
+		<P>Unfortunately, the answer isn't black and white. You could save a lot of time by just teaching yourself C and writing apps, but there are two disadvantages to this approach.
+		<UL>
+			<LI>You're missing out on what will likely be a much more effective way of modeling the data in your game. 
+			<BR><LI>By not learning OO programming off the bat, you could be enforcing bad programming habits that you'll have to un-learn later. Trust me on this one. 
+		</UL>
+		Many of the biggest commercial games, including most first-person shooters, get by without C++. The authors of these programs, however, always insist that they're using object-oriented programming techniques even though they're using plain old C. If you want to just learn C, at least teach yourself OO programming techniques. OO is the perfect methodology for simulations (read: games), and you'll really be doing it "the hard way" if you push off learning OO.
+	</BLOCKQUOTE>
+
+
+	<BR><BR>
+	<A NAME="assembly"></A>
+	<H3>Assembly</H3>
+	<BLOCKQUOTE>
+		By default, assembly was the first computer language. Assembly language is actually a command-based representation of the actual instructions that your computer's processor runs. That means you will be dealing with the low-level details of your processor, like registers and stacks. If you're looking for a language that's English-like and is relatively self-documenting, this isn't it!
+		<P>By definition, anything you can do in any other language, you can do in assembly, only not as easily --of course, that's like saying that anywhere you can go in a car, you can go on foot, only not as easily. While the statement might be true, the later technologies made things much easier to use.
+		<P>In general, assembly language is not used on its own for games. Games that use assembly language use it in bits and pieces where it can improve performance. For example, DOOM is written entirely in C with a couple of drawing routines hand-coded in assembly. They are the routines that are called a few thousand times a second, so making the routine as tight as possible really helped the performance of the game. It's fairly easy to write a function in assembly that is call-able from C, so using both languages wasn't a problem.
+		<P><B>Special Note:</B> The name of the language is "assembly". The name of the tool that converts assembly language into true machine code is called an "assembler". It's a common misnomer to call the language "assembler", so start out on the right foot by calling the language by its proper name.
+		<P><B>Advantages:</B> Is, by definition, the smallest and fastest language. A talented assembly programmer can write programs that are faster than anything that can be done in other languages. You'll be the first person to be able to take advantage of the processor's latest new features, because you can use them directly.
+		<P><B>Disadvantages:</B> Difficult to learn, cryptic syntax, tough to do efficiently, and it takes much more code to get something done --not for the faint of heart!
+		<P><B>Portability:</B> Zilch. Since the language is designed for a single processor, it is not portable by definition. If you use extensions specific to a particular brand of processor, your code isn't even portable to other processors of the same type (for example, AMD 3DNOW instructions are not portable to other Pentium-class processors).
+		<P><B>Games Written in Assembly:</B> I don't know of any commercial games that are written entirely in assembly. Some games, however, have the most time-critical portions done in assembly.
+		<P><B>Resources:</B> When you're looking for documentation for an assembly language, you're basically looking for the documentation for the chip. There is some online information at Intel, AMD, and Motorola for their processors. As for books, Assembly Language: Step-By-Step is well-reviewed.
+	</BLOCKQUOTE>
+
+
+
+	<BR><BR>
+	<A NAME="pascal"></A>
+	<H3>Pascal</H3>
+	<BLOCKQUOTE>
+		Pascal was designed by Nicolas Wirth in the early 70's, because he was dismayed to see that FORTRAN and COBOL were not enforcing healthy structured programming disciplines in students. "Spaghetti code" was becoming the norm, and the languages of the time weren't discouraging it. Pascal was designed from the ground up to enforce structured programming practices. While the original Pascal was designed strictly for teaching, it had enough advocates to eventually make inroads into commercial programming. Pascal finally took the spotlight in a big way when Borland released Turbo Pascal for the IBM PC. The integrated editor, lightning-fast compiler, and low price were an irresistible combination, and Pascal became the preferred language for writing small programs for MS-DOS.
+		<P>The momentum, however, did not stay. C compilers became faster and got nice built-in editors and debuggers. The almost-final nail in Pascal's coffin happened in the early 1990's when Windows took over, and Borland ignored Pascal in favor of C++ for writing Windows applications. Turbo Pascal was all but forgotten.
+		<P>Finally, in 1996, Borland released its "Visual Basic Killer", Delphi. Delphi was a fast Pascal compiler coupled with a gorgeous user interface. Against all odds (and the Visual Basic juggernaut), it gained a lot of fans.
+		<P>On the whole, Pascal is simpler than C. While the syntax is similar, it lacks a lot of the shortcut operations that C has. This is a good thing and a bad thing. It's harder to write inscrutable "clever" code, but it makes low-level operations like bit-manipulation more difficult.
+		<P><B>Advantages:</B> Easy to learn. Platform-specific implementations (Delphi) are very nice.
+		<P><B>Disadvantages:</B> "World class" OO successors to Pascal (Modula, Oberon) have not been successful. Language standards are not adhered to by compiler-makers. Proprietary.
+		<P><B>Portability:</B> Dismal. The features of the language changes from platform to platform, and there are no portability toolkits to handle platform-specific features.
+		<P><B>Games Written in Pascal:</B> A couple. The DirectX components for Delphi have made the playing field more level.
+		<P><B>Resources:</B> The find out about Delphi, check out the Inprise Delphi page.
+	</BLOCKQUOTE>
+
+
+
+	<BR><BR>
+	<A NAME="vb"></A>
+	<H3>Visual Basic</H3>
+	<BLOCKQUOTE>
+		Ahh, BASIC. Way back in the stone-age of the 80's, it was the first language for budding programmers. The original incarnations of BASIC, while easy to learn, were horribly unstructured, leading to the a rash of GOTO-laden "spaghetti-code". Not many people wipe away tears when reminiscing about BASIC's line numbers and the GOSUB command.
+		<P>Fast-forward to the early 1990's. While not the monster that Apple was hoping for, HyperCard was a compelling little programming environment that had no equal under Windows. Windows-based HyperCard clones like ToolBook were slow, clunky, and expensive. To finally compete with HyperCard, Microsoft licensed a neat little programming environment named Thunder, releasing it as Visual Basic 1.0. The user-interface was very innovative for the time. The language, while still called Basic (and no longer all-caps), was much more structured. Line numbers were mercy-killed. The language was, in fact, much closer to Pascal with Basic-style verbs than the old ROM BASIC that was built into every TRS-80, Apple ][, and Atari.
+		<P>Six versions later, Visual Basic is pretty deluxe. The user-interface has made some changes, but still retains its "attach bits of code to the user-interface" motif. This, in combination with instantaneous compiling, makes it a terrific environment for fast prototyping.
+		<P><B>Advantages:</B> Neat IDE. Easy to learn. Instantaneous compiling makes for very fast and easy prototyping. Lots and lots of add-ons available. While there are currently third-party DirectX add-ons for Visual Basic, DirectX version 7 is going to include support for Visual Basic right out of the box.
+		<P><B>Disadvantages:</B> Apps are large and require several large runtime DLL's to run. While form and dialog-based apps are easy to make, writing good graphical apps is more difficult. Calling Windows API functions is clunky, because VB data structures don't map nicely to C. Has OO features, but is not fully object-oriented. Proprietary.
+		<P><B>Portability:</B> Worse than dismal. Since Visual Basic is owned by Microsoft, you're pretty-much limited to whatever platforms they've ported it too. That means that you've got the choice of Windows, Windows, or Windows. Note that there are, however, a couple of tools that help convert VB apps to Java.
+		<P><B>Games Written in Visual Basic:</B> A few. There are lots of shareware games done in VB, and a couple of commercial offerings.
+		<P><B>Resources:</B> The Microsoft VB page has a little info.
+	</BLOCKQUOTE>
+
+
+	<BR><BR>
+	<A NAME="java"></A>
+	<H3>Java</H3>
+	<BLOCKQUOTE>
+		Java was originally designed by Sun to be a portable "small C++" that could be used in embedded applications. The idea of running little applications in a web-page really captured people's imaginations, so the language caught on quickly. It turned out that Java wasn't just suitable for embedding animated banners in web pages --it was a downright nifty little language for application programming! The "virtual machine" nature, garbage collection and lack of pointers made it easy to make bulletproof apps that didn't crash and had no resource leaks.
+		<P>While not an official "sequel" to C++, Java borrows very heavily from C++ syntax. It dumps many of the more difficult C++ features to reveal a rather compact and easy-to-learn language. Unlike C++, Java enforces object-orientation with a heavy hand. Writing a non-OO app in Java is as difficult as writing spaghetti-code in Pascal.
+		<P><B>Advantages:</B> Binaries are portable to other platforms. Apps can run embedded in web pages. The included class library is reasonably standardized and extremely robust. Automatic allocation and garbage collection all but eliminates resource leaks in applications. Zillions of code examples on the web.
+		<P><B>Disadvantages:</B> Uses a "virtual machine" to run portable byte-code rather than native machine code, so apps are slower than true compilers. There are technologies (like "Just In Time" compilers) that greatly improve the speed of Java, but the speed will likely always lag behind true machine-code solutions. Early features like the Abstract Windowing Toolkit were not well thought-out and, while officially abandoned, have to hang around for backward compatibility. Is very high-level, which makes dealing with any low-level machine features very difficult. Sun is pretty slow in adding new "blessed" features to the language.
+		<P><B>Portability:</B> The best of the lot, but still not what it should be. The low-level code is very portable, but a lot of the UI and newer features are wobbly on some platforms.
+		<P><B>Games Written in Java:</B> Lots of little applets in web pages, but only a couple of commercial offerings. Several commercial games use Java as the internal script language.
+		<P><B>Resources:</B> Sun's official Java page has some good info. IBM also has an excellent Java page. The JavaLobby is the best place to go for news about Java.
+	</BLOCKQUOTE>
+
+	<BR><BR>
+	<A NAME="author"></A>
+	<H3>Authoring Tools</H3>
+	<BLOCKQUOTE>
+		All of the programming languages mentioned above cover pretty-much every commercial game out there. There is one exception, but it's such a big one that it would be conspicuous by its absence.
+		<P>Myst.
+		<P>Yep, the best selling commercial game of all time wasn't written in any of the above languages. While some would say that 99% of Myst was written using 3D modeling tools, the underlying program logic was done in HyperCard.
+		<P>Most authoring tools are a bit like Visual Basic, only they work at a much higher level. Most of the tools use some kind of click-and-drag flowchart motif to model control flow. Many contain embedded interpreted programming languages, but these languages aren't nearly as robust as the standalone languages mentioned above.
+		<P><B>Advantages:</B> Fast prototyping --if your game fits the motif the tool's made for, you can probably get your game running faster than any other language. In many cases, you can make a rudimentary game without writing any code. You can broadcast many authored apps on web pages with plug-ins like Shockwave and IconAuthor Player.
+		<P><B>Disadvantages:</B> Proprietary, so you're at the mercy of the tool-maker as to what features will be added. You've gotta really look at these tools to see if they'll do everything that your game's gonna require, because there are things that authoring tools simply can't do. Some of these tools produce frighteningly bloated apps.
+		<P><B>Portability:</B> Since authoring tools are proprietary, your portability is limited to whatever they offer. Some systems, like Director, can author and run on several platforms. Some tools can author on one platform but play on several. Some are single-platform beasts.
+		<P><B>Games Written in Authoring Tools:</B> Myst and a few other "exploration" games of the same genre. All of the Shockwave games on the web.
+		<P><B>Resources:</B> Director. HyperCard. SuperCard. IconAuthor. Authorware.
+	</BLOCKQUOTE>
+
+
+	<BR><BR>
+	<A NAME="conclusion"></A>
+	<H3>Conclusion</H3>
+	<BLOCKQUOTE>
+		You probably were hoping for a more cut-n-dry conclusion to the "what programming language do I use" dilemma. Unfortunately, there's no solution that's optimal for all applications. C is suited for fast and small applications, but doesn't support OO programming well. C++ has very complete OO support, but is frighteningly complicated. Visual Basic and Delphi are easy to learn, but are non-portable and proprietary. Java has a lot of neat features, but is slow. Authoring tools can get your app working quickest, but are only useful for a narrow range of applications. It might just be best for you to figure out what kind of game you're writing and pick the language that would best support your game. It's a good thing that the "try it free for 30 days" offer has become the industry norm :-) 
+	</BLOCKQUOTE>
+
+
+
+<H4>Author: <a href="mailto:john-hattan@bigfoot.com">John Hattan</a></H4>
+
+
+
+<!-- ****************************************************************************************************************************************************************************************************************** -->
+						</FONT>
+					</BLOCKQUOTE>
+				</BLOCKQUOTE>
+
+			</TD>
+		</TR>
+	</TABLE>
+</CENTER>
+
+
+<!-- Footer Insert -->
+<script language="JavaScript" src="footer.js"></script>
+
+</BODY></HTML>

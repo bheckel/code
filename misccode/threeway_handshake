@@ -1,0 +1,45 @@
+
+1. Computer A (active open) sends a segment with
+
+SYN=1
+
+ACK=0
+
+Sequence Number = X (where X is Computer A's ISN)
+
+The active open computer (Computer A) sends a segment with the
+SYN flag set to one and the ACK flag set to zero. SYN stands for
+synchronize. This flag, as described earlier, announces an attempt to
+open a connection. This first segment header also contains the initial
+sequence number, which marks the beginning of the sequence numbers
+for data that Computer A will transmit. The first byte transmitted to
+Computer B will have the sequence number ISN+1.
+
+
+
+2.  Computer B (passive open) receives Computer A's segment and returns a
+    segment with
+
+SYN = 1 (still in synchronization phase)
+
+ACK = 1 (the Acknowledgment Number field will contain a value)
+
+Sequence number = Y, where Y is Computer B's ISN
+
+Acknowledgment number = M + 1, where M is the last sequence number
+received from A
+
+
+
+3.  Computer A sends a segment to Computer B that acknowledges receipt of
+    Computer B's ISN
+
+SYN=0
+
+ACK=1
+
+Sequence number = next sequence number in series (M+1)
+
+Acknowledgment number = N+1 (where N is the last sequence number received
+from B)
+

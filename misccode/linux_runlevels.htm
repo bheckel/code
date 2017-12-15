@@ -1,0 +1,370 @@
+<HTML>
+<HEAD>
+<TITLE>
+Linux Magazine | December 2000 | FEATURES | Start Me Up  bobh runlevels
+</TITLE>
+</HEAD>
+<BODY BGCOLOR="#EFEFEF" LINK="#0000FF" ALINK="#0000FF" VLINK="#0000FF">
+<p><b><font face="Arial, Helvetica, Sans-Serif" size="-1">Linux Magazine (http://www.linux-mag.com) December 2000</p></b></font><p>
+<p><b><font face="Arial, Helvetica, Sans-Serif" size="-1">Copyright Linux Magazine &copy;2000</p></b></font>
+
+
+<DIV CLASS ="SECTION"><FONT FACE="Arial,Helvetica,sans-serif"><B> FEATURES </B></FONT></DIV>
+
+
+<DIV CLASS ="TITLE"><FONT SIZE="5" COLOR="#DC143C"> Start Me Up </FONT></DIV>
+
+
+<DIV CLASS ="DECK"><FONT SIZE="3"><B> A Look at Run Levels and the Linux Startup/Shutdown Sequence </B></FONT></DIV>
+
+
+<DIV CLASS ="AUTHOR"><FONT SIZE="2" FACE="Arial,Helvetica,sans-serif">by  William von Hagen </FONT></DIV>
+
+
+<BLOCKQUOTE>
+
+
+<P CLASS ="LEADPARA">One of the nicest things about purely GUI-based systems like the MacOS and Windows, is that they start up cleanly. You turn the key, you hear a few cool noises (courtesy of Brian Eno and Grandfather Clock), a few icons pop up, and suddenly you materialize as a driver on the information interstate.</P>
+
+ <P>Needless to say, things are somewhat different with Linux. Instead of a cute musical tune and a bunch of icons, Linux hits you with information overload -- screen after screen of information about devices, interrupts, and networking status, followed by a stately parade of status messages about services that you may or may not care about (or even understand). In this regard, Linux resembles a car sold with a spare tire, jack, shop manual, toolkit, and complete schematics of the wiring harness.</P>
+
+ <P>This article will help you understand all the information Linux throws at you when it starts up. We'll examine the way Linux allows you to make different sets of services available to users at boot time. We'll also look at how to control the services that are available once your system is up and running. You may never have to change anything, but it's still comforting to know exactly what's going on and that you have the flexibility to change things if you ever need to.</P>
+
+<P CLASS ="SUBHEAD"><B>Getting the Boot</B></P>
+
+ <P>The first thing a computer does when it starts up is to conduct a basic self-test (known as POST -- Power On Self Test) to determine things such as how much memory it has, what drives it has, whether a keyboard and mouse are present, etc. After completing the self-test, the system reads a block of information from the device it is booting from (known as a <I>boot block</I>), which is usually (but not always) your hard disk. The boot block is always found at the same location -- track 0, cylinder 0, and head 0 of the device the system is booting from. You can modify the settings of your computer's Basic Input Output System (BIOS) if wish to change your boot device, but describing how to do that is specific to each BIOS.</P>
+
+ <P>The boot block contains a program loader (usually LILO [LInux LOader] or a variant thereof) that has knowledge about how the partitions on the boot disk are organized, what operating systems your computer can run, where to look on the disk for each of them, and so on. Everything that comes up on your screen before the <TT>LILO:</TT> prompt is your computer testing itself and its hardware -- everything after that has something to do with Linux. (Assuming you're running Linux, of course.)</P>
+
+ <P>At the <TT>LILO:</TT> prompt, you can press the &lt;Return> key to cause your system to boot the default operating system, "linux," or press the &lt;Tab> key to see the list of operating systems that your computer can currently boot. The list of operating systems that LILO knows about and can find on your system is located in the file <I>/etc/lilo.conf.</I></P>
+
+ <P>So here's where things <I>really</I> start to get interesting! LILO loads the selected or default operating system (actually, the Linux kernel) into memory and then transfers control to that kernel. (LILO also does the same thing when you boot a system other than Linux.)</P>
+
+ <P>As the kernel executes, it does the same sorts of hardware probes that your BIOS and motherboard did when you first switched on your system, but this time with an eye towards using all of them as key underpinnings of your Linux system. The kernel then enters into the part of the boot procedure that we will look at in the rest of this article. But first, let's step back and explore a little bit of additional Linux/Unix theory. (This sort of thing is why I get invited to all the cool Linux/Unix parties.)</P>
+
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+	</TABLE>
+
+<BLOCKQUOTE>
+
+<P CLASS ="SUBHEAD"><B>Linux/Unix Run Levels</B></P>
+
+ <P>In order to really understand what happens while your system is booting up, you need to be familiar with the concept of "run levels." Run levels represent the mode in which your computer is operating. They are defined by the set of network and system services available on a system at any given time. Linux systems feature several different, mutually-exclusive modes of operation that you may have heard of: single-user mode, single-user mode with networking, multi-user mode, multi-user mode running a graphical console, and so on. These are the basic Linux run levels.</P>
+
+ <P>To better describe run levels, let's go back to that car analogy we made earlier -- different run levels are exactly like the different phases of working on your car. There's the "it's up on blocks" phase, where you can remove the tires, get under the car, or work on the engine. There's the "it's idling in the driveway" phase, where you can tune up the engine and add oil and transmission fluid without someone trying to drive it away while you're still working on it. And, finally, there's the "Let's take it out on the highway" phase, when you're back in business.</P>
+
+ <P>So run levels are just different ways that your Linux system makes itself available to you as both a user and as an administrator. As a user you won't normally be aware of run levels, but the multi-user run levels make available the services you would expect to find when using a Linux system -- printing, networking, and other high-level services. As an administrator, the single-user run levels let you add or modify hardware, disable existing services or add new ones, change the order in which services start, and so on, without having to worry that a user will log onto the system while you're working on it and before you're finished fine-tuning it.</P>
+
+ <P>Run levels and the files associated with them are one area where Linux systems vary a great deal, so for the purposes of this article we'll look at a Red Hat system, which offers the following run levels:</P>
+
+
+ <P>0 Halt. Shuts down the system and turns it off, when possible.</P>
+
+
+ <P>1 Single user mode. Used to perform administrative tasks, such as adding, partitioning, and formatting disks, changing network information, and so on.</P>
+
+
+ <P>2 Multiuser, without networking. (The same as run level 3, if you do not have networking.)</P>
+
+
+ <P>3 Full multiuser mode, with networking support.</P>
+
+
+ <P>5 Full multiuser user mode with an X11 graphical login process running on the console.</P>
+
+
+ <P>6 Reboot. Terminates all running process-es and reboots the system to its default run level.</P>
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" BORDER ="1" CELLPADDING ="8"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>Starting Up Different Types of Unix Systems </I></FONT></P></DIV><DIV>
+
+<P>
+The Unix operating system upon which Linux is based has a long and sordid history. Unix was originally developed in 1969 at AT&T's Bell labs. A copy of the Unix source code made it's way to the University of California at Berkeley; things got pretty wild soon after that.
+</P>
+
+
+<P>
+The Unix developed at Berkeley quickly began to diverge from the Unix developed at AT&T; this situation created two basic evolutionary paths for Unix. There is the BSD (Berkeley Software Distribution) path, of which free versions of Unix like FreeBSD and NetBSD represent the most current releases, and there is the AT&T-driven SysV (System 5) path, represented by systems such as Sun Microsystems' Solaris. Linux is something of a hybrid, but when it comes to startup scripts, it falls very much into the SysV camp.
+</P>
+
+
+<P>
+BSD systems use a simple, but monolithic, set of command files to determine what services are available at different run levels. In general, the monster command file /etc/rc (Run Command) and much smaller /etc/rc.boot files use dynamic settings and variables set in the configuration file /etc/rc.conf to invoke several other command files, including a system-specific command file known as /etc/rc.local.
+</P>
+
+
+<P>
+SysV systems use a much more complex set of command files, and directories of command files, to determine what services are available at different run levels; /etc/rc.d, /etc/ rc.d/rc.sysinit, and /etc/rc.d/init.d run level-specific subdirectories with names like /etc/rc.d/rc3.d (and so on). 
+</P>
+
+
+<P>
+System administrators who are used to the elegant simplicity of the BSD startup files may have that "deer in the headlights" feeling when first confronted with the apparent complexity of the SysV startup and shutdown procedures. But trust us -- 50 million Elvis fans can't be wrong. The SysV/Linux model works and is quite flexible once you're comfortable with it.
+</P>
+
+
+</DIV></TD></TR></TABLE>
+
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+
+
+
+
+<BLOCKQUOTE>
+
+<P CLASS ="SUBHEAD"><B>Init -- The Parent of All Processes</B></P>
+
+
+ <P>In the beginning, there was one process running on a Linux system and it was good, but hardly good enough to keep anyone interested. This first process is known as the init (initialization) process; it is the parent of all other processes on a Unix/Linux system. The init process is the first process the kernel starts after it has finished with all of its hardware probes.</P>
+
+
+ <P><B>THE /etc/inittab FILE</B></P>
+
+ <P>Once your system has found an operating system that it can boot and has loaded that operating system, it starts the <I>init</I> process, which first examines the file <I>/etc/inittab</I> (Init Table) to determine what to do next. The following is a sample section of an <I>/etc/ inittab</I> file:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>id:3:initdefault:
+si::sysinit:/etc/rc.d/rc.sysinit
+l0:0:wait:/etc/rc.d/rc 0
+l1:1:wait:/etc/rc.d/rc 1
+l2:2:wait:/etc/rc.d/rc 2
+l3:3:wait:/etc/rc.d/rc 3
+l4:4:wait:/etc/rc.d/rc 4
+l5:5:wait:/etc/rc.d/rc 5
+l6:6:wait:/etc/rc.d/rc 6
+</PRE></P></DIV>
+
+ <P>The lines in the <I>/etc/inittab</I> file have the following format: <I>identifier:run-level:action:command-to-run. </I>The command files in the "command-to-run" column of the <I>/etc/ inittab</I> file are actually Unix shell (<I>/bin/sh</I>) scripts. However, since these scripts contain large sequences of commands, thinking of them as "command files" helps clarify their purpose and use without introducing yet another new term.</P>
+
+ <P>In fact, you may have noticed that all of these command files are named <I>rc</I>.&lt;some number>. Well, the <I>rc</I> stands for "run command," giving us yet another excuse to call these "command files" instead of just scripts.</P>
+
+ <P>The line in the <I>/etc/inittab</I> file with the action <TT>initdefault</TT> tells the init process that the default run level for your machine is run level 3, which is a multi-user run level at which all network services are enabled. The init process saves this information for future use and continues reading through the <I>/etc/inittab</I> file. Without some way of specifying the run level that your system should aspire to, your computer wouldn't know what command files to run, what services to start, and so on.</P>
+
+ <P>Next, the init process finds the line with the action <TT>sysinit</TT> (system initialization) and executes the command file identified in that line, in this case <I>/etc/rc.d/rc.sysinit.</I> After executing the <I>/etc/rc.d/rc.sysinit</I> script, the init process will then begin to execute the commands associated with the default run level.</P>
+
+ <P>The next few lines in the <I>/etc/inittab</I> file are specific to different run levels. Each of these lines runs a single script -- &lt;/etc/rc.d/rc> -- which takes a number from 1-6 as an argument that tells it which run level the system wishes to enter. The most common action for these run-level-specific entries in the <I>/etc/inittab</I> file is <TT>wait</TT>, which means that the init process executes the command file for the specified run level and then waits for that run level to terminate. For a complete list of actions in the <I>/etc/inittab</I> file, see the online manual page for <I>inittab</I> by issuing the command <TT>man inittab</TT>.</P>
+
+ <P>One other entry in the <I>/etc/inittab</I> file that's worth mentioning is the line with the action <TT>ctrlaltdel</TT>, which tells the <I>init</I> process how to handle receiving the classic three-finger-salute of PC computing, <I>control-alt-delete.</I> If you want your system to ignore <I>control-alt-delete,</I> don't specify a command or command file in this entry. The default command is to shut the system down in three seconds and reboot it. </P>
+
+
+
+</BLOCKQUOTE><BR CLEAR="ALL"/>
+<!-- END BOTTOM TREENAV -->
+</TD>
+			</TR>
+		</TABLE>
+
+
+	<TABLE WIDTH ="80%" CELLPADDING="6">
+
+	<TR>
+
+
+
+<BLOCKQUOTE>
+
+ <P><B>THE /etc/rc.d/rc.sysinit COMMAND FILE</B></P>
+
+
+ <P>The command that is identified in the system initialization entry in <I>/etc/inittab</I> is executed only once by the <I>init</I> process each time your system boots. In general, this script runs a bunch of commands that perform the following tasks:</P>
+
+
+<OL TYPE ="1" START ="1">
+	<LI>   Determines if your system is on a network based on the contents of the file <I>/etc/sysconfig/network;</I></LI>
+
+	<LI>     Mounts the <I>/proc</I> filesystem used internally by Linux to track the status of various processes on your system;</LI>
+
+
+	<LI>     Sets the Linux system clock based on the settings in your BIOS and the time zone and other settings you identified when you installed Linux;</LI>
+
+
+	<LI>     Starts virtual memory on your system by activating any swap partitions identified in your <I>/etc/fstab</I> (File System table) file;</LI>
+
+
+	<LI>     Sets your system's host name for networking and system-wide authentication mechanisms, such as NIS (the Network Information Service, also known as the Yellow Pages to graying system administrators), NIS+ (an enhanced version of NIS), and so on;</LI>
+
+	<LI>     Checks the root filesystem for your system for serious problems and mounts it if no problems were found;</LI>
+
+
+	<LI>     Checks the other filesystems identified in your <I>/etc/fstab</I> file, as appropriate;</LI>
+
+	<LI>     Identifies any special routines that may be required for the operating system to use the hardware in your computer, configures any older plug-and-play devices that may be attached, and activates other basic system services, such as sound;</LI>
+
+
+	<LI>     Checks the status of any specialized disk devices you may be using, such as RAID (Redundant Array of Inexpensive Disks) drives;</LI>
+
+
+	<LI>     Mounts all of the filesystems identified in your <I>/etc/ fstab</I> file;</LI>
+
+
+	<LI>     Performs various other system accounting tasks.</LI>
+</OL>
+
+
+ <P><B>THE /etc/rc.d/init.d DIRECTORY</B></P>
+
+ <P>The <I>/etc/rc.d/init.d</I> directory contains all of the command files that actually start and stop the services that are associated with all of the run levels. Storing all of the commands associated with all of the run levels in a single directory makes it easy to associate any given service with multiple run levels.</P>
+
+ <P>This one-to-many association between commands and run levels is made possible because each run level has its own directory containing the command files associated with that run level. But as we'll see in a minute, the commands "stored" in the run-level-specific directories are all just symbolic links to the "one true copy" of these command files that are stored in the <I>/etc/rc.d/ init.d</I> directory.</P>
+
+ <P>All of the command files in the <I>/etc/rc.d/init.d</I> directory have short names that are descriptive of the services with which they are associated. For example, the file <I>/etc/rc.d/init.d/amd</I> starts and stops the <I>automount</I> daemon, which mounts NFS hosts and devices whenever required.</P>
+
+ <P>The scripts in <I>/etc/rc.d/ init.d</I> start or stop the services that they are associated with based on the specific arguments with which they are called. For example, the <TT>/etc/rc.d/init.d/amd start</TT> command starts the <I>automount</I> daemon, while the <TT>/etc/rc.d/init.d/ amdstop</TT> command stops the <I>automount</I> daemon. Some of these command files accept other arguments, such as <TT>restart</TT> or <TT>status</TT>. The <TT>restart</TT> command-line argument terminates any processes associated with that command file and then starts the service over again. The <TT>status</TT> command-line argument lists any processes associated with that command file, and then exits without changing anything.</P>
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" BORDER ="1" CELLPADDING ="8"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>GET WITH THE PROCESS!</I></FONT></P></DIV><DIV>
+
+<P>
+A process is a computer-science term for a single program that is running on your computer system. Processes have a hierarchical relationship; in order to start a new process, it must be "spawned" by an existing process. A process can start any number of other processes. Such a process is known as the "parent" of those other processes. Each process has its own "process number" that allows it to be uniquely identified.
+</P>
+
+
+<P>
+It's worth pointing out that the init process is something of a special case. Because it is the first process to be run on any Unix or Linux system, it is spawned by the kernel as it boots up. It is given the process number 0; it then proceeds to ultimately spawn (directly or indirectly) all of the other processes that are available on your system.
+</P>
+
+
+<P>
+The term "process" is often used loosely; you'll hear people using the terms "process" and "procedure" interchangeably, which can be confusing. A procedure is a sequence of steps performed to achieve a specific goal. Some or all of these steps may require starting or stopping specific processes on your system.
+</P>
+</DIV></TD></TR></TABLE>
+
+
+<BLOCKQUOTE>
+
+<P CLASS ="SUBHEAD"><B>Command Files for Different Run Levels</B></P>
+
+
+
+ <P>The list of services associated with each Linux run level is stored in a directory associated with that run   level. For example, the services associated with Linux' basic multi-user run level, level 3, are listed in the directory <I>/etc/rc.d/rc3.d.</I> As mentioned earlier, the entries in this directory are actually symbolic links to the command files in <I>/etc/rc.d/init.d</I> that actually start and stop various services.</P>
+
+ <P>Now here's where the really clever bits kick in:</P>
+
+
+ <P>> First, the names of the symbolic links that identify services that must be started when you enter a certain run level begin with an uppercase <TT>S</TT> (for "Start"). Similarly, the symbolic links identifying services that must be stopped when leaving a certain run level begin with an uppercase <TT>K</TT> (for "Kill").</P>
+
+
+ <P>> Second, the names of the symbolic links contain numbers that specify the order in which the services they refer to will be started. </P>
+
+
+ <P>Before the top of your head blows off, lets look at an  example that should help tie this all together. Assume that there are two services, <I>foo</I> and <I>bar,</I> that must be started whenever Linux enters run level 3, and that the service <I>bar</I> can only be started after the service <I>foo</I> is already running. Linux makes it easy to encode this information. The directory <I>/etc/rc.d/ rc3.d</I> would contain a symbolic link called <I>S1foo</I> to the command file <I>/etc/rc.d/init.d/foo.</I> The directory <I>/etc/rc.d/ rc3.d</I> would also contain a symbolic link called <I>S2bar</I> to the command file <I>/etc/rc.d/init.d/bar.</I> That's all there is to it!</P>
+
+ <P>When you start your system with the goal of being in run level 3, the <I>init</I> command changes its working directory to <I>/etc/rc.d/rc3.d,</I> and begins to execute the command files beginning with the letter <TT>'S'</TT> in numeric order. For example, the first command file it executes is <I>S1foo,</I> which points to <I>/etc/rc.d/init.d/foo.</I> After starting that service, the init process next executes <I>S2bar,</I> which points to <I>/etc/ rc.d/init.d/ bar.</I> Voila! The right thing happens, and it all just works!</P>
+
+
+<P CLASS ="SUBHEAD"><B>Displaying the Login Prompt</B></P>
+
+ <P>After the <I>init</I> process has executed all of the commands, files, and scripts identified in the previous few sections, the last few processes it starts are <I>/sbin/mingetty</I> processes which display the familiar banner and login message on your monitor or any other terminals connected to your system. The system is now fully up and running and ready for you to log in.</P>
+
+
+
+
+<P CLASS ="SUBHEAD"><B>Changing Run Levels and Shutting Down</B></P>
+
+ <P>At this point you may be asking yourself "OK, so I can boot into a given run level, but what if I want to change run levels once the system has already booted up?" Well, that's not a problem at all. Red Hat offers three different ways to change run levels. Two of these have limited uses (the <I>shutdown</I> command and booting into a specific run level), while the third is a general-purpose command for changing from any run level to any other run level.</P>
+
+ <P>The shutdown command (<I>/sbin/shutdown</I>) changes the run level to 6 (the run level preparatory to shutting down), then switches to run level 0 (halt and power down). You can pass arguments to the shutdown command such as <I>-h</I> (halt) or <I>-r</I> (reboot), telling it which of these run levels (0 or 6) to execute. If you do not specify either of the switches in your shutdown command, your system will automatically reboot in single-user mode.</P>
+
+
+
+<BLOCKQUOTE>
+
+ <P>Booting once into a specific run levels is done by passing the run level you want to boot into as an argument to your boot loader, usually LILO. You can also use the <I>-s </I>switch to cause the system to come up in single user mode so that you can perform administrative tasks. Sample command lines to do this from the <I>LILO:</I> prompt would be:</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>linux -s
+</PRE></P></DIV>
+
+ <P>or</P>
+
+
+<DIV CLASS ="LISTING"><P>
+<PRE>linux 5
+</PRE></P></DIV>
+
+ <P>The first of these examples boots your system into single-user mode. As an example of booting your system into a specific run level, the second of these boots your system into run level 5. Being able to specify a run-level to LILO makes it easy to test other run levels without having to change the run-level entry on the <TT>initdefault</TT> line in the <I>/etc/inittab </I>file.</P>
+
+ <P>However, the most general purpose approach to changing run levels is by using the <I>telinit</I> command (<I>/sbin/telinit</I>). The <I>telinit</I> command is actually linked to the <I>init</I> command, but is meant to be used by system administrators, rather than run as an automatic part of the system boot procedure. To switch to a different run level, execute the command <TT>telinit <I>run-level</I></TT>, where<I> run-level</I> is one of the run levels specified in the <I>/etc/inittab</I> file. This first runs all of the <TT>K</TT>* commands in the <I>/etc/rc.d/rec.run-level</I> directory associated with the current run level, then switches to the specified run level, which runs all of the <TT>S</TT>* commands in the <I>/etc/rc.d/rec.run-level</I> directory associated with the new run level.</P>
+
+ <P>It's important to realize that changing to a specified run level doesn't execute the commands associated with lower run levels, but just executes the start-up commands associated with the new run level. It's easy to see why this is so -- if Linux executed the commands associated with lower run levels each time it move to a higher run level, it would always execute the commands for run level 0 first, which would turn the system off.</P>
+
+ <P>Once you're in a specific run level as a result of having used the <I>/sbin/telinit,</I> you can manually start commands associated with other run levels by issuing them directly from the console. For example, you could issue the command <TT>/etc/rc.d/init.d/inetd start</TT> to start the Internet super-daemon from a run level that doesn't automatically run that command file. This can actually be very useful for testing out various services.</P>
+
+ <P>Once you're done experimenting with run levels and configuring you system, you can issue the <I>reboot</I> command (<I>/sbin/reboot</I>) to restart the system into its default run level, and your system will be up and running.</P>
+
+
+<P CLASS ="SUBHEAD"><B>Summary</B></P>
+
+
+ <P>While it may appear complex, understanding run levels, the commands that your Linux system    uses to switch run levels, and the order in which your Linux system executes those commands is very empowering. Not only will you feel better about all of the data that Linux displays on the screen as it starts, but you will be able to customize your system's boot process if you so desire.</P>
+
+ <P>Understanding run levels gives you the power to easily customize your system to start any processes you want, at any run level, in any order. And that's what Linux is all about -- having the flexibility and freedom you need to make your system work the way you want it to.</P>
+
+
+<TABLE BGCOLOR ="#ffffff" WIDTH ="80%" BORDER ="1" CELLPADDING ="8"><TR><TD>
+<DIV CLASS ="LISTING">
+<P CLASS ="LISTING-TITLE">
+<FONT FACE ="Arial,Helvetica,sans-serif"><I>WEBLINKS</I></FONT></P></DIV><DIV>
+
+<P>
+<a href="http://www.njnet.edu.cn/info/ebook/os/linux/lsg15.htm">http://www.njnet.edu.cn/info/ebook/os/linux/lsg15.htm</a>
+ Linux System Administrator's Survival Guide section on "Booting, init, and Shutdown"
+</P>
+
+
+<P>
+<a href="http://members.linuxstart.com/~superlinux/shutdown.html">http://members.linuxstart.com/~superlinux/shutdown.html</a>
+ Superlinux Encyclopedia: Linux Shutdown
+</P>
+
+
+<P>
+<a href="http://howto.tucows.com/man/man8/shutdown.8.html">http://howto.tucows.com/man/man8/shutdown.8.html</a>  
+ TUCOWS man page for the shutdown command
+</P>
+
+
+<P>
+<a href="http://www.ctanet.fr/~sheflug/mailarchive/2000/06/msg00014.html">http://www.ctanet.fr/~sheflug/mailarchive/2000/06/msg00014.html</a>
+ Discussion of BSD and SYSV init procedures
+</P>
+
+
+<P>
+<a href="http://rabi.phys.columbia.edu/~zack/code/init.html">http://rabi.phys.columbia.edu/~zack/code/init.html</a> 
+ Interesting discussion of BSD and SYSV init procedures with some outdated information
+</P>
+
+
+<P>
+<a href="http://www.df.lth.se/~elg/rcfaq.html">http://www.df.lth.se/~elg/rcfaq.html</a> 
+ FAQ about organization of /etc/rc scripts and commands
+</P>
+
+
+</DIV></TD></TR></TABLE><P><HR></HR></P>
+
+<P>
+ <I>Bill von Hagen is president of Move2Linux.com, which ports mainframe and midrange COBOL applications to Linux. He can be reached at <a href="mailto:wvh@movetolinux.com">wvh@movetolinux.com</a>.</I>
+</P>
+
+<p><b><font face="Arial, Helvetica, Sans-Serif" size="-1">Linux Magazine (http://www.linux-mag.com) December 2000</p></b></font><p>
+<p><b><font face="Arial, Helvetica, Sans-Serif" size="-1">Copyright Linux Magazine &copy;2000</p></b></font>
+</BODY></HTML>

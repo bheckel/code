@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Modified: Fri 24 Jan 2003 13:27:38 (Bob Heckel)
+
+Usage() {
+  echo "Usage: `basename $0` FILENAME.PL"
+  echo '  Runs the GUI ptkdb Perl Debugger under Unix.'
+  echo '  See pdba for ActivePerl Win32 debugging.'
+  echo '  Tip: use ":!pdb %" within Vim to debug current pgm.'
+  exit 1
+}
+
+MIN_EXPECTED_ARGS=1
+
+# User may have typed -h or --help
+if [ "$#" -lt $MIN_EXPECTED_ARGS ]; then
+  Usage
+  exit 1
+fi
+
+echo 'Running Cygwin version of Perl Debugger...'
+# DOS format files look ugly in the debugger.
+cat $1 | dos2unix > $TMP/pdb.tmp.pl
+if [ "$#" -eq 1 ]; then
+  perl -d:ptkdb $TMP/pdb.tmp.pl
+elif [ "$#" -eq 2 ]; then
+  perl -d:ptkdb $TMP/pdb.tmp.pl $2
+else
+  echo 'Unknown error (probably too many params passed).  Exiting.'
+  exit 2
+fi

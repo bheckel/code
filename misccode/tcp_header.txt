@@ -1,0 +1,50 @@
+Layer 4 (TCP) header
+
+|        16 bits               |            32 bits            |
+================================================================
+|          Source port         |        Destination port       |   <---1 hdr
+----------------------------------------------------------------
+|                       Sequence number                        |   <---2 hdr
+----------------------------------------------------------------
+|                     Acknowledgement number                   |   <---3 hdr
+----------------------------------------------------------------
+|Offset| Reserved  |U|A|P|R|S|F|     Window size               |   <---4 hdr
+----------------------------------------------------------------
+|        Checksum              |      Urgent pointer           |   <---5 hdr
+----------------------------------------------------------------
+|                  Option + Padding                            |   <---6 opthdr
+----------------------------------------------------------------
+|                        Data                                  |
+----------------------------------------------------------------
+
+Source port: See /etc/services for list of applications that sent the data.
+             65,535 (2^16-1) possible port numbers.
+
+Destination port: Name of application that is to receive the data contained
+                  within the IP packet.  Contrast with Layer 3 which only
+                  specifies the computer that should receive the data.
+
+Sequence number: Used by TCP to assure that all packets arrived in the right
+                 sequence and intact.
+
+Acknowledgement number: Sequence number of the next packet the receiver is
+                        ready to receive.
+
+Header Length or Offset: The IHL of TCP.  4 bits.
+
+Reserved: Unused.  6 bits.
+
+Control Flags: URGent, ACKnowledgement, PuSH, ReSeT, SYNchronize, FINish.  1
+               bit each.
+
+Window size: Size of buffer on the receiving host; used to temporarily store
+             IP packets.  16 bits.
+
+Checksum: CRC check on the entire IP packet (not just the TCP part).  Run on
+          sending and receipt.
+
+Urgent pointer: If URGent was set, this is where to find the urgent data.
+
+Options and padding: Pads if 32 bit word is not filled.
+
+Data: Actual data being sent.  No additional headers.

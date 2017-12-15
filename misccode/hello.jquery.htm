@@ -1,0 +1,22 @@
+<html>
+  <head>
+<!-- Should wait for page loaded - see better approach: http://www.jquery-tutorial.net/introduction/the-ready-event/-->
+    <title>jQuery test</title>
+<!--    <script type="text/javascript" src="jquery-1.7.2.js"></script>-->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+  </head>
+
+  <div id="divTest1"></div>
+  <script type="text/javascript">
+    document.getElementById("divTest1").innerHTML = "Hello, world javascript!";
+  </script>
+
+  <div id="divTest2"></div>
+  <script type="text/javascript">
+    $("#divTest2").text("Hello, world jquery!");
+  </script>
+ <body>
+ foo
+ </body>
+</html>
+

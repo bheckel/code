@@ -1,0 +1,41 @@
+#!/bin/bash
+##############################################################################
+#     Name: dupfile.sh (symlinked as filedup)
+#
+#  Summary: Create dummy copies of an existing file (for testing, etc.).
+#
+#           Input file foo.txt will produce files looking like this:
+#           1foo.txt, 2foo.txt, 3foo.txt...
+#
+#  Created: Fri 24 May 2002 13:59:26 (Bob Heckel)
+# Modified: Thu 26 Sep 2002 13:31:46 (Bob Heckel)
+##############################################################################
+
+Usage() {
+  echo "
+Usage: `basename $0` n myinputfile
+  E.g. `basename $0` 42 foo.xls
+
+  Creates n dummy copies of specified file with the sequence number
+  prepended to the name (e.g. 1foo.xls, 2foo.xls, 3foo.xls...)
+
+  Cleanup using this:
+  $ rm [1-9]*"
+
+  exit 1
+}
+
+N_EXPECTED_ARGS=2
+
+if [ $# -ne $N_EXPECTED_ARGS ]; then
+  Usage
+  exit 1
+fi
+
+LIMIT=$1
+
+# Bash only.
+for (( f=1; f <= $LIMIT ; f++ )); do
+  # We're prepending instead of appending to preserve extensions like .xls
+  cp -v $2 "${f}$2"
+done

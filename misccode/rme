@@ -1,0 +1,48 @@
+#!/bin/bash
+##############################################################################
+#     Name: rme
+#
+#  Summary: Shortcut for accessing the readme dir.
+#    
+#           TODO allow wildcards 
+#           TODO partial strings on rme w/o parm to list what's available
+#
+#  Created: Wed 11 Dec 2002 15:47:36 (Bob Heckel)
+# Modified: Tue 13 Jan 2009 14:34:25 (Bob Heckel)
+##############################################################################
+  
+location=$HOME/code/readme
+
+usage() {
+  echo >&2 \
+    "Usage: `basename $0` [-p|-v] [MYREADMEFILEROOTNAME]
+            -p  to view in pwd
+            -l  to view (list) in pwd
+            -v  to view all available in $HOME/readme
+       E.g. `basename $0` postgresql
+            `basename $0` -p postgresql
+            Shortcut for accessing the readme dir
+            where the filename pattern is readme.foo.txt"
+}
+
+if [ "$#" = 0 ]; then
+  usage
+  exit 1
+fi
+
+while getopts pvl opt
+  do
+    case "$opt" in
+       p )  location=.
+            ;;
+     v|l )  ls $location  # TODO using sed to remove readme. & .txt 
+            exit 0                # ruins the multicol display
+            ;;
+       * )  usage
+            exit 1
+            ;;
+    esac
+  done
+shift `expr $OPTIND - 1`    # move argument pointer to next
+
+$EDITOR "$location/readme.$1.txt"

@@ -1,0 +1,175 @@
+Procmail Spam Trapping:
+======================
+
+The .forward file belongs in your home directory. This is the file most mail
+delivery systems check for special instructions about delivering your mail.
+Some delivery systems may use other files; check with your system
+administrator. In this case, we want all mail to be sent through procmail. It
+gets a little complex to account for things like file locking. My .forward
+file (which is fairly standard) reads: 
+
+"|IFS=' ' && exec /home/users3/bbell/local/bin/procmail -f- || exit 75 #bbell"
+
+You will want to replace the location of procmail with the full path of
+wherever it is installed on your system. Also replace the "bbell" at the end
+of the line with your username. Lastly, the permissions on the file need to be
+set so that the mail delivery system can read the file. It most cases, this
+can be done with the command: chmod 644 .forward
+
+
+Sample .procmailrc
+-------------------------------------------------------
+# Set VERBOSE=on to debug your procmail setup
+VERBOSE=off
+
+# Set for pine.  Use $HOME/Mail for elm, or ignore if
+# using a Windows mail client
+MAILDIR=$HOME/mail
+
+# This is the local where the rest of my procmail files are
+PMDIR=$HOME/.procmail
+
+# The logfile records what procmail does.  You can read
+# it with the mailstat command
+LOGFILE=$PMDIR/log
+
+# These next few rc.* files contain the "recipes" procmail parses
+# to determine what to do with my mail.  It processes them in
+# order, so order is important.
+INCLUDERC=$PMDIR/rc.maillists
+
+# Disable logging of spam cancellations
+# You can comment this out for debugging purposes, or if
+# you like to watch spam die!
+LOGFILE=/dev/null
+
+# Spam recipe.  Hopefully Hormel isn't upset :)
+INCLUDERC=$PMDIR/rc.spam
+
+# Turn logging back on for normal messages
+LOGFILE=$PMDIR/log
+-------------------------------------------------------
+
+
+The whole principal behind my spam filter is that it deletes mail that is not
+addressed to you. Well, often any mailing lists to which you are subscribed
+will also fall under this category. To avoid problems with your mailing lists,
+you have to account for them before you analyze a message for spam. This is
+why rc.maillists was listed before rc.spam in .procmailrc. This file goes in
+the location specified in .procmailrc, which in our case was ~/.procmailrc.
+This file makes use of procmail "recipes" to analyze the incoming mail. These
+recipes can be quite complex. For these examples, however, I am just checking
+for text in the "From" field of the e-mail header. For more information on
+procmail recipes, see examples under the procmailrc and procmailex man
+pages.  The file below is an example rc.maillists.
+
+Sample rc.maillists
+-------------------------------------------------------
+# For this mailing list, just treat it as a normal file
+:0
+* From.*HumourNet
+$DEFAULT
+
+# This mailing list is HTML based, and I normally us a text-based
+# mail reader, so forward all mail to another account I have
+:0
+* From.*infobeat.com
+!other-acct@some-isp.com
+
+# All mail from this list goes into the specified folder.  This should work
+# with pine, elm, and other Un*x mail readers, but will not work when
+# checking mail from Windows (using a POP3 client).
+:0
+* From.*javasoft.com
+INBOX.java
+-------------------------------------------------------
+
+
+Finally we get to the good stuff. Time to nail those spammers! Here's the
+heart of the whole process. Before we actually kill the mail, however, we put
+in a few safeguards. 
+
+First, we provide a backdoor for some messages to get through. Any mail sent
+with the subject "spam error" will be treated as a normal message. This is in
+case we somehow kill a legitimate message by mistake. The information in the
+reply to what we thought was spam describes this method of making sure the
+message gets through. You can change "spam error" to whatever you like. 
+
+Second, we catch bounced messages. Many of the replies we sent back to
+spammers will bounce, since they often use faked addresses. To catch these, we
+first look for messages that didn't make it through the sending process. On
+the Taylor system, checking for a message from "Mail Delivery Subsystem"
+works. You may have to check to see what a bounced e-mail message looks like
+on your system. Once we have a bounced message, we then search the body for
+the field "X-Mailer", and see if the message was sent from our spam canceller.
+If it was, then we save the file to /dev/null. /dev/null points into oblivion,
+and the file winds up being deleted.  Finally, with all those safeguards in
+place, we are ready to process the spam message. To verify that the message is
+spam, I check to see if the message is not addressed to me. Rarely does a spam
+message actually list the real e-mail address in the "To" or "CC" field. Here
+I check to see if the message is (not) addressed to "bell". The reason is that
+I have a number of e-mail address that forward to this one account, but all
+have the word "bell" (my last name) in them. Replace "bell" with part or all
+of your e-mail address. 
+
+The next part processes the e-mail. You may want to change this line to save
+mail in a special folder until you are sure you have it set up correctly. As
+it stands, the command first sends the message through the program formail,
+part of the procmail distribution. It changes the headers of the message so it
+is addressed to whoever sent it, and removes the body of the message. It adds
+the "X-Mailer" field, which helps when we check for bounced messages. It adds
+the "From" field to read my name, but doesn't give an e-mail address (see how
+easy it is to fake these things?). It also updates the subject to make sense
+to anyone who actually reads the message, saving the old subject as
+"Old-Subject", in case it ever needs to be tracked. 
+
+The resulting message is sent through the standard Un*x program cat. This
+simply adds a body to the message. See my message here. Lastly, the whole
+things is processed by sendmail, another common Uni*x program. Note that you
+may have to specify the full pathnames of these programs, but I didn't. 
+
+I've included a sample file below for you to look at.
+
+
+Sample rc.spam
+-------------------------------------------------------
+# First, catch any spam correction messages
+:0
+* ^Subject.*spam error
+$DEFAULT
+
+# Second, stop bounced messages
+:0
+* ^From: Mail Delivery Subsystem
+{
+  :0 B
+  * X-Mailer: Bob's Spam Canceller
+  /dev/null
+}
+
+# Finally, nail those spammers!
+:0
+* !((^TO_.*taylor)|(^TO_.*bell))
+| ~bbell/local/bin/formail -rf -I "X-Mailer: Bob's Spam Canceller" -I "From: Bob Bell" -i "Subject: Your message has been deleted" | cat - ~bbell/.spam-msg | sendmail -t
+
+
+Sample .spam-msg
+-------------------------------------------------------
+      This message is to inform you that your message to me has been
+automatically deleted.  It was detected as being a "spam" message not
+addressed to me.  If this was in error, I sincerely apologize.  Please
+send a message to bbell@css.tayloru.edu asking me to remedy the problem
+with the subject "spam error" to ensure that it gets through.
+      If, however, this was an unsolicited piece of e-mail, cease and
+desist all additional mailings immediately.  Any attempts to circumvent
+this spam protection system may meet with legal prosecution to the
+fullest extent of the law.
+
+      Bob Bell
+
+Note: Again, if you sent a legitimate message or something from a mailing
+      list to which I am suscribed, I _DO_ want to hear from you.  Please
+      send back a message to bbell@css.tayloru.edu with the subject
+      "spam error" so I can fix the problem.  Thank you, and please accept
+      my apologies.
+-------------------------------------------------------

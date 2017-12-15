@@ -1,0 +1,1743 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Debian Linux Home and Office Networking and Network Tutorial</title>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<META name="description" content="How to set up and test a Linux network for home or business with information on the basics of TCP/IP, the OSI layer, network hardware, Internet connection sharing, using static routes, how to subnet a network.">
+<META name="keywords" content="server,linux,basics,guide,beginner,newbie,tutor,tutorial,easy,simple,starting,tcp/ip,ip addressing,networking,how to,installing,installation,static,dynamic,subnet,subnetting,osi,protocol,install,beginning,basic,configure,build,networking,training,setting up,setup,basics,help,home network,instruction,configuring,configure,servers,beginning,newbie,step-by-step,easy,how to,simple,mail server,help,info,information,assistance,reference,understanding,basics,introduction,configuration,managing,administration,administrating,administrator,learn,sample,example,explanation,definition,explain,starting,set up,building,guides,tutorials,newbies,beginners">
+</head>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#ae0039" VLINK="#dd0000" TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+<a name="top"> </a>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="left" valign="middle" bgcolor="#c30035" nowrap>
+<a href="index.htm"><img src="smmain.gif" border="0" vspace="0" hspace="0" alt="Home Page"></a> <img src="menu.gif" usemap="#menu" border="0" vspace="0" hspace="0">
+</td>
+<td width="2%" align="right" valign="middle" bgcolor="#c30035" nowrap>
+<a href="order.htm"><img src="cds.gif" border="0" vspace="0" hspace="0" alt="Order Debian Linux CDs"></a>
+</td>
+</tr></table>
+<map name="menu">
+<area shape="rect" coords="34,6,118,14" href="linux.htm" alt="Linux Basics">
+<area shape="rect" coords="34,19,114,27" href="install3.htm" alt="Debian Linux Installation">
+<area shape="rect" coords="34,33,101,42" href="packages.htm" alt="Using Debian Packages">
+<area shape="rect" coords="34,46,92,55" href="modems.htm" alt="Using Modems With Linux">
+<area shape="rect" coords="148,6,226,14" href="network.htm" alt="Setting Up A Network">
+<area shape="rect" coords="148,19,203,27" href="internet.htm" alt="Linux Internet Servers">
+<area shape="rect" coords="148,33,177,42" href="lan.htm" alt="Linux LAN Servers">
+<area shape="rect" coords="148,46,225,55" href="proxy.htm" alt="Linux Proxy/NAT Servers">
+<area shape="rect" coords="254,6,310,14" href="firewall.htm" alt="Linux Firewall Servers">
+<area shape="rect" coords="254,19,312,27" href="security.htm" alt="Linux Security">
+<area shape="rect" coords="254,33,322,42" href="compile.htm" alt="Compiling Linux Programs">
+<area shape="rect" coords="254,46,330,55" href="whatnow.htm" alt="What Now?">
+
+<area shape="rect" coords="356,6,399,14" href="about.htm" alt="About Debian Linux">
+<area shape="rect" coords="356,19,427,27" href="resource.htm" alt="Linux Resources">
+<area shape="rect" coords="356,33,399,42" href="books.htm" alt="Linux Books">
+<!-- <area shape="rect" coords="356,46,392,55" href="gear.htm" alt="Debian Linux Mousepads, Shirts, Mugs"> -->
+
+</map>
+<br><br><br>
+<blockquote>
+
+<center>
+<font size="5" face="verdana" color="#c30035">
+<b>
+How To Set Up A Linux Network
+</b>
+</font>
+</center>
+<br><br>
+
+Before we get into setting up Linux networking on a Debian system, we'll cover the basics of how to set up a network with both Windows and Linux systems and how to make it a &quot;private&quot; network.  Here the term &quot;private&quot; may not mean what you think it does.  It has to do with the IP addresses you use on your home or business network.  You'll then understand the value of having a proxy/NAT server or a firewall system which also performs the proxy/NAT function on your network.
+<br><br>
+Once we cover the &quot;whys&quot; and &quot;whats&quot; we'll get into the &quot;hows&quot;. You'll see how easy it is to set up a home or small-business network including what hardware is needed.  We'll briefly mention what you need to look at on Windows PCs and present more in-depth information on which files are used on a Debian system to set up networking. The <font size="3" face="verdana" color="#c30035"><b>Network Configuration Files</b></font> section shows what files are involved in setting up your Debian system to work on a local network and how they need to be configured to enable the various functions involved in networking including being able to connect to the Internet.
+<br><br>
+<blockquote>
+<b>Note:</b> &nbsp;Even if you're not familier with TCP/IP networks, try giving the material on this page a shot.  It's presented in an introductory manner.  Don't be concerned if you don't understand all of the material on OSI layers, subnetting, etc. presented on this page. Understanding this material is not necessary when setting up a network or using the subsequent guide pages on this site.  It is merely presented for those who wish more in-depth information.
+<br><br>
+Even if you don't have a network you can still play around with the material present on this page and on the <a href="proxy.htm">Proxy/NAT</a> and <a href="firewall.htm">Firewall</a> pages.  See the <font face="verdana" color="#A8003B"><b>No-Network Network</b></font> section below on how to do this. 
+</blockquote>
+What's particularly appealing about Linux for small businesses and non-profit organizations is that you can set up both internal (file, print, database) servers and external Internet (Web, e-mail, ftp) servers for very little cost.  The operating system and server applications are free and, given that Debian will run on older hardware, the hardware costs can be minimal.  These attributes also make it a great toy for those wishing to learn more about networking.  Pick up one CD set and you can set up all the servers, firewalls, and routers you want and experiment your brains out.
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>&quot;Private&quot; Networks</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+Theoretically, every system on a network needs a unique identifier (a unique address).  As such, every system that accesses the Internet would need a unique IP address because TCP/IP is the protocol of the Internet.  However, when the Internet exploded in the mid-90s it became clear that there simply were not enough addresses available in the TCP/IP address space for every computer in every office of every Internet-connected organization.  That doesn't even take into account those who wanted to access the Internet from home.
+<br><br>
+The solution was to create &quot;private&quot; address ranges to be used in conjunction with &quot;address translation&quot;.  Lets look at the first piece first.
+<br><br>
+Three blocks of IP addresses were set aside as private, meaning that all of the routers on the Internet would be configured to <b>not</b> route them.  That's why private addresses are also referred to as &quot;non-routable&quot; addresses.  The benefit?  If packets from systems with private addresses weren't routed between Internet-connected networks, then a whole bunch of networks could use the same private addresses because they'd never &quot;see&quot; each others addresses.  In other words, these same addresses could be used by any number of computers around the world because if they weren't routed, it would never be &quot;discovered&quot; that they weren't unique.
+<br><br>
+So if they're not routed, how do you get on the Internet if your computer has a private address assigned to it?  That's where the second piece, address translation, comes in.  Normally, in order for all the computers in a company to have Internet access they would all have to be assigned routable (&quot;public&quot;) IP addresses that could pass through the Internet.  Since there aren't enough addresses for this, companies instead assign all of the hundreds of computers in their organization private addresses and they all share a single &quot;public&quot; address to access resources on the Internet.  This sharing is accomplished by configuring privately-addressed systems to use a special server, called a <b>proxy server</b>, to access the Internet.
+<br><br>
+A proxy server has two NICs (Network Interface Cards) because it's connected to two different networks.  One NIC is connected to the Internet and is assigned a <u>single</u> &quot;public&quot; (routable) IP address.  (This NIC is referred to as the &quot;external interface&quot;.)  The other NIC is connected to the company's internal network. It is assigned a private IP address so that it can communicate with all of the other privately-addressed computers in the company.  (This NIC is referred to as the &quot;internal interface&quot;.) The proxy server acts as a &quot;gateway&quot; onto the Internet. (Because of the gateway behavior, a proxy server should also have firewalling capabilities to protect the internal network.)  However, in addition to acting as a gateway, it acts as an address translator.
+<br><br>
+<blockquote>
+<blockquote>
+The private IP addresses assigned to the systems on your internal nework are chosen by you from one of the three private address ranges listed below.
+<br><br>
+Public IP addresses are only available from an ISP.  In most cases, such as with a dial-up, DSL, or cable modem, your ISP automatically assigns a single public address to your modem using PPP, bootp, or DHCP.  This assigned address can change from time to time (&quot;dynamic&quot;).  It requires no configuration on your part.  Business customers typically obtain multiple public addresses from their ISP.  These addresses do not change (&quot;static&quot;).  Static addresses are needed for Internet servers that are referenced by DNS records such as Web servers, mail servers, etc. that are contacted using a domain name.
+</blockquote>
+</blockquote>
+When a computer on the internal network with a private address wants to request information from a Web site, it actually sends the request to the internal interface of the proxy server.  The proxy server, with it's public routable address on the external NIC, is the one that actually sends the request to the Internet Web server.  The Web server sends the response back to the proxy server's external NIC, and the proxy server then forwards the response on to the computer on the internal network that made the initial request.  The proxy server keeps track of which internal computers make which requests.
+<br><br>
+The advantage?  Hundreds of computers in a company can access the Internet and only take up a <u>single</u> public Internet address (that of the proxy server's external NIC).  Another advantage is security.  If your computer's address can't be routed over the Internet, it would be hard for someone to get at your computer <i>from</i> the Internet.  (There are ways though.)
+<br><br>
+The translating of a private address to a public address (outbound request) and back again (inbound response) is most commonly known as <b>NAT</b> (Network Address Translation).  In the Linux community it's also often referred to as &quot;masquerading&quot; because the proxy server hides the true identity of the internal computer that made the initial Internet request.
+<br><br>
+The internationally-established private IP address ranges that can be assigned to internal network computers are as follows:
+<br><br>
+<blockquote>
+<ul>
+<li><b>10.0.0.1</b> through <b>10.255.255.254</b>
+<ul>
+<li>16,777,214 addresses
+<li>16,777,214 computers on 1 network<br>
+(<font color="#A8003B">10</font>.x.x.x)
+<li>Uses a subnet mask of <b>255.0.0.0</b>
+<li>First octet must be the same on all computers
+<li>A Class <b>A</b> address range
+</ul>
+<br>
+<li><b>172.16.0.1</b> through <b>172.31.255.254</b>
+<ul>
+<li>1,048,574 addresses
+<li>65,534 computers on each of 16 possible networks<br>
+(172.<font color="#A8003B">16</font>.x.x to 172.<font color="#A8003B">31</font>.x.x)
+<li>Uses a subnet mask of <b>255.255.0.0</b>
+<li>First two octets must be the same on all computers
+<li>A Class <b>B</b> address range
+</ul>
+<br>
+<li><b>192.168.0.1</b> through <b>192.168.255.254</b>
+<ul>
+<li>65,534 addresses
+<li>254 computers on each of 256 possible networks<br>
+(192.168.<font color="#A8003B">0 to 255</font>.x)
+<li>Uses a subnet mask of <b>255.255.255.0</b>
+<li>First three octets must be the same on all computers
+<li>A Class <b>C</b> address range
+</ul>
+</ul>
+</blockquote>
+<br>
+Clearly, with 254 possible addresses on each of the 192.168.x.x private address ranges, using one of these ranges is plenty for most small businesses and those who want to play around with a network at home.  (This is why, you may recall, the default IP address in the &quot;Network Setup&quot; part of the Debian installation was 192.168.1.1.)   The 10.x.x.x address space is often used by very large organizations with many dispersed locations.  They will &quot;subnet&quot; this large private address space so that one location will have an address range of 10.3.x.x, another will have 10.4.x.x, and so on, with each location having the ability to have up to 65,534 computers.  Each location may even further subnet their address space for different departments or facilities.  For example, in the location that has the 10.3.x.x address space, the engineering department will have the 10.3.2.x space, the accounting will have the 10.3.3.x address space, etc. with each department being able to have up to 254 computers.  (You'll see where these numbers come from later.)
+<br><br>
+Each of the numbers separated by periods in an IP address is referred to as &quot;octet&quot; because the value of the number (0 to 255) is derived from eight binary bits.  An IP address actually consists of two parts.  The first part of an IP address identifies the <b>N</b>etwork that a computer is on, and the other part identifies the individual <b>C</b>omputer on that network.
+<br><br>
+There's an often-used analogy comparing an IP address to a telephone number.  The network part of the IP address is analogous to the area code, and the computer part of the IP address is like the individual's phone number.  All the people on phone company network (in one area code) have the same area code number, and no two of them have the same phone number.  Conversly, two people can have the same phone number in different parts of the country because they're not in the same area code (not on the same network).  It's when you put the area code and an individual's phone number together that the number becomes one that is unique to the entire country (internetwork).  In this context, we call the area code the <b>prefix</b>.  With IP addresses, the network part of an IP address is the prefix.
+<br><br>
+<blockquote>
+<b>Note:</b> &nbsp;If you get into routers you'll learn about another instance where this telphone number anology holds true.  The long distance carriers don't care what the individual's phone number is.  All they look at is the area code and route the call to the baby bell's appropriate switching center.  Likewise, most network routers don't care about the computer part of an IP address.  They only look at the network part of the address because routers route packets between networks, not PCs.  The only router that cares about the computer part of the address is the &quot;final hop&quot; router (the router which is connected to the network segment that destination computer is connected to).
+</blockquote>
+With national phone numbers the prefix is always three digits. Unlike national phone numbers, the prefix of an IP address can vary in length. That's where a <b>subnet mask</b> comes in.  It determines how much of the IP address is the prefix (the network part). If you have a subnet mask of 255.255.0.0 it means that the first two numbers (octets) in an IP address are the network part (prefix) of the address and the last two numbers (octets) are used to identify the individual computers on that network.
+<center>
+<br>
+<img src="netmask.gif" border="0" alt="What a subnet mask does">
+</center>
+<br>
+Note that a '1' in a subnet mask indicates a <b>N</b>etwork bit and a '0' indicates a <b>C</b>omputer bit.  Because of the way an IP address is split into two parts (network part followed by the computer part), a subnet mask will always be a series of consecutive 1s followed by a series of consecutive 0s.  In other words, you'll <u>never</u> see a subnet mask where 1s and 0s are interspersed (ex: 11100110).  
+<br><br>
+Here's a few points you need to be aware of when you assign IP addresses to systems on a network:
+<br><br>
+<ul>
+<li>All systems on an internal network must have the same subnet mask
+<li>The <b>network</b> part of the IP address must be the <u>same</u> for all computers on the internal network
+<li>The <b>computer</b> portion of the IP address must be <u>different</u> for every computer on the internal network 
+</ul>
+That second point is important.  With a Class C network the subnet mask of 255.255.255.0 indicates the first <i>three</i> octets are the &quot;network&quot; part of the IP address.  That means that the first three numbers (octets) of the IP address must be the same on all of the computers on this internal network.  That leaves only the last octet available to identify individual computers on the network (8 bits equals about 254 computers that can be uniquely identified, a value between 1 and 254 for the last octet).
+<br><br>
+<blockquote>
+<b>Note:</b> &nbsp;People are often confused by the 192.168.x.x private address range because of it has two 'x's.  The first 'x' means you can pick <b>one and only one</b> number from the range of available values (0 through 255) for your network.  Because this is a Class C address which uses a subnet mask of 255.255.255.0, the number you choose for the first 'x' must be the same on all systems on your network.
+<br><br>
+You can set up a network with 192.168.1.x addresses and another network with 192.168.2.x addresses but because these are Class C address ranges they are two totally separate networks.  You would need to set up a router to inter-connect the two networks in order for the machines on both networks to talk to each other.  If you think that, given the number of servers, workstations, network printers, switches, etc. you may have in the forseeable future may grow to more than 254, you may want to consider using the Class B private address space on your network. 
+</blockquote>
+The range of values for the last octet (to assign to computers) on a Class C network is 1 to 254.  So you can only have 254 computers on a network that has a subnet mask of 255.255.255.0 (a Class C network).  A '0' in the last octet is reserved as the &quot;wire&quot; address for the network and 255 in the last octet is the broadcast address for the network.  No system can be assigned either of these numbers.  The following addresses can't be assigned to computers when using the private IP address ranges:
+<br><br>
+<blockquote>
+&quot;Wire&quot; or &quot;Network&quot; Addresses:
+<blockquote>
+10.<font color="#A8003B">0.0.0</font><br>
+172.16-31.<font color="#A8003B">0.0</font><br>
+192.168.0-255.<font color="#A8003B">0</font>
+</blockquote>
+Broadcast Addresses:
+<blockquote>
+10.<font color="#A8003B">255.255.255</font><br>
+172.16-31.<font color="#A8003B">255.255</font><br>
+192.168.0-255.<font color="#A8003B">255</font>
+</blockquote>
+</blockquote>
+<br>
+Because you can't use these two (wire and broadcast) addresses to assign to computers, the number of addresses that you can assign to computers can be calculated using the equation:
+<center>
+<br>
+2<sup><b>c</b></sup> - 2 = number of available computer addresses
+</center>
+<br>
+where <b>c</b> is the number of <b>c</b>omputer bits in your subnet mask.  Now you can see how we came up with the number of computers you could have on each network when we gave the three private address ranges earlier. With a class B address you have 16 computer bits in the subnet mask:
+<center>
+<br>
+<img src="netmask.gif" border="0" alt="What a subnet mask does">
+</center>
+<br>
+so using our equation we end up with
+<center>
+<br>
+2<sup>16</sup> = 65,536 - 2 = 65,534 available computer addresses
+</center>
+<br>
+On a class C network we have 8 computer bits in the subnet mask so:
+<center>
+<br>
+2<sup>8</sup> = 256 - 2 = 254 available computer addresses
+</center>
+<br>
+Earlier we said that private address ranges and NAT help conserve IP addresses but the use of subnet masks can also. For a more thorough explanation on IP address classes and the use of subnet masks check out the <font size="3" face="verdana" color="#c30035"><b>Subnetting</b></font> section later in this page.
+<br><br>
+You may run into networks in businesses and schools where the computers <b>don't</b> have private addresses.  Our local community college is one such case.  That's because they jumped on the Internet bandwagon early when public addresses were being handed out for the asking and got themselves a Class B public address (which allows them to have 65,534 publically addressed computers).  Every PC at all the campuses has a publically routable address.  The upside is they don't need to use a proxy/NAT server in order for the students to be able to access the Internet. The downside is that their internal network is basically a part of the Internet.  This is a huge security risk if no firewall is in place because every system is accessible from anywhere in the world (which is why they have a mega-bucks Cisco PIX firewall appliance).
+<br><br>
+<blockquote>
+<blockquote>
+If you're using a networked Windows system at the office and you want to see what your system's TCP/IP settings are, open up a DOS window and enter the command:
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>ipconfig</b></font>
+</center>
+<br>
+To view the TCP/IP settings configured for a NIC on a Linux system type in the following command at the shell prompt:
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>ifconfig</b></font>
+</center>
+<br>
+and look for the &quot;eth0:&quot; entry.
+</blockquote>
+</blockquote>
+<br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>What Network Hardware Does</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+Now that we've covered the &quot;logical&quot; part of networking, lets take a look at the hardware.  When you talk networking hardware you're talking NICs, hubs, switches, routers, cables, etc. However, hubs are quickly disappearing, being replaced by switches.  When switches were first introduced, they were significantly more expensive than hubs on a &quot;per port&quot; cost basis, but their prices have dropped to the point where the cost difference isn't an issue.
+<br><br>
+Why are switches better than hubs?  When two PCs want to talk to each other, switches set up a virtual direct connection between two.  This means the bandwidth isn't shared with other systems.  The two PCs get it all (100 Mbps).  They accomplish this by using the MAC addresses of systems on the network.
+<br><br>
+Each system on a network actually has two addresses.  A &quot;logical&quot; IP address that can be assigned and changed by you at will, and a &quot;physical&quot; hardware address that is permanently burned into a NIC.  This permanent hardware address is often referred to as a MAC address or &quot;BIA&quot; - Burned-In Address.  (Physical, hardware, MAC, and BIA all refer the same address.)  Each &quot;packet&quot; sent over a network must include both the logical and physical addresses to identify the destination computer.
+<center>
+<br>
+<img src="encap.gif" border="0" alt="Ethernet packet encapsulation">
+</center>
+<br>
+The above diagram shows how the MAC and IP addresses are used on a LAN.  It also illustrates the theory behind how &quot;encapsulation&quot; is used to build a frame and how they apply to the OSI layers.  Don't worry about the OSI layer stuff if you're not studying networking.  It's presented in just about every network book ever written so I included the references here for those that may be reading up on networking and are encountering this material.  (The &quot;FCS&quot; at the end of the frame stands for Frame Check Sequence which is a CRC checksum to make sure the frame didn't get corrupted in transit.)  The above also shows why TCP/IP is independent of the networking technology used.  When using WAN connections instead of an ethernet LAN, the TCP/IP packet would be encapsulated in a PPP (dial-up, ISDN, or leased-line), frame relay, or X.25 frame.  If encapsulated in a frame relay frame, the Layer 2 addressing would use numbers called DLCIs (Data Link Connection Identifiers) instead of MAC addresses.
+<br><br>
+Technically, using the term &quot;packet&quot; when referring to what's sent across the wire isn't proper.  A packet has a very specific meaning in the TCP/IP world.  The term &quot;frame&quot; would be more appropriate but it's become rather common to mis-use the term &quot;packet&quot; in this way, such as in &quot;packet sniffers&quot;, etc.  And actually, nothing is &quot;sent&quot; across a network cable.  The voltage on the network cables just flucuates rapidly and, like the telegraph operators in the old west who knew Morse Code, every device attached to the same LAN cable segment senses and monitors this series of flucuations to see if they pertain to them (as indicated by the destination MAC address).  If you're familier with the OSI model, these voltage fluctuations are what's referred to by &quot;Layer 1&quot;.  It's the NIC's job to convert a frame into a series of voltage fluctuations when sending and to use these voltage flucuations to rebuild a frame when receiving.
+<center>
+<br>
+<img src="encap2.gif" border="0" alt="Packet payload encapsulation">
+</center>
+<br>
+The encapsulation scheme was devised because it offers flexibility.  One layer's packet is the next lower layer's payload.  Packets travel over a LAN are encapsulated in an ethernet frame.  If you're connecting to another network using a modem, your computer encapsulates the packets in a PPP frame.  The Layer 2 framing is dependent on the connection technology you're using.  When Cisco routers are used to connect remote sites they can use any number of different technologies with their related framing protocols including PPP, frame relay, HDLC, etc.  Likewise, the Layer 3 protocol could be IPX on a Novell network rather than IP.  In such a case the Layer 3 header would contain source and destination IPX addresses (and Novell's SPX protocol would take the place of TCP). 
+<br><br>
+The sending computer takes your data (your e-mail message or Web site request) and does the series of encapsulations based on the type of network you're on.  The receiving computer simply reverses the process and de-encapsulates the received frame to extract the data you sent.
+<br><br>
+One other point to note in the above diagram is that the destination IP address is not the only TCP/IP-related information specified about the destination computer.  The TCP port number for the requested service is also specified.  HTTP (Web) uses port 80.  FTP (file transfer) uses port 110.  You may have seen the term &quot;socket&quot; used in TCP/IP literature.  A socket is simply referencing the IP address and port number together.  For example, traffic destined for a Web server with an IP address of 172.16.5.20 would have a destination socket of 172.16.5.20:80.  It's the use of different port numbers (and sockets) that allows you to still surf the Web <i>while</i> you're using FTP to download a file.
+<br><br>
+So how does the sending system find out what a destination computer's MAC address is so that it can put it in a frame?  It uses ARP. ARP is an address resolution protocol kind of like DNS.  Whereas a computer will send out a DNS query packet to a DNS server to resolve a domain name or system name to an IP address, it will also send out an ARP query packet to resolve an IP address to a MAC address.  An ARP request is basically just a broadcast that says &quot;<i>Whoever has IP address x.x.x.x, send me your MAC address</i>&quot;. We mention this because when comparing hubs to switches to routers you can see where these two different destination addresses come into play.  (You'll see how all this ties together in the <font face="verdana" color="#A8003B"><b><nobr>How It All Works</nobr></b></font> section later in this page.)
+<center>
+<br><br>
+<table border="1" cellpadding="10">
+<tr>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#A8003B" size="3"> 
+<b>Network<br>
+Device</b>
+</font>
+</td>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+<b>Packet<br>
+Handling</b>
+</font>
+</td>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+<b>OSI<br>
+Layer</b>
+</font>
+</td>
+</tr>
+<tr>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#A8003B" size="3"> 
+<b>Hubs</b>
+</font>
+</td>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+Hubs don't look at anything.  They serve as a central electrical tie point for all the systems on a network and are basically just repeaters.  Any packets received on one port are flooded out all other ports.  All systems on the network see all traffic and all share the available bandwidth.  As a result, only one computer on the network segment can transmit packets at a time (shared bandwidth).
+</font>
+</td>
+<td align="center" valign="top" nowrap>
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+1<br>
+<font size="2">Electrical<br>
+signals and<br>
+connections</font>
+</font>
+</td>
+</tr>
+<tr>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#A8003B" size="3"> 
+<b>Switches</b>
+</font>
+</td>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+Switches also serve as a central electrical tie point.  They don't care about IP addresses.  They look at the MAC addresses in packets and build a lookup table that shows which MAC address is plugged into which switch port.  This allows them to forward packets MAC-addressed for a specific system to that system only (the virtual direct connection).  None of the other systems on the network segment see them.  (If it doesn't have the destination MAC address in it's ARP table it floods the packet, either waiting for the destination system to respond so it can add an entry into its' ARP table for it, or it lets the default gateway router deal with it.)  As a result, multiple computers on the same network segment can transmit at the same time (bandwidth is not shared).
+<br><br>
+Another advantage of switches is that the virtual direct connection they set up between two systems allows for full-duplex communications between the two systems.  Full-duplex operation has <i>the effect</i> of doubling the bandwidth under certain circumstances because the both systems can send and receive packets to each other simultaneously (provided both NICs support full-duplex operation).
+<br><br>
+There is a <i>disadvantage</i> to switches though.  You can't hook a system running a &quot;packet sniffer&quot; to a switch to try and analyze your network's level of bandwidth utilization or capture traffic to/from a specific system because the sniffer system can't see all the traffic.  It will only see traffic sent to it and any &quot;broadcast&quot; traffic (such as ARP requests) which is flooded out all switch ports.  (Knowing the level of broadcast traffic on your network is helpful however.)  You can only sniff traffic to/from other systems when they (and the sniffer system) are connected to hubs.  However, Cisco switches have a feature called SPAN that lets you configure a port as a SPAN port to hook a sniffer to.  You then specify one or more other ports on the switch which will have their traffic duplicated to the SPAN port.  You would specify two ports to monitor the traffic between two systems or all other ports to simulate having your sniffer hooked to a hub.  This could slow down a heavily utilized switch though as you would in essence be doubling the amount of traffic across the switch fabric because all unicast traffic is going to two ports instead of one.
+</font>
+</td>
+<td align="center" valign="top" nowrap>
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+2<br>
+<font size="2">Hardware<br>
+addressing<br>
+(MAC address)</font>
+</font>
+</td>
+</tr>
+<tr>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#A8003B" size="3"> 
+<b>Routers</b>
+</font>
+</td>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+Routers do switching too, building a lookup table of the MAC addresses of systems on the network segment that connects to each interface, but they also look at IP addresses.  If the destination IP address of a packet isn't on the same network segment as the system that sent the packet, the router looks at a different table (routing table) to see which other interface it needs to send the packet out of to reach the destination network.  That's why default gateway devices are routers.
+<br><br>
+Often times a router will connect to two different types of networks.  One interface will connect to an ethernet LAN while another connects to a frame relay WAN link.  If the router receives a packet on the LAN interface that needs to be forwarded onto the frame relay link, it will strip off the ethernet frame and re-encapsulate the packet in a frame relay frame before sending it on its' way.
+</font>
+</td>
+<td align="center" valign="top" nowrap>
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+3<br>
+<font size="2">Logical<br>
+addressing<br>
+(IP address)</font>
+</font>
+</td>
+</tr>
+</table>
+</center>
+<br><br>
+Switches and routers aren't the only things that build ARP tables.  Computers build them too, but the table entries are temporary (called the &quot;ARP cache&quot;), usually being removed after a couple minutes.  On a Windows system, open up a DOS window.  Linux systems just do the following at the shell prompt. Ping another system on your network.  When the ping is finished (on Linux systems press Ctrl-C to stop the pinging), type in the following command to view the ARP table entry created as a result of the ping:
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>arp -a</b></font>
+</center>
+<br>
+Given that most broadband Internet connections are only in the 1 Megabit-per-second (Mbps) range, you probably wouldn't notice much of a performance difference between using a hub and a switch on a home network.  In this case you could save some money by buying a used 8-port 10 or 100 Mbps hub on places like eBay rather than a new switch.  However, on larger business LANs the performance difference could be significant.
+<br><br>
+Notice one very important point.  An ARP is a broadcast packet.  As such, only systems on the same LAN segment will see the broadcast and respond.  In other words, ARP will only resolve the MAC addresses of destination systems on the same Layer 2 segment (which is comprised of systems interconected by hubs or switches).
+<br><br>
+How does your system know when to try and get the destination system's MAC address?  Easy.  It looks at the destination IP address.  If the destination IP address isn't on the same subnet (doesn't have the same <b>network</b> portion of the IP address), then it knows sending an ARP request with the destination's IP address won't do any good.  So instead, it sends out an ARP request with the IP address of the <b>default gateway</b>.  Your system knows that to access any system on a different network (or subnet), it has to send the packet out the default gateway router so it ARPs to get the MAC address of that router's interface.  (That's why you enter an IP address, subnet mask, and default gateway address in your system's TCP/IP configuration.)
+<br><br>
+Let's take a look at a somewhat realistic frame.  You're on your PC at work which is connected to an Ethernet LAN and you send your mom an e-mail.  Remember, when <i>sending</i> information the encapsulation process starts at the top OSI layer (Application layer) and works it's way down through the transport, network, and link layers.  (Received frames go up the OSI layers and get de-encapsulated at each layer.)
+<br><br>
+<ul>
+<li>Since e-mail messages are sent using the SMTP protocol, your e-mail message will get wrapped in a <u>TCP segment</u> with port 25 as the destination port.
+<li>Then, since your mom's e-mail address contained the domain name of her ISP, your system has to send out a DNS request to get the IP address of the mail server for that domain name.  Once it has that it will use it as the destination IP address as it wraps the TCP segment up in an <u>IP packet</u>.
+<li>Because the source and destination IP addresses are for different networks, your system will send out an ARP request to get the MAC address for the default gateway router's interface.  With that it can wrap the IP packet inside an <u>ethernet frame</u>, calculate the checksum value for the FCS (Frame Check Sequence), and pass it down to the hardware layer to be put on the wire.
+</ul>
+<br>
+Note that your system had to do two address resolution queries (DNS and ARP) to get the two destination addresses (IP and MAC).  Only after it has both of them can it build the frame.
+<center>
+<br>
+<img src="mailfram.gif" border="0" alt="E-mail packet encapsulated in a frame">
+</center>
+<br>
+At some point the packet will likely encounter your proxy server and it will change the source IP address of the packet to the public address of the external interface of the proxy server.  The proxy server will use the randomly generated source port number (58631) to keep track of your PC's SMTP &quot;conversation&quot; with the mail server.
+<br><br>
+As your e-mail packet travels over the Internet the frame type will change to whatever medium (frame relay, ATM, etc.) is encountered along the way (the intermediate hop routers de-encapsulate and re-encapsulate with the proper frame type as necessary because routers can connect to different network mediums).  But once the proxy server has changed the private IP address to a public one and sent the frame on its' way, the IP addresses in the packet (and any information in the layers above it) never change as it winds its' way through the Internet. Only the Layer 2 framing changes.
+<br><br>
+<blockquote>
+<blockquote>
+<b>Note:</b> &nbsp;With point-to-point serial links like a dial-up connection between two modems (PPP Layer 2 protocol) or a leased line between two routers (HDLC Layer 2 protocol) there is no need for Layer 2 addressing.  As an analogy, take the old George Carlin line &quot;When there's only two people on an elevator and one of them farts everybody knows who did it&quot;.  If there's only two devices connected to a link and one of them is sending they both know who needs to be receiving.  The packet is still encapsulated in a frame appropriate for the medium, but there is no addressing information in the frame header.
+</blockquote>
+</blockquote>
+Going back to the OSI model for those studying networking, you can see how the pieces of the above frame relate to the lower layers of the model.  It also shows how all the different technologies relate to each other.
+<center>
+<br><br>
+<table border="1" cellpadding="10">
+<tr>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#A8003B" size="3"> 
+<b>OSI<br>
+Layer</b>
+</font>
+</td>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+<b>Function</b>
+</font>
+</td>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+<b>Example<br>
+Technologies</b>
+</font>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+<b>1<br>
+Physical</b>
+</font>
+</td>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+Hardware interconnection of devices specifying cable types, connector types and pin-outs, electrical signal levels, and encoding/modulation methods.
+</font>
+</td>
+<td align="center" valign="top" nowrap>
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+10/100-Base-T<br>
+<font size="2">(for Ethernet)</font>,<br>
+Token Ring<br>
+<font face="2">(hardware specs)</font>,<br>
+LocalTalk<br>
+<font size="2">(for AppleTalk)</font>,<br>
+232c and v.35<br>
+<font size="2">(for serial<br>
+connections)</font>
+</font>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#C60000" size="3"> 
+<b>2<br>
+Link</b>
+</font>
+</td>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+Local network (same segment) addressing.
+Used by NICs, switches, and routers.
+</font>
+</td>
+<td align="center" valign="top" nowrap>
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+Ethernet<br>
+<font size="2">(802.2/802.3)</font>,<br>
+Token Ring<br>
+<font size="2">(802.5)</font>,<br>
+Frame Relay,<br>
+ATM,<br>
+Serial links using<br>
+PPP, HDLC, etc.<br>
+</font>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#0000c6" size="3"> 
+<b>3<br>
+Network</b>
+</font>
+</td>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+Internetwork (different subnet or network) addressing. Used by routers.
+</font>
+</td>
+<td align="center" valign="top" nowrap>
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+IP,<br>
+IPX (Novell),<br>
+AppleTalk
+</font>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top">
+<font face="arial,sans serif,helvetica" color="#008400" size="3"> 
+<b>4<br>
+Transport</b>
+</font>
+</td>
+<td align="left" valign="top">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+Service identification (WWW, e-mail, FTP, etc.).  Used by the protocol stack.
+</font>
+</td>
+<td align="center" valign="top" nowrap>
+<font face="arial,sans serif,helvetica" color="#000000" size="3">
+TCP and UDP (using<br>
+Port numbers),<br>
+SPX (Novell),<br>
+AppleTalk
+</font>
+</td>
+</tr>
+</table>
+</center>
+<br><br>
+Note that a NIC is both a Layer 1 device (because it has a 10/100-Base-T connector) and a Layer 2 device (because it looks at the MAC addresses of the frames it sees).  Same for switches because they have 10/100-Base-T connectors and they look at the MAC address to build their MAC address-to-port lookup table).  Routers can have multiple interfaces of varying types (serial, 10/100-Base-T, Token Ring) so it is a Layer 1 device (different connector types), has to appropriately re-frame a packet for each of those network types and apply the appropriate Layer 2 address (so it is also a Layer 2 device) and it looks at the IP addess to see which interface the packet needs to go out of (so it's also a Layer 3 device).
+<br><br>
+Also note that the Layer 3 Network technologies (IP, IPX, etc.) are totally independent of the Layer 2 Link technologies which is why you can have a TCP/IP network span different network types or run Novell IPX/SPX on an Ethernet or Token Ring network.
+<br><br>
+The above was a simplified coverage of frames and packets.  There's more than just addresses in frame (Layer 2), packet (Layer 3), and segment (Layer 4) headers.  There are flags, status indicators, sequence numbers, etc.  And we didn't show the information in the layers between the Transport layer (TCP ports) and the Application layer (the data).  For example, NetBIOS and client/server technologies like SQL would use the &quot;Session&quot; layer above the Transport layer.
+<br><br>
+Time spent learning the OSI model is an investment that will likely pay off in big time savings when troubleshooting network problems.  The layers allow you to narrow down and isolate the possible sources of problems.  As a simple example, take a Web server that isn't responding to requests from browsers.  If you can ping the server, which uses Layer 3 ICMP packets, you know the network configuration is OK but for some reason the Apache Web server software isn't listening on port 80 (Layer 4).  Likewise if two Windows systems running NetBIOS over TCP/IP can't &quot;see&quot; each other in Network Neighborhood but they can ping each other you know the TCP/IP properties are OK and it's likely a Session layer problem.
+<center><br>
+<table border="1" cellpadding="10" width="75%">
+<tr><td>
+<font face="arial,helvetica,sans serif">
+<center>
+<font color="#A8003B"><b>The <u>Two</u> Parts of<font size="4" face="courier"> Ping</font></b></font>
+</center>
+<br>
+Be careful about your assumptions when using the<font face="courier" size="4" color="#A8003B"><b> ping </b></font>command.  It has two parts  The ECHO (what you send) and the <nobr>ECHO REPLY</nobr> (what the remote system sends back). 
+<br><br>
+It is easy to assume that if you don't get a response to a ping there is no connectivity between the two systems.  This is not necessarily true.  The ping ECHOs may very well be reaching the remote system.  However, if the remote system isn't configured correctly, you may not receive the <nobr>ECHO REPLY</nobr>s.
+<br><br>
+The most common reason for this is that the remote system doesn't have a route in it's routing table to the network your system (the ECHO sending system) is on.  As a result, the remote system is trying to reply but either it doesn't know where to send the replies, or it is sending them but out of the wrong interface.  (This can happen if you have multiple NICs in the system but remember that your system sees a connected modem as the<font face="courier" size="4"> ppp0 </font>interface.)
+<br><br>
+Causes for this are incorrect values for the default gateway, subnet mask, or IP address on the remote system (i.e. an incorrect Layer 3 configuration).  Also consider the fact that the incorrect values could be on the ECHO sending system.  In this case, while there may be connectivity between the two systems, the ECHOs are never being sent or are being sent out of the wrong interface.  Although Layer 3 may be configured incorrectly, there is still may be traffic coming from the system.  Look at the port indicators on your hub or switch (for ethernet interfaces) when you ping to check for the existence of Layer 1 signals indicating ping traffic.  Likewise, the indicators on an external modem can be used to see if ping attempts are being sent or received at the lower layers with dial-up connections.
+<br><br>
+If you're trying to ping a system on a remote network it's also possible that a router or firewall somewhere between the two networks is blocking one or both of the ping componenets or the router/firewall itself has an imcomplete routing table.
+</font></td></tr></table>
+</center>
+<br>
+Debian comes with two great &quot;sniffer&quot; packages that allow you to look at individual packets. <b>tcpdump</b> is a console program that will display packet traffic in a real-time manner, with the packets scrolling up the screen as they are received and displayed.  <b>Ethereal</b> is a sophisticated GUI protocol analyzer that breaks the frames down into their individual OSI layers and displays the data contained in each of the frame, packet, and segment fields. I use a dual-boot notebook at work with Fluke's <i>expensive</i> (read 'thousands of dollars') &quot;Protocol Expert&quot; sniffer installed on the Windows 2000 partition and Ethereal installed on the Debian partition and the differences in the information provided by both is very small indeed.
+<center>
+<br><br>
+<table>
+<tr>
+<td colspan="3" align="left">
+<font face="arial,sans serif,helvetica" color="#A8003B" size="3">
+<i><b>The best of our bookshelves:</b></i> 
+<br><br>
+</font>
+</td>
+</tr>
+<tr>
+<td align="center" valign="middle">
+<A HREF="http://www.amazon.com/exec/obidos/ASIN/1587130254/aboutdebian-20" target="_blank"><IMG SRC="cisco1.jpg" border="0" alt="First Year Companion Guide" hspace="3" vspace="3"><br>
+<font size="1"><i>More info...</i></font></A> 
+</td>
+<td nowrap>
+&nbsp; &nbsp;
+</td>
+<td valign="middle" align="left">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+If you're interested in really learning how networks work and the TCP/IP protocol, Cisco's <A HREF="http://www.amazon.com/exec/obidos/ASIN/1587130254/aboutdebian-20" target="_blank"><b>First Year Companion Guide</b></a> is THE book for you.  It's one of my all-time favorite networking books.  It really makes the light bulbs come on. It's actually the first-year text book for the Cisco Networking Academy program but the first half of the book (first semester of the program which is Chapters 1 through 15 - in the book) deals entirely with the &quot;basics&quot; of networking.  It has one of the most thorough presentations of the OSI model I have ever seen in any book, and understanding the functions of the various layers in the OSI model is understanding how networks work. TCP/IP, address classes, encapsulation, the functions of switches and routers, and how to subnet a network are all covered.  They even get into security, network management, and home networking later in the book (along with some basics on router programming so you can see how that's accomplished).   A strong foundation in the OSI model is essential if you're going to be good at network troubleshooting and this book will get you there.  The book gets some bad reviews on Amazon due to some typos and misplaced diagrams.  But the fact that you can easily identify a typo or misplaced diagram indicates you understand the material. (Be sure to get the newer 2nd Edition which fixes many of these mistakes.)
+</font>
+</td>
+</tr>
+</table>
+</center>
+<br><br>
+Don't get hung up on the word &quot;protocol&quot; that you see mentioned a lot in networking.  It's just a technical term for &quot;a set of rules or commands&quot;.  The PPP protocol dictates that if you're going to put a PPP frame on the wire the frame has to be comprised of these fields with these lengths and each field has to contain this information.  The SMTP protocol for dictates that if you're going use the SMTP service on a mail server to send a mail message you have to use these commands with these parameters in this order to set up the connection, specify the sender, specify the recipient, etc.  Defining a protocol is just a means of establishing a standard.  If everyone builds their hardware or writes their software to follow the same rules then all the pieces work with each other.
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>At The Office</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+The wide range of addresses available with the 172.x.x.x space allows you to simplify things in larger networks.  You pick <b>one and only one</b> value for the first 'x' (the second octet) from the available range of 16 through 31, but you can use different values for the third octet to try and keep track of things.
+<br><br>
+For example, lets say you decide to use 172.18.x.x for your network.  You could manually assign all of your servers addresses in the 172.18.1.x range.  All of your printers could be manually assigned addresses in the 172.18.2.x range, and you could set up a DHCP server on your internal network to automatically assign addresses in the 172.18.3.x and 172.8.4.x ranges to your workstation computers.  (In DHCP lingo, the address spaces you set up for the DHCP server to hand out individual addresses from are called &quot;scopes&quot; and the addresses are &quot;leased&quot; to workstations.)
+<br><br>
+Even though the systems in your network would have a value for the third octet ranging from 1 to 4 in this example, because you'd only be using a Class B subnet mask (255.255.0.0), they would all still be on the same network. You're still using two octets to identify individual computers instead of just one octet as with a Class C address.  It's just that you're using the third octet as a means of logically grouping or identifying devices.
+<br><br>
+<blockquote>
+<b>Note:</b> &nbsp;Using different numbers in the &quot;computer&quot; portion of address as in the previous example is <u>not</u> the same as the &quot;subnetting&quot; we referred to when discussing the 10.x.x.x network address space earlier.  While a subnetted Class B network would likely have different values for the third octet on each subnet, simply assigning certain a certain group of computers the same value for the third octet in a Class B address range does not create a subnet.  Subnetting is done with routers to reduce the size of broadcast domains which has the effect of increasing available LAN bandwidth.  (Subnetting is covered in more detail in the <font face="verdana" color="#A8003B"><b>Subnetting</b></font> section on this page.)
+</blockquote>
+If you want to allow your internal private network to access the Internet you can set up a broadband connection to the Internet. This isn't much different than getting cable or DSL access at home. You would then set up a proxy/NAT server to allow everyone on the internal network (with their non-routable IP addresses) to share this broadband Internet connection.  Most ISPs require businesses to get a &quot;business account&quot;. However, most business accounts have a special features that make them preferrable.
+<br><br>
+For one, check to see if the business-account broadband connection is symmetrical (i.e. the speed of the connection is the same in both directions).  Home accounts have an asymmetrical connection where the download speed is much faster than the upload speed.  The other important feature is that most business accounts include several static public IP addresses that you are assigned.  These two features are necessary if you want to set up your own Web and/or e-mail servers (as you will see on the <a href="internet.htm"><nobr>Internet Servers</nobr></a> page).  The cable or DSL interfaces for most home accounts are dynamically assigned temporary public IP address. (A comparison of DSL and cable services is given later on this page.)
+<br><br>
+Keep in mind though, that security becomes a major issue when you start connecting business networks to the Internet.  Ideally you'd want to put any Web and/or e-mail servers in a &quot;DMZ&quot; with one firewall between them and the Internet.  You'd then put a second firewall between the DMZ and your internal network to further restrict traffic.  A DMZ is also referred to as &quot;screened subnet&quot;.  It's also a good idea to put an IDS (Intrusion Detection System) in your DMZ.
+<center>
+<br>
+<img src="dmz.gif" border="0" alt="A DMZ configuration">
+</center>
+<br>
+We get more into how to set up a DMZ using Linux systems for the outside and inside firewalls on the <a href="firewall.htm">Firewalls</a> page.  We also show you how to set up and test a Snort IDS system on the <a href="security.htm">Security</a> page.
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>At Home</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+Setting up a network at home is easy.  Hardware-wise you just need to install some 100 mega-bit PCI NICs (Network Interface Cards) in the PCs, buy an 8-port 100 mega-bit switch, and the RJ-45 Cat 5 UTP cables to connect the PC NICs to the switch.  (Get an 8-port instead of a 4-port switch.  They don't cost that much more and it's always better to have too many network connections than not enough.)  For home networks a hub would work just as well as a switch, but not too many companies make hubs anymore because switches have dropped in price so much.  Some computers come with NICs integrated into the motherboard.  Check the back of your computer for an RJ-45 jack.  It looks like a telephone jack but has 8 contacts instead of the 4 contacts with telephone jacks.
+<br><br>
+If some of your systems are scattered or you don't want to run cables to them you could always add a wireless NAP (Network Access Point - which is like a wireless hub that would plug into a port on your switch) to your network but this would also require getting wireless NICs for those PCs.   They also make PCMCIA versions of NICs so you can connect your notebook into your home network.  Once you've got the hardware in place, you just configure the network settings in the PC software.  We'll cover the Debian network configuration below.  On Windows PCs, go to
+<center>
+Start/Settings/Control Panels/Networking
+</center>
+and get into the TCP/IP properties for the NIC where you can enter an IP address for the PC, a subnet mask, and possibly a default gateway (if you have a broadband Internet connection).  When you enter an IP address into the TCP/IP properties like this it's called a &quot;static&quot; IP address because it won't change unless you change it.
+<br><br>
+The family in the diagram below chose a Class C private address range of 192.168.5.x
+<center>
+<br>
+<img src="home.gif" border="0" alt="Setting up a home network">
+</center>
+<br>
+When you set the TCP/IP properties you are assigning the private addresses to the NICs inside the computers.  You can have a NIC with a private address assigned to it on your home network and still use a dial-up modem connected to the same system to get on the Internet.  Your modem gets a different (public routable) IP address from your ISP every time you dial in and retains it as long as you're connected.
+<br><br>
+The names above are not just identifying family members.  They are the names given to the systems (hostnames).  Since a home network is too small for a DNS server, you can set up name resolution using a simple<font face="courier" color="#A8003B" size="4"><b> hosts </b></font>file.  A<font face="courier" color="#A8003B" size="4"><b> hosts </b></font>file is just a simple text file you can edit using any text editor (like NotePad on Windows systems).  Note that this file does <u>not</u> have an extension.  On most Linux and UNIX systems the path to open the file is:  
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>/etc/hosts</b></font>
+</center>
+<br>
+On Windows systems the paths are typically:
+<center>
+<br>
+<table border="0">
+<tr>
+<td align="right" nowrap>
+<font face="arial,helvetica,sans serif">
+95 / 98:
+</font>
+</td>
+<td align="left" nowrap>
+<font face="arial,helvetica,sans serif">
+&nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td align="left" nowrap>
+<font face="courier">
+C:\Windows\hosts
+</font>
+</td>
+</tr>
+<tr>
+<td align="right" nowrap>
+<font face="arial,helvetica,sans serif">
+NT / 2000:
+</font>
+</td>
+<td align="left" nowrap>
+<font face="arial,helvetica,sans serif">
+&nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td align="left" nowrap>
+<font face="courier">
+C:\WINNT\system32\drivers\etc\hosts
+</font>
+</td>
+</tr>
+</table>
+</center>
+<br>
+Once you open the file in a text editor, add the address/hostname pairs for the systems on your network.  For the above home network the<font face="courier" color="#A8003B" size="4"><b> hosts </b></font>file would look like this:
+<center>
+<br>
+<table border="0">
+<tr>
+<td align="left" valign="top">
+<font face="courier" color="#000000" size="4">
+127.0.0.1<br>
+192.168.5.10<br>
+192.168.5.11<br>
+192.168.5.12<br>
+192.168.5.13<br>
+192.168.5.14<br>
+192.168.5.15
+</font>
+</td>
+<td align="left" valign="top">
+<font face="courier" color="#000000" size="4">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td align="left" valign="top">
+<font face="courier" color="#000000" size="4">
+localhost<br>
+dad<br>
+mom<br>
+grandpa<br>
+junior<br>
+sis<br>
+fido
+</font></td></tr></table>
+</center>
+<br>
+(That's a Tab character between the address and hostname.)  Each system that would want to do name resolution would need to have this<font face="courier" color="#A8003B" size="4"><b> hosts </b></font>file but once you create one you can just copy it to other systems.  Then instead of entering the command:
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>ping 192.168.5.12</b></font>
+</center>
+<br>
+you could just enter:
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>ping grandpa</b></font>
+</center>
+<br>
+If Grandpa had a Debian system running the Apache Web server software, Junior could open up a Web browser on his system and enter the following URL to see Grandpa's Web pages:
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>http://grandpa/</b></font>
+</center>
+<br>
+If you have cable or DSL service at home, you can share this broadband connection with all of the computers on your home network.  Cable or DSL providers typically give you the option of having an external cable or DSL modem, which then connects to your computer's NIC via a Cat 5 LAN type cable or connects to your computer's USB port, or an internal model that gets installed in one of your computer's slots.   Stay away from anything USB and <b>get the external model that plugs into a NIC.</b>  That way, instead of plugging the cable into your computer's NIC you can plug it into a device known as a <b>cable/DSL router</b>.  This cable/DSL router would then plug into the hub or switch that you use to connect all of your computers together. (Some cable/DSL routers have a built in 4-port hub.)  A cable/DSL router is basically just a &quot;proxy-server-in-a-box&quot;.
+<br><br>
+<center><br>
+<img src="sharing.gif" border="0" alt="How To Share An Internet Connection with a Cable/DSL Router">
+</center>
+<br>
+<blockquote>
+<blockquote>
+The &quot;modem&quot; you get from your cable or DSL provider is actually just a device called a &quot;bridge&quot;.  It bridges traffic from one type of network (cable or telephone) to another (ethernet-based LAN) without doing any packet inspection, filtering, or manipulation.  It is essentially a media converter.
+<br><br>
+<blockquote>
+Note that a cable/DSL <u>router</u> is <b>not</b> the same as the cable or DSL &quot;modem&quot; or &quot;interface&quot; that you get from your cable company or ISP.  The <u>router</u> allows you to take the incoming Internet connection, which normally goes to a single computer, and plug it into a hub or switch so that the Inernet connection can be shared by your entire internal network.  Some can even be set up to act as DHCP servers to hand out private IP addresses to your home PCs each time you turn them on. If you don't want to assign static addresses to the PCs on your home network you just set them up to use a DHCP server and then enable the DHCP function on the cable/DSL router.
+</blockquote>
+Your cable or DSL service provider assigns you a single public (routable) IP address.  If you don't have a cable/DSL router, and because of the bridging action of the <b>modem</b> they give you, it is your <b>PC</b> which receives this public, routable IP address.  As a result, only one PC can access the Internet.  A cable/DSL <b>router</b> performs the NAT function explained earlier which allows this single public address (which is assigned to the router rather than a single PC) to be shared by multiple systems on your LAN.
+<br><br>
+Note in the above diagram that if you use a commercial cable/DSL router you <i>may</i> need one of two things (it depends on the model you buy).  The cable that connects the router to your hub or switch may have to be a Cat 5 &quot;crossover&quot; cable, or you may have to use a regular Cat 5 LAN cable and plug it into the &quot;uplink&quot; port found on most hubs/switches.  If you try using a regular cable but the &quot;link&quot; indicator on your hub/switch don't light up for that connection, you'll likely have to do either of the above.  (If your hub or switch doesn't have an uplink port, you'll have no choice but to get an uplink cable.) None of this applies if you are using a Linux system as a proxy server.
+<br><br>
+<font color="red"><b>IMPORTANT:</b></font> &nbsp;Because Windows enables file and print sharing by default, having a publically routable IP address assigned to your Windows PC is a security risk.  The file and print sharing functions open ports on your system and the public address makes your system accessible from anywhere on the Internet.  So even if you don't need to share your broadband Internet connection with other PCs (i.e. the cable or DSL modem now plugs directly into your PC), you should either disable file and print sharing or have some kind of NAT or firewall system (cable/DSL router or Linux system) between your PC and the modem to protect your PC.  (You could disable these sharing functions but this would negate the point of having a home network in the first place - to share files, printers, etc.)
+</blockquote>
+</blockquote>
+In the above diagram, the public IP address dynamically assigned by your ISP is on the router's &quot;external interface&quot; (connection), and you assign a static private IP address to the &quot;internal interface&quot;.  Note that the &quot;default gateway&quot; setting on all of your home network PCs is this same static private address you assigned to the internal interface of the router.
+<br><br>
+The default gateway setting on a PC is kind of a &quot;last resort&quot; setting. (Cisco routers actually refer to the default gateway setting as the &quot;gateway of last resort&quot;.)  It basically tells the computer that if it wants to contact another computer, and it can't find that other computer on the local network (which Internet servers won't be), it should send the traffic for this other computer to the address of the default gateway.  The default gateway device is typcially a router, so it will know what to do with any traffic that's destined for a distant network (which is why they call it a &quot;gateway&quot;).  So in addition to doing address translation, a commerical &quot;proxy-server-in-a-box&quot; or Linux proxy server is also a router which acts as a gateway.
+<br><br>
+Cable/DSL routers are available from manufacturers such as Linksys and DLink for under $100. Here's an example list using mostly Linksys equipment of what you'd need to set up a home network where you can share a broadband Internet connection.  (You may want to spend a little more and get 3Com 3C905 NICs because they have wide driver support.):
+<center>
+<br>
+<table border="0">
+<tr><td align="left" nowrap>
+<font face="arial,helvetica,sans serif">
+<ul>
+<li>An <A HREF="http://www.amazon.com/exec/obidos/ASIN/B00003006K/aboutdebian-20" target="_blank">8-port 10/100-mb Switch</A> * - <font size="2">approx $60</font>
+<li>One <A HREF="http://www.amazon.com/exec/obidos/ASIN/B00003006R/aboutdebian-20" target="_blank">100-mb NIC</a> for each computer - <font size="2">approx $20 ea</font>
+<li>One <A HREF="http://www.amazon.com/exec/obidos/ASIN/B00004Z5L8/aboutdebian-20" target="_blank">Cat 5 LAN cable</a> for each computer (variable lengths) - <font size="2">approx $15 ea</font>
+<li>A <A HREF="http://www.amazon.com/exec/obidos/ASIN/B00004TRD9/aboutdebian-20" target="_blank">Cable/DSL Router</a> for Internet access sharing * - <font size="2">approx $60</font>
+<li>One <A HREF="http://www.amazon.com/exec/obidos/ASIN/B00003006X/aboutdebian-20" target="_blank">PCMCIA NIC</a> for each notebook - <font size="2">approx $40 ea</font>
+<center>
+<br>
+* <font size="2">You could replace the switch and router with an<br>
+<A HREF="http://www.amazon.com/exec/obidos/ASIN/B000051SGX/aboutdebian-20" target="_blank">integrated model</a> but that limits your options for<br>
+cable runs, experimenting, and troubleshooting.</font>
+</center>
+</ul>
+<i>For adding wireless nodes:</i>
+<br><br>
+<ul>
+<li>A <A HREF="http://www.amazon.com/exec/obidos/ASIN/B00005854B/aboutdebian-20" target="_blank">Wireless NAP/Bridge</A> - <font size="2">approx $110</font>
+<li>One <A HREF="http://www.amazon.com/exec/obidos/ASIN/B00005QFYE/aboutdebian-20" target="_blank">Wireless NIC</a> for each computer - <font size="2">approx $70 ea</font>
+<li>One <A HREF="http://www.amazon.com/exec/obidos/ASIN/B000056SSM/aboutdebian-20" target="_blank">Wireless PCMCIA NIC</a> for each notebook - <font size="2">approx $60 ea</font>
+</ul>
+</font>
+</td></tr></table>
+</center>
+<br>
+So to network (wired) four desktop PCs at home without a broadband Internet connection you're looking at approximately $200 (switch, NICs, and cables).  Around $300 (additional cable and router) if you do have a broadband connection to share.  This can always be added on as a separate piece later if you don't have a broadband connection now.
+<br><br>
+<font color="#A8003B"><b><i><u>Alternative:</u></i></b></font> &nbsp;Instead of buying a commerical cable/DSL router product you could just use a Linux box to act like one. Since a cable/DSL router is nothing but a proxy-server-in-a-box, you could set up a Linux system to be a proxy server and it's easy to do.  (You'll see how easy on the <a href="proxy.htm">Proxy/NAT</a> page.)  The advantage of using a Linux system as your cable/DSL router is that you can customize the firewalling capabilities of the router using something called IPCHAINS.  This not only includes customizing what traffic you allow into your network, but also allows you to restrict which systems on your network can access certain services or sites on the Internet.  (You'll see how to do this on the <a href="firewall.htm">Firewall</a> page.) 
+<br>
+<center><br>
+<img src="sharing2.gif" border="0" alt="How To Share An Internet Connection with a Linux Firewall / Proxy Server">
+</center>
+<br>
+Another advantage of using a Linux server over a commercial cable/DSL router is that you could also use it as <b>your own home Web and e-mail server</b> using the dyndns.org dynamic DNS service.  We cover this on the <nobr><a href="internet.htm">Internet Servers</a></nobr> page.
+<br><br>
+The concept of sharing an Internet connection is the same no matter what type of Internet connection you have.  With a Linux system acting as a proxy server or firewall, you can just as easily share a modem connection.
+<br><br>
+<center><br>
+<img src="share-modem.gif" border="0" alt="Sharing A Modem Connection">
+</center>
+<br>
+This is essentially the same type of configuration you have if you use the &quot;Internet Connection Sharing&quot; option found on Windows systems.  See the <a href="modems.htm">Modems</a> page for information on getting a modem to work on your Debian system.  Then see the <a href="proxy.htm">Proxy/NAT</a> page for a script that you can use to get your Debian system to act as a proxy server.
+<br><br>
+One important point to keep in mind when setting up a gateway type of system (which includes proxy servers and firewall systems) is that the <b>&quot;internal&quot; interface should NOT have a Default Gateway entry.</b>  Leave it blank. The Default Gateway entry for the &quot;external&quot; interface will either be automatically assigned when you connect to your ISP or should otherwise be available from them. 
+<br><br>
+So the proxy server that sits between your private network and the Interent actually has (or should have) three functions.  A <b>gateway</b> (router), an <b>address translator</b>, and a <b>firewall</b>.  The firewalling capabilities of the commercial cable/DSL routers are limited at best and typically not upgradable if a new sort of attack is developed.  We'll show you how to set your Debian system up to protect your network on the <a href="firewall.htm">Firewall</a> page.
+<br><br>
+<blockquote>
+<b>Note: </b>&nbsp;When we use IP addresses in our examples on these guide pages, they will be in the private IP address ranges even if it's an example where a public address would normally be needed (such as with an Internet-connected interface).  We use addresses like this so we're not using IP addresses that have been legally licensed to companies or ISPs.
+</blockquote>
+If you also want your Debian system to act as a DHCP server handing out addresses to the PCs on your home network when they boot up, you can easily accomplish this.  However, we won't cover it here.  Based on the information we've given so far on searching for and installing packages, this would be a good one for you to try on your own.  If you do set it up, be sure to set the PCs on your network to use a DHCP server.  In Windows, this is modifying the TCP/IP properties for the LAN interface to &quot;Obtain an IP address automatically&quot;.
+<br><br>
+If you are going to connect to your ISP's cable or DSL modem to the &quot;external&quot; interface (NIC) on your Debian system, you'll likely need to run some sort of DHCP <i>client</i> software on the system so that it can pull the ISP-assigned address and apply it to the external NIC.  This is because it's not the cable or DSL modem that gets assigned an IP address.  A cable or DSL modem merely acts as a bridge.  Whatever device is connected to the customer side of the modem (PC, router, etc.) is what actually gets assigned an IP address.  We likewise won't cover installing a bootp or DHCP client here.  See the Web HOWTO documents for <a href="http://www.tldp.org/HOWTO/Cable-Modem/" target="_blank">cable</a> or <a href="http://www.tldp.org/HOWTO/DSL-HOWTO/" target="_blank">DSL</a> modems.  (The reason that no DHCP client software is necessary if you're using a dial-up modem connection is because the dynamic addressing is handled by the PPP protocol.) See the Web HOWTO documents for <a href="http://www.tldp.org/HOWTO/Cable-Modem/" target="_blank">cable</a> or <a href="http://www.tldp.org/HOWTO/DSL-HOWTO/" target="_blank">DSL</a> modems.
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>A No-Network Network</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+On the <a href="proxy.htm">Proxy/NAT</a> and <a href="firewall.htm">Firewall</a> pages we'll show you how to configure your Debian system so you can share your broadband connection with all of the computers on a network, including a home network.  However, you don't need a formal network or even a broadband connection if you want to try setting up the proxy and firewall functions demonstrated on these pages.
+<br><br>
+For those that don't have a home network or access to a business network you can still try the examples we present on these pages by setting up a two-system network (your Debian system and a Windows PC for example).  All it requires you to do is to have a NIC installed and configured in each computer, and to purchase a special cable called a &quot;<A HREF="http://www.amazon.com/exec/obidos/ASIN/B00004Z5D5/aboutdebian-20" target="_blank"><nobr>Cat 5 cross-over</nobr></a>&quot; cable.  (As mentioned above, your computers may have network cards inegrated into the motherboard already.  Check the back of the systems for an RJ-45 jack.)  If one of the computers you use is a notebook, and it doesn't have an integrated NIC, you'll need to get a <nobr>100 mb</nobr> PCMCIA card.  You can get those used for about $20 on eBay or similar sites.
+<br><br>
+A cross-over cable flips the transmit and receive pairs of the cable so they are on different pins on the connectors on each end.  This allows you to connect the two systems in a back-to-back fashion so that you don't need an ethernet hub or switch.  Note that you would have to have had the NIC installed in the system and installed the appropriate NIC driver module during the Debian installation to be able to use the NIC.
+<center><br>
+<img src="nonet.gif" border="0" alt="Networking Two PCs Together">
+</center><br>
+The back-to-back connection between the two systems represents the internal LAN where each system would need a unique IP address.  You would then hook you modem up to the Debian system to set up the Internet connection (as outlined on the <a href="modems.htm">Modems</a> page).  And just as shown in the above diagram, the IP address of the NIC on the Debian system would be the default gateway entry on the Windows system.  This is because the Debian system will be acting as the gateway for this two-system network.
+<br><br>
+This configuration will also work if you want to play around with the servers we set up on the <a href="internet.htm"><nobr>Internet Servers</nobr></a> page.
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>How It All Works</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+So you've got IP addresses and MAC addresses and subnet masks and default gateways and DNS and ARP and hardware and software.  How do all these pieces fit together?  Consider the network below.  
+<center><br>
+<img src="pieces.gif" border="0" alt="How a network works">
+</center><br>
+The user of the Windows PC in the Sales department fires up their Web browser so that they can access the company's internal intranet Web servers.  There's a corporate intranet Web server with company-wide information and one right in the user's department on the same network segment with information for Sales staff.
+<br><br>
+Remember that each system has <b>two</b> addresses (logical and physical) and in order for one system to communicate with another, it needs to include <b>both</b> of these addresses when it puts a packet together to send to the destination system.
+<br><br>
+<blockquote>
+<b>Scenario 1 - Accessing SALES1 - SAME Network</b>
+<br><br>
+The Windows PC user wants to look at sales figures for last month on the intranet Web server in their department.  In the browser URL line they enter:
+<center>
+<br>
+http://sales1.widgets.com
+</center>
+<br>
+or in the case of a Windows-based network that is only using WINS for name resolution:
+<center>
+<br>
+http://sales1
+</center>
+Here's what happens:
+<br><br>
+<ol>
+<li>The Windows PC sends a DNS or WINS query to the DNS or WINS server to get the IP address of the intranet Web server named in the URL (in this case SALES1)
+<li>The DNS or WINS server sends a response back with the IP address of 172.16.0.20
+<li>The Windows PC uses its' subnet mask to see if the received IP address is on the same logical network as it is (i.e. is the network portion of the IP addresses of both SALES1 and the Windows PC the same)
+<li>Because they are on the same logical network, the Windows PC sends out an ARP request using the SALES1 IP address
+<li>SALES1 responds to the Windows PC supplying the Windows PC with its' (SALES1) MAC address so the Windows PC now has both of the destination addresses it needs to send the HTTP packets to SALES1
+<li>The Windows PC sends out the HTTP packets to SALES1.  The switch, knowing the MAC addresses of both systems, sets up a virtual direct connection between the two and the HTTP traffic is sent
+</ol>
+<br>
+<b>Scenario 2 - Accessing CORP1 - DIFFERENT Networks</b>
+<br><br>
+The Windows PC user in the Sales department wants to look at the company's telephone directory on the main corporate intranet Web server.  In the browser URL line they enter:
+<center>
+<br>
+http://corp1.widgets.com
+</center>
+<br>
+or in the case of a Windows-based network that is only using WINS for name resolution:
+<center>
+<br>
+http://corp1
+</center>
+Here's what happens:
+<br><br>
+<ol>
+<li>The Windows PC sends a DNS or WINS query to the DNS or WINS server to get the IP address of the intranet Web server named in the URL (in this case CORP1)
+<li>The DNS or WINS server sends a response back with the IP address of 172.17.0.25
+<li>The Windows PC uses its' subnet mask to see if the received IP address is on the same logical network as it is (i.e. is the network portion of the IP addresses of both CORP1 and the Windows PC the same)
+<li>Because they are <b>not</b> on the same logical network, the Windows PC sends out an ARP request using the <b>default gateway's IP address</b>
+<li>The default gateway (router) responds to the Windows PC supplying the Windows PC with its' (router interface) MAC address so the Windows PC now has both of the destination addresses it needs to send the HTTP packets to CORP1
+<li>The Windows PC sends out the HTTP packets to the default gateway and the switch, knowing the MAC addresses of the Windows PC and the default gateway router interface, sets up a virtual direct connection between the two and the HTTP traffic is sent
+<li>The default gateway router removes the Ethernet frame (de-encapsulation) and looks at the network portion of the IP address in the incoming packets to determine what network the destination computer is on
+<li>The default gateway router checks its' routing table and finds that the destination network is connected to one of its' interfaces (the 172.17.0.1 interface)
+<li>The default gateway router sends an ARP request out of this interface with the IP address of the destination computer (CORP1)
+<li>CORP1 responds to the router with supplying it (router) with its' (CORP1) MAC address so the router now has both of the destination addresses it needs to forward the packets onto CORP1
+<li>The default gateway router re-encapsulates the packet with a new Ethernet frame using CORP1's destination MAC address and the source MAC address of its' 172.17.0.1 interface and forwards the packets to CORP1. The switch, knowing the MAC addresses of the router interface and CORP1, sets up a virtual direct connection between the two and the HTTP traffic is forwarded
+</ol>
+</blockquote>
+In both of the above scenarios, the intranet Web servers will be the ones doing all the DNSing and ARPing when they wish to respond to the received HTTP request. (Recall that on small networks having a<font face="courier" color="#A8003B" size="4"><b> hosts </b></font>file on each system could be used instead of a DNS or WINS server in which case the DNS or WINS queries wouldn't be necessary.)  Also, in actuality a PC or router will check it's local ARP table first to see if it already has an entry for the MAC address of the destination system before sending out an ARP request.  It it does need to issue an ARP request it uses the received MAC address to update its' table.
+<br><br>
+Note one important point.  As packets travel over router hops, the MAC addresses change (as the routers re-encapsulate the packets with new frames).  However, the source and destination IP addresses stay the same.  MAC addresses (and ARP) are used <b>within</b> networks (or sub-networks as in the case above).  IP addresses are used both within and across sub-networks and networks.
+<br><br>
+In order to fully appreciate the above material you have to be familier with the OSI layer model and what takes place at each layer.  However, if you understand the above material you've got a pretty good handle on how networks work.
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>Network Configuration Files</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+If you set up networking during the Debian OS installation, these files will be pretty much set up already.  If you wanted to change anything related to the network settings on your system, you simply make the relevant changes in the appropriate files (just make sure you make all of the necessary changes in all of the files so the networking configuration is consistent).  As with most Linux/UNIX configuration files, these are all text files that can be changed using a simple text editor.
+<br><br>
+Where necessary, changes to these files are detailed on the <a href="internet.htm"><nobr>Internet Servers</nobr></a> page in the configuration of various server services.  The primary network configuration files on a Debian system are:
+<br><br>
+<ul>
+<li><font face="courier" color="#A8003B" size="4">/etc/<b>hosts</b></font><br>
+This file is used for name resolution of machines on the <b>local</b> network.  Just as DNS is used to resolve Internet domain names (i.e. translate the domain name into an IP address that your computer can use to communicate with a distant computer), the<font face="courier" color="#A8003B" size="4"><b> hosts </b></font>file is used to resolve the names of computers on your local network.  In addition to having a line for each of the other computers on your internal network, you have to have one for the computer that the hosts file is on (the &quot;local&quot; computer). For example, if you accepted the default host name of &quot;debian&quot; during the installation, the hosts file entry for the local system would be:
+<center>
+<br>
+<font face="courier" color="#A8003B" size="3"><nobr>192.168.10.10 &nbsp; &nbsp; debian debian.mylastname.net &nbsp; &nbsp; localhost mailhost</nobr></font>
+</center>
+<br>
+Note that the host name and the FQDN (Fully Qualified Domain Name) are both listed.  The extra space between the IP address and host name, and between the FQDN and the word &quot;localhost&quot; indicate Tab characters.  You can also have entries for your Windows systems (provided they're running TCP/IP and not just NetBEUI).  You just use the system's <nobr>&quot;Computer Name&quot;</nobr> so an example of an entry for a Windows system would be:
+<center>
+<br>
+<font face="courier" color="#A8003B" size="3">192.168.10.20 &nbsp; &nbsp; win95box win95box.mylastname.net</font>
+</center>
+<br>
+You will also see a &quot;localhost&quot; entry with an IP address of 127.0.0.1 which is called the &quot;loopback&quot; address. It has an interface designation of<font face="courier" color="#A8003B"><b> lo </b></font>when you use the<font face="courier" color="#A8003B"><b> ifconfig </b></font>command.  The loopback address is a TCP/IP standard found on all systems no matter their OS.  It is used for testing. If you can successfully ping the loopback address it indicates that your TCP/IP stack is properly configured.  If you can ping the IP address of the NIC that's in the computer you're on (the local system) it indicates that the NIC and TCP/IP stack are both OK.
+<br><br>
+Note that with hard-core networking types like Linux/UNIX and Cisco, a &quot;host&quot; is <u>any</u> end-node like a server, a workstation computer, or even a networked printer.  So what we refer to as the &quot;computer&quot; part of the IP address on this page is often referred to as the &quot;host portion&quot; of the IP address in networking literature.
+<br><br> 
+<li><font face="courier" color="#A8003B" size="4">/etc/<b>host.conf</b></font><br>
+This file is what you use to tell the system what to use to resolve host (computer) and domain names.  The most common possible selections are:
+<br><br>
+<ul>
+<li>hosts - look for host names and addresses in the<font face="courier" color="#A8003B"><b> /etc/hosts </b></font>file
+<li>bind - use the DNS server(s) specified in<font face="courier" color="#A8003B"><b> /etc/resolv.conf</b></font>
+<li>nis - Network Information System - kind of an internal network version of DNS used on large Linux/UNIX networks
+</ul>
+<br>
+The order in which the above possible selections are listed is the order in which they are used.  For example, you should always list &quot;hosts&quot; first so your system doesn't go out to the Internet trying to find a system that's on your local network.  If using the first method doesn't resolve the name, the next entry is tried.  Running NIS on your network is no small feat so if you don't know if you should use NIS or not you're probably not running it so you don't need the &quot;nis&quot; entry.  As a result, the important line in this file is:
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>order hosts,bind</b></font>
+</center>
+<br>
+<li><font face="courier" color="#A8003B" size="4">/etc/<b>resolv.conf</b></font><br>
+As noted above, this is the file you use to enter your DNS server information.  Unless you have your own Internet DNS server, this file will contain information about your ISP.
+<br><br>
+<blockquote>
+<font face="courier" color="#A8003B"><b>
+search <font color="#0000c0">yourisp.com</font><br>
+nameserver <font color="#0000c0">172.25.188.66</font><br>
+nameserver <font color="#0000c0">172.25.188.77</font>
+</b></font>
+</blockquote>
+Your ISP's domain and DNS server IP addresses would be entered in place of the blue entries above.
+<br><br>
+What about having your own Internet DNS server?  Bad idea.  First of all, when you register a domain name with someone like Network Solutions you're required to enter the IP addresses for two DNS servers.  This is because DNS is critical.  If it fails no one will be able to &quot;find&quot; (get the IP address of) your Web, e-mail, or other Internet servers.  Thats why a proper DNS server setup includes two servers with two different addresses (for redundancy).  And since an ISP will typically only allocate a few static IP addresses to you, using two of them just for DNS isn't very efficient.  If you need DNS records for an Internet Web or e-mail server, check with your ISP.  They will usually host your DNS records on their DNS servers for a small one-time setup fee ($5 in the case of our ISP).
+<br><br>
+<li><font face="courier" color="#A8003B" size="4">/etc/network/<b>interfaces</b></font><br>
+This file contains the IP information that your system uses to work with the NIC(s).  There is a parent entry for each NIC, and the information for the NIC is listed underneath it like so:
+<br><br>
+<blockquote>
+<font face="courier" color="#A8003B"><b>
+<pre>
+iface eth0 inet static
+        address 192.168.10.10
+        netmask 255.255.255.0
+        network 192.168.10.0
+        broadcast 192.168.10.255
+		gateway 192.168.10.1
+</pre>
+</b></font>
+</blockquote>
+Note that the above would be appropriate for an internal LAN interface.  Also note that the &quot;network&quot; (aka &quot;wire&quot;) and broadcast addresses for the network the system is on are also listed.
+<br><br>
+Be careful about using the<font face="courier" color="#A8003B"><b> gateway </b></font>setting.  This should only be used if you truly do have a gateway router that leads off your network, most likely to the Internet.  (A proxy server or firewall is one such type of router.)  Having a default gateway address in the NIC configuration when you don't have a default gateway router will cause problems if your try and connect to the Internet using a modem. (See the <a href="modems.htm">Modems</a> page for more information on this.)
+<br><br>
+As you will see on the <a href="internet.htm"><nobr>Internet Servers</nobr></a> page, the Apache Web server software allows you to host any number of Web sites on a single server by setting up a &quot;virtual host&quot; for each domain (Web site).  For example, if you wanted to use your system to host the Web sites<font face="courier"> www.shoes4men.com </font>and<font face="courier"> www.shoes4ladies.com </font>you would set up a virtual host for each in the Apache configuration file. However, remember that DNS would require a unique IP address for each of these domains, but at the same time you only have one NIC connected to your broadband connection.  No problem.  You just create a &quot;virtual interface&quot; for each domain.
+<br><br>
+You create virtual interfaces by creating an additional parent entry in the<font face="courier" color="#A8003B"><b> /etc/interfaces </b></font>file for each virtual interface.  Where the above only had one parent entry for the NIC, we create multiple parent entries for each virtual interface append the actual interface designation with a colon (<font face="courier" color="#A8003B"><b>:</b></font>) and the number 1 or higher.  For example:
+<br><br>
+<blockquote>
+<font face="courier" color="#A8003B"><b>
+<pre>
+iface eth0<font color="#0000c0">:1</font> inet static
+        address 172.30.156.<font color="#0000c0">115</font>
+        netmask 255.255.255.240
+        network 172.30.156.112
+        broadcast 172.30.156.127
+		gateway 172.30.156.1
+		
+iface eth0<font color="#0000c0">:2</font> inet static
+        address 172.30.156.<font color="#0000c0">116</font>
+        netmask 255.255.255.240
+        network 172.30.156.112
+        broadcast 172.30.156.127
+		gateway 172.30.156.1
+</pre>
+</b></font>
+</blockquote>
+Notice the<font face="courier" color="#A8003B"><b> netmask </b></font>entry.  This indicates that most of the address is the network address.  Only the last 4 bits of the last octet identify the computer.  That only allows for 16 computer addresses (actually only 14 are usable due to the wire and broadcast addresses).  
+<center><br>
+<img src="subnet.gif">
+</center><br>
+More precisely, because the IP addresses are in the Class B address range, the first two octets are the <b>network</b> portion of the address and the third octet and the first half (4 bits) of the fourth octet are the <b>subnet</b> portion of the address.  Subnets are created by &quot;borrowing&quot; some of the computer bits in an address and using them to identify sub-networks.  Naturally, this leaves you with fewer computer bits so you must have fewer computers on a subnet.
+<br><br>
+This is something that ISPs routinely do.  They will take their public address space and subnet it into a lot of small public subnets.  These small public subnets are then assigned to business customers looking for static IP addresses.
+<br><br>
+The point?  Looking at a subnet mask will give you some idea of a networks size. The higher the numbers in the subnet mask:
+<br><br>
+<ul>
+<li>the more bits that are used to identify the network/subnet portion of an IP address
+<li>the more networks (subnets) there are in the address space
+<li>the smaller these individual networks will be (fewer number of computers per network)
+</ul>
+<br>
+It's kind of like cutting up a pie.  You can get more slices (networks) if you make the individual slices smaller.  More details on subnetting are given in the <font face="verdana" color="#A8003B"><b>Subnetting</b></font> section below.
+<br><br>
+<li><font face="courier" color="#A8003B" size="4">/etc/network/<b>options</b></font><br>
+There's only one line of interest to us in this file:
+<center>
+<br>
+<font face="courier" color="#A8003B"><b>ip_foward=no</b></font>
+</center>
+<br>
+This is the setting that allows (or in this case doesn't allow) your system to act as a gateway when acting as a proxy server or firewall.  I point this out because you will see in the shell scripts on the <a href="proxy.htm">Proxy/NAT</a> and <a href="firewall.htm">Firewall</a> pages that you can use a command to dynamically change this setting.  The actual file isn't edited at all, but there is a way to change this setting in memory (which is lost at the next reboot).
+<br><br>
+<li><font face="courier" color="#A8003B" size="4">/etc/<b>inetd.conf</b></font><br>
+This file allows you to control which services are made available by the server.  As a matter of fact, commenting out the lines for some of the services listed in this file is one of the ways you can help to secure an Internet server.  When you comment out a line its' corresponding service does not start and its' associated port is never opened.  More details about this file are given on the <a href="internet.htm"><nobr>Internet Servers</nobr></a> page. 
+</ul>
+<br>
+On Windows systems, when you want to change the network settings you go into the Network control panel and select the TCP/IP Properties.  You enter your information into a GUI window and it is then written to the files that make up the registry.  With Linux you basically eliminate the GUI middle-man and edit the files yourself.
+<br><br>
+When it comes to networking, all operating systems do pretty much the same thing.  They just put a different face on it.
+<center>
+<br><br>
+<table>
+<tr>
+<td colspan="3" align="left">
+<font face="arial,sans serif,helvetica" color="#A8003B" size="3">
+<i><b>The best of our bookshelves:</b></i> 
+<br><br>
+</font>
+</td>
+</tr>
+<tr>
+<td align="center" valign="middle">
+<A HREF="http://www.amazon.com/exec/obidos/ASIN/0201774232/aboutdebian-20" target="_blank"><IMG SRC="advlinnet.jpg" border="0" alt="Advanced Linux Networking" hspace="3" vspace="3"><br>
+<font size="1"><i>More info...</i></font></A> 
+</td>
+<td nowrap>
+&nbsp; &nbsp;
+</td>
+<td valign="middle" align="left">
+<font face="arial,sans serif,helvetica" color="#000000" size="3"> 
+What the &quot;Debian GNU/Linux Bible&quot; is to the Linux OS, <A HREF="http://www.amazon.com/exec/obidos/ASIN/0201774232/aboutdebian-20" target="_blank"><b>Advanced Linux Networking</b></a> is to Linux servers. It's 26 chapters covers a <i>wide</i> variety of servers without getting heavy into the technical details of each specific one.  In addition to covering the usual variety of LAN and Internet servers (Web, e-mail, NFS, print, Samba, etc.) it also covers the less common types of servers including news (NNTP), time, kerberos authentication, and X servers.  Setting up a gateway-to-gateway VPN and a VPN access server running PPTP to support Windows clients are also covered. As is typical with type of book, you won't become an expert in any single server application, but you will be able to get a lot of different types of servers up and running quickly so that you can play around with them while pursuing more in-depth technical material. 
+</font>
+</td>
+</tr>
+</table>
+</center>
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>Using Static Routes</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+Every computer system (servers and workstations) maintains a &quot;routing table&quot; in memory.  This table contains entries that specify which gateway to use to get to other networks or subnets.  If a network or subnet only has one gateway (which most do), the routing table isn't very complex.  The routing table will typically consist of information taken from the &quot;default gateway&quot; setting in the system's TCP/IP configuration and a local loopback address (127.0.0.1).  The local loopback information is only used for testing a TCP/IP configuration.
+<br><br>
+On Linux systems you can look at the routing table simply by entering<font face="courier" color="#A8003B"><b> route </b></font>by itself at a shell prompt.  On Windows systems you have to open up a DOS window and enter the<nobr><font face="courier" color="#A8003B"><b> route print </b></font></nobr>command.  If you have a &quot;default gateway&quot; entered in the system's TCP/IP settings, you should see one or more entries in the routing table with this address.  If you look at the routing table, and then dial up your ISP, you'll see that the table was updated to include entries for your ISP's network. In this case, the modem is acting as a gateway off of your local network (or stand-alone system).
+<br><br>
+Static routes are entries that you manually enter into a system's routing table (they can also be entered on routers).  They <b>are useful when a network segment has multiple &quot;gateways&quot;</b>, or paths off the local segment.  In the diagram below the multiple gateways are represented by two routers.  However a multi-homed system like proxy or VPN server could be substituted for one or both of the routers.
+<br><br>
+If a computer system wants to send data to another computer that's not on the &quot;local&quot; segment, it will send that data out through whatever <b>default gateway</b> is specified in its' TCP/IP configuration.  But what if the destination computer isn't accessible by the default gateway?  That's where static routes come in.
+<br><br>
+Lets consider a scenario using the diagram below.  A Windows PC on the 172.16.0.0 network segment runs a special application that accesses data on the Linux server with the address 172.18.0.43.  Without a static route, the Windows PC will go through the 172.16.0.1 router trying to find this server because thats what its' default gateway is set to.  We need to tell the Windows PC to use a different (172.16.0.2) gateway when it wants to communicate with the 172.18.0.43 Linux server.
+<center>
+<br>
+<img src="static.gif" border="0" alt="Basics of Static Routes">
+</center>
+<br>
+On the Windows PC we would open up a DOS window and enter one of the static route commands shown in the diagram above.  The first command will set up a static route that applies only to that one specific Linux server (172.18.0.43).  Traffic destined for all other systems on that same network segment (172.18.0.22 for example) would still be erroneously sent out the Windows PC's default gateway.  The second command would create a static route that would correctly route traffic to any system on the 172.18.0.0 network segment.  In other words, the first command sets up a static route to a specific system, while the second command sets up a static route to the entire 172.18.0.0 network.  Setting up static routes to specific systems rather than entire networks (or subnets) is used as an access control (security) measure.
+<br><br>
+The syntax for the Linux<font face="courier" color="#A8003B"><b> route </b></font>command is similar to the Windows version.  The Linux equivalents of the two Windows commands given in the diagram would be:
+<center>
+<br>
+<table border="0"><tr><td align="left">
+<font face="courier" color="#A8003B" size="2">
+<b>
+route add -host 172.18.0.43 gw 172.16.0.2<br>
+<nobr>route add -net 172.18.0.0 netmask 255.255.0.0 gw 172.16.0.2</nobr>
+</b>
+</font>
+</td></tr></table>
+</center><br>
+Note that you don't need to enter a mask when using the<font face="courier" color="#A8003B"><b> -host </b></font>switch as a mask of 255.255.255.255 is assumed.
+<br><br>
+<blockquote>
+<blockquote>
+Note that I said when the<font face="courier" color="#A8003B"><b> -host </b></font>switch is used to specify a single system the subnet mask of 255.255.255.255 is assumed.  This may not seem logical since this subnet mask means &quot;all network bits and no system bits&quot;.  Actually, what you are specifying with a 255.255.255.255 mask is a single-address network (the address of the specified system).
+</blockquote>
+</blockquote>
+In the diagram above, the Windows PC uses the 172.16.0.1 for a default gateway because this is the route to take to get onto the Internet.  The default gateway router (the one with the 172.16.0.1 interface) would itself likely have a &quot;gateway of last resort&quot; (default gateway) entry of 172.17.0.2 which would cause it to send all non-local traffic out through the proxy server.
+<br><br>
+In the above diagram the static routes are being entered on a Windows workstation PC but they are also useful on servers.  For example, we have a mail server on our 172.17.x.x LAN segment that needs to pull Internet e-mail from one of our ISP's servers.  To get to the ISP server the mail server uses it's default gateway (which is set to our proxy server).  However, it also has to pull messages from an internal enterprise Lotus Notes/Domino or Microsoft Exchange server on a different internal network segment (172.30.x.x).  Entering a static route on the mail server takes care of the problem:
+<center>
+<br>
+<font face="courier" color="#A8003B" size="2"><b>
+<nobr>route add -net 172.30.0.0 netmask 255.255.0.0 gw 172.17.0.1</nobr>
+</b></font>
+</center>
+<br>
+The<font face="courier" color="#A8003B" size="2"><b> 172.17.0.1 </b></font>is the address of the router interface which connects our LAN segment to the rest of the enterprise network where the internal (Domino or Exchange) mail servers are located.  Enabling server-to-server communications is probably the most common use of static routes.
+<br><br>
+Static routes can be thought of as &quot;explicit&quot; routes.  You use them to explicitly tell IP to use a certain gateway for a given destination network or subnet.  The default gateway setting could be thought of as an &quot;implicit&quot; static route.  You are telling IP that for any destination network or subnet that doesn't have an explicit route defined, send the traffic to the default gateway router.
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>Subnetting</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+<center><font size="2">
+The information in this section isn't necessary for<br>
+setting up a Linux server.  It is presented here<br>
+for those that may want to know more about the<br>
+subnetting process than was presented above.
+</font>
+</center>
+<br>
+As mentioned earlier, the decimal numbers that make up an IP address or subnet mask are referred to as &quot;octets&quot; because their values are derived from 8 binary digits.  (These 8 binary digits are often written in two groups of 4 to make for easier reading.)  And, like all other number systems, the further you go to the left, the more value (weight) the digit has.  For example, with a base-10 number system like we use for money, with &quot;$111&quot; the first '1' represents $100, the second '1' represents $10, and the third '1' only represents $1 (a factor of 10 for each position to the left because it's a base-10 number system) all added together.  With $101 there wouldn't be any 10-value to add in so it's just $100 plus $1. 
+<br><br>
+With the binary number system it's pretty much the same thing.  It's just that because the binary number system is base-2, the value (weight) of a digit <b>doubles</b> (a factor of 2 rather than a factor of 10) for each position to the left.
+<center>
+<br>
+<img src="binary.gif" border="0" alt="Binary number weights">
+</center>
+<br>
+In a binary number, any bit that's a '0' has no value.  Any bit that's a '1' has the value of its' position.  Add up the values of the positions that have a '1' bit and you have the decimal equivanlet. If all the bits were a '1' you would add up the values for all of the positions it would total '255' (as in a subnet mask). See how easy binary-to-decimal conversion is! 
+<br><br>
+When they created the IP addressing system they decided to create the classes based on how many '1' bits started the first octet like so:
+<center><br>
+<table border="1" cellpadding="10">
+<tr>
+<td nowrap align="center" valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+<b>Address<br>
+Class</b>
+</font>
+</td>
+<td nowrap align="center" valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+<b>First<br>
+Octet</b>
+</font>
+</td>
+<td nowrap align="center" valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+<b>Possible<br>
+Values</b>
+</font>
+</td>
+<td nowrap align="center" valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+<b>Network<br>
+Portion</b>
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap align="center" valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+A
+</font>
+</td>
+<td nowrap valign="top">
+<font face="courier" size="3" color="#000000">
+<font color="#c30035"><b>0</b></font>000 0000<br>
+<font color="#c30035"><b>0</b></font>111 1111
+</font>
+</td>
+<td nowrap valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+0 through 127<br>
+<font size="2">'0' network not used<br>
+127 reserved (loopback)</font>
+</font>
+</td>
+<td nowrap valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+First octet only
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap align="center" valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+B
+</font>
+</td>
+<td nowrap valign="top">
+<font face="courier" size="3" color="#000000">
+<font color="#c30035"><b>10</b></font>00 0000<br>
+<font color="#c30035"><b>10</b></font>11 1111
+</font>
+</td>
+<td nowrap valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+128 through 191
+</font>
+</td>
+<td nowrap valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+First two octets
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap align="center" valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+C
+</font>
+</td>
+<td nowrap valign="top">
+<font face="courier" size="3" color="#000000">
+<font color="#c30035"><b>110</b></font>0 0000<br>
+<font color="#c30035"><b>110</b></font>1 1111
+</font>
+</td>
+<td nowrap valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+192 through 223
+</font>
+</td>
+<td nowrap valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+First three octets
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap align="center" valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+D
+</font>
+</td>
+<td nowrap valign="top">
+<font face="courier" size="3" color="#000000">
+<font color="#c30035"><b>1110</b></font> 0000<br>
+<font color="#c30035"><b>1110</b></font> 1111
+</font>
+</td>
+<td nowrap valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+224 through 239<br>
+<font size="2">Reserved for<br>
+multicast addresses</font>
+</font>
+</td>
+<td nowrap valign="top">
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+N/A
+</font>
+</td>
+</tr>
+</table>
+</center>
+<br>
+That's how the numeric ranges for IP addresses in the the various address classes are derived.
+<br><br>
+Now ask yourself this question; If you can tell the class of an address just by looking at the first few bits, and the class determines how much of the address is the network portion, why do you need a subnet mask?
+<br><br>
+Technically, you don't.  At least not with a &quot;class<u>ful</u>&quot; addressing scheme. In classful addressing schemes, routers don't even forward a subnet mask in their routing updates.  The class (and subsequently how much of an IP address constitutes the &quot;network&quot; portion of the address) is determined simply by looking at the first few bits in the first octet.  The very common RIPv1 routing protocol is strictly classful.
+<br><br>
+You need a subnet mask because these days most IP-based software, like the networking software that's part of your operating system (and the RIPv2 and OSPF routing protocols), operates in a &quot;class<u>less</u>&quot; manner.  It doesn't assume anything so you need a subnet mask to tell it how much of the IP address identifies the network.  There are several benefits to using a classless addressing scheme that we won't get into here because they mainly deal with routers.  However, play it safe and <u>always</u> assume you're dealing with classless IP addressing and enter an appropriate subnet mask when configuring any IP-based software.
+<br><br>
+Earlier we compared a computer network with the telephone system, comparing an area code to a network number and a person's telephone number to an individual computer's address.  But notice that in a person's telephone number not all of it is unique.  Only the last four digits are unique to that person.  Many people share the same first three digits.  These first three digits are called the &quot;exchange&quot;.
+<br><br>
+If we think of each area code being a network, we can think of an exchange as sort of a &quot;sub network&quot; within that area code network.  Actually, area code networks have quite a few exchange sub-networks in them.  The telephone network is divided up into this hierarchical structure of a network (area code) being divided into sub-networks (exchanges) consisting of individual nodes (last four digits of a telephone number) because it makes it easier to design systems that route calls. It makes things more &quot;modular&quot;.
+<br><br>
+Breaking up a data network into sub-nets is done for pretty much the same reason.  It makes it easier to route and manage network traffic.  However, another important reason is that it saves on IP addresses.  If an ISP were to assign an entire Class C address range to a business customer with only 50 computers, 201 addresses would be wasted.  Subnetting allows an ISP to parcel out their available public addresses in much smaller ranges in order to reduce this waste.
+<br><br>
+We can take one of the standard Class B private network ranges, say 172.16.0.0, and subnet it by taking a piece of the computer part of an IP address (analogous to a phone number) and using it to sub-divide the network range (as with an exchange).
+<center>
+<br>
+<img src="submask.gif" border="0" alt="Subnet mask">
+</center> 
+<br>
+Here we &quot;borrowed&quot; three bits from the computer part of the IP address (by using the subnet mask) to use them to identify several sub-networks.  (Remember that the '1's in a subnet mask have to be contiguous so we always borrow from the left end of the computer part of the mask.)  Given that we borrowed three bits, and 2 raised to the power of 3 is 8, we can identify up to 8 subnets.  Note that the <font color="#0000c0"><b>S</b></font>ubnet portion of mask does <u>not</u> have to coincide with an octet boundary. You can borrow as many bits as you want as long as it's at least two.  (If you only borrowed one bit you'd only end up with two addresses - because 2 raised to the power of 1 is 2 - and those would be the wire and broadcast addresses with nothing left for computers.) Now you see why they call it a &quot;subnet&quot; mask.
+<br><br>
+That leaves us with 13 bits to use for computer identification on <i>each</i> of those 8 subnets.  2 raised to the power of 13 is 8,192.  But like each network, each subnet has a wire and broadcast address so we have to subtract off the two which gives us 8,190 IP addresses for computers on each subnet.
+<br><br>
+Instead of using the private Class B address space in the diagram above as an example, lets say a regional ISP had a public Class B address space assigned to it by ARPA and they had operations in six small cities.  They could use a subnetting scheme similar to that above to subnet their space so that each city had its' own subnet.  The operation in each city would have nearly 8.200 addresses for customers.  They could then further subnet their space (by using even more '1's in the subnet mask) to have smaller ranges to give to business customers wishing to have a small range of static public addresses for their Internet servers.  Also in the above diagram we show the binary bit patterns and their corresponding octet values.
+<br><br>
+Subnetting is the practice of taking of given address space and dividing it up into numerous, smaller sub-networks.  We mentioned that ISPs will subnet public address space to help conserve IP addresses.  On privately-addressed Ethernet LANs subnetting cuts down on the size of things called &quot;broadcast domains&quot;.
+<br><br>
+As local networks are expanded, more and more systems share the same bandwidth.  This also means more and more systems are sending broadcasts to locate servers or resolve addresses.  A broadcast domain is just a logical area of a network where all systems can see each others broadcasts.  When broadcast domains get too big, bandwidth is gobbled up with broadcasts and the network users only get what's left. 
+<br><br>
+Switches are useful in that they cut down on collisions (common in Ethernet networks) by breaking up the <b>physical</b> (OSI layer 1) segments (shared cable), but they don't break up the <b>logical</b> (OSI layer 3) segment that represents a network (i.e. a collection of machines that all have the same network part of their IP addresses).  As a result, switches pass broadcasts.  The only way to stop broadcasts is to subnet a network into different logical segments (sub-networks) using routers which operate at OSI layer 3.
+<br><br>
+Because of the ability to borrow some of the bits from the computer part of the address and use them to identify the subnet part of the address, you can end up with subnet masks like:
+<blockquote>
+<blockquote>
+255.128.0.0<br>
+255.255.248.0<br>
+255.255.255.192<br>
+</blockquote>
+</blockquote>
+These are only a few of a myriad of different numbers you could encounter in subnet masks.  To make things easier to document, subnet masks are often indicated using &quot;bit mask&quot; notation.  In bit mask notation, the subnet mask is indicated with a slash (/) followed by the number of 1s in the subnet mask.  Note that when this notation is used, it is specifying <b>the length of the prefix</b>. Here are some examples of subnet masks and their equivalent bit mask notations:
+<center><br>
+<table border="0">
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.0.0.0
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/8
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.0.0
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/16
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.128.0
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/17
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.255.0
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/24
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.255.128
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/25
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.255.192
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/26
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.255.224
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/27
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.255.240
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/28
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.255.248
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/29
+</font>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+255.255.255.252
+</font>
+</td>
+<td nowrap>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+&nbsp; &nbsp; &nbsp; &nbsp;
+</font>
+</td>
+<td>
+<font face="arial,sans serif,helvetica" size="3" color="#000000">
+/30
+</font>
+</td>
+</tr>
+</table>
+</center><br>
+So instead of writing out an IP address and a subnet mask, it is becoming more and more common in networking literature and specifications to see an IP address with a bit mask after it to indicate the length of the subnet mask (how many 1s there are):
+<center>
+<br>
+192.168.1.5/24
+</center>
+<br>
+A /30 bit mask (255.255.255.252) yields only two usable computer addresses and is typically only found when connecting two routers together via a point-to-point link (i.e. each router's interface gets one of the addresses).
+<br><br>
+Lets take a look at a typical subnetting situation.  An insurance company has multiple buildings in close proximity.  Note that this does NOT constitute a WAN (Wide Area Network).  It is commnly known as a &quot;Campus LAN&quot;.  The buildings are close enough that LAN technologies (Gigabit or Fast Ethernet over fiber for example) are used to interconnect the buidlings, not WAN technologies like frame relay or leased lines.  Fiber (100-Base-FX) allows you to extend the length of Ethernet segments so that buidlings too far apart for copper (100-Base-T) can be interconnected.
+<br>
+<center>
+<br>
+<img src="campus.gif" border="0" alt="Subnet Example">
+</center>
+<br>
+In this example the Class B private address network of 172.16.0.0 is subnetted into six usable subnets even though only four are being used.  If this network was not subnetted and the router was replaced with a switch, you can imagine what would happen to the bandwidth of this network if every computer in every building could see broadcasts sent from every other computer in all of the buildings.  For example, a PC in Building C would send an ARP broadcast intended to resolve a MAC address for another PC in building C but all of the systems in Buildings A and B and the data center would also see it.  Multiply this by every PC in the enterprise and you'd have a lot of broadcast activity over the entire network.
+<br><br>
+Like full Class A, B, or C networks, every subnet has both a wire and a broadcast address.  (The wire address is also referred to as the &quot;network address&quot;.)  No computers can use either of these addresses.
+<br><br>
+The first subnet can't be used because its' address range includes the network (wire) address for the entire 172.16.0.0 network.  Likewise, the last subnet can't be used because its' address range includes the broadcast address for the entire 172.16.0.0 network (172.16.255.255).  In addition, addresses ending in .0 and .255 <b>on each subnet</b> can't be used because these are the network and broadcast addresses for the individual subnets respectively.  This is one downside of subnetting,  available addresses are &quot;lost&quot; (can't be used by systems).  The more subnets created, the more addresses that are lost.  This is important to consider when you are trying to decide on which private address class to use for your enterprise.  If you choose a Class C private address range and you're close to using all available addresses without subnetting, you may want to consider using the Class B space so you have some room to subnet should it become necessary in the future.
+<br><br>
+<i>QUIZ!</i> &nbsp;Looking at the above diagram, determine the following for Building B:
+<br><br>
+<ul>
+<li>Network (wire) address &nbsp; &nbsp;<font color="#FFFFFF"><b>172.16.96.0</b></font>
+<li>Router interface address &nbsp; &nbsp;<font color="#FFFFFF"><b>172.16.96.1</b></font>
+<li>Starting and ending addresses in the range available for systems in the building<br>
+<font color="#FFFFFF"><b>172.16.96.2 (because the router is using .1) through 172.17.127.254</b></font>
+</ul>
+<br>
+When you think you've got the right answers, drag your mouse over the above bullet points to see what they are.
+<br><br>
+<i>Another QUIZ!</i> &nbsp;This network uses a bitmask of /19 so 19 bits of a 32-bit IP address represent the network/subnet portion of the address (the prefix).  How many <b><u>usable</u></b> addresses are available for systems on each subnet?
+<br><br>
+<blockquote>
+<blockquote>
+<font color="#FFFFFF"><b>
+32 - 19 = 13<br>
+2<sup>13</sup> = 8192<br>
+8192 - 2 unusable = 8190 systems
+</b></font>
+</blockquote>
+</blockquote>
+When you think you have the answer, drag your mouse over the blank area above.  When trying to determine how to best subnet a network, it is often best to determine the absolute maximum possible number of systems (computers, printers, etc) you would have in the largest subnet.  For example, if Building A was the largest of all buildings, and it currently has 1,800 systems and would never get over 2,500 systems because there simply isn't room for more, you would figure out how many host bits you would need to support 2,500 systems.
+<br><br>
+<blockquote>
+<blockquote>
+2<sup>10</sup> = 1024 so 10 computer bits isn't enough<br>
+2<sup>11</sup> = 2048 so 11 computer bits still isn't enough<br>
+2<sup>12</sup> = 4096 so 12 computer bits would be enough
+</blockquote>
+</blockquote>
+So if we need 12 bits for systems, 32-12=20.  We should have used a /20 bitmask (255.255.240.0) in our example network in the diagram above.  What would be the benefit of using /20 instead of /19? Note on the above diagram that the /19 bitmask only gave us six usable subnets with four already being used.  What if the insurance company wanted to expand and add remote offices in three other cities?  It couldn't be supported with a /19 mask.  Even though these offices in remote cities would be connected via WAN technologies like frame relay or leased lines, their subnet addressing schemes would still have to fall within the addressing scheme set up at headquarters.
+<br><br>
+So here's a few basic principles of network design.  We'll use the above example again here:
+<br><br>
+<ol>
+<li>Determine the largest possible number of systems on any given subnet
+<center>
+<br>
+<font size="2" color="#A8003B"><b>
+2,500 systems
+</b></font>
+</center>
+<br>
+<li>Calculate how many computer bits you would need to support this number (remember to subtract two):
+<center>
+<br>
+<font size="2" color="#A8003B"><b>
+<nobr>11 bits aren't enough (2,048-2) so 12 bits support 4,096-2 or 4,094 systems</nobr>
+</b></font>
+</center>
+<br>
+<li>Calculate how many bits this leaves you with for subnets (for example, a Class B network has 16 computer bits to start with so after subtracting the required number of computer bits how many computer bits are left for subnetting)
+<center>
+<br>
+<font size="2" color="#A8003B"><b>
+16 computer bits - 12 bits needed for systems = 4 bits for subnetting
+</b></font>
+</center>
+<br>
+Note that these 4 bits plus the Class B 16 network bits gives a bitmask of /20.
+<br><br>
+<li>Determine how many subnets the remaining computer bits will allow you to have (remember to subtract two)
+<center>
+<br>
+<font size="2" color="#A8003B"><b>
+2<sup>4</sup> = 16 - 2 = 14 subnets available
+</b></font>
+</center>
+<br>
+<li>If this isn't enough subnets, go to the next higher address class (ex: <nobr>Class B</nobr> to <nobr>Class A)</nobr>
+</ol>
+<br>
+An important rule to remember with this type of subnetting is that <b>all subnets must be the same size</b> (i.e. all have the same number of available system addresses).  With this type of subnetting the real waste of IP addresses is not due to the necessity that each subnet have it's own network and broadcast addresses.  It's that even point-to-point links, which only have two connections (one at each router interface), have to be set up as their own subnet.  So in the above example, even though serial links would only use two addresses, they would have to be given their own subnet consisting of 4,094 addresses.  4,092 of those addresses would never be used. 
+<br><br>
+In the case of the insurance company above, if they opened three remote offices, not only would three subnets be required for systems in each of those offices to use, but three <b>additional</b> subnets would be required for each of the three serial (leased line) links to those offices.  That's six subnets for three offices!  And on each of those three serial link subnets, only two of the available 4,094 addresses would be used.  That's <nobr>(3 x 4092)</nobr> or 12,276 wasted addresses.  This doesn't even take into account all of the unused addresses on each of the building subnets.
+<br><br>
+What to do about all this address wasting?  That's where VLSM (Variable Length Subnet Masking) and CIDR (Classless Interdomain Routing) come in.  VLSM allows you to set up subnets of different sizes.  However, this requires a that your routers use a more complex &quot;classless&quot; routing protocol where the bitmask value is included with every IP address.  (Simpler &quot;classful&quot; routing protocols like RIP v1 assume the subnet mask that corresponds to the class of any given address.)
+<br><br>
+Address wasting isn't really a problem when you use private IP address ranges except that having all the same-size subnets can cause excessive routing traffic on routed networks.  We won't get into the details of VLSM and CIDR here.  Cisco has a book called <nobr><A HREF="http://www.amazon.com/exec/obidos/ASIN/1587130254/aboutdebian-20" target="_blank">Top-Down Network Design</a></nobr> that covers the material nicely.  But we wanted to point out the above so you know why the Internet is in danger of running out of addresses.  Many companies use standard subnetting like that presented above but do it using the public address space assigned to their company resulting in many wasted routable IP addresses.
+<br><br><br>
+<table border="0">
+<tr><td align="left" valign="middle">
+<font size="3" face="verdana" color="#c30035"><b>DSL vs Cable</b></font>
+</td><td align="right" valign="middle" width="1%">
+<a href="#top"><img src="up.gif" border="0" vspace="0" hspace="0" alt="Top of page"></a></td></tr></table>
+<br>
+As previously stated, if you want to set up one or more serious Internet servers, you're going to need three things:
+<br><br>
+<ol>
+<li>A high-speed symmetrical connection to an ISP
+<li>One or more static IP addresses
+<li>An ISP that will host your DNS records
+</ol>
+<br>
+These things are typically only available with &quot;business&quot; accounts offered by cable and DSL providers.  Even if the servers will be located in your home, you're going to need a business account to get these features.
+<br><br>
+Business accounts cost considerably more than you average asymmetrical residential account, but if you're currently paying a Web hosting service to host several Web sites on their servers, you may be able to save some money by hosting your sites yourself.  There are advantages and disadvantages to this.
+<br><br>
+Advantages:
+<blockquote>
+<ul>
+<li>By hosting your own Web sites you're not restricted by artificial lmiits on disk storage, e-mail accounts, and monthly bandwidth allocations.
+<li>You can configure your Web server with all of the bells and whistles that hosting companies charge extra for.
+<li>The money you're paying your Web hosting service and the money you're paying your ISP for monthly dial-up access could be put toward your own broadband connection.
+<li>You can host as many sites as you want on one server (the way the hosting companies do).
+<li>Because your server will host your sites, and your sites only, your sites won't be affected by all of the other Web sites you share a server with when you use a hosting service.
+<li>The same server could also be set up to have Sendmail handle your Internet e-mail needs rather than using an ISP's mail server.
+<li>You could charge others a monthly fee for hosting their Web sites on your server also (but you'd better check with your ISP on this as it may violate their service contract).
+</ul>
+</blockquote>
+Disadvantages:
+<blockquote>
+<ul>
+<li>You would be responsible for the monitoring and support of your Web server.  There is cheap software available to routinely check the availability of your Web sites (www.ipsentry.com), but you would have to be reachable via pager or cell phone 24/7 should the software discover a failure.
+<li>You'd have to set up a means of routinely backing up your server so you can recover from server hard-drive failures quickly.
+<li>You'd want to provide some means of extended power backup should the power go out at your home or office.
+<li>You'd have to become <b>very</b> knowledgable in the areas of system security (prevention, monitoring, detection, and recovery).
+</ul>
+</blockquote>
+This last point is especially important if you want to conduct secure (SSL) transactions on your Web sites.  Frankly, I wouldn't recommend &quot;hosting your own&quot; if you do need to do this.  Hosting companies have a lot of experience with setting up and securing SSL-enabled Web servers.  This is one area that may be best left to the professionals.
+<br><br>
+Also, while the &quot;baby bells&quot; do offer static IP addresses with some of their business DSL packages, they usually only offer asymmetrical service.  I suspect this is because they don't want symmetrical DSL cutting into their high-priced T1 and fraction T1 product lines (which are also symmetrical).
+<br><br>
+Below are some points you should consider when comparing symmetrical DSL and cable broadband services.
+<center>
+<br>
+<table border="0" cellpadding="5">
+<tr>
+<td valign="middle" align="center">
+<font face="arial,sans serif,helvetica" size="3">
+<b>DSL</b>
+</font>
+</td>
+<td valign="top" align="center">
+<font face="arial,sans serif,helvetica" size="3">
+<b>Cable-modems</b>
+</font>
+</td>
+</tr>
+<tr>
+<td valign="top" align="left">
+<font face="arial,sans serif,helvetica" size="3">
+<ul>
+<li>If you get the more expensive business-class DSL service you receive a DSL router (instead of a DSL adapter for a single computer) which you can plug into an Ethernet hub.  This means that all the computers on your network can share the Internet access.
+</ul>
+</font>
+</td>
+<td valign="top" align="left">
+<font face="arial,sans serif,helvetica" size="3">
+<ul>
+<li>Most cable-modem providers charge extra for each additional PC you want to have use the Internet access.  However, Linksys (www.linksys.com) and D-Link (www.dlink.com) both sell a cable/DSL router for under $100 that would allow you to get around this.  But hook it up <b>after</b> the cable guy leaves because the cable companies do not support the use of them.  (They will also not help you if you have problems setting one up.)  Like the straight DSL router, you just plug the cable into the cable/DSL router and then plug that into your hub to share the access.
+</ul>
+</font>
+</td>
+</tr>
+<tr>
+<td valign="top" align="left">
+<font face="arial,sans serif,helvetica" size="3">
+<ul>
+<li>The speed of your connection is dependent upon your physical distance from a telephone company facility.  You may be limited to a 144 kbps service if you are beyond the distance limitations of the higher-speed service.
+</ul>
+</font>
+</td>
+<td valign="top" align="left">
+<font face="arial,sans serif,helvetica" size="3">
+<ul>
+<li>Cable-modem users share their pipe with other cable users.  The more business and private users between you and the cable company's office the slower your speed will be.
+</ul>
+</font>
+</td>
+</tr>
+<tr>
+<td valign="top" align="left">
+<font face="arial,sans serif,helvetica" size="3">
+<ul>
+<li>Your &quot;up-time&quot; is dependent on the reliability of your local telephone service which is typically less susceptible to weather-related problems and does not involve neighborhood line power provided by your local electric utility.
+</ul>
+</font>
+</td>
+<td valign="top" align="left">
+<font face="arial,sans serif,helvetica" size="3">
+<ul>
+<li>If your cable-tv service often goes out due to storms or other weather-related events, your Internet access will also go out.  The electronic components used in the cable distribution network (mounted on utility poles, etc. around town) use line power in those neighborhoods.  This means that you are also affected by power outages that occur for any reason.  If the power goes out anywhere between you and your cable service provider, your service will go down.
+</ul>
+</font>
+</td>
+</tr>
+<tr>
+<td valign="top" align="left">
+<font face="arial,sans serif,helvetica" size="3">
+<ul>
+<li>Service considerations include:
+<ul>
+<li>You will be dealing with your local baby bell for the line (installation and maintenance), the DSL provider for the DSL service over that line, and an ISP.
+<li>Cases of installations taking over a month to complete are not uncommon.
+<li>A lot of DSL providers have gone out of business.
+</ul>
+</ul>
+</font>
+</td>
+<td valign="top" align="left">
+<font face="arial,sans serif,helvetica" size="3">
+<ul>
+<li>Service considerations include:
+<ul>
+<li>The cable company will likely be slower to respond to data line problems.  As part of their contract with municipalities, most cable companies have to respond to &quot;no picture&quot; service calls quickly when it comes to video service.  However, they are under no such obligation for data service.  A friend of mine was told it would take three weeks to get a technician to his house when his cable-modem died.
+<li>Because most municipalities only have one cable service provider, the lack of competition means your cost for the service could rise substantially over the next few years (look at how much video service has gone up in the last few years).
+<li>Most cable companies block SNMP (network device status monitoring) traffic.
+<li>Not all cable companies host customer DNS records.
+<li>Not all cable companies allow you to &quot;dial in&quot; when you're away from home.
+<li>It's the cable company.  &nbsp;<b>:^(</b>
+</ul>
+</ul>
+</font>
+</td>
+</tr>
+</table>
+</center>
+<br>
+If you've got more time than money, hosting your own may be the way to go.  However, maintaining the 24/7 operation of Internet servers is a big responsibility.
+<br><br><br><br>
+<br>
+
+
+<br><br>
+<center>
+<table border="0" cellpadding="0"><tr>
+<td align="center" valign="bottom">
+<a href="/cgi-bin/birdcast.cgi"><img src="quill.gif" border="0" vspace="0" hspace="0" alt="Tell a friend about this site"></a>
+</td>
+<td align="left" valign="bottom">
+<font face="arial,helvetica,sans serif" size="2">
+<a href="/cgi-bin/birdcast.cgi">Tell a friend</a> about this site.
+</font></td></tr></table>
+<br>
+<font size="1">
+Site, content, documents, original images &nbsp; Copyright &copy; 2003 &nbsp; <a href="http://www.execpc.com/~keithp/">Keith Parkansky</a> &nbsp; All rights reserved<br>
+Duplication of any portion of this site or the material contained herein without<br>
+the express written consent of Keith Parkansky, USA is strictly prohibited.
+<br><br>
+This site is in no way affiliated with the Debian Project, the debian.org Web site, or<br>
+Software In The Public Interest, Inc.  No endorsement of this site by the Debian Project<br>
+or Software In the Public Interest is expressed or implied.  Debian and the Debian logo<br>
+are registered trademarks of Software In The Public Interest, Inc. Linux is a registered<br>
+trademark of Linus Torvalds.  The Tux penguin graphic is the creation of Larry Ewing.
+<br><br>
+LIABILITY 
+<br><br>
+IN NO EVENT WILL KEITH PARKANSKY OR <A href="http://www.host-affiliates.com/t.asp?id=4685" target="_blank">HOSTWAY INCORPORATED</a> OR ANY OF ITS' SUBSIDIARIES BE LIABLE TO ANY PARTY (i) FOR ANY DIRECT, INDIRECT, SPECIAL, PUNITIVE OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF PROGRAMS OR INFORMATION, AND THE LIKE), OR ANY OTHER DAMAGES ARISING IN ANY WAY OUT OF THE AVAILABILITY, USE, RELIANCE ON, OR INABILITY TO USE THE INFORMATION, METHODS, HTML OR COMPUTER CODE, OR &quot;KNOWLEDGE&quot; PROVIDED ON OR THROUGH THIS WEBSITE, COMMONLY REFERRED TO AS THE &quot;ABOUT DEBIAN&quot; WEBSITE, OR ANY OF ITS' ASSOCIATED DOCUMENTS, DIAGRAMS, IMAGES, REPRODUCTIONS, COMPUTER EXECUTED CODE, OR ELECTRONICALLY STORED OR TRANSMITTED FILES OR GENERATED COMMUNICATIONS OR DATA EVEN IF KEITH PARKANSKY OR <A href="http://www.host-affiliates.com/t.asp?id=4685" target="_blank">HOSTWAY INCORPORATED</a> OR ANY OF ITS' SUBSIDIARIES SHALL HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, AND REGARDLESS OF THE FORM OF ACTION, WHETHER IN CONTRACT, TORT, OR OTHERWISE; OR (ii) FOR ANY CLAIM ATTRIBUTABLE TO ERRORS, OMISSIONS, OR OTHER INACCURACIES IN, OR DESTRUCTIVE PROPERTIES OF ANY INFORMATION, METHODS, HTML OR COMPUTER CODE, OR &quot;KNOWLEDGE&quot; PROVIDED ON OR THROUGH THIS WEBSITE, COMMONLY REFERRED TO AS THE &quot;ABOUT DEBIAN&quot; WEBSITE, OR ANY OF ITS' ASSOCIATED DOCUMENTS, DIAGRAMS, IMAGES, REPRODUCTIONS, COMPUTER EXECUTED CODE, OR ELECTRONICALLY STORED, TRANSMITTED, OR GENERATED FILES, COMMUNICATIONS, OR DATA. ALL INFORMATION, METHODS, HTML OR COMPUTER CODE IS PROVIDED STRICTLY &quot;AS IS&quot; WITH NO GUARANTY OF ACCURACY AND/OR COMPLETENESS. USE OF THIS SITE CONSTITUTES ACCEPTANCE OF ALL STATED TERMS AND CONDITIONS.
+</font>
+<br><br>
+</center>
+</blockquote>
+</font>
+
+</body>
+</html>

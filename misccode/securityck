@@ -1,0 +1,30 @@
+#!/bin/sh
+
+echo LIST PASSWD AND SHADOW FILES TO CHECK FOR LAST DATE ACCESSED
+echo 
+cd /etc; ls -l *passwd* *shadow*
+echo
+echo CHECK FOR USERS AND GROUPS THAT ARE EQUAL WITH ROOT
+echo
+grep ':00*:' /etc/passwd
+echo
+echo CHECK FOR USERS WITH SHELL ACCESS
+echo
+grep bash /etc/passwd
+echo
+echo LIST SU ACTIVITY
+echo
+cat /usr/adm/sulog
+echo
+echo CHECK FOR INVALID PASSWORDS
+echo
+grep invalid /var/log/syslog
+echo
+echo LIST THE LAST 20 LOGINS
+echo
+last |head -20
+echo
+echo CHECK THE HARD DRIVE SPACE
+df
+echo CHECK APACHE
+TODO

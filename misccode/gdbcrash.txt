@@ -1,0 +1,14 @@
+
+portico.org programming 
+soed at 30 March, 01:11:54
+
+Want to know exactly why your program crashed? At the bash prompt type: 
+ulimit -c 100000 
+
+Then run your program and watch it dump core. Now run gdb like this: 
+gdb program core 
+Or if using Cygwin you'll need dumper.exe (may not work) to get core
+gdb -nw program.exe program.exe.core 
+
+Then do a backtrace on the core like this: 
+bt  

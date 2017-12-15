@@ -1,0 +1,17 @@
+:%substitute/After/Aft/g
+:%substitute/Granulation/Gran/g
+:%substitute/Maximum/Max/g
+:%substitute/Minimum/Min/g
+:%substitute/Thickness/Thick/g
+:%substitute/Appearance/Appear/g
+:%substitute/Individual/Ind/g
+:%substitute/Overall/Over/g
+:%substitute/Average/Avg/g
+:%substitute/Disintegration/Disint/g
+:%substitute/Number/Num/g
+:%substitute/Theoretical/Num/g
+:%substitute/Purified/Pur/g
+:%substitute/chopper/chp/g
+:%substitute/Required/Req/g
+:%substitute/Record/Rec/g
+:%substitute/Temperature/Temp/g

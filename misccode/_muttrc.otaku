@@ -1,0 +1,335 @@
+#¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø#
+#
+#     Name: $HOME/.muttrc
+#
+#           See man muttrc
+# 
+#           For Cygwin:
+#           May need to edit /etc/ssmtp/ssmtp.conf.  Make sure my version 
+#           of ~/.mailcap exists.  Make sure ~/Mail exists.
+#
+#           This file can be chmod 755
+#
+#           To determine a setting e.g.:
+#           :set ?sort
+#           To avoid using this .muttrc:
+#           /bin/mutt -F foo  <---foo must exist
+#
+#  Created: Sun 03 Jun 2001 14:02:02 (Bob Heckel)
+# Modified: Tue 29 Mar 2005 16:25:40 (Bob Heckel)
+#
+#¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤ø,¸¸,ø¤º°`°º¤øø¤º°`°º¤¤º°`°º¤ø,¸¸,ø¤º°`°º¤ø#
+
+# Initialize
+reset all # variables to system defaults
+unhook *
+unscore *
+unlists *
+source $HOME/.email_addr
+source $HOME/.muttprivate   # personal config specific to this box
+# Show version at startup; side effect is to give visual confirmation after
+# .muttrc has been sourced from its command line.
+push V   
+
+set abort_unmodified=no    # let me send blank emails
+set alias_format="%4n%t%-17a %r" 
+set noarrow_cursor  # only for index, it is redefined later
+set ascii_chars   # use plain ASCII characters when displaying thread, etc. 
+set attach_format="%u%D%I %t%4n %T%.40d%> [%.7m/%.10M, %.6e%?C?, %C?, %s] "
+set attribution="* On %d, %n wrote:"
+set auto_tag  # press 't' to select items, next op will apply to all tagged
+set write_bcc=no   # fix strangeness with occasionally visible Bcc: 
+###set collapse_unread=no
+set confirmappend=no  # don't ask me if ok during saves
+set copy=yes      # copies of outgoing messages will be saved (to $record)
+# Messages marked for deletion will automatically be purged without prompting. 
+set delete=yes
+set edit_headers
+set editor="vim -c 'set tw=68 et' +/^$"
+# Uses attachment detection logic.  TODO is it worth it?
+###set editor=/arpa/ag/b/bheckel/bin/mutt-editor
+# Avoid the tampering that certain mail delivery and transport agents tend to
+# do with 'From' in messages.
+set encode_from=yes
+set fast_reply=yes
+set fcc_attach        # save attachments with body of sent msgs
+set folder=$HOME/Mail
+set folder_format="%1N%4C %10F%10u %9s %15f %4C"  # file Directory window
+set forward_format="Fwd: %s"
+set hdrs=yes    # user defined header fields are added to every new message
+set history=100
+set include=yes  # quote all, save time, can always del the quoted part in Vim
+set ispell="aspell -e -c"
+set locale=EST
+set pager_context=1 # N lines from bot of prev is also on start of new pg
+set pager_index_lines=7
+# SENDER's date/time on sender's machine when he sent the email.
+set pager_format="Bytes:%c"   # email message status line
+set pager_stop    # don't fall thru to next message
+set postponed=$HOME/Mail/postponed
+set print=ask-yes
+unset mark_old       # don't mark as read if I haven't read it
+unset markers  # no '+' markers at the beginning of wrapped lines (for clipbd)
+# Hide .procmailusage and archive files when using file browser.  Double
+# backslashes!
+set mask="!(^\\.|gz$)"  
+set mbox=$HOME/Mail/mbox
+set metoo=no      # remove yourself from To: line during replies
+set menu_scroll=yes
+set message_format="%s"
+set move=ask-yes     # ask to move read emails to mbox
+set nohelp
+set print=ask-yes
+set quit=yes
+set quote_regexp="^ {0,4}[a-zA-Z]*([^<]*{0,4}[>%])"
+set read_inc=5
+set record="$HOME/Mail/sentmail"
+set reply_to=ask-yes   # use or ignore Reply-To
+set reverse_name  # reply as the user to whom the mail was sent to
+###set sendmail_wait=-1  # don't wait for actual send to occur
+set simple_search="~f %s | ~s %s"
+set score_threshold_flag=100    # place ! in front of wanted email
+###set score_threshold_read=80    # mark crap not sent directly to me as read
+set smart_wrap
+# The method that comes second (after the '/' ).  'date-sent' is same as 'date'
+set sort_aux=date-sent
+# Status line displayed in the index menu.  
+set status_format="%h %f[Tot:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d? Postp:%p](%s/%S)%> (%P)" 
+set suspend  # allow Ctrl-z
+set tilde=yes    # like vi
+set tmpdir="$HOME/tmp"
+set to_chars="-+TCF"
+set uncollapse_jump=yes
+set nouser_agent   # creates User-Agent: Mutt/<Version> header
+set wait_key=no  # don't want to press CR after creating a tunnel
+set wrap_search 
+# Clean up mails.
+set display_filter=/arpa/ag/b/bheckel/bin/muttfilter.pl
+
+
+# "Why can't you be more like your older brother vi?"
+bind alias ' ' next-page
+bind alias G   last-entry
+bind alias L   bottom-page    # clashes with mailing list L; don't need H, M
+bind alias b   previous-page
+bind alias g   first-entry    # clashes with group-reply
+
+bind browser G last-entry
+# TODO why doesn't this work?
+bind browser q exit
+
+bind attach ' ' next-page
+bind attach G   last-entry
+bind attach L   bottom-page   # clashes with mailing list L; don't need H, M
+bind attach R   group-reply  # override default g
+bind attach b   previous-page
+bind attach e   edit-type
+bind attach g   first-entry
+bind attach z   noop
+
+bind compose <insert> attach-file
+bind compose <delete> detach-file
+bind compose D        edit-description    # swap with d
+bind compose p        postpone-message    # clashes with pgp-menu
+bind compose d        detach-file         # swap with D
+bind compose f        edit-from           # instead of <esc>f
+bind compose F        edit-fcc            # instead of f clashes with filter
+bind compose v        view-attach
+bind compose y        noop                # avoid accidental send
+bind compose Y        send-message        # avoid accidental send
+
+bind index <down>  next-entry
+bind index <space> next-page
+bind index <tab>   change-folder
+bind index <up>    previous-entry
+bind index \eN     next-new
+bind index \eP     previous-new
+bind index \CN     next-unread
+bind index \CP     previous-unread
+bind index *       tag-entry  # toggle
+bind index !       flag-message  # toggle.  Clashes with shell-escape (good)
+bind index B       bounce-message
+bind index C       collapse-all  # clashes with copy-message
+bind index D       undelete-message # use Tag to select then D to mass undelete
+bind index G       last-entry
+bind index L       bottom-page   # clashes with mailing list L; don't need H, M
+bind index R       group-reply
+bind index b       previous-page 
+bind index g       first-entry   # clashes with group-reply
+bind index p       search-opposite
+###bind index x       noop    # currently being used as a macro
+
+bind pager <down> next-line
+bind pager <up>   previous-line
+bind pager <tab>  change-folder        # as in index
+bind pager \Cn    search-next
+bind pager \Cp    search-opposite
+bind pager \Ce    next-line
+bind pager \Cy    previous-line
+bind pager ' '    next-page
+bind pager \Cf    next-page
+bind pager \Cb    previous-page 
+bind pager \Cd    delete-message
+bind pager [3~  delete-message
+bind pager /      search
+bind pager B      bounce-message
+bind pager D      undelete-message 
+bind pager G      bottom
+bind pager R      group-reply
+bind pager b      previous-page
+bind pager g      top
+bind pager h      exit  # like slrn
+bind pager i      noop                 # strangely mapped to exit by default
+bind pager j      next-line
+bind pager k      previous-line
+bind pager n      next-entry
+bind pager p      previous-entry
+bind pager t      display-toggle-weed  # act like slrn; clashes with tag
+###bind pager x      noop  # currently being used as a macro
+
+
+# Archive older than 9 months.  Must be in folder of interest.
+###macro index ,a "<tag-pattern>~r>9m!(~F|~N)<enter><tag-prefix><save-message>mailarch/ARCH"
+# Use  $ muttman  outside of mutt.  It is configured as:  alias muttman='less
+# /usr/doc/mutt/manual.txt' in .bashrc
+# Forward spam (including full headers) to SpamCop.
+###macro index \Cf ":set display-toggle-weed\n: \
+                 ###<forward-message>spamcop@spamcop.net\n\n"
+# For SpamCop forwards.
+###macro pager S "<enter-command>set invforward_decode<enter>" "Toggle full hdrs on fwd"
+
+macro attach J "<save-entry>~/html/tmp.jpg" "Save JPG image to ~/html for viewing in browser"
+macro attach S "<save-entry>~/html/tmp." "Save image to ~/html for viewing in browser"
+
+# TODO useful?
+###macro browser "x" "\t\t"
+
+macro index <F2>  ":source $HOME/.muttrc\n" "Source .muttrc"
+macro index <F12> "quit" "Quit"  # like Vim
+# Messages created via <Esc>e do not get copied to sent_messages.  This is a
+# known "feature" -- here's a workaround:
+macro index \ee "<resend-message>f=sentmail\n" \
+                "Resend message with fcc set to sentmail"
+macro index j "<next-entry>@" "View sender's email in statusbar"
+# Replied to mail is normally deleted.  This saves it to where it would
+# normally be if it was not replied to.
+macro index r "C=repliedto\n<reply>" "Save a copy then reply"
+macro index x "c?" "Keystroke saving mailbox browsing"
+# TODO is this working?
+macro index R "C=repliedto\n<group-reply>" "Save a copy then reply to all"
+# TODO hangs mutt don't know why
+###macro index \cs "set index_format='%s'" "View subject only"
+macro index \cx "<tag-pattern>.*\n<tag-prefix>d" "Delete all"
+
+macro pager <F2>  ":source $HOME/.muttrc\n" "Source .muttrc"
+macro pager <F12> "quit" "Quit"  # like Vim
+macro pager r "C=repliedto\n<reply>" "Save a copy then reply"
+macro pager R "C=repliedto\n<group-reply>" "Save a copy then reply to all"
+macro pager \cb <pipe-entry>'urlview'<enter> "Follow links with urlview"  
+macro pager \ee "<resend-message>f=sentmail\n" \
+                "Resend message with fcc set to sentmail"
+macro pager w "<enter-command>set invsmart_wrap invmarkers<enter>" "Toggle wrapping"
+macro pager \cx "q<tag-pattern>.*\n<tag-prefix>d" "Close current msg and delete all"
+###macro pager \cu |urlview\n "View links in urlview"
+macro pager \cu |w3m\n "Call w3m to extract URLs then press ':' (urlview improvement)"
+macro pager x "c?" "Keystroke saving mailbox browsing"
+# ...more in $HOME/.private
+
+
+# First ignore all lines by default.
+ignore *        
+# Except these (not case sensitive), unless I toggle to view all.
+unignore From: Reply-To: To: Cc: Bcc: Subject: Organization: \
+         Date: User-Agent: X-Operating-System: X-Editor: X-Mailer: \
+         Newsgroups: X-Resent Followup-To: Mail-Followup-To: Importance: \
+         X-Message-Flag
+
+hdr_order Sender: From: Reply-To: To: Cc: Bcc: Subject: Organization: \
+          Date: User-Agent: X-Operating-System: X-Editor: X-Mailer: \
+          Newsgroups: X-Resent Followup-To: Mail-Followup-To: \
+          Importance: X-Message-Flag
+
+# Add these custom headers to my outgoing mail.
+###my_hdr X-Operating-System: `uname -m -r -s`
+###my_hdr X-Editor: `$EDITOR -h` # mutt only parses the first line, so this works
+###my_hdr X-Message-Flag: Have more than thou showest, speak less than thou knowest - Shakespeare
+
+# Handle unknown types:
+###charset-hook x-unknown ISO-8859-1
+charset-hook x-unknown US-ASCII
+
+
+# Mutt knows to use the second one in the pager because of the
+# 'copiousoutput', and uses the first one if I select a pdf attachment from
+# the attachment menu.
+# from .mailcap:
+#   text/html; /usr/pkg/bin/links %s; nametemplate=%s.html
+#   text/html; /usr/pkg/bin/links -dump %s; copiousoutput
+auto_view "text/html"
+
+
+# Note: folder-hook requires double backslashes for one space!
+# Defaults:
+folder-hook . set index_format="%2C%Z%(%b%d)\\ %-10.10n:\\ %s"
+folder-hook . set sort=date-sent
+folder-hook . set sort=threads   # want cursor on msg 1
+folder-hook . save-hook . =trash
+
+folder-hook '!' save-hook . =Tmp
+folder-hook 'Cygwin' set index_format="[%-12.12n]\\ %s"
+# TODO
+###folder-hook 'Cygwin' collapse-all .
+folder-hook 'Mutt' set index_format="[%-12.12n]\\ %s"
+folder-hook 'PerlQuiz' set index_format="[%-12.12n]\\ %s"
+folder-hook 'PerlJobs' set index_format="%(%b%d)\\ %s"
+###folder-hook 'SASl' set index_format="[%-12.12n]\\ %s"
+# TODO 
+###folder-hook 'SASl' collapse-all
+folder-hook 'Vim' set index_format="[%-12.12n]\\ %s"
+# Default simple_search above looks at From: and Subject:
+# This uses To: and Subject: since it's all mail from me to others.
+#                    -        Quotes mandatory.        -
+folder-hook sentmail 'set simple_search="~t %s | ~s %s"'
+
+
+# HTML is the LAST option (Outlook protection).
+alternative_order text/enriched text/plain text/html 
+
+
+# Note:            double backslashes!
+color body       blue black "\\* On .*[^:]:"             # On Thu, May 21...
+color body       green black "(ftp|http)://[^ >]+"       # URLs
+color body       yellow black  "\\*+[-a-z_0-9 .']+\\*+"  # bolded
+color body       yellow black " _.*_ "                   # bolded
+color body       green black "[-a-z_0-9.]+@[-a-z_0-9.]+" # e-mail addresses
+color body       black black "-+BEGIN PGP SIGNATURE"
+color body       black black "-+END PGP SIGNATURE"
+color attachment blue black
+color hdrdefault yellow black
+color header     green black "^(From|Reply-To|To|TO|Cc|CC|Date):"
+color header     red black "^Subject: "
+color index      green black ~N     # new
+###color index      blue black ~O      # old
+color index      magenta black ~D   # deleted
+color index      yellow black ~T    # tagged
+###color index      green black ~F       # flagged
+color indicator  black green
+color status     white blue
+color tilde      blue black
+color quoted     cyan black
+color quoted1    green black
+color quoted2    yellow black
+color quoted3    red black
+
+# Colour definitions when on a mono screen.
+mono bold      bold
+mono underline underline
+mono indicator reverse
+
+# Various smilies.
+color body brightgreen white "<[Gg]>"                    # <g>
+color body brightgreen white " [;:]-*[)>(<|]"            # :-) etc...
+color body brightblue  black "(^|[[:space:]])\\*[^[:space:]]+\\*([[:space:]]|$)" # *bold* text
+color body brightblue  black "(^|[[:space:]])_[^[:space:]]+_([[:space:]]|$)"     # _underlined_ text
+color body brightblue  yellow "(^|[[:space:]])/[^[:space:]]+/([[:space:]]|$)"     # /italic/ text
+

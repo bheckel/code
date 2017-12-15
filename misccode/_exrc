@@ -1,0 +1,17 @@
+" Adapted: Sat Mar 27 22:38:13 2004 (Bob Heckel /root/.exrc on daeb)
+
+set autoindent
+set magic
+set mesg
+set shiftwidth=2
+set showmode
+set wrapscan
+
+" F12 exits.
+map [24~ :q
+
+" Spacebar to pagedown.  You type:(m)(a)(p)( )(Ctrl-V)(Ctrl-V)( )( )(Ctrl-F)
+" You see:
+map   
+
+map gg 1G

@@ -1,0 +1,4 @@
+DECLARE @test1 varchar(30)
+SELECT @test1 = 'Hello'
+IF @@ERROR = 0
+  PRINT @test1

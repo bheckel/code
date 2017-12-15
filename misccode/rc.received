@@ -1,0 +1,4 @@
+
+:0:
+* ^Received.*(misconfigured|untrusted) sender.*
+PotentialSpam

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Toggle /etc/login to add security to the Cygwin system.
+# Toggle on prior to using FTP, telnet or rsh (including CVS) Cygwin daemons.
+# TODO start/stop Cygwin INETD Service here
+
+if [ -e /etc/nologin ]; then
+  mv -v /etc/nologin /etc/nologinHOLD
+  echo "Logins enabled"
+  exit 0
+fi
+
+if [ -e /etc/nologinHOLD ]; then
+  mv -v /etc/nologinHOLD /etc/nologin
+  echo "Logins disabled"
+  exit 0
+fi

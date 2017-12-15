@@ -1,0 +1,30 @@
+#!/bin/sh
+##############################################################################
+#     Name: hyper.sh
+#
+#  Summary: Create a hyperlink based on URL passed in.  Used in situations
+#           where copy/paste into the browser's Go box is unavailable (e.g.
+#           bad X server connections).
+#
+#  Created: Sun 06 Jul 2003 22:20:20 (Bob Heckel)
+# Modified: Tue 15 Jul 2003 08:25:43 (Bob Heckel)
+##############################################################################
+
+Usage() {
+  echo "Usage: `basename $0` URL
+  E.g. `basename $0` 'foo.com'
+  Creates a hyperlink (optionally pass in 'HTTP://')"
+  exit 1
+}
+
+N_EXPECTARGS=1
+
+if [ "$#" -ne $N_EXPECTARGS ]; then
+  Usage
+fi
+
+# Remove the prefix, if any.
+lnk=${1#http://}
+
+echo -n "$lnk" | sed "s!.*!<A HREF=http://$lnk>tmp link</A>!" >| \
+                                               $HOME/public_html/tmp.html

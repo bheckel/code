@@ -1,0 +1,10 @@
+# Used on daeb Debian box.
+
+# DON'T FORGET TO RESTART LPD AFTER CHANGES HAVE BEEN MADE!!
+# Added 20020513 (Bob Heckel)
+lp|hpljet|HP LaserJet IIID:\
+  :lp=/dev/lp0\
+  :sd=/var/spool/lpd/lp\
+  :lf=/tmp/lpd-errs\
+  :ifhp=model=pcl\
+  :filter=/usr/local/libexec/filters/ifhp

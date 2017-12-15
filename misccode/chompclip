@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Place URLs on one line to paste into IE.
+# Mostly superceded by ~/bin/viewurl
+# Created: Wed 23 Jan 2002 14:21:35 (Bob Heckel)
+
+getclip | perl -pe 's/\n?\r?//g' | putclip
+
+return 0

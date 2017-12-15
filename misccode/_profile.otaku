@@ -1,0 +1,176 @@
+#!/bin/ksh
+#
+# freeshell-specific ksh config file
+#
+# $ disk    <---gives freeshell usage stats
+# $ quota   <---gives freeshell usage stats
+# $ tweak   <---reallocate quota
+# $ ruptime <---loads on all boxes
+# $ dues
+#
+# Modified: Mon 17 Jan 2005 14:44:23 (Bob Heckel)
+
+# View email stats since last login.
+mailstat $HOME/.procmail/log
+
+export EDITOR=/usr/pkg/bin/vim
+export LS_COLORS='*.swp=00;35:*.swo=00;35:*.bak=00;35:ex=00;32:*.pm=00;32:no=00:fi=00:di=01;34:ln=00;36:*.lnk=00;36:*.gz=00;31:*.bz2=00;31:*.zip=00;31:*.tgz=00;31'
+export MAIL=/mail/${LOGNAME:?}
+export MAILCHECK=500
+export HISTFILE=$HOME/.sh_history
+# TODO how to implement in ksh?
+###export HISTIGNORE='ls:fg'
+###export HISTCONTROL=ignoredups
+export HISTSIZE=5000
+export HOSTNAME=`uname -n`
+export PAGER=less
+export PARINIT='rTbgqR B=.?_A_a Q=_s>| w65'  # for par formatter
+export PATH=$HOME/bin:$PATH
+export PERL5LIB=/arpa/ag/b/bheckel/perllib/lib/site_perl/5.6.1/
+# Get  bheckel@sdf[127]$  and put the PWD in the xterm titlebar
+###export PS1='`echo -n -e "\033]2;$(stoppedjobs) $HOSTNAME:$PWD\007\015"`${LOGNAME}@$HOSTNAME$ '
+export PS1='`echo -n -e "\033]2; $HOSTNAME:$PWD\007\015"`${LOGNAME}@$HOSTNAME$ '
+# TODO 
+###export PS1='`echo -n -e "\033]2;stoppedjobs $HOSTNAME:$PWD\007\015"`${LOGNAME}@$HOSTNAME$ '
+# For mutt (at least).
+export TERM=xterm
+export TMP=$HOME/tmp
+export TZ=/usr/share/zoneinfo/US/Eastern
+###export VIMSTATUSL="${USER}@`echo ${HOSTNAME} | perl -ne 's/(.*)/\L$1\E/;print $_'`"
+###export VIMSTATUSL="${USER}@`echo otaku | perl -ne 's/(.*)/\L$1\E/;print $_'`"
+export VISUAL=/usr/pkg/bin/vim
+export WWW_HOME=http://bheckel.multics.org/x
+
+set -o vi-tabcomplete
+
+alias ..='cd ..;ls'
+alias be="vi $HOME/.profile"  # originally mnemonic was 'bash edit'
+alias bye=exit
+alias cd..='cd ..;ls'
+alias cdm='cd ~/code/misccode'
+alias cdp='cd ~/code/perl'
+alias cds='cd ~/code/sas'
+alias cdv='cd ~/code/vb'
+alias cdc='cd ~/code/c'
+alias cdh='cd ~/code/html'
+alias cdt='cd ~/tmp/testing'
+alias cls='clear'
+alias crontab=mkcron
+alias ee="vi $HOME/.email_addr"
+alias f=fg
+alias fy='fetchyahoo && mutt'
+alias got='go -t '
+alias h=history
+alias j=jobs
+alias l='ls -F'
+alias la='ls -aF'
+alias ls='linuxls --color -F'
+alias la='ls -FA'
+alias ll='ls -Fl'
+alias lla='ls -FlAo'
+alias lls='ls -l | sort +4r | grep -v "total"'  # sort descending on size
+alias lt='ls -lt | head -n25'
+alias md5sum='/sys/pkg/bin/gmd5sum'  # freeshell only
+# TODO wtf is this on sdf?
+###alias muttman='less /sys/pkg/share/doc/mutt/manual.txt'
+alias pdoc=perldoc
+alias pe="vi $HOME/.procmailrc"
+alias jam='ps -aux | grep $USER'
+alias m=$PAGER
+alias me='vi $HOME/.muttrc'
+alias mep='vi $HOME/.muttprivate'
+alias one='vi $HOME/code/misccode/oneliners'
+alias se='vi $HOME/.slrnrc'
+alias srcb='. $HOME/.profile'
+alias ve='vi $HOME/.vimrc'
+
+stty erase ^? intr ^C kill ^K
+###stty erase '^h' echoe
+###stty erase '^?' echoe
+# Prevent Ctrl-y from suspending when in mutt.
+stty dsusp undef
+
+# Paper the seat.
+umask 077
+
+# TODO iterate all mailboxes and check sizes, ESP SENTMAIL
+# TODO this is probably cleaner
+###find . -name foomegger -size +1900000c -exec rotate {} \;
+typeset -i FILECK
+FILECK=`ls -l ~/Mail/mbox | awk '{print $5}'`
+if [ $FILECK -gt 5000000 ]; then
+  echo '.profile:  mbox is being rotated'
+  ~/bin/rotate ~/Mail/mbox
+fi
+
+FILECK=`ls -l ~/.procmail/log | awk '{print $5}'`
+if [ $FILECK -gt 9000000 ]; then
+  echo '.profile:  procmail log needs to be rotated !!!'
+fi
+
+# Show disk usage every other day.  Also see command disk on freeshell.
+###if [ `date | awk '{print $3}' | perl -e '$x=<>; $y=($x%2)'` ]; then
+###  echo `du -sk` KB used
+###fi
+
+
+# Recycler.
+# TODO make sure user is in the dir if -s is used
+rmv() {
+  local VERBOSE
+  local MARKER
+  # MUST be same as ~/bin/clean_synch
+  MARKER=REMOVETHIS__
+
+  # -s placeholder file output is used for synching parsifal and work PCs
+  # important directories.
+  if [ ! "$1" ]; then
+    echo 'error: Must enter file(s) or file pattern.  Exiting.'
+    echo 'Usage: rmv [-s|-v] file1 file2 pat* ...'
+    echo "       Removes a file or files to $HOME/tmp"
+    echo "       -s places a $MARKER marker after rmv'ing (sweep-away mode)"
+    echo "       -v shows action (verbose mode)"
+    return 1
+  fi
+  if [ "$1" = '-s' ]; then
+    shift
+    for f in "$@"; do
+      touch "${MARKER}${f}"
+    done
+  fi
+  if [ "$1" = '-v' ]; then
+    VERBOSE=$1
+    shift
+  else
+    VERBOSE=''
+  fi
+  if [ -d $HOME/tmp ]; then
+    for f in "$@"; do
+      mv $VERBOSE $f $HOME/tmp || echo 'failed to rmv'
+    done
+  else  # very rare
+    mkdir -v $HOME/tmp && echo "$HOME/tmp created successfully";
+    for f in "$@"; do
+      mv -v $f $HOME/tmp && echo 'rmv failed';
+    done
+  fi
+}
+
+
+# TODO put in cron
+function tmpclean {
+  echo "Cleaning 60+ day old files from ~/tmp....";
+  $HOME/bin/mind $HOME/tmp -not -type d -mtime +59 -exec rm {} \;
+}
+
+# Set terminal to basics if it freaks out over telnet, etc.
+function fix {
+  export TERM=vt100
+  export PS1='${LOGNAME}@`uname -n`[$?]$ '
+}
+
+# TODO jobs -s does not exist
+###function stoppedjobs {
+  ###jobs -s | wc -l | sed -e "s/ //g"
+###}
+

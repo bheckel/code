@@ -1,0 +1,49 @@
+#! /bin/sh
+############################################################################## 
+#     Name: halvelog
+#
+#          TODO allow for possibility of large file not fitting in memory.
+#
+#           See also ~/bin/shrink to remove every other line.
+#
+#  Adapted: Mon, 06 Nov 2000 08:45:50 (Bob Heckel -- Unix Guru Universe -
+#                                     www.ugu.com)
+# Modified: Tue 29 Oct 2002 09:52:05 (Bob Heckel)
+############################################################################## 
+FILE=$1
+
+Usage() {
+  echo "Usage: $0 [FILE]"
+  echo '  This program will cut a file in half, throwing away the top half.'
+  echo '  If successful, you will be prompted to replace the old file.'
+  echo '  with the halved file.  It is memory-intensive.  You may want to'
+  echo '  look into $HOME/bin/shrink for finer control.  Or use '
+  echo '  ":%norm jdd" in Vim'
+  exit 1
+}
+ 
+if test "$#" -lt 1 || test "$1" = '-h' || test "$1" = '--h'; then
+  Usage;
+fi
+
+if [ ! -w $FILE ]; then
+  echo "Requested file $FILE does not exist."
+  Usage;
+fi
+
+SIZE=`cat $FILE | wc -l`
+HALF=`echo "$SIZE / 2" | bc`
+ 
+echo "Total lines = $SIZE   Half = $HALF"
+tail -n${HALF} $FILE > $FILE.halved
+ls -al $FILE $FILE.halved
+
+echo -n "OK to write $FILE.halved on top of $FILE? "
+# TODO fails with a --v ? error on otaku
+read yesno
+if [ $yesno = 'y' ]; then
+  cp $FILE $TMP
+  mv $FILE.halved $FILE
+else
+  echo "$FILE was not modified"
+fi

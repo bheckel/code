@@ -1,0 +1,667 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Strict//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+<head>
+<meta content="HTML Tidy for Linux/x86 (vers 12 April 2005), see www.w3.org" name="generator" />
+<meta http-equiv="content-type" content="text/html; charset=us-ascii" />
+<title>Oracle PL/SQL Cheatsheet</title>
+<link href="cheatsheet.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="maintable">
+<h1>Oracle PL/SQL Cheatsheet</h1><div class='leftcolumn'>
+<table summary='Symbols'>
+<caption>Symbols</caption>
+<tr>
+<td class='definition'>; Semicolon.</td>
+<td class='example'>Statement terminator </td>
+</tr>
+<tr>
+<td class='definition'>% Percent sign</td>
+<td class='example'>Attribute indicator (cursor attributes like %ISOPEN and indirect declaration attributes like %ROWTYPE). Also used as multibyte wildcard symbol, as in SQL. </td>
+</tr>
+<tr>
+<td class='definition'>_ Single underscore</td>
+<td class='example'>Single-byte wildcard symbol, as in SQL </td>
+</tr>
+<tr>
+<td class='definition'>: Colon</td>
+<td class='example'>Host variable indicator, such as :block.item in Oracle Forms </td>
+</tr>
+<tr>
+<td class='definition'>** Double asterisk</td>
+<td class='example'>Exponentiation operator </td>
+</tr>
+<tr>
+<td class='definition'>&lt; &gt; and != </td>
+<td class='example'>Not equals"</td>
+</tr>
+<tr>
+<td class='definition'>|| Double vertical bar</td>
+<td class='example'>Concatenation operator </td>
+</tr>
+<tr>
+<td class='definition'>&lt;&lt; and &gt;&gt;</td>
+<td class='example'>Label delimiters </td>
+</tr>
+<tr>
+<td class='definition'>:=</td>
+<td class='example'>Assignment operator </td>
+</tr>
+<tr>
+<td class='definition'>=></td>
+<td class='example'>Association operator for positional notation </td>
+</tr>
+<tr>
+<td class='definition'> -- </td>
+<td class='example'>Double dash: single-line comment indicator </td>
+</tr>
+<tr>
+<td class='definition'>/* and */</td>
+<td class='example'>Beginning and ending multiline comment block delimiters </td>
+</tr>
+<table summary='Data Types.'>
+<caption>Data Types.</caption>
+<tr>
+<td class='definition'>Database types<br>  NUMBER<br> CHAR(N), VARCHAR2(N)<br> DATE<br> LONG<br> LONG RAW<br> ROWID<br> MLSLABEL<br> </td>
+<td class='example'>Definition<br> Used to store any number<br>Used for storing text<br>Oracle system date<br>Stores large blocks of text<br>Stores large blocks of binary data<br>Smaller binary data store<br>Uesd for row identifier<br>Security label</td>
+</tr>
+<tr>
+<td class='definition'>Non database types.</td>
+<td class='example'>DEC, DECIMAL, REAL, DOUBLE-PRECISION, INTEGER, INT, SMALLINT, NATURAL, POSITIVE, NUMERIC, BINARY-INTEGER, CHARACTER, VARCHAR, BOOLEAN, TABLE, RECORD</td>
+</tr>
+<table summary='PLSQL Module types'>
+<caption>PLSQL Module types</caption>
+<tr>
+<td class='definition'>Procedure</td>
+<td class='example'>A non-formal function that can accept paremeters via value or reference. Similar in form to a function.</td>
+</tr>
+<tr>
+<td class='definition'>Function</td>
+<td class='example'>A classical function that returns one value. Usually contains declaration, execution and exception sections.</td>
+</tr>
+<tr>
+<td class='definition'>Package</td>
+<td class='example'>A library, consisting of a specification with function/prototype signatures, and a body with actual code. eg<br></td>
+</tr>
+<div class='leftcolumn'>
+<div class='leftcolumn'>
+<tr>
+<td class='definition'>Trigger</td>
+<td class='example'>Code attached to a table that fires on certian conditions.</td>
+</tr>
+<table summary='Module Sections or Blocks'>
+<caption>Module Sections or Blocks</caption>
+<tr>
+<td class='definition'>Variable Declaration</td>
+<td class='example'>DECLARE<br>employee-id employee.empid%TYPE, pi CONSTANT number := 3.14, ratio REAL,..<br>BEGIN..</td>
+</tr>
+<tr>
+<td class='definition'>Executable Section</td>
+<td class='example'>.. BEGIN select * into my_employee<br>where employee.emid = 42;<br> END; ..</td>
+</tr>
+<tr>
+<td class='definition'>Exception Handler.</td>
+<td class='example'>END;<br>EXCEPTIONS .. END;</td>
+</tr>
+<table summary='Package Syntax'>
+<caption>Package Syntax</caption>
+<tr>
+<td class='definition'>Specification</td>
+<td class='example'>PACKAGE package_name<br> IS<br> [ declarations of variables and types ]<br> [ specifications of cursors ]<br> [ specifications of modules ]<br> END [ package_name ];<br></td>
+</tr>
+<tr>
+<td class='definition'>Body</td>
+<td class='example'>PACKAGE BODY package_name<br> IS<br> [ declarations of variables and types ]<br> [ specification and SELECT statement of cursors ]<br> [ specification and body of modules ]<br> [ BEGIN<br> executable statements ]<br> [ EXCEPTION<br> exception handlers ]<br> END [ package_name ];<br></td>
+</tr>
+<table summary='Filename Extensions'>
+<caption>Filename Extensions</caption>
+<tr>
+<td class='definition'>General SQL*Plus script </td>
+<td class='example'><file>.sql</td>
+</tr>
+<tr>
+<td class='definition'>Testing script</td>
+<td class='example'><file>.tst</td>
+</tr>
+<tr>
+<td class='definition'>Stored procedure</td>
+<td class='example'><file>.sp</td>
+</tr>
+<tr>
+<td class='definition'>Stored function</td>
+<td class='example'><file>.sf</td>
+</tr>
+<tr>
+<td class='definition'>Stored package body</td>
+<td class='example'><file>spb</td>
+</tr>
+<tr>
+<td class='definition'>Stored package specification</td>
+<td class='example'><file>.sps</td>
+</tr>
+<table summary='Implict cursor attributes.'>
+<caption>Implict cursor attributes.</caption>
+<tr>
+<td class='definition'>%NOTFOUND</td>
+<td class='example'>True if fetch did not return row. </td>
+</tr>
+<tr>
+<td class='definition'>%ROWCOUNT</td>
+<td class='example'>Number of rows processed by this cursor</td>
+</tr>
+<tr>
+<td class='definition'>%FOUND</td>
+<td class='example'>Opposite of %NOTFOUND</td>
+</tr>
+<tr>
+<td class='definition'>%ISOPEN</td>
+<td class='example'>If currently open for processing then true.</td>
+</tr>
+<table summary='Transaction processing'>
+<caption>Transaction processing</caption>
+<tr>
+<td class='definition'>Same Options as SQL</td>
+<td class='example'>COMMIT, ROLLBACK, SAVEPOINT</td>
+</tr>
+<tr>
+<td class='definition'>Transaction begins at execution of first change of data.</td>
+<td class='example'>Rollbacks go to last COMMIT or SAVE_POINT</td>
+</tr>
+<tr>
+<td class='definition'>DBMS_TRANSACTION</td>
+<td class='example'>A package with functions for transaction control.</td>
+</tr>
+<table summary='Exception Handling'>
+<caption>Exception Handling</caption>
+<tr>
+<td class='definition'>Predefined </td>
+<td class='example'>Relates to an oracle error. No need to invoke. Just catch.<br>EXCEPTION WHEN NO_DATA_FOUN THEN<br>DBMS_OUTPUT.PUT_LINE('No data found');<br></td>
+</tr>
+<tr>
+<td class='definition'>User defined.</td>
+<td class='example'>Need to be declared, tested and handled in their respective blocks.<br>DECLARE My_salary_null EXCEPTION; ..<br>EBGIN..<br>IF my_emp_record.salary IS NULL THEN<br>RAISE my_salary_null;<br>END IF;<br>EXCEPTION..<br>WHEN my_salary_null<br>THEN DBMS_OUTPUT.PUT_LINE('Salary column was null for employee');<br>END<br></td>
+</tr>
+<tr>
+<td class='definition'>Pragmas.</td>
+<td class='example'>Associate a predefined error with a exception handler. eg to have my_salary_null catch Oracle error -1400<br>DECLARE<br> PRAGMA EXCEPTION INIT(my_salary_null, -1400); </td>
+</tr>
+</table>
+</div>
+<div class='rightcolumn'>
+</table>
+<table summary='Control Flow'>
+<caption>Control Flow</caption>
+<tr>
+<td class='definition'>IF..THEN..ELSE..ENDIF;</td>
+<td class='example'>As usual.</td>
+</tr>
+<tr>
+<td class='definition'>LOOP .. <br>IF (condition) THEN EXIT END IF;<br> .. END LOOP: </td>
+<td class='example'>Equivalent to if (conition) then break;</td>
+</tr>
+<tr>
+<td class='definition'>WHILE cond LOOP..END LOOP; </td>
+<td class='example'>while () {};</td>
+</tr>
+<tr>
+<td class='definition'>FOR var IN n..m LOOP .. END LOOP;</td>
+<td class='example'>for thing in range(n,m) {} </td>
+</tr>
+<tr>
+<td class='definition'>EXECUTE function_name;</td>
+<td class='example'>Function call FUNCTION name (parameter type,..) ..body.. END:</td>
+</tr>
+<tr>
+<td class='definition'>Cursor for.</td>
+<td class='example'>Opens cursor, loops across until %NOTFOUND. <br>FOR variables IN cursor LOOP..END LOOP; </td>
+</tr>
+<table summary='Explicit Cursor Handling'>
+<caption>Explicit Cursor Handling</caption>
+<tr>
+<td class='definition'>Implict cursor named by developer.</td>
+<td class='example'>Think of it as a select statement that has a name.</td>
+</tr>
+<tr>
+<td class='definition'>Implict cusror is called SQL</td>
+<td class='example'>IF SQL%NOTFOUND THEN ..</td>
+</tr>
+<tr>
+<td class='definition'>Declaring an explicit cursor.</td>
+<td class='example'>DECLARE  CURSOR employee_crsr IS <br>SELECT empid, salary FROM employee<br> BEGIN ..</td>
+</tr>
+<tr>
+<td class='definition'>Executing a cursor</td>
+<td class='example'>OPEN employee_cursor<br>LOOP<br>FETCH employee_cursor INTO my_empid, my_salary;<br> EXIT WHEN employee_crsr%NOTFOUND;<br> ..do stuff..<br> ENDLOOP;</td>
+</tr>
+<tr>
+<td class='definition'>FETCH</td>
+<td class='example'>Obtains next record from cursor.Can fetch into individual variables (as above) or a RECORD.</td>
+</tr>
+<tr>
+<td class='definition'>Declaring an explicit cursor using a record.</td>
+<td class='example'>TYPE t_emp IS RECORD (T_Salary number, t_empid number);<br>my_emprec t_emp;<br>CURSOR employee_crsr IS<br>SELECT empid, salary<br>FROM employee;<br></td>
+</tr>
+<tr>
+<td class='definition'>Executing explicit cursror using record.</td>
+<td class='example'>OPEN employee_cursr;<br>LOOP<br>FETCH emloyee_crsr INTO my_emprec<br>EXIT WHEN employee_crsr%NOTFOUND;<br>IF my_emprec.t_empid .. </td>
+</tr>
+<tr>
+<td class='definition'>Cursor Parameters.</td>
+<td class='example'>Declaring parameters to be used at OPEN time.<br>DECLARE .. CURSOR employee_crsr(low_end VARCHAR2, high_end VARCHAR2) IS<br>SELECT empid, salary FROM employee<br>WHERE substr(lastname,1,1) BETWEEN UPPER(low_end) AND UPPER(high_end);</td>
+</tr>
+<table summary='Common exceptions'>
+<caption>Common exceptions</caption>
+<tr>
+<td class='definition'>INVALID_CURSOR</td>
+<td class='example'>Occurs when you attempt to close a cursor that has not been opened.</td>
+</tr>
+<tr>
+<td class='definition'>CURSOR_ALREADY_OPEN</td>
+<td class='example'>Occurs when you attempt to open a cursor the second time</td>
+</tr>
+<tr>
+<td class='definition'>DUP_VAL_ON_INDEX</td>
+<td class='example'>Unique or primary key constraint violation</td>
+</tr>
+<tr>
+<td class='definition'>TOO_MANY_ROWS</td>
+<td class='example'>More than one row was opbtained by a single row subquery, or another context when Oracle was expecting one row.</td>
+</tr>
+<tr>
+<td class='definition'>ZERO_DIVIDE</td>
+<td class='example'>An attempt to divide by zero.</td>
+</tr>
+<tr>
+<td class='definition'>ROWTYPE_MISMATCH </td>
+<td class='example'>An attempt to FETCH a cursor into an incompatible variable type.</td>
+</tr>
+<tr>
+<td class='definition'>INVALID_NUMBER</td>
+<td class='example'>An char type was referenced as a number.</td>
+</tr>
+<tr>
+<td class='definition'>OTHERS</td>
+<td class='example'>Special catchall exception.</td>
+</tr>
+<table summary='Pragmas'>
+<caption>Pragmas</caption>
+<tr>
+<td class='definition'>EXCEPTION_INIT </td>
+<td class='example'>Tells the compiler to associate a particular error number with an identifier you have declared as an exception in your program.</td>
+</tr>
+<tr>
+<td class='definition'>RESTRICT_REFERENCES</td>
+<td class='example'>Tells the compiler the purity level (freedom from side effects) of a packaged program. </td>
+</tr>
+<tr>
+<td class='definition'>SERIALLY_REUSABLE</td>
+<td class='example'>Tells the PL/SQL runtime engine that package-level data should not persist between references to that data. See Chapter 25, Tuning PL/SQL Applications for more information. </td>
+</tr>
+</table>
+</div>
+</div><div class="liscence"><!--Creative Commons License--><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/"><img alt="Creative Commons License" border="0" src="http://creativecommons.org/images/public/somerights20.png"/></a><br/>		This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/">Creative Commons Attribution-NonCommercial-ShareAlike 2.5 License</a>.		<!--/Creative Commons License--><!-- <rdf:RDF xmlns="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">		<Work rdf:about="">			<license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.5/" />	<dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />		</Work>		<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.5/"><permits rdf:resource="http://web.resource.org/cc/Reproduction"/><permits rdf:resource="http://web.resource.org/cc/Distribution"/><requires rdf:resource="http://web.resource.org/cc/Notice"/><requires rdf:resource="http://web.resource.org/cc/Attribution"/><prohibits rdf:resource="http://web.resource.org/cc/CommercialUse"/><permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/><requires rdf:resource="http://web.resource.org/cc/ShareAlike"/></License></rdf:RDF> --></div>
+</body>
+
+<!--  Combined from 2 pgs bobh 2007-02-27  -->
+<h1>PL/SQL</h1>
+<p><a href="#Overview">Overview</a></p>
+<p><a href="#Handling Variables">Handling Variables</a></p>
+<p><a href="#Coding Guidelines">Coding Guidelines</a></p>
+<p><a href="#SQL Statements in PL/SQL">SQL Statements in PL/SQL</a>&nbsp;</p>
+<p><a href="#Control Structures">Control Structures&nbsp;</a></p>
+<p><a href="#SQL Cursor">SQL Cursors</a></p>
+<p><a href="#Writing PL/SQL Procedures/Functions">Writing Procedures/Functions</a></p>
+<p><a href="#Writing and Compiling PL/SQL Packages.">Writing and Compiling 
+PL/SQL Packages</a></p>
+<hr>
+<h2><a name="Overview">Overview</a></h2>
+<p>PL/SQL is the Oracle's extension to SQL with design features of programming
+languages. The data manipulation and query statements are included in the
+procedural units of codes. PL/SQL allows the applications to be written in a
+PL/SQL procedure or a package and stored at Oracle server, where these PL/SQL
+codes can be used as shared libraries, or applications, thus enhancing the
+integration and code reuse. Moreover, the Oracle&nbsp; server pre-compiles
+PL/SQL codes prior to the actual code execution and thus improving the
+performance.</p>
+<p>The basic PL/SQL code structure is :</p>
+<ul>
+  <li>DECLARE -- optional, which declares and define variables, cursors and
+    user-defined exceptions.</li>
+  <li>BEGIN -- mandatory</li>
+</ul>
+<blockquote>
+  <p>- SQL statements</p>
+  <p>- PL/SQL statements</p>
+</blockquote>
+<ul>
+  <li>EXCEPTION -- optional, which specifies what actions to take when error
+    occurs.</li>
+  <li>END; -- mandatory</li>
+</ul>
+<p>For example, the following PL/SQL code block declares an integer v1, assigns
+it with value 3 and print out the value.</p>
+<blockquote>
+  <p><font face="Courier">DECLARE<br>
+  v1&nbsp; NUMBER(3);<br>
+  <br>
+  BEGIN<br>
+  &nbsp;&nbsp; v1 := 3;<br>
+  &nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE('v1=' || v1);&nbsp;<br>
+  END;</font></p>
+</blockquote>
+<p>Note that <font face="Courier">DBMS_OUTPUT</font> is an Oracle-supplied
+PL/SQL package and PUT_LINE is one of the packaged procedures. It displays the
+values on the SQL*Plus terminal&nbsp; which must be enabled with SET
+SERVEROUTPUT ON first. To execute this code sample, login into SQL*Plus, and
+type</p>
+<blockquote>
+  <p><font face="Courier">SQL&gt; SET SERVEROUTPUT ON</font></p>
+  <p><font face="Courier">DECLARE<br>
+  v1&nbsp; NUMBER(3);<br>
+  <br>
+  BEGIN<br>
+  &nbsp;&nbsp; v1 := 3;<br>
+  &nbsp;&nbsp;  DBMS_OUTPUT.PUT_LINE('v1= ' || v1);&nbsp;<br>
+  END;</font></p>
+  <p><font face="Courier">/</font></p>
+</blockquote>
+<p>Note that a PL/SQL block is terminated by a slash / or a line byitself.</p>
+<hr>
+<h2><a name="Handling Variables">Handling Variables</a></h2>
+<ul>
+  <li>Variables must be declared first before the usage. The PL/SQL variables
+    can be a scalar type such as DATE, NUMBER, VARCHAR(2), DATE, BOOLEAN, LONG
+    and CHAR, or a composite type, such&nbsp; array type VARRAY.</li>
+  <li>Only TRUE and FALSE can be assigned to BOOLEAN type of variables.</li>
+  <li>AND, OR, NOT operators can be used to connect BOOLEAN values.</li>
+  <li>% TYPE attribute can be used to define a variable which is of type the
+    same as a database column's type definition.</li>
+  <li>Users can customize the variable types by using TYPE ... IS ... statement.</li>
+</ul>
+<p>The following code block illustrates the use of TYPE..IS... and VARRAY. In
+this sample, a type <i>v_arr</i> is defined as an variable array of maximum 25
+elements which are of type NUMBER(3).&nbsp; Then a variable <i>v1</i> is defined
+as type <i>v_arr </i>.&nbsp;&nbsp;&nbsp; This sample code also demonstrates the
+use of %TYPE attribute.</p>
+<blockquote>
+  <p><font face="Courier">DECLARE<br>
+  TYPE v_arr IS VARRAY(25) of NUMBER(3);<br>
+  </font></p>
+  <p><font face="Courier">v1 v_arr;</font></p>
+  <p><font face="Courier">v_empno employee.empno%TYPE;<br>
+  <br>
+  BEGIN<big></big></font></p>
+  <p><big></big><font face="Courier">&nbsp;&nbsp;&nbsp; v1(2) := 3;<br>
+  &nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE('The Value of v1(2) = ' || v1(2));&nbsp;</font></p>
+  <p><big>&nbsp;&nbsp;&nbsp;</big><font face="Courier">&nbsp;&nbsp; v_empno&nbsp;
+  := 4;</font></p>
+  <p><big></big><font face="Courier">END;</font></p>
+</blockquote>
+<hr>
+<h2><a name="Coding Guidelines">Coding Guidelines</a></h2>
+<ul>
+  <li>Single-line comments are prefixed with two dashes --.</li>
+  <li>Multiple-line comments can be enclosed with the symbols /* and */.</li>
+  <li>Variables and function identifiers can contain up to 30 characters, and
+    should not have the same name as a database column name.</li>
+  <li>Identifiers must begin with an alphanumerical character.</li>
+  <li>SQL functions can be used in PL/SQL.</li>
+  <li>Code blocks can be nested and unqualified variables can locally scoped.</li>
+  <li>It is recommended that variable names are prefixed by v_, and parameter 
+  names in procedures/functions are prefixed by _p.</li>
+</ul>
+<hr>
+<h2><a name="SQL Statements in PL/SQL">SQL Statements in PL/SQL</a></h2>
+<p>The following code block shows how to run DML statements in PL/SQL. Basically
+they look similar to the SQL. Note that the SELECT statement retrieves the
+single-row value and store into a variable using INTO clause.</p>
+<p><font face="Courier">DECLARE<br>
+&nbsp;&nbsp;&nbsp; v_sal employee.sal%TYPE;<br>
+   BEGIN</font></p>
+<p><font face="Courier"><br>
+&nbsp;&nbsp;&nbsp; INSERT INTO employee VALUES (6, 'TOM LEE', 10000);</font></p>
+<p><font face="Courier"><br>
+&nbsp;&nbsp;&nbsp; UPDATE employee SET sal = sal + 5000 WHERE empno = 6;</font></p>
+<p>&nbsp;&nbsp;&nbsp;<font face="Courier">&nbsp;&nbsp; SELECT sal INTO v_sal
+FROM employee WHERE </font><font face="Courier">empno = 6;</font></p>
+<p><font face="Courier">&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE('Salary
+increased to ' || v_sal);&nbsp;</font></p>
+<p><font face="Courier">&nbsp;&nbsp;&nbsp; DELETE FROM employee WHERE empno = 6;</font></p>
+<p>&nbsp;&nbsp;&nbsp;<font face="Courier">&nbsp;&nbsp; COMMIT;</font><font face="Courier"><br>
+END;<br>
+<small><br>
+/</small></font></p>
+<hr>
+<h2><a name="Control Structures">Control Structures</a></h2>
+<ul>
+  <li>Conditions checking</li>
+</ul>
+<blockquote>
+  <p>IF &lt;condition&gt; THEN</p>
+  <p>[ELSIF &lt;condition&gt; THEN]</p>
+  <p>[ELSE &lt;condition&gt; THEN]</p>
+  <p>END IF;</p>
+</blockquote>
+<ul>
+  <li>Basic loops.</li>
+</ul>
+<blockquote>
+  <p>LOOP</p>
+  <p>...</p>
+  <p>EXIT WHEN &lt;condition&gt;</p>
+  <p>END LOOP;</p>
+</blockquote>
+<ul>
+  <li>FOR loop.</li>
+</ul>
+<blockquote>
+  <p>FOR counter IN lower_bound .. upper_bound&nbsp;</p>
+  <p>...</p>
+  <p>END LOOP;</p>
+</blockquote>
+<ul>
+  <li>WHILE loop.</li>
+</ul>
+<blockquote>
+  <p>WHILE &lt;condition&gt; LOOP</p>
+  <p>...</p>
+  <p>END LOOP;</p>
+</blockquote>
+<p>The code samples making use of the control structures will be given in the
+following.</p>
+<hr>
+<h2><a name="SQL Cursor">SQL Cursor&nbsp;</a></h2>
+<p>A SQL cursor is a private Oracle SQL working area. There are two types of SQL
+cursor: implicit or explicit cursor. The implicit cursor is used by Oracle
+server to test and parse the SQL statements and the explicit cursors are
+declared by the programmers.</p>
+<p>Using the implicit cursor, we can test the outcome of SQL statements in
+PL/SQL. For example,</p>
+<ul>
+  <li>SQL%ROWCOUNT, return the number of rows affected;</li>
+  <li>SQL%FOUND, a BOOLEAN attribute indicating whether the recent SQL statement
+    matches to any row;</li>
+  <li>SQL%NOTFOUND, a BOOLEAN attribute indicating whether the recent SQL
+    statement does not match to any row;</li>
+  <li>SQL%ISOPEN, a BOOLEAN attribute and always evaluated as FALSE immediately
+    after the SQL statement is executed.</li>
+</ul>
+<p>To write the explicit cursor,&nbsp; please refer to the following example.
+Note that a cursor definition can array a number of arguments.</p>
+<p>For example,</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier">DECLARE</font></p>
+<blockquote>
+  <blockquote>
+    <p><font face="Courier">      CURSOR csr_ac (p_name VARCHAR2) IS<br>
+        SELECT empno, name, sal<br>
+        FROM employee<br>
+    WHERE name LIKE '%p_name%';</font></p>
+  </blockquote>
+  <p><font face="Courier"> BEGIN</font></p>
+  <blockquote>
+    <p><font face="Courier">                  FOR rec_ac IN  csr_ac ('LE')<br>
+          LOOP<br>
+    &nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE(</font><font face="Courier">rec_ac.empno || ' ' ||rec_ac.name
+    || ' '</font><font face="Courier">||v_sal);&nbsp;</font><font face="Courier"><br>
+                  END LOOP ;</font></p>
+    <p><font face="Courier"> CLOSE csr_ac;</font></p>
+  </blockquote>
+  <p><font face="Courier">END;</font></p>
+  <p><font face="Courier">/</font><font face="Courier"><br>
+  </font></p>
+</blockquote>
+<p>Another way of writing the above code, is to use the basic loop and the
+SQL%NOTFOUND cursor, as shown in the following.</p>
+<blockquote>
+  <p><font face="Courier">DECLARE</font></p>
+  <blockquote>
+    <p><font face="Courier">      CURSOR csr_ac (p_name VARCHAR2) IS<br>
+        SELECT empno, name, sal<br>
+        FROM employee<br>
+    WHERE name LIKE '%p_name%';</font></p>
+    <p><font face="Courier">v_a employee.empno%TYPE;</font></p>
+    <p><font face="Courier">v_b employee.name%TYPE;</font></p>
+    <p><font face="Courier">v_c employee.sal%TYPE;</font></p>
+  </blockquote>
+  <p><font face="Courier">BEGIN&nbsp;<br>
+  &nbsp;&nbsp;&nbsp; OPEN </font><font face="Courier">  csr_ac ('LE')</font><font face="Courier">;<br>
+  &nbsp;&nbsp;&nbsp; LOOP&nbsp;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FETCH </font><font face="Courier">  csr_ac </font><font face="Courier"> INTO a,
+  b, c;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            EXIT WHEN csr_ac%NOTFOUND;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font>
+  </p>
+  <p><font face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE(v_a || ' ' || 
+  v_b
+    || ' '||v_c);&nbsp;<br>
+                  <br>
+            &nbsp;&nbsp;&nbsp;
+        END LOOP;<br>
+        &nbsp;&nbsp;&nbsp;
+        CLOSE csr_ac;<br>
+    END; </font><br>
+  </p>
+</blockquote>
+<hr>
+<h2><a name="Writing PL/SQL Procedures/Functions">Writing PL/SQL Procedures/Functions</a></h2>
+<p>PL/SQL functions returns a scalar value and PL/SQL procedures return nothing. 
+Both can take zero or more number of parameters as input or output. The special 
+feature about PL/SQL is that a procedure/function argument can be of input 
+(indicating the argument is read-only), output (indicating the argument is 
+write-only) or both (both readable and writable).</p>
+<p>For example, the following is a PL/SQL procedure and a function.</p>
+<blockquote>
+<p><font face="Courier">PROCEDURE hire_employee (emp_id INTEGER, name VARCHAR2) 
+IS<br>
+BEGIN<br>
+&nbsp;&nbsp;&nbsp; INSERT INTO employee VALUES (emp_id, name, 1000);<br>
+END hire_employee; </font></p>
+</blockquote>
+  <pre>&nbsp;</pre>
+<blockquote>
+  <pre><tt><font face="Courier" size="3">FUNCTION sal_ok (salary REAL, title REAL) RETURN BOOLEAN IS
+   min_sal REAL;
+   max_sal REAL;
+BEGIN
+   SELECT losal, hisal INTO min_sal, max_sal 
+      FROM sals
+      WHERE job = title;
+   RETURN (salary &gt;= min_sal) AND (salary &lt;= max_sal);
+END sal_ok;</font></tt></pre>
+<p>&nbsp;</p>
+</blockquote>
+<p>&nbsp;&nbsp; A function is called as part of an expression. For example, the 
+function sal_ok might be called as follows: <br>
+<br>
+&nbsp;&nbsp;&nbsp; IF sal_ok(new_sal, new_title) THEN ...</p>
+<hr>
+<h2><a name="Writing and Compiling PL/SQL Packages.">Writing and Compiling PL/SQL Packages.</a></h2>
+<p>A <i>package</i> is a database object that groups logically related PL/SQL 
+types, objects, and subprograms. Packages usually have two parts, a 
+specification and a body, although sometimes the body is unnecessary. The <i>
+specification</i> is the interface to your applications; it declares the types, 
+variables, constants, exceptions, cursors, and subprograms available for use. 
+The <i>body</i> fully defines cursors and subprograms, and so implements the 
+specification. </p>
+<p>Unlike subprograms, packages cannot be called, parameterized, or nested. 
+Still, the format of a package is similar to that of a subprogram: </p>
+<pre><tt>CREATE PACKAGE name AS  -- specification (visible part)
+   -- public type and object declarations
+   -- subprogram specifications
+END [name];
+
+CREATE PACKAGE BODY name AS  -- body (hidden part)
+   -- private type and object declarations
+   -- subprogram bodies
+[BEGIN
+   -- initialization statements]
+END [name];</tt></pre>
+<p>The specification holds <i>public</i> declarations, which are visible to your 
+application. The body holds implementation details and <i>private</i> 
+declarations, which are hidden from your application. As shown in the following 
+figure, you can think of the specification as an operational interface and of 
+the body as a &quot;black box&quot;: </p>
+<p><img src="image014.gif" width="447" height="178"> </p>
+<p>You can debug, enhance, or replace a package body without changing the 
+interface (package specification) to the package body. </p>
+<p>For example, we want to create a simple package providing three functions: 
+hire_employee, fire_employee and raise_salary.</p>
+<p>First we created the package specification.</p>
+<blockquote>
+  <p><font face="Courier">CREATE OR REPLACE PACKAGE test AS -- package spec<br>
+&nbsp;&nbsp;&nbsp; TYPE list IS VARRAY(25) of NUMBER(3);<br>
+  <br>
+&nbsp;&nbsp;&nbsp; PROCEDURE hire_employee (emp_id INTEGER, name VARCHAR2); <br>
+&nbsp;&nbsp;&nbsp; PROCEDURE fire_employee (emp_id INTEGER);<br>
+&nbsp;&nbsp;&nbsp; PROCEDURE raise_salary (emp_id INTEGER, amount REAL);<br>
+  END test;<br>
+  /</font></p>
+</blockquote>
+<p>Then we created the package body.</p>
+<blockquote>
+  <p><font face="Courier">CREATE OR REPLACE PACKAGE BODY test AS -- package body<br>
+&nbsp;&nbsp;&nbsp; PROCEDURE hire_employee (emp_id INTEGER, name VARCHAR2) IS<br>
+&nbsp;&nbsp;&nbsp; BEGIN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO employee VALUES (emp_id, 
+  name, 1000);<br>
+&nbsp;&nbsp;&nbsp; END hire_employee;<br>
+  <br>
+&nbsp;&nbsp;&nbsp; PROCEDURE fire_employee (emp_id INTEGER) IS<br>
+&nbsp;&nbsp;&nbsp; BEGIN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DELETE FROM employee WHERE empno = 
+  emp_id;<br>
+&nbsp;&nbsp;&nbsp; END fire_employee;<br>
+  <br>
+&nbsp;&nbsp;&nbsp; PROCEDURE raise_salary (emp_id INTEGER, amount REAL) IS<br>
+&nbsp;&nbsp;&nbsp; BEGIN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE('Increase Salary 
+  :' || to_char(amou<br>
+  nt));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UPDATE employee SET sal = sal + 
+  amount WHERE empno = emp_id;<br>
+&nbsp;&nbsp;&nbsp; END raise_salary;<br>
+  END test;<br>
+  <br>
+  /</font></p>
+</blockquote>
+<p>To compile the package, we can either type them into SQL*Plus terminal. And 
+Oracle server will compile and store the package, or save them into separate 
+files and compile them from SQL*Plus. Assume the package spec is stored in a 
+file named spec, and the body is stored in another file named body. The 
+following shows how to compile the package and make the procedure call at 
+SQL*Plus.</p>
+<blockquote>
+  <p><font face="Courier">SQL&gt; SET SERVEROUTPUT ON<br>
+  SQL&gt; VARIABLE num NUMBER<br>
+  <br>
+  SQL&gt; @spec<br>
+  <br>
+  SQL&gt; @body<br>
+  <br>
+  SQL&gt; exec test.raise_salary(1,1000);</font></p>
+</blockquote>
+<hr>
+<p>
+
+
+</html>

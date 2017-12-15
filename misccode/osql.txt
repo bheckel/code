@@ -1,0 +1,16 @@
+Make sure env vars are set e.g. st=ak;svr=02
+
+        -------------------      A. CLP COUNT    ---------------
+osql -n -E -w 200 -l 30 -d bpms_$st -S "W23PSQL$svr\PRODUCTION" -Q "select count(*) from claims_pharmacy"
+
+        -------------------      B. MEM COUNT    ---------------
+osql -n -E -w 200 -l 30 -d bpms -S 'WNETBPMS1\PRODUCTION' -Q "select [$st], month, year from membercounts where year='2005' order by 2"
+
+        ------------------- C. BPMSO AND CLP COUNT    ---------------
+osql -n -E -w 200 -l 30 -d bpms_$st -S "W23PSQL$svr\PRODUCTION" -Q "select count(*) as bpmso_cnt from bpmsoutliers GO select count(*) as clp_cnt from claims_pharmacy"
+
+        -------------------    D. GOODCLM COUNT    ---------------
+osql -n -E -w 200 -l 30 -d bpms_$st -S "W23PSQL$svr\PRODUCTION" -Q "select count(*) from goodclm"
+
+        -------------------    D. GOODCLM COUNT    ---------------
+osql -n -E -w 200 -l 30 -d bpms_$st -S "W23PSQL$svr\PRODUCTION" -Q "select distinct count(*) from goodclm where id_number in (select distinct id_number from bpmsoutliers where report = '11b') and source = 'p'"

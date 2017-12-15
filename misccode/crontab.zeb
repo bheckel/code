@@ -1,0 +1,17 @@
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+HOME=/home/bheckel
+# min hr day mon wkday(0=Sun,6=Sat)
+###20 10,16 * * * /bin/updatedb --prunepaths='/cygdrive /proc /tmp /var /home/bheckel/tmp' --output='/var/lib/locatedb'
+20 10,16,21 * * * /bin/updatedb --prunepaths='/cygdrive /proc /tmp /var /home/bheckel/tmp'
+# For loc alias
+00 10,16,21 * * * /bin/updatedb --localpaths='/home/bheckel/code' --output='/var/lib/locatedb.code'
+# Update existing database (assumes a prior run w/o -u)
+10 14 * * 2 /usr/sbin/makewhatis -u
+40 14 1,7,15 * * /home/bheckel/bin/tmpclean
+###36 * * * * echo crontesting>/home/bheckel/junkcron
+# Run LELimsGist
+###11 * * * * /usr/bin/w3m -dump_both >|/var/tmp/llg.html 'http://rtpsawn321/links/runllg.asp?action=Run+LLG'
+# not working 2007-01-11 
+###30 * * * * c:/PROGRA~1/SASINS~1/SAS/V8/sas.exe -sysin $HOME/tmp/testing/t7.sas -sysparm foo_11
+###26 * * * * /usr/bin/w3m 'http://rtpsawn321/sasweb/cgi-bin/broker.exe?_service=default&_program=links.LRStudyRpt_vcc58655.sas&_server=rtpsawn321.corpnet1.com&_port=1034&_sessionid=el9dngGDK52&REPORT0=2&REPORT=SC06%2F341-25C%2F75I&METHOD0=+++++++++++1&METHOD=HPLC+Related+Imp.&screen=REPORTS&_debug=0&REPORT1=SC06%2F341-25C%2F75I&TIME100=5&TIME101=0&TIME102=4&TIME103=+&TIME104=8&TIME105=12&REPORT2=SC06%2F341-40C%2F75I&TIME200=5&TIME201=0&TIME202=4&TIME203=6&TIME204=8&TIME205=12&METHOD1=HPLC+Related+Imp.&ReportType=SPEC&DataType=SPEC&FooterFlag=NONE&DataStatus=APP&OutType=HTML&TotalCnt=40&submit=Finish' 2>/dev/null

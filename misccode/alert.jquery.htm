@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <script type="text/javascript" src="jquery-1.7.2.js"></script>
+  </head>
+  <body>
+    <span>
+    <p>Paragraph 1</p>
+    foo
+    <p>Paragraph 2</p>
+    </span>
+    <b>bar</b>
+    <script type="text/javascript">
+    $(function()
+    {
+      // all links and spans become clickable
+      $("a, span").bind("click", function() {
+        alert('Hello, world!');
+      });
+    });
+
+    $(function()
+    {
+      $("b").bind("click", function() {
+        alert($(this).text());
+      });
+    });
+    </script>
+
+    <a href="javascript:void(0);">Test 1</a>
+    <a href="javascript:void(0);">Test 2</a>
+    <script type="text/javascript">
+    var msg = "Hello, world!";
+    $(function()
+    {
+      // also see live() and die() for dynamic binding
+      $("a").bind("click", function() {
+        $("a").unbind("click");
+        alert("First and only message from me!");
+      });
+    });
+    </script>
+  </body>
+</html>

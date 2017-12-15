@@ -1,0 +1,20 @@
+{
+"name": "AL Daily",
+"description": "AL Daily applink",
+"version": "1.0",
+"icons": {
+"angry": "angry.ico"
+},
+"app": {
+"urls": [
+"http://aldaily.com/"
+],
+"launch": {
+"web_url": "http://aldaily.com"
+}
+},
+"permissions": [
+"unlimitedStorage",
+"notifications"
+]
+}

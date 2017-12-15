@@ -1,0 +1,14 @@
+<GroceryList>
+<Item>
+<Dept>Produce</Dept><Name>Orange</Name><Price>3.20</Price>
+</Item>
+<Item>
+<Dept>Meat</Dept><Name>Steak</Name><Price>13.20</Price>
+</Item>
+<Item>
+<Dept>Produce</Dept><Name>Lettuce</Name><Price>1.34</Price>
+</Item>
+<Item>
+<Dept>Meat</Dept><Name>Ham</Name><Price>11.41</Price>
+</Item>
+</GroceryList>

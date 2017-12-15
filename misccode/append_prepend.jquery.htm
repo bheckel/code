@@ -1,0 +1,25 @@
+<html>
+  <head>
+<!-- http://www.jquery-tutorial.net/dom-manipulation/the-append-and-prepend-methods/ -->
+    <script type="text/javascript" src="jquery-1.7.2.js"></script>
+  </head>
+  <body>
+    <a href="javascript:void(0);" onclick="AppendItemsToList();">Append</a>   
+    <ol id="olTestList2"></ol>
+
+    <script type="text/javascript">
+    function AppendItemsToList()
+    {
+      // JQuery element creation approach
+      var item1 = $("<li></li>").text("Item 1");
+      // HTML approach
+      var item2 = "<li>Item 2</li>";
+      // old DOM approach
+      var item3 = document.createElement("li"); item3.innerHTML = "Item 3";
+      
+      $("#olTestList2").append(item1, item2, item3);
+      ///$("#olTestList2").prepend(item1, item2, item3);
+    }
+    </script>
+  </body>
+</html>

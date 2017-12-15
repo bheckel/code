@@ -1,0 +1,42 @@
+#!/bin/bash
+##############################################################################
+#     Name: lowerit
+#
+#  Summary: Convert all file names in the current directory to lower case.
+#           Only operates on files--does not change the name of 
+#           directories. Will ask for verification before overwriting an 
+#           existing file.
+# 
+#           TODO turn prompt off during execution if things look ok
+#           TODO recurse
+#
+#  Created: Tue May 25 1999 11:58:42 (Linux TIPS-HOWTO)
+# Modified: Sun Jun 23 12:30:20 2002 (Bob Heckel)
+##############################################################################
+
+Usage() {
+  echo "
+Usage: `basename $0`
+  Converts all file names in the current directory to lower case."
+
+  exit 1
+}
+
+N_EXPECTED_ARGS=0
+
+if [ $# -ne $N_EXPECTED_ARGS ]; then 
+  Usage
+  exit 1
+fi
+
+for x in `ls`; do                                                                   
+  if [ ! -f $x ]; then                                                 
+    continue                                                           
+  fi                                                                 
+  lc=`echo $x  | tr '[A-Z]' '[a-z]'`                                   
+  if [ $lc != $x ]; then                                               
+    ###mv -i $x $lc                                                       
+    mv $x $lc                                                       
+ fi                                                                   
+done                                                                 
+

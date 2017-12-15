@@ -1,0 +1,46 @@
+#!/bin/bash
+##############################################################################
+#     Name: checkviewvnet
+#
+#  Summary: Make sure file on Windows share has not been tampered with either
+#           by human or viral changes.
+#
+#  Created: Fri 26 Jul 2002 13:10:50 (Bob Heckel)
+##############################################################################
+  
+F1=$HOME/code/misccode/map_to_daeb.bat
+###echo $F1
+###F2=K:\CABINETS\EVERYONE\Vitalnet\map_to_daeb.bat
+F2=K:/CABINETS\EVERYONE/Vitalnet/map_to_daeb.bat
+###echo $F2
+
+Usage() {
+  echo "Usage: `basename $0`"
+  echo "        Compares two copies of a file."
+
+  exit 1
+}
+
+N_EXPECTED_ARGS=0
+
+if [ $# -ne $N_EXPECTED_ARGS ]; then 
+  Usage
+  exit 1
+fi
+
+
+if ! test -f $F1 && ! test -f $F2; then
+  echo 'Files are not available.  Exiting.'
+  exit 1
+fi
+
+LOCAL=`cksum $HOME/code/misccode/map_to_daeb.bat | cut -d' ' -f1`
+REMOTE=`cksum 'K:\CABINETS\EVERYONE\Vitalnet\map_to_daeb.bat'| cut -d' ' -f1`
+###echo local is $LOCAL
+###echo remote is $REMOTE
+
+if [ $LOCAL -ne $REMOTE ]; then
+  echo 'checksums do not match'
+else
+  echo 'ok'
+fi

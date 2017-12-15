@@ -1,0 +1,64 @@
+-- http://en.wikipedia.org/wiki/Join_%28SQL%29
+
+CREATE TABLE department
+(
+ DepartmentID INT,
+ DepartmentName VARCHAR(20)
+);
+ 
+CREATE TABLE employee
+(
+ LastName VARCHAR(20),
+ DepartmentID INT
+);
+ 
+INSERT INTO department VALUES(31, 'Sales');
+INSERT INTO department VALUES(33, 'Engineering');
+INSERT INTO department VALUES(34, 'Clerical');
+INSERT INTO department VALUES(35, 'Marketing');
+ 
+INSERT INTO employee VALUES('Rafferty', 31);
+INSERT INTO employee VALUES('Jones', 33);
+INSERT INTO employee VALUES('Heisenberg', 33);
+INSERT INTO employee VALUES('Robinson', 34);
+INSERT INTO employee VALUES('Smith', 34);
+INSERT INTO employee VALUES('Williams', NULL);
+
+
+-- Cartesian
+---SELECT *
+---FROM employee CROSS JOIN department;
+--
+-- Same, implicit cross join
+---SELECT *
+---FROM employee, department;
+
+-- Equ-join
+-- Primary and foreign keys must be identical.
+--
+-- No Marketing, no Williams are returned, a left outer join can usually be
+-- substituted for an inner join when the join field in one table may contain
+-- NULL values
+--
+-- NATURAL is dangerous
+---SELECT *
+---FROM employee NATURAL JOIN department;
+--
+-- Same
+---SELECT *
+---FROM employee INNER JOIN department on employee.DepartmentID=department.DepartmentID;
+--
+-- Same
+---SELECT *
+---FROM employee, department 
+---WHERE employee.DepartmentID=department.DepartmentID;
+
+-- Outer join
+---SELECT *
+---FROM employee 
+---LEFT OUTER JOIN department ON employee.DepartmentID=department.DepartmentID;
+--
+-- Not supported!
+---SELECT *
+---FROM employee 
+---FULL OUTER JOIN department ON employee.DepartmentID=department.DepartmentID;

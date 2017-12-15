@@ -1,0 +1,229 @@
+#!/usr/bin/expect -f
+
+# 99 bottles of beer on the wall, Expect-style
+# Author: Don Libes <libes@nist.gov>
+# Modifications (see below): "Lars G. Erlandsen" <lerland@icrt.demon.co.uk>
+
+# Unlike programs (http://www.ionet.net/~timtroyr/funhouse/beer.html)
+# which merely print out the 99 verses, this one SIMULATES a human
+# typing the beer song.  Like a real human, typing mistakes and timing
+# becomes more erratic with each beer - the final verse is barely
+# recognizable and it is really like watching a typist hunt and peck
+# while drunk.
+
+# Finally, no humans actually sing all 99 verses - particularly when
+# drunk.  In reality, they occasionally lose their place (or just get
+# bored) and skip verses, so this program does likewise.
+
+# Because the output is timed, just looking at the output isn't enough
+# - you really have to see the program running to appreciate it.
+# Nonetheless, for convenience, output from one run (it's different
+# every time of course) can be found in the file beer.exp.out
+# But it won't show the erratic timing; you have to run it for that.
+
+# From: "Lars G. Erlandsen" <lerland@icrt.demon.co.uk>
+# To: Don Libes <libes@cme.nist.gov>
+# Subject: re.: Another 99 bottles of beer
+# Date: Wed, 28 May 1997 06:00:34 +0100
+
+# During installation, I hunted around in the distribution, and found
+# the '99 bottles of beer' application. It had me in fits of laughter,
+# imagining this creature hunting and pecking at the keyboard.
+#
+# Last week, another engineer at work had a requirement that 'expect'
+# would handle extremely well. I showed him briefly what 'expect' was
+# capable of, and as a good example, ran the '99 bottles'
+# application. Being the person never to miss an opportunity to
+# criticise (don't you just love those sort of guys?), he made 2 remarks
+# about the typing creature:
+# 
+# 1. (S?)he never discovers any typos, but carries on typing.
+# 
+# 2. When he makes typing mistakes, he hits keys not even remotely near
+# the key he meant to hit.
+# 
+# That same lunch hour, I had a few spare minutes, and so I couldn't
+# resist the temptation of sculpting more of a personality on this
+# creature, in the form of these changes (yes, I know, a total waste of
+# time, but so irresistable ;-):
+# 
+# * Typing mistakes are mostly discovered. However, the corrections
+# don't always work (in fact, mostly don't), and quite often he makes
+# another error and then carries on. There are other occasional hiccups
+# as well when a typo error is discovered.
+# 
+# * The typing mistakes falls into two categories (50-50 random split
+# between them).  There is the usual vowel and consonant exchange as
+# before, but now also a nearest- key exchange procedure, where one of
+# the neighbour keys is hit instead.
+# 
+# The changes aren't fancy, and there is scope for vast improvements in
+# the error detection rate and correction accuracy, depending on the
+# number of bottles consumed. However, it serves as a starting point. I
+# was quite pleased to see the 'creature' getting increasingly irate
+# over its typing errors, go hunting and pecking furiously, hitting the
+# 'delete' key, only to go wrong again, or eventually get it right.
+
+proc bottles {i} {
+    return "$i bottle[expr $i!=1?"s":""] of beer"
+}
+
+proc line123 {i} {
+    out $i "[bottles $i] on the wall,\n"
+    out $i "[bottles $i],\n"
+    out $i "take one down, pass it around,\n"
+}
+
+proc line4 {i} {
+    out $i "[bottles $i] on the wall.\n\n"
+}
+
+proc out {i s} {
+    foreach c [split $s ""] {
+	# don't touch punctuation; just looks too strange if you do
+	if [regexp "\[,. \n\]" $c] {
+	    append d $c
+	    continue
+	}
+
+	# keep first couple of verses straight
+	if {$i > 97} {append d $c; continue}
+
+	# +3 prevents it from degenerating too far
+	# /2 makes it degenerate faster though
+
+	set r [rand [expr $i/2+3]]
+	if {$r} {append d $c; continue}
+
+	# do something strange
+	switch [rand 3] {
+	    0 {
+		# substitute another letter
+
+		# Two methods: Phonetic neighbour, or nearest key on the keyboard
+		# (chosen randomly)
+		set nearest [ expr {[rand 2] == 0}]
+
+		# Might need a number of goes if the typo is discovered
+		while {1} {
+		    
+		    if $nearest {
+			# Nearest keyboard neighbour
+			append d [neighbour $c]
+		    } else {
+			# Phonetic neighbour
+			if [regexp \[aeiou\] $c] {
+			    # if vowel, substitute another
+			    append d [string index aeiou [rand 5]]
+			} elseif [regexp \[0-9\] $c] {
+			    # if number, substitute another
+			    append d [string index 123456789 [rand 9]]
+			} else {
+			    # if consonant, substitute another
+			    append d [string index bcdfghjklmnpqrstvwxyz [rand 21]]
+			}
+		    }
+		    
+		    # Assume 80% likelyhood of the error being discovered
+		    switch [rand 5] {
+			0 {
+			    # Typo not discovered
+			    break;
+			} 1 {
+			    # Discovered and corrected
+			    append d "\b$c"
+			    break;
+			} 2 {
+			    # Discovered and over-corrected
+			    append d "\b$c"
+			    continue;
+			} default {
+			    # Discovered: Correct it, and try again
+			    append d "\b"
+			    continue;
+			}
+		    }
+		}
+		if {![rand 4]} {
+		    # Discovered!
+		    append d "\b\b$c"
+		}
+	    } 1 {
+		# duplicate a letter
+		append d $c$c
+	    } 2 {
+		# drop a letter
+	    }
+	}
+    }
+
+    set arr1 [expr .4 - ($i/333.)]
+    set arr2 [expr .6 - ($i/333.)]
+    set shape [expr log(($i+2)/2.)+.1]
+    set min 0
+    set max [expr 6-$i/20.]
+
+    set send_human "$arr1 $arr2 $shape $min $max"
+
+    send -h $d
+}
+
+set _ran [pid]
+
+proc rand {m} {
+    global _ran
+
+    set period 259200
+    set _ran [expr ($_ran*7141 + 54773) % $period]
+    expr int($m*($_ran/double($period)))
+}
+
+proc neighbour {char} {
+
+    set qwerty(0) "1234567890-"
+    set qwerty(1) "qwertyuiop\["
+    set qwerty(2) "asdfghjkl;\'"
+    set qwerty(3) "zxcvbnm,.\/ "
+
+    # Find old character
+    foreach i [array names qwerty] {
+	set n [string first $char $qwerty($i)]
+	if {$n >= 0} {
+	    break
+	}
+    }
+
+    # Calculate new neighbour until we get a good one
+    while {1} {
+	set new_i [expr {$i + ([rand 3] - 1)}]
+	if {($new_i >= 0) && ($new_i <= 3)} {
+	    break;
+	}
+    }
+    while {1} {
+	set new_n [expr {$n + ([rand 3] - 1)}]
+	if {($new_n >= 0) && ($new_n < [string length $qwerty($i)])} {
+	    break;
+	}
+    }
+
+    return [string range $qwerty($new_i) $new_n $new_n]
+}
+
+for {set i 99} {$i>0} {} {
+    line123 $i
+    incr i -1
+    line4 $i
+
+    # get bored and skip ahead
+    if {$i == 92} {
+	set i [expr 52+[rand 5]]
+    }
+    if {$i == 51} {
+	set i [expr 12+[rand 5]]
+    }
+    if {$i == 10} {
+	set i [expr 6+[rand 3]]
+    }
+}
+

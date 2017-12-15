@@ -1,0 +1,287 @@
+##
+## httpd.conf -- Apache HTTP server configuration file
+##
+## Host-dependent Configuration for Solectron RTP
+##
+## This file SHOULD NOT be copied to other hosts, as it contains
+## host-specific configuration items (like ServerName)
+##
+
+#
+# Based upon the NCSA server configuration files originally by Rob McCool.
+#
+# This is the main Apache server configuration file.  It contains the
+# configuration directives that give the server its instructions.
+# See <URL:http://www.apache.org/docs/> for detailed information about
+# the directives.
+#
+# Do NOT simply read the instructions in here without understanding
+# what they do.  They're here only as hints or reminders.  If you are unsure
+# consult the online docs. You have been warned.  
+#
+# After this file is processed, the server will look for and process
+# /webshop/apache/conf/srm.conf and then /webshop/apache/conf/access.conf
+# unless you have overridden these with ResourceConfig and/or
+# AccessConfig directives here.
+#
+# The configuration directives are grouped into three basic sections:
+#  1. Directives that control the operation of the Apache server process as a
+#     whole (the 'global environment').
+#  2. Directives that define the parameters of the 'main' or 'default' server,
+#     which responds to requests that aren't handled by a virtual host.
+#     These directives also provide default values for the settings
+#     of all virtual hosts.
+#  3. Settings for virtual hosts, which allow Web requests to be sent to
+#     different IP addresses or hostnames and have them handled by the
+#     same Apache server process.
+#
+# Configuration and logfile names: If the filenames you specify for many
+# of the server's control files begin with "/" (or "drive:/" for Win32), the
+# server will use that explicit path.  If the filenames do *not* begin
+# with "/", the value of ServerRoot is prepended -- so "logs/foo.log"
+# with ServerRoot set to "/usr/local/apache" will be interpreted by the
+# server as "/usr/local/apache/logs/foo.log".
+#
+
+### Section 1: Global Environment
+#
+# The directives in this section affect the overall operation of Apache,
+# such as the number of concurrent requests it can handle or where it
+# can find its configuration files.
+#
+
+#
+# ServerType is either inetd, or standalone.  Inetd mode is only supported on
+# Unix platforms.
+#
+ServerType standalone
+
+#
+# ServerRoot: The top of the directory tree under which the server's
+# configuration, error, and log files are kept.
+#
+# NOTE!  If you intend to place this on an NFS (or otherwise network)
+# mounted filesystem then please read the LockFile documentation
+# (available at <URL:http://www.apache.org/docs/mod/core.html#lockfile>);
+# you will save yourself a lot of trouble.
+#
+# Do NOT add a slash at the end of the directory path.
+#
+ServerRoot "/opt/apache"
+
+#
+# The LockFile directive sets the path to the lockfile used when Apache
+# is compiled with either USE_FCNTL_SERIALIZED_ACCEPT or
+# USE_FLOCK_SERIALIZED_ACCEPT. This directive should normally be left at
+# its default value. The main reason for changing it is if the logs
+# directory is NFS mounted, since the lockfile MUST BE STORED ON A LOCAL
+# DISK. The PID of the main server process is automatically appended to
+# the filename. 
+#
+#LockFile /opt/apache/logs/httpd.lock
+
+#
+# PidFile: The file in which the server should record its process
+# identification number when it starts.
+#
+PidFile /opt/apache/logs/httpd.pid
+
+#
+# ScoreBoardFile: File used to store internal server process information.
+# Not all architectures require this.  But if yours does (you'll know because
+# this file will be  created when you run Apache) then you *must* ensure that
+# no two invocations of Apache share the same scoreboard file.
+#
+ScoreBoardFile /opt/apache/logs/httpd.scoreboard
+
+#
+# In the standard configuration, the server will process this file,
+# srm.conf, and access.conf in that order.  The latter two files are
+# now distributed empty, as it is recommended that all directives
+# be kept in a single file for simplicity.  The commented-out values
+# below are the built-in defaults.  You can have the server ignore
+# these files altogether by using "/dev/null" (for Unix) or
+# "nul" (for Win32) for the arguments to the directives.
+#
+ResourceConfig conf/srm.conf
+AccessConfig conf/alias.conf
+
+#
+# Timeout: The number of seconds before receives and sends time out.
+#
+Timeout 300
+
+#
+# KeepAlive: Whether or not to allow persistent connections (more than
+# one request per connection). Set to "Off" to deactivate.
+#
+KeepAlive On
+
+#
+# MaxKeepAliveRequests: The maximum number of requests to allow
+# during a persistent connection. Set to 0 to allow an unlimited amount.
+# We recommend you leave this number high, for maximum performance.
+#
+MaxKeepAliveRequests 100
+
+#
+# KeepAliveTimeout: Number of seconds to wait for the next request from the
+# same client on the same connection.
+#
+KeepAliveTimeout 15
+
+#
+# Server-pool size regulation.  Rather than making you guess how many
+# server processes you need, Apache dynamically adapts to the load it
+# sees --- that is, it tries to maintain enough server processes to
+# handle the current load, plus a few spare servers to handle transient
+# load spikes (e.g., multiple simultaneous requests from a single
+# Netscape browser).
+#
+# It does this by periodically checking how many servers are waiting
+# for a request.  If there are fewer than MinSpareServers, it creates
+# a new spare.  If there are more than MaxSpareServers, some of the
+# spares die off.  The default values are probably OK for most sites.
+#
+MinSpareServers 5
+MaxSpareServers 10
+
+#
+# Number of servers to start initially --- should be a reasonable ballpark
+# figure.
+#
+StartServers 5
+
+#
+# Limit on total number of servers running, i.e., limit on the number
+# of clients who can simultaneously connect --- if this limit is ever
+# reached, clients will be LOCKED OUT, so it should NOT BE SET TOO LOW.
+# It is intended mainly as a brake to keep a runaway server from taking
+# the system with it as it spirals down...
+#
+MaxClients 150
+
+#
+# MaxRequestsPerChild: the number of requests each child process is
+# allowed to process before the child dies.  The child will exit so
+# as to avoid problems after prolonged use when Apache (and maybe the
+# libraries it uses) leak memory or other resources.  On most systems, this
+# isn't really needed, but a few (such as Solaris) do have notable leaks
+# in the libraries. For these platforms, set to something like 10000
+# or so; a setting of 0 means unlimited.
+#
+# NOTE: This value does not include keepalive requests after the initial
+#       request per connection. For example, if a child process handles
+#       an initial request and 10 subsequent "keptalive" requests, it
+#       would only count as 1 request towards this limit.
+#
+MaxRequestsPerChild 0
+
+#
+# Listen: Allows you to bind Apache to specific IP addresses and/or
+# ports, in addition to the default. See also the <VirtualHost>
+# directive.
+#
+#Listen 3000
+#Listen 12.34.56.78:80
+
+#
+# BindAddress: You can support virtual hosts with this option. This directive
+# is used to tell the server which IP address to listen to. It can either
+# contain "*", an IP address, or a fully qualified Internet domain name.
+# See also the <VirtualHost> and Listen directives.
+#
+#BindAddress *
+
+#
+# Dynamic Shared Object (DSO) Support
+#
+# To be able to use the functionality of a module which was built as a DSO you
+# have to place corresponding `LoadModule' lines at this location so the
+# directives contained in it are actually available _before_ they are used.
+# Please read the file README.DSO in the Apache 1.3 distribution for more
+# details about the DSO mechanism and run `httpd -l' for the list of already
+# built-in (statically linked and thus always available) modules in your httpd
+# binary.
+#
+# Note: The order is which modules are loaded is important.  Don't change
+# the order below without expert advice.
+#
+# Example:
+# LoadModule foo_module libexec/mod_foo.so
+
+#
+# ExtendedStatus controls whether Apache will generate "full" status
+# information (ExtendedStatus On) or just basic information (ExtendedStatus
+# Off) when the "server-status" handler is called. The default is Off.
+#
+#ExtendedStatus On
+
+### Section 2: 'Main' server configuration
+#
+# The directives in this section set up the values used by the 'main'
+# server, which responds to any requests that aren't handled by a
+# <VirtualHost> definition.  These values also provide defaults for
+# any <VirtualHost> containers you may define later in the file.
+#
+# All of these directives may appear inside <VirtualHost> containers,
+# in which case these default settings will be overridden for the
+# virtual host being defined.
+#
+
+#
+# If your ServerType directive (set earlier in the 'Global Environment'
+# section) is set to "inetd", the next few directives don't have any
+# effect since their settings are defined by the inetd configuration.
+# Skip ahead to the ServerAdmin directive.
+#
+
+#
+# Port: The port to which the standalone server listens. For
+# ports < 1023, you will need httpd to be run as root initially.
+#
+Port 80
+
+#
+# If you wish httpd to run as a different user or group, you must run
+# httpd as root initially and it will switch.  
+#
+# User/Group: The name (or #number) of the user/group to run httpd as.
+#  . On SCO (ODT 3) use "User nouser" and "Group nogroup".
+#  . On HPUX you may not be able to use shared memory as nobody, and the
+#    suggested workaround is to create a user www and use that user.
+#  NOTE that some kernels refuse to setgid(Group) or semctl(IPC_SET)
+#  when the value of (unsigned)Group is above 60000; 
+#  don't use Group nogroup on these systems!
+#
+User www
+Group www
+
+#
+# ServerAdmin: Your address, where problems with the server should be
+# e-mailed.  This address appears on some server-generated pages, such
+# as error documents.
+#
+ServerAdmin MarkHewett@solectron.com
+
+#
+# ServerName allows you to set a host name which is sent back to clients for
+# your server if it's different than the one the program would get (i.e., use
+# "www" instead of the host's real name).
+#
+# Note: You cannot just invent host names and hope they work. The name you 
+# define here must be a valid DNS name for your host. If you don't understand
+# this, ask your network administrator.
+# If your host doesn't have a registered DNS name, enter its IP address here.
+# You will have to access it by its address (e.g., http://123.45.67.89/)
+# anyway, and this will make redirections work in a sensible way.
+#
+ServerName 47.143.212.20
+
+#
+# Host-Dependent CGI Environment variables
+#
+SetEnv ARCH pa_risc
+SetEnv ORACLE_HOME /d01/home/oracle/dist/8.1.5
+SetEnv SYBASE /opt/freetds
+SetEnv LD_LIBRARY_PATH /d01/home/oracle/dist/8.1.5/lib:/opt/freetds/lib

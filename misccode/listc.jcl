@@ -1,0 +1,7 @@
+//BQH0LC   JOB (BF00,BX21),BQH0,MSGCLASS=K,TIME=5,CLASS=V,REGION=0M
+//STEP1    EXEC PGM=IDCAMS
+//* listc.jcl Lists directory info.  Like ls -l BF19* in Unix.
+//* Upload as :!bfp % 'BQH0.PGM.LIB(LISTC)'
+//SYSPRINT DD DSN=BQH0.BF19.DATASET,DISP=SHR
+//SYSIN    DD *
+ LISTCAT LEVEL(BF19)

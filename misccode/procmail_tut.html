@@ -1,0 +1,467 @@
+<HTML>
+<HEAD>
+
+
+<!--TITLE==Procmail Tutorial-->
+
+<!--HEADER-->
+<!--HEADFILE==head-->
+<TITLE>Procmail Tutorial</TITLE>
+
+
+
+
+
+</HEAD>
+<BODY BGCOLOR="#DDDDDD" TEXT="#222222" >
+
+<A name="top">
+
+
+
+
+<TABLE WIDTH=100%>
+<TR>
+<TD ALIGN=LEFT>
+
+<UL>
+
+	<LI>	<H3><A HREF="../" TARGET="_top">My Homepage</A></H3>		</LI>
+
+
+	<LI><H3><A HREF="">Unix/Linux Index Page</A></H3> </LI>
+	<LI>	<H3><A HREF="../linux/index.html">Linux</A></H3>	</LI>
+
+</UL>
+</TD>
+
+<TD ALIGN=RIGHT HEIGHT=200 VALIGN=TOP>
+
+<H1>UNIX and Linux</H1>
+<H2>Procmail Tutorial</H2>
+<BR>
+<!--MAILTO--><tt> <FONT SIZE=+1><!--MAILTO-->
+
+<A HREF="mailto:elflord@pegasus.rutgers.edu">
+elflord@pegasus.rutgers.edu</A>
+
+<!--/MAILTO--></FONT></FONT><!--/MAILTO-->
+
+
+</TD>
+</TR></TABLE>
+
+
+
+	<H2>Tutorials</H2>
+	<P>Useful information mostly written by me, the conspicuous exception
+	being the bash manpage ... </P>
+	<A HREF="intro.html">Intro to Unix</A> <BR>
+	
+		<A HREF="quickguide.html">UNIX command summary</A><BR>
+		<A HREF="grep.html">grep tutorial</A> powerful search tool<BR>
+		<A HREF="sed.html">sed tutorial</A> scripts to edit text files<BR>
+		<A HREF="autofs.html">Autofs in Linux </A> automatically mounting removable media<BR>
+		<A HREF="procmail.html">procmail tutorial</A> well known email filter<BR>
+		<A HREF="bash.html">bash manpage</A> the man page for the bash shell. Warning: this is long (~210k)<BR>
+	
+
+
+
+<!--/HEADER-->
+<H2>Contents</H2>
+<UL>
+<LI><A HREF="#forward">The .forward file</A></LI>
+<LI><A HREF="#procmail">The .procmail directory</A></LI>
+<LI><A HREF="#procmailrc">The .procmailrc file</A></LI>
+<LI><A HREF="#includerc">The syntax for INCLUDERC files</A></LI>
+<LI><A HREF="#examples1">Examples</A></LI>
+<DIR>
+<LI><A HREF="#folder">Saving mail to a folder</A></LI>
+<LI><A HREF="#inbox">Saving mail to my inbox</A></LI>
+<LI><A HREF="#again">Another example of saving to a folder</A></LI>
+<LI><A HREF="#spam">Unwanted Mail/spam</A></LI>
+<DIR>
+<LI>Unwanted Sources</LI>
+<LI>Saving Your Spam (so you can report them !!!</LI>
+<LI>A smarter way of detecting spam</LI>
+<LI>Those annoying jokes !  Arrrrgggh, save me !!!</LI>
+</DIR>
+<LI><A HREF="#forward">Forwarding Mail</A></LI>
+<LI><A HREF="#moreThanOne">Doing more than one thing with a message </A></LI>
+<LI><A HREF="#output">Sending output to a program</A></LI>
+</DIR>
+<LI><A HREF="#summary">Putting it all together</A></LI>
+<LI><A HREF="#egrep">Appendix: egrep Regular Expressions</A></LI>
+</UL>
+<BR>
+
+<A NAME="forward">
+<H2>(1) The .forward file</H2>
+<A HREF="#top">Back to top</A>
+First you need a  <CODE>~/.forward</CODE> file
+It goes like this:
+<BLOCKQUOTE>
+<CODE>
+"|IFS=' ' &amp;&amp; exec /usr/local/bin/procmail || exit 75 #your_user_name"
+</CODE></BLOCKQUOTE>
+Be warned that procmail might not be installed in <CODE>/usr/local/bin</CODE>. 
+To find out where procmail is installed, type <CODE>which procmail</CODE>
+<H2>(2) The .procmail directory</H2>
+Make a directory  <CODE>~/.procmail</CODE><BR>
+<H2>(3) The .procmailrc File</H2>
+(3) <CODE>~/.procmailrc </CODE><BR>
+<CODE>
+VERBOSE=off<BR>
+MAILDIR=$HOME/mail # elm users might use $HOME/Mail instead<BR>
+PMDIR=$HOME/.procmail<BR>
+DEFAULT=/var/spool/mail/elflord<BR>
+LOGFILE=$PMDIR/log<BR>
+INCLUDERC=$PMDIR/general.rc<BR>
+# INCLUDERC=$PMDIR/other.rc<BR>
+# add as many INCLUDERC's as you like
+<BR>
+# end of .procmailrc<BR>
+<BR>
+</CODE>
+<A NAME="includerc">
+<H2>(4) Syntax For INCLUDERC Files</H2>
+<A HREF="#top">Back to top</A>
+<BR>
+Now .procmail/general.rc should look something like this :<BR>
+<BR>
+So the basic syntax is <BR>
+<PRE>
+:0
+* case-insensitive-egrep-regex
+* case-insensitive-egrep-regex
+folder_name
+
+:0 
+* another-case-insensitive-egrep-regex
+folder_name
+
+</PRE>
+<P>
+A "regex" is a <EM>regular expression.</EM> See the <A HREF="#egrep">appendix</A> for 
+details as to how an egrep regex works (and then play it by ear),
+or if you really want to nail it down, read the <A HREF="grep.html">grep</A>
+tutorial.
+<P>
+the regex's are anded (you can have as few as zero, or as many as
+you would dream of having). If you have zero, the action specified on 
+the next line (usually save to folder) is automaticall taken. 
+Make sure you put the "*" in front of each
+regex. 
+<P>
+One thing the procmail man pages tell you to do is use
+<CODE>From:.*</CODE> as your expression to search for a sender.
+However, I have found that this does not work. 
+I recommend using <CODE>From.*</CODE> instead.
+
+<A NAME="examples">
+<H2>(5) Examples</H2>
+<A HREF="#top">Back to top</A>
+
+<A NAME="folder">
+<H3>Saving Mail to a Folder</H3>
+<A HREF="#top">Back to top</A>
+
+Firstly, I know someone who's mail I want to keep on my ISP's account.<BR>
+	  <CODE>
+	  :0<BR>
+	  * ^From.*bill@andromeda\.rutgers\.edu<BR>
+	  bill<BR>
+	  <BR>
+	  </CODE>
+
+<A NAME="inbox">
+<H3>Saving Mail to My INBOX</H3><BR>
+<A HREF="#top">Back to top</A>
+I also want all of the mail from the domain pegasus.rutgers.edu 
+to go to my inbox<BR>
+	<CODE>
+	:0<BR>
+	* ^From.*pegasus\.rutgers\.edu<BR>
+	$DEFAULT<BR>
+	</CODE>
+
+<BR>
+Note that I need a \ before the "." since a "." matches any character,
+but I want to really match a "." , not just any character. 
+In practice, the "." without the \ will probably work though
+, however it seems a little risky, and it is incorrect in a sense. 
+
+<A NAME="again">
+<H3>Another Example of Saving Mail to A Folder</H3>
+<A HREF="#top">Back to top</A><BR>
+Here's a useful one. I get mail from lists and I don't want it cluttering my
+inbox. Better to put it in a folder.
+It goes like this:
+	  <CODE>
+	  :0<BR>
+	  * ^From.*redhat.*list.*list.*@<BR>
+	  redhat-lists<BR>
+	  </CODE>
+This saves all of my mail from addresses containing Redhat in the user 
+name to the redhat lists file
+<A NAME="spam">
+<H3>Unwanted Mail/Spam</H3>
+<A HREF="#top">Back to top</A>
+<H4>Unwanted Sources</H4>
+Deleting mail from an unwanted source: ...<BR>
+<BR>
+	<CODE>
+	  :0                         <BR>
+	  * ^From.*big-jerk <BR>
+	  /dev/null<BR>
+	</CODE>
+	<BR>
+<H4>Saving your SPAM (so you can report them !!!)</H4>
+However, for spammers, I use a different approach: 
+	  <CODE>
+	  :0                         <BR>
+	  * ^From.*spammer <BR>
+	  spam<BR>
+	  </CODE>
+Then I can go through the folder when I am bored and report them to 
+their ISPs. It's a great way to let of steam !!! 
+<P>
+<H4>A Smarter Way of Detecting Spam</H4>
+However, it's difficult to identify spammers since they often mail from
+fake addresses and they change accounts frequently (since their ISP's kick
+them out all the time). So you need something smarter to bust them.
+The best wy to do this is to kill all mail that satisfies the following<BR>
+<BLOCKQUOTE>
+(a) Doesn't have your address(es) on the To or Cc part of the header<BR>
+(b) It is not from a "trusted source" or a mailing list you subscribe to<BR>
+</BLOCKQUOTE>
+Frankly, anyone who is not in either of the above categories had better
+put me on the  <CODE>To</CODE> or <CODE>Cc </CODE> part of the header!
+<BR>
+<CODE><PRE>
+:0
+* !(To|Cc).*my_address		# this is my account here
+* !(To|Cc).*my_address_2	# I get mail forwarded from here
+* !From.*my\.domain\.edu	# I trust the locals not to spam
+* !From.*list.*@			# don't trash anything from mail lists
+* !From.*good-buddy		# sometimes Bcc's me person mail to his sig-other
+spam
+</PRE>
+</CODE>
+
+<H4>Those Annoying Jokes! Arrggghhh, Save Me !!!</H4>
+And something a little more advanced. You know that friend who keeps sending 
+you those annoying jokes ? 
+Try this one out:
+<BR>
+	  <CODE>
+	  :0<BR>
+	  * ^From.*my-buddy<BR>
+	  * ^Subject.*(Fwd|Forward|joke)
+	  /dev/null
+	  </CODE>
+
+<A NAME="forward">
+<H3>Forwarding Mail</H3>
+<A HREF="#top">Back to top</A>
+To forward mail, you use a "!" symbol in the action line:
+<CODE>
+:0<BR>
+* ^Subject.*something-or-other<BR>
+! another@address.com<BR>
+</CODE>
+
+<A NAME="moreThanOne">
+<H3>Doing More than One Thing With a Message</H3>
+<A HREF="#top">Back to top</A>
+Suppose I want to forward the message <EM>and </EM>do something else with 
+it. The way to do this is use the <CODE>c</CODE> flag in the first 
+recipe, to tell procmail to keep going ... 
+<BR>
+<CODE><PRE>
+:0
+* ^Cc.*joe@somewhere.org
+* ^Cc.*me
+{
+	:0 c
+	$DEFAULT
+
+	:0
+	SOME_FOLDER
+}
+</PRE>
+</CODE>
+
+<A NAME="output">
+<H3>Sending Output to a Program</H3>
+<A HREF="#top">Back to top</A>
+
+Here's an example that I use: I do not have CGI access, so I have my 
+web forms mailed to me and have procmail send them to the right programs,
+so that they are processed correctly. What you might think of as "virtual CGI".
+What this does is spit the message to a file, then run a program on that file,
+<P>
+How the | works on the action line is that it starts the program following it,
+and sends the message to STDIN. In other words, it pipes to the program. 
+<P>
+<CODE>
+Subject:.*Form Posted<BR>
+| cat&amp;&gt;$HOME/guestmail &amp;&amp; \<BR>
+$HOME/bin/guestscript $HOME/guestmail <BR>
+</CODE>
+
+<A NAME="summary">
+<H2>(6) Putting it all Together</H2>
+<A HREF="#top">Back to top</A>
+
+OK, so now , we are going to put it all together. We will use the following 
+INCLUDE rc's:
+<UL>
+<LI>default.rc</LI>
+<LI>general.rc</LI>
+<LI>lists.rc</LI>
+<LI>spam.rc</LI>
+<LI>guestbook.rc</LI>
+</UL>
+So ~/.procmailrc looks like this : 
+<CODE>
+VERBOSE=off<BR>
+MAILDIR=$HOME/mail # elm users might use $HOME/Mail instead<BR>
+PMDIR=$HOME/.procmail<BR>
+DEFAULT=/var/mail/elflord<BR>
+LOGFILE=$PMDIR/log<BR>
+INCLUDERC=$PMDIR/default.rc<BR>
+INCLUDERC=$PMDIR/general.rc<BR>
+INCLUDERC=$PMDIR/lists.rc<BR>
+INCLUDERC=$PMDIR/guestbook.rc<BR>
+INCLUDERC=$PMDIR/spam.rc<BR>
+# add as many INCLUDERC's as you like <BR>
+</CODE>
+<P>
+Note that the order <EM>DOES</EM> matter, as the rules are applied 
+in the order of that the rc files are included. It's a good idea to 
+put your spam killer last, because the whole point of it is to trash mail
+you don't recognise, and any mail that gets grabbed by the other rules will be 
+mail that you recognise in some sense. 
+<P>
+Now all of these INCLUDERC files go in the ~/.procmail directory. 
+
+<HR>
+<H3>default.rc</H3> looks something like this (anything we want to go straight to 
+the inbox, no questions asked: 
+<HR>
+<PRE>
+	<CODE>
+	:0
+	* ^From.*pegasus\.rutgers\.edu
+	$DEFAULT
+	</CODE>
+</PRE>
+<HR>
+<H3>general.rc</H3> 
+<HR>
+<PRE>
+<CODE>
+:0
+* ^Cc.*joe@somewhere.org
+* ^Cc.*me
+{
+	:0 c
+	$DEFAULT
+
+	:0
+	SOME_FOLDER
+}
+
+:0
+* ^Subject.*something-or-other
+! another@address.com
+</CODE>
+</PRE>
+<HR>
+<H3>lists.rc</H3> 
+<HR>
+<CODE>
+	  :0<BR>
+	  * ^From.*redhat.*list.*list.*@<BR>
+	  redhat-lists<BR>
+	  <BR>
+	  :0<BR>
+	  * ^From.*owner@independence<BR>
+	  independence-list<BR>
+</CODE>
+<HR>
+<H3>spam.rc</H3> <HR>
+<PRE>
+	  <CODE>
+:0
+* ^From.*my-buddy
+* ^Subject.*(Fwd|Forward|joke)
+/dev/null
+
+:0
+* !(To|Cc).*my_address		# this is my account here
+* !(To|Cc).*my_address_2	# I get mail forwarded from here
+* !From.*my\.domain\.edu	# I trust the locals not to spam
+* !From.*list.*@			# don't trash anything from mail lists
+* !From.*good-buddy		# sometimes Bcc's me person mail to his sig-other
+spam
+
+:0     
+* ^From.*big-jerk 
+/dev/null
+
+</PRE>
+</CODE>
+<HR>
+<H3>guestbook.rc</H3> <HR>
+<CODE>
+Subject:.*Form Posted<BR>
+| cat&amp;&gt;$HOME/guestmail &amp;&amp; \<BR>
+$HOME/bin/guestscript $HOME/guestmail <BR>
+</CODE>
+
+<A NAME="egrep">
+
+<H2>Appendix: egrep regular expressions</H2>
+<A HREF="#top">Back to top</A>
+
+
+<TABLE><TR>
+<TD> <CODE>^</CODE> </TD>
+<TD>matches the beginning of the line </TD>
+</TR><TR>
+<TD> <CODE>$</CODE> </TD>
+<TD>matches the end of the line </TD>
+</TR><TR>
+<TD><CODE>.</CODE></TD>
+<TD>Matches any single character</TD>
+</TR><TR>
+<TD><CODE>(character)*</CODE></TD>
+<TD>match arbitrarily many occurences of (character)</TD>
+</TR><TR>
+<TD><CODE>(character)?</CODE></TD>
+<TD>Match 0 or 1 instance of (character)</TD>
+</TR><TR>
+<TD><CODE>[abcdef]</CODE></TD>
+<TD>Match any character enclosed in [] (in this instance, a b c d e or f)
+ranges of characters such as <CODE>[a-z]</CODE> are permitted. The behaviour
+of this deserves more description. See the page on <A HREF="grep.html">grep</A>
+for more details about the syntax of lists. 
+</TD>
+</TR><TR>
+<TD><CODE>[^abcdef]</CODE></TD>
+<TD>Match any character <EM>NOT</EM> enclosed in [ ] (in this instance, any character other than a b c d e or f)</TD>
+</TR><TR>
+<TD><CODE>(expression)</CODE></TD>
+<TD>Group operator. Contents of parentheses treated as one character with respect to * , + , ? and | concatenation operators</TD>
+</TR><TR>
+<TD><CODE>\n</CODE></TD>
+<TD>Backreference - matches the contents of the nth set of parentheses</TD>
+</TR><TR>
+<TD><CODE>expression1|expression2</CODE></TD>
+<TD>Matches expression1 or expression 2. 
+</TD>
+</TR></TABLE>
+

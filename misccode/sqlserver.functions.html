@@ -1,0 +1,966 @@
+
+<h3 class="HeadB">Microsoft SQL Server-Supported Functions </h3>
+
+
+<p class="Body"><a href="ch04.html#65646" class="XRef">Table 4-7</a> provides an alphabetical listing of Microsoft SQL Server-supported functions.</p>
+
+
+<p>
+<table border="1">
+<caption>
+<b class="TableLabel"><a name="65646">Table 4-7:</a></b> 
+<b class="TableTitle">Microsoft SQL Server-Supported Functions </b> 
+</caption>
+<tbody><tr>
+<th rowspan="1" colspan="1">
+<p class="CellHeading"><em class="Filename">Function</em></p>
+
+</th>
+<th rowspan="1" colspan="1">
+<p class="CellHeading">Description</p>
+
+</th>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">abs(numeric_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns absolute value.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">acos( float_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns angle (in radians) whose cosine is the specified argument.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">app_name(  )</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Returns application name for current session; set by application.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">ascii(character_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Converts character to a numeric ASCII code.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">asin( float_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns angle (in radians) whose sine is the specified argument.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">atan( float_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns angle (in radians) whose tangent is the specified argument.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">atn2( float_expression, float_expressioin)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns angle (in radians) whose tangent is 
+<br>
+
+argument1/argument1.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">avg([ All| Distinct] Expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Computes average of a column.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">binary_checksum(* | expression [,...n])</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns binary checksum for list of expressions or row of a table.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">cast(Expression as 
+<br>
+
+Data Type)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Converts a valid SQL Server expression to the specified datatype. </p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">ceiling(numeric_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Returns smallest integer greater than or equal to the argument.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">char(integer_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Converts a numeric ASCII code to a character.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">charindex(expression1, expression2 [, start_location])</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns position of the first occurrence of a substring in a string.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">checksum(* | 
+<br>
+
+expression [,...n])</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns checksum value (computed over row values or expressions provided).</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">checksum_agg([ALL | Distinct] expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Returns checksum of the values in group.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">coalesce(expression [,...n]) </em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the first non-NULL argument from a list of arguments.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">col_length(`table', `column')</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns column length in bytes.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">col_name(table_id, column_id)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns column name, given table ID and column ID.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">contains({column | }, `contains_search_condition'})</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Searches columns on exact or "fuzzy" matches of <em class="Emphasis">contains_seach_criteria</em>. It is an elaborate function used to perform full-text searches. Refer to the vendor documentation for more information.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">containsable(table, column, contains_search_condition)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns a table with exact and "fuzzy" matches of <em class="Emphasis">contains_search_condition</em>. It is an elaborate function used to perform full-text searches. Refer to the vendor documentation for more information.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">convert(data_type [(length)], expression 
+<br>
+
+[, style])</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Converts data from one datatype to another.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">cos(float_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns cosine.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">cot(float_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Returns cotangent.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">count({[All | 
+<br>
+
+Distinct] expression]| *})</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Counts rows.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">count(*)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Computes the number of rows, including those with NULL values.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">count( DISTINCT expression )</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Calculates the number of distinct non-NULL values in a column or expression. Each group of rows with the same value of <em class="Emphasis">expression </em>adds 1 to the result.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">count( expression )</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the number of rows with non-NULL values in a certain column or expression.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">count_big([All | Distinct] expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Same as <em class="Emphasis">count</em> except returns big integer.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">current_timestamp</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns current date and time.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">current_user</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns username in the current database of the current session.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">datalength(expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Returns number of bytes in a character or binary string.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">databasepropertyex(database, property)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns database option or property.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">dateadd(datepart, number, date)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Adds a number of dateparts (e.g., days) to a datetime value.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">datediff(datepart, startdate, enddate)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Calculates difference between two datetime values expressed in certain dateparts.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">datename(datepart, date)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns name of a datepart (e.g., month) of a datetime argument.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">datepart(datepart, date)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns value of a datepart (e.g., hour) of a datetime argument.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">day(date)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns an integer value representing the day of the date provided as a parameter.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">db_id(`[database_name]')</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns database ID and given name.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">db_name(database_id)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the database name.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">degrees(numeric_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Converts radians to degrees.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">difference(character_expression, character_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Compares how two arguments sound and returns a number from 0 to 4. Higher result indicates better phonetic match.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">exp(float_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns exponential value.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">floor(numeric_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns largest integer less than or equal to the argument.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">file_id(`file_name')</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the file ID for the logical filename.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">file_name(file_id)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the logical filename for file ID.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">filegroup_id
+<br>
+
+(`filegroup_name')</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns filegroup ID for the logical filegroup name.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">filegroup_name
+<br>
+
+(filegroup_id)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the logical filegroup name for filegroup ID.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">filegroupproperty
+<br>
+
+(filegroup_name, property)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns filegroup property value for the specified property.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">fileproperty
+<br>
+
+(file, property)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns file property value for the specified property.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">fulltextcatalog
+<br>
+
+property(catalog_name, property)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns full-text catalog properties.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">fulltextservice
+<br>
+
+property(property)</em></p>
+
+</td>
+
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns full-text service level properties.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">formatmessage
+<br>
+
+(msg_number, param_value [,... n ])</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Constructs a message from an existing message in <b class="EmphasisBold">
+
+SYSMESSAGES</b> table (similar to RAISERROR).</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">freetexttable(table
+<br>
+
+ { column |*}, `freetext_string' [, top_n_by_rank]) </em></p>
+
+</td>
+
+<td rowspan="1" colspan="1">
+<p class="CellBody">Used for full-text search; returns a table with columns that match the meaning but don't exactly match value of <em class="Emphasis">freetext_string</em>.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">getdate(  )</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns current date and time.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">getansinull([`database'])</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns default nullability setting for new columns.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">getutcdate(  )</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns Universal Time Coordinate (UTC) date.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">grouping(column_name)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Returns 1 when the row is added by CUBE or ROLLUP; otherwise, returns 0.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">host_id(  )</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns workstation ID of a given process.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">host_name(  )</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns process hostname.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">ident_incr
+<br>
+
+(`table_or_view')</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns identity-column increment value.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">ident_seed
+<br>
+
+(`table_or_view')</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns identity seed value.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">ident_current
+<br>
+
+(`table_name')</em></p>
+
+</td>
+
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the last identity value generated for the specified table.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">identity(data_type [, seed, increment]) As column_name</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Used in <em class="Emphasis">SELECT INTO</em> statement to insert an identity column into the destination table.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">index_col(`table', 
+<br>
+
+index_id, key_id)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns index column name, given table ID, index ID, and column sequential number in the index key.</p>
+
+</td>
+
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">indexproperty(table_id, index, property)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns index property (such as Fillfactor).</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">isdate(expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Validates if a character string can be converted to DATETIME.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">is_member({`group' | `role'})</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns true or false (1 or 0) depending on whether user is a member of NT group or SQL Server role.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">is_srvrolemember
+<br>
+
+(`role' [,'login'])</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns true or false (1 or 0) depending on whether user is a member of specified server role.</p>
+
+</td>
+
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">isnull(check_expression, replacement_value)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the first argument if it is not NULL; otherwise, returns the second argument.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">isnumeric(expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Validates if a character string can be converted to NUMERIC.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">left(character_expression, integer_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns a portion of a character expression, starting at <em class="Emphasis">integer_expression</em> from left.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">len(string_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the number of characters in the expression.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">log(float_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns natural logarithm.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">log10(float_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Returns base-10 logarithm.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">lower(character_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Converts a string to lowercase.</p>
+
+</td>
+</tr>
+
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">ltrim(character_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Trims leading-space characters.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">max([All | Distinct] expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Finds maximum value in a column.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">min([All | Distinct] expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Finds minimum value in a column.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">month(date)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns month part of the date provided.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">nchar(integer_expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns the unicode character with the given integer code.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">newid(  )</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Creates a new unique identifier of type <em class="Emphasis">uniqueidentifier</em>.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">nullif(expression, expression)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns NULL if two specified expressions are equivalent.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody"><em class="Filename">object_id(`object')</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns object ID and given name.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">object_name(object_id)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+
+<p class="CellBody">Returns object name and given ID.</p>
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="1">
+<p class="CellBody"><em class="Filename">objectproperty
+<br>
+
+(id, property)</em></p>
+
+</td>
+<td rowspan="1" colspan="1">
+<p class="CellBody">Returns properties of objects in the current database.</p>
+
+</td>
+</tr>
+</tbody></table>

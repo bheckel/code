@@ -1,0 +1,55 @@
+#/bin/tcsh
+#
+# [t]csh SUCKS!
+#
+# Modified: Thu 10 Jun 2004 10:33:22 (Bob Heckel)
+
+###set path=($HOME/bin $path /usr/sbin /usr/local/bin /opt/samba/bin)
+set path=(/u/bqh0/bin $path /tools/bin /usr/local/bin)
+set noclobber
+# Doesn't work for mainframe.
+###set hostname `uname -n`
+set hostname=`hostname`
+setenv host `expr $hostname : '\([^.]*\).*'`
+# Force mainframe to lowercase.
+setenv lcuser `echo $user |tr '[A-Z]' '[a-z]'`
+setenv lchost `echo $host | tr '[A-Z]' '[a-z]'`
+###set prompt="`whoami`@`hostname`% "
+set prompt="${lcuser}@${lchost}% "
+set history=100
+set ignoreeof
+set filec
+set fignore=(.o,.bak)
+
+###setenv MANPATH /usr/dt/man:/usr/local/man:/usr/man
+
+umask 022
+
+if ($?tcsh) then
+  # vi mode
+  bindkey -v 
+  set autolist
+  set autocorrect
+  set nobeep
+  set recexact
+  set correct=all
+  set visualbell
+endif
+
+###if (-f /usr/local/bin/.alias) source /usr/local/bin/.alias
+
+alias by       exit
+alias bye      exit
+alias cd..     'cd ..'
+alias cdt      'cd ~/tmp/testing'
+alias copy     'cp -i'
+alias delete   'rm -i'
+alias f        fg
+alias la       'ls -a'
+alias ll       'ls -l'
+alias lt       'ls -lt | head -n20'     # latest twenty
+alias h        'history | tail -n10'
+alias jam      "ps -eaf | grep `whoami`"
+
+setenv EDITOR /bin/vi
+exit

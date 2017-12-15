@@ -1,0 +1,5 @@
+# Low volume mailing lists
+:0:
+* (^Sender: cygwin-apps-owner\@cygwin\.com)
+* (^To: w3m-dev-en@mi.med.tohoku.ac.jp)
+${DEFAULT}

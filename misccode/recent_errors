@@ -1,0 +1,13 @@
+#!/bin/sh
+HOST=`uname -n`
+echo Content-type: text/html
+echo Refresh: 30
+echo 
+echo "<HTML><HEAD><TITLE>Recent Errors</TITLE></HEAD>"
+echo "<BODY>"
+echo "<H1 ALIGN=CENTER>Recent Errors on $HOST<HR></H1>"
+echo -n "<FONT SIZE=\"-1\" FACE=\"Courier\"><PRE>"
+tail -20 /apache/logs/error_log
+echo "</PRE></FONT>"
+echo "<H5 ALIGN=CENTER><HR>This display updates every 30 seconds.</H1>"
+echo "</BODY></HTML>"

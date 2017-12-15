@@ -1,0 +1,419 @@
+#!/usr/pkg/bin/bash
+
+# Choose a random line
+
+F=$HOME/html/rss/dhammapada.txt
+
+TOTLINES=`wc -l $F|awk '{print $1}'`
+
+LINENUM=$[($RANDOM%${TOTLINES})+1]
+
+RND=`sed -n "$LINENUM"p $F | awk -F '|' '{print $1}'`
+
+###echo $RND
+
+perl -pi -e "s/<item>.*/<item><title>$RND<\/title><\/item>/" $HOME/html/rss/dhammapada.rss
+
+
+#All states of being are determined by mind.<BR> It is mind that leads the way.<BR> Just as the wheel of the oxcart follows <BR> the hoof print of the animal that draws it, <BR> so suffering will surely follow <BR> when we speak or act impulsively<BR> from an impure state of mind.|I. THE PAIRS 1
+#All states of being are determined by mind.<BR> It is mind that leads the way.<BR> As surely as our shadow never leaves us,<BR> so well-being will follow <BR> when we speak or act <BR> with a pure state of mind.|I. THE PAIRS 2
+#When we hold fast to such thoughts as,<BR> "They abused me, mistreated me, <BR> molested me, robbed me,"<BR> we keep hatred alive.|I. THE PAIRS 3
+#If we thoroughly release ourselves <BR> from such thoughts as,<BR> "They abused me, mistreated me, <BR> molested me, robbed me,"<BR> hatred is vanquished.|I. THE PAIRS 4
+#Never by hatred is hatred conquered, <BR> but by readiness to love alone.<BR> This is eternal law.|I. THE PAIRS 5
+#Those who are contentious <BR> have forgotten that we all die;<BR> for the wise, who reflect on this fact, <BR> there are no quarrels.|I. THE PAIRS 6
+#As a stormy wind can uproot a frail tree <BR> so one who holds heedlessly to pleasure, <BR> who indulges in food and is indolent, <BR> can be uprooted by Mara |I. THE PAIRS 7
+#As a stormy wind <BR> cannot move a mountain of rock <BR> so one who contemplates <BR> the reality of the body, <BR> who develops faith and energy,<BR> is unmoved by Mara.|I. THE PAIRS 8
+#Wearing the robe of a renunciate <BR> does not in itself render one pure. <BR> Those who wear it, and yet lack diligence, <BR> are heedless.|I. THE PAIRS 9
+#Being possessed of self-restraint,<BR> honest and diligent in conduct;<BR> such a one is worthy <BR> of the renunciate's robe.|I. THE PAIRS 10
+#Mistaking the false for the real <BR> and the real for the false,<BR> one suffers a life of falsity.	|I. THE PAIRS 11
+#But, seeing the false as the false <BR> and the real as the real,<BR> one lives in the perfectly real.|I. THE PAIRS 12
+#Like rain leaking through <BR> a poorly-thatched roof, <BR> the unruly passions <BR> seep into an untamed heart.|I. THE PAIRS 13
+#As rain cannot penetrate <BR> a well-thatched roof, <BR> so the passions <BR> cannot enter a well-trained heart. |I. THE PAIRS 14
+#When we see clearly <BR> our own lack of virtue <BR> we are filled with grief;<BR> here and hereafter we grieve.|I. THE PAIRS 15
+#When we appreciate fully <BR> the benefit of our own pure deeds <BR> we are filled with joy;	<BR> here and hereafter <BR> there is a celebration of joy.|I. THE PAIRS 16
+#Here and hereafter <BR> those who perform evil <BR> create their own suffering.<BR> Mental preoccupation 	<BR> with the thought, "I have done wrong" <BR> possesses their minds, <BR> and they fall into chaos.|I. THE PAIRS 17
+#Here and hereafter <BR> those who live their lives well <BR> abide in happiness.<BR> They are filled <BR> with a natural appreciation of virtue,<BR> and they dwell in delight.|I. THE PAIRS 18
+#Though one may know <BR> much about Dhamma,<BR> if one does not live accordingly  - <BR> like a cowherd <BR> who covets another's cattle  - <BR> one experiences none of the benefits <BR> of walking the Way.|I. THE PAIRS 19
+#Knowing only a little about Dhamma<BR> but wholeheartedly according with it,<BR> transforming the passions <BR> of greed, hatred and delusion,<BR> releasing all attachments to here and hereafter,<BR> one will indeed experience for oneself <BR> the benefits of walking the Way.|I. THE PAIRS 20
+#Appreciative awareness leads to life;<BR> heedless avoidance is the path to death. <BR> Those who are aware are fully alive,<BR> while those who are heedless <BR> are as if already dead.|II. AWARENESS 21
+#The wise, being fully alive, rejoice<BR> in appreciative awareness,<BR> and abide delighting <BR> in this capacity.|II. AWARENESS 22
+#The Awakened Ones, firm in their resolve, <BR> vigorously apply themselves,<BR> and know freedom from bondage:<BR> liberation, true security.|II. AWARENESS 23
+#Those who are energetically <BR> committed to the Way, <BR> who are pure and considerate in effort,<BR> composed and virtuous in conduct,<BR> steadily increase in radiance.|II. AWARENESS 24
+#By endeavour, vigilance, <BR> restraint and self-control, <BR> let the wise make islands of themselves <BR> which no flood can overwhelm.|II. AWARENESS 25
+#Those who are foolish and confused<BR> betray themselves to heedlessness.<BR> The wise treasure the awareness<BR> they have cultivated <BR> as their most precious possession.|II. AWARENESS 26
+#"Do not become lost in negligence, do not become lost in sensuality."<BR> Heeding such council,<BR> the contemplative discovers <BR> profound release.|II. AWARENESS 27
+#Those Awakened Ones, <BR> who have tasted freedom <BR> from all distraction <BR> by cultivating awareness,<BR> view all who are suffering<BR> with compassionate perspective, <BR> as one on a mountaintop<BR> is able to view the plains.|II. AWARENESS 28
+#Aware among those who are heedless,<BR> awake among those who sleep,<BR> the wise go forward like strong young horses, <BR> leaving the exhausted behind.|II. AWARENESS 29
+#By way of diligent awareness<BR> the god Magha won his realm.<BR> Diligence is ever rewarded,<BR> negligence is ever scorned.|II. AWARENESS 30
+#The renunciate who delights in vigilance <BR> and shuns heedlessness<BR> advances like a grass fire,<BR> consuming obstructions great and small.|II. AWARENESS 31
+#The renunciate who delights in vigilance <BR> and shuns heedlessness<BR> is protected from regression:<BR> such a one approaches liberation.|II. AWARENESS 32
+#Just as a fletcher shapes an arrow,<BR> so the wise develop the mind;<BR> so excitable, uncertain <BR> and difficult to control.|III. THE MIND 33
+#Like a fish which on being dragged <BR> from its home in the water <BR> and tossed on dry land <BR> will thrash about,<BR> so will the heart tremble<BR> when withdrawing from the current of Mara.|III. THE MIND 34
+#The active mind is difficult to tame, <BR> flighty and wandering wherever it wills:<BR> taming it is essential,<BR> leading to the joy of well-being.|III. THE MIND 35
+#The protected and guarded mind<BR> leads to ease of being.<BR> Though subtle, elusive and hard to see,<BR> one who is alert <BR> should tend and watch over this mind.|III. THE MIND 36
+#Wandering far and wide on its own,<BR> without form, <BR> the mind lies in the heart-cavern within.<BR> To bring it under control<BR> is to be freed from the bonds of ignorance.|III. THE MIND 37
+#In one whose mind is unsteady,<BR> whose heart is not prepared <BR> with true teachings, <BR> whose faith is not matured,<BR> the fullness of wisdom is not yet manifest.|III. THE MIND 38
+#There is no fear<BR> if the heart is uncontaminated <BR> by the passions<BR> and the mind is free from ill-will.<BR> Seeing beyond good and evil <BR> one is awake.|III. THE MIND 39
+#Seeing this body to be as fragile as a clay vessel,<BR> and fortifying the heart like a city wall,<BR> one can confront Mara with the weapon of insight.<BR> Having the advantage of non-attachment,<BR> one protects what has already been gained.|III. THE MIND 40
+#Certainly this body will soon lie lifeless: <BR> cast aside on the ground,<BR> devoid of consciousness<BR> and as useless as a burnt-out log.|III. THE MIND 41
+#More than a thief,<BR> more than an enemy,<BR> a misdirected heart <BR> brings one to harm.|III. THE MIND 42
+#Neither mother, father<BR> nor any member of a family<BR> can give you the blessings generated<BR> by your own well-directed heart.|III. THE MIND 43
+#Who is it <BR> that can truly see as they are<BR> this earth, this body, <BR> the hell realms and the heavenly realms?<BR> Who can discern <BR> the well-taught Path of Wisdom,<BR> in the way the eye of a skilled florist<BR> can select perfect blooms?|IV. FLOWERS 44
+#It is those who knowingly walk the Way<BR> who can see as they truly are <BR> this earth, this body, <BR> the hell realms and the heavenly realms.<BR> These are the ones who can discern <BR> the well-taught Path of Wisdom.|IV. FLOWERS 45
+#Know the body <BR> to be as transient as foam, a mirage.<BR> The flower of sensual passion<BR> has a hidden barb.<BR> See this and pass beyond death.|IV. FLOWERS 46
+#As a flash flood <BR> can sweep away a sleeping village, <BR> so death can destroy<BR> those who only seek the flowers<BR> of casual sensual pleasures.|IV. FLOWERS 47
+#To be frustrated and ungratified,<BR> yet still only seek the flowers <BR> of casual sensual pleasures <BR> brings one under the destroyer's sway.|IV. FLOWERS 48
+#As a bee gathering nectar <BR> does not harm or disturb <BR> the colour and fragrance of the flower,<BR> so do the wise move<BR> through the world.|IV. FLOWERS 49
+#Dwell not on the faults <BR> and shortcomings of others, <BR> instead, seek clarity<BR> about your own.|IV. FLOWERS 50
+#As a beautiful flower <BR> without fragrance is disappointing,<BR> so are wise words <BR> without right action.|IV. FLOWERS 51
+#As a beautiful flower <BR> with a delightful fragrance is pleasing, <BR> so is wise and lovely speech <BR> when matched with right action.|IV. FLOWERS 52
+#As many garlands can be made <BR> from a heap of flowers, <BR> so too, much that is wholesome can be done <BR> during this human existence.|IV. FLOWERS 53
+#The fragrance of flowers or sandalwood<BR> blows only with the prevailing wind,<BR> but the fragrance of virtue<BR> pervades all directions.|IV. FLOWERS 54
+#The fragrance of virtue <BR> surpasses by far <BR> the fragrance of flowers <BR> or sandalwood.|IV. FLOWERS 55
+#The aroma of sandalwood <BR> and the scent of flowers <BR> bring only little delight<BR> compared to the fragrance of virtue,<BR> which suffuses even the heavenly realms.|IV. FLOWERS 56
+#It is not possible for Mara to find <BR> those who abide in appreciative awareness <BR> who, by perfect knowledge, are freed <BR> and live in virtue.|IV. FLOWERS 57
+#Just as a sweet-smelling and beautiful lotus <BR> can grow from a pile of discarded waste, <BR> the radiance of a true disciple of the Buddha<BR> outshines dark shadows cast by ignorance.|V. FLOWERS 58-59
+#The night is long <BR> for one who cannot sleep. <BR> A journey is long for one who is tired. <BR> Ignorant existence is long and tedious<BR> for those unaware of Truth.|V. THE FOOLISH 60
+#Having found no companion<BR> who has travelled at least as far as ourselves, <BR> it is better to go alone <BR> than to accompany those <BR> who remain irresolute.|V. THE FOOLISH 61
+#"This is my child, this is my wealth": such thoughts are the preoccupations of fools.<BR> If we are unable to own even ourselves, <BR> why make such claims?|V. THE FOOLISH 62
+#The fool who knows he is a fool <BR> is at least a little wise; <BR> the fool who thinks that he is wise <BR> is assuredly a fool.|V. THE FOOLISH 63
+#Like spoons unable to taste<BR> the flavour of the soup, <BR> are the fools who cannot see truth,<BR> even though they live <BR> all their lives among the wise.|V. THE FOOLISH 64
+#Like the tongue that can appreciate<BR> the flavour of the soup, <BR> is one who can discern clearly the truth<BR> after only a brief<BR> association with the wise.|V. THE FOOLISH 65
+#By heedlessly performing evil,<BR> the unwary fools <BR> produce their own bitter fruits.<BR> They behave like their worst enemy. |V. THE FOOLISH 66
+#A deed is not well-done <BR> when upon reflection remorse arises:<BR> with tears of sorrow <BR> one harvests its fruit.|V. THE FOOLISH 67
+#A deed is well-done <BR> when upon reflection no remorse arises: <BR> with joy one harvests its fruits.|V. THE FOOLISH 68
+#Fools perceive evil acts <BR> to be sweet as honey <BR> until they have seen the consequences.<BR> When they behold their fruits, <BR> fools suffer indeed.|V. THE FOOLISH 69
+#Even after months of rigid asceticism,<BR> subsisting on a frugal diet, <BR> a fool is not to be compared in value<BR> to the person who simply sees the truth.|V. THE FOOLISH 70
+#Fresh milk does not immediately <BR> turn into curd,<BR> and evil acts do not immediately <BR> show their fruits;<BR> however, fools do suffer from the consequences<BR> of their foolishness<BR> as they would be burned <BR> by standing on coals hidden in ashes.|V. THE FOOLISH 71
+#Fools are those who use foolishly <BR> whatever gifts they have, <BR> destroying their accumulated good fortune.|V. THE FOOLISH 72
+#The conceit and craving of fools grows <BR> as they claim for themselves <BR> undue authority, recognition and reward: <BR> their falsity affects their longing,<BR> they wish to be seen <BR> as powerful and discerning.|V. THE FOOLISH 73-74
+#Like the tongue that can appreciate<BR> the flavour of the soup, <BR> is one who can discern clearly the truth<BR> after only a brief<BR> association with the wise.|V. THE FOOLISH 75
+#Only blessings can arise <BR> from seeking the company <BR> of wise and discerning persons,<BR> who skilfully offer <BR> both admonition and advice<BR> as if guiding one to hidden treasure.|VI. THE WISE 76
+#Let the wise guide beings away from darkness, <BR> give direction and advice.<BR> They will be treasured by the virtuous<BR> and dismissed by the foolish.|VI. THE WISE 77
+#Do not seek the company of misguided friends;<BR> beware of degenerate companions.<BR> Seek and enjoy the company of well-guided friends, <BR> those who support insight. |VI. THE WISE 78
+#Surrendering oneself to Dhamma <BR> leads to serene being. <BR> The wise perpetually delight in the truth <BR> taught by the Awakened One.|VI. THE WISE 79
+#Those who build canals <BR> channel the flow of water. <BR> Arrowsmiths make arrows. <BR> Woodworkers craft wood.<BR> The wise tame themselves.|VI. THE WISE 80
+#As solid rock<BR> is unshaken by the wind, <BR> so are those with wisdom undisturbed <BR> whether by praise or blame. |VI. THE WISE 81
+#On hearing true teachings,<BR> the hearts of those who are receptive,<BR> become serene, <BR> like a lake, deep, clear and still. |VI. THE WISE 82
+#Virtuous beings are unattached. <BR> They do not indulge in heedless speech <BR> about sensual pleasures.<BR> They experience both joy and sorrow <BR> but are possessed by neither.|VI. THE WISE 83
+#Neither for one's own sake <BR> nor on behalf of another<BR> does a wise person do harm <BR> - not for the sake of family, fortune or gain.<BR> Such a one is rightly called <BR> just, virtuous and wise.|VI. THE WISE 84
+#Few are those who reach the beyond. <BR> Most pace endlessly back and forth,<BR> not daring to risk the journey.|VI. THE WISE 85
+#Although it is difficult  to cross over <BR> the storm-swept sea of passion, <BR> those who live in accord <BR> with the well-taught Way <BR> arrive at the beyond.|VI. THE WISE 86
+#With an image of liberation as the goal <BR> the wise abandon darkness <BR> and cherish light,<BR> leave petty security behind<BR> and seek freedom from attachment.<BR> To pursue such release is difficult and rare, <BR> yet the wise will seek it, <BR> detaching themselves from obstructions, <BR> purifying heart and mind.|VI. THE WISE 87-88
+#Freeing themselves from longing,<BR> unhindered by habitual grasping, <BR> those who align themselves with the Way <BR> delight in non-attachment<BR> and, while still in the world,<BR> are radiant.|VI. THE WISE 89
+#There is no tension<BR> for those who have completed their journey <BR> and have become free 	<BR> from the distress of bondage.|VII. THE AWAKENED ONE 90
+#Alert to the needs of the journey,<BR> those on the path of awareness,<BR> like swans, glide on,<BR> leaving behind their former resting places.|VII. THE AWAKENED ONE 91
+#Just like birds that leave no tracks in the air,<BR> there are those whose minds do not cling<BR> to temptations that are offered to them. <BR> Their focus is the signless state of liberation,<BR> which to others is indiscernible. |VII. THE AWAKENED ONE 92
+#There are those who are free from all obstructions;<BR> they do not worry about food,<BR> their focus is the signless state of liberation.<BR> Like birds flying through the air,<BR> trackless they move on their way.|VII. THE AWAKENED ONE 93
+#Like horses well-trained by their owners <BR> are those who have rightly tamed their senses; <BR> having freed their hearts from pride and pollution <BR> they generate all-pervading delight.|VII. THE AWAKENED ONE 94
+#There are those who discover <BR> they can leave behind confused reactions <BR> and become patient as the earth;<BR> unmoved by anger,<BR> unshaken as a pillar,<BR> unperturbed as a clear and quiet pool.|VII. THE AWAKENED ONE 95
+#Those who arrive <BR> at the state of perfect freedom <BR> through right understanding<BR> are unperturbed <BR> in body, speech or mind. <BR> They remain unshaken <BR> by life's vicissitudes.|VII. THE AWAKENED ONE 96
+#Those who know the uncreated, <BR> who are free and stilled,<BR> who have discarded all craving, <BR> are the most worthy beings.|VII. THE AWAKENED ONE 97
+#Whether in a forest, <BR> a town or open country, <BR> delightful is the dwelling place <BR> of one now fully free.|VII. THE AWAKENED ONE 98
+#Beings free from addiction to sensual pleasures<BR> know a unique form of delight.<BR> They seek quiet in forest retreats<BR> which worldly beings would avoid.|VII. THE AWAKENED ONE 99
+#A single word of truth, <BR> which calms the mind,<BR> is better to hear than a thousand<BR> irrelevant words.|VIII. THE THOUSANDS 100
+#A single verse of truth,<BR> which calms the mind,<BR> is better to hear than a thousand<BR> irrelevant verses.|VIII. THE THOUSANDS 101
+#Reciting a single verse of truth <BR> which calms the mind<BR> is better than reciting<BR> a hundred meaningless verses.|VIII. THE THOUSANDS 102
+#One might defeat alone in battle <BR> a thousand thousand men,<BR> but one who gains self-mastery <BR> is by far the greater hero.|VIII. THE THOUSANDS 103
+#Self-mastery is the supreme victory -<BR> much more to be valued <BR> than winning control over others. <BR> It is a victory <BR> that no other being whatsoever<BR> can distort or take away.|VIII. THE THOUSANDS 104-105
+#To honour,<BR> even for a single moment,<BR> one who has attained self-mastery, <BR> is of greater merit <BR> than making countless offerings <BR> to those who are unworthy.|VIII. THE THOUSANDS 106
+#To honour,<BR> even for a single moment,<BR> one who has attained self-mastery, <BR> is of greater benefit <BR> than habitually performing ceremonies <BR> based on a wrong understanding.|VIII. THE THOUSANDS 107
+#Even if one should spend<BR> an entire year<BR> making gestures of offering <BR> for the sake of self-gain, <BR> all this is not worth one quarter the value<BR> of offering veneration to a noble being.|VIII. THE THOUSANDS 108
+#For one who always honours and respects<BR> those of greater years,<BR> there are four blessings:<BR> long life, beauty, happiness and strength.|VIII. THE THOUSANDS 109
+#A single day lived <BR> with conscious intention and virtue <BR> is of greater value than a hundred years<BR> lived devoid of discipline and right restraint.|VIII. THE THOUSANDS 110
+#A single day lived <BR> with conscious intention and wisdom<BR> is of greater value than a hundred years<BR> lived devoid of discipline and manifest wisdom.|VIII. THE THOUSANDS 111
+#A single day lived <BR> with conscious intention and profound effort <BR> is of greater value than a hundred years<BR> lived in lazy passivity.|VIII. THE THOUSANDS 112
+#A single day lived in awareness <BR> of the transient nature of life <BR> is of greater value than a hundred years<BR> lived unaware of birth and death.|VIII. THE THOUSANDS 113
+#A single day lived awake to the undying state <BR> is of greater value than a hundred years<BR> lived without recognising deathlessness.|VIII. THE THOUSANDS 113
+#A single day lived awake to profound truth <BR> is of greater value than a hundred years <BR> lived unawakened.|VIII. THE THOUSANDS 115
+#Hasten towards doing what is wholesome.<BR> Restrain your mind from evil acts.<BR> The mind that is slow to do good<BR> can easily find pleasure in evil-doing.|IX. EVIL 116
+#If you perform an evil act,<BR> then do not repeat it.<BR> Avoid finding pleasure in its memory. <BR> The aftermath of evil-doing is painful.|IX. EVIL 117
+#Having performed a wholesome act<BR> it is good to repeat it.<BR> Enjoy the pleasure of its memory. <BR> The fruit of goodness is contentment.|IX. EVIL 118
+#Even those who perform evil <BR> can experience well-being <BR> so long as their actions <BR> have not yet borne direct fruits. <BR> However, when the results <BR> of their actions ripen,<BR> the painful consequences<BR> cannot be avoided.|IX. EVIL 119
+#Even those who live wholesome lives <BR> can experience suffering <BR> so long as their acts <BR> have not yet borne direct fruits. <BR> However, when the fruits <BR> of their actions ripen<BR> the joyful consequences <BR> cannot be avoided.|IX. EVIL 120
+#Do not ignore the effects of evil, <BR> saying, "This will come to nothing."<BR> Just as by the gradual fall of raindrops <BR> the water jar is filled,<BR> so in time fools are corrupted<BR> by evil-doing.|IX. EVIL 121
+#Do not ignore the effect of right action<BR> saying, "This will come to nothing."<BR> Just as by the gradual fall of raindrops <BR> the water jar is filled,<BR> so in time the wise <BR> become replete with good.|IX. EVIL 122
+#As one who is entrusted with precious cargo<BR> would remain vigilant and protective<BR> avoid evil as if it were poison.|IX. EVIL 123
+#A hand without an open wound <BR> can carry poison <BR> and remain free from harm; <BR> likewise, evil has no consequences <BR> for those who do not perform it.|IX. EVIL 124
+#If you intentionally harm <BR> an innocent person, <BR> someone who is pure and blameless,<BR> the harm will come back to you <BR> like fine dust thrown into the wind.|IX. EVIL 125
+#Some are reborn as humans; <BR> evil-doers are reborn in hell.<BR> Doers of good are reborn in bliss <BR> and the pure enter the trackless land.|IX. EVIL 126
+#There is no place on earth<BR> where one can hide <BR> from the consequences of evil actions -<BR> not in a mountain cave,<BR> the ocean nor in the sky.|IX. EVIL 127
+#There is no place on earth<BR> beyond the reach of death  -<BR> not in a mountain cave, <BR> the ocean nor in the sky.|IX. EVIL 128
+#Having empathy for others <BR> one sees that all beings are afraid<BR> of punishment and death.<BR> Knowing this, <BR> one does not attack or cause attack.|X. AGGRESSION 129
+#Having empathy for others <BR> one sees that all beings <BR> love life and fear death. <BR> Knowing this, <BR> one does not attack or cause attack.|X. AGGRESSION 130
+#To harm live beings<BR> who, like us, seek contentment, <BR> is to bring harm to ourselves.|X. AGGRESSION 131
+#To avoid bringing harm to living beings<BR> who, like us, seek contentment, <BR> is to bring happiness to ourselves.|X. AGGRESSION 132
+#Avoid speaking harshly to others;<BR> harsh speech prompts retaliation.<BR> Those hurt by your words may hurt you back.|X. AGGRESSION 133
+#If spoken to harshly,<BR> make yourself as silent as a cracked gong;<BR> non-retaliation is a sign of freedom.|X. AGGRESSION 134
+#Just as a herdsman <BR> drives cattle to pasture, <BR> old age and death <BR> direct living beings.|X. AGGRESSION 135
+#Though while they perform their evil acts <BR> they do not realise what they are doing,<BR> fools suffer the results <BR> of their own actions accordingly, <BR> just as one is burnt when handling fire.|X. AGGRESSION 136
+#To cause harm to the defenceless <BR> soon brings suffering <BR> to those who attack.<BR> They will reap pain or poverty or loss,<BR> illness, insanity or persecution,<BR> abuse, distress or devastation,<BR> and, alone, after death <BR> they must confront their misdeeds.|X. AGGRESSION 137-140
+#Not outer asceticisms,<BR> nor self-humiliation<BR> nor physical deprivation of any kind,<BR> can purify the heart <BR> of one still obscured by doubt.|X. AGGRESSION 141
+#Flamboyant outer appearance<BR> does not in itself constitute <BR> an obstruction to freedom.<BR> Having a heart at peace,<BR> pure, contained, <BR> awake and blameless,<BR> distinguishes a renunciate, <BR> a Wayfarer, a noble being.|X. AGGRESSION 142
+#A well-trained horse <BR> gives no cause for restraint.<BR> Rare are those beings who,<BR> through modesty and discipline, <BR> give no cause for rebuke.|X. AGGRESSION 143
+#Let the dread of endless mediocrity<BR> spur you into great effort,<BR> like a well-trained horse<BR> encouraged by the mere touch of the whip.<BR> Relinquish the burden of endless struggle<BR> with unapologetic confidence,<BR> with purity of action, effort, concentration,<BR> and by conscious and disciplined commitment<BR> to the path.|X. AGGRESSION 144
+#Those who build canals <BR> channel the flow of water. <BR> Arrowsmiths make arrows. <BR> Woodworkers craft wood.<BR> The good tame themselves.|X. AGGRESSION 145
+#Why is there laughter?<BR> Why is there joy <BR> when the world is on fire? <BR> Since you are clouded in darkness<BR> should you not seek the light?|XI. OLD AGE 146
+#Gaze upon this once-decorated body  -<BR> it used to attract attention<BR> but now it is only festering flesh,<BR> a putrid thing.<BR> It is neither sure nor substantial.|XI. OLD AGE 147
+#This body wears out with age;<BR> it becomes a host to disease <BR> - vulnerable, fragile, <BR> a decrepit, disintegrating mass,<BR> which eventually ends in death.|XI. OLD AGE 148
+#What pleasure does life hold<BR> once one has seen <BR> old bleached bones,<BR> discarded and scattered round?|XI. OLD AGE 149
+#The physical body consists of bones <BR> covered with flesh and blood.<BR> Stored up inside it<BR> are decay and death, pride and malice.|XI. OLD AGE 150
+#Passed down by the wise<BR> is the knowledge that,<BR> though what is externally impressive<BR> loses its splendour,<BR> and though our bodies will decay,<BR> the truth itself outlasts all degeneration.|XI. OLD AGE 151
+#While ageing fools put on weight<BR> like oxen in their stalls,<BR> their minds remain small.|XI. OLD AGE 152
+#For many lives I have wandered <BR> looking for, but not finding,<BR> the house-builder<BR> who caused my suffering.<BR> But now you are seen and<BR> you shall build no more.<BR> Your rafters are dislodged and <BR> the ridge-pole is broken.<BR> All craving is ended;<BR> my heart is as one with the unmade.|XI. OLD AGE 153-154
+#Those who while still young<BR> neither choose a life of renunciation<BR> nor earn a good living,	<BR> end up like dejected old herons<BR> beside a pond without fish.|XI. OLD AGE 155
+#Those who while still young<BR> neither choose a life of renunciation<BR> nor earn a good living,<BR> will end up bemoaning the past,<BR> falling like spent arrows <BR> that have missed their mark.|XI. OLD AGE 156
+#If we hold ourselves dear, <BR> then we maintain careful self-regard<BR> both day and night.|XII. THE SELF 157
+#It is wise <BR> to set ourselves right <BR> before instructing others.|XII. THE SELF 158
+#One's own self is the hardest to discipline.<BR> You should act as you teach:<BR> tame yourself <BR> before trying to tame others. |XII. THE SELF 159
+#Truly it is ourselves <BR> that we depend upon; <BR> how could we really <BR> depend upon another? <BR> When we reach the state <BR> of self reliance <BR> we find a rare refuge.|XII. THE SELF 160
+#As a diamond can cut through<BR> the stone that once housed it,<BR> so your own evil can grind you down.|XII. THE SELF 161
+#Committed evil doers <BR> behave toward themselves<BR> like their own worst enemies.<BR> They are like creepers <BR> that strangle the trees<BR> which support them.|XII. THE SELF 162
+#It is easy to do that which is <BR> of no real benefit to oneself, <BR> but it is difficult indeed to do that <BR> which is truly beneficial and good.|XII. THE SELF 163
+#Like the bamboo <BR> which destroys itself as it bears fruit,<BR> so fools harm themselves<BR> by holding to wrong views<BR> and deriding those worthy ones<BR> who live in harmony with the Way.|XII. THE SELF 164
+#By ourselves we do evil <BR> and by ourselves we are made impure.<BR> By ourselves we avoid evil <BR> and by ourselves we are made pure. <BR> The great matter of purity <BR> is our own affair.<BR> No other can be responsible.|XII. THE SELF 165
+#Knowing the Way for oneself,<BR> walk it thoroughly.<BR> Do not allow the needs of others, <BR> however demanding,<BR> to bring about distraction.|XII. THE SELF 166
+#By renouncing unworthy ways <BR> and by not living carelessly, <BR> by not holding to false views <BR> we no longer perpetrate delusion.|XIII. THE WORLD 167
+#Do not show false humility.<BR> Stand firmly in relation to your goal.<BR> Practice, well-observed,<BR> leads to contentment <BR> both now and in the future.|XIII. THE WORLD 168
+#Live your life well in accord with the Way -<BR> avoid a life of distraction.<BR> A life well-lived leads to contentment,<BR> both now and in the future.|XIII. THE WORLD 169
+#The King of Death cannot find <BR> those who look upon the world <BR> as insubstantial,<BR> as transient, a bubble -<BR> illusive, only a mirage.|XIII. THE WORLD 170
+#Come, view this world.<BR> See it as an ornate, festive carriage. <BR> See how fools are entranced by their visions,<BR> yet, for the wise there is no attachment.|XIII. THE WORLD 171
+#There are those who awaken from heedlessness. <BR> They bring light into the world<BR> like the moon <BR> emerging from clouds.|XIII. THE WORLD 172
+#One who transforms old and heedless ways<BR> into fresh and wholesome acts<BR> brings light into the world<BR> like the moon freed from clouds.|XIII. THE WORLD 173
+#If birds are trapped in a net <BR> only a few will ever escape. <BR> In this world of illusion<BR> only a few see their way to liberation.|XIII. THE WORLD 174
+#White swans rise into the air.<BR> Adept yogis <BR> transport themselves through space. <BR> Wise beings <BR> transcend worldly delusion<BR> by outwitting the hordes of Mara.|XIII. THE WORLD 175
+#For one who transgresses <BR> the law of truthfulness,<BR> one who has no regard<BR> for a future existence, <BR> there is no manner of evil <BR> that is impossible.|XIII. THE WORLD 176
+#Those who fail to value generosity<BR> do not reach the celestial realms. <BR> But the wise rejoice in giving<BR> and forever abide in bliss.|XIII. THE WORLD 177
+#Better than ruling the whole world, <BR> better than going to heaven, <BR> better than lordship over the universe,<BR> is an irreversible commitment to the Way.|XIII. THE WORLD 178
+#The Buddha's perfection is complete;<BR> there is no more work to be done.<BR> No measure is there for his wisdom;<BR> no limits are there to be found.<BR> In what way could he be distracted <BR> from truth?|XIV. THE BUDDHA 179
+#The Buddha's perfection is complete;<BR> in him there is no craving<BR> that could drag him down.<BR> No measure is there for his wisdom;<BR> no limits are there to be found.<BR> In what way could he be distracted <BR> from truth?|XIV. THE BUDDHA 180
+#Celestial beings treasure <BR> the Awakened Ones <BR> who have fully seen the Way,<BR> who are devoted to meditation <BR> and delight in the peace <BR> of renunciation.|XIV. THE BUDDHA 181
+#It is not easy to be born <BR> as a human being <BR> and to live this mortal life.<BR> It is not easy to discern <BR> profound wisdom <BR> and most rare <BR> for a Buddha to arise.|XIV. THE BUDDHA 182
+#Cease to do evil,<BR> cultivate that which is good;<BR> purify the heart.<BR> This is the Way <BR> of the Awakened Ones.|XIV. THE BUDDHA 183
+#A renunciate does not <BR> oppress anyone.<BR> Patient endurance <BR> is the ultimate asceticism.<BR> Profound liberation, <BR> say the Buddhas, <BR> is the supreme goal.|XIV. THE BUDDHA 184
+#Not insulting, not harming,<BR> cultivating restraint <BR> with respect for the training,<BR> modesty in eating and contentment <BR> with one's dwelling place, <BR> devotion to mindful intent:<BR> this is the Teaching of the Buddha.|XIV. THE BUDDHA 185
+#Not in great wealth <BR> is there contentment,<BR> nor in sensual pleasure, <BR> gross or refined. <BR> But in the extinction of craving <BR> is joy to be found<BR> by a disciple of the Buddha.|XIV. THE BUDDHA 186-187
+#To many places beings withdraw <BR> to escape from fear:<BR> to mountains, forests, <BR> parklands and gardens; <BR> sacred places as well.<BR> But none of these places <BR> offer true refuge,<BR> none of them can free us from fear.|XIV. THE BUDDHA 188-189
+#One who finds refuge in the Buddha<BR> in the Dhamma and in the Sangha <BR> sees with penetrating insight: <BR> suffering, its cause, its release <BR> and the Way leading to true freedom.|XIV. THE BUDDHA 190-191
+#The Buddha, the Dhamma, the Sangha:<BR> these are true refuge;<BR> these are supreme;<BR> these lead to Liberation.|XIV. THE BUDDHA 192
+#It is hard to find <BR> a being of great wisdom;<BR> rare are the places <BR> in which they are born.<BR> Those who surround them <BR> when they appear<BR> know good fortune indeed.|XIV. THE BUDDHA 193
+#Blessed is the arising of a Buddha; <BR> blessed is the revealing of the Dhamma; <BR> blessed is the concord of the Sangha; <BR> delightful is harmonious communion.|XIV. THE BUDDHA 194
+#Immeasurable is the benefit <BR> obtained from honouring those <BR> who are pure and beyond fear. <BR> Beings who have found freedom<BR> from sorrow and grieving <BR> are worthy of honour.|XIV. THE BUDDHA 195-196
+#While in the midst <BR> of those who hate, <BR> to dwell free from hating <BR> is happiness indeed.|XV. HAPPINESS 197
+#While in the midst <BR> of those who are troubled, <BR> to dwell free from troubling <BR> is happiness indeed.|XV. HAPPINESS 198
+#While in the midst <BR> of those who are greedy, <BR> to dwell free from greed<BR> is happiness indeed.|XV. HAPPINESS 199
+#We dwell happily, <BR> free from anxiety;<BR> like radiant beings <BR> in celestial realms <BR> we rejoice in delight.|XV. HAPPINESS 200
+#Victory leads to hatred,<BR> for the defeated suffer.<BR> The peaceful live happily,<BR> beyond victory and defeat.|XV. HAPPINESS 201
+#There is no fire like lust, <BR> no distress like hatred, <BR> no pain like the burden of attachment,<BR> no joy like the peace of liberation.|XV. HAPPINESS 202
+#Hunger is the greatest affliction, <BR> conditionality the greatest <BR> source of despair. <BR> The wise, seeing this as it is,<BR> realise liberation, the greatest joy.|XV. HAPPINESS 203
+#A healthy mind is the greatest gain.<BR> Contentment is the greatest wealth.<BR> A trustworthy friend is the best of kin. <BR> Unconditional freedom <BR> is the highest bliss.|XV. HAPPINESS 204
+#Tasting the flavour of solitude<BR> and the nectar of peace,<BR> those who drink the joy<BR> that is the essence of reality <BR> abide free from fear of evil.|XV. HAPPINESS 205
+#It is always a pleasure <BR> not to have to encounter fools. <BR> It is always good to see noble beings<BR> and a delight to live with them.|XV. HAPPINESS 206
+#Tedious is the company of fools,<BR> always painful, like being<BR> surrounded by enemies;<BR> but to associate with the wise<BR> is like being at home.|XV. HAPPINESS 207
+#You should follow the ways <BR> of those who are steadfast,<BR> discerning, pure and aware,<BR> just as the moon follows<BR> the path of the stars.|XV. HAPPINESS 208
+#There are those who pursue <BR> that which should be avoided <BR> and avoid that which <BR> should be pursued.<BR> Caught up in the senses <BR> they lose their way <BR> and later envy<BR> those who know the truth.|XVI. AFFECTION 209
+#To lose the company <BR> of those with whom <BR> one feels at home is painful,<BR> to be associated with those <BR> whom you dislike is even worse;<BR> so do not abandon yourselves<BR> either to the company of those<BR> with whom you feel at home<BR> or those whom you dislike.|XVI. AFFECTION 210
+#Beware of the attachment<BR> that springs from fondness,<BR> for separation from those<BR> one holds dear is painful,<BR> while if you take sides <BR> neither for nor against fondness,<BR> there will be no bondage.|XVI. AFFECTION 211
+#From endearment springs grief.<BR> From endearment springs fear of loss.<BR> Yet, if one is free from endearment, <BR> there is no grief<BR> so how could there be fear?|XVI. AFFECTION 212
+#Becoming lost in affection <BR> brings sorrow; <BR> becoming lost in affection <BR> brings fear.<BR> Being free from affection <BR> means sorrow ceases, <BR> so how could there be any fear?|XVI. AFFECTION 213
+#Becoming lost in enjoyment <BR> brings sorrow; <BR> becoming lost in enjoyment<BR> brings fear.<BR> Being free in your experience of enjoyment <BR> means sorrow ceases, <BR> so how could there be any fear?|XVI. AFFECTION 214
+#Becoming lost in lust <BR> brings sorrow; <BR> becoming lost in lust <BR> brings fear.<BR> Not being lost in lust <BR> means sorrow ceases, <BR> so how could there be any fear?|XVI. AFFECTION 215
+#Becoming lost in craving <BR> brings sorrow; <BR> becoming lost in craving<BR> brings fear.<BR> Being free from craving<BR> means sorrow ceases, <BR> so how could there be any fear?|XVI. AFFECTION 216
+#Naturally loved are those <BR> who live with right action <BR> and have found the Way, <BR> and through insight <BR> have become established in the truth.|XVI. AFFECTION 217
+#Those who long <BR> for the undefinable,<BR> with hearts filled with inspiration,<BR> whose minds are freed <BR> from sensual longing<BR> are called <BR> "those bound for freedom".|XVI. AFFECTION 218
+#Just as family and friends<BR> joyfully welcome home<BR> loved ones returned from afar,<BR> so their own good deeds<BR> welcome those that have done them<BR> as they go from this life to the next.|XVI. AFFECTION 219-220
+#Relinquish anger.<BR> Let go of conceit.<BR> Release yourself <BR> from all that binds you.<BR> The pure-hearted who cling <BR> neither to body or mind<BR> do not fall prey to suffering.|XVII. ANGER 221
+#I say, those who contain anger<BR> as a charioteer controls <BR> a speeding chariot, <BR> are fully in charge of their lives;<BR> others are merely keeping <BR> their hands on the reins.|XVII. ANGER 222
+#Transform anger with kindness <BR> and evil with good,<BR> meanness with generosity<BR> and deceit with integrity.|XVII. ANGER 223
+#These three ways <BR> lead to the heavens:<BR> asserting the truth,<BR> not yielding to anger,<BR> and giving, even if you have <BR> only a little to share. |XVII. ANGER 224
+#Awakened Ones do not cause harm. <BR> They are rightly restrained<BR> and they move to changelessness <BR> where they grieve no more.|XVII. ANGER 225
+#All pollution is cleared <BR> from the minds of those <BR> who are always vigilant,<BR> training themselves day and night<BR> and whose lives are fully intent <BR> upon liberation.|XVII. ANGER 226
+#Since ancient times it has been the case <BR> that those who speak too much <BR> are criticised, <BR> as are those who speak too little <BR> and those who don't speak at all. <BR> Everyone in this world is criticised.|XVII. ANGER 227
+#There never was<BR> nor will there be<BR> nor is there now anybody <BR> who is only blamed <BR> or wholly praised.|XVII. ANGER 228
+#Those who live impeccably,<BR> who are discerning, <BR> intelligent and virtuous - <BR> they are continually praised by the wise.|XVII. ANGER 229
+#Who would cast blame on those <BR> who in their being are like gold?<BR> Even the gods appreciate their lustre.|XVII. ANGER 230
+#Beware of clumsy movement <BR> and aware in your bodily conduct. <BR> Renounce all devious action<BR> and cultivate that which is wholesome.|XVII. ANGER 231
+#Beware of contrived utterance <BR> and aware in all that you say.<BR> Renounce all cunning speech <BR> and cultivate that which is wholesome.|XVII. ANGER 232
+#Beware of devious thinking<BR> and aware of all that you dwell upon.<BR> Renounce all unruly thought <BR> and cultivate that which is wholesome.|XVII. ANGER 233
+#Ably self-restrained <BR> are the wise,<BR> in action, in thought <BR> and in speech.|XVII. ANGER 234
+#Resembling a withered leaf, <BR> you have the messenger <BR> of death at your side. <BR> Although a long journey lies ahead, <BR> you have still made no provision.|XVIII. POLLUTION 235
+#Hasten to cultivate wisdom. <BR> Make an island for yourself.<BR> Freed from stain and defilement, <BR> you will enter noble being.|XVIII. POLLUTION 236
+#It is time for you to come<BR> into the presence of the Lord of Death. <BR> There is no time for rest on this journey,<BR> yet what provision have you made?|XVIII. POLLUTION 237
+#Hasten to cultivate wisdom;<BR> make an island for yourself.<BR> Freed from stain and defilement<BR> you are released <BR> from birth and death.|XVIII. POLLUTION 238
+#Gradually, gradually,<BR> a moment at a time,<BR> the wise remove their own impurities <BR> as a goldsmith removes the dross.|XVIII. POLLUTION 239
+#As iron is destroyed by the rust it produces,  <BR> so those who perform evil are corroded<BR> by their own action.|XVIII. POLLUTION 240
+#Lack of study leads  <BR> to forgetting the teachings; <BR> neglect spoils the home; <BR> laziness leads to loss of beauty; <BR> heedlessness ruins attention.|XVIII. POLLUTION 241
+#Sexual misconduct <BR> diminishes those who perform it,<BR> stinginess diminishes <BR> those who could give.<BR> Acts that diminish their doer <BR> are stains indeed.|XVIII. POLLUTION 242
+#But the worst stain of all <BR> is ignorance. <BR> Be purified of this <BR> and you are free.|XVIII. POLLUTION 243
+#Life is apparently easy <BR> for one who lacks shame, <BR> who is as impudent as a crow,<BR> who is arrogant, aggressive, <BR> invasive and corrupt.|XVIII. POLLUTION 244
+#Life is not easy for those <BR> who have a sense of shame, <BR> who are modest, <BR> pure-minded and detached,<BR> morally upright and reflective.|XVIII. POLLUTION 245
+#Whoever destroys life, <BR> disregards truth,<BR> is sexually irresponsible,<BR> takes what is not rightfully theirs, <BR> and heedlessly indulges in drugs,<BR> destroys the very roots <BR> of their own life.|XVIII. POLLUTION 246-247
+#Whoever is intent on goodness<BR> should know this:<BR> a lack of self-restraint is disastrous.<BR> Do not allow  greed and misconduct <BR> to prolong your misery.|XVIII. POLLUTION 248
+#People are inspired to be generous <BR> according to their faith and trust. <BR> If we become discontented<BR> with what we have been given<BR> our meditation will be filled<BR> with endless mental affliction;<BR> but if we are free from this discontent, <BR> our meditation is full of  peace.|XVIII. POLLUTION 249-250
+#There is no fire like lust,<BR> no obstruction like hatred,<BR> no trap like delusion,<BR> and no vortex like craving.|XVIII. POLLUTION 251
+#It is easy to see the faults of others, <BR> but it takes courage to look at one's own.<BR> As with chaff,<BR> one might winnow others' shortcomings<BR> while hiding one's own,<BR> as a stealthy hunter<BR> might conceal himself from his prey. |XVIII. POLLUTION 252
+#Those who always look for <BR> the faults of others - <BR> their corruptions increase<BR> and they are far from freedom.|XVIII. POLLUTION 253
+#No tracks are found in the air, <BR> there is no liberation apart from the Way. <BR> Most people tend to indulge in proliferation, <BR> from which Awakened Ones are free.|XVIII. POLLUTION 254
+#No tracks are found in the air, <BR> there is no liberation apart from the Way.<BR> There are no conditioned things <BR> that are permanent <BR> and yet the Buddhas remain unperturbed.|XVIII. POLLUTION 255
+#Making an arbitrary decision<BR> does not amount to justice.<BR> Having considered arguments <BR> for and against, <BR> the wise decide the case.|XIX. THE JUST 256
+#By making decisions <BR> based on truth and fairness  <BR> one safeguards the law<BR> and is called righteous.|XIX. THE JUST 257
+#Those who speak much<BR> are not necessarily possessed of wisdom.<BR> The wise can be seen <BR> to be at peace with life<BR> and free from all enmity and fear.|XIX. THE JUST 258
+#Though one's knowledge <BR> may be limited,<BR> if understanding and conduct<BR> rightly accord with the Way <BR> one is to be considered <BR> well-versed in Dhamma.|XIX. THE JUST 259
+#Having grey hair <BR> does not make you an elder; <BR> ripe in years maybe, <BR> but perhaps pointlessly so.|XIX. THE JUST 260
+#One who is truthful,  <BR> virtuous, impeccable in conduct,<BR> free from all stains and wise<BR> can be called an elder.|XIX. THE JUST 261
+#Those who are envious, <BR> stingy and manipulative<BR> remain unappealing despite <BR> good looks and eloquent speech.<BR> But those who have freed themselves <BR> from their faults <BR> and arrived at wisdom<BR> are attractive indeed.|XIX. THE JUST 262-263
+#Shaving your head<BR> does not make you a renunciate,<BR> if you are still full of <BR> recklessness and deceit.<BR> How could someone possessed <BR> by craving and lust <BR> be considered a renunciate?|XIX. THE JUST 264
+#You become a monk or nun <BR> by letting go of all evil,<BR> by renouncing all <BR> unwholesomeness, <BR> both great and small.|XIX. THE JUST 265
+#You are not a monk or nun<BR> because you depend <BR> on others for food, <BR> but by submitting yourself <BR> wholeheartedly <BR> to the training of body, <BR> speech and mind.|XIX. THE JUST 266
+#You become a monk or nun<BR> by seeing through this world <BR> with understanding, <BR> by rising above good and bad <BR> and living a life of purity <BR> and contemplation.|XIX. THE JUST 267
+#Silence does not denote profundity<BR> if you are ignorant and untrained.<BR> Like one holding scales,<BR> a sage weighs things up, <BR> wholesome and unwholesome, <BR> and comes to know <BR> both the inner and outer worlds. <BR> Therefore the sage is called wise.|XIX. THE JUST 268-269
+#Those who still cause harm <BR> to living beings <BR> cannot be considered as attained.<BR> Those who are attained<BR> maintain a harmless demeanour<BR> toward all beings.|XIX. THE JUST 270
+#Do not rest contented<BR> because you keep all the rules and regulations,<BR> nor because you achieve great learning.<BR> Do not feel satisfied because you<BR> attain meditative absorption,<BR> nor because you can dwell in <BR> the bliss of solitude.<BR> Only when you arrive <BR> at the complete eradication<BR> of all ignorance and conceit<BR> should you be content.|XIX. THE JUST 270-271
+#The eight-fold path <BR> is the most honourable way,<BR> the four noble truths <BR> the most honourable utterance,<BR> freedom from craving <BR> the most honourable state,<BR> and the all-seeing Buddha <BR> the most honourable being.|XX. THE PATH 273
+#This is the only Way;<BR> there is no other <BR> that leads to clear seeing.<BR> Follow this Way<BR> and Mara becomes disoriented.|XX. THE PATH 274
+#If you walk the path<BR> you will arrive at the end of suffering.<BR> Having beheld this myself,<BR> I proclaim the Way <BR> which removes all thorns.|XX. THE PATH 275
+#The Awakened Ones <BR> can but point the way; <BR> we must make the effort ourselves.<BR> Those who reflect wisely<BR> and enter the path are freed <BR> from the fetters of Mara.|XX. THE PATH 276
+#"All conditioned things are impermanent"; <BR> when we see this with insight <BR> we will tire of this life of suffering. <BR> This is the Way to purification.|XX. THE PATH 277
+#"All conditioned things are inherently lacking"; <BR> when we see this with insight <BR> we will tire of this life of suffering. <BR> This is the Way to purification.|XX. THE PATH 278
+#"All realities are devoid of an abiding self"; <BR> when we see this with insight <BR> we will tire of this life of suffering. <BR> This is the Way to purification.|XX. THE PATH 279
+#If, while still young and strong,<BR> you procrastinate <BR> when you should act,<BR> indulging in heedless fantasies,<BR> the Way and its wisdom <BR> will never become clear.|XX. THE PATH 280
+#Be careful in what you say,<BR> restrained in what you think,<BR> and impeccable in how you act. <BR> Purifying these three ways of behaviour <BR> will take you along the Way of the sages.|XX. THE PATH 281
+#To contemplate life leads to wisdom;<BR> without contemplation wisdom wanes.<BR> Recognise how wisdom <BR> is cultivated and destroyed,<BR> and walk the Way of increase.|XX. THE PATH 282
+#Clear away the forests of craving <BR> but do not attack and destroy the trees.<BR> Clear the entire forest of craving<BR> and you will see the Way to freedom.|XX. THE PATH 283
+#So long as sexual attraction<BR> has not been cleared away ?<BR> if the even the slightest trace remains,<BR> the heart is held in dependence<BR> like a suckling calf to a cow.|XX. THE PATH 284
+#Remove the bonds of affection <BR> as one might pluck an autumn flower. <BR> Walk the Way that leads to liberation <BR> explained by the Awakened One.|XX. THE PATH 285
+#It is a fool <BR> who indulges in dreaming <BR> about the most comfortable <BR> place to live, saying<BR> "here it will be warm,<BR> there it will be cool" -<BR> unaware of impending death.|XX. THE PATH 286
+#As a flood could sweep away <BR> an entire village, <BR> those who are caught up<BR> in relationships and possessions<BR> will be carried away by death.|XX. THE PATH 287
+#As you approach death<BR> none of your fond attachments <BR> will protect you. <BR> See this, then with wise restraint<BR> and unwavering effort,<BR> hasten to clear your path to liberation.|XX. THE PATH 288-289
+#It is wisdom <BR> that enables letting go <BR> of a lesser happiness<BR> in pursuit of a happiness <BR> which is greater.|XI. VARIOUS 290
+#You fail <BR> in the pursuit of happiness <BR> if it is at the expense <BR> of others' well-being. <BR> The snare of ill-will<BR> can still entangle you. |XI. VARIOUS 291
+#To leave undone <BR> that which should be done<BR> and to do that <BR> which should be avoided<BR> leads to carelessness and conceit.<BR> It will increase confusion.|XI. VARIOUS 292
+#Confusion ceases <BR> by maintaining <BR> a meditation practice<BR> focused in the body,<BR> by avoiding that <BR> which should not be done <BR> and by mindfully doing <BR> that which should be done.|XI. VARIOUS 293
+#By removing craving and conceit,<BR> eradicating wrong views,<BR> and by overcoming <BR> the deluded attachments of the sense realm,<BR> the noble being freely moves on.|XI. VARIOUS 294
+#Having cleared <BR> all the hindrances to the Path -<BR> greed, rage, dullness and laziness,<BR> worry, anxiety and doubt -	<BR> the noble being freely moves on.|XI. VARIOUS 295
+#Disciples of the Budda <BR> are fully awake<BR> dwelling both day and night<BR> in contemplation of the Awakened One. |XI. VARIOUS 296
+#Disciples of the Budda <BR> are fully awake<BR> dwelling both day and night<BR> in contemplation of reality.|XI. VARIOUS 297
+#Disciples of the Budda <BR> are fully awake<BR> dwelling both day and night<BR> in contemplation of the communion<BR> of beings who have awakened.|XI. VARIOUS 298
+#Disciples of the Buddha <BR> are fully awake<BR> dwelling both day and night<BR> in contemplation of <BR> the true nature of the body.|XI. VARIOUS 299
+#Disciples of the Buddha <BR> are fully awake<BR> both day and night<BR> taking delight in compassion.|XI. VARIOUS 300
+#Disciples of the Buddha <BR> are fully awake<BR> both day and night<BR> taking delight <BR> in cultivating the heart.|XI. VARIOUS 301
+#It is hard to live <BR> the life of renunciation;<BR> its challenges <BR> are difficult to find pleasant.<BR> Yet it is also hard to live <BR> the householder's life;<BR> there is pain <BR> when associating with those <BR> among whom one feels no companionship.<BR> To wander uncommitted <BR> is always going to be difficult;<BR> why not renounce<BR> the deluded pursuit of pain?|XI. VARIOUS 302
+#A traveller possessed of virtue,<BR> disciplined and committed to right conduct,<BR> will be received with honour;<BR> such a one can be recognised <BR> and can travel with confidence.|XI. VARIOUS 303
+#The good <BR> are seen even from afar.<BR> They shine like the distant <BR> Himalayan peaks.<BR> The untrained simply disappear<BR> like arrows shot into the dark.|XI. VARIOUS 304
+#With enthusiasm establish yourself <BR> in solitary practice -<BR> sit alone, sleep alone, walk alone<BR> and delight as if secluded in the forest.|XI. VARIOUS 305
+#Lying leads to sorrow.<BR> Concealing wrong actions<BR> leads to sorrow.<BR> These two acts of deceit <BR> take beings <BR> to the same state of woe.|XXII. HELL 306
+#Those who wear <BR> the robes of a renunciate<BR> yet harbour evil <BR> and are unrestrained<BR> go to a sorrowful state.|XXII. HELL 307
+#It would be better to swallow molten iron<BR> than for a renunciate<BR> to live on offerings<BR> deceitfully gained.|XXII. HELL 308
+#Accumulated sadness,<BR> troubled sleep,<BR> blame and remorse<BR> are an adulterer's lot.|XXII. HELL 309
+#Brief is the delight<BR> of the fearful, adulterous couple,<BR> for only painful consequences can follow. |XXII. HELL 310
+#As kusa grass wrongly grasped<BR> wounds the hand that holds it,<BR> so the renunciate life <BR> hurts those who train in it wrongly.|XXII. HELL 311
+#Acts carelessly done,<BR> practices corruptly performed,<BR> the holy life lived perversely,<BR> lead to little or no benefit at all. |XXII. HELL 312
+#If anything is to be done,<BR> do it well,<BR> with energy and devotion;<BR> the renunciate life led heedlessly<BR> just stirs up the dust.|XXII. HELL 313
+#Hurtful deeds <BR> are better left undone<BR> as they always lead to remorse.<BR> Harmless deeds are better done <BR> as no regret will follow.|XXII. HELL 314
+#As a border city must be careful protected<BR> so guard yourself both within and without; <BR> build your defenses wisely and in time.<BR> If these things are not attended to <BR> at the right moment<BR> great sadness will come.|XXII. HELL 315
+#Distorted views <BR> which create feelings of shame <BR> about that which is not shameful,<BR> or indifference <BR> to that which is shameful,<BR> can cause beings to descend into hell.|XXII. HELL 316
+#Distorted views <BR> which create feelings of fear<BR> toward what is not actually threatening,<BR> or indifference in the face <BR> of that which is threatening,<BR> can cause beings to descend into hell.|XXII. HELL 317
+#Distorted views,<BR> which give rise to seeing right as wrong<BR> and wrong as right,<BR> are the cause for beings to disintegrate.|XXII. HELL 318
+#The clear seeing which knows<BR> that which is flawed as flawed<BR> and that which is pure as pure<BR> can lead beings to transcend misery.|XXII. HELL 319
+#Like an elephant in battle<BR> withstands arrows,<BR> I choose to endure <BR> verbal attacks from others.|XXIII. THE ELEPHANT 320
+#Well-trained horses <BR> can be trusted in crowds,<BR> and are to be mounted by kings.<BR> Individuals who have trained <BR> themselves to withstand abuse<BR> will be valuable everywhere.|XXIII. THE ELEPHANT 321
+#Impressive are horses or elephants<BR> which have been well-trained;<BR> but more impressive<BR> are individuals<BR> who have tamed themselves.|XXIII. THE ELEPHANT 322
+#It is not on a well-trained animal<BR> that you can ride<BR> to the land of liberation;<BR> it is only on the vehicle <BR> of a well-trained self <BR> that you will arrive there.|XXIII. THE ELEPHANT 323
+#A wild elephant <BR> when captured and bound and in rut<BR> is restless, uncontrollable,<BR> not eating its food.<BR> It longs for its native forest home.|XXIII. THE ELEPHANT 324
+#It is a fool that overeats<BR> and indulges in laziness,<BR> then, feeling drowsy,<BR> wallows in sleep like an oversized pig;	 <BR> this forebodes perpetual suffering.|XXIII. THE ELEPHANT 325
+#My mind which was once <BR> wild and unruly,<BR> wandering as it wished,<BR> I hold now in check, <BR> as the mahout with his hook<BR> controls an elephant in rut.|XXIII. THE ELEPHANT 326
+#As an elephant <BR> resolutely drags itself from a swamp<BR> uplift yourself with the inspiration <BR> of cultivated attention.|XXIII. THE ELEPHANT 327
+#If you find a good companion,<BR> of integrity and wisdom,<BR> you will overcome all dangers<BR> in joyous and caring company.|XXIII. THE ELEPHANT 328
+#But if you cannot find <BR> a good companion<BR> of integrity and wisdom,<BR> then, like a king departing <BR> a conquered land,<BR> or an elephant wandering <BR> alone in the forest,<BR> walk alone.|XXIII. THE ELEPHANT 329
+#A harmless solitary life <BR> lived at ease <BR> like that of the lone elephant in the forest,<BR> is better than <BR> the unnecessary company of fools.|XXIII. THE ELEPHANT 330
+#Pleasure arises from <BR> the timely company of friends.<BR> Pleasure arises from <BR> having few needs.<BR> Pleasure arises from <BR> accumulated virtue at life's end.<BR> Pleasure arises from <BR> seeing beyond suffering.|XXIII. THE ELEPHANT 331
+#Pleasure arises from <BR> rightly serving one's parents.<BR> Pleasure arises from <BR> supporting renunciates.<BR> Pleasure arises from <BR> honouring awakened beings.|XXIII. THE ELEPHANT 332
+#Pleasure arises from <BR> sustaining virtue into old age.<BR> Pleasure arises from <BR> sustaining sound faith.<BR> Pleasure arises with insight. <BR> Pleasure arises from <BR> renouncing evil.|XXIII. THE ELEPHANT 333
+#Uncontained craving <BR> grows like a creeper in the forest.<BR> Being lost in it<BR> one leaps around <BR> like a tree-dwelling ape looking for fruit.|XXIV. CRAVING 334
+#Fostering habits <BR> such as craving and clinging<BR> is like fertilising noxious weeds.|XXIV. CRAVING 335
+#As water falls from a lotus leaf<BR> so sorrow drops from those <BR> who are free of toxic craving.|XXIV. CRAVING 336
+#Torrential rains can destroy crops.<BR> Mara can destroy you.<BR> Thus I implore you ?<BR> dig up the roots of all craving.<BR> I give you my blessing<BR> for this work.|XXIV. CRAVING 337
+#If the roots are not removed<BR> a tree grows again and again;<BR> suffering returns to us<BR> so long as craving remains.|XXIV. CRAVING 338
+#When the streams <BR> of sensual pleasure run strong<BR> they can generate <BR> a torrent of longing.|XXIV. CRAVING 339
+#The streams of craving flow everywhere. <BR> The wild creeper of craving<BR> spreads and entangles.<BR> Discerning this creeper with insight,<BR> dig it out.|XXIV. CRAVING 340
+#Beings naturally experience pleasure;<BR> but when pleasure is contaminated with craving,<BR> not releasing it creates frustration <BR> and tedious suffering follows.|XXIV. CRAVING 341
+#Trapped in habits of craving <BR> people panic <BR> like rabbits caught in the snare.<BR> Their reactions reinforce the pain<BR> of their entrapment. |XXIV. CRAVING 342
+#Trapped in habits of craving <BR> people panic <BR> like rabbits caught in the snare.<BR> If you wish to be free from entrapment,<BR> craving itself must be removed. |XXIV. CRAVING 343
+#There are those who have begun <BR> on the path to freedom<BR> yet return, out of desire, to bondage.|XXIV. CRAVING 344
+#Wisdom sees <BR> that being held behind bars <BR> or bound by chains<BR> is less limiting <BR> than infatuation with possessions <BR> and obsession with relationships.<BR> These bonds, though not so obvious,<BR> are strong and hold us down.<BR> To renounce attachment <BR> to the world of the senses<BR> is to be free from the prison of craving.|XXIV. CRAVING 345-346
+#Like a spider caught in its own web,<BR> a being enwrapped in sensual craving<BR> must be released from its own longings<BR> before it can walk free.|XXIV. CRAVING 347
+#Let go of the past.<BR> Let go of the future.<BR> Let go of the present.<BR> With a heart that is free<BR> cross over to that shore<BR> which is beyond suffering.|XXIV. CRAVING 348
+#The bonds <BR> of deluded habits and craving <BR> are strengthened<BR> by one who lets the mind heedlessly dwell<BR> on objects of desire.|XXIV. CRAVING 349
+#But one who delights<BR> in calming sensual thoughts,<BR> who is alert <BR> and cultivates awareness <BR> of the loathsome <BR> aspects of the body, <BR> breaks through craving<BR> and unbinds deluded habits.|XXIV. CRAVING 350
+#No more need is there to re-form<BR> for those who have reached the goal;<BR> they are free from fear and longing.<BR> The thorns of existence have been removed.|XXIV. CRAVING 351
+#A master is one who has let go<BR> of all craving and clinging to the world;<BR> who has seen <BR> the truth beyond forms,<BR> yet is possessed of <BR> a profound knowledge of words.<BR> Such a great being can be said <BR> to have finished the task.|XXIV. CRAVING 352
+#I do not declare <BR> another as my teacher <BR> since by myself have I arrived <BR> at the wisdom that overcomes all,<BR> realises all, renounces all.<BR> Wholly liberated am I<BR> from all craving.|XXIV. CRAVING 353
+#The gift of truth excels all gifts.<BR> The flavour of reality <BR> surpasses all flavours.<BR> The delight of truth <BR> transcends all delights.<BR> Freedom from craving<BR> is the end of all suffering.|XXIV. CRAVING 354
+#Riches mostly ruin the foolish	<BR> but not those who seek the beyond.<BR> Just as they dismiss <BR> the well-being of others and cause harm,<BR> fools also ruin themselves.|XXIV. CRAVING 355
+#Weeds cause damage in fields.<BR> Lust causes damage to all beings.<BR> Support those who are free from lust;<BR> the gift will yield great benefit.|XXIV. CRAVING 356
+#Weeds cause damage in fields. <BR> Hatred causes damage to all beings.<BR> Support those who are free from hatred;<BR> the gift will yield great benefit.|XXIV. CRAVING 357
+#Weeds cause damage in fields.<BR> Confusion causes damage to all beings.<BR> Support those who are free from confusion;<BR> the gift will yield great benefit.|XXIV. CRAVING 358
+#Weeds cause damage in fields.<BR> Envy causes damage to all beings.<BR> Encourage those who are free from envy <BR> and there will be great benefit.|XXIV. CRAVING 359
+#It is good to restrain the eye.<BR> It is good to restrain the ear. <BR> It is good to restrain the nose. <BR> It is good to restrain the tongue.|XXV. THE RENUNCIATE 360
+#It is good to be restrained in body. <BR> It is good to be restrained in speech. <BR> It is good to be restrained in the mind. <BR> It is good to be restrained <BR> in everything. <BR> The renunciate who is restrained <BR> in every way will realise freedom <BR> from suffering.|XXV. THE RENUNCIATE 361
+#One who is rightly disciplined <BR> in all actions,<BR> who is composed, <BR> contented and delights in <BR> solitary contemplation -<BR> such is a renunciate.|XXV. THE RENUNCIATE 362
+#It is pleasing to hear<BR> the words of a renunciate<BR> who is wise, not inflated, <BR> whose mind is composed<BR> and whose speech is contained<BR> and clear in meaning.|XXV. THE RENUNCIATE 363
+#One who abides in Dhamma,<BR> who delights in Dhamma,<BR> who contemplates Dhamma,<BR> who memorises Dhamma<BR> does not lose the Way.|XXV. THE RENUNCIATE 364
+#Bemoaning your own lot <BR> or envying the gains of others <BR> obstructs peace of mind.|XXV. THE RENUNCIATE 365
+#But, being contented<BR> even with modest gains<BR> pure in livelihood and energetic,<BR> you will be held in high esteem. |XXV. THE RENUNCIATE 366
+#True renunciates<BR> regard the entire body-mind <BR> without any thought of 'I' or 'mine'<BR> and are devoid of longing <BR> for what they do not have.|XXV. THE RENUNCIATE 367
+#A renunciate who <BR> abides in loving-kindness<BR> with a heart full of devotion <BR> for the Buddha's teaching<BR> will find peace, stillness and bliss.|XXV. THE RENUNCIATE 368
+#Bale out the water from your boat;<BR> cut loose from the defiling passions <BR> of lust and hatred;<BR> unencumbered, sail on<BR> towards liberation.|XXV. THE RENUNCIATE 369
+#One who has<BR> cut off coarse attachments,<BR> cut off subtle attachments,<BR> who cultivates the spiritual faculties,<BR> is the one who finds freedom <BR> from delusion.|XXV. THE RENUNCIATE 370
+#Be careful!<BR> Do not neglect meditation,<BR> nor allow the mind <BR> to dwell on sensuality<BR> lest you might heedlessly swallow<BR> a red-hot ball of iron<BR> and find yourself crying out, "why am I suffering?"|XXV. THE RENUNCIATE 371
+#Concentration does not arise<BR> without understanding,<BR> nor understanding <BR> without concentration.<BR> One who knows both <BR> approaches liberation.|XXV. THE RENUNCIATE 372
+#A happiness transcending ordinary bliss <BR> is experienced by those renunciates <BR> who have entered into seclusion<BR> with tranquil heart<BR> and clear understanding of the Way.|XXV. THE RENUNCIATE 373
+#When those who are wise <BR> dwell in contemplation<BR> on the transient nature<BR> of the body-mind,<BR> and of all conditioned existence,<BR> they experience joy and delight<BR> seeing through <BR> to the inherently secure. |XXV. THE RENUNCIATE 374
+#This then is the beginning <BR> for a renunciate <BR> who takes up the training:<BR> wisely control your faculties,<BR> commit yourself to the instruction,<BR> seek contentment;<BR> cultivate the company of those <BR> who support your aspiration<BR> for energetic practice of the teachings.<BR> The beauty of pure conduct <BR> conditions whole-hearted well-being<BR> giving rise to complete <BR> freedom from remorse.|XXV. THE RENUNCIATE 375-376
+#As old flowers fall <BR> from a jasmine plant<BR> let lust and hatred<BR> fall away.|XXV. THE RENUNCIATE 377
+#I call them the peaceful ones,	<BR> who are calm in body,<BR> in speech and in mind,<BR> and who are thoroughly purged <BR> of all worldly obsessions.|XXV. THE RENUNCIATE 378
+#Scrutinise yourself.<BR> Examine yourself.<BR> With right attention <BR> to self assessment<BR> you will live at ease.|XXV. THE RENUNCIATE 379
+#We are our own protection;<BR> we are indeed our own secure abiding;<BR> how could it be otherwise?<BR> So with due care<BR> we attend to ourselves.|XXV. THE RENUNCIATE 380
+#A monk, a nun, who cultivates<BR> a joyous disposition<BR> and is filled with <BR> confidence in the Way<BR> will find peace, stillness and bliss.|XXV. THE RENUNCIATE 381
+#Yet still a youth, a renunciate <BR> fully devoted to the Way<BR> lights up the world<BR> like the moon emerging from clouds.|XXV. THE RENUNCIATE 382
+#Diligently cut off <BR> the stream of craving <BR> and abandon sensual longings;<BR> knowing the limitation<BR> of all that is formed,<BR> realise the uncreated.|XXVI. GREAT BEING 383
+#All chains of bondage fall away<BR> from those who see clearly<BR> and know well the states <BR> of concentration and insight.|XXVI. GREAT BEING 384
+#I say a being is great<BR> who stands not on this shore,<BR> nor the other shore,<BR> nor on any shore at all.<BR> Such a being is free from all ties.|XXVI. GREAT BEING 385
+#I say a being is great<BR> who dwells secluded and at ease, <BR> knowing the heart <BR> free from all pollution,<BR> having completed the task<BR> purified of all compulsive tendencies,	<BR> and awake.|XXVI. GREAT BEING 386
+#The sun shines by day,<BR> the moon shines by night.<BR> But, both all day and all night<BR> the Buddha shines <BR> in glorious splendour.|XXVI. GREAT BEING 387
+#Having transformed evil<BR> one is called a great being.<BR> Living peacefully<BR> one is called a contemplative.<BR> Having given up impurity<BR> one is called a renunciate.|XXVI. GREAT BEING 388
+#Non-retaliation <BR> is the characteristic of great beings.<BR> They do not give rise to anger.<BR> Should they be attacked, <BR> it is not in their nature to strike back.|XXVI. GREAT BEING 389
+#Suffering subsides to the degree <BR> that you are free from the intention<BR> to cause harm.<BR> There is no real greatness<BR> if there is no restraint from anger.|XXVI. GREAT BEING 390
+#One who refrains from causing harm<BR> by way of body, speech or mind,<BR> can be called a worthy being.|XXVI. GREAT BEING 391
+#Devotion and respect<BR> should be offered to those <BR> who have shown us the Way.|XXVI. GREAT BEING 392
+#One should not be considered <BR> worthy of respect<BR> because of birth or background<BR> or any outer sign;<BR> it is purity <BR> and the realisation of truth <BR> that determine one's worth.|XXVI. GREAT BEING 393
+#Your outer adornments <BR> and pseudo-spiritual preoccupations<BR> are irrelevant<BR> if inwardly you remain in disarray.|XXVI. GREAT BEING 394
+#To be unconcerned <BR> about outer appearance,<BR> but committed to <BR> intense relentless practice<BR> makes for greatness.|XXVI. GREAT BEING 395
+#No one is noble <BR> merely because of what they inherit.<BR> Nobility comes from cleansing oneself<BR> of all pollutions <BR> and attachments.|XXVI. GREAT BEING 396
+#Whoever has broken lose from all bondage<BR> and found fearlessness,<BR> who is beyond attachments <BR> and defilements,<BR> I recognise as a great being.|XXVI. GREAT BEING 397
+#Whoever severs the ties of hatred,<BR> unbinds the ropes of craving,<BR> undoes the locks of wrong view,<BR> opens the doors of ignorance,<BR> and sees truth,<BR> I recognise as a great being.|XXVI. GREAT BEING 398
+#Strength of patience <BR> is the might of noble beings;<BR> they can be shackled,<BR> endure verbal abuse and beatings,<BR> without resorting to anger.|XXVI. GREAT BEING 399
+#Those who are free from anger,<BR> simply disciplined, virtuous, <BR> well trained, <BR> and have gone beyond rebirth,<BR> these I call great beings.|XXVI. GREAT BEING 400
+#As water slides from a lotus leaf,<BR> so sensual pleasures<BR> do not cling <BR> to a great being.|XXVI. GREAT BEING 401
+#Those who know the freedom <BR> of having laid aside <BR> the burden of attachment <BR> to the body-mind<BR> I call great beings.|XXVI. GREAT BEING 402
+#Those possessed of deep wisdom,<BR> who see what accords with the Way <BR> and what does not,<BR> those who have attained <BR> to the peak of possibility,<BR> I call great beings.|XXVI. GREAT BEING 403
+#Those who are free from attachment <BR> to the company of either householders<BR> or fellow renunciates,<BR> and so wander free from desires <BR> or concern for security of any kind,<BR> are great beings.|XXVI. GREAT BEING 404
+#Those who have renounced <BR> the use of force <BR> in relationship to other beings	<BR> whether weak or strong,<BR> who neither kill <BR> nor cause to be killed,<BR> can be called great beings. |XXVI. GREAT BEING 405
+#Those who remain<BR> friendly amid the hostile,<BR> at peace among the aggressive,<BR> and who do not attach themselves<BR> to that upon which others depend <BR> are great beings.|XXVI. GREAT BEING 406
+#For a great being,<BR> lust and ill-will, <BR> arrogance and conceit <BR> drop away<BR> even as a tiny seed would drop<BR> from the tip of a needle.|XXVI. GREAT BEING 407
+#Those who speak truth<BR> and give gentle encouragement, <BR> contending with no-one,<BR> these do I call great beings.|XXVI. GREAT BEING 408
+#The actions of a great being are pure.<BR> Great beings never <BR> knowingly take for themselves	<BR> that which belongs to another.	|XXVI. GREAT BEING 409
+#The heart of a great being is free. <BR> Great beings no longer pine<BR> for things of this world <BR> or any other world.|XXVI. GREAT BEING 410
+#The heart of a great being is free. <BR> With accurate understanding<BR> which is beyond doubt,<BR> great beings have set their feet firmly <BR> in the land of liberation.|XXVI. GREAT BEING 411
+#Whoever has transcended<BR> all ties of good and bad<BR> is purified,<BR> and free from sorrow,<BR> should be called a great being.|XXVI. GREAT BEING 412
+#Those beings who <BR> are released from all longing<BR> and, like the moon in a cloudless sky,<BR> are pure, clear and serene,<BR> I call great. |XXVI. GREAT BEING 413
+#There are beings <BR> who travel the difficult path<BR> across the dangerous swamp <BR> of defiling passions,<BR> traverse the ocean of delusion<BR> through the darkness of ignorance,<BR> and go beyond.<BR> They are sustained <BR> by wise contemplation,<BR> secure in freedom from doubt,<BR> liberated;<BR> such beings are great indeed.|XXVI. GREAT BEING 414
+#It is a great being <BR> who, having restrained desires <BR> for sensual pleasure, <BR> lives the homeless life<BR> and realises freedom<BR> from both sensual desire<BR> and perpetual becoming.|XXVI. GREAT BEING 415
+#It is a great being <BR> who, having restrained all craving,<BR> lives the homeless life<BR> and realises freedom<BR> from both craving<BR> and perpetual becoming.|XXVI. GREAT BEING 416
+#It is a great being <BR> who can see through all obvious delights<BR> as well as subtle pleasures<BR> to be free from attachment.|XXVI. GREAT BEING 417
+#Those who cease <BR> setting up like against dislike,<BR> who are cooled,<BR> who are not swayed <BR> by worldly conditions -<BR> these I call great beings.|XXVI. GREAT BEING 418
+#I say anyone who understands fully<BR> the passing away and arising of beings,<BR> who remains aware, <BR> non-attached, awake,<BR> who is conscious of <BR> right action at all times,<BR> is a great being.|XXVI. GREAT BEING 419
+#The condition after death<BR> of great beings is indiscernible;<BR> no trace of passion remains.<BR> They are pure.|XXVI. GREAT BEING 420
+#Anyone who lives freed <BR> from habits of clinging, <BR> to past, present or future,<BR> possessing nothing,<BR> is a great being.|XXVI. GREAT BEING 421
+#A great being is fearless like a bull, <BR> noble, strong, wise, diligent,<BR> sees through delusions,<BR> is clear, attentive and awake.|XXVI. GREAT BEING 422
+#To understand all dimensions <BR> of past existence,<BR> to see accurately into all realms,<BR> to reach the end of rebirths,<BR> to know with insight <BR> that which must be known,<BR> to free the heart from ignorance<BR> this is truly being made great.|XXVI. GREAT BEING 423

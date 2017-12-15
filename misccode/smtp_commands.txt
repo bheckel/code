@@ -1,0 +1,23 @@
+
+bqh0@rtp-bqh0$[1] telnet mainframe 25
+Trying 158.111.2.21...
+Connected to mainframe.
+Escape character is '^]'.
+220 CDCJES2.CDC.GOV running IBM MVS SMTP CS V1R5 on Tue, 05 Oct 04 14:01:58 EST
+HELO local.domain.name
+250 CDCJES2.CDC.GOV is my domain name.   HELO from IP  (158.111.250.163)
+MAIL FROM: <bqh0@cdc.gov>
+250 OK
+RCPT TO: <bqh0@cdc.gov>
+250 OK
+DATA
+354 Enter mail body.  End by new line with just a '.'
+Subject: test2
+
+testing send from mf
+14:04
+.
+250 Mail Delivered
+quit
+221 CDCJES2.CDC.GOV running IBM MVS SMTP CS V1R5 closing connection
+Connection closed by foreign host.

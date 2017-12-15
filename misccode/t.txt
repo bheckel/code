@@ -1,0 +1,38 @@
+foo
+bar baz
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line
+more appended to file
+last line

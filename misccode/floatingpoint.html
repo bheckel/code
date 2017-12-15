@@ -1,0 +1,338 @@
+<HTML><HEAD><TITLE>Floating Point</TITLE><LINK href="cps104.css"
+rel="stylesheet" type="text/css"></HEAD><BODY><H1>Floating
+Point</H1><P>Thomas Finley, April 2000</P>
+<P>Small modi 9.125 to 5.125 Bob Heckel</P>
+<A NAME="intro"></A><H2>Contents and Introduction</H2><UL TYPE=CIRCLE>
+<LI><A HREF="#intro">Contents and Introduction</A>	<LI><A
+HREF="#representation">Representation</A>	<LI><A HREF="#hex2dec">Conversion
+from Floating Point Representation to Decimal</A>	<LI><A
+HREF="#dec2hex">Conversion from Decimal to Floating Point Representation</A>
+<LI><A HREF="#special">Special Numbers</A>	<LI><A HREF="#software">Helper
+Software</A></UL><P>This document explains the IEEE 754 floating-point
+standard.  It explains the binary representation of these numbers, how to
+convert to decimal from floating point, how to convert from floating point to
+decimal, discusses special cases in floating point, and finally ends with some
+C code to further one's understanding of floating point.  This document does
+not cover operations with floating point numbers.</P><P>I wrote this
+document so that if you know how to represent, you can skip the representation
+section, and if you know how to convert to decimal from single precision, you
+can skip that section, and if you know how to convert to single precision from
+decimal, you can skip that section.</P><A
+NAME="representation"></A><H2>Representation</H2><P>First, know that
+binary numbers can have, if you'll forgive my saying so, a decimal point.  It
+works more or less the same way that the decimal point does with decimal
+numbers.  For example, the decimal 22.589 is merely 22 and 5*10<SUP>-1</SUP> +
+8*10<SUP>-2</SUP> + 9*10<SUP>-3</SUP>.  Similarly, the binary number 101.001 is
+simply 1*2<SUP>2</SUP> + 0*2<SUP>1</SUP> + 1*2<SUP>0</SUP> + 0*2<SUP>-1</SUP> +
+0*2<SUP>-2</SUP> + 1*2<SUP>-3</SUP>, or rather simply 2<SUP>2</SUP> +
+2<SUP>0</SUP> + 2<SUP>-3</SUP> (this particular number works out to be 5.125,
+if that helps your thinking).</P><P>Second, know that binary numbers, like
+decimal numbers, can be represented in scientific notation.  E.g., The decimal
+923.52 can be represented as 9.2352 * 10<SUP>2</SUP>.  Similarly, binary
+numbers can be expressed that way as well.  Say we have the binary number
+101011.101 (which is 43.625).  This would be represented using scientific
+notation as 1.01011101 * 2<SUP>5</SUP>.</P><P>Now that I'm sure the
+understanding is perfect, I can finally get into representation.  The single
+precision floating point unit is a packet of 32 bits, divided into three
+sections one bit, eight bits, and twenty-three bits, in that order.  I will
+make use of the previously mentioned binary number 1.01011101 * 2<SUP>5</SUP>
+to illustrate how one would take a binary number in scientific notation and
+represent it in floating point notation.</P><TABLE BORDER CELLPADDING=4
+CELLSPACING=0><TR><TR><TD ALIGN=RIGHT
+BGCOLOR="#CCDDDD"><PRE>X</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>XXXXXXXX</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>XXXXXXXXXXXXXXXXXXXXXXX</PRE></TD></TR><TR><TD
+BGCOLOR="#99AAAA"><B>Sign</B><BR>1 bit</TD><TD
+BGCOLOR="#AA99AA"><B>Exponent</B><BR>8 bits</TD><TD
+BGCOLOR="#AAAA99"><B>Mantissa</B><BR>23 bits</TD></TR></TABLE><H3>Sign
+Field</H3><P>The first section is one bit long, and is the sign bit.  It is
+either 0 or 1; 0 indicates that the number is positive, 1 negative.  The number
+1.01011101 * 2<SUP>5</SUP> is positive, so this field would have a value of
+0.</P><TABLE BORDER CELLPADDING=7 CELLSPACING=0><TR><TR><TD ALIGN=RIGHT
+BGCOLOR="#CCDDDD"><PRE>0</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>XXXXXXXX</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>XXXXXXXXXXXXXXXXXXXXXXX</PRE></TD></TR></TABLE><H3>Exponent
+Field</H3><P>The second section is eight bits long, and serves as the
+"exponent" of the number as it is expressed in scientific notation as explained
+above (there is a caveat, so stick around).  A field eight bits long can have
+values ranging from 0 to 255.  How would the case of a negative exponent be
+covered?  To cover the case of negative values, this "exponent" is actually 127
+greater than the "real" exponent a of the 2<SUP>a</SUP> term in the scientific
+notation.  Therefore, in our 1.01011101 x 2<SUP>5</SUP> number, the eight-bit
+exponent field would have a decimal value of 5 + 127 = 132.  In binary this is
+10000100.</P><TABLE BORDER CELLPADDING=7 CELLSPACING=0><TR><TR><TD
+ALIGN=RIGHT BGCOLOR="#CCDDDD"><PRE>0</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>10000100</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>XXXXXXXXXXXXXXXXXXXXXXX</PRE></TD></TR></TABLE><H3>Mantissa
+Field</H3><P>The third section is twenty-three bits long, and serves as the
+"mantissa."  (The mantissa is sometimes called the significand.)  The mantissa
+is merely the "other stuff" to the left of the 2<SUP>a</SUP> term in our binary
+number represented in scientific notation.  In our 1.01011101 * 2<SUP>5</SUP>
+number, you would think that the mantissa, in all its 23 bit glory, would take
+the value 10101110100000000000000, but it does not.  If you think about it, all
+numbers expressed in binary notation would have a leading 1.  Why?  In decimal
+scientific notation there should never be expressed a value with a leading 0,
+like 0.2392 * 10<SUP>3</SUP> or something.  This would be expressed instead as
+2.392 * 10<SUP>2</SUP>.  The point is, there is never a leading 0 in scientific
+notation, and it makes no difference whether we're talking about binary or
+decimal or hexadecimal or whatever.  The advantage of binary, though, is that
+if a digit can't be 0, it must be 1!  So, the 1 is assumed to be there and is
+left out to give us just that much more precision.  Thus, our mantissa for our
+number would in fact be 01011101000000000000000.  (The long stream of 0s at the
+end has one more zero than the alternative number at the beginning of this
+paragragh.)</P><TABLE BORDER CELLPADDING=7 CELLSPACING=0><TR><TR><TD
+ALIGN=RIGHT BGCOLOR="#CCDDDD"><PRE>0</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>10000100</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>01011101000000000000000</PRE></TD></TR></TABLE><H3>Double
+Precision vs. Single Precision</H3><P>In addition to the single precision
+floating point described here, there are also double precision floating point
+units.  These have 64 bits instead of 32, and instead of field lengths of 1, 8,
+and 23 as in single precision, have field lengths of 1, 11, and 44.  The
+exponent field contains a value that is actually 1023 larger than the "true"
+exponent, rather than being larger by 127 as in single precision.  Otherwise,
+it is exactly the same.</P><A NAME="hex2dec"></A><H2>Conversion from
+Floating Point Representation to Decimal</H2><P>Now I'll talk about
+conversation.</P><P>Conversion to decimal is very simple if you know how
+these numbers are represented.  Let's take the hexadecimal number 0xC0B40000,
+and suppose it is actually a single precision floating point unit that we want
+to make into a decimal number.  First convert each digit to
+binary.</P><TABLE BORDER CELLPADDING=7 CELLSPACING=0><TR><TR
+ALIGN=CENTER><TD BGCOLOR="#EEEEEE">Hex</TD><TD
+BGCOLOR="#EEFFFF">C</TD><TD BGCOLOR="#FFEEFF">0</TD><TD
+BGCOLOR="#FFFFEE">B</TD><TD BGCOLOR="#EEFFFF">4</TD><TD
+BGCOLOR="#FFEEFF">0</TD><TD BGCOLOR="#FFFFEE">0</TD><TD
+BGCOLOR="#EEFFFF">0</TD><TD BGCOLOR="#FFEEFF">0</TD></TR><TR
+ALIGN=CENTER><TD BGCOLOR="#DDDDDD">Binary</TD><TD
+BGCOLOR="#CCDDDD"><PRE>1100</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>0000</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>1011</PRE></TD><TD
+BGCOLOR="#CCDDDD"><PRE>0100</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>0000</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>0000</PRE></TD><TD
+BGCOLOR="#CCDDDD"><PRE>0000</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>0000</PRE></TD></TR></TABLE><P>Then reorganize
+this number into packets of 1, 8, and 23 bits long.</P><TABLE BORDER
+CELLPADDING=7 CELLSPACING=0><TR><TR><TD ALIGN=RIGHT
+BGCOLOR="#CCDDDD"><PRE>1</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>10000001</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>01101000000000000000000</PRE></TD></TR></TABLE></P>The
+sign field is one, which means this number is negative.  The exponent field has
+a value of 129, which signifies a real exponent of 2 (remember the real
+exponent is the value of the exponent field minus 127).  The mantissa has a
+value of 1.01101 (once we stick in the implied 1).  So, our number is the
+following:</P><TABLE BORDER=0><TR><TD></TD><TD>-1.01101 *
+2<SUP>2</SUP></TD></TR><TR><TD>=</TD><TD>-(2<SUP>0</SUP> + 2<SUP>-2</SUP> +
+2<SUP>-3</SUP> +
+2<SUP>-5</SUP>)</TD><TD>*</TD><TD>2<SUP>2</SUP></TD></TR><TR><TD>=</TD><TD>-(2<SUP>2</SUP>
++ 2<SUP>0</SUP> + 2<SUP>-1</SUP> +
+2<SUP>-3</SUP>)</TD></TR><TR><TD>=</TD><TD>-(4 + 1 + .5 +
+0.125)</TD></TR><TR><TD>=</TD><TD>-5.625</TD></TR></TABLE><P>It's
+almost fun, yeah?</P><A NAME="dec2hex"></A><H2>Conversion from Decimal to
+Floating Point Representation</H2><P>Say we have the decimal number
+329.390625 and we want to represent it using floating point numbers.  The
+method is to first convert it to binary scientific notation, and then use what
+we know about the representation of floating point numbers to show the 32 bits
+that will represent it.</P><P>If you know how to put a decimal into binary
+scientific notation, you'll get no benefit from reading this.  If you don't,
+read this.</P><P>The first step is to convert what there is to the left of
+the decimal point to binary.  329 is equivalent to the binary 101001001.  Then,
+leave yourself with what is to the right of the decimal point, in our example
+0.390625.</P><P>Yes, I deliberately chose that number to be so convoluted
+that it wasn't perfectly obvious what the binary representation would be.
+There is an algorithm to convert to different bases that is simple,
+straightforward, and largely foolproof.  I'll illustrate it for base two.  Our
+base is 2, so we multiply this number times 2.  We then record whatever is to
+the left of the decimal place after this operation.  We then take this number
+and discard whatever is to the left of the decimal place, and continue with
+this progress on the resulting number.  This is how it would be done with
+0.390625.</P><TABLE BORDER=0><TR><TD>0.390625</TD><TD>* 2</TD><TD
+WIDTH=200>= 0.78125</TD><TD>0</TD></TR><TR><TD>0.78125</TD><TD>* 2</TD><TD>=
+1.5625</TD><TD>1</TD></TR><TR><TD>0.5625</TD><TD>* 2</TD><TD>=
+1.125</TD><TD>1</TD></TR><TR><TD>0.125</TD><TD>* 2</TD><TD>=
+0.25</TD><TD>0</TD></TR><TR><TD>0.25</TD><TD>* 2</TD><TD>=
+0.5</TD><TD>0</TD></TR><TR><TD>0.5</TD><TD>* 2</TD><TD>=
+1</TD><TD>1</TD></TR><TR><TD>0<TD></TR></TABLE><P>Since we've reached
+zero, we're done with that.  The binary representation of the number beyond the
+decimal point can be read from the right column, from the top number downward.
+This is 0.011001.</P><P>As an aside, it is important to note that not all
+numbers are resolved so conveniently or quickly as sums of lower and lower
+powers of two (a number as simple as 0.2 is an example).  If they are not so
+easily resolved, we merely continue on this process until we have however many
+bits we need to fill up the mantissa.</P><P>As another aside, to the more
+ambitious among you that don't know already, since this algorithm works
+similarly for all bases you could just as well use this for any other
+conversion you have to attempt.  This can be used to your advantage in this
+process by converting using base 16.</P><TABLE
+BORDER=0><TR><TD>0.390625</TD><TD>* 16</TD><TD WIDTH=200>=
+6.25</TD><TD>6</TD></TR><TR><TD>0.25</TD><TD>* 16</TD><TD>=
+4</TD><TD>4</TD></TR><TR><TD>0<TD></TR></TABLE><P>If we convert simply
+from hex to binary, 0x64 is 0110 0100, which is the same result as the 011001
+yielded above.  This method is much faster.</P><P>Anyway!  We take those
+numbers that we got, and represent them as .011001, placing them in the order
+we acquired them.  Put in sequence with our binary representation of 329, we
+get 101001001.011001.  In our binary scientific notation, this is
+1.01001001011001 * 2<SUP>8</SUP>.  We then use what we know about how single
+precision numbers are represented to complete this process.</P><P>The sign
+is positive, so the sign field is 0.</P><P>The exponent is 8.  8 + 127 =
+135, so the exponent field is 10000111.</P><P>The mantissa is merely
+01001001011001 (remember the implied 1 of the mantissa means we don't include
+the leading 1) plus however many 0s we have to add to the right side to make
+that binary number 23 bits long.</P><P>Since one of the homework problems
+involves representing this as hex, I will finish with a hex
+number.</P><P><TABLE BORDER CELLPADDING=7 CELLSPACING=0><TR><TR><TD
+ALIGN=RIGHT BGCOLOR="#CCDDDD"><PRE>0</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>10000111</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>01001001011001000000000</PRE></TD></TR></TABLE></P><P>Then
+we break it into four bit pieces (since each hexadecimal digit is the
+equivalent of 4 bits) and then convert each four bit quantity into the
+corresponding hexadecimal digit.</P><P><TABLE BORDER CELLPADDING=7
+CELLSPACING=0><TR><TR ALIGN=CENTER><TD BGCOLOR="#DDDDDD">Binary</TD><TD
+BGCOLOR="#CCDDDD"><PRE>0100</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>0011</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>1010</PRE></TD><TD
+BGCOLOR="#CCDDDD"><PRE>0100</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>1011</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>0010</PRE></TD><TD
+BGCOLOR="#CCDDDD"><PRE>0000</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>0000</PRE></TD></TR><TR ALIGN=CENTER><TD
+BGCOLOR="#EEEEEE">Hex</TD><TD BGCOLOR="#EEFFFF">4</TD><TD
+BGCOLOR="#FFEEFF">3</TD><TD BGCOLOR="#FFFFEE">A</TD><TD
+BGCOLOR="#EEFFFF">4</TD><TD BGCOLOR="#FFEEFF">B</TD><TD
+BGCOLOR="#FFFFEE">2</TD><TD BGCOLOR="#EEFFFF">0</TD><TD
+BGCOLOR="#FFEEFF">0</TD></TR></TABLE></P><P>So, in hexadecimal, this
+number is 0x43A4B200.</P><A NAME="special"></A><H2>Special
+Numbers</H2><P>Sometimes the computer feels a need to put forth a result of
+a calculation that reflects that some error was made.  Perhaps the magnitude of
+the result of a calculation was larger or smaller than this format would seem
+to be able to support.  Perhaps you attempted to divide by zero.  Perhaps
+you're trying to represent zero!  How does one deal with these issues?  The
+answer is that there are special cases of floating point numbers, specifically
+when the exponent field is all 1 bits (255) or all 0 bits
+(0).</P><H3>Denormalized Numbers</H3><P>If you have an exponent field
+that's all zero bits, this is what's called a denormalized number.  With the
+exponent field equal to zero, you would think that the real exponent would be
+-127, so this number would take the form of 1.MANTISSA * 2<SUP>-127</SUP> as
+described above, but it does not.  Instead, it is 0.MANTISSA *
+2<SUP>-126</SUP>.  Notice that the exponent is no longer the value of the
+exponent field minus 127.  It is simply -126.  Also notice that we no longer
+include an implied one bit for the mantissa.</P><P>As an example, take the
+floating point number represented as 0x80280000.  First, convert this to
+binary.</P><P><TABLE BORDER CELLPADDING=7 CELLSPACING=0><TR><TR
+ALIGN=CENTER><TD BGCOLOR="#EEEEEE">Hex</TD><TD
+BGCOLOR="#EEFFFF">8</TD><TD BGCOLOR="#FFEEFF">0</TD><TD
+BGCOLOR="#FFFFEE">2</TD><TD BGCOLOR="#EEFFFF">8</TD><TD
+BGCOLOR="#FFEEFF">0</TD><TD BGCOLOR="#FFFFEE">0</TD><TD
+BGCOLOR="#EEFFFF">0</TD><TD BGCOLOR="#FFEEFF">0</TD></TR><TR
+ALIGN=CENTER><TD BGCOLOR="#DDDDDD">Binary</TD><TD
+BGCOLOR="#CCDDDD"><PRE>1000</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>0000</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>0010</PRE></TD><TD
+BGCOLOR="#CCDDDD"><PRE>1000</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>0000</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>0000</PRE></TD><TD
+BGCOLOR="#CCDDDD"><PRE>0000</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>0000</PRE></TD></TR></TABLE></P><P>We put this
+into the three 1 bit, 8 bits, and 23 bits packets that we're now familiar
+with.</P><P><TABLE BORDER CELLPADDING=7 CELLSPACING=0><TR><TR><TD
+ALIGN=RIGHT BGCOLOR="#CCDDDD"><PRE>1</PRE></TD><TD
+BGCOLOR="#DDCCDD"><PRE>00000000</PRE></TD><TD
+BGCOLOR="#DDDDCC"><PRE>01010000000000000000000</PRE></TD></TR></TABLE></P><P>Our
+sign bit is 1, so this number is negative.  Our exponent is 0, so we know this
+is a denormalized number.  Our mantissa is 0101, which reflects a real mantissa
+of 0.0101; remember we don't include what was previously an implied one bit for
+an exponent of zero.  So, this means we have a number
+-0.0101<SUB>2</SUB>*2<SUP>-126</SUP> = -0.3125<SUB>10</SUB>*2<SUP>-126</SUP> =
+-1.25<SUB>10</SUB>*2<SUP>-128</SUP>.</P><H3>Zero</H3><P>You can think
+of zero as simply another denormalized number.  Zero is represented by an
+exponent of zero and a mantissa of zero.  From our understanding of
+denormalized numbers, this translates into 0*2<SUP>-126</SUP> = 0.  This sign
+bit can be either positive (0) or negative (1), leading to either a positive or
+negative zero.  This doesn't make very much sense mathematically, but it is
+allowed.</P><H3>Infinity</H3><P>Just as the case of all zero bits in
+the exponent field is a special case, so is the case of all one bits.  If the
+exponent field is all ones, and the mantissa is all zeros, then this number is
+an infinity.  There can be either positive or negative infinities depending on
+the sign bit.  For example, 0x7F800000 is positive infinity, and 0xFF800000 is
+negative infinity.</P><H3>NaN (Not a Number)</H3><P>These special
+quantities have an exponent field of 255 (all one bits) like infinity, but
+differ from the representation of infinity in that the mantissa contains some
+one bits.  It doesn't matter where they are or how many of them there are, just
+so long as there are some.  The sign bit appears to have no bearing on this.
+Examples of this special quantity include 0x7FFFFFFF, 0xFF81ABD0, 0x7FAA12F9,
+and soforth.</P><H3>Summary of Special Cases</H3><P>A summary of
+special cases is shown in the below table.  It is more or less a copy of the
+table found on page 301 of the second edition of Computer Organization and
+Design, the Hardware Software Interface" by Patterson and Hennessy, the
+textbook for Computer Science 104 in the Spring 2000 semester.  Even though
+only single precision was covered in the above text, I include double precision
+for the sake of completeness.</P><P><TABLE BORDER CELLPADDING=7
+ALIGN=center VALIGN=center><TR VALIGN=top><TD COLSPAN=2
+BGCOLOR="#003333"><FONT COLOR=white><B>Single Precision</B></FONT></TD><TD
+COLSPAN=2 BGCOLOR="#330033"><FONT COLOR=white><B>Double
+Precision</B></FONT></TD><TD BGCOLOR="#333300" ROWSPAN=2><FONT
+COLOR=white><B>Object Represented</B></FONT></TD></TR><TR><TD
+BGCOLOR="#BBCCCC">Exponent</TD><TD BGCOLOR="#CCDDDD">Mantissa</TD><TD
+BGCOLOR="#CCBBCC">Exponent</TD><TD
+BGCOLOR="#DDCCDD">Mantissa</TD></TR><TR><TD BGCOLOR="#DDEAEA">0</TD><TD
+BGCOLOR="#EEF5F5">0</TD><TD BGCOLOR="#EADDEA">0</TD><TD
+BGCOLOR="#F5EEF5">0</TD><TD BGCOLOR="#EAEADD">zero</TD></TR><TR><TD
+BGCOLOR="#DDEAEA">0</TD><TD BGCOLOR="#EEF5F5">nonzero</TD><TD
+BGCOLOR="#EADDEA">0</TD><TD BGCOLOR="#F5EEF5">nonzero</TD><TD
+BGCOLOR="#EAEADD">&plusmn; denormalized number</TD></TR><TR><TD
+BGCOLOR="#DDEAEA">1-254</TD><TD BGCOLOR="#EEF5F5">anything</TD><TD
+BGCOLOR="#EADDEA">1-2046</TD><TD BGCOLOR="#F5EEF5">anything</TD><TD
+BGCOLOR="#EAEADD">&plusmn; normalized number</TD></TR><TR><TD
+BGCOLOR="#DDEAEA">255</TD><TD BGCOLOR="#EEF5F5">0</TD><TD
+BGCOLOR="#EADDEA">2047</TD><TD BGCOLOR="#F5EEF5">0</TD><TD
+BGCOLOR="#EAEADD">&plusmn; infinity</TD></TR><TR><TD
+BGCOLOR="#DDEAEA">255</TD><TD BGCOLOR="#EEF5F5">nonzero</TD><TD
+BGCOLOR="#EADDEA">2047</TD><TD BGCOLOR="#F5EEF5">nonzero</TD><TD
+BGCOLOR="#EAEADD">NaN (Not a Number)</TD></TR></TABLE></P><H3>When,
+Where, and Where Not</H3><P>When you have operations like 0/0 or
+subtracting infinity from infinity (or some other ambiguous computation), you
+will get NaN.  When you divide a number by zero, you will get an
+infinity.</P><P>However, accounting for these special operations takes some
+extra effort on the part of the designer, and can lead to slower operations as
+more transistors are utilized in chip design.  For this reason sometimes CPUs
+do not account for these operations, and instead generate an exception.  For
+example, when I try to divide by zero or do operations with infinity, my
+computer generates exceptions and refuses to complete the operation (my
+computer has a G3 processor, or MPC750).</P><A
+NAME="software"></A><H2>Helper Software</H2><P>If you're interested in
+investigating further, I include two programs for which I provide the C code
+that you can run to gain a greater understanding of how floating point works,
+and also to check your work on various assignments.</P><H3>Hex 2
+Float</H3><PRE CLASS=notSpaced>#include &lt;stdio.h&gt;int
+main(){  float theFloat;  while (1) {    scanf("%x", (int *)
+&theFloat);    printf("0x%08X, %f\n", *(int *)&theFloat, theFloat);  }
+return 0;}</PRE><P>This program accepts as input a hexadecimal quantity
+and reads it as raw data into the variable "theFloat."  The program then
+outputs the hexadecimal representation of the data in "theFloat" (repeating the
+input), and prints alongside it the floating point quantity that it
+represents.</P><P>I show here a sample run of the program.  Notice the
+special case floating point quantities (0, infinity, and not a
+number).</P><P>For the denormalized but nonzero numbers, this program will
+display zero even though the number is not really zero.  If you want to get
+around this problem, replace the %f in the formatting string of the printf
+function with %e, which will deplay the number to great precision with
+scientific notation.  I did not have it as %e because I find scientific
+notation extremely annoying.</P><PRE
+CLASS=notSpaced>C0B400000xC0B40000, -5.62500043A4B2000x43A4B200,
+329.390625000000000x00000000, 0.000000800000000x80000000,
+-0.0000007f8000000x7F800000, infff8000000xFF800000,
+-inf7fffffff0x7FFFFFFF, NaNffffffff0xFFFFFFFF,
+NaN7f81A0230x7F81A023, NaN</PRE><H3>Float 2 Hex</H3><PRE
+CLASS=notSpaced>#include &lt;stdio.h&gt;int main(){  float
+theFloat;  while (1) {    scanf("%f", &theFloat);    printf("0x%08X,
+%f\n", *(int *)&theFloat, theFloat);  }  return 0;}</PRE><P>This is
+a slight modification of the "Hex 2 Float" program.  The exception is it reads
+in a floating point number.  Just like and outputs the hexadecimal form plus
+the floating point number.  Again I include a sample run of this program,
+confirming the results of the example problems I covered earlier in this text,
+along with some other simple cases.  Notice the hexadecimal representation of
+0.2.</P><PRE CLASS=notSpaced>-5.6250xC0B40000,
+-5.625000329.3906250x43A4B200, 329.39062500x00000000,
+0.000000-00x80000000, -0.000000.20x3E4CCCCD, 0.200000.50x3F000000,
+0.50000010x3F800000, 1.000000</PRE><P>And that's the end of that
+chapter.</P><HR WIDTH=100 ALIGN=LEFT><DIV CLASS=BOTTOM>Thomas Finley
+2000</DIV></BODY></HTML>

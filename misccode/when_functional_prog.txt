@@ -1,0 +1,48 @@
+From http://www-106.ibm.com/developerworks Teodore Zlatanov
+
+When to use FP
+Once again, I will say this: know your tools. Functional programming is an
+excellent tool, as we have seen so far. It can simplify some pretty hairy problems
+and make others a little easier. So when should you use FP?
+
+ + First of all, remember that in Perl, FP is only an approach. The actual
+ solution will be procedural, even though it simulates a functional solution.
+ The question is not when FP should be used, but how much it should be used,
+ from "not at all" to "as much as possible."
+
+ + Any time you need to do complex sorting, see if the Schwartzian transform
+ or the Guttman-Rosler transform are appropriate. They are drop-in functional
+ replacements for regular sorting.
+
+ + If your functions are chained often, consider FP. For example, modification
+ of a list in steps by several functions can probably be accomplished with an
+ FP approach.
+
+ + If you have a lot of temporary variables that are thrown away as soon as
+ they are used, consider FP to decrease their number.
+
+ + Filtering, sorting, and general transforming functions applied to lists or
+ hashes are candidates for FP.
+
+ + If your functions have a lot of side effects, and their parameters are more
+ than a few, FP is probably not going to work too well.
+
+ + Recursive algorithms can go either way with regard to FP. They are not
+ clearly better or worse when done with the FP approach.
+
+ + Avoid FP if performance is very important. Use the Benchmark module to
+ check your approach -- sometimes FP will speed things up considerably (for
+ example, the Schwartzian transform is significantly faster because of its
+ cache of comparison values), but sometimes it will cause the performance of
+ the code to drop significantly.
+
+ + One-liners work well with FP.
+
+ + Obfuscated Perl code has always favored grep() and map() as ways to obscure
+ the actions of code. Unless you are writing obfuscated Perl code for a
+ contest, don't use grep() and map() without at least some commenting.
+
+ + Learn, practice, and use FP in your daily programming work. You will gain
+ insight into all of your other code, see new ways ahead, and make life
+ easier.  Don't use FP just because it's there, but do use it because it works
+ well for your specific problem.

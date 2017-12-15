@@ -1,0 +1,38 @@
+#!/bin/sh
+##############################################################################
+#     Name: sasdate (s/b symlined as ~/code/sas/sasdate)
+#
+#  Summary: Human date to SAS numeric date converter.
+#
+#           TODO go the other way:
+#           data; x=put(19530, DATE.); put x=; run;
+#
+#  Created: Mon 14 Apr 2003 13:08:53 (Bob Heckel)
+##############################################################################
+  
+Usage() {
+  echo "Usage: `basename $0` DATE
+  E.g. `basename $0` '01/04/1960'
+  Calculates days from 1960 to DATE
+  See ~/code/sas/days_since_1960.sas or use
+  datecalc 1/1/1960 15999 for opposite direction"
+  exit 1
+}
+
+N_EXPECTED_ARGS=1
+
+if [ "$#" -ne $N_EXPECTED_ARGS ]; then 
+  Usage
+fi
+
+CURR=`date +%s -d"$1"`
+###echo $CURR
+
+# TODO if the SAS dt returned is < 0, make sure to add 1 day (for day 0)
+#              add 10 years of seconds since SAS uses 1960 and Unix 1970
+RESULT=`expr $CURR + 315655920`
+###echo $RESULT
+
+#                   sec per day
+FINAL=`expr $RESULT / 86400`
+echo $FINAL

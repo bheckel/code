@@ -1,0 +1,1266 @@
+################################################################################
+                        V I   H E L P
+################################################################################
+   SPF commands on left, VI commands on right.  NVI-specific noted by (NVI: ).
+   For SPF commands, equivalent TSO Edit keystroke commands noted in upper case
+by [keyname], TSO Edit command line options noted by (=>commandname), TSO Edit
+line commands noted by (commandname).
+   © Copyright (C) 1993, 1994, 1995, 1996 Jeff Wang.  You can do whatever you
+want with this file, just don't charge money for it :-)
+--------------------------------------------------------------------------------
+
+********************************************************************************
+SPF FILE COMMAND        | VI/NVI FILE COMMANDS EQUIVALENT
+********************************************************************************
+edit file               | vi file
+edit file at last line  | vi + file
+edit file at line n     | vi +n file
+edit file after running | vi +/pattern file
+   a command first      |    <edit file at first "pattern" occurrence>
+                        | vi +":!grep -n pattern %" file
+                        |    <edit file after displaying all occurrences of
+                        |     "pattern" with line numbers; vi +":g/pattern/p"
+                        |     does the same, but does not list line numbers>
+                        | vi +":g/pattern/d" file
+                        |    <edit file after deleting all lines with "pattern">
+edit another file       | :e file2  |  :edit file2
+   [F2 SPLIT]           | :e +/pattern file2
+                        |    <edit second file at first line of "pattern">
+   [F9 SWAP]            | :e#  |  Ctrl-^
+                        |    <toggle between two files; # is symbol for the
+                        |     alternate file; % is symbol for current file; when
+                        |     editing more than one file, all currently saved
+                        |     options, maps, buffers, search patterns, and last
+                        |     edit command (. or Ctrl-@) are retained>
+edit multiple files     | vi file1 file2 file3 ...
+                        |    <use :n to go to next file in list or use ':e file'
+                        |     to go directly to named "file"; for ':e file', the
+                        |     ':args' still reflects the previous file edited;
+                        |     to return to previous file, use :e#)
+                        | vi prog*
+                        |    <edit all filenames beginning with "prog">
+                        | vi `find . -type f -print`
+                        |    <edit all files in current directory and in all
+                        |     subdirectories>
+                        | vi `find . -name *.c -print`
+                        |    <edit all files in current directory and in all
+                        |     subdirectories with filename that ends in ".c">
+                        | vi `grep -l "pattern" *`
+                        |    <edit all files in current directory with "pattern"
+                        |     in its contents>
+                        | vi `egrep -l "pattern1|pattern2|pattern3" *`
+                        |    <edit all files in current directory with either
+                        |     "pattern1", "pattern2", or "pattern3" in contents>
+                        | :n  |  :next
+                        |    <move to next file; if autowrite set, each file is
+                        |     saved before moving to next file; if autowrite not
+                        |     set, need to :w first, or use :n! to move to next
+                        |     file without saving changes to current file>
+                        | :n file4 file5
+                        |    <edit new set of files; current file(s) is flushed
+                        |     from edit buffer>
+                        | :rew  |  :rewind
+                        |    <rewind pointer to first file in list; use :rew! to
+                        |     not save edits made to current file>
+                        | :ar  |  :args
+                        |    <display current set of files being edited>
+edit file after system  | vi -r
+   crash [=>RECOVER ON] |    <list edit files the system saved during crash>
+                        | vi -r file
+                        |    <edit buffer file recovered from edit abort>
+browse file             | view file  |  vi -R file
+                        |    <read-only mode; or use `more` to browse file>
+save and exit [F3 END]  | ZZ  |  :x  |  :wq
+save file  (=>SAVE)     | :w  |  :write
+save part of the file   | :130,$w file2
+                        |    <save line 130 to end of file as "file2">
+                        | :'a,'bw file2
+                        |    <save from line marked label `a' to line marked `b'
+                        |     as "file2">
+                        | :/pattern1/,/pattern2/w! file2
+                        |    <save from line with "pattern1" to line with
+                        |     "pattern2" to "file2"; w! overwrites "file2" if it
+                        |     it previously existed>
+append current file to  | :w >> file2
+   another file         |    <append buffer contents to "file2">
+save current file under | :w file2
+   different filename   |    <save current file buffer as "file2"; current file
+                        |     is not saved until you :w it>
+                        | :w %.new
+                        |    <save current file as "file.new">
+                        | :w new%.ver3
+                        |    <save current file as "newfile.ver3">
+rename filename without | :f newfilename  |  :file newfilename
+   modifying the        |    <ZZ saves "newfilename"; no change is made to the
+   original file        |     original file prior to entering :f if you have not
+                        |     saved it yet>
+use vi to rename or     | mvi *.dat
+   delete files         |    <edit the names of all files ending in ".dat"; upon
+                        |     upon exit from /tmp file created, filenames which
+                        |     were changed are renamed; filenames preceded with
+                        |     "D " are deleted)
+[=>CANCEL] edit session | :q!
+   do not save changes  |
+undo any changes made   | :e!
+   since last save      |
+********************************************************************************
+SPF CURSOR MOVEMENT     | VI MOVEMENT EQUIVALENTS
+********************************************************************************
+MOVE BY CHARACTER       |
+--------------------------------------------------------------------------------
+left  arrow             | h  |  [LeftArrow]   |  Ctrl-H
+right arrow             | l  |  [RightArrow]  |  [space bar]
+up    arrow             | k  |  [UpArrow]     |  Ctrl-P
+down  arrow             | j  |  [DownArrow]   |  Ctrl-J  |  Ctrl-N
+input mode [BackSpace]  | [BackSpace]  |  Ctrl-H
+--------------------------------------------------------------------------------
+MOVE BY TEXT OBJECT     |
+--------------------------------------------------------------------------------
+move to new line        | [Return]  |  j  |  [DownArrow]  |  Ctrl-M
+move forward one word   | w  |  W <move to start of next word>
+   [Alt][RightArrow]    | e  |  E <move to end   of next word>
+move backward one word  | b  |  B <move to start of previous word>
+   [Alt][LeftArrow]     |
+move backward one word  | Ctrl-W  <move backward over newly entered text on
+   during input mode    |          current line to type over the words>
+move backward to start  | Ctrl-U  <move backward to start of newly entered text
+   of newly entered     |          on current line to type over it; if you press
+   text in input mode   |          [Escape] after this, all new text is deleted>
+move to beginning of    | )  <move to start of next     sentence>
+   next or previous     | (  <move to start of previous sentence>
+   sentence             |    <sentence is delimited by empty line or .?!
+                        |     followed by at least 2 spaces>
+move to beginning of    | }  <move to start of next     paragraph>
+   next or previous     | {  <move to start of previous paragraph>
+   paragraph            |    <paragraph is delimited by empty line or nroff and
+                        |     troff paragraph macro)
+move to beginning of    | ]] <move to start of next     section>
+   next or previous     | [[ <move to start of previous section>
+   section              |    <section is delimited by nroff and troff section
+                        |     macros or each "{" character in a C program>
+--------------------------------------------------------------------------------
+MOVE BY LINE            |
+--------------------------------------------------------------------------------
+move to start of line   | 0  <move to extreme left margin of line>
+move to end   of line   | $
+move to first of line   | ^  <move to first character on line>
+                        | +  <move to first character of next line>
+                        | -  <move to first character of previous line>
+                        | n_ <move to first character (n-1) lines lower>
+[Tab] during text input | <Tab>   <tabs default to 8 spaces; ':set tabstop=n' to
+                        |          set tabs n spaces>
+                        | Ctrl-I  <like <Tab> key during text input mode>
+                        | Ctrl-T  <like <Tab> when input at start of line>
+back up a shiftwidth of | Ctrl-D  <useful if shiftwidth is set to tabstop; works
+   tabs in input mode   |          only if autoindent is turned on)
+disable autoindent in   | ^ Ctrl-D <start edit on column 1 in input mode, resume
+   text input mode      |           autoindent on next line>
+                        | 0 Ctrl-D <start edit on column 1 in input mode, do not
+                        |           resume autoindent until a line is manually
+                        |           indented again>
+go to last line         | G   |  :$
+go to first line        | 1G
+go to line n            | nG  |  :n  <move to line "n">
+go down n lines         | nj  |  n[DownArrow]
+go up   n lines         | nk  |  n[UpArrow]
+move to top of current  | H
+  screen  <F12 CURSOR>  | nH <move cursor to "n" lines below top line>
+move to middle line of  | M
+  current screen        |
+move to last   line of  | L
+  current screen        | nL <move cursor to "n" lines above bottom line>
+mark cursor position    | mx <mark cursor position with label, where `x' is
+   with mark to use as  |     alphabetic character a-z>
+   line address for ex  | `x <move cursor to the character marked by `x'>
+   commands (can use to | 'x <move cursor to start of line marked `x'>
+   move around quickly) | `` <return cursor to previous mark or context>
+                        | '' <return cursor to start of line of previous mark or
+                        |     context>
+--------------------------------------------------------------------------------
+MOVE BY COLUMN          |
+--------------------------------------------------------------------------------
+go to column n          | n| <move to column "n" of current line>
+move n spaces to right  | nl  |  n[RightArrow]  |  n[space bar]
+move n spaces to left   | nh  |  n[LeftArrow]
+--------------------------------------------------------------------------------
+MOVE BY SCREEN          |
+--------------------------------------------------------------------------------
+scroll up one full      | Ctrl-B
+   screen  [F7 UP]      | nCtrl-B <scroll backward "n" full screenfuls>
+scroll up half-screen   | Ctrl-U
+   [F7 UP] HALF         | nCtrl-U
+   [F7 UP] n            |    <set scroll length to n lines and scroll up; other
+                        |     Ctrl-U's will also scroll "n" lines)
+scroll down one full    | Ctrl-F
+   screen  [F8 DOWN]    | nCtrl-F <scroll forward  "n" full screenfuls>
+scroll down half-screen | Ctrl-D
+   [F8 DOWN] HALF       | nCtrl-D
+   [F8 DOWN] n          |    <set scroll length to "n" lines and scroll down;
+                        |     other Ctrl-D's will also scroll "n" lines>
+scroll up   1 line      | Ctrl-Y  <leaves cursor where it is, if possible>
+scroll down 1 line      | Ctrl-E  <leaves cursor where it is, if possible>
+scroll screen           | z [Return]  <scroll current line to top screen>
+   [F7 F8] CSR          | z. <scroll current line to center of screen>
+                        | z- <scroll current line to bottom of screen>
+                        | z+ <scroll line to top    of     next page>
+                        | z^ <scroll line to bottom of previous page>
+                        | /pattern/z  |  /pattern/z.  |  /pattern/z-
+                        |    <search forward for "pattern" and place the next
+                        |     occurrence of "pattern" on the top, center, or
+                        |     bottom of screen>
+--------------------------------------------------------------------------------
+MOVE BY FINDING TEXT    |
+--------------------------------------------------------------------------------
+find a pattern (=>FIND) | /pattern <search forward  for "pattern">
+                        | ?pattern <search backward for "pattern">
+find a word             | /\<word\>
+                        |    <search forward for "word", omitting "word" that is
+                        |     an embedded pattern of another word>
+                        | ?\<[Kk][^ <tab>]*[aeiouAEIOU]\>
+                        |    <search backward for any word that begins with "K"
+                        |     or "k" and ends in a vowel>
+repeat find             | n <repeat find in same     direction>
+   (rFIND [F5])         | N <repeat find in opposite direction>
+find pattern only if it | /pattern1/;/pattern2/;/pattern3/
+   occurs after another |    <find "pattern3" only if it occurs after "pattern1"
+   patterns             |     and "pattern2"; search fails if either "pattern2"
+                        |     occurs before "pattern1" or "pattern3" is before
+                        |     "pattern1" or "pattern2">
+find nth occurrence of  | I<Esc>ni/pattern[Ctrl-V][Return][Esc]l"xd0@x
+   pattern              |    <"n" is number of occurrences to search forward;
+                        |     keystroke sequence outputs a stream of multiple
+                        |     "/pattern^M" (^M is carriage return) that is
+                        |     deleted to buffer "x" and executed by entering @x
+                        |     from wherever the cursor is>
+                        | A.<Esc>na?pattern[Ctrl-V][Return][Esc]F.x"xd$@x
+                        |    <same as above command except it searches for nth
+                        |     occurrence backwards>
+find character on       | fc  <search forward for character "c">
+   current line         | nfc <search forward for "n"th occurrence of "c">
+                        | Fc  <search backward for character "c">
+                        | nFc <search backard for "n"th occurrence of "c">
+                        | tc  <search forward for the character before "c">
+                        | Tc  <search backward for the character after "c">
+repeat character find   | ;  <repeat find in same direction as last find)
+                        | ,  <repeat find in the opposite direction)
+find matching bracket   | %  <if cursor is placed on open bracket (, [, {, press
+   in program code      |     % to move cursor to matching closing bracket of
+                        |     ), ], }; the reverse also works>
+display lines having    | :g/pattern/p
+   pattern              |    <display all lines having "pattern">
+                        | :g!/pattern/nu  |  :v/pattern/nu
+                        |    <display all lines not having "pattern" along with
+                        |     their line numbers>
+                        | :v/^[A-Za-z0-9]/p
+                        |    <display all lines not starting with alphanumerics>
+********************************************************************************
+SPF EDIT LINE COMMANDS  | VI EDIT EQUIVALENTS
+********************************************************************************
+INSERT TEXT             |
+--------------------------------------------------------------------------------
+insert text    [Insert] | i  <insert text before cursor>
+                        | ni <duplicate "n" copies of what is inserted>
+                        | a  <append text after cursor>
+                        | na <duplicate "n" copies of what is appended>
+insert at start of line | I  <insert text at beginning of line>
+insert at end   of line | A  <append text at ending of line>
+insert new line  (I)    | o  <open a new line below the current line>
+                        | O  <open a new line above the current line>
+text split       (TS)   | i [Return] [Escape]
+insert non-printing     | Ctrl-V
+   control characters   |    <quote the next non-printing character; quoting a
+                        |     newline [Return] prints out ^M, <escape> prints ^[
+                        |     to quote Ctrl-V itself, press Ctrl-V twice for ^V>
+return to command mode  | Esc [F11]  |  Ctrl-[
+--------------------------------------------------------------------------------
+CHANGE TEXT             |
+--------------------------------------------------------------------------------
+replace text  [overlay] | R   <type over existing text starting at cursor>
+                        | nR  <insert "n" copies of text that is input>
+replace a character     | r   <replace the character the cursor is on; this
+                        |      command leaves you in command mode>
+                        | nr  <overlay n copies of replacement character>
+change a word           | cw  <change a   word  starting at cursor>
+                        | ncw <change "n" words starting at cursor>
+change to end   of line | C   <change text from cursor to end   of line>
+change to start of line | c0  <change text from cursor to start of line>
+change to sentence end  | c)  <c( changes to start of sentence>
+change range of columns | cn| <change from cursor to column "n">
+change to character     | cf? <change from cursor to next "?" on line>
+change to text pattern  | c/pattern  <change text from cursor to next occurrence
+                        |             of "pattern">
+                        | c?pattern  <change text from cursor to previous
+                        |             occurrence of "pattern">
+change a line           | cc  <blank out current line and go into input mode>
+                        | S   <same as cc, but does not blank out current line>
+change n lines          | ncc <change "n" consecutive lines>
+change to end   of file | cG  <change from current line to end of file>
+change to start of file | c1G <change from current line to first line>
+substitute a character  | s   <replace a   character  with new text>
+substitute n characters | ns  <replace "n" characters with new text>
+change txt1 txt2        | :s/txt1/txt2/
+   (=>CHANGE txt1 txt2) |    <change first "txt1" on line to "txt2">
+                        | :s/txt1/txt2/g
+                        |    <change all "txt1" on line to "txt2">
+                        | :6,15s/txt1/txt2/
+                        |    <change first "txt1" to "txt2" on lines 6 to 15>
+                        | :%s/pattern1.*pattern2/txt/g
+                        |    <change pattern of text that begins with "pattern1"
+                        |     and ends with "pattern2" to "txt">
+repeat change           | n & <n moves cursor to next occurrence of text; &
+   (rCHANGE [F6])       |      changes next occurrence of text>
+                        | :&  <repeat last ex substitution command>
+                        | :&g <repeat last ex substitution command on current
+                        |      line>
+                        | :%&g <repeat last ex substitution command for all
+                        |       lines in file>
+change all txt1 txt2    | :%s/txt1/txt2/g
+   (=>CHANGE ALL)       |    <change all "txt1" in file to "txt2">
+                        | :%s/txt1/txt2/gc
+                        |    <confirm each change by entering "y" at ^^^ prompt;
+                        |     enter "n" or just press <Return> to negate; Ctrl-C
+                        |     cancels further changes>
+                        | :g/pattern/s/old/new/g
+                        |    <globally change all "old" to "new" only on lines
+                        |     where "pattern" occurs>
+                        | :g!/pattern/s/old/new/g  |  :v/pattern/s/old/new/g
+                        |    <globally change all "old" to "new" only on lines
+                        |     where "pattern" does not occur>
+regular expressions for | .    <match any single character except newline>
+   search patterns      | *    <match zero or more of preceding character>
+   (wildcard character) | .*   <match any number of any characters>
+                        | ^txt <match "txt" only at start of line>
+                        | txt$ <match "txt" only at end   of line>
+                        | \    <escape the meaning of the special command
+                        |       character that follows, such as . * ^ $ / \ ~>
+                        | [ ]  <match any character enclosed in the brackets;
+                        |       e.g., [A9] matches A or 9, [A-Z] matches A to Z,
+                        |       [;:0-9&] matches ; : & and numbers 0-9, ^[aeiou]
+                        |       matches any lowercase vowel at start of line,
+                        |       [^aeiou] matches any character that is not a
+                        |       vowel; to match \ - or ] within brackets, escape
+                        |       their meaning by specifying \\ \- or \] )
+                        | \(   <save pattern inside \( \) in 1 of 9 buffers;
+                        | \)    recall buffer in replacement text using \n
+                        |       :%s/\([0-9.]*\) *\([0-9.]*\)/\2    \1/
+                        |       transposes two fields in a numeric file having
+                        |       only numbers and decimals>
+                        | \<   <match characters at start of word; e.g., \<un
+                        |       matches words starting with "un">
+                        | \>   <match characters at end of word; e.g., \>es
+                        |       matches words ending with "es">
+                        | ~    <match whatever was last used as search pattern;
+                        |       if last search was on "XGrabKey", /~board will
+                        |       will search for "XGrabKeyboard"; does not work
+                        |       as a pattern in substitute command, may not work
+                        |       on some vi's>
+regular expressions for | \    <escape the meaning of the special command
+   replacement patterns |       character that follows such as . or *>
+   (wildcard character) | \n   <where n is 0 to 9, replace \n with corresponding
+                        |       \( \) delimited search pattern; see \( \) above>
+                        | &    <replace & with whatever was used as search
+                        |       pattern; e.g., :%s/In/& fact/g will replace all
+                        |       "In" with "In fact">
+                        | \u   <\u changes next character in replacement to be
+                        | \U    uppercase; \U changes all characters after it in
+                        |       replacement string to uppercase unless separated
+                        |       by \e or \E>
+                        | \l   <\l changes next character in replacement to be
+                        | \L    lowercase; \L changes all characters after it in
+                        |       replacement string to lowercase unless separated
+                        |       by \e or \E>
+                        | ~    <replace search pattern with whatever was last
+                        |       used as replacement pattern; if :s/He is/He was/
+                        |       was substituted on a line, the next substitution
+                        |       substitution command of :s/She saw/~/ changes
+                        |       "She saw" also to "She was">
+change case of letter   | ~    <toggles between upper and lower case>
+invert case of word     | ywmno<Esc>P:s/[^ ]/\~/g<Return>0"nDdd`n@n
+                        |    <ywmno yanks word, marking it as `n'; P:s/[^ ]/\~/g
+                        |     puts word on next line and converts to lowercase;
+                        |     0"nDdd deletes tilde'd characters to buffer "n"
+                        |     deletes line; `n@n moves back to original word and
+                        |     executes "n" buffer; this command changes "AbC" to
+                        |     "aBc"; to include punctuation, use yWmno so "Ab.C"
+                        |     changes to "aB.c">
+invert case of line     | !!tr '[a-z][A-Z]' '[A-Z][a-z]'
+                        | :s/\([a-z]*\)\([A-Z]*\)/\U\1\L\2/g
+                        |    <either the tr or substitution will work>
+change to uppercase     | :%s/.*/\U&/  <change entire file to uppercase>
+   (=>UPCASE ALL)       | :/do:/,/end:go/s/.*/\U&/
+                        |    <change all text between first occurrence of line
+                        |     having "do:" to next line having pattern "end:go"
+                        |     to uppercase>
+                        | :?^$?,'bs/other/\u&/g
+                        |    <change all occurrences of "other" from previous
+                        |     empty line to line marked `b' to "Other">
+change to lowercase     | :%s/.*/\L&/  <change entire file to lowercase>
+   (=>LOWCASE ALL)      | :3,8s/IN EXAMPLE/\L&\e NUMBER/g
+                        |    <change all "IN EXAMPLE" patterns in lines 3 to 8
+                        |     to "in example NUMBER">
+                        | :,'bs/Ex/\l&/g
+                        |    <change all occurrences of "Ex" from current line
+                        |     to line marked `b' to "ex">
+--------------------------------------------------------------------------------
+DELETE / MOVE TEXT      |
+--------------------------------------------------------------------------------
+delete a character      | x   <delete character at     cursor>
+   [delete]             | X   <delete character before cursor>
+delete n characters     | nx  <delete "n" characters after  cursor>
+                        | nX  <delete "n" characters before cursor>
+delete word             | dw  <delete a   word  starting at cursor>
+   [Alt][delete]        | ndw <delete "n" words starting at cursor>
+delete to end   of line | D   <delete from cursor to end   of line>
+delete to start of line | d0  <delete from cursor to start of line>
+delete to sentence end  | d)  <d( deletes to start of sentence>
+delete range of columns | dn| <delete from cursor to column "n">
+delete line        (D)  | dd  <delete current line>
+delete n lines     (DD) | ndd <delete "n" consecutive lines; e.g., 4dd is same
+                        |      as D4 in SPF Edit>
+                        | d'a <delete from current line to line marked `a'>
+                        | :/-/d <delete next line with a "-" in it>
+delete to end   of file | dG  <delete from current line to end of file>
+delete to start of file | d1G <delete from current line to first line>
+delete to character     | df? <delete from cursor to next "?" on current line>
+delete to text pattern  | d/pattern
+                        |    <delete text from cursor to next "pattern">
+                        | d?pattern
+                        |    <delete text from cursor to previous "pattern">
+                        | :%s/pattern1.*pattern2//g
+                        |    <delete pattern of text that begins with "pattern1"
+                        |     and ends with "pattern2">
+delete block of text    | ma mb `ad`b
+                        |    <to delete an arbitrary text block (instead of
+                        |     complete lines), mark start of text with label `a'
+                        |     and mark the character AFTER the last character to
+                        |     delete with `b'; `ad`b deletes marked text block)
+move line          (M)  | dd  (p  |  P)
+                        |    <dd deletes line; p or P puts deleted line below or
+                        |     above cursor; unless you delete to named buffer,
+                        |     you must use p/P to put text back to another spot
+                        |     before doing another dd or yy move/copy>
+                        | :m$
+                        |    <move current line to end of file>
+block move n lines (MM) | ndd  (p  |  P)
+                        |    <ndd deletes "n" lines; p pastes deleted lines
+                        |     below cursor, P pastes the text above cursor; e.g.
+                        |     4dd p is the same as M4 in SPF Edit)
+                        | :'a,'bm.
+                        |    <move from line marked "a" to line marked "b" after
+                        |     current line)
+delete to named buffer  | "andd
+                        |    <"a" is one of 26 buffers named a-z; "n" is number
+                        |     of lines to delete, default of 1 line>
+                        | "Andd
+                        |    <delete "n" lines, append it to buffer "a" content>
+delete text block to    | ma mb `a"cd`b
+   named buffer         |    <to delete an arbitrary text block (instead of
+                        |     complete lines to named buffer, mark start of text
+                        |     with label `a' and mark character AFTER the last
+                        |     character to delete with `b'; `a"cd`b deletes the
+                        |     marked text block to buffer "c">
+paste deleted text from | "ap  |  "aP
+   named buffer         |    <paste buffer "a" contents after or before current
+                        |     line>
+paste from delete       | "np  |  "nP
+   buffer               |    <"n" is buffer number 1-9 storing past 9 deletions;
+ (restore deleted text) |     last delete is saved in buffer 1; only works for
+                        |     deleted lines, not deleted strings of text>
+                        | "1pu.u.u.u.u.u.u.u.u
+                        |    <step through the contents of all 9 delete buffers;
+                        |     useful if you accidentally deleted text recently
+                        |     that you want to get back; "u" undoes each delete
+                        |     buffer restoration; "." puts contents of another
+                        |     delete buffer below current line>
+transpose two character | xp <swap character with following character>
+transpose two words     | dwwP <swap word starting at cursor with next word>
+transpose two lines     | ddp  <swap position of current line with next word>
+delete lines having     | :g/pattern/d
+   pattern              |    <delete all lines in file with "pattern">
+                        | :g!/pattern/d  |  :v/pattern/d
+                        |    <delete all lines in file without "pattern">
+                        | :/pattern1/,/pattern2/d
+                        |    <delete from first line having "pattern1" to
+                        |     next line having "pattern2">
+                        | d/pattern1/;/pattern2/
+                        |    <delete from first line having "pattern1" up to
+                        |     (but not including) next line having "pattern2">
+                        | :g/pattern/-3,-1d|+1,+2d
+                        |    <for all occurrences of "pattern", delete 3 lines
+                        |     above and 2 lines below it; if "pattern" at top or
+                        |     bottom of file, use :4,$-2g/pattern/-3,-1d|+1,+2d
+                        |     instead; to also display lines having occurrences
+                        |     of "pattern", use :4,$-2g/pattern/-3,-1d|p|+1,+2d>
+move lines having a     | :g/pattern/mo$
+   pattern              |    <move all lines with "pattern" to end of file>
+delete columns of text  | :%!colrm f l
+  (=>C ALL P'=' '' f l) |    <delete all text in columns "f" through "l">
+                        | :'a,.!colrm f l
+                        |    <delete all text in columns "f" to "l" from line
+                        |     marked `a' to current line>
+                        | :2,10!colrm 1 4
+                        |    <delete all text in columns 1 to 4 for lines 2
+                        |     to 10; this can be use to shift text to the left>
+blank out text columns  | :.,$!column f l
+ (=>C ALL P'=' ' ' f l) |    <from current line to end of file, blank out
+                        |     columns "f" to "l" with spaces>
+                        | :'a,'b!column 20
+                        |    <from line marked `a' to line `b', fill columns 20
+                        |     to end of line with blank spaces>
+                        | :%!column 34 55 -
+                        |    <for all lines in file, fill columns 34 to 55 with
+                        |     character "-">
+overlay text onto other | :.!yo  (:16,26!po)
+  lines of text  (C OO) |    <yank current line of text to buffer and overlay it
+                        |     onto lines 16 through 26>
+                        | :'a,'b!yo  (:'c,'d!po)
+                        |    <yank lines marked `a' through `b' and overlay them
+                        |     on block of lines marked `c' and `d'>
+                        | !!yo  (:'a,.!po  |  !'a po)
+                        |    <overlay line of yo-yanked text onto lines starting
+                        |     from line marked `a' to current line>
+--------------------------------------------------------------------------------
+COPY TEXT               |
+--------------------------------------------------------------------------------
+copy file (=>COPY file) | :r file  |  :read file
+                        |    <copy contents of "file" after current line>
+                        | :r !sed -n 50,75p file
+                        |    <copy lines 50 to 75 of "file" after current line;
+                        |     equivalent command using awk is
+                        |     :r !awk 'NR >= 50 && NR <= 75' file >
+                        | :r !sed -n "/pattern1/,/pattern2/p" file
+                        |    <copy after current line all text in "file" that is
+                        |     between an occurrence of "pattern1" and occurrence
+                        |     of "pattern2">
+copy a file after all   | :g/pattern/r file
+   pattern occurrences  |    <a copy of "file" is placed after every "pattern">
+copy a command output   | :g/pattern/r !Unixcommand
+   after every pattern  |    <"Unixcommand" output placed after every "pattern">
+copy a command output   | :r !Unixcommand
+   into current file    |    <copy Unix command output after current line>
+copy n numbers of words | nyw  (p  |  P)
+                        |    <copy "n" number of words starting at cursor and
+                        |     put after or before cursor>
+copy to end   of line   | y$  (p  |  P)
+                        |    <copy text from cursor to end of line and put below
+                        |     or above cursor>
+copy to start of line   | y0  (p  |  P)
+                        |    <copy text from cursor to start of line and put
+                        |     below or above cursor>
+copy to end of sentence | c)  (p  |  P)
+                        |    <y( copies to start of sentence>
+copy a range of columns | yn| (p  |  P)
+                        |    <copy from cursor to column "n" and put after or
+                        |     before cursor>
+copy a line        (C)  | yy  (p  |  P)
+                        |    <yy yanks line; p or P puts yanked line below or
+                        |     above cursor; unless you yank to named buffer, you
+                        |     must use p/P to put the text back to another spot
+                        |     before doing another dd or yy move/copy>
+block copy n lines (CC) | nyy (p  |  P)
+                        |    <yank "n" consecutive lines; p or P pastes yanked
+                        |     lines; e.g., 4yy is same as C4 in SPF Edit>
+                        | y'a (p  |  P)
+                        |    <yank from current line to line marked `a'; p or P
+                        |     pastes the yanked text>
+                        | :'a,'by  (p  |  P)
+                        |    <yank from line marked `a' to line `b'>
+                        | :'a,'bco.
+                        |    <copy from line marked `a' to line marked `b' after
+                        |     current line>
+copy a text block       | ma mb `ay`b  (p  |  P)
+                        |    <to yank an arbitrary text block (instead of
+                        |     complete lines), mark start of text with label `a'
+                        |     and mark the character AFTER the last character to
+                        |     to yank with label `b'; `ay`b yanks marked text
+                        |     block; p or P pastes it back>
+repeat a line       (R) | yy  (p  |  P)
+                        |    <yank line, paste back below or above current line>
+repeat line n times (Rn)| :1,ng/^/'aco'a
+                        |    <to repeat line "n" times, either yy yank and then
+                        |     use p "n" number of times, or mark the line as `a'
+                        |     and :1,ng/^/'aco'a will duplicate "n" copies of
+                        |     that line; e.g., :1,34g/^/'aco'a  will add 34 more
+                        |     copies of line marked `a'; "n" must be no greater
+                        |     than the number of lines in the file>
+repeat text block  (RR) | :'a,'bco'b
+                        |    <repeat the text block marked `a' on first line and
+                        |     `b' on last line; the repeated block is placed
+                        |     beneath original text block>
+                   (RRn)| :1,ng/^/'a,'bco'b
+                        |    <repeath the text block marked `a' on first line
+                        |     and `b' on last line "n" number of times; "n"
+                        |     "n" copies of repeated text block will be appended
+                        |     appended below original text block; "n" be no
+                        |     greater than the number of lines in the file>
+yank to buffer (=>COPY1)| "anyy
+ (copy to named buffer) |    <"a" is one of 26 buffers named a-z; "n" is number
+                        |     of lines to yank, default of 1 line>
+                        | "Anyy
+                        |    <yank "n" lines, append it to buffer "a" contents>
+yank a text block to    | ma mb `a"cy`b
+   named buffer         |    <to yank an arbitrary text block (instead of
+                        |     complete lines to named buffer, mark start of text
+                        |     with label `a' and mark character AFTER the last
+                        |     character to yank with label `b'; `a"cy`b yanks
+                        |     marked text block to buffer "c">
+paste yanked text from  | "ap  |  "aP
+ named buffer (=>COPY1) |    <put contents of buffer `a' after or before current
+                        |     line>
+yank lines having       | :g/pattern/y a
+   pattern              |    <yank all lines having "pattern" and store in
+                        |     buffer "a">
+                        | :g/pattern/y A
+                        |    <yank all lines having "pattern" and append to
+                        |     buffer "a">
+store often-used ex     | "add @a  |  "ayy @a
+   command into buffer  |    <"add deletes line containing a vi or ex command
+   and execute buffer   |     sequence and stores it in buffer "a" (or a-z); @a
+   whenever the command |     executes stored command in command mode; can
+   is needed            |     restore delete buffer with "ap if command needs
+                        |     changing; when using "ayy, enter command on last
+                        |     line and use 1,$-1 as line address to avoid
+                        |     running the command on itself; @ buffer commands
+                        |     may not be more than 512 characters long>
+                        | :*a <equivalent ex execution of buffer "a">
+repeat last @ command   | @@
+--------------------------------------------------------------------------------
+REFORMAT TEXT           |
+--------------------------------------------------------------------------------
+concatenate text lines  | J  <join next line to end of current line>
+                        | nJ <join "n" consecutive lines into one line>
+                        | :j n   |  :join n
+                        |    <join "n" consecutive lines into one line>
+                        | :j! n  |  :join! n
+                        |    <like :j, but whitespace is not eliminated>
+text flow       (TFnn)  | !a}fmt -nn
+                        |    <"a" is number of paragraphs to format; "nn" is
+                        |     maximum allowed line length; format only a few
+                        |     paragraphs at a time>
+justify and block text  | :%!format -b -w72
+                        |    <format all lines both left and right justified and
+                        |     72-columns wide>
+                        | :'a,'b!format -i4 -w68 -l
+                        |    <format text between lines `a' and `b' to be 68-
+                        |     columns wide, indented 4 spaces (for right margin
+                        |     of 72 columns), and left justified>
+                        | :1,7!format -c -w80
+                        |    <format lines 1 to 7 so they are centered within
+                        |     80-column wide lines>
+                        | :%!perl -pe 'print " " x int((81-length())/2)'
+                        |    <center all lines down the middle between columns 1
+                        |     and 80>
+                        | :,8!perl -pe 'print " " x int((73-length())/2)'
+                        |    <center from current line to line 8 down the middle
+                        |     between between columns 1 and 72>
+shift lines left/right  | << >>   <each shift is 8 spaces; use :set shiftwidth=n
+   (  or  )             |          to shift line n spaces>
+                        | .       <repeat previous << or >> shift>
+block shift n lines     | n<< n>> <shift n consecutive lines>
+   ((  or  ))           | .       <repeat previous << or >> shift>
+                        | >'a     <shift current line to line marked `a' to the
+                        |          right>
+                        | :8,12s/^/   /g
+                        |         <shift lines 8 to 12 to left 3 spaces>
+insert empty line       | :%s/$/Ctrl-V[Return]/
+   between every line   |    <Ctrl-V/[Return] generates "^M" on substitution>
+split text up so a new  | :%s/Example:/Example:Ctrl-V[Return]/g
+   line is made at every|    <Ctrl-V/[Return] generates "^M" on substitution;
+   occurrence of pattern|     text is split after all occurrences of "Example:">
+split text up so each   | :%s/[[Space][Tab]][[Space][Tab]]*/Ctrl-V[Return]/g
+   line has only one    |    <for all lines, substitute any tabs or blanks for
+   left-justified word  |     newline breaks; if no tabs exist, you can use:
+                        |     Q :%s/  */Ctrl-V[Return]/g
+delete leading spaces   | :%s/^ *\(.*\)/\1/  |  :%s/^[ [Tab]]*//
+   on every line in the |    <^ * searches for one or more spaces at start of
+   file  (=>CRUNCH)     |     line; \(.*\)/\1 restores rest of line without any
+                        |     leading spaces; can use this to prepare text for
+                        |     embedding of nroff-troff commands)
+delete spaces and tabs  | :%s/[[Space][Tab]]*$//
+   at ends of lines and |    <remove blanks or tabs at ends of all lines; blank
+   on blank lines       |     lines with invisible blanks or tabs also trimmed>
+delete all blank lines  | :g/^$/d  |  :v/./d
+                        |    <delete all blank lines which are empty>
+                        | :g/^[ [Tab]]*$/d
+                        |    <delete all blank or white-space-only lines>
+change multiple blank   | :%s/[[Space][Tab]]*$//  :%!cat -s
+   lines to single blank|    <substitution first compresses blank lines having
+   lines                |     spaces to empty lines; `cat` command then squeezes
+                        |     out all multiple blank lines>
+convert single text     | !}pr -4t
+   column into 4 columns|    <if needed, use !}expand -8 to align columns>
+switch columns of data  | :'a,'b!awk '{print $2"  "$1"  "$3"  "$5"  "$4}'
+   in a column-oriented |    <from lines marked `a' to `b', move 2nd field to
+   table                |     1st column of so that 1st field is now 2nd filed,
+                        |     and swap the 4th and 5th fields; assumes 5 fields,
+                        |     each separated by 2 blanks>
+                        | :%!awk '{printf "\%10s\%10s\%20s\n", $3, $2, $1}'
+                        |    <for all lines containing 3 fields separated by
+                        |     blanks, reverse the order of entries, printing in
+                        |     order 3rd, 2nd, and 1st fields right-justified in
+                        |     formatted columns of 10, 10, and 20 spaces wide>
+                        | :%s/\(...\)\(.......\)\(....\)\(.....\)/\4\3\2\1/
+                        |    <for all lines in file with four columns of data
+                        |     3, 7, 4, and 5 columns wide, rearrange the columns
+                        |     such that 4th and 1st columns are swapped and 2nd
+                        |     and 3rd columns are swapped; unlike awk examples
+                        |     above, this swaps exact columns (with spaces).>
+reverse order of lines  | :g/^/mo0
+   in file  (=>FLIP)    |
+sort the lines in file  | :%!sort     <sort file in ascending order>
+                        | :%!sort -r  <sort file in descending order>
+                        | :'a,'b!sort +2
+                        |    <sort 3rd field between the lines marked `a'/`b'.>
+                        | :%!perl -00 -e 'print sort <>'
+                        |    <sort entire file by paragraphs>
+add line numbers to     | :%!nl  |  :%!cat -n
+   start of each line   |    <inserts line numbers in columns 1-6 followed by a
+                        |     tab character; remove numbers using :%!colrm 1 7>
+                        | :%!pr -t -n
+                        |    <inserts line numbers in columns 1-5 followed by a
+                        |     tab character; remove numbers with :%!colrm 1 6>
+add line numbers to end | 1G
+   of each line         | !Gawk '{printf "\%s\%8d\n", $0, NR}'
+                        |    <1G first moves to start of file; awk adds line
+                        |     numbers to end of each line; if spacing of numbers
+                        |     is not okay, "u" undo, and execute command again
+                        |     using some spacing other than "%8")
+transpose matrix of     | :%!transpose
+   values               |    <transpose entire file contents (matrix of values);
+                        |     8x5 matrix becomes 5x8 matrix>
+translate characters to | :%!tr A-Za-z N-ZA-Mn-za-m
+   other characters     |    <encrypts all lines to ROT13 format>
+                        | :%!tr N-ZA-Mn-za-m A-Za-z
+                        |    <translates all lines with ROT13 encryption>
+                        | tr '\015' '\012' < file > file1
+                        |    <translate all carriage returns to line feeds;
+                        |     useful if "file" is too long for vi to accept as a
+                        |     single line; run in Unix and output to "file1">
+regularize spacing and  | :%s/\([.?!]\) *\([a-zA-Z0-9]\)/\1  \U\2/g
+   case of sentences    |    <change any . ? ! punctuation followed by at least
+                        |     one space followed by an alphanumeric character to
+                        |     uniform two spaces between sentences, capitalizing
+                        |     any lowercase letter that begins a sentence; this,
+                        |     however, will not capitalize letters at the start
+                        |     of a line that should be capitalized>
+                        | :%s/\([^.?!]\)  *\([^.?!]\)/\1 \2/g
+                        |    <change spacing between any character that is not a
+                        |     . ? ! punctuation and any non[.?!] character to a
+                        |     uniform one space separation>
+run spelling checker on | :w            <save file first>
+   the file             | :$r !spell %  <append mispelled words at bottom>
+--------------------------------------------------------------------------------
+SPF EDIT LINE OPERATION |
+--------------------------------------------------------------------------------
+draw a ruler     (COLS) | map _ o^[i----+----1----+----2----+----3----+----4 \
+                        | ----+----5----+----6----+----7-^V|--+----8^[0
+                        |    <place this in your .exrc file to draw an SPF-EDIT
+                        |    COLS-styled ruler below the current line when you
+                        |    press "_" in command mode; "^[" is Escape character
+                        |    and "^V" is made by entering Ctrl-V twice>
+--------------------------------------------------------------------------------
+exclude text block (XX) | :'a,'b!exclude  (!!exclude)
+   from current file    |    <exclude from line marked label `a' to line marked
+                        |     `b' and then enter !!exclude on the folded text
+                        |     to expand it back out again; warning: text must be
+                        |     expanded prior to exiting current edit session>
+********************************************************************************
+COMMANDS FOR PROCESSING | VI EDIT EQUIVALENTS
+********************************************************************************
+comment IBM JCL lines   | :,$s/^/\/\/\* /
+                        |    <insert a "//* " in front of current line to the
+                        |     last line to comment IBM JCL>
+                        | :/&END/+1,/EXEC DUMP/s/^\/\/\* //
+                        |    <uncomment previously commented lines of IBM JCL
+                        |     starting from line after the next occurrence of
+                        |     "&END" to next occurrence of "EXEC DUMP">
+********************************************************************************
+SPF EDIT KEYS/COMMANDS  | VI OR EX COMMAND EQUIVALENTS
+********************************************************************************
+repeat last edit/insert | .
+   command  [RETRIEVE]  |    <repeat last modification command issued; command
+                        |     may be o/O, d, c, i, a, etc...>
+                        | 4. <repeat last modification command 4 times>
+                        | Ctrl-@
+                        |    <in input mode, repeat the text that was last
+                        |     inserted if input as the first character of the
+                        |     new insertion; returns to command mode; only 128
+                        |     characters are saved from previous insert; will
+                        |     not work if >128 characters were last input>
+[reset]                 | Escape key   (usually [F11] on DECs)
+                        |    <in input mode, return from input mode to command
+                        |     mode; in command mode, cancel a partially formed
+                        |     command, such as "z" or "d", when no followup
+                        |     character has been given>
+display current line #  | :.=
+display total number of | :=
+   lines in the file    | :/pattern/=
+                        |    <show line number of first line with "pattern">
+display lines with      | :number  |  :nu  | :#
+   their line numbers   |    (address)number(count)
+                        |    <display current line with line number; if preceded
+                        |     with address or followed by count, displays range
+                        |     of lines and their numbers>
+display lines showing   | :list  |  :l
+   tabs and end-of-lines|    (address)list(count)
+                        |    <display current line with tabs shown as "^I" and
+                        |     end-of-lines marked "$"; if preceded with address
+                        |     or followed by count, displays range of lines>
+display filename, line  | Ctrl-G  |  :f
+   number, total lines  |
+undo previous change    | u  <undo last change made>
+   (=>UNDO)             | U  <undo all changes made to a line; cursor must not
+                        |     have moved off of that line>
+                        | :e! <undo all changes to file since last save>
+cancel current partial  | Ctrl-U <Backspace>
+   ex/search command    |
+screen refresh [Dup PA1]| Ctrl-L  |  Ctrl-R
+                        |    <refresh the screen; useful if mail message changes
+                        |     screen during edit session>
+quit vi, invoke ex      | Q
+quit ex, return to vi   | :vi
+run command             | :!Unixcommand
+   (=>TSO COMMAND)      |    <special characters used in "Unixcommand" may need
+                        |     to be preceded with \ to escape the normal shell
+                        |     meaning, including...
+                        |     ! & | % + - * ? / ^ > < ( ) && || << >> # ; $
+                        | :!!
+                        |    <execute most recent shell escape command>
+                        | :!! arguments
+                        |    <repeat last shell command, appending supplied
+                        |     "arguments" to command>
+filter text through Unix| :.!Unixcommand
+   command as standard  |    <filter current line through Unix command; the line
+   input, replacing the |     addresses given are replaced by standard output of
+   text with command's  |     the Unix command>
+   standard output      | !!Unixcommand
+                        |    <filter current line through Unix command and
+                        |     replace with it with command output; may want to
+                        |     open up a new line first to insert command output>
+                        | n!!Unixcommand
+                        |    <filter "n" consecutive lines starting with current
+                        |     line through Unix command; the "n" lines are
+                        |     replaced with command output>
+                        | !!!Unixcommand
+                        |    <filter current line through the last Unix command
+                        |     used and replace with command output>
+                        | !}Unixcommand
+                        |    <filter paragraph of text through Unix command;
+                        |     general form is !(times)(textblock) where "times"
+                        |     is number of "textblocks" to process, "textblock"
+                        |     is {} () [[ ]] + - G `"label", '"label", H, M, L
+                        | :'a,'b!Unixcommand1 | Unixcommand2 | Unixcommand3
+                        |    <filter text block from line marked `a' to `b'
+                        |     through three different Unix commands; text block
+                        |     is replaced with output from "command3">
+                        | :map key
+                        | 1G/pattern<CR>!/pattern/<CR>command<CR><key>
+                        |    <recursively map "key" to filter all occurrences of
+                        |     "pattern" in file through Unix command>
+send file contents to   | :w ! Unixcommand
+   standard input of    |    <can input file contents to script or C program>
+   Unix command         |
+define a string as an   | :ab string replace_text
+   abbreviation to be   |    <abbreviate "replace_text" as "string"; "string"
+   translated to other  |     changes to "replace_text" after a non-alphanumeric
+   text                 |     character is entered unless character is quoted
+                        |     with Ctrl-V; [Return] or [Esc] will trigger the
+                        |     conversion; "replace_text" cannot end as "string">
+                        | :una string
+                        |    <cancel "string" as an abbreviated text string>
+change working directory| :cd directory  |  :chdir directory  |  :chd directory
+                        |    <change current working directory that vi writes to
+                        |     using :w or read from using :e; if no directory
+                        |     argument is specified, new directory is $HOME>
+copy lines using ex     | :co  |  :copy  |  :t
+                        |    (address)co(destination)
+                        | :.,.+4co28  <copy current line to 4th line below
+                        |              current line after line 28>
+                        | :'a+2,$-4t. <copy 2nd line after line marked as `a'
+                        |              through 4th line before last line in file
+                        |              after current line>
+                        | :%co$       <copy entire buffer file after last line
+                        |              of file; same as Unix "cat file >> file">
+delete lines using ex   | :d  |  :delete
+                        |    (address)d(bufferletter)
+                        | :d b 4  <delete 4 consecutive lines, store in
+                        |          buffer "b">
+                        | :'a,'bd <delete all lines between the line marked `a'
+                        |          to line marked `b'>
+                        | :%d     <delete all lines in file>
+display saved buffers   | :display buffers  |  :di b
+                        |    <NVI: display all buffers (named/unnamed/numeric)>
+display all background  | :display screens  |  :di s
+   screens              |    <NVI: display filenames of all background screens>
+display the tags stack  | :display tags  |  :di t
+                        |    <NVI: display the tags stack>
+display ex help info    | :exusage [ex command]  |  :exu [ex command]
+                        |    <NVI: display usage info for a ex command, if given
+                        |     as argument; otherwise, display all ex usage info>
+display vi help info    | :viusage [vi command]  |  :viu [vi command]
+                        |    <NVI: display usage info for a vi command, if given
+                        |     as argument; otherwise, display all vi usage info>
+display short help line | :help  |  :he
+                        |    <NVI: display brief help message>
+map a key to commands   | :map [k] command
+map a key to commands   | :map [k] command
+   to be executed in    |    <map key [k] to commands in command mode; "command"
+   command mode         |     cannot use "k" in its definition and cannot be
+                        |     more than 100 characters>
+                        | :unmap [k]   |  :unm [k]
+                        |    <cancel key [k] that was previously mapped>
+map a key to commands   | :map! <k> replacementcommand
+   to be executed in    |    <map key <k> to commands in input mode; "command"
+   input mode           |     cannot use "k" in its definition and cannot be
+                        |     more than 100 characters; do not make input-mode
+                        |     keymaps recursive>
+                        | :unmap! <k>  |  :unm! <k>
+                        |    <cancel key <k> that was previously mapped>
+mark current line with  | :ma x  |  :mark x  |  :k x
+   an letter label      |    <assign marker `x' (single lowercase letter) to a
+                        |     line to use as command address; go to this line
+                        |     using `x or 'x>
+move lines using ex     | :m  |  :move
+                        |    (address)m(destination)
+                        |    <same as copy with delete or delete with put>
+                        | :m 'a    <move current line to line marked a>
+                        | :2 m 15  <move line 2 to below line 15>
+                        | :.,.+4m0 <move current line through 4th line after
+                        |           current line to top of file>
+create exrc file from   | :mkexrc exrc_file  |  :mk exrc_file
+   currently set maps,  |    <NVI: write all current maps, abbreviations, and
+   abbreviations, and   |     options to "exrc_file" in form source'able by ex;
+   options              |     if "exrc_file" exists, mkexrc will fail unless "!"
+                        |     is appended to command to override>
+preserve current buffer | :pre  |  :preserve
+  in case of write error|    <use "vi -r filename" to recover later on>
+edit previous file from | :prev  |  :previous
+  argument list         |    <NVI: edit previous file from argument list
+display lines using ex  | :p  |  :P  |  :print
+                        |    (address)p(count)
+restore previously      | :pu  |  :put
+   deleted or yanked    |    (address)pu(buffername)
+   text                 |    <if (buffername) is deleted, the last deleted or
+                        |     yanked text is restored>
+recover file from system| :rec  |  :recover
+   save area after      |    <use after system crash or after using :pre;
+   aborted edit session |     equivalent to starting vi with "vi -r file">
+create a new shell from | :!sh  |  :!csh  |  :!ksh
+   vi                   | exit  |  Ctrl-D  <to quit shell and resume editing
+                        |                   current file>
+exit from vi to current | Ctrl-Z  |  :stop  |  :st  |  :suspend  |  :su  (fg)
+   shell                |    <temporarily suspend vi and return to Unix prompt
+                        |     of current shell; enter "fg" at prompt to resume
+                        |     vi; if autowrite set and file was changed, a file
+                        |     save is done unless :stop! or :suspend! is used>
+execute ex commands     | Q :so filename  |  Q :source filename
+   stored in file       |    <enter :vi to return to vi mode; may be used to
+                        |     initiate additional maps stored in a file>
+split current screen in | :E [files...]
+   two [F2 SPLIT]       |    <NVI: split the current screen into two equal-sized
+                        |     screens; if "files" are specified, the new screen
+                        |     begins editing these; without file arguments, the
+                        |     current file is edited by both screens. Use Ctrl-W
+                        |     to switch between screens, moving to next lower
+                        |     screen in window.
+background current split| :bg
+   screen               |    <NVI: background current screen; it is replaced by
+                        |     neighboring screen; cannot background your only
+                        |     screen in the window>
+foreground a screen that| :fg [file]
+   was backgrounded     |    <NVI: foreground the first screen in the list of
+                        |     backgrounded screens; with a file argument, the
+                        |     requested file screen replaces the current screen,
+                        |     which is in turn backgrounded>
+resize split screens    | :resize +/-size  |  :res +/-size
+                        |    <NVI: resize split screens by increasing/decreasing
+                        |     number of rows when using "+/-" (e.g. :res +10
+                        |     increases current screen by 10 lines) or setting
+                        |     absolute number of rows (e.g. :res 30 sets current
+                        |     screen to 30 lines, if window is large enough).
+create a ctags file for | ctags prog*
+   use later by vi      |    <create a file "tag" in current directory with
+                        |     pointers to segments of code in all programs whose
+                        |     names start with "prog">
+                        | ctags *.c *.h ~/lib/*.h
+                        |    <create file "tag" with pointers to all program
+                        |     segments in all C and header files in current
+                        |     directory along with all header files in "lib">
+edit tagged program     | :ta Segmentnametag  |  :tag Segmentnametag
+   segment (very quick  |    <ctags must have been run to make tags file>
+   way to hop around in | :vi -tSegmentname
+   up to three different|    <start vi in file with the tagged code segment>
+   segments of code that| Ctrl-]
+   may be in other files|    <if cursor is placed on first character of a tagged
+   or even other        |     program function name, pressing Ctrl-] will open
+   directories)         |     up the file containing that tagged code segment;
+                        |     :rew returns to original place you were editing
+                        |     prior to Ctrl-]; if you use Ctrl-] on a function
+                        |     name from the file that the first Ctrl-] placed
+                        |     you in, you may be placed into yet a third file;
+                        |     Ctrl-^ will toggle back and forth between this
+                        |     file and the one opened by the first Ctrl-]; :rew
+                        |     :rew will return you back to original edit spot>
+undo all changes made by| :u  |  :undo
+   last editing command |    <equivalent to vi "u" undo command>
+print vi program version| :ver  |  :version
+yank lines using ex     | :ya  |  :yank  |  :y
+                        |    (address)ya(bufferletter)
+                        | :y a 4  <yank 4 consecutive lines, store in buffer a>
+                        | :12,19 y  <yank lines 12-19 to general buffer>
+shift lines left/right  | :(address)<(count)  |  :(address)>(count)
+   in ex                | :>   <shift current line one shiftwidth to right>
+                        | :<8  <shift 8 consecutive lines one shiftwidth to the
+                        |       left>
+line address of ex      | none    <execute ex command on current line only>
+   commands             | $       <last    line in file>
+                        | .       <current line in file>
+                        | -       <line above current line of cursor>
+                        | ---     <three lines above current line of cursor>
+                        | +       <line below current line of cursor>
+                        | ++      <two lines below current line of cursor>
+                        | n       <nth line in file>
+                        | %       <all lines in file; same as 1,$>
+                        | g       <global or all lines in file; same as %>
+                        | .-n     <nth line before the current line>
+                        | .+n     <nth line after  the current line>
+                        | 'a      <line previously marked as "a">
+                        | ''      <line of previous context where cursor was>
+                        | /pattern/ <first line in forward search direction
+                        |            having "pattern">
+                        | ?pattern? <first line in backward search direction
+                        |            having "pattern">
+                        | a,b     <all lines from line a to line b>
+                        | 'a,'b   <all lines from line marked `a' to line marked
+                        |          `b'; label `b' must not precede label `a'>
+                        | a+n,a-n <"n" lines after or before "a" where "a" is
+                        |          any address described above; second address
+                        |          must not precede first address>
+********************************************************************************
+VI/NVI OPTION SETTINGS  | DESCRIPTION
+********************************************************************************
+All toggle flag options can be disabled by adding prefix 'no' to option name
+Options may also be specified using the abbreviations shown in brackets.
+--------------------------------------------------------------------------------
+:set all                | Display all current option settings.
+:set                    | Display only options changed from default setting.
+:set option             | Set specified "option".
+:set option?            | Display set value of specified "option".
+:set altwerase          | NVI: Change how words are erased during input. Text is
+                        |    broken into clases: alphanumerics and underscore,
+                        |    other nonblank characters, and blank characters.
+                        |    Def: noaltwerase.
+:set autoindent   (ai)  | Good for programming; indent next line same distance
+                        |    distance as previous line; Ctrl-T or Ctrl-D (input
+                        |    mode) add or remove indent levels based on tabstop
+                        |    setting.  Def: noai.
+:set autoprint    (ap)  | Display changes after each editor command.  Def: ap.
+:set autowrite    (aw)  | Automatically write file if changed before opening
+                        |    another file with :n or before giving Unix command
+                        |    with :!.  Useful when editing two or more files
+                        |    simultaneously.  Def: noaw.
+:set beautify     (bf)  | Ignore control characters during input (except tabs,
+                        |    newlines, and formfeeds).  Def: nobf.
+:set cdpath=":"         | NVI: Specify colon-separated list of directories used
+                        |    as path prefixes for relative pathnames used in the
+                        |    ':cd' command.  Def: CDPATH variable if set, or
+                        |    current directory. To reference current directory,
+                        |    use either empty string or "." in CDPATH variable.
+:set columns=??   (co)  | NVI: Number of columns in screen; setting causes ex/vi
+                        |    to reset COLUMNS variable:  Def: co=80.
+:set comment            | NVI: If first non-empty line of file begins with "/*",
+                        |    nvi skips to end of that C comment block before
+                        |    displaying file.  Def: nocomment.
+:set directory=?  (dir) | Store buffer files in specified directory.  Def: /tmp.
+:set digraph      (dir) | NVI:
+:set edcompatible       | Use ed-like features on substitute commands.  Def:
+                        |    noedcompatible.
+:set errorbells   (eb)  | Sound bell when error occurs.  Def: errorbells.
+:set exrc         (ex)  | NVI: If 'noexrc' is set in the system or $HOME .*exrc
+                        |    files, local .*exrc files are never read (unless
+                        |    they are the same as the system or $HOME .*exrc
+                        |    files). Setting 'exrc' on has no effect; the normal
+                        |    local .*exrc files checks are done.  Def: noexrc
+:set extended           | NVI: Regular expressions are extended (i.e. egrep)
+                        |    format.  Def: noextended.
+:set flash              | NVI: Flash screen instead of beep keyboard on error.
+                        |    Def: flash.
+:se hardtabs=?    (ht)  | Define boundaries for terminal hardware tabs.  Def:
+                        |    ht=8.
+:set ignorecase   (ic)  | Disregard case of characters in searches.  Def: noic.
+:set keytime=?          | NVI: 10th's of a second ex/vi waits for full keymap
+                        |    sequence.  Def: keytime=6.
+:set leftright          | NVI: Scroll screen left-right for long lines instead
+                        |    of folding lines at right margin. Def: noleftright.
+:set lines=?      (li)  | NVI: Number of lines in screen.  Setting this causes
+                        |    ex/vi to reset LINES variable.  Def: li=24.
+:set lisp               | Insert indents in appropriate lisp format. Def: nolisp
+:set list               | Display tabs as ^I and ends of lines as $. Def: nolist
+:set magic              | Wildcard characters . * [] ~ have special meaning when
+                        |    used in patterns.  Def: magic.
+:set matchtime=?        | NVI: 10th's of a second ex/vi pauses on matching
+                        |    character when showmatch set.  Def: matchtime=7.
+:set mesg               | Permit system messages to display on terminal while
+                        |    editing, which may disrupt display; use Ctrl-L to
+                        |    restore screen display.  Def: mesg.
+:set modeline           | After vi reads EXINIT variable and .exrc file, first
+                        |    and last 5 lines of edit file are read for extra ex
+                        |    commands; embedded commands must begin with "ex:"
+                        |    or "vi:" and must be valid ex editor commands;
+                        |    separate multiple commands with "|"; each line must
+                        |    be terminated with :.  Def: nomodeline.
+:set number       (nu)  | Display line numbers left of screen.  Def: nonu.
+:set octal              | NVI: Display unknown characters as octal numbers,
+                        |    instead of default hexidecimal.  Def: nooctal.
+:set open               | Allow entry to open or visual mode from ex. Def: open.
+:set optimize     (opt) | Abolish carriage returns at end of lines when printing
+                        |    many lines; speeds output on dumb terminals when
+                        |    displaying lines with leading white spaces (blanks
+                        |    or tabs).  Def: noopt.
+:set paragraphs=???     | Define paragraph delimiters for movement by {}.  Pair
+                  (para)|    of characters used in value are nroff/troff macros
+                        |    that begin paragraphs.
+:set prompt             | Display ex prompt (:) when vi Q command given.  Def:
+                        |    prompt.
+:set readonly     (ro)  | Any file writes will fail unless ! is used after the
+                        |    write (using w, ZZ, or autowrite).  Def: noro.
+:set redraw       (re)  | Redraw screen whenever edits are made. Noredraw useful
+                        |    on slow dumb terminals; deleted lines show up as @
+                        |    and inserted text appears to overwrite existing
+                        |    text until [Esc] pressed.  Def: depends on line
+                        |    speed and terminal.
+:set remap              | Allow nested map sequences.  Def: remap.
+:set report=?           | Display message on prompt line whenever edit is made
+                        |    that affects at least a certain number of lines.
+                        |    Def: report=5.
+:set ruler              | NVI: Display row/column on command line. Def: noruler.
+:set scroll=??          | Amount of lines to scroll.  Def: half of window.
+:set sections=?? ??     | Define section delimiters for movement by [[ ]].  Pair
+                        |    of characters used in value are nroff/troff macros
+                        |    that begin sections.
+:set shell=????   (sh)  | Define pathname of shell used for shell escape ':!'
+                        |    and shell command ':sh'.  Def: path derived from
+                        |    existing shell environment.  Def: SHELL variable.
+:set shiftwidth=? (sw)  | Define number of spaces for backward tabs when
+                        |    autoindenting or shifting lines with <</>> command.
+                        |    Def: sw=8.
+:set showdirty          | NVI: Display asterisk on command line if file has been
+                        |    modified.  Def: noshowdirty.
+:set showmatch    (sm)  | Good for programming; when ) or } is entered, cursor
+                        |    moves briefly to matching ( or {; if no match made,
+                        |    error bell rings.  Def: nosm.
+:set showmode           | NVI: Display current edit mode on command line.  Def:
+                        |    noshowmode.
+:set sidescroll=??      | NVI: Set number of columns shift to left-right when
+                        |    using leftright scrolling and left-right margin is
+                        |    crossed.  Def: sidescroll=16.
+:set slowopen    (slow) | Hold off display during insert.  Def: depends on line
+                        |    speed and terminal type.
+:set sourceany          | Start vi using other person's startup files; security
+                        |    risk, so do not use!  Def: nosourceany.
+:set tabstop=?    (ts)  | Define number spaces <Tab> spaces.  Def: ts=8.
+:set taglength=?  (tl)  | Define number of characters significant for tags. Def:
+                        |    tl=0, all characters significant.
+:set tags=?? ???        | Define pathname of files containing tags.  Def: system
+                        |    searches /usr/lib/tags and file "tag" in current
+                        |    directory.
+:set term=vt???         | Define terminal type.
+:set terse              | Display shorter error messages.  Def: noterse.
+:set tildeop            | NVI: Modify ~ command to take associated motion.  Def:
+                        |    notildeop.
+:set timeout      (to)  | Time out a keyboard map after 1 second; useful for vi
+                        |    versions that allow mapping a keystroke sequence.
+                        |    Def: to.
+:set ttywerase          | NVI: Change how words are erased during input.  Option
+                        |    breaks text into two classes, blanks and non-blank
+                        |    characters.  Def: nottywerase
+:set ttytype=vt???      | Define the terminal type.
+:set verbose            | NVI: Display error message on command line instead of
+                        |    ringing bell for all errors.  Def: noverbose.
+:set warn               | Display warning "No write since last change".  Def:
+                        |    warn.
+:set window=??    (w)   | Display specified number of lines on screen.  Def:
+                        |    depends on line speed and terminal type.
+:set wrapmargin=? (wm)  | Define right margin as n number of spaces from end of
+                        |    line; automatically inserts carriage returns to
+                        |    break lines.  Def: wm=0.
+:set wrapscan     (ws)  | Continue search around either end of a file.  Def: ws.
+:set writeany     (wa)  | Allow saving to any file.  Def: nowa.
+********************************************************************************
+OTHER NOTES ABOUT VI
+********************************************************************************
+   Some vi commands have opposite lowercase and uppercase meanings.  Usually,
+lowercase means to execute the command after or below the current cursor or line
+location; uppercase means to execute the command before or above the current
+cursor or line location.  Thus, the vi paste command (P or p) is case-sensitive
+to have the same effect for copy and move commands as 'b' or 'a' have to denote
+before or after a specific line number in SPF Edit.
+   Edit commands c (change), d (delete), y (yank) can have a movement command as
+a suffix to modify the meaning.  cc, dd, yy operate on an entire line.  But c^
+will change text from beginning of line to cursor position, cb will change a
+word from its beginning up to cursor postion, d$ (or D) will delete from cursor
+position to end of line, de will delete a word from cursor position to end of
+word, y$ will yank text to buffer from cursor position to end of line and p will
+paste the yanked text after the new cursor position, y3w will yank to buffer 3
+consecutive words starting from cursor position and P will paste those 3 yanked
+words before the new cursor position, etc, etc.  Thus, change, delete, and yank
+have the general format (number)(command)(movement) where (number) is the number
+of occurrences, (command) is either c, d, or y, and (movement) is a movement
+command.  vi also distinguishes between "line" and "character" moves.  If
+change, delete, or yank are used with ex line addresses, entire lines are acted
+upon.  If those commands are used with / or ? being the (movement) command,
+only the text starting from the current cursor position the character pattern
+searched for is acted upon.
+   Most vi commands can also have a numeric count as a prefix.  Thus, 5w will
+move the cursor ahead by 5 words, 2( will move the cursor back 2 sentences.
+   vi toggles between the command mode and text input mode by pressing the
+<escape> key (usually F11).  Most keys have a function in command mode.  If you
+are new to vi, and are not sure if you are in command or input mode, or if you
+think you may have typed a key by mistake, press <escape> until your terminal
+beeps to get back to command mode.  If you typed a key by accident and changed
+your file, enter 'u' to undo whatever last change was made to the file.  The vi
+commands that enter input mode are : i, a, I, A, o, O, c, C, s, S, R.  The last
+line of the display is always saved for reading input from : (for ex and shell
+commands), / (forward search command), ? (backward search command), or ! (shell
+command to filter a text object through).
+   EX commands have format :(line_address)(command)(parameters)(count)(flags)
+where (line_address) defines lines to be affected, (command) defines type of
+operation, (parameters) define arguments or options, (count) defines optional or
+required number of lines affected by command, and (flags) define actions to be
+taken upon completion of command (e.g., p to print line after executing the
+command; l to print line along with EOL and tabs, c to confirm each change
+before making it, g to globally repeat command across the line; only g and c are
+usually needed in vi mode invoking of ex).  The EX line_address is usually input
+in pairs separated by "," or ";".  If no beginning address is given, the current
+line is assumed ".".  If ";" is used as a separator, the address before the
+semicolon becomes the current line address relative to the next address
+reference.
+   An input mode keymap can be used like the :ab abbreviation facility with the
+following key differences.  The abbreviation mechanism waits to see what the
+NEXT character after the abbreviation is going to be before deciding whether to
+make a substitution, and if the sequence was not preceded by a non-alphanumeric
+character (or by the top of the file), the abbreviation mechanism doesn't start
+working at all.  By contrast, an input mode keymap mechanism instead starts a
+per-character timer that begins whenever you type the first character of a
+remapped sequence.  If there is an input mode keymap corresponding to multiple
+characters, when you type the first character of that string, nothing will be
+echoed to your screen unless you type some character other than the second
+character of the keymap, or unless you type nothing at all within the set vi
+"timeout" period, typically about two seconds long.  In short, vi watches to see
+if you have typed the beginning of an input mode keymap sequence, and if the
+sequence is longer than a single character, vi waits to see if you will type the
+complete sequence, in which case vi will supply whatever remapping you have
+specified for the sequence you've just typed.  This will happen regardless of
+what follows the remapped sequence.  To negate the expansion of a set
+abbreviation, enter Ctrl-V right after you have typed the abbreviated sequence
+(to tell vi that you want to use the character string literal as opposed to
+having it expand out as an abbreviation).  To negate the execution of a set
+input mode keymap, enter Ctrl-V before you have typed the keymapped sequence.
+   Abbreviations (:ab) must be activated in input mode, but command and input
+mode keymaps, once they have been activated from their respective modes, may
+hop back and forth between command and input modes during the keymap sequence.
+   If you do a yank from within a macro into a named buffer, vi may tell you
+that you cannot yank from inside a macro, or put inside a macro.  This is
+sometimes untrue (the message may come up due to a bug in the program logic).
+You may be able to get around this by making the yank the first thing that
+happens in the macro.

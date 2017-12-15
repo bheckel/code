@@ -1,0 +1,29 @@
+#!/bin/sh
+##############################################################################
+#     Name: phone
+#
+#  Summary: Searches mutt's email alias list.
+#
+#           Sample .email_addr line:
+#           alias yahoo Bob Heckel <bheckel@yahoo.com>  # a comment
+#
+#  Created: Mon 08 Jul 2002 12:48:29 (Bob Heckel)
+# Modified: Wed 20 Nov 2002 09:01:59 (Bob Heckel)
+##############################################################################
+
+EMAILFILE="$HOME/.email_addr"
+
+Usage() {
+  echo "Usage: `basename $0` searchstring
+  Case insensitive search of mutt's email alias list: $EMAILFILE"
+  exit 1
+}
+
+N_EXPECTED_ARGS=1
+
+if [ $# -ne $N_EXPECTED_ARGS ]; then 
+  Usage
+  exit 1
+fi
+
+grep -i "$1" $EMAILFILE | sed 's/[<>]//g' | cut -d' ' -f3-

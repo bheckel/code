@@ -1,0 +1,4 @@
+-- $ ln -s ~/code/misccode/_sqliterc ~/.sqliterc
+.mode column
+.header on
+.nullvalue NULL

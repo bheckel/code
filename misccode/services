@@ -1,0 +1,174 @@
+# @(#)services $Revision: 1.32.214.7 $ $Date: 97/09/10 14:50:42 $
+#
+# This file associates official service names and aliases with
+# the port number and protocol the services use.  
+#
+# Some of the services represented below are not supported on HP-UX.
+# They are provided solely as a reference.
+#
+# The form for each entry is:
+# <official service name>  <port number/protocol name>  <aliases>
+#
+# See the services(4) manual page for more information.
+# Note: The entries cannot be preceded by a blank space.
+#
+tcpmux         1/tcp                 # TCP port multiplexer (RFC 1078)
+echo           7/tcp                 # Echo
+echo           7/udp                 #
+discard        9/tcp  sink null      # Discard
+discard        9/udp  sink null      #
+systat        11/tcp  users          # Active Users
+daytime       13/tcp                 # Daytime
+daytime       13/udp                 #
+qotd          17/tcp  quote          # Quote of the Day
+chargen       19/tcp  ttytst source  # Character Generator
+chargen       19/udp  ttytst source  #
+ftp-data      20/tcp                 # File Transfer Protocol (Data)
+ftp           21/tcp                 # File Transfer Protocol (Control)
+telnet        23/tcp                 # Virtual Terminal Protocol
+smtp          25/tcp                 # Simple Mail Transfer Protocol
+time          37/tcp  timeserver     # Time
+time          37/udp  timeserver     #
+rlp           39/udp  resource       # Resource Location Protocol
+whois         43/tcp  nicname        # Who Is
+domain        53/tcp  nameserver     # Domain Name Service
+domain        53/udp  nameserver     #
+bootps        67/udp                 # Bootstrap Protocol Server
+bootpc        68/udp                 # Bootstrap Protocol Client
+tftp          69/udp                 # Trivial File Transfer Protocol
+rje           77/tcp  netrjs         # private RJE Service
+finger        79/tcp                 # Finger
+http          80/tcp  www            # World Wide Web HTTP
+http          80/udp  www            # World Wide Web HTTP
+link          87/tcp  ttylink        # private terminal link
+supdup        95/tcp                 #
+hostnames    101/tcp  hostname       # NIC Host Name Server
+tsap         102/tcp iso_tsap iso-tsap # ISO TSAP (part of ISODE)
+pop          109/tcp postoffice pop2 # Post Office Protocol - Version 2
+pop3         110/tcp  pop-3          # Post Office Protocol - Version 3
+portmap      111/tcp  sunrpc         # SUN Remote Procedure Call
+portmap      111/udp  sunrpc         #
+ident        113/tcp  authentication # RFC1413
+sftp         115/tcp                 # Simple File Transfer Protocol
+uucp-path    117/tcp                 # UUCP Path Service
+nntp         119/tcp  readnews untp  # Network News Transfer Protocol
+ntp          123/udp                 # Network Time Protocol
+netbios_ns   137/tcp                 # NetBIOS Name Service
+netbios_ns   137/udp                 #
+netbios_dgm  138/tcp                 # NetBIOS Datagram Service
+netbios_dgm  138/udp                 #
+netbios_ssn  139/tcp                 # NetBIOS Session Service
+netbios_ssn  139/udp                 #
+bftp         152/tcp                 # Background File Transfer Protocol
+snmp         161/udp  snmpd          # Simple Network Management Protocol Agent
+snmp-trap    162/udp  trapd          # Simple Network Management Protocol Traps
+bgp          179/tcp                 # Border Gateway Protocol
+# PV performance tool services entries
+pvserver     382/tcp    # PV server
+pvalarm      383/tcp    # PV alarm management
+#
+# UNIX services
+#
+biff         512/udp  comsat         # mail notification
+exec         512/tcp                 # remote execution, passwd required
+login        513/tcp                 # remote login
+who          513/udp  whod           # remote who and uptime
+shell        514/tcp  cmd            # remote command, no passwd used
+syslog       514/udp                 # remote system logging
+printer      515/tcp  spooler        # remote print spooling
+talk         517/udp                 # conversation
+ntalk        518/udp                 # new talk, conversation
+route        520/udp  router routed  # routing information protocol
+efs          520/tcp                 # Extended file name server
+timed        525/udp  timeserver     # remote clock synchronization
+tempo        526/tcp  newdate        #
+courier      530/tcp  rpc            #
+conference   531/tcp  chat           #
+netnews      532/tcp  readnews       #
+netwall      533/udp                 # Emergency broadcasting
+uucp         540/tcp  uucpd          # uucp daemon
+remotefs     556/tcp  rfs_server rfs # Brunhoff remote filesystem 
+ingreslock  1524/tcp                 # 
+#
+# Other HP-UX services
+#
+lansrm       570/udp                 # SRM/UX Server
+DAServer     987/tcp                 # SQL distributed access
+instl_boots 1067/udp                 # installation bootstrap protocol server
+instl_bootc 1068/udp                 # installation bootstrap protocol client
+nfsd-keepalive 1110/udp              # Client status info
+nfsd-status    1110/tcp              # Cluster status info
+msql        1111/tcp                 # Mini SQL database server
+rlb         1260/tcp                 # remote loopback diagnostic
+clvm-cfg    1476/tcp                 # HA LVM configuration
+diagmond    1508/tcp                 # Diagnostic System Manager
+nft         1536/tcp                 # NS network file transfer
+sna-cs      1553/tcp                 # SNAplus client/server
+sna-cs      1553/udp                 # SNAplus client/server
+ncpm-pm     1591/udp                 # NCPM Policy Manager
+ncpm-hip    1683/udp                 # NCPM Host Information Provider
+cvmon       1686/udp                 # Clusterview cvmon-cvmap communication
+registrar   1712/tcp                 # resource monitoring service
+registrar   1712/udp                 # resource monitoring service
+ncpm-ft     1744/udp                 # NCPM File Transfer
+psmond      1788/tcp                 # Predictive Monitor
+psmond      1788/udp                 # Hardware Predictive Monitor
+pmlockd     1889/tcp                 # SynerVision locking daemon
+pmlockd     1889/udp                 #
+nfsd        2049/udp                 # NFS remote file system
+netdist     2106/tcp                 # update(1m) network distribution service
+rfa         4672/tcp                 # NS remote file access
+veesm       4789/tcp                 # HP VEE service manager
+hacl-hb     5300/tcp                 # High Availability (HA) Cluster heartbeat
+hacl-gs     5301/tcp                 # HA Cluster General Services
+hacl-cfg    5302/tcp                 # HA Cluster TCP configuration
+hacl-cfg    5302/udp                 # HA Cluster UDP configuration
+hacl-probe  5303/tcp                 # HA Cluster TCP probe
+hacl-probe  5303/udp                 # HA Cluster UDP probe
+hacl-local  5304/tcp                 # HA Cluster Commands
+hacl-test   5305/tcp                 # HA Cluster Test
+hacl-dlm    5408/tcp                 # HA Cluster distributed lock manager
+lanmgrx.osB 5696/tcp                 # LAN Manager/X for B.00.00 OfficeShare
+r4-sna-cs   5707/tcp                 # SNA client/server (up to Release 4.1)
+SNAplus     5708/udp                 # SNA logical network A (up to Release 4.1)
+r4-sna-ft   5709/tcp                 # SNA file transfer (up to Release 4.1)
+hcserver    5710/tcp                 # HP Cooperative Services
+grmd        5999/tcp                 # graphics resource manager
+spc         6111/tcp                 # sub-process control
+desmevt     6868/tcp                 # DE/ Services Monitor, Event Service
+pdclientd   6874/tcp                 # Palladium print client daemon
+pdeventd    6875/tcp                 # Palladium print event daemon
+iasqlsvr    7489/tcp                 # Information Access
+recserv     7815/tcp                 # SharedX Receiver Service
+ftp-ftam    8868/tcp                 # FTP->FTAM Gateway
+mcsemon     9999/tcp                 # MC/System Environment monitor
+console     10000/tcp                # MC/System Environment console multiplexor
+actcp       31766/tcp                # ACT Call Processing Server
+#
+# Kerberos (Project Athena/MIT) services
+#
+kerberos5    88/udp   kdc     	     # Kerberos 5 kdc
+klogin       543/tcp                 # Kerberos rlogin -kfall
+kshell       544/tcp  krcmd          # Kerberos remote shell -kfall
+ekshell      545/tcp  krcmd          # Kerberos encrypted remote shell -kfall
+kerberos     750/udp  kdc            # Kerberos (server) udp -kfall
+kerberos     750/tcp  kdc            # Kerberos (server) tcp -kfall
+kerberos_master 751/tcp kadmin       # Kerberos kadmin
+krbupdate    760/tcp  kreg           # Kerberos registration -kfall
+kpasswd      761/tcp  kpwd           # Kerberos "passwd" -kfall
+eklogin     2105/tcp                 # Kerberos encrypted rlogin -kfall
+# The X10_LI server for each display listens on ports 5800 + display number.
+# The X10_MI server for each display listens on ports 5900 + display number.
+# The X11 server for each display listens on ports 6000 + display number.
+# The X11 font server listens on port 7000.
+# Do NOT associate other services with these ports.
+# Refer to the X documentation for details.
+
+hpoms-ci-lstn   5403/tcp	#SAP spooler support
+hpoms-dps-lstn  5404/tcp	#SAP spooler support
+samd            3275/tcp        # sam daemon
+
+dtspc	6112/tcp	#subprocess control
+
+swat      901/tcp	# SAMBA Web-based Admin Tool
+omni  5555/tcp     # OMNIBACK-II 

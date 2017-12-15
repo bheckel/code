@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# TODO make less brittle
+ls -lgG $1 |sed -r 's/^\S+ \S+ \w+ //g'

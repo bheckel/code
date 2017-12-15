@@ -1,0 +1,30 @@
+#!/bin/awk -f
+##############################################################################
+#     Name: sumlist
+#
+#  Summary: Sum a list of numbers that are available in a single column.
+#
+#           See oneliners for alternatives!
+#
+#           Also see ;B mapping in Vim if the column has trailing '+', etc.
+#
+#           $ getclip | sumlist
+#           Assuming numbers in bytes 10-12, sum them:
+#           $ cut -b10-12 test.dat | sumlist
+#
+#  Created: Sat, 18 Sep 1999 20:22:44 (Bob Heckel)
+# Modified: Tue 13 Jul 2004 13:55:13 (Bob Heckel)
+##############################################################################
+
+# TODO how to call this only if user provides '-h' ?
+###BEGIN { 
+###  print "usage: Sums column 1 (or STDIN)" 
+###  print "       e.g.  $ ll /foo | awk '{print $4}' | sumlist\n"
+###  print "       e.g.  $ cat numlistfoo.txt | sumlist\n"
+###}
+
+{ the_tot += $1 }
+
+END { 
+  print the_tot 
+}

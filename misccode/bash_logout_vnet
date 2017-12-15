@@ -1,0 +1,15 @@
+# ~/.bash_logout: executed by bash(1) when login shell exits.
+
+# Clear out the home directory.  Anything valuable should have been flushed to
+# /tmp/vitalnet_output by the statistician via menu selection.
+# Skip dotfiles implicitly.
+for f in ~/*; do
+  if [ -f $f ]; then
+    mv $f ~/tmp
+  fi
+done
+
+# When leaving the console clear the screen to increase privacy.
+case "`tty`" in
+  /dev/tty[0-9]) clear
+esac

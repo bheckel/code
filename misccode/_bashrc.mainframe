@@ -1,0 +1,48 @@
+DEPRECATED, using ~/.bashrc successfully
+
+export PS1=`echo "$LOGNAME@CDCJES2$ " | tr A-Z a-z `
+###stty erase ^? intr ^C kill ^K
+###stty erase ^H 
+
+alias h='history | tail -25'
+alias vi=vim
+
+rmv() {
+  local VERBOSE
+  local MARKER
+  # MUST be same as ~/bin/clean_synch
+  MARKER=REMOVETHIS__
+      
+  # -s placeholder file output is used for synching parsifal and work PCs
+  # important directories.
+  if [ ! "$1" ]; then
+    echo 'error: Must enter file(s) or file pattern.  Exiting.'
+    echo 'Usage: rmv [-s|-v] file1 file2 pat* ...'
+    echo "       Removes a file or files to $HOME/tmp"
+    echo "       -s places a $MARKER marker after rmv'ing (sweep-away mode)"
+    echo "       -v shows action (verbose mode)"
+    return 1
+  fi
+  if [ "$1" = '-s' ]; then
+    shift
+    for f in "$@"; do
+      touch "${MARKER}${f}"
+    done
+  fi
+  if [ "$1" = '-v' ]; then
+    VERBOSE=$1
+    shift
+  else
+    VERBOSE=''
+  fi
+  if [ -d $HOME/tmp ]; then
+    for f in "$@"; do
+      mv $VERBOSE $f $HOME/tmp || echo 'failed to rmv'
+    done
+  else  # very rare
+    mkdir -v $HOME/tmp && echo "$HOME/tmp created successfully";
+    for f in "$@"; do
+      mv -v $f $HOME/tmp && echo 'rmv failed';
+    done
+  fi
+}

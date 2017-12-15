@@ -1,0 +1,8 @@
+user bh1 pgm3hh
+lcd \todel
+cd ~
+binary
+prompt
+hash
+get output.xls
+quit

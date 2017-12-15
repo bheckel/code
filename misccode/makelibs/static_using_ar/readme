@@ -1,0 +1,20 @@
+With all .o files copied to this dir, ran
+
+$ ar r boblib.a *.o 
+$ rm *.o
+$ gcc Main.c libbobh.a     <---implicit linking
+
+Same effect as ../
+
+Now Main.c can use the functions in the object files.
+
+Could have also copied libbobh.a to /usr/lib and compiled like so:
+
+$ gcc Main.c -lbobh
+or don't cp to /usr/lib and
+$ gcc Main.c -L. -lbobh    <---to search pwd, '.'
+
+Statically linked a.exe now has a *copy* of the .o files.
+
+View contents of archive:
+$ ar t libbobh.a

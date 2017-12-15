@@ -1,0 +1,8 @@
+Addefourteen|Lnamer|555|Tenured|9000|53
+Dontteachit|Lnocs|555|Tenured|50000|60
+Ialso|Liamteach|555|Tenured|60000|59
+Iteachit|Liteachit|555|Fired|70000|58
+Metoorich|Lmetoo|555|Fired|80000|93
+Nullf|Nulllquirk|444|Fired|10000|
+Rich|Proforser|333|Tenured|201000|51
+Whydontshow|Lnocs|444|Lazy|39000|62

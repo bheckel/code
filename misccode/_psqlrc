@@ -1,0 +1,15 @@
+-- Modified: Thu 22 Sep 2016 11:30:58 (Bob Heckel)
+
+-- This causes full aborts for bad SELECT queries so set it manually prior to INSERT/UPDATEs
+---\set AUTOCOMMIT off
+
+\x auto
+
+\pset pager on
+\pset null ¤
+\pset linestyle unicode
+---\pset border 2
+
+-- Each db gets its own hist
+\set HISTFILE ~/.psql_history- :DBNAME
+\set PROMPT1 '%[%033[1;33;40m%]%n@%M:%/%[%033[0m%] '

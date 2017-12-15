@@ -1,0 +1,11 @@
+# From Sun PDF 816-0559.linker.pdf
+
+$ LD_LIBRARY_PATH=dir1:dir2;dir3
+$ export LD_LIBRARY_PATH
+$ cc -o prog main.c -Lpath1 ... -Lpath2 ... -Lpathn -lfoo
+
+The effective search path will be dir1:dir2:path1:path2... pathn:dir3:/
+usr/ccs/lib:/usr/lib.
+
+If no semicolon is specified as part of the LD_LIBRARY_PATH definition, the
+specified directory list is interpreted after any -L options.

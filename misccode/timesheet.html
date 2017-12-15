@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>Timesheet Calculator</TITLE>
+
+<SCRIPT language=JavaScript>
+    <!--HIDE
+    function changeIt(newLoc)  {
+        document.links[0].href=newLoc
+    }
+    //STOP HIDING-->
+  </SCRIPT>
+
+<SCRIPT language=JavaScript>
+<!-- Beginning of JavaScript -
+// Math.round 
+
+function hours (form) {
+  todays_hours = (
+    (
+    ( (document.today.fh.options[document.today.fh.selectedIndex].value +
+      (document.today.fm.options[document.today.fm.selectedIndex].value / 6)) 
+    - (document.today.sh.options[document.today.sh.selectedIndex].value +
+      (document.today.sm.options[document.today.sm.selectedIndex].value / 6))
+  ) - (document.today.bh.options[document.today.bh.selectedIndex].value +
+      (document.today.bm.options[document.today.bm.selectedIndex].value / 6))
+  ) / 10);
+  if ( document.today[2].checked == true ) {
+	todays_hours = ( todays_hours + 24 );
+  }
+  x100 = (todays_hours * 100);
+  rounded = ( (x100 - (x100 % 1)) / 100 );
+  if ( ( x100 % 1 ) >= .5 ) {
+	  // Round up if the remainder is greater than half
+	  rounded = rounded + .01;
+  }
+  if ( todays_hours != rounded  ) {
+	  // alert ( todays_hours + " => " + rounded  );
+	  self.status = "Rounding " + todays_hours + " to " + rounded;
+  }
+  document.today.worked.value = rounded;
+}
+
+function update_total (form) {
+ total_hours = (
+ // Multiplication converts text strings into numerical values
+   ( document.week.day0.value * 1 )
+ + ( document.week.day1.value * 1 )
+ + ( document.week.day2.value * 1 )
+ + ( document.week.day3.value * 1 )
+ + ( document.week.day4.value * 1 )
+ + ( document.week.day5.value * 1 )
+ + ( document.week.day6.value * 1 ));
+ document.week.total.value = (total_hours);
+}
+
+function update_day (day) {
+    if ( day == 0 ) {
+    	document.week.day0.value = (document.today.worked.value);
+    }
+    if ( day == 1 ) {
+    	document.week.day1.value = (document.today.worked.value);
+    }
+    if ( day == 2 ) {
+    	document.week.day2.value = (document.today.worked.value);
+    }
+    if ( day == 3 ) {
+    	document.week.day3.value = (document.today.worked.value);
+    }
+    if ( day == 4 ) {
+    	document.week.day4.value = (document.today.worked.value);
+    }
+    if ( day == 5 ) {
+    	document.week.day5.value = (document.today.worked.value);
+    }
+    if ( day == 6 ) {
+    	document.week.day6.value = (document.today.worked.value);
+    }
+	update_total();
+}
+
+function ching (form) {
+update_total();
+rate        = ( document.week.rate.value * 1 ) ;
+total       = ( total_hours * rate ) ;
+var content = '<HTML><HEAD><TITLE>Invoice</TITLE></HEAD>' +
+'<BODY TEXT="000000" BGCOLOR="#ffffff">' +
+'<CENTER><B>Invoice</B></CENTER>' +
+'<PRE>' +
+'Period: Week ending ' +
+ document.week.day.options[document.week.day.selectedIndex].value + ' ' +
+ document.week.date1.options[document.week.date1.selectedIndex].value +
+ document.week.date2.options[document.week.date2.selectedIndex].value + ' ' +
+ document.week.month.options[document.week.month.selectedIndex].value + ' ' +
+ document.week.year.options[document.week.year.selectedIndex].value +
+ ' <BR> &nbsp; <BR>' +
+ total_hours + ' hrs @ ' + rate + '/hr = ' + total + ' <P>' +
+'Amount Due:        <U>' + total + '</U>' +
+'</PRE>' +
+'</BODY></HTML>' ;
+document.open();
+document.write(content);
+document.close();
+}
+
+// - End of JavaScript - -->
+
+</SCRIPT>
+
+<META content="MSHTML 6.00.2800.1458" name=GENERATOR></HEAD>
+<BODY text=#000000 vLink=#c0c0c0 aLink=#c0c0c0 link=#c0c0c0 
+bgColor=#ffffff>
+
+<h1>Timesheet Calculator</h1>
+
+<!--
+<FONT color=#000000 size=-4>This timesheet calculator uses 
+JavaScript to add up your hours for the week and produce an invoice page. <BR>It 
+works with both Netscape and MSIE and doesn't use CGI so you can save it to your 
+desktop and run it there if you prefer. <BR>I'm a code recycler, so if you find 
+this useful I'm happy for you to take it and use it. <BR>I hereby place this 
+document under the General Public License. <BR>See: <A 
+href="http://www.gnu.org/copyleft/gpl.html">http://www.gnu.org/copyleft/gpl.html</A> 
+for T's &amp; C's </FONT>
+-->
+
+<P><B>Calculate today's Hours:</B></P>
+<TABLE cellSpacing=0 cellPadding=0 width="50%" border=0>
+  <FORM name=today>
+  <TBODY>
+  <TR>
+    <TD width="20%">Start Time:</TD>
+    <TD width="10%"><SELECT name=sh> <OPTION value=00>00<OPTION 
+        value=01>01<OPTION value=02>02<OPTION value=03>03<OPTION 
+        value=04>04<OPTION value=05>05<OPTION value=06>06<OPTION 
+        value=07>07<OPTION value=08>08<OPTION value=09 selected>09<OPTION 
+        value=10>10<OPTION value=11>11<OPTION value=12>12<OPTION 
+        value=13>13<OPTION value=14>14<OPTION value=15>15<OPTION 
+        value=16>16<OPTION value=17>17<OPTION value=18>18<OPTION 
+        value=19>19<OPTION value=20>20<OPTION value=21>21<OPTION 
+        value=22>22<OPTION value=23>23</OPTION></SELECT> <SELECT name=sm> 
+        <OPTION value=00 selected>00<OPTION value=05>05<OPTION value=10>10<OPTION 
+        value=15>15<OPTION value=20>20<OPTION value=25>25<OPTION
+	value=30>30<OPTION value=35>35<OPTION value=40>40<OPTION 
+        value=45>45<OPTION value=50>50<OPTION value=55>55</OPTION></SELECT> </TD></TR>
+  <TR>
+    <TD width="20%">Finish Time: &nbsp; &nbsp; (<INPUT type=checkbox 
+      name=plus24> Next day) </TD>
+    <TD width="10%"><SELECT name=fh> <OPTION value=00>00<OPTION 
+        value=01>01<OPTION value=02>02<OPTION value=03>03<OPTION 
+        value=04>04<OPTION value=05>05<OPTION value=06>06<OPTION 
+        value=07>07<OPTION value=08>08<OPTION value=09>09<OPTION 
+        value=10>10<OPTION value=11>11<OPTION value=12>12<OPTION 
+        value=13>13<OPTION value=14>14<OPTION value=15>15<OPTION 
+        value=16>16<OPTION value=17>17<OPTION value=18 selected>18<OPTION 
+        value=19>19<OPTION value=20>20<OPTION value=21>21<OPTION 
+        value=22>22<OPTION value=23>23</OPTION></SELECT> <SELECT name=fm> 
+        <OPTION value=00 selected>00<OPTION value=05>05<OPTION 
+        value=10>10<OPTION value=15>15<OPTION value=20>20<OPTION 
+        value=25>25<OPTION value=30>30<OPTION value=35>35<OPTION 
+        value=40>40<OPTION value=45>45<OPTION value=50>50<OPTION 
+        value=55>55</OPTION></SELECT> </TD></TR>
+  <TR>
+    <TD width="20%">Time off for Breaks:</TD>
+    <TD width="10%"><SELECT name=bh> <OPTION value=00 selected>00<OPTION 
+        value=01>01<OPTION value=02>02<OPTION value=03>03<OPTION 
+        value=04>04<OPTION value=05>05<OPTION value=06>06<OPTION 
+        value=07>07<OPTION value=08>08<OPTION value=09>09<OPTION 
+        value=10>10<OPTION value=11>11</OPTION></SELECT> <SELECT name=bm> 
+        <OPTION value=00 selected>00<OPTION value=05>05<OPTION value=10>10<OPTION 
+        value=15>15<OPTION value=20>20<OPTION value=25>25<OPTION 
+        value=30>30<OPTION value=35>35<OPTION value=40>40<OPTION
+	value=45>45<OPTION value=50>50<OPTION value=55>55</OPTION></SELECT> </TD></TR>
+  <TR>
+    <TD width="20%">You have worked: <INPUT maxLength=5 size=5 name=worked> 
+      hours.</TD>
+    <TD width="10%"><INPUT onclick=hours(document.today) type=button value=Calculate> 
+    </TD></TR></FORM></TBODY></TABLE>
+<FORM name=week>Insert hours into day: 
+<TABLE cellSpacing=0 cellPadding=0 width="45%" border=0>
+  <TBODY>
+  <TR>
+    <TD width="2%"><A href="javascript:update_day(0);"><IMG height=19 alt=mon 
+      src="./mon.gif" width=100 align=absMiddle border=0></A> </TD>
+    <TD width="2%"><A href="javascript:update_day(1);"><IMG height=19 alt=tue 
+      src="./tue.gif" width=100 align=absMiddle border=0></A> </TD>
+    <TD width="2%"><A href="javascript:update_day(2);"><IMG height=19 alt=wed 
+      src="./wed.gif" width=100 align=absMiddle border=0></A> </TD>
+    <TD width="2%"><A href="javascript:update_day(3);"><IMG height=19 alt=thu 
+      src="./thu.gif" width=100 align=absMiddle border=0></A> </TD>
+    <TD width="2%"><A href="javascript:update_day(4);"><IMG height=19 alt=fri 
+      src="./fri.gif" width=100 align=absMiddle border=0></A> </TD>
+    <TD width="2%"><A href="javascript:update_day(5);"><IMG height=19 alt=sat 
+      src="./sat.gif" width=100 align=absMiddle border=0></A> </TD>
+    <TD width="2%"><A href="javascript:update_day(6);"><IMG height=19 alt=sun 
+      src="./sun.gif" width=100 align=absMiddle border=0></A> </TD>
+    <TD width="2%"><A href="javascript:update_total();"><IMG height=19 alt=tot 
+      src="./tot.gif" width=100 align=absMiddle border=0></A> 
+  </TD></TR>
+  <TR>
+    <TD width="2%"><INPUT maxLength=5 size=4 name=day0></TD>
+    <TD width="2%"><INPUT maxLength=5 size=4 name=day1></TD>
+    <TD width="2%"><INPUT maxLength=5 size=4 name=day2></TD>
+    <TD width="2%"><INPUT maxLength=5 size=4 name=day3></TD>
+    <TD width="2%"><INPUT maxLength=5 size=4 name=day4></TD>
+    <TD width="2%"><INPUT maxLength=5 size=4 name=day5></TD>
+    <TD width="2%"><INPUT maxLength=5 size=4 name=day6></TD>
+    <TD width="2%"><INPUT maxLength=5 size=5 name=total></TD></TR></TBODY></TABLE>
+<P><B>Calculate &amp; create invoice:</B></P>For week ending: <SELECT name=day> 
+  <OPTION value=Sunday selected>Sunday<OPTION value=Monday>Monday<OPTION 
+  value=Tuesday>Tuesday<OPTION value=Wednesday>Wednesday<OPTION 
+  value=Thursday>Thursday<OPTION value=Friday>Friday<OPTION 
+  value=Saturday>Saturday</OPTION></SELECT> <SELECT name=date1> <OPTION value=0 
+  selected>0<OPTION value=1>1<OPTION value=2>2<OPTION 
+value=3>3</OPTION></SELECT><SELECT name=date2> <OPTION value=0 
+  selected>0<OPTION value=1>1<OPTION value=2>2<OPTION value=3>3<OPTION 
+  value=4>4<OPTION value=5>5<OPTION value=6>6<OPTION value=7>7<OPTION 
+  value=8>8<OPTION value=9>9</OPTION></SELECT> <SELECT name=month> <OPTION 
+  value=Jan selected>Jan<OPTION value=Feb>Feb<OPTION value=Mar>Mar<OPTION 
+  value=Apr>Apr<OPTION value=May>May<OPTION value=Jun>Jun<OPTION 
+  value=Jul>Jul<OPTION value=Aug>Aug<OPTION value=Sep>Sep<OPTION 
+  value=Oct>Oct<OPTION value=Nov>Nov<OPTION value=Dec>Dec</OPTION></SELECT> 
+<SELECT name=year> <OPTION value=2003 selected>2003<OPTION 
+  value=2004>2004<OPTION value=2005>2005</OPTION></SELECT> 
+<P>
+<TABLE cellSpacing=0 cellPadding=0 width="45%" border=0>
+  <TBODY>
+  <TR>
+    <TD>Rate: </TD>
+    <TD><INPUT size=8 name=rate> <INPUT onclick=ching(this.form) type=button value="Do Invoice"> <INPUT type=reset value=Reset> 
+</TD></TR></TBODY></TABLE></FORM></P>
+
+</BODY>
+</HTML>
+

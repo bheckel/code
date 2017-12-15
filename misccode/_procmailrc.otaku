@@ -1,0 +1,70 @@
+##############################################################################
+#     Name: $HOME/.procmailrc
+#
+#  Summary: This file directs incoming mail to special mail folders.
+#
+#           Assumes $HOME/.forward
+#            |IFS=' ' && exec /usr/bin/procmail -f- || exit 75 #YOUR_USERNAME
+#           exists, unless you're on a RH6 (or higher?) box.
+#
+#           See  $ man procmailex
+#
+#  Created: Thu 06 Dec 2001 17:00:18 (Bob Heckel)
+# Modified: Thu 17 Mar 2005 10:14:36 (Bob Heckel)
+##############################################################################
+
+SHELL=/bin/sh
+###VERBOSE=on  # must comment out the mailstat call in .profile
+VERBOSE=off  # must comment out the LOG=" " below
+MAILDIR=$HOME/Mail
+
+# Local dir to store procmail recipies & log files.
+PMDIR=$HOME/.procmail
+
+# The logfile records what procmail does.  You can read it with the mailstat
+# command
+LOGFILE=$PMDIR/log
+# Place newline in Log between email receipts:
+###LOG="
+###"
+
+###########
+#
+# Recipes (processed in order):
+
+# Mailing lists (highest volume first)
+###INCLUDERC=$PMDIR/rc.sasl
+INCLUDERC=$PMDIR/rc.cyg
+INCLUDERC=$PMDIR/rc.vim
+INCLUDERC=$PMDIR/rc.mutt
+###INCLUDERC=$PMDIR/rc.perlquiz
+INCLUDERC=$PMDIR/rc.perljobs
+###INCLUDERC=$PMDIR/rc.perlusenet
+INCLUDERC=$PMDIR/rc.cron
+INCLUDERC=$PMDIR/rc.lowvolume
+
+# Bounce to the-heckels
+###INCLUDERC=$PMDIR/rc.attbounce
+
+# Whitelist
+INCLUDERC=$PMDIR/rc.wlist
+
+# Specific addresses to trash folder
+INCLUDERC=$PMDIR/rc.refused
+
+# Trap spam:
+# Most effective recipe:
+INCLUDERC=$PMDIR/rc.not_to_me
+# Uses scoring against the rampant *@att spam
+###INCLUDERC=$PMDIR/rc.toomany_att
+# 2003-12-04 may be too agressive
+###INCLUDERC=$PMDIR/rc.nohtml
+# Uses scoring.  TODO too aggressive, too much of a resource hog?
+###INCLUDERC=$PMDIR/rc.spam_in_body
+INCLUDERC=$PMDIR/rc.subjpattern
+# 'untrusted' header
+###INCLUDERC=$PMDIR/rc.received
+INCLUDERC=$PMDIR/rc.gmailsoftfail
+#
+###########
+

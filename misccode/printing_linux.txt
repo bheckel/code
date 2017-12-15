@@ -1,0 +1,218 @@
+
+ De-mystifying printers and printing.
+
+
+This week, I am going to wander into frightening territory. Over the years, I have seen several estimates regarding system administrators and printers. One figure (which had a fairly strong argument backing up the numbers) put printer administration at around 25 percent of a system administrator's time. If you think printers are fun, try wandering by your tech support people's cubicles (assuming you are not one yourself), and waiting for a printer call to come through. You shouldn't have to wait too long. Next, note the look on their faces when they're told it's a printer problem. 
+
+I've sort of avoided dealing with printers myself (although some of you have sent me requests to cover the topic). The reason is that, like most system administrators, I also hate dealing with printers. In the next few columns, I will show how you can make printer hell closer to printer heaven. In doing this, I'll walk you through the basics of what really happens when you print. Armed with the nuts and bolts of printing, we will then look at some clever tools and techniques that add unprecedented flexibility to your everyday printing needs. 
+
+Linux offers us a number of printing options. We can do text, Postscript, local printers as well as lpd remotes. If we want to, we can even create queues that direct printing to our co-workers' Windows 9x printers, or provide Windows 9x users with Linux print services (using Samba). One printer is mostly okay, but add a few more and you've got yourself a real handful. What Linux does do here is provide a wide range of options for dealing with all this diversity. 
+
+Let's go back to the beginning (well, almost) and see how this whole thing actually works, starting with your old friend--the parallel printer. 
+
+Basic PC architectures usually have a single parallel port. A printer on that port would actually be connected to /dev/lp0. If your PC has more than one parallel connector (or if you added a printer card), the second and third ports would be /dev/lp1 and /dev/lp2, respectively. Now, let's pretend you have a basic, run-of-the-mill printer attached the first parallel port. Printing can be as simple (or as strange) as this: 
+
+   # echo "This is a test." > /dev/lp0
+   # echo "Please ignore this print job." > /dev/lp0
+   # echo "There is nothing of value here." > /dev/lp0
+   # echo "^L" > /dev/lp0
+The last line, with the ctrl-L, means "send a form feed to the printer to eject the page." Now the output of this silly job looks like this: 
+
+This is a test.
+               Please ignore this print job.
+                                            There is nothing of value here.
+This is what my printer configuration tool refers to as "stair stepping of text". You may have also heard it referred to as the "staircase effect". What happens is that my printer, a LaserJet 5L in this case, expects either PCL (its native printer command language) or DOS-style text. That means carriage returns and line feeds at the end of each line, unlike Linux files, which default to simply line feeds. In any case, this is a nice display of the need for filters. 
+
+Let's take exactly the same lines of (non) information (minus the echo "^L" line) and create a file called testfile. I used pico for this, but you can use whatever editor makes you happy. If we simply cat the file to the printer as before (with cat testfile > /dev/lp0), the results are the same. Let's build a filter. Here's what mine looks like: 
+
+   #!/bin/bash
+   echo -ne 33&k2G
+   cat
+   echo -ne f
+Not much to it, is there? The first echo line sends the command that tells my LaserJet to convert Linux line feeds to carriage return followed by a line feed, an octal escape character followed by the printer control sequence &k2G. This is an HP code, so your printer may require a different code. The next line simply takes the input you gave it and passes it through, unaltered. The final line sends a form feed to eject the page. I called the file "dosfilter", moved it to /usr/local/bin and made it executable. 
+
+   # cp dosfilter /usr/local/bin
+   # chmod 755 dosfilter
+Now, let's resend the job and use the filter: 
+
+   # cat testfile | /usr/local/bin/dosfilter > /dev/lp0
+Now my text comes out looking normal, one line after the other, and properly aligned. Pretty neat, but in Real LifeTM, we usually don't send jobs to printers in this way. We create printers on the system and send jobs by spooling them. Let's create a spooler definition called "lptest". Do this by editing /etc/printcap and adding the following information. Keep in mind that the printcap file is quite picky about how it is laid out. That's why the guide you received with your Linux system (assuming you bought a nice boxed set) tells you to use printtool, or something like it. Learning to do it the hard way is more fun in the long run. Later, we'll use nice tools. (Right--the /etc/printcap file.) It looks like this: 
+
+   lptest:
+        :sd=/var/spool/lpd/lptest:
+        :mx#0:
+        :sh:
+        :lp=/dev/lp0:
+        :if=/usr/local/bin/dosfilter:
+Here's what all that means. The first line is simply a printer name. If I send a job to a printer with the lpr command, I would specify this queue name. The next line refers to the spool directory; in other words, where all the information related to the current job goes. This is a directory under the /var/spool/lpd directory (by default), but it could conceivably go anywhere you like. /var/spool/lpd is just convention. I like to use a directory name that is the same as the queue name (I'm funny that way). 
+
+"mx" refers to the maximum file size you will allow to be sent to the printer. A zero means unlimited. The next line (:sh:) means "suppress header page". Since this is a physically connected device, we have the lp option, which defines the parallel device itself (/dev/lp0 since I have only one parallel port). The last line refers to my input filter, the dosfilter we created earlier. 
+
+To make this all work, you need only create the spool directory (/var/spool/lpd/lptest) and send your job to the printer. 
+
+   # mkdir /var/spool/lpd/lptest
+   # lpr -Plptest testfile
+Did you get an extra, unwanted form feed with your job? If so, modify your dosfilter and remove (or comment out) the form feed line. Another way, if you did not want to modify your dosfilter, would simply be to add another parameter to the /etc/printcap definition, one that tells the printing subsystem to "suppress formfeed". The line would look like this: 
+
+   :sf:
+The options sh and sf are booleans. Their presence in the /etc/printcap file means "true". It's up to you to decide where these things are better located (in printcap or in a filter). For a more complete list of printcap options, you can use man and check out the page. 
+
+   # man printcap
+By default, when you send a job to the printer with the lpr command, it uses a queue definition called "lp" (as opposed to lptest, or whatever name you gave your queue). If the queue was simply named "lp", the only command you need to print is this: 
+
+   # lpr printfile_name
+That's why we used the long form of the command. 
+
+   # lpr -Pprint_queue_name printfile_name
+If you always print to a specific printer, you can add the PRINTER environment variable to your $HOME/.bash_profile. 
+
+   PRINTER=lptest ; export PRINTER
+Now, after you log in, all you have to do (assuming you want to print to lptest) is type the first, simpler version of the print command (lpr printfile_name). 
+
+Before we go and wrap it up for the week, let's look at printing to a remote Linux (or UNIX) printer. Let's create a printer called "faraway" on our current machine, called nearlinux. The printer (the lptest we created earlier) is on another machine called farlinux. Here's the /etc/printcap entry for "nearlinux": 
+
+   faraway:
+        :sd=/var/spool/lpd/faraway:
+        :mx#0:
+        :sh:
+        :rm=farlinux:
+        :rp=lptest:
+There are only a couple of really new things here. For starters, the lp line that defines the physical location of my printer is gone. Now we have a rm option, which refers to the remote host name (the host to which the printer is connected). The last line, :rp=lptest:, defines the remote printer's name on that system. 
+
+The only catch here is that farlinux has to let me print. This is done by editing the file /etc/hosts.lpd and adding the hosts or host IP addresses of the machines that are allowed to print. My hosts.lpd file has these entries: 
+
+   192.168.22.2
+   192.168.22.3
+   nearlinux
+It is probably a good idea to restart your lpd daemon after making this kind of change. One way to do this is simply to do a ps ax | grep lpd and kill the current lpd process. The second (which may vary slightly from system to system) is to use these commands: 
+
+    # /etc/rc.d/init.d/lpd stop
+    # /etc/rc.d/init.d/lpd start
+On some releases, you can wrap this up in one command by using restart instead of stop followed by start. Now, from my machine, I can send a really important file to my remote Linux machine for printing. 
+
+    # /usr/games/fortune -l | lpr -Pfaraway
+That about wraps it up for this week. For those of you who knew all this and still read through, we'll look at some cool things to do with printers when next we meet. Until then, remember the old saying, "Print lightly and carry a big toner cartridge." 
+
+Remote printing, JetDirects, ghostscript and other beasties.
+
+
+Whoa! I'm speechless. Judging from the response I received on the last article in this series, printing is very much the evil beast that I made it out to be last week. Thanks, everyone, for the feedback. 
+
+This time around, I'd like to continue down the nuts-and-bolts track of printer administration. I know I promised fancy, cool GUI tools to do some of these things, and I promise we'll get there--eventually. For now, I'd like to spend just a bit more time on how all this stuff works under the surface. 
+
+In a moment, I'm going to jump head first into your Linux tools for control of print jobs, queues, etc. Before doing that, I'd like to follow up on something from the last article: setting up remote print queues. Specifically, setting up a print queue to an HP JetDirect adapter. 
+
+An increasingly common feature of IT shops these days is the Hewlett-Packard JetDirect printer adapter. The Windows and Novell connectivity gets hyped, but rest easy, true believers--getting a Linux system to print to one of those neat little boxes is no big deal. Last week, I gave you the following example. It was a printer locally referred to as "faraway" to access a remote queue called "lptest". For a refresher, here's what it looked like. 
+
+   faraway:
+        :sd=/var/spool/lpd/faraway:
+        :mx#0:
+        :sh:
+        :rm=farlinux:
+        :rp=lptest:
+If you are using an HP JetDirect adapter, I'll assume you have configured either the printer or the stand-alone server with an IP address. This can be done with the included JetAdmin software (for a stand-alone server) or from the control panel in the case of printers that have JetDirect cards built in. 
+
+The next thing to do is define the print queue. Let's say my adapter had an IP address of 192.168.1.225 and a host name of "hpjd1". To create a queue on my Linux system, I would use this printcap entry: 
+
+   jdqueue1:
+        :sd=/var/spool/lpd/jdqueue1:
+        :mx#0:
+        :sh:
+        :rm=hpjd1:
+        :rp=text:
+For text-only printing, this is all there is to it. Notice the remote printer name is "text". JetDirect cards and adapters have two recognized printer names; the other is "raw". If your output is always PCL or Postscript, then you should use "raw" as the remote printer name. 
+
+Now, say you had one of those new, super-cool, 3-port HP JetDirect adapters; what then? Glad you asked. These cards recognize six different printer names. They are "text1", "text2" and "text3". For raw, or postscript output, try "raw1", "raw2" and (you guessed it) "raw3". 
+
+All right; so now you can set up local and remote printers, and send jobs to them. Now we'll look at what you can do to take control and affect those jobs. 
+
+The master control program for printers is lpc, a small, interactive command-line program. In its simplest form, you type this: 
+
+   # lpc
+The system replies with a quiet little prompt: 
+
+   lpc>
+If I type status here, I will get the status (strangely enough) of all printers configured on that machine. Here's what the output looks like on my system: 
+
+   lpc> status
+   lp:
+        queuing is disabled
+        printing is disabled
+        no entries
+        no daemon present
+   colour:
+        queuing is enabled
+        printing is enabled
+        no entries
+        no daemon present
+   lptest:
+        queuing is enabled
+        printing is enabled
+        no entries
+        no daemon present
+Now, for reasons I don't want to go into, my main printer "lp" is having problems, and I don't want the system to continue trying to print to it while I am trying to fix it. At the lpc> prompt, I type the following. The format is as follows. 
+
+   down lp "You should not have bothered with this printer."
+What this will do is take down the printer and stop jobs from getting to it. Notice the message that follows down lp. This will print a message to anyone who queries the status of the print queue from their computer (I am assuming a remote user here, but they could be local as well). So, not knowing what my system administrator has done, I still send a job to the printer. I then decide to see where in the queue my job sits, so I use lpq to find out. As you might have guessed, lpq reports on the status of queued jobs. You invoke it like this: 
+
+   # lpq -Pprinter_name
+Remember, also, that if you specify a PRINTER environment variable (as I mentioned last week), you don't have to specify the printer. In other words, PRINTER=lptest ; export PRINTER means you can just type lpq. Here's what happens when I check the status of my job after my system administrator (okay, it's really me) downs the printer: 
+
+   mycomputer.salmar.com: waiting for queue to be enabled on scigate
+   Rank   Owner      Job   Files                              Total Size
+   1st    root       16    /etc/profile                       546 bytes
+
+   Warning: lp is down: "You should not have bothered with this printer"
+   Warning: lp queue is turned off
+   no entries
+Well, dang! I suppose I'll have to use another printer. I could also remove the job from the queue. You do this with the lprm command. To get rid of this job, I would type the following: 
+
+   # lprm -Plptest 16
+I didn't really want that job, anyway. 
+
+Let's talk a little bit more about filters. In my office, I have a small HP LaserJet 5L. It's the one I've been using for all these examples. If you've spent any time whatsoever with Linux (or other Unices/Unixes), you know that most applications print using the postscript format. Unfortunately, my printer doesn't print postscript. Luckily, I do happen to have a little package called ghostscript on my system. 
+
+I won't spend a long time (not today, anyway) talking about ghostscript, except to tell you it is a powerful tool, and one that makes a great print filter to boot. If I try to print a postscript file to my printer, it comes out as strange text, which just happens to be a kind of code--code written in the Postscript language. Looking at the first 10 lines of a postscript file on my system, I see this: 
+
+   # head contact.ps
+
+   %!PS-Adobe-PS
+   %%BoundingBox: 54 72 558 720
+   %%Creator: Mozilla (NetScape) HTML->PS
+   %%DocumentData: Clean7Bit
+   %%Orientation: Portrait
+   %%Pages: 1
+   %%PageOrder: Ascend
+   %%Title: Registrant Name Change Agreement
+   %%EndComments
+   %%BeginProlog
+This is also what it looks like if I just send it to my printer without a filter of some kind that can interpret postscript. Different Linux distributions offer different alternative filters, but all should have ghostscript in common. 
+
+Here's an example. I'll send my contact.ps file to the printer, but pass it through a ghostscript filter beforehand. 
+
+   # cat contactm.ps | gs -q -dNOPAUSE -sDEVICE=ljet4 -r300  
+             -sPAPERSIZE=letter -sOutputFile=- - | lpr
+The -q means that ghostscript should perform its work quietly. Normally, ghostscript would put out a lot of "this is what I am currently doing" information, not what we want for a print job. The -dNOPAUSE> tells ghostscript to process all pages without pausing to ask for directions. The first -s flag you see specifies the printer type. The ljet4 definition covers a whole range of LaserJet printers that can do 600 dpi resolution. This brings us to the -r flag, where I define a 300 dpi resolution. This Netscape-generated page (remember, you can print to a file when using Netscape) doesn't need a 600 dpi resolution. Ghostscript also allows me to specify paper size, important for those of us in North America who hold firmly (if not wisely) to the 8-1/2 by 11-inch letter size format. Finally, I specify standard out as my output file. Notice the last hyphen in that line. It means that ghostscript is taking the input through its standard in. The last thing I do is fire it to the printer. 
+
+The great thing about ghostscript is its extensive printer support. Check out the Ghostscript printer support page if you want to see the latest and greatest list of support. 
+
+   http://www.cs.wisc.edu/~ghost/
+Scroll down the list, and click on "printer compatibility". 
+
+Armed with this, I could use essentially the same line to create a filter for printing. Always keep in mind that the filter lives on the local printcap definition, not the remote. Remember my dosfilter from last week? Here's a refresher: 
+
+   #!/bin/bash
+   echo -ne 33&k2G
+   cat
+   echo -ne f
+There was only one real active line in (other than the staircase effect change), and that was a simple cat. That line would be the ghostscript line from above, minus the | lpr at the end of it. 
+
+   #!/bin/bash
+   gs -q -dNOPAUSE -sDEVICE=ljet4 -r300 -sPAPERSIZE=letter -sOutputFile=- -
+   echo -ne f
+Very cool and very powerful. As an added bonus, you can even use ghostscript as a desktop X viewer for postscript files and documents, simply by typing gs followed by the file you want to see. 
+
+   # gs contact.ps
+There you have it. Another week of me rambling far too long. I look forward to exploring this topic when next we meet here at Sysadmin's Corner. Until then, "Print lightly and carry a big toner cartridge."
+
+

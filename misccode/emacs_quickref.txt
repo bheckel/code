@@ -1,0 +1,12 @@
+Fucking emacs
+
+C-x C-s	save
+C-x C-c	exit
+C-g	cancel
+C-s	search
+C-k	cut lines of text
+C-y	paste lines of text
+C-v	page down
+M-v	page up
+M-x auto-fill-mode	automatically wrap text
+M-x replace-string	search and replace

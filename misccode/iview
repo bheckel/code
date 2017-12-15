@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd ~/.wine/drive_c/Program\ Files\ \(x86\)/IrfanView/
+
+if [ "$1" != "" ]; then
+  filename=`echo z:$1 | sed 's/\\//\\\\/g'`
+  wine i_view32.exe "$filename" &
+else
+  wine i_view32.exe &
+fi

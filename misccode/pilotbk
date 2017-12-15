@@ -1,0 +1,32 @@
+#!/bin/bash
+##############################################################################
+# Program Name: bkpilot
+#
+#   Summary: Backup bheckel PalmPilot directories to floppy.
+#
+#   Created: Fri, 12 Nov 1999 21:30:25 (Bob Heckel)
+#  Modified: Sat, 25 Dec 1999 12:28:22 (Bob Heckel--data overflows floppy.)
+#  Modified: Sat, 22 Jul 2000 12:00:21 (Bob Heckel)
+##############################################################################
+
+ls -la /mnt/floppy;
+echo "OK to wipe out /mnt/floppy?";
+read yesno;
+# TODO don't think this right
+if [ $yesno == 'y' ]; then
+  # Make sure can access floppy prior to wiping.
+  if (cd /mnt/floppy) ; then
+    # Erase last backup to this floppy.
+    rm -rf /mnt/floppy/*;
+    ls -la /mnt/floppy;
+    echo 'Floppy contents deleted.';
+    echo 'Now copying Pilot directories...';
+    cp -pR ~/palm/HeckelB /mnt/floppy;
+    # TODO Test for size of dir before copying to avoid full floppy problem.
+    ###cp -pR $HOME/pilot/InstalledPgms /mnt/floppy;
+    echo '...Successfully copied Pilot directories';
+  else echo 'Insert floppy.';
+  fi
+else echo 'Cancelled--no deletions.'; 
+fi
+

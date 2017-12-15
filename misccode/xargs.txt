@@ -1,0 +1,23 @@
+Consider xargs as a powerful replacement for backquotes.  Normally, xargs
+reads from stdin or from a pipe, but it can also be given the output of a
+file.  xargs processes many arguments in manageable portions.
+
+Save yourself a lot of typing when you have to perform repetitive
+commands on a list of files.  Put the list of files in a text file
+with one file per line ie: find . -name version.C > filename
+Then have xargs build a command line for each file in the list as 
+follows:
+
+$ cat filename |xargs -n 1 cp anotherfile
+
+This will copy anotherfile over all the files listed in
+filename one at a time until the end of filename is reached. 
+
+How xargs improves on backticks:
+
+$ ls -ld `find / -print`
+
+might generate an error when the command line is too large, the equivalent
+command using xargs will never generate that error:
+
+$ find / -print | xargs ls -ld

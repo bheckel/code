@@ -1,0 +1,73 @@
+#!/bin/bash
+##########################################################################
+#   Name: rand
+#
+# Summary: Uses the date and the process id to calculate a random number
+#          Also try $ perl -e 'print rand()'
+#
+#          TODO allow a range e.g. between 1 and 10
+#
+# Adapted: Thu 01 Mar 2001 12:29:08 (Bob Heckel -- Heiner Steven
+#                                    heiner.steven@odn.de)
+# Modified: Tue 27 Mar 2001 10:59:21 (Bob Heckel)
+##########################################################################
+
+PN=`basename "$0"`
+VER=`echo '$Revision: 1.4 $' | cut -d' ' -f2`
+maxrand=32766
+
+####
+Usage () {
+  echo "$PN - return random number, $VER (stv '95)
+Usage: $PN [maxvalue]
+
+ Prints a random value (1 <= random <= maxvalue) to standard output. 
+ If no maximum value is specified, `expr $maxrand + 1` is the default" >&2
+
+  exit 1
+}
+
+
+Msg () {
+  for i
+    do echo "$PN: $i" >&2
+  done
+}
+
+
+Fatal () { Msg "$@"; exit 1; }
+####
+
+# Main loop.
+
+while [ $# -gt 0 ]
+do
+  case "$1" in
+    --)	shift; break;;
+    -h)	Usage;;
+    -*)	Usage;;
+     *)	break;;			# First file name
+  esac
+  shift
+done
+
+if [ $# -gt 1 ];then Usage
+elif [ $# -eq 1 ];then
+    if expr $1 + 0 > /dev/null 2>&1;then Max=$1
+    else Fatal "illegal number: $1"
+    fi
+fi
+
+# TODO what is this??
+: ${Max:=$maxrand}			# Use default value 
+
+set -- `date '+%S %M %H'`
+[ $# -ne 3 ] && Fatal "could not invoke program date"
+
+# Somehow avoids ascending randoms that plagued Heiner.
+dummy=`date +%s`
+
+# TODO what is this??
+n=`expr $$ \* $1 \* $2 \+ $3`
+exec expr \( $n % $Max \) + 1
+

@@ -1,0 +1,28 @@
+#!/bin/sh
+##############################################################################
+#     Name: perla
+#
+#  Summary: Use ActiveState's perl from within Cygwin.
+#
+#           TODO default to the ~/bin ?
+#           TODO allow -cw param
+#
+#  Created: Thu 24 Jul 2003 09:09:57 (Bob Heckel)
+# Modified: Tue 23 Sep 2003 12:45:28 (Bob Heckel)
+##############################################################################
+  
+Usage() {
+  echo "Usage: `basename $0` 'win32pgm.pl parm1 parm2'
+  E.g. `basename $0` ~/bin/norton
+  Use ActiveState Perl, not Cygwin Perl
+  To debug a Win32 pl pgm, use ~/bin/pdba"
+  exit 1
+}
+
+N_EXPECTED_ARGS=1
+
+if [ "$#" -ne $N_EXPECTED_ARGS ]; then 
+  Usage
+fi
+
+/c/Perl/bin/perl.exe `cygpath -w "$1"`

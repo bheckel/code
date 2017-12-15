@@ -1,0 +1,1599 @@
+<html>
+<head>
+<title>InformIT -- Internet Layer: Subnetting</title>
+<table cellspacing="0" cellpadding="0" border="0"><tr><td><font size="-1">
+<H2> What Is a Subnet? </H2>
+<P>Typically companies or organizations request and are assigned a network ID 
+  from their ISP, and large ISPs are assigned blocks of Class C and possibly Class 
+  B network IDs from the Internet Assigned Number Authority (IANA) (formerly InterNIC). 
+  (The IANA is the organization responsible for assigning IP addresses in an efficient 
+  manner worldwide.) For example, a company with 100 employees would be assigned 
+  a Class C network address. As you recall from our discussion in Hour 4,&quot;The 
+  Internet Layer&quot; a Class C address allows for 254 usable nodes, which should 
+  be more than enough for 100 people. But what if this company is structured into 
+  10 person offices in 10 cities? How would you connect all 100 people in these 
+  distant locations using one network ID? The answer is to subnet. As mentioned 
+  in this hour&#039;s introduction, subnetting is a technique for dividing Class 
+  A, B, or C IP address blocks into multiple, smaller IP address blocks of addresses 
+  for more efficient usage.</P>
+<H3>
+Benefits
+of Subnetting
+</H3>
+<P>There
+are
+several reasons why you might want or need to subnet a network ID. The
+preceding scenario is the most common reason for subnetting. However, other
+compelling reasons exist for you to consider subnetting:
+</P>
+<UL>
+<LI><P>		Reduce
+congestion--Placing large
+numbers of users on a single network segment is an invitation for congestion. A
+10Base-T network with 254 users typically has many collisions and poor
+performance. However, 30 users on a 10Base-T network usually works quite well.
+Subnetting allows you to build network segments that service fewer machines.
+</P></LI></UL><blockquote><hr>
+  <b>Just a Minute -</B>
+An
+alternative
+method for reducing congestion is through the use of 
+<I>switched
+hubs
+</I>.
+Switched hubs can reduce congestion without the need for routers or subnets.<hr>
+    </blockquote>
+  
+<UL>
+<LI><P>		Support
+different technologies--Suppose your network is part Token Ring, part Ethernet,
+and part AppleTalk. How could you spread your network ID to cover these
+different technologies? Subnetting allows you to use one network ID with nodes
+connected to different technologies.</P></LI></UL><blockquote><hr>
+  <b>Just a Minute -</B> An alternative method for connecting dissimilar technologies 
+  is through the use of networking equipment known as translating bridges. However 
+  many network designers prefer routers for this purpose. <I>Routers</I> are networking 
+  equipment that can forward packets from one network to another network; they 
+  are covered in more detail in Hour 9, &quot;Routers, Brouters, and Bridges&quot;.
+<hr>
+    </blockquote>
+  
+<UL>
+<LI><P>		Handle
+technology-imposed limits--Technologies place a limit on the maximum number of
+devices allowed per network segment. For example, the Ethernet specifications
+impose a 1,024 device limit per network segment. If you have a Class B network
+with 65,534 IP addresses, you will find a 1,024 device limit to be an
+unacceptable restriction.
+</P></LI><LI><P>		Security--Routers,
+by their nature, isolate one network segment from another. This isolation can
+provide a basic level of security.
+</P></LI><LI><P>		Reduce
+disruption from broadcasts--Broadcasts
+are packets directed to every node attached to a network segment. Broadcasts
+are disruptive because they cause every computer to stop what it is currently
+doing and spend a few milliseconds deciding whether it needs to respond to the
+broadcast. Subnets allow you to place fewer computers on a network segment,
+which reduces the number of computers affected by broadcasts. 
+</P></LI><LI><P>		Wide
+area network support--As mentioned previously, a company or organization with
+multiple geographically separated locations can use a single network ID across
+multiple LANs.</P></LI></UL><H3>
+Implementing
+Subnetting
+</H3>
+<P>The
+process
+of subnetting should not be taken lightly, as it does require a good amount of
+forethought, planning, and precision. Many people find the subject daunting,
+tedious, or even scary. But be assured it doesn&#039;t have to be that way. The
+process is actually very logical and has only a few rules that you must abide by.
+</P><P>If
+you buy a pie at the local pie shop and take it home, how do you decide how
+many pieces to cut the pie into? You would probably first determine how many
+hungry people are present then cut the pie into the appropriate number of
+slices. If four people are present, each slice is quite large; if 16 people are
+present everybody is only going to get a sliver.
+</P><P>The
+pie example is analogous to subnetting. If you divide a block of addresses from
+a network ID into four groups, each group still has a fairly large number of
+addresses. If it is divided into 16 or more groups, obviously there are fewer
+addresses per group.
+</P><P>One
+of the rules of subnetting is you must throw away the first and the last item.
+You lose two groups of addresses: One group is from the beginning of the block
+of network addresses while the second group is from the end of the block of
+network addresses. Returning to the pie example, if the pie is cut into two
+pieces, and the two pieces are thrown away, nobody eats! If the pie is cut into
+four slices, half the pie gets thrown away. If the pie is cut into eight
+slices, then two slices or one quarter of the pie is wasted. If the pie is cut
+into 16 narrow slices, then only two slices or one eighth of the total is lost,
+and so on. As you can see, the more slices you make, the less the amount of
+total waste. The same is true for subnetting. When you subnet a network ID, the
+amount of loss can range from a small percentage to, in the worse case, roughly
+half the addresses. As in the pie example the greatest loss from eliminating
+the first and last group occurs when the number of subnets is small, while the
+least loss occurs when there are many subnets.</P><P>In
+addition to the losses just described, there are additional losses. You will
+recall that a Class C network ID has 256 addresses. However two of the
+addresses, the first and last, are not usable. This leaves 254 usable
+addresses. When you create subnets, each subnet loses the first and the last
+address within the subnet. The greatest losses here occur when each group
+contains a small number of addresses.
+</P>
+<P>Suppose you divide a Class C network with 256 addresses into 16 
+  subnets, with 16 addresses per subnet. You would need to &quot;throw away&quot; 
+  two subnets, for example, 2x16=32 addresses. In the 14 remaining subnets you 
+  must also throw away two addresses per subnet, for example, 14x2=28 addresses. 
+  When combined, for example, 32+28=60 you lose a total of 60 addresses from the 
+  original 256 due to subnetting. </P>
+<P>If
+you look at the three conversion tables in the next section, you will notice
+that the least total loss occurs in the middle of the subnet range. You
+typically want to avoid using the ends of a subnet range if possible.
+</P><P>As
+you do your planning of how to subnet your network ID, try to find the best
+balance between the three items listed below. Be sure to plan for future growth
+so that you will not need to reengineer your subnets anytime soon.
+</P>
+<ol> 
+  <li>
+    <P> A usable number of network segments. </P>
+</li>
+  <li>
+    <P> A usable number of nodes per segment. </P>
+</li>
+  <li>
+    <P> Minimal loss of IP addresses.</p>
+</li>
+</ol>
+ 
+
+ 
+<H3> Conversion Tables </H3>
+<P>The following 
+  tables show the allowable combinations of network segments and nodes you can 
+  derive when subnetting. Using the previous example of a Class C network with 
+  10 locations of 10 people each, you can see that using four subnet bits from 
+  the leftmost column of the chart would allow up to 14 subnets with up to 14 
+  nodes per subnetwork. This meets our current needs and allows for some future 
+  growth as well. If some offices grow to 20 people for instance, a second subnet 
+  can be used to handle the additional users. </P>
+<P>At the beginning and end of each table you will notice rows that 
+  contain the word &quot;Invalid.&quot; This indicates combinations of subnet 
+  bits that would yield either zero usable subnets, or zero usable nodes per subnet. 
+  These would be analogous to cutting the pie in half where no one would eat, 
+  or cutting the pie into such thin slices that again no one would eat. The valid 
+  portion of each table ranges from two usable subnets near the top of each chart, 
+  to two usable nodes near the bottom of each chart. </P>
+<P>A Class C network can be subnetted as shown in Table 5.1. </P> 
+<H4>Table 5.1 &#160;&#160;Class C Subnetting</H4>
+  
+ 
+
+<DIV align="LEFT"> 
+  <TABLE border>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of subnet bits </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Subnet mask </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of usable subnets </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total loss from first and last subnet </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of bits in node </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of usable nodes per subnet </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total loss from within subnets </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total aggregate IP address loss </I></B></P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Not Subnetted </P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>254</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>7</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.192</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>128</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>62</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>132</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>3</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.240</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>64</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>5</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>30</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>12</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>76</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.248</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>28</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>60</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>5</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.252</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-30</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>3</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>60</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>76</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.254</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-62</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>128</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>132</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>7</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> <BR>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> <BR>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+  </TABLE>
+</DIV>
+<BR>
+<P>A Class B network can be subnetted as shown in Table 5.2. </P> 
+<H4>Table 5.2 &#160;&#160;Class B Subnetting</H4>
+ 
+
+<DIV align="LEFT"> 
+  <TABLE border>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of subnet bits </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Subnet mask </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of usable subnets </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total loss from first and last subnet </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of bits in node </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of usable nodes per subnet </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total loss from within subnets </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total aggregate IP address loss </I></B></P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Not Subnetted </P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>65534</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>15</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.192.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32768</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16382</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32772</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>3</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.224.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16384</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>13</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8190</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>12</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16396</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.240.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8192</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>12</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4094</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>28</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8220</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>5</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.248.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-30</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4096</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>11</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2046</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>60</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4156</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.252.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-62</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2048</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>10</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1022</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>124</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2172</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>7</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.254.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-126</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1024</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>9</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>510</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>252</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1276</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-254</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>512</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>254</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>508</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1020</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>9</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.128</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-510</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>256</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>7</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>126</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1020</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1276</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>10</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.192</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-1022</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>128</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>62</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2044</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2172</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>11</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.224</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-2046</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>64</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>5</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>30</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4092</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4156</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>12</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.240</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-4094</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8184</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8216</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>13</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.248</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-8190</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>3</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16380</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16396</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.252</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-16382</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32764</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32772</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>15</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+  </TABLE>
+</DIV>
+<BR>
+<P>A Class A network can be subnetted as shown in Table 5.3. </P>
+<H4>Table 5.3 &#160;&#160;Class A Subnetting</H4>
+
+
+<DIV align="LEFT"> 
+  <TABLE border>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of subnet bits </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Subnet mask </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of usable subnets </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total loss from first and last subnet </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of bits in node </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I># of usable nodes per subnet </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total loss from within subnets </I></B></P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P><B><I>Total aggregate IP address loss </I></B></P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.0.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Not Subnetted </P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>24</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16777214</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>23</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8388606</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.192.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8388608</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>22</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4194032</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8388612</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>3</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.224.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4194034</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>21</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2097150</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>12</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4194046</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.240.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2097152</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>20</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1048574</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>28</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2097180</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>5</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.248.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-30</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1048576</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>19</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>524286</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>60</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1048636</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.252.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-62</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>524288</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>18</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>262142</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>124</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>524412</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>7</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.254.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-126</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>262144</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>17</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>131070</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>252</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>262396</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.0.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-254</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>131072</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>65534</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>508</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>131580</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>9</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.128.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-510</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>65536</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>15</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32764</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1020</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>66556</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>10</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.192.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-1022</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32768</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16382</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2044</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>34812</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>11</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.224.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-2046</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16384</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>13</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8190</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4086</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>20470</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>12</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.240.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-4094</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8192</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>12</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4094</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8184</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16376</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>13</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.248.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-8190</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4096</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>11</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2046</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16380</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>20476</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.252.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-16382</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2048</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>10</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1022</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32764</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>34812</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>15</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.254.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-32766</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1024</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>9</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>510</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>65532</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>65556</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-65534</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>512</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>254</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>131068</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>131580</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>17</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.128</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-131070</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>256</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>7</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>126</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>262140</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>262396</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>18</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.192</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-262142</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>128</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>62</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>524284</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>524412</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>19</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.224</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-524286</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>64</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>5</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>30</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1048572</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1048636</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>20</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.240</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-1048574</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>32</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>14</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2097148</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2097180</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>21</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.248</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-2097150</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>16</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>3</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>6</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4194300</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>4194316</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>22</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>255.255.255.252</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1-4194302</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>2</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8388604</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>8388612</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>23</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>1</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+    <TR valign="TOP"> 
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>24</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>0</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>Invalid</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+      <TD colspan=1 rowspan=1 valign="TOP"> 
+        <P>NA</P>
+      </TD>
+    </TR>
+  </TABLE>
+</DIV>
+</body>
+</html>

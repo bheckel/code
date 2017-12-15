@@ -1,0 +1,79 @@
+# min hr day mon wkday(0=Sun,6=Sat)
+
+taeb_STACK=US
+taeb_TIER=PROD
+NICE='nice -n19 '
+###NOTIFY='bob.heckel@taeb.com'
+SAS_COMMAND=/sas/sashome/SASFoundation/9.4/sas
+
+
+# ~~~~DEBUG~~~~
+###14 * * * * $NICE $SAS_COMMAND -sysin ~bheckel/t.sas -log ~bheckel/t.log -print ~bheckel/t.lst
+###59 14 * * * echo 'ok' | mailx bob.heckel@taeb.com
+###46 * * * * /bin/touch $HOME/croncheck.txt
+###19 * * * * ~bheckel/bin/t.sh >> ~bheckel/cron.log 2>&1
+###32 15 * * * $SAS_COMMAND -sysin /Drugs/Cron/Monthly/MonthlyOBCReport/OBCMonthlyReport_v1.4_test.sas -log /Drugs/Cron/Monthly/MonthlyOBCReport/OBCMonthlyReport_v1.4_test.log -print /Drugs/Cron/Monthly/MonthlyOBCReport/OBCMonthlyReport_v1.4_test.lst
+###46 15 * * * /sasdata/Cron/Monthly/MonthlyOBCReport/run_jobs_email_status_monthlyOBC_test.sh
+###00 07 28-31 * * [[ $(date -d +1day +\%d) -eq 01 ]] && echo 'james script will be ok at 500 today' | mailx bheckel@gmail.com
+###28 10 * * * [[ $(date -d +1day +\%d) -eq 02 ]] && echo 'ok' | mailx bob.heckel@taeb.com
+###44 15 * * 3 mail -s '[cron] Monitor /Drugs/Cron/Weekly/ArchiveOldFiles/archive_Drugs.pl' 'bob.heckel@taeb.com' </Drugs/Cron/Weekly/ArchiveOldFiles/logs/archive_tmmeligibility_imports_${TODAY}.log
+###02 11 * * * /Drugs/Personnel/bob/TMM/Affiliates/run_affiliate.sh Osborn_Aff 23JUN2016  >|/Drugs/Personnel/bob/t2.err 2>&1
+###59 14 * * 1-5 ~bheckel/bin/imm_check.sh | mail -s '[cron] Monitor Freds/Ahold immunization' $NOTIFY 2>&1
+###15 08 * * 0,6 ~bheckel/bin/hp_check.sh | mail -s '[cron] Monitor healthplans' 'bheckel@gmail.com' 2>&1
+###00 04 * * * /sasdata/Cron/Daily/ImmTask/run_immunization_tasks.sh >|~bheckel/cron.imm.log 2>&1
+###45 15 * * 5 ~bheckel/bin/backup.sh | mail -s '[cron] backup.sh completed' bob.heckel@taeb.com
+###49 15 * * 3 [ `expr \`date +\%V\` \% 2` -eq 0 ] && ~/crontest.sh
+29 13 * * * $SAS_COMMAND -sysin ~/t.sas -log ~/t.log -altlog ~/t.`date +\%a`.log
+
+
+# ~~~~Hourly~~~~
+45 * * * * /sasdata/Cron/Hourly/check_saswork.sh
+###15 08,13 * * * $SAS_COMMAND -sysin /sasdata/Cron/Hourly/Walgreens_Deletions/walgreens_priority_deletion.sas -log /sasdata/Cron/Hourly/Walgreens_Deletions/walgreens_priority_deletion.log -print /sasdata/Cron/Hourly/Walgreens_Deletions/walgreens_priority_deletion.lst
+
+
+# ~~~~Daily~~~~
+00 02 * * * $SAS_COMMAND -sysin /sasdata/Cron/Daily/WalgreensDigital/walgreensdigitaleligibledaily.sas -log /sasdata/Cron/Daily/WalgreensDigital/walgreensdigitaleligibledaily.log -print /sasdata/Cron/Daily/WalgreensDigital/walgreensdigitaleligibledaily.lst
+05 02 * * * $SAS_COMMAND -sysin /sasdata/Cron/Daily/update_shortname_ds/update_shortname_ds.sas -log /sasdata/Cron/Daily/update_shortname_ds/update_shortname_ds.log -print /sasdata/Cron/Daily/update_shortname_ds/update_shortname_ds.lst
+00 04 * * * /sasdata/Cron/Daily/ImmTask/run_immunization_tasks.sh
+40 05 * * * /sasdata/Cron/Daily/HPTask/run_healthplans.sh >|~bheckel/cron.hp.log 2>&1
+30 07 * * * $SAS_COMMAND -sysin /sasdata/Cron/Daily/WalgreensDigital/walgreensdigitaleligibledaily2.sas -log /sasdata/Cron/Daily/WalgreensDigital/walgreensdigitaleligibledaily2.log -print /sasdata/Cron/Daily/WalgreensDigital/walgreensdigitaleligibledaily2.lst
+35 07 * * * /sasdata/Cron/Daily/tmm_enroll_ratio/run_tmm_enroll_ratio.sh >|~bheckel/cron.enroll.log 2>&1
+###15 14 * * * $SAS_COMMAND -sysin /Drugs/Cron/Daily/GEImm/geimm.sas -log /Drugs/Cron/Daily/GEImm/geimm.log -print /Drugs/Cron/Daily/GEImm/geimm.lst #>|~bheckel/cron.ge.log 2>&1
+# disabled 21-Nov-16
+###30 14 * * * $SAS_COMMAND -sysin /Drugs/Cron/Daily/FredsImm/fredsimm.sas -log /Drugs/Cron/Daily/FredsImm/fredsimm.log -print /Drugs/Cron/Daily/FredsImm/fredsimm.lst #>|~bheckel/cron.freds.log 2>&1
+# disabled 21-Nov-16
+###45 14 * * * $SAS_COMMAND -sysin /Drugs/Cron/Daily/AholdImm/aholdimm.sas -log /Drugs/Cron/Daily/AholdImm/aholdimm.log -print /Drugs/Cron/Daily/AholdImm/aholdimm.lst #>|~bheckel/cron.ahold.log 2>&1
+# Publix UHC only
+00 21 * * * /sasdata/Cron/Daily/HPTask/run_healthplans.sh >|~bheckel/cron.hp.log 2>&1
+# ~~~~Daily-monitor~~~~
+30 02 * * * $SAS_COMMAND -sysin /sasdata/Personnel/bob/Dashboard/check_database.sas -log /sasdata/Personnel/bob/Dashboard/check_database.log -print /sasdata/Personnel/bob/Dashboard/check_database.lst
+30 03 * * * ~bheckel/bin/shortname_check.sh
+45 07 * * * ~bheckel/bin/wagdigital_check.sh
+18 08 * * * ~bheckel/bin/hp_check.sh
+19 08 * * * ~bheckel/bin/wag_check.sh
+###19 08 * * * ~/bin/wag_check.sh|mail -s 'cce check' fei.yu@taeb.com
+20 08 * * * ~bheckel/bin/ck_enroll.sh
+21 08 * * * ls -lt /Drugs/Macros|grep -v pilot|head -n25
+22 08 * * * ~bheckel/bin/imm_check.sh
+
+
+# ~~~~Weekly~~~~
+# Must finish prior to start of /sasdata/Cron/Daily/HPTask/run_healthplans.sh
+01 00 * * 0 /sasdata/Cron/Weekly/TMMCensusHPLoop/tmm_census_loop.sh >|~bheckel/cron.log 2>&1
+00 13 * * 3 /sasdata/Cron/Weekly/ArchiveOldFiles/archive.sh
+# Quick code backup of major T: directories
+45 15 * * 5 ~bheckel/bin/backup.sh
+# ~~~~Weekly-monitor~~~~
+30 23 * * 0 ~bheckel/bin/loop_check.sh
+30 22 * * 3 ~bheckel/bin/arch_check.sh
+
+
+# ~~~~Monthly~~~~
+###30 08 25 * * /sasdata/Cron/Monthly/TMM_mature_clients/tmm_build_multiple_clients.sh
+30 17 15 * * /Drugs/Cron/Monthly/MonthlyAdherenceDashboard/run_dashboard.sh >|~bheckel/cron.dash 2>&1
+
+
+# ~~~~One-time~~~~
+# min hr day mon wkday(0=Sun,6=Sat)
+###5 7 3 2 * $NICE $SAS_COMMAND -sysin /Drugs/RFREval/Freds/2017/RFR_Build_Freds.sas -log /Drugs/RFREval/Freds/2017/RFR_Build_Freds.log -print /Drugs/RFREval/Freds/2017/RFR_Build_Freds.lst
+5 0 4 4 * $NICE $SAS_COMMAND -sysin /Drugs/RFREval/Ahold/2017/RFR_Build_Ahold.sas -log /Drugs/RFREval/Ahold/2017/RFR_Build_Ahold.log -print /Drugs/RFREval/Ahold/2017/RFR_Build_Ahold.lst

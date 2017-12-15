@@ -1,0 +1,27 @@
+"
+" Use Cygwin vim and Windows gvim on work boxes whether online or not.
+"
+" This original should be saved as ~/code/misccode/_vimrc_profile
+" and copied, NOT symlinked, as ~/.vimrc
+"
+" Modified: Thu 06 Dec 2012 13:51:16 (Bob Heckel)
+
+if has('win32unix')
+  " Cygwin - online
+  if filereadable('/cygdrive/u/code/misccode/_vimrc')
+    source /cygdrive/u/code/misccode/_vimrc
+  else " Cygwin - offline
+    " An occasional copy of the real vimrc
+    " $ cp -i /cygdrive/u/code/misccode/_vimrc _vimrc.local
+    source $HOME/.vimrc.local
+  endif
+elseif has('win32')
+  " Gvim - online
+  if filereadable('u:\code\misccode\_vimrc')
+    source u:/code/misccode/_vimrc
+  else " Gvim - offline
+    source c:/cygwin/home/rsh86800/.vimrc.local
+  endif
+else
+  echo '.vimrc: unknown OS'
+endif

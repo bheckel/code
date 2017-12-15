@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!-- Created: Sun Jan 25 21:24:49 2004 (Bob Heckel - emulate vi) should be
+     stored in something like
+    /c/program\ files/Common\ Files/mozilla.org/GRE/1.6_2004011308/res/builtin 
+    or
+    res/builtin off the main firefox\
+
+    http://mozilla.org/unix/customizing.html#keys
+ -->
+<bindings id="htmlBindings"
+   xmlns="http://www.mozilla.org/xbl"
+   xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <binding id="browserUser">
+    <handlers>
+      <handler event="keypress" key="h" command="cmd_scrollLeft"/>
+      <handler event="keypress" key="j" command="cmd_scrollLineDown"/>
+      <handler event="keypress" key="k" command="cmd_scrollLineUp"/>
+      <handler event="keypress" key="l" command="cmd_scrollRight"/>
+      <handler event="keypress" key="g" command="cmd_scrollTop"/>
+      <handler event="keypress" modifiers="shift" key="g" command="cmd_scrollBottom"/>
+      <handler event="keypress" key="b" command="cmd_scrollPageUp"/>
+      <handler event="keypress" key="y" command="cmd_copy"/>
+    </handlers>
+  </binding>
+</bindings> 

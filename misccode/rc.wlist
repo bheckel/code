@@ -1,0 +1,20 @@
+# Allow certain email addresses.
+#
+# Adapted: Fri Apr  2 14:50:35 2004 (Bob Heckel --
+#                                    http://handsonhowto.com/pmail101.html)
+#
+# You do not want any blank lines in the file whitelist -- if you do have one
+# or more, fgrep will ALWAYS match and so accept (or reject!) ALL incoming
+# mail. There is no way to enter a 'comment' in this file. It must contain
+# ONLY addresses or domain names which you want to match.
+
+FGREP=/usr/bin/fgrep
+FROM=`formail -x From:`
+
+:0E
+* ? (echo "$FROM" | $FGREP -i -f $HOME/.procmail/whitelist)
+{
+  LOG="Whitelist OK "
+  :0
+  ${DEFAULT}
+}

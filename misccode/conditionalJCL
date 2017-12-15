@@ -1,0 +1,38 @@
+
+RC<=4 lets warnings through, but not syntax errors.  RC<=12 would let most
+anything through except for major Mainframe malfunctions.  RC<=0 wouldn't let
+anything through except complete success without warnings.
+
+//KJK4MOR1 JOB (BF00,P09),KJK4,CLASS=J,TIME=20,                                 
+//  MSGCLASS=K,NOTIFY=KJK4,REGION=0M                                            
+//PRINT OUTPUT FORMDEF=A10111,PAGEDEF=V06683,CHARS=GT15,COPIES=1                
+/*ROUTE  PRINT HOLD                                                             
+//STEP1 EXEC SAS90,WTR1=A,WTR=A,                                                
+// OPTIONS='MSGCASE,MEMSIZE=0,SYSPARM=N'                                        
+//SASLIST DD SYSOUT=A,OUTPUT=*.PRINT,                                           
+//           RECFM=VBA,LRECL=260,BLKSIZE=264                                    
+//SASLOG DD DISP=OLD,DSN=DWJ2.ID2004.MOR.LOG                                    
+//WORK  DD SPACE=(CYL,(150,150),,,ROUND)                                        
+//IN    DD DISP=SHR,                                                            
+//         DSN=BF19.IDX0401.MORMERZ                                             
+//SYSIN  DD DSN=DWJ2.VSCP.PGMLIB(JSMAAAA),DISP=SHR                              
+// IF RC <= 4 THEN                                                              
+//STEP2 EXEC PGM=IEBGENER                                                       
+//SYSUT1 DD DATA,DLM=$$                                                         
+//HDG7MOR2 JOB (BF00,P09),HDG7,CLASS=V,TIME=20,                                 
+//  MSGCLASS=Z,REGION=0M                                                        
+//PRINT OUTPUT FORMDEF=A10111,PAGEDEF=V06683,CHARS=GT15,COPIES=1                
+/*ROUTE  PRINT HOLD                                                             
+//STEP3 EXEC SAS90,WTR1=A,WTR=A,OPTIONS='MSGCASE,MEMSIZE=0'                     
+//SASLIST DD SYSOUT=A,OUTPUT=*.PRINT,                                           
+//           RECFM=VBA,LRECL=260,BLKSIZE=264                                    
+//SASLOG DD DISP=SHR,DSN=DWJ2.ID2004.MVDS.MOR.LOG                               
+//WORK  DD SPACE=(CYL,(150,150),,,ROUND)                                        
+//IN    DD DISP=SHR,                                                            
+//         DSN=BF19.IDX0401.MORMERZ                                             
+//SYSIN  DD DSN=DWJ2.VSCP.PGMLIB(JSMAAAA1),DISP=SHR                             
+$$                                                                              
+//SYSUT2 DD SYSOUT=(*,INTRDR)                                                   
+//SYSPRINT DD DUMMY                                                             
+//SYSIN DD DUMMY                                                                
+// ENDIF                                                                        

@@ -1,0 +1,402 @@
+================================================================================
+
+%[-][minimum-field-width][.][precision]format-specifier
+     ^^^^^^^^^^^^^^^^^^^
+        no truncation
+
+================================================================================
+
+From Steve Summit tutorial:
+
+c Print a single character. The corresponding argument is an int (or, by the
+  default argument promotions, a char or short int). 
+
+d Print a decimal integer. The corresponding argument is an int, or a long int
+  if the l modifier appears, or a short int if the h modifier appears. If the
+  number is negative, it is preceded by a -. If the space flag appears and the
+  the number is positive, it is preceded by a space. If the + flag appears and
+  the the number is positive, it is preceded by a +. 
+
+e Print a floating-point number in scientific notation: [-]m.nnnnnne[-]nn .
+  The corresponding argument is either a float or a double or, if the L modifier
+  appears, a long double. The precision gives the number of places after the
+  decimal point; the default is 6. If the # flag appears, a decimal point will
+  be printed even if the precision is 0. 
+
+E Like e, but use a capital E to set off the exponent. 
+
+f Print a floating-point decimal number (mmm.nnnnnn). The corresponding
+  argument is either a float or a double or, if the L modifier appears, a long
+  double. The precision gives the number of places after the decimal point; the
+  default is 6. If the # flag appears, a decimal point will be printed even if
+  the precision is 0. 
+
+g Use either e or f, whichever works best given the range and precision of the
+  number. (Roughly speaking, ``works best'' means to display the most precision
+  in the least space.) If the # flag appears, don't strip trailing 0's. 
+
+G Like g, but use E instead of e. 
+
+i Just like d. 
+
+n The corresponding argument is an int *. Rather than printing anything, %n
+  stores the number of characters printed so far (by this call to printf) into
+  the integer pointed to by the corresponding argument. For example, if the
+  variable np is an int, printf("%s %n%s!", "Hello", &n, "world") stores 6 into
+  np. 
+
+o Print an unsigned integer, in octal (base 8). The corresponding argument is
+  an unsigned int, or an unsigned long int if the l modifier appears, or an
+  unsigned short int if the h modifier appears. If the # flag appears, and the
+  number is nonzero, it will be preceded by an extra 0, to make it look like a C
+  octal constant. 
+
+p Print a pointer value (the pointer, not what it points to), in some
+  implementation-defined format. The corresponding argument is a void *.
+  Usually, the value printed is the numeric value of the pointer--that is, the
+  memory address pointed to--in hexadecimal. For the segmented architecture of
+  the IBM PC, pointers are often printed using a segment:offset notation. 
+
+s Print a string. The corresponding argument is a char * (which may result
+  from an array of char). If the optional precision is present, at most that
+  many characters of the string will be printed (if the \0 isn't encountered
+  first). 
+
+u Print an unsigned decimal integer. The corresponding argument is an unsigned
+  int, or an unsigned long int if the l modifier appears, or an unsigned short
+  int if the h modifier appears. 
+
+x Print an unsigned integer, in hexadecimal (base 16). The corresponding
+  argument is an unsigned int, or an unsigned long int if the l modifier
+  appears, or an unsigned short int if the h modifier appears. If the # flag
+  appears, and the number is nonzero, it will be preceded by the characters 0x,
+  to make it look like a C hexadecimal constant. 
+
+X Like x, except that the capital letters A, B, C, D, E, and F are used for
+  the hexadecimal digits 10-15. (Also, the # flag leads to a leading 0X.) 
+
+% Print a single % sign. There is no corresponding argument. 
+
+================================================================================
+
+You use printf for formatted printing. printf prints everything on one line if
+you don't put newline charater into format string, constants to be printed or
+into variables to be printed. Format string contains text and conversion
+specifications. Conversion specifications consist of percent character "%",
+zero or more flags, field width, precision, conversion specifier and
+conversion qualifier. Percent character and conversion specifier must be
+there, other are optional. Conversion specifications correspond one by one to
+the variables or constants to be printed. Most common conversion specifiers
+are: 
+     %d    signed integer
+     %e    signed fractional with exponent
+     %f    signed fractional without exponent
+     %s    sequence of characters in corresponding variable or constant
+     %%    percent character
+
+Escape sequences are used to format printf output. Most common escape
+sequences are: 
+     \f    form feed, new page
+     \n    new line  (\012 or \015)
+     \r    carriage return, overprint
+     \t    horizontal tab
+     \v    vertical tab
+     \'    single quote
+     \"    double quote
+     \\    backslash
+     \0    null (character value 000)
+     \a    alert, bell
+     \b    backspace
+     \040  space
+     \ddd  octal notation
+     \xddd hexadecimal notation
+
+Some printf examples: 
+     printf("%d %e %f", A, B, C)
+     printf("%s %d %% %s", "It is", proof, " alcohol") 
+     printf("First line, number %d \n and second line, number %d", n1, n2)
+
+# E.g.
+printf("\$ %.2f is the payment.", $retme);
+# returns $ 750.01 is the payment.
+
+=============================================================================
+
+printf From New C Primer Plus:
+
+%[-][minimum-field-width][.][precision]format-specifier
+
+%c   Single character
+%d   Signed decimal integer
+%e   Floating-point, e-notation
+%E   Floating-point, E-notation
+%f   Floating-point, decimal notation
+%g   Use %f or %e, whichever is shorter
+%G   Use %f or %E, whichever is shorter
+%i   Signed decimal integer
+%o   Unsigned octal integer
+%p   A pointer
+%s   Character string
+%u   Unsigned decimal integer
+%x   Unsigned hexadecimal integer, using hex digits 0f
+%X   Unsigned hexadecimal integer, using hex digits 0F
+%%   Print a percent sign
+
+
+=============================================================================
+From Gawk Info:
+
+Using printf Statements for Fancier Printing
+
+If you want more precise control over the output format than print gives you,
+use printf. With printf you can specify the width to use for each item, and
+you can specify various formatting choices for numbers (such as what radix to
+use, whether to print an exponent, whether to print a sign, and how many
+digits to print after the decimal point). You do this by supplying a string,
+called the format string, which controls how and where to print the other
+arguments. 
+
+Introduction to the printf Statement
+The printf statement looks like this: 
+
+printf format, item1, item2, ...
+
+The entire list of arguments may optionally be enclosed in parentheses. The
+parentheses are necessary if any of the item expressions use the `>'
+relational operator; otherwise it could be confused with a redirection (see
+section Redirecting Output of print and printf). 
+
+The difference between printf and print is the format argument. This is an
+expression whose value is taken as a string; it specifies how to output each
+of the other arguments. It is called the format string. 
+
+The format string is very similar to that in the ANSI C library function
+printf. Most of format is text to be output verbatim. Scattered among this
+text are format specifiers, one per item. Each format specifier says to output
+the next item in the argument list at that place in the format. 
+
+The printf statement does not automatically append a newline to its output. It
+outputs only what the format string specifies. So if you want a newline, you
+must include one in the format string. The output separator variables OFS and
+ORS have no effect on printf statements. For example: 
+
+BEGIN {
+   ORS = "\nOUCH!\n"; OFS = "!"
+   msg = "Don't Panic!"; printf "%s\n", msg
+}
+This program still prints the familiar `Don't Panic!' message. 
+
+Format-Control Letters
+
+A format specifier starts with the character `%' and ends with a
+format-control letter; it tells the printf statement how to output one item.
+(If you actually want to output a `%', write `%%'.) The format-control letter
+specifies what kind of value to print. The rest of the format specifier is
+made up of optional modifiers which are parameters to use, such as the field
+width. 
+
+Here is a list of the format-control letters: 
+
+c 
+This prints a number as an ASCII character. Thus, `printf "%c", 65' outputs
+the letter `A'. The output for a string value is the first character of the
+string. 
+d 
+i 
+These are equivalent. They both print a decimal integer. The `%i'
+specification is for compatibility with ANSI C. 
+e 
+E 
+This prints a number in scientific (exponential) notation. For example, 
+printf "%4.3e\n", 1950
+prints `1.950e+03', with a total of four significant figures of which three
+follow the decimal point. The `4.3' are modifiers, discussed below. `%E' uses
+`E' instead of `e' in the output. 
+f 
+This prints a number in floating point notation. For example, 
+printf "%4.3f", 1950
+prints `1950.000', with a total of four significant figures of which three
+follow the decimal point. The `4.3' are modifiers, discussed below. 
+g 
+G 
+This prints a number in either scientific notation or floating point notation,
+whichever uses fewer characters. If the result is printed in scientific
+notation, `%G' uses `E' instead of `e'. 
+o 
+This prints an unsigned octal integer. (In octal, or base-eight notation, the
+digits run from `0' to `7'; the decimal number eight is represented as `10' in
+octal.) 
+s 
+This prints a string. 
+x 
+X 
+This prints an unsigned hexadecimal integer. (In hexadecimal, or base-16
+notation, the digits are `0' through `9' and `a' through `f'. The hexadecimal
+digit `f' represents the decimal number 15.) `%X' uses the letters `A' through
+`F' instead of `a' through `f'. 
+% 
+This isn't really a format-control letter, but it does have a meaning when
+used after a `%': the sequence `%%' outputs one `%'. It does not consume an
+argument, and it ignores any modifiers.  When using the integer format-control
+letters for values that are outside the range of a C long integer, gawk will
+switch to the `%g' format specifier. Other versions of awk may print invalid
+values, or do something else entirely (d.c.). 
+
+Modifiers for printf Formats
+A format specification can also include modifiers that can control how much of
+the item's value is printed and how much space it gets. The modifiers come
+between the `%' and the format-control letter. In the examples below, we use
+the bullet symbol "*" to represent spaces in the output. Here are the possible
+modifiers, in the order in which they may appear: 
+
+- 
+The minus sign, used before the width modifier (see below), says to
+left-justify the argument within its specified width. Normally the argument is
+printed right-justified in the specified width. Thus, 
+printf "%-4s", "foo"
+prints `foo*'. 
+
+space 
+For numeric conversions, prefix positive values with a space, and negative
+values with a minus sign. 
+
++ 
+The plus sign, used before the width modifier (see below), says to always
+supply a sign for numeric conversions, even if the data to be formatted is
+positive. The `+' overrides the space modifier. 
+
+# 
+Use an "alternate form" for certain control letters. For `%o', supply a
+leading zero. For `%x', and `%X', supply a leading `0x' or `0X' for a non-zero
+result. For `%e', `%E', and `%f', the result will always contain a decimal
+point. For `%g', and `%G', trailing zeros are not removed from the result. 
+
+0 
+A leading `0' (zero) acts as a flag, that indicates output should be padded
+with zeros instead of spaces. This applies even to non-numeric output formats
+(d.c.). This flag only has an effect when the field width is wider than the
+value to be printed. 
+
+width 
+This is a number specifying the desired minimum width of a field. Inserting
+any number between the `%' sign and the format control character forces the
+field to be expanded to this width. The default way to do this is to pad with
+spaces on the left. For example, 
+printf "%4s", "foo"
+prints `*foo'. The value of width is a minimum width, not a maximum. If the
+item value requires more than width characters, it can be as wide as
+necessary. Thus, 
+printf "%4s", "foobar"
+prints `foobar'. Preceding the width with a minus sign causes the output to be
+padded with spaces on the right, instead of on the left. 
+
+.prec 
+This is a number that specifies the precision to use when printing. For the
+`e', `E', and `f' formats, this specifies the number of digits you want
+printed to the right of the decimal point. For the `g', and `G' formats, it
+specifies the maximum number of significant digits. For the `d', `o', `i',
+`u', `x', and `X' formats, it specifies the minimum number of digits to print.
+For a string, it specifies the maximum number of characters from the string
+that should be printed. Thus, 
+printf "%.4s", "foobar"
+prints `foob'. 
+The C library printf's dynamic width and prec capability (for example,
+"%*.*s") is supported. Instead of supplying explicit width and/or prec values
+in the format string, you pass them in the argument list. For example: 
+
+w = 5
+p = 3
+s = "abcdefg"
+printf "%*.*s\n", w, p, s
+is exactly equivalent to 
+
+s = "abcdefg"
+printf "%5.3s\n", s
+Both programs output `**abc'. 
+
+Earlier versions of awk did not support this capability. If you must use such
+a version, you may simulate this feature by using concatenation to build up
+the format string, like so: 
+
+w = 5
+p = 3
+s = "abcdefg"
+printf "%" w "." p "s\n", s
+This is not particularly easy to read, but it does work. 
+
+C programmers may be used to supplying additional `l' and `h' flags in printf
+format strings. These are not valid in awk. Most awk implementations silently
+ignore these flags. If `--lint' is provided on the command line (see section
+Command Line Options), gawk will warn about their use. If `--posix' is
+supplied, their use is a fatal error. 
+
+Examples Using printf
+Here is how to use printf to make an aligned table: 
+
+awk '{ printf "%-10s %s\n", $1, $2 }' BBS-list
+prints the names of bulletin boards ($1) of the file `BBS-list' as a string of
+10 characters, left justified. It also prints the phone numbers ($2) afterward
+on the line. This produces an aligned two-column table of names and phone
+numbers: 
+
+$ awk '{ printf "%-10s %s\n", $1, $2 }' BBS-list
+-| aardvark   555-5553
+-| alpo-net   555-3412
+-| barfly     555-7685
+-| bites      555-1675
+-| camelot    555-0542
+-| core       555-2912
+-| fooey      555-1234
+-| foot       555-6699
+-| macfoo     555-6480
+-| sdace      555-3430
+-| sabafoo    555-2127
+Did you notice that we did not specify that the phone numbers be printed as
+numbers? They had to be printed as strings because the numbers are separated
+by a dash. If we had tried to print the phone numbers as numbers, all we would
+have gotten would have been the first three digits, `555'. This would have
+been pretty confusing. 
+
+We did not specify a width for the phone numbers because they are the last
+things on their lines. We don't need to put spaces after them. 
+
+We could make our table look even nicer by adding headings to the tops of the
+columns. To do this, we use the BEGIN pattern (see section The BEGIN and END
+Special Patterns) to force the header to be printed only once, at the
+beginning of the awk program: 
+
+awk 'BEGIN { print "Name      Number"
+             print "----      ------" }
+     { printf "%-10s %s\n", $1, $2 }' BBS-list
+Did you notice that we mixed print and printf statements in the above example?
+We could have used just printf statements to get the same results: 
+
+awk 'BEGIN { printf "%-10s %s\n", "Name", "Number"
+             printf "%-10s %s\n", "----", "------" }
+     { printf "%-10s %s\n", $1, $2 }' BBS-list
+By printing each column heading with the same format specification used for
+the elements of the column, we have made sure that the headings are aligned
+just like the columns. 
+
+The fact that the same format specification is used three times can be
+emphasized by storing it in a variable, like this: 
+
+awk 'BEGIN { format = "%-10s %s\n"
+             printf format, "Name", "Number"
+             printf format, "----", "------" }
+     { printf format, $1, $2 }' BBS-list
+See if you can use the printf statement to line up the headings and table data
+for our `inventory-shipped' example covered earlier in the section on the
+print statement (see section The print Statement). 
+
+c Print a single character. The corresponding argument is an int (or, by the default argument promotions, a
+
+c Print a single character. The corresponding argument is an int (or, by the default argument promotions
+
+
+==========================================================================
+Examples:
+printf("%.*f", 2, 76.54321) prints 76.54
+printf("%.3s", "Hello, world!") prints Hel
+printf("%.5d", 12) prints 00012
+==========================================================================

@@ -1,0 +1,19 @@
+<!-- Windows Scripting Host example 2008-02-11 -->
+<!-- $ cscript.exe //LOGO hello.wsf foo bar -->
+<package>
+<job id="A">
+<script language="VBScript">
+  WScript.Echo "This is Job A."
+  '                  collection
+  For Each arg In WScript.Arguments
+    WScript.Echo arg
+  Next
+</script>
+</job>
+
+<job id="B">
+<script language="VBScript">
+  WScript.Echo "This is Job B."
+</script>
+</job>
+</package>

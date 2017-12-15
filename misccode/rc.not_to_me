@@ -1,0 +1,13 @@
+# Detecting To:, Cc:, etc. not addressed to me.  TODO why doesn't the second
+# line show in ~/.procmail/log ?
+# 
+# Email with the word 'worldnet' is probably spam.
+
+:0:
+* ! ^TO_.*bheckel@att.net
+* ! ^TO_.*bheckel@.*lonestar.org
+* ! ^TO_.*bheckel@freeshell.org
+* ! ^TO_.*bheckel@spamgourmet.com
+* ! ^TO_.*bheckel@recursor.net
+* ! ^TO_.*the-heckels
+PotentialSpam

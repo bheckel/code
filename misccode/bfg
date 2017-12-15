@@ -1,0 +1,47 @@
+#!/bin/sh
+##############################################################################
+#     Name: bfg
+#
+#  Summary: Front-end to bftp to simplify transfers from mainframe to PC.
+#
+#           Can use e.g.  :!mv % FCAST.bob.html  to elim the tempfile in Vim
+#
+#           TODO go to ~/tmp/testing before d/l
+#           TODO combine bfg and bfp into one pgm depending on how called
+#           TODO centralize password storage a la .netrc
+#
+#           Assumes a symlink to bfgd (for debug)
+#
+#  Created: Tue 03 Feb 2004 12:54:28 (Bob Heckel)
+# Modified: Thu 12 May 2005 13:37:41 (Bob Heckel)
+##############################################################################
+  
+PW=`getpw`;
+
+Usage() {
+  echo "Usage: `basename $0` REMOTENAME
+  Calls ~/bin/bftp to transfer from MF to PC using preset configs
+
+  Note: parens require that the file be quoted
+
+  E.g. `basename $0` TBE2.FINAL.BF19.DATASET
+       `basename $0` 'bqh0.pgm.lib(junk)'
+       `basename $0` /u/bqh0/bin/badyrs
+
+  (can call as bfgd for debugging)"
+  exit 1
+}
+
+N_EXPECTED_ARGS=1
+
+if [ "$#" -lt $N_EXPECTED_ARGS ]; then 
+  Usage
+fi
+
+# TODO allow override junk prefix
+t=`date +%s`
+if [ $0 = "$HOME/bin/bfg" ];then
+  bftp -g "'$1'" "junk.$t.sas" bqh0 mainframe $PW 1
+else
+  bftp -gd "'$1'" "junk.$t.sas" bqh0 mainframe $PW 1
+fi

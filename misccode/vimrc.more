@@ -1,0 +1,50 @@
+" Emulate more(1)/less(1) by using Vim
+"
+" $ alias m="vim -u $HOME/code/misccode/.vimrc.more"
+"
+" Adapted: Mon Nov 15 16:18:30 2004 (Bob Heckel -- VimTip 121)
+" Modified: Thu 06 Jan 2005 15:31:28 (Bob Heckel)
+"
+
+" Necessary for mappings to work.
+set nocompatible
+
+set laststatus=0
+set cmdheight=1
+set noswapfile
+set readonly
+set timeoutlen=0
+" Don't remember file names and positions.
+set viminfo=
+
+" Ctr-v Ctr-[ may be required.
+if has("terminfo")
+  set t_Co=16
+  set t_Sb=[4%p1%dm
+  set t_Sf=[3%p1%dm
+  " The next two lines force vim to clear itself when exiting.
+  set t_ti=7[r[?47h
+  set t_te=[?47l8
+else
+  set t_Co=8
+  set t_Sb=[4%dm
+  set t_Sf=[3%dm
+endif
+syntax on
+
+" Key bindings.
+nmap b <C-B>
+nmap e :!vim %<CR>
+nmap g 1G
+nmap j <C-E>
+nmap k <C-Y>
+nmap q :q<CR>
+nmap <F12> :q<CR>
+" Switch to normal editing vi
+nmap v :!vim %<CR>
+
+" Map the spacebar.
+" To type the following line, type *two* C-V's followed by two spaces.
+"""nmap    <C-F><C-G>
+" Use space to page down.
+noremap <Space> <C-F><C-G>

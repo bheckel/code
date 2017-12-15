@@ -1,0 +1,150 @@
+Binary
+
+ 0 =     0
+ 1 =     1
+ 2 =    10
+ 3 =    11
+ 4 =   100
+ 5 =   101
+ 6 =   110
+ 7 =   111
+ 8 =  1000
+ 9 =  1001
+10 =  1010  A
+11 =  1011  B
+12 =  1100  C
+13 =  1101  D
+14 =  1110  E
+15 =  1111  F
+16 = 10000
+17 = 10001
+18 = 10010
+19 = 10011
+20 = 10100
+
+When you look at this sequence, 0 and 1 are the same for decimal and binary
+number systems. At the number 2 you see carrying first take place in the
+binary system. If a bit is 1, and you add 1 to it, the bit becomes zero and
+the next bit becomes 1. In the transition from 15 to 16 this effect rolls over
+through 4 bits, turning 1111 into 10000. 
+
+=====
+
+Name  Abbrev  Size  
+----  ------  ---- 
+Kilo    K     2^10 = 1,024         
+Mega    M     2^20 = 1,048,576
+Giga    G     2^30 = 1,073,741,824
+Tera    T     2^40 = 1,099,511,627,776
+Peta    P     2^50 = 1,125,899,906,842,624
+Exa     E     2^60 = 1,152,921,504,606,846,976
+Zetta   Z     2^70 = 1,180,591,620,717,411,303,424
+Yotta   Y     2^80 = 1,208,925,819,614,629,174,706,176
+
+
+=====
+
+Hexadecimal 0xAF is binary 10101111
+b/c A = 1010 and F = 1111
+
+=====
+
+E.g. integer data type range: decimal -32768 to 32767 b/c it's 2 bytes (16
+bits). One of these bits is used for the sign so you've got 2^15 remaining.
+But use 2^15-1 b/c you need a 0. Since don't need a negative 0, the lower
+range is -32768, not -32767.
+                  ______________________________________________________
+                  |  max   |               range                       |
+                  |________|___________________________________________|
+  signed 1 byte  = 2^(7)-1  =           -128 to           127
+UNsigned 1 byte  = 2^(8)-1  =              0 to           255  0xFF
+  signed 2 bytes = 2^(15)-1 =        -32,768 to        32,767
+UNsigned 2 bytes = 2^(16)-1 =              0 to        65,535  0xFFFF
+  signed 4 bytes = 2^(31)-1 = -2,147,483,648 to 2,147,483,647
+UNsigned 4 bytes = 2^(32)-1 =              0 to 4,294,967,295  0xFFFFFFFF
+
+
+=======
+
+Bit fiddling:
+
+And
+---
+X & 0 = 0  <---any bit AND'ed with a Zero yields a Zero
+X & 1 = X  <---any bit AND'ed with a One yields itself (i.e. copies the value)
+
+Or
+--
+X | 0 = X any bit OR'ed with a Zero yields itself (i.e. copies the value)
+X | 1 = 1 any bit OR'ed with a One yields a One
+
+Xor
+---
+X ^ Y      <-- produces a complement of X and Y (i.e. inverts)
+
+
+
+E.g. 1: 
+Want to put 0s in bit position 3 and 2 (rightmost being 0, int
+implemented as 4bytes)
+Need to use 0xfffffff3 (b11111111 11111111 11111111 11110011)
+X &= 0xfffffff3
+
+  10101010 10101010 10101010 10101010  <---number on which to apply mask
+& 11111111 11111111 11111111 11110011  <---the mask
+  -----------------------------------
+  10101010 10101010 10101010 10100010  <---you've "turned off" these bits
+                                 ^^        by using '0's
+
+E.g. 2:  
+X = 29
+X &= 0xfffffff3  (i.e. X  =  X & 0xfffffff3)
+X is 17
+Here's why:
+  00000000 00000000 00000000 00011101  <---decimal 29
+& 11111111 11111111 11111111 11110011  <---the mask
+  -----------------------------------
+  00000000 00000000 00000000 00010001
+                                 ^^
+
+E.g. 3:  
+X = 85
+X |= 0xf0  (i.e. X  =  X | 0xf0)
+X is 245
+Here's why:
+  01010101  <---decimal 85
+| 11110000  <---the mask
+  --------
+  11110101  <---you've "turned on" these bits
+  ^ ^           by using '1's
+
+
+
+=======
+TODO is this right?
+flags &= ~FOO;   /* Turns FOO off. */
+flags |= FOO;    /* Turns FOO on.  */
+
+=======
+
+Converting from binary e.g. 0100 1100
+1- do hex first  0100 1100
+                 ---- ----
+                  8    C (i.e. 12)  therefore 0x8C
+
+2- do decimal next, using the hex result, (8x16)+12 therefore 76
+
+3- do octal  01 001 100
+            --- --- ---
+             1   1   4  therefore 0114
+
+
+Converting from decimal e.g. 1359
+1- Work from a large power of two downward.  Try 2^11=2048, too high,
+   2^10=1024, ok, take 1359-1024=335. Binary = "1"
+
+2- Try next lower power 2^9=512, too high.  Binary = "10"
+
+3- Try next lower power 2^8=256, ok, take 335-256=79.  Binary = "101"
+
+4- Keep going to 2^0=1

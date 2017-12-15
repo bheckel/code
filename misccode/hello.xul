@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- From http://books.mozdev.org/html/mozilla-chp-2.html -->
+<!-- In Moz, do File:Open to run -->
+<!-- Or from cmd -->
+<!-- "C:\Program Files\mozilla.org\Mozilla\mozilla.exe" -chrome file://c:/cygwin/home/bqh0/code/misccode/hello.xul -->
+
+<!-- Case sensitive tags! -->
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<!-- <box align="center"> -->
+<!-- same since xul is the only namespace in this example -->
+<xul:box align="center">
+  <button label="hello xFly" onclick="alert('Hello World');" />
+<!-- </box> -->
+</xul:box>
+</window>

@@ -1,0 +1,1189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title>Vim Regular Expressions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name = "description" content ="VIM Regular Expressions">
+<meta name = "keywords" content ="VIM, Regular Expressions">
+
+<link rel="stylesheet" type="text/css" href="common.css">
+<link rel="stylesheet" type="text/css" href="regex.css">
+</head>
+
+<body bgcolor="F7F7E6">
+<table width="636" border="0">
+  <tr> 
+    <td colspan="2" height="41"> 
+      <table border="0" class="navigation" cellpadding="2" cellspacing="10">
+        <tr> 
+          <td><a href="index.html">HOME</a></td>
+          <td><a href="photos.html">PHOTO</a></td>
+          <td><a href="vim-main.html">VIM:</a>REGEXP</td>
+          <td><a href="links.html">LINKS</a></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2"><img src="images/vim/regex-heads_05.gif" width="636" height="51" alt="Vim regular expressions 101"> 
+    </td>
+  </tr>
+  <!-- # 
+  <tr> 
+    <td colspan="2">
+      <table border="0"  cellspacing="3" class="buttonbar">
+        <tr> 
+          <td><a href="#intro"><img border="0" src="images/vim/regex-bullets_01.gif" width="16" height="11" alt="*">Introduction</a></td>
+          <td><a href="#regex"><img border="0" src="images/vim/regex-bullets_02.gif" width="16" height="11" alt="*">Regexps</a></td>
+          <td><a href="#examples"><img border="0" src="images/vim/regex-bullets_03.gif" width="15" height="11" alt="*">Examples</a></td>
+          <td><a href="#compare"><img border="0" src="images/vim/regex-bullets_04.gif" width="16" height="11" alt="*">Comparison</a></td>
+          <td><a href="#links"><img border="0" src="images/vim/regex-bullets_05.gif" width="16" height="11" alt="*">Links</a></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  --> 
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1>Contents</h1>
+      <p><a href="#intro" class="majorhead"><img border="0" src="images/vim/regex-bullets_01.gif" width="16" height="11" alt="*">Introduction</a><br>
+        <a class="minorhead" href="#credits">Credits</a><br>
+        <a href="#substitute" class="majorhead"><img border="0" src="images/vim/regex-bullets_02.gif" width="16" height="11" alt="*">Substitute 
+        Command</a><br>
+        <a class="minorhead" href="#substitute">2.1 Search &amp; Replace</a><br>
+        <a class="minorhead" href="#address">2.2 Line Ranges &amp; Addressing</a><br>
+        <a href="#pattern" class="majorhead"><img border="0" src="images/vim/regex-bullets_03.gif" width="15" height="11" alt="*">Pattern 
+        Description </a><br>
+        <a class="minorhead" href="#anchors">3.1 Anchors</a><br>
+        <a class="minorhead" href="#metacharacters">3.2 &quot;Escaped&quot; characters 
+        or metacharacters</a><br>
+        <a class="minorhead" href="#Non-Greedy">3.3 Quantifiers, Greedy and Non-Greedy</a><br>
+        <a class="minorhead" href="#ranges">3.4 Character ranges</a><br>
+        <a class="minorhead" href="#backreferences">3.5 Grouping and Backreferences</a><br>
+        <a class="minorhead" href="#alternations">3.6 Alternations</a><br>
+        <a class="minorhead" href="#precedence">3.7 Operator Precedence</a><br>
+        <a href="#global" class="majorhead"><img border="0" src="images/vim/regex-bullets_04.gif" width="16" height="11" alt="*">Global 
+        Command</a><br>
+        <a class="minorhead" href="#global search">4.1 Global search and execution</a><br>
+        <a class="minorhead" href="#global examples">4.2 Examples</a><br>
+        <a href="#examples" class="majorhead"><img border="0" src="images/vim/regex-bullets_05.gif" width="16" height="11" alt="*">Examples</a><br>
+        <a class="minorhead" href="#tips">5.1 Tips &amp; Techniques</a><br>
+        <a class="minorhead" href="#contents">5.2 Creating Outline</a><br>
+        <a class="minorhead" href="#tables">5.3 Working with Tables</a><br>
+        <a href="#compare" class="majorhead"><img border="0" src="images/vim/regex-bullets_06.gif" width="16" height="11" alt="*">Other 
+        Regexp Flavors</a><br>
+        <a href="#links" class="majorhead"><img border="0" src="images/vim/regex-bullets_07.gif" width="15" height="11" alt="*">Links</a><br>
+      </p>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a name="intro"><img src="images/vim/regex-heads_11.gif" width="636" height="35" class="heading" alt="Introduction"></a></td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <p>I started this tutorial for one simple reason - I like regular expressions. 
+        Nothing compares to the satisfaction from a well-crafted regexp which does 
+        exactly what you wanted it to do :-). And yes, I have a life too. I hope it's 
+        passable as a foreword. Feel free to send me your comments, corrections and 
+        suggestions concerning this tutorial.</p>
+      <p>Speaking more seriously, regular expressions (or regexps for short) are tools 
+        used to manipulate text and data. They don't exist as a standalone product 
+        but usually are a part of some program/utility. The most well known example 
+        is UNIX<i> grep, </i>a program to search files for lines that match certain 
+        pattern. The search pattern is described in terms of <i>regular expressions. 
+        </i>You can think of regexps as a specialized pattern language. Regexps are 
+        quite useful and can greatly reduce amount of time required to do some tedious 
+        text editing. </p>
+      <p>Note: Regexp terminology is largely borrowed from Jeffrey Friedl &quot;Mastering 
+        Regular Expressions&quot;.</p>
+      <h1><a name="credits">Credits</a></h1>
+      <p>Many thanks to everybody (especially Benji Fisher &amp; Zdenek Sekera) who 
+        sent their corrections and suggestions.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a name="substitute"><img src="images/vim/regex-heads_17.gif" width="636" height="35" class="heading" alt="Substitute Command"></a></td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="replace">2.1 Search &amp; Replace</a></h1>
+      <p>So, what can you do with regular expressions? The most common task is to 
+        make replacements in a text according to certain rules. For this tutorial 
+        you need to know VIM search and replace command (S&amp;R) <code>:substitute</code>. 
+        Here is an excerpt from VIM help: </p>
+      <table class="vimdoc" cellspacing="3">
+        <tr> 
+          <td colspan="2"><b>:<i>range</i> s[ubstitute]/<i>pattern</i>/<i>string</i>/cgiI</b> 
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="2">For each line in<b> <i>the range</i></b> replace a match 
+            of <i><b>the pattern</b></i> with <i><b>the string</b></i> where:</td>
+        </tr>
+        <tr> 
+          <td width="44"> 
+            <div align="center"><b>c</b></div>
+          </td>
+          <td width="551">Confirm each substitution</td>
+        </tr>
+        <tr> 
+          <td width="44"> 
+            <div align="center"><b>g</b></div>
+          </td>
+          <td width="551">Replace all occurrences in the line (without <b>g </b>- 
+            only first).</td>
+        </tr>
+        <tr> 
+          <td width="44"> 
+            <div align="center"><b>i</b></div>
+          </td>
+          <td width="551" height="19">Ignore case for the pattern.</td>
+        </tr>
+        <tr> 
+          <td width="44"> 
+            <div align="center"><b>I </b></div>
+          </td>
+          <td width="551">Don't ignore case for the pattern.</td>
+        </tr>
+      </table>
+      <p>Part of the command word enclosed in the &quot;[&quot; &amp; &quot;]&quot; 
+        can be omitted. </p>
+      <h1><a name="address">2.2 Range of Operation, Line Addressing and Marks</a></h1>
+      <p>Before I begin with a pattern description let's talk about line addresses 
+        in Vim. Some Vim commands can accept a line range in front of them. By specifying 
+        the line range you restrict the command execution to this particular part 
+        of text only. Line range consists of one or more line specifiers, separated 
+        with a comma or semicolon. You can also mark your current position in the 
+        text typing <code>m<i>l</i></code> , where <i>&quot;l&quot;</i> can be any 
+        letter, and use it later defining the line address.</p>
+      <table width="585" class="vimdoc" cellspacing="3">
+        <tr> 
+          <td> 
+            <div align="center"><b>Specifier</b></div>
+          </td>
+          <td> 
+            <div align="center"><b>Description</b></div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b><i>number</i></b></div>
+          </td>
+          <td> an absolute line number </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>. </b></div>
+          </td>
+          <td>the current line</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>$</b></div>
+          </td>
+          <td> the last line in the file</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>%</b></div>
+          </td>
+          <td>the whole file. The same as <b>1,$</b></td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>'<i>t </i></b></div>
+          </td>
+          <td>position of mark &quot;t&quot;</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>/<i>pattern</i>[/]</b> </div>
+          </td>
+          <td>the next line where text<i> &quot;pattern</i>&quot; matches.</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b> ?<i>pattern</i>[?] </b></div>
+          </td>
+          <td>the previous line where text &quot;<i>pattern</i>&quot; matches</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\/ </b></div>
+          </td>
+          <td>the next line where the previously used search pattern matches </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\?</b></div>
+          </td>
+          <td> the previous line where the previously used search pattern matches 
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\&amp;</b></div>
+          </td>
+          <td> the next line where the previously used substitute pattern matches 
+          </td>
+        </tr>
+      </table>
+      <p> If no line range is specified the command will operate on the current line 
+        only.</p>
+      <p>Here are a few examples:</p>
+      <p><code>10,20 </code></p>
+      <p> - from 10 to 20 line. </p>
+      <p>Each may be followed (several times) by &quot;+&quot; or &quot;-&quot; and 
+        an optional number. This number is added or subtracted from the preceding 
+        line number. If the number is omitted, 1 is used. </p>
+      <p><code>/Section 1/+,/Section 2/-</code></p>
+      <p>- all lines between <span class="pattern">Section 1</span> and <span class="pattern">Section 
+        2</span>, non-inclusively, i.e. the lines containing <span class="pattern">Section 
+        1</span> and <span class="pattern">Section 2</span> will not be affected. 
+      <p>The <code>/<i>pattern</i>/</code> and <code>?<i>pattern</i>?</code> may be 
+        followed by another address separated by a semicolon. A semicolon between 
+        two search patterns tells Vim to find the location of the first pattern, then 
+        start searching from that location for the second pattern.</p>
+      <p><code>/Section 1/;/Subsection/+,/Subsection/-</code></p>
+      <p>- first find <span class="pattern">Section 1</span>, then the first line 
+        with <span class="pattern">Subsection</span>, step one line down (beginning 
+        of the range) and find the next line with <span class="pattern">Subsection</span>, 
+        step one line up (end of the range).</p>
+      <p>The next example shows how you can reuse you search pattern:</p>
+      <p><code>:/Section/+ y</code></p>
+      <p>- this will search for the <span class="pattern">Section</span> line and 
+        yank (copy) one line after into the memory.</p>
+      <p><code>:// normal p</code></p>
+      <p>- and that will search for the next <span class="pattern">Section</span> 
+        line and put (paste) the saved text on the next line.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <div class="tip"> 
+        <p><b>Tip 1:</b> frequently you need to do S&amp;R in a text which contains 
+          UNIX file paths - text strings with slashes (&quot;/&quot;) inside. Because 
+          S&amp;R command uses slashes for pattern/replacement separation you have 
+          to escape every slash in your pattern, i.e. use &quot;\/&quot; for every 
+          &quot;/&quot; in your pattern:</p>
+        <p><code>s/\/dir1\/dir2\/dir3\/file/dir4\/dir5\/file2/g</code></p>
+        <p> To avoid this so-called &quot;backslashitis&quot; you can use different 
+          separators in S&amp;R (I prefer &quot;:&quot;)</p>
+        <p><code>s:/dir1/dir2/dir3/file:/dir4/dir5/file2:g</code></p>
+        <p><b>Tip 2:</b> You may find these mappings useful (put them in your <b>.vimrc</b> 
+          file)</p>
+        <p><code>map ;; :%s:::g&lt;Left&gt;&lt;Left&gt;&lt;Left&gt;<br>
+          map ;' :%s:::cg&lt;Left&gt;&lt;Left&gt;&lt;Left&gt;&lt;Left&gt;</code> </p>
+        <p>These mappings save you some keystrokes and put you where you start typing 
+          your search pattern. After typing it you move to the replacement part , 
+          type it and hit return. The second version adds confirmation flag.</p>
+      </div>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a name="pattern"><img src="images/vim/regex-heads_47.gif" alt="Pattern Description" width="636" height="35"></a></td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="anchors">3.1 Anchors</a></h1>
+      <p>Suppose you want to replace all occurrences of <span class="pattern">vi</span> 
+        with <span class="pattern">VIM</span>. This can be easily done with</p>
+      <p><code>s/vi/VIM/g</code></p>
+      <p>If you've tried this example then you, no doubt, noticed that <span class="pattern">VIM</span> 
+        replaced all occurrences of <span class="pattern">vi</span> even if it's a 
+        part of the word (e.g. na<span class="match">vi</span>gator). If we want to 
+        be more specific and replace only whole words <span class="pattern">vi</span> 
+        then we need to correct our pattern. We may rewrite it by putting spaces around 
+        <span class="pattern">vi</span>:</p>
+      <p><code>s: vi : VIM :g</code> </p>
+      <p>But it will still miss <span class="pattern">vi</span> followed by the punctuation 
+        or at the end of the line/file. The right way is to put special word boundary 
+        symbols &quot;<code>\&lt;</code>&quot; and &quot;<code>\&gt;</code>&quot; 
+        around <span class="pattern">vi</span>.</p>
+      <p><code>s:\&lt;vi\&gt;:VIM:g</code> </p>
+      <p>The beginning and the end of the line have their own special anchors - &quot;<code>^</code>&quot; 
+        and &quot;<code>$</code>&quot;, respectively. So, for all <span class="pattern">vi</span> 
+        only at the start of the line:</p>
+      <p><code>s:^vi\&gt;:VIM:</code> </p>
+      <p>To match the lines where <span class="pattern">vi</span> is the only word:</p>
+      <p><code>s:^vi$:VIM:</code> </p>
+      <p>Now suppose you want to replace not only all <span class="pattern">vi</span> 
+        but also <span class="pattern">Vi</span> and <span class="pattern">VI</span>. 
+        There are several ways to do this:</p>
+      <ul>
+        <li>probably the simplest way is to put &quot;i&quot; - ignore case in a pattern 
+          <code>%s:vi:VIM:gi</code> 
+        <li>define a class of characters. This is a sequence of characters enclosed 
+          by square brackets &quot;[&quot; and &quot;]&quot;. It matches any character 
+          from this set. So <code>:%s:[Vv]i:VIM:</code> will match <span class="pattern">vi</span> 
+          and <span class="pattern">Vi</span>. More on character ranges in the following 
+          <a href="#ranges">section</a>. 
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="metacharacters">3.2 &quot;Escaped&quot; characters or metacharacters</a></h1>
+      <p>So far our pattern strings were constructed from normal or <i><b>literal 
+        </b></i>text characters. The power of regexps is in the use of <i><b>metacharacters</b>. 
+        </i>These are types of characters which have special meaning inside the search 
+        pattern. With a few exceptions these metacharacters are distinguished by a 
+        &quot;magic&quot; backslash in front of them. The table below lists some common 
+        VIM metacharacters.</p>
+      <table class="vimdoc" cellspacing="3">
+        <tr> 
+          <th width="43"> 
+            <div align="center"><b>#</b></div>
+          </th>
+          <th width="245"> 
+            <div align="center"><b>Matching</b></div>
+          </th>
+          <th width="46"> 
+            <div align="center"><b>#</b></div>
+          </th>
+          <th width="225"> 
+            <div align="center"><b>Matching</b></div>
+          </th>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>.</b></div>
+          </td>
+          <td width="245">any character except new line</td>
+          <td width="46">&nbsp; </td>
+          <td width="225">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\s</b></div>
+          </td>
+          <td width="245">whitespace character </td>
+          <td width="46"> 
+            <div align="center"><b>\S</b></div>
+          </td>
+          <td width="225">non-whitespace character </td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\d</b></div>
+          </td>
+          <td width="245">digit</td>
+          <td width="46"> 
+            <div align="center"><b>\D</b></div>
+          </td>
+          <td width="225">non-digit</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\x</b></div>
+          </td>
+          <td width="245">hex digit</td>
+          <td width="46"> 
+            <div align="center"><b>\X</b></div>
+          </td>
+          <td width="225">non-hex digit</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\o</b></div>
+          </td>
+          <td width="245">octal digit</td>
+          <td width="46"> 
+            <div align="center"><b>\O</b></div>
+          </td>
+          <td width="225">non-octal digit</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\h</b></div>
+          </td>
+          <td width="245">head of word character (a,b,c...z,A,B,C...Z and _)</td>
+          <td width="46"> 
+            <div align="center"><b>\H</b></div>
+          </td>
+          <td width="225">non-head of word character</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\p</b></div>
+          </td>
+          <td width="245"> printable character</td>
+          <td width="46"> 
+            <div align="center"><b>\P</b></div>
+          </td>
+          <td width="225">like <b>\p</b>, but excluding digits</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\w</b></div>
+          </td>
+          <td width="245">word character</td>
+          <td width="46"> 
+            <div align="center"><b>\W</b></div>
+          </td>
+          <td width="225">non-word character</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\a</b></div>
+          </td>
+          <td width="245">alphabetic character</td>
+          <td width="46"> 
+            <div align="center"><b>\A</b></div>
+          </td>
+          <td width="225">non-alphabetic character</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\l</b></div>
+          </td>
+          <td width="245">lowercase character</td>
+          <td width="46"> 
+            <div align="center"><b>\L</b></div>
+          </td>
+          <td width="225">non-lowercase character</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\u</b></div>
+          </td>
+          <td width="245">uppercase character</td>
+          <td width="46"> 
+            <div align="center"><b>\U</b></div>
+          </td>
+          <td width="225">non-uppercase character </td>
+        </tr>
+      </table>
+      <p>So, to match a date like 09/01/2000 you can use <code> </code></p>
+      <p><code>\d\d/\d\d/\d\d\d\d</code> </p>
+      <p>To match 6 letter word starting with a capital letter</p>
+      <p><code>\u\w\w\w\w\w</code></p>
+      <p> Obviously, it is not very convenient to write <code>\w</code> for any character 
+        in the pattern - what if you don't know how many letters in your word? This 
+        can be helped by introducing so-called <i>quantifiers</i>. </p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td> 
+      <h1><a name="Non-Greedy">3.3 Quantifiers, Greedy and Non-Greedy</a></h1>
+      <p>Using quantifiers you can set how many times certain part of you pattern 
+        should repeat by putting the following after your pattern:</p>
+      <table width="585" class="vimdoc" cellspacing="3">
+        <tr> 
+          <th> 
+            <div align="center"><b>Quantifier</b></div>
+          </th>
+          <th> 
+            <div align="center"><b>Description</b></div>
+          </th>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>*</b></div>
+          </td>
+          <td>matches 0 or more of the preceding characters, ranges or metacharacters 
+            .* matches everything including empty line </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\+</b></div>
+          </td>
+          <td>matches 1 or more of the preceding characters... </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\= </b></div>
+          </td>
+          <td>matches 0 or 1 more of the preceding characters...</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\{n,m}</b></div>
+          </td>
+          <td>matches from n to m of the preceding characters...</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\{n}</b></div>
+          </td>
+          <td>matches exactly n times of the preceding characters...</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\{,m}</b></div>
+          </td>
+          <td>matches at most m (from 0 to m) of the preceding characters...</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\{n,}</b></div>
+          </td>
+          <td>matches at least n of of the preceding characters... </td>
+        </tr>
+        <tr> 
+          <td colspan="2"> 
+            <div align="center">where <b>n</b> and <b>m</b> are positive integers 
+              (&gt;0) </div>
+          </td>
+        </tr>
+      </table>
+      <p>Now it's much easier to define a pattern that matches a word of <i>any </i> 
+        length <code>\u\w\+</code>. </p>
+      <p>These quantifiers are <i>greedy</i> - that is your pattern will try to match 
+        <i> <b>as much text as</b></i> possible. Sometimes it presents a problem. 
+        Let's consider a typical example - define a pattern to match delimited text, 
+        i.e. text enclosed in quotes, brackets, etc. Since we don't know what kind 
+        of text is inside the quotes we'll use </p>
+      <p><code>/&quot;.*&quot;/</code></p>
+      <p> But this pattern will match <i>everything</i> between the first &quot; and 
+        the last &quot; in the following line:</p>
+      <p> <code>this file is normally <span class="match">"$VIM/.gvimrc". You can 
+        check this with ":version"</span>.</code></p>
+      <p>This problem can be resolved by using non-greedy quantifiers: </p>
+      <table width="585" class="vimdoc" cellspacing="3">
+        <tr> 
+          <td> 
+            <div align="center"><b>Quantifier</b></div>
+          </td>
+          <td> 
+            <div align="center"><b>Description</b></div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\{-}</b></div>
+          </td>
+          <td> matches 0 or more of the preceding atom, as few as possible </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\{-n,m} </b></div>
+          </td>
+          <td>matches 1 or more of the preceding characters...</td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\{-n,}</b></div>
+          </td>
+          <td>matches at lease or more of the preceding characters... </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center"><b>\{-,m} </b></div>
+          </td>
+          <td>matches 1 or more of the preceding characters... </td>
+        </tr>
+        <tr> 
+          <td colspan="2"> 
+            <div align="center">where <b>n</b> and <b>m</b> are positive integers 
+              (&gt;0) </div>
+          </td>
+        </tr>
+      </table>
+      <p>Let's use <code>\{-}</code> in place of <code>*</code> in our pattern. So, 
+        now <code>&quot;.\{-}&quot;</code> will match the first quoted text:</p>
+      <p><code>this file is normally <span class="match">"$VIM/gvimrc"</span>. You 
+        can check this with ":version".</code></p>
+      <p><code>.\{-}</code> pattern is not without surprises. Look what will happen 
+        to the following text after we apply: </p>
+      <p><code>:s:.\{-}:_:g</code></p>
+      <p>Before: </p>
+      <p><code>n and m are decimal numbers between</code></p>
+      <p>After:</p>
+      <p> <code>_n_ _a_n_d_ _m_ _a_r_e_ _d_e_c_i_m_a_l_ _n_u_m_b_e_r_s_ _b_e_t_w_e_e_n_</code></p>
+      <p>&quot;As few as possible&quot; applied here means zero character replacements. 
+        However match <b>does occur</b> between characters! To explain this behavior 
+        I quote Bram himself:</p>
+      <p><cite>Matching zero characters is still a match. Thus it will replace zero 
+        characters with a "_". And then go on to the next position, where it will 
+        match again. </cite></p>
+      <p><cite>It's true that using "\{-}" is mostly useless. It works this way to 
+        be consistent with "*", which also matches zero characters. There are more 
+        useless ones: "x\{-1,}" always matches one x. You could just use "x". More 
+        useful is something like "x\{70}". The others are just consistent behavior: 
+        ..., "x\{-3,}", "x\{-2,}", "x\{-1,}. </cite></p>
+      <p><cite>- Bram </cite></p>
+      <p>But what if we want to match only the second occurrence of quoted text? Or 
+        we want to replace only a part of the quoted text keeping the rest untouched? 
+        We will need <i>grouping</i> and <i>backreferences.</i> But before let's talk 
+        more about character ranges.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="ranges">3.4 Character ranges</a></h1>
+      <p>Typical character ranges:</p>
+      <p><code>[012345]</code> will match any of the numbers inside the brackets. 
+        The same range can be written as <code>[0-5]</code>, where dash indicates 
+        a range of characters in ASCII order. Likewise, we can define the range for 
+        all lowercase letters: <code>[a-z]</code>, for all letters: <code>[a-zA-Z]</code>, 
+        letters and digits: <code>[0-9a-zA-Z]</code> etc. Depending on your system 
+        locale you can define range which will include characters like &agrave;, &Ouml;, 
+        &szlig; and other non ASCII characters.</p>
+      <p>Note that the range represents just <i>one character</i> in the search pattern, 
+        that is <code>[0123]</code> and <code>0123</code> are not the same. Likewise 
+        the order (with a few exceptions) is not important: <code>[3210]</code> and 
+        <code>[0123]</code> are the same character ranges, while <code>0123</code> 
+        and <code>3210</code> are two different patterns. Watch what happens when 
+        we apply </p>
+      <p><code>s:[65]:Dig:g</code> </p>
+      <p>to the following text:</p>
+      <p>Before:</p>
+      <p><code>High <span class="match">65</span> to 70. Southeast wind around 10</code></p>
+      <p>After:</p>
+      <p><code>High <span class="replace">DigDig</span> to 70. Southeast wind around 
+        10</code></p>
+      <p>and now: </p>
+      <p><code>s:65:Dig:g</code></p>
+      <p>Before: </p>
+      <p><code>High <span class="match">65</span> to 70. Southeast wind around 10</code></p>
+      <p>After:</p>
+      <p><code>High <span class="replace">Dig</span> to 70. Southeast wind around 
+        10</code></p>
+      <p>Sometimes it's easier to define the characters you don't want to match. This 
+        is done by putting a negation sign <code>&quot;^&quot;</code> (caret) as a 
+        first character of the range </p>
+      <p>/<code>[^A-Z]</code>/</p>
+      <p> - will match <i>any character</i> except capital letters. We can now rewrite 
+        our pattern for quoted text using </p>
+      <p><code>/&quot;[^&quot;]\+&quot;</code>/ </p>
+      <p>Note: inside the [ ] all metacharacters behave like ordinary characters. 
+        If you want to include &quot;-&quot; (dash) in your range put it first</p>
+      <p><code>/[-0-9]/</code></p>
+      <p> - will match all digits <i>and </i> -. &quot;^&quot; will lose its special 
+        meaning if it's not the first character in the range. </p>
+      <p>Now, let's have some real life example. Suppose you want to run a grammar 
+        check on your file and find all places where new sentence does not start with 
+        a capital letter. The pattern that will catch this: </p>
+      <p><code>\.\s\+[a-z] </code></p>
+      <p>- a period followed by one or more blanks and a lowercase word. We know how 
+        to find an error, now let's see how we can correct it. To do this we need 
+        some ways to remember our matched pattern and recall it later. That is exactly 
+        what <i>backreferences</i> are for. </p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="backreferences">3.5 Grouping and Backreferences</a></h1>
+      <p>You can group parts of the pattern expression enclosing them with &quot;<code>\(</code>&quot; 
+        and &quot;<code>\)</code>&quot; and refer to them inside the replacement pattern 
+        by their special number <code>\1, \2 ... \9</code>. Typical example is swapping 
+        first two words of the line:</p>
+      <code>s:\(\w\+\)\(\s\+\)\(\w\+\):\3\2\1:</code> 
+      <p>where <code>\1</code> holds the first word, <code>\2</code> - any number 
+        of spaces or tabs in between and <code>\3</code> - the second word. How to 
+        decide what number holds what pair of <code>\(\)</code> ? - count opening 
+        &quot;<code>\(</code>&quot; from the left. </p>
+      <h2>Replacement Part of :substitute</h2>
+      <p>Replacement part of the S&amp;R has its own special characters which we are 
+        going to use to fix grammar:</p>
+      <table class="vimdoc" cellspacing="3">
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>#</b></div>
+          </td>
+          <td width="245"> 
+            <div align="center"><b>Meaning</b></div>
+          </td>
+          <td width="46"> 
+            <div align="center"><b>#</b></div>
+          </td>
+          <td width="225"> 
+            <div align="center"><b>Meaning</b></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>&amp;</b></div>
+          </td>
+          <td width="245">the whole matched pattern</td>
+          <td width="46"> 
+            <div align="center"><b>\L</b></div>
+          </td>
+          <td width="225">the following characters are made lowercase</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\0</b></div>
+          </td>
+          <td width="245">the whole matched pattern</td>
+          <td width="46"> 
+            <div align="center"><b>\U</b></div>
+          </td>
+          <td width="225">the following characters are made uppercase</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\1</b></div>
+          </td>
+          <td width="245">the matched pattern in the first pair of \(\)</td>
+          <td width="46"> 
+            <div align="center"><b>\E</b></div>
+          </td>
+          <td width="225">end of \U and \L</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\2</b></div>
+          </td>
+          <td width="245">the matched pattern in the second pair of \(\)</td>
+          <td width="46"> 
+            <div align="center"><b>\e</b></div>
+          </td>
+          <td width="225">end of \U and \L</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>...</b></div>
+          </td>
+          <td width="245">...</td>
+          <td width="46"> 
+            <div align="center"><b>\r</b></div>
+          </td>
+          <td width="225">split line in two at this point</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>\9</b></div>
+          </td>
+          <td width="245">the matched pattern in the ninth pair of \(\)</td>
+          <td width="43"> 
+            <div align="center"><b>\l </b></div>
+          </td>
+          <td width="245">next character made lowercase</td>
+        </tr>
+        <tr> 
+          <td width="43"> 
+            <div align="center"><b>~</b></div>
+          </td>
+          <td width="245">the previous substitute string</td>
+          <td width="43"> 
+            <div align="center"><b>\u</b></div>
+          </td>
+          <td width="245">next character made uppercase </td>
+        </tr>
+      </table>
+      <p>Now the full S&amp;R to correct non-capital words at the beginning of the 
+        sentences looks like</p>
+      <p><code>s:\([.!?]\)\s\+\([a-z]\):\1&nbsp;&nbsp;\u\2:g</code></p>
+      <p>We have corrected our grammar and as an extra job we replaced variable number 
+        of spaces between punctuation and the first letter of the next sentence with 
+        exactly two spaces.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="alternations">3.6 Alternations</a></h1>
+      <p>Using &quot;<code>\|</code>&quot; you can combine several expressions into 
+        one which matches any of its components. The first one matched will be used.</p>
+      <p> <code>\(Date:\|Subject:\|From:\)\(\s.*\)</code></p>
+      will parse various mail headings and their contents into \1 and \2, respectively. 
+      The thing to remember about VIM alternation that it is not <i>greedy. </i> It 
+      won't search for the longest possible match, it will use the first that matched. 
+      That means that the order of the items in the alternation is important!</td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <div class="tip"> 
+        <p><b>Tip 3:</b> Quick mapping to put \(\) in your pattern string</p>
+        <p> <code>cmap ;\ \(\)&lt;Left&gt;&lt;Left&gt;</code></p>
+      </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="precedence">3.7 Regexp Operator Precedence</a></h1>
+      <p>As in arithmetic expressions, regular expressions are executed in a certain 
+        order of precedence. Here the table of precedence, from highest to lowest:</p>
+      <table class="vimdoc" cellspacing="3">
+        <tr> 
+          <td width="94"> 
+            <div align="center"><b>Precedence</b></div>
+          </td>
+          <td width="192"> 
+            <div align="center"><b>Regexp</b></div>
+          </td>
+          <td width="261"> 
+            <div align="center"><b>Description</b></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="94"> 
+            <div align="center"><b>1</b></div>
+          </td>
+          <td width="192"> 
+            <div align="center"><b>\( \)</b></div>
+          </td>
+          <td width="261"> 
+            <div align="center">grouping</div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="94"> 
+            <div align="center"><b>2</b></div>
+          </td>
+          <td width="192"> 
+            <div align="center"><b>\=,\+,*,\{n} etc.</b></div>
+          </td>
+          <td width="261"> 
+            <div align="center">quantifiers</div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="94"> 
+            <div align="center"><b>3</b></div>
+          </td>
+          <td width="192"> 
+            <div align="center"><b>abc\t\.\w</b></div>
+          </td>
+          <td width="261"> 
+            <div align="center">sequence of characters/ metacharacters, not containing 
+              quantifiers or grouping operators</div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="94"> 
+            <div align="center"><b>4</b></div>
+          </td>
+          <td width="192"> 
+            <div align="center"><b>\|</b></div>
+          </td>
+          <td width="261"> 
+            <div align="center">alternation</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a name="global"><img src="images/vim/regex-heads_41.gif" width="636" height="35" alt="Global Command"></a></td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="global search">4.1 Global search and execution</a></h1>
+      <p>I want to introduce another quite useful and powerful Vim command which we're 
+        going to use later</p>
+      <table class="vimdoc" cellspacing="3">
+        <tr> 
+          <td colspan="2"><b>:<i>range</i> g[lobal][!]/<i>pattern</i>/<i>cmd</i></b></td>
+        </tr>
+        <tr> 
+          <td colspan="2">Execute the Ex command <b><i>cmd</i></b> (default "<b>:p</b>") 
+            on the lines within [<b><i>range</i></b>] where <b><i>pattern</i></b> 
+            matches. If <b><i>pattern</i></b> is preceded with a <b>!</b> - only where 
+            match <b>does not</b> occur.</td>
+        </tr>
+      </table>
+      <p>The global commands work by first scanning through the [<i>range</i>] of 
+        of the lines and marking each line where a match occurs. In a second scan 
+        the [<i>cmd</i>] is executed for each marked line with its line number prepended. 
+        If a line is changed or deleted its mark disappears. The default for the [<i>range</i>] 
+        is the whole file. </p>
+      <p>Note: Ex commands are all commands you are entering on the Vim command line 
+        like <code>:s[ubstitute], :co[py] , :d[elete], :w[rite] </code>etc. Non-Ex 
+        commands (normal mode commands) can be also executed via </p>
+      <p><code>:norm[al]<i>non-ex command</i></code> </p>
+      <p>mechanism.</p>
+      <h1><a name="global examples">4.2 Examples</a></h1>
+      <p>Some examples of <code>:global</code> usage:</p>
+      <p><code>:g/^$/ d</code></p>
+      <p>- delete all empty lines in a file</p>
+      <p><code>:10,20g/^/ mo 10</code></p>
+      <p>- reverse the order of the lines starting from the line 10 up to the line 
+        20. </p>
+      <p>Here is a modified example from <a href="http://www.networkcomputing.com/unixworld/tutorial/009/009.html">Walter 
+        Zintz vi tutorial</a>:</p>
+      <p><code>:'a,'b g/^Error/ . w >> errors.txt</code></p>
+      <p>- in the text block marked by <code>'a</code> and <code>'b </code>find all 
+        the lines starting with <span class="pattern">Error</span> and copy (append) 
+        them to &quot;errors.txt&quot; file.<b> Note:</b> . (current line address) 
+        in front of the <code>w</code> is very important, omitting it will cause <code>:write</code> 
+        to write the whole file to &quot;errors.txt&quot; for every <span class="pattern">Error</span> 
+        line found.</p>
+      <p>You can give multiple commands after <code>:global </code>using &quot;|&quot; 
+        as a separator. If you want to use &quot;|' in an argument, precede it with 
+        &quot;\'. Another example from Zintz tutorial:</p>
+      <p><code>:g/^Error:/ copy $ | s /Error/copy of the error/</code></p>
+      <p>- will copy all <span class="pattern">Error</span> line to the end of the 
+        file and then make a substitution in the copied line. Without giving the line 
+        address <code>:s</code> will operate on the current line, which is the newly 
+        copied line.</p>
+      <p><code>:g/^Error:/ s /Error/copy of the error/ | copy $</code></p>
+      <p>- here the order is reversed: first modify the string then copy to the end.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a name="examples"><img src="images/vim/regex-heads_23.gif" width="636" height="35" class="heading" alt="Real World Examples"></a></td>
+  </tr>
+  <tr>
+    <td width="20">&nbsp;</td>
+    <td width="616">
+      <h1><a name="tips">5.1 Tips and Techniques</a></h1>
+      <p>A collection of some useful S&amp;R tips:</p>
+      <p>(1) sent by Antonio Colombo:</p>
+      <p> <cite>&quot;a simple regexp I use quite often to clean up a text: it drops 
+        the blanks at the end of the line:&quot;</cite></p>
+      <p><code> s:\s*$::</code></p>
+      <p> <cite>or (to avoid acting on all lines): </cite></p>
+      <p><code>s:\s\+$::</code></p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="contents">5.2 Creating outline</a></h1>
+      <p>For this example you need to know a bit of HTML. We want to make a table 
+        of contents out of <code>h1</code> and <code>h2</code> headings, which I will 
+        call majors and minors. HTML heading <code>h1</code> is a text enclosed by 
+        <code>&lt;h1&gt;</code> tags as in <code>&lt;h1&gt;Heading&lt;/h1&gt;</code>.</p>
+      <p>(1) First let's make named anchors in all headings, i.e. put <code>&lt;h1&gt;&lt;a 
+        name=&quot;anchor&quot;&gt;Heading&lt;/a&gt;&lt;/h1&gt;</code> around all 
+        headings. The <code>&quot;anchor</code>&quot; is a unique identifier of this 
+        particular place in HTML document. The following S&amp;R does exactly this:</p>
+      <p><code> :s:\(&lt;h[12]&gt;\)\(.*\s\+\([-a-zA-Z]\+\)\)\s*\(&lt;/h[12]&gt;\):\1&lt;a 
+        name="\3"&gt;\2&lt;/a&gt;\4:</code></p>
+      <p><b>Explanation:</b> the first pair of <code>\(\)</code> saves the opening 
+        tag (<code>h1</code> or <code>h2</code>) to the <code>\1</code>, the second 
+        pair saves all heading text before the closing tag, the third pair saves the 
+        last word in the heading which we will later use for &quot;anchor&quot; and 
+        the last pair saves the closing tag. The replacement is quite obvious - we 
+        just reconstruct a new &quot;named&quot; heading using <code>\1-\4</code> 
+        and link tag <code>&lt;a&gt;.</code></p>
+      <p>(2) Now let's copy all headings to one place:</p>
+      <p><code>:%g/&lt;h[12]&gt;/ t$</code></p>
+      <p>This command searches our file for the lines starting with <code>&lt;h1&gt;</code> 
+        or <code>&lt;h2&gt;</code> and copies them to the end of the file. Now we 
+        have a bunch of lines like:</p>
+      <p><code>&lt;h1&gt;&lt;a name=&quot;anchor1&quot;&gt;Heading1&gt;&lt;/a&gt;&lt;/h1&gt;<br>
+        &lt;h2&gt;&lt;a name=&quot;anchor2&quot;&gt;Heading2&gt;&lt;/a&gt;&lt;/h2&gt;<br>
+        &lt;h2&gt;&lt;a name=&quot;anchor3&quot;&gt;Heading3&gt;&lt;/a&gt;&lt;/h2&gt;<br>
+        ..........................<br>
+        &lt;h1&gt;&lt;a name=&quot;anchorN&quot;&gt;HeadingN&gt;&lt;/a&gt;&lt;/h1&gt;</code> 
+      </p>
+      <p>First, we want to convert all <code>name=&quot;</code> to <code>href=&quot;#</code> 
+        in order to link table entries to their respective places in the text:</p>
+      <p><code>s:name=&quot;:href=&quot;#:</code></p>
+      <p>Second, we want our <code>h1</code> entries look different from <code>h2</code>. 
+        Let's define CSS classes &quot;majorhead&quot; and &quot;minorhead&quot; and 
+        do the following:</p>
+      <p><code>g/&lt;h1&gt;/ s:&lt;a:&amp; class=&quot;majorhead&quot;:<br>
+        g/&lt;h2&gt;/ s:&lt;a:&amp; class=&quot;minorhead&quot;: </code></p>
+      <p>Now our entries look like:</p>
+      <p><code>&lt;h1&gt;&lt;a class=&quot;majorhead&quot; name=&quot;anchor1&quot;&gt;Heading1&gt;&lt;/a&gt;&lt;/h1&gt;<br>
+        &lt;h2&gt;&lt;a class=&quot;minorhead&quot; name=&quot;anchor2&quot;&gt;Heading2&gt;&lt;/a&gt;&lt;/h2&gt;</code></p>
+      <p>We no longer need <code>h1</code> and <code>h2</code> tags:</p>
+      <p><code>s:&lt;h[21]&gt;::</code></p>
+      <p>and replace closing tags with breaklines <code>&lt;br&gt;</code></p>
+      <p><code>s:/h[21]:br:</code></p>
+      <p><code>&lt;a class=&quot;majorhead&quot; name=&quot;anchor1&quot;&gt;Heading1&gt;&lt;/a&gt;&lt;br&gt;<br>
+        &lt;a class=&quot;minorhead&quot; name=&quot;anchor2&quot;&gt;Heading2&gt;&lt;/a&gt;&lt;br&gt;</code></p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <h1><a name="tables">5.3 Working with Tables</a></h1>
+      <p>Quite often you have to work with a text organized in tables/columns. Consider, 
+        for example, the following text</p>
+      <table width="500" border="0" align="center">
+        <tr> 
+          <td> 
+            <div align="center">Asia</div>
+          </td>
+          <td> 
+            <div align="center">America</div>
+          </td>
+          <td> 
+            <div align="center">Africa</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center">Africa</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center">Africa</div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center">Asia</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+        </tr>
+      </table>
+      <p>Suppose we want to change all &quot;Europe&quot; cells in the third column 
+        to &quot;Asia&quot;:</p>
+      <p><code>:%s:\(\(\w\+\s\+\)\{2}\)Europe:\1Asia:</code></p>
+      <table width="500" border="0" align="center">
+        <tr> 
+          <td> 
+            <div align="center">Asia</div>
+          </td>
+          <td> 
+            <div align="center">America</div>
+          </td>
+          <td> 
+            <div align="center">Africa</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center">Africa</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center" class="replace">Asia</div>
+          </td>
+          <td> 
+            <div align="center">Africa</div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center">Asia</div>
+          </td>
+          <td> 
+            <div align="center" class="replace">Asia</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <p>To swap the first and the last columns:</p>
+      <p><code>:%s:\(\w\+\)\(.*\s\+\)\(\w\+\)$:\3\2\1:</code></p>
+      <table width="500" border="0" align="center">
+        <tr> 
+          <td class="replace"> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center">America</div>
+          </td>
+          <td> 
+            <div align="center">Africa</div>
+          </td>
+          <td class="replace"> 
+            <div align="center">Asia</div>
+          </td>
+        </tr>
+        <tr> 
+          <td class="replace"> 
+            <div align="center">Africa</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td class="replace"> 
+            <div align="center">Africa</div>
+          </td>
+        </tr>
+        <tr> 
+          <td class="replace"> 
+            <div align="center">Europe</div>
+          </td>
+          <td> 
+            <div align="center">Asia</div>
+          </td>
+          <td> 
+            <div align="center">Europe</div>
+          </td>
+          <td class="replace"> 
+            <div align="center">Europe</div>
+          </td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <p>To be continued...</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a name="compare"><img src="images/vim/regex-heads_29.gif" width="636" height="35" class="heading" alt="Comparing with Others"></a></td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> Here I would like to compare Vim's regexp implementation with 
+      others, in particular, Perl's. You can't talk about regular expressions without 
+      mentioning Perl. To be written...</td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a name="links"><img src="images/vim/regex-heads_35.gif" width="636" height="35" class="heading" alt="Links &amp; Further Reading"></a></td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <p>Read VIM documentation about pattern and searching - type &quot;:help pattern&quot; 
+        in VIM normal mode to get this information.</p>
+      <p>The only book I know of which deals with VIM/vi regular expressions is the 
+        same <a href="http://www.oreilly.com/catalog/vi6/">&quot;Learning the vi Editor&quot;</a> 
+        by Linda Lamb and Arnold Robbins.</p>
+      <p>Definitive reference on regular expressions is Jeffrey Friedl's <a href="http://www.oreilly.com/catalog/regex/chapter/ch04.html">&quot;Mastering 
+        Regular Expressions&quot;</a> published by O'Reilly &amp; Associates, but 
+        it mostly deals with Perl regular expressions. Note that Perl regexp flavor 
+        is a bit different from VIM's. O'Reilly has one of the book chapters available 
+        online.</p>
+      <p>Others sources: practically every Perl book has some information on regular 
+        expressions.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20">&nbsp;</td>
+    <td width="616"> 
+      <div class="footer">Copyright &copy; 2000, <a href="mailto:olrcc@scisun.sci.ccny.cuny.edu">Oleg Raisky</a>. Last update: Tue May 30 2000 
+		Access: <!-- CRONCOUNT--> 9,834 times since 25-Feb-98 <A HREF="http://www.ee.pdx.edu/~maurice/CRONCOUNT/">CronCount</A>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,18 @@
+#!/bin/sh
+##############################################################################
+#     Name: cp2hfs.sh
+#
+#  Summary: Copy files from MVS to HFS.
+#
+#  Created: Wed 29 Sep 2004 10:26:36 (Bob Heckel)
+##############################################################################
+  
+if [ $# -lt 2 ]; then
+  echo "usage: $0 MVS-file HFS-file-relative-to-/u/bqh0/"
+  echo "  e.g. $0 'pgm.lib(foo)' tmp/testing/fooonhfs"
+  echo "  e.g. $0 JUNK fooonhfs"
+  exit 1
+fi
+
+# TODO allow default name on hfs to be the (one)
+tso "oput $1 '/u/bqh0/$2'"

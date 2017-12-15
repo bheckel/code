@@ -1,0 +1,25 @@
+Layer 4 (UDP) header  
+Always 8 bytes since it contains no options.
+
+|        16 bits               |            32 bits            |
+================================================================
+|          Source port         |        Destination port       |
+----------------------------------------------------------------
+|         Length               |          Checksum             |
+----------------------------------------------------------------
+|                        Data                                  |
+----------------------------------------------------------------
+
+Source port: See /etc/services for list of applications that sent the data.
+             65,535 (2^16-1) possible port numbers.
+
+Destination port: Name of application that is to receive the data contained
+                  within the IP packet.  Contrast with Layer 3 which only
+                  specifies the computer that should receive the data.
+
+Length: In bytes, of the UDP header and data.  So you subtract 8 from this 
+        number to determine the size of the data being sent.
+
+Checksum: Optional (this is UDP after all), 0 if not used.
+
+Data: Actual data being sent.  No additional headers.

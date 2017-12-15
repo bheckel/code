@@ -1,0 +1,35 @@
+#!/bin/sh
+##############################################################################
+#     Name: rgrep
+#
+#  Summary: Recursive grep.
+#           Use when bgrep fails (e.g. searching recursively on grserver).
+#           TODO not working the same on unix and cygwin...
+#           ver 2.2 (cygwin's latest) of grep doesn't have -r recurse.
+#
+#  Created: Fri, 08 Sep 2000 15:21:35 (Bob Heckel)
+# Modified: Mon, 23 Oct 2000 17:42:09 (Bob Heckel)
+##############################################################################*****************************************************************************
+
+# TODO send errors to /dev/null
+# TODO skip binary files.
+Usage() {
+  echo "Usage: $0"
+  echo "  e.g. rgrep [ie] regex ['filetype'] *"
+  echo "    -i  case insensitive"
+  echo "    -e  extended, specify filetype e.g. '*.txt'"
+  echo " Assumes search begins in CWD."
+  exit 1 
+}
+
+test $# -gt 0 || Usage
+
+if [ "$1" = '-i' ]; then
+  find . -type f -print | xargs grep -i "$2";
+  return 0
+elif [ "$1" = '-e' ]; then
+  grep "$2" `find . -name $3 -print`
+else
+  # Quotes allow 'foo bar' to pass.
+  find . -type f -print | xargs grep "$1" 2>/dev/null;
+fi

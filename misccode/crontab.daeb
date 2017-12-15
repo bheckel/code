@@ -1,0 +1,29 @@
+#ident  "@(#)root 1.19  98/07/06 SMI" /* SVr4.0 1.1.3.1 */
+#
+# The root crontab should be used to perform accounting data collection.
+#
+# The rtc command is run to adjust the real time clock if and when
+# daylight savings time changes.
+#
+# min hr day mon wkday(0=Sun)
+10 02 * * 0,4 /etc/cron.d/logchecker
+10 02 * * 0   /usr/lib/newsyslog
+15 02 * * 0   /usr/lib/fs/nfs/nfsfind
+01 01 * * *   [ -x /usr/sbin/rtc ] && /usr/sbin/rtc -c > /dev/null 2>&1
+30 02 * * *   [ -x /usr/lib/gss/gsscred_clean ] && /usr/lib/gss/gsscred_clean
+# Rotate Apache's access_log when it hits a half gig.
+59 21 * * *   find /opt/apache/logs/access_log -size +500000000c -exec /opt/bin/rotatelog.sh -c \;
+45 22 * * *   /opt/bin/updatedb --prunepaths='/proc /tmp /var'
+# Check for impending disk full condition.
+59 22 * * *   /opt/bin/df.pl
+# Full backup on Sunday, new/changed files from prev day on Mon - Fri.
+59 03 * * 0 /usr/sbin/ufsdump 0uf /dev/rmt/0ubn /home
+59 03 * * 1 /usr/sbin/ufsdump 1uf /dev/rmt/0ubn /home
+59 03 * * 2 /usr/sbin/ufsdump 2uf /dev/rmt/0ubn /home
+59 03 * * 3 /usr/sbin/ufsdump 3uf /dev/rmt/0ubn /home
+59 03 * * 4 /usr/sbin/ufsdump 4uf /dev/rmt/0ubn /home
+59 03 * * 5 /usr/sbin/ufsdump 5uf /dev/rmt/0ubn /home
+# Should be run soon after ufsdump completes (assumes 'u' option e.g. '3uf')
+59 05 * * 1-5 /opt/bin/appendmotd.sh
+# Monitor hourly activity on console using syslog.
+00 * * * 1-5 echo '---' `date` 'via cron' >/dev/console

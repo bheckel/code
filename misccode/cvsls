@@ -1,0 +1,58 @@
+#!/usr/bin/perl
+# This is a quickie to get some manageable output from 'cvs status'
+# without all the noise.  MAH 28-Jun-2000
+# Re-written to provide more info 19-Jul-2000 (MAH)
+
+$| = 1;
+$CVSROOT = $ENV{CVSROOT};
+$cvscmd = "cvs -Q status ".join(" ", @ARGV);
+
+open(CVSPIPE, $cvscmd."|") or die "Cannot execute 'cvs status'.\n";
+while (<CVSPIPE>)
+	{
+	if (/^File:\s*(no file )?([^\s]+)\s*Status:\s*(.*)/)
+		{
+		print_line(\%filedata);
+		undef %filedata;
+		$filedata{File}   = $2;
+		$filedata{Status} = $3;
+		}
+	elsif (/^\s+([^:]+):\s+(.*)/)
+		{
+		$filedata{$1} = $2;
+		}
+	}
+close CVSPIPE;
+
+print_line(\%filedata);
+
+exit;
+
+sub print_line
+	{
+	my($fd) = @_;
+	return if (!$fd->{File});
+
+	$dir = find_dir($fd);
+	printf("\n%s\n", $dir) if ($dir && ($dir ne $Last_Dir));
+
+	printf("%s%-26.26s %-18.18s %s\n",
+		$dir ? " " : "?",
+		$fd->{File}." "."."x26,
+		$fd->{Status},
+		$fd->{'Sticky Tag'},
+		);
+	$Last_Dir = $dir if ($dir);
+	}
+
+sub find_dir
+	{
+	my($fd) = @_;
+	my $dir, $file;
+
+	$file = $fd->{File};
+	($dir) = ($fd->{'Repository revision'} =~ /.*\s(\/.*),v/);
+	$dir =~ s/$CVSROOT//;
+	$dir =~ s/$file//;
+	$dir;
+	}

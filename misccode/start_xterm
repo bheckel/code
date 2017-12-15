@@ -1,0 +1,94 @@
+#!/bin/csh -f
+# start_xterm	MAH	1-SEP-1993
+#
+# Start an X-terminal, displaying on the originating node, or a specified node
+#
+set LOCALPATH=/usr/local/bin
+#
+# pathname for X11 bin directory varies from system to system
+if (-f $LOCALPATH/XPATH) then
+   source $LOCALPATH/XPATH
+else
+   set XPATH=/usr/bin/X11
+endif
+#  
+# remove private options from command line (other args passed to xterm)
+@ px=1
+while ($px <= $#argv)
+   switch ($argv[$px])
+      case -d:
+         @ px++
+         setenv DISPLAY $argv[$px]
+         breaksw
+      case -r:
+         if (-x /usr/local/bin/rxterm) then
+            @ px++
+            exec /usr/local/bin/rxterm $argv[$px-$#argv]
+         else
+            echo "start_xterm: remote option not available"
+            exit 1
+         endif
+      case -dec:
+         set decterm
+         breaksw
+      default:
+         break
+   endsw
+   @ px++
+end
+set xtermargs=($argv[$px-$#argv])
+#
+# get user font preference if one exists
+if (-f $HOME/.xtermfont) then
+   set font="`head -1 $HOME/.xtermfont`"
+else
+   # by default, use medium-weight 14pt "Terminal" font so we don't go blind
+   #set font="-*-terminal-medium-r-normal-*-*-140-75-75-*-*-iso8859-1"
+   set font="10x20"
+endif
+#
+# get node name for window/icon titling
+if (-f /bin/uname) then
+   set node="`uname -n`"
+else
+   set node="`$LOCALPATH/uname -n`"
+endif
+#
+# get user name for window/icon titling
+if ($?LOGNAME) then
+   set username=$LOGNAME
+else
+   if ($?USER) then
+      set username=$USER
+   else
+      set username=`whoami`
+   endif
+endif
+#
+# attempt to determine appropriate DISPLAY if not already set
+if (! $?DISPLAY) then
+  source $LOCALPATH/set_x_display
+endif
+#
+# now detach an xterm and direct output to a log file
+if ($?DISPLAY) then
+   if (! -d ~/tmp) then
+      mkdir ~/tmp
+      echo $HOME/tmp created for log files
+   endif
+   echo "`date` Display = $DISPLAY" >&! ~/tmp/xterm$$.log
+   if ($?decterm) then
+      echo "DEC keyboard set"
+      $XPATH/xterm -sb +ut +vb -tm erase^\?intr^C \
+         -n "${username}@${node}" \
+         -T "${username}@${node} (Xterm)" \
+         -fn "$font" $xtermargs >&! ~/tmp/xterm$$.log &
+   else
+      $XPATH/xterm -sb +ut +vb \
+         -n "${username}@${node}" \
+         -T "${username}@${node} (Xterm)" \
+         -fn "$font" $xtermargs >&! ~/tmp/xterm$$.log &
+   endif
+else
+   echo Display server cannot be determined.
+endif

@@ -1,0 +1,8 @@
+user bh1 da1Bichi
+lcd \todel
+cd ~
+prompt
+ascii
+hash
+put input.txt
+quit

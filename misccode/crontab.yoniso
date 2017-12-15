@@ -1,0 +1,5 @@
+# sudo crontab -e -u root
+30 09 * * 0,6 updatedb
+30 18 * * 2,4 updatedb
+45 09 * * 0,6 updatedb --database-root='/home/bheckel/code' --output='/var/lib/locatedb.code'
+45 18 * * 2,4 updatedb --database-root='/home/bheckel/code' --output='/var/lib/locatedb.code'

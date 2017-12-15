@@ -1,0 +1,6 @@
+
+PRIMARY KEYS SHOULD BE NON-MEANINGFUL!!! so that they are not forced to be
+changed on a manager's sort order whims, etc.  Bottom line, meaningful primary
+keys are a temptation to primary key manipulation, and primary key
+manipulation is a recipe for disaster.
+

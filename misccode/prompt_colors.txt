@@ -1,0 +1,54 @@
+
+ESC[?;?;?m 
+  
+Where the first ? = one of the following:
+    Text attributes 
+       0    All attributes off 
+       1    Bold on/LIGHT colors
+       4    Underscore (on monochrome display adapter only) 
+       5    Blink on 
+       7    Reverse video on 
+       8    Concealed on 
+  
+Where the second ? = one of the following:
+    Foreground colors 
+       30    Black 
+       31    Red 
+       32    Green 
+       33    Yellow 
+       34    Blue 
+       35    Magenta 
+       36    Cyan 
+       37    White 
+  
+Where the third ? = one of the following:
+    Background colors 
+       40    Black 
+       41    Red 
+       42    Green 
+       43    Yellow 
+       44    Blue 
+       45    Magenta 
+       46    Cyan 
+       47    White 
+
+
+
+# From .bashrc
+export fg_whitebold="^[[1;37m"
+export fg_black="^[[0;30m"
+export fg_lightgray="^[[0;37m"
+export fg_darkgray="^[[1;30m"
+export fg_bluebold="^[[1;34m"
+export fg_blue="^[[0;34m"
+export fg_greenbold="^[[1;32m"
+export fg_green="^[[0;32m"
+export fg_cyanbold="^[[1;36m"
+export fg_cyan="^[[0;36m"
+export fg_redbold="^[[1;31m"
+export fg_red="^[[0;31m"
+export fg_purplebold="^[[1;35m"
+export fg_purple="^[[0;35m"
+export fg_yellowbold="^[[1;33m"
+export fg_yellow="^[[0;33m"
+export normal="^[[0m"

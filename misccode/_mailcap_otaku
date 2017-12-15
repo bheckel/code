@@ -1,0 +1,24 @@
+##############################################################################
+#     Name: .mailcap
+#  Created: Sun 22 Jul 2001 10:39:11 (Bob Heckel)
+#
+#           TODO how to handle filenames containing single quote?
+#
+#  Summary: Used by mutt on freeshell.
+# Modified: Thu 17 Apr 2003 16:15:56 (Bob Heckel)
+##############################################################################
+
+# Mutt knows to use the second one in the pager because of the
+# 'copiousoutput', and uses the first one if I select an html attachment from
+# the attachment menu.
+text/html; ~/bin/links %s; nametemplate=%s.html
+text/html; ~/bin/links -dump %s; copiousoutput
+###text/html; w3m -dump -T text/html; copiousoutput
+
+# Assumes symlink from mutt-graphic to mutt-jpg exists.
+image/jpeg; cat %s | ~/bin/mutt-jpg ; copiousoutput
+image/jpg; cat %s | ~/bin/mutt-jpg ; copiousoutput
+###image/pjpg; echo %s | sed "s/'//" | cat - | ~/bin/mutt-jpg ; copiousoutput
+image/gif; cat %s | ~/bin/mutt-gif ; copiousoutput
+
+application/msword; cat %s | strings; copiousoutput

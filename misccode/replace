@@ -1,0 +1,29 @@
+#!/bin/sh
+##############################################################################
+#     Name: replace
+#
+#  Summary: Replace string(s) in all files in pwd.  This masks W2K's replace()
+#
+#           May want to use Vim's :args :argdo approach instead.
+#
+#  Created: Mon 18 Mar 2002 10:00:18 (Bob Heckel)
+# Modified: Sat 02 Oct 2004 21:18:32 (Bob Heckel)
+##############################################################################
+
+number_of_expected_args=2
+
+Usage() {
+  echo "Usage: `basename $0` oldstring newstring
+  Replace string(s) in all files in $PWD
+  Creates .bak files for all files modified"
+
+  exit 1
+}
+
+
+if [ $# -ne $number_of_expected_args ]; then
+  Usage
+fi
+
+# Replacer (recursive with backup) replace all instances of XXX
+find . -type f | xargs perl -pi.bak -e "s/$1/$2/"

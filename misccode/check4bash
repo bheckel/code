@@ -1,0 +1,54 @@
+#!/bin/sh
+##############################################################################
+#     Name: check4bash
+#
+#  Summary: Scratch 'n' sniff a file that might have sh incompatibilities.
+#           A.k.a. bashisms.
+#
+# Adapted: Thu 11 Jul 2002 08:21:49 (Bob Heckel -- from /usr/bin Debian)
+##############################################################################
+  
+Usage() {
+  echo "Usage: `basename $0` shellscript.sh
+  Checks shell scripts for bash-like incompatibilities."
+
+  exit 1
+}
+
+N_EXPECTED_ARGS=1
+
+if [ $# -ne $N_EXPECTED_ARGS ]; then 
+  Usage
+  exit 1
+fi
+
+TMP=tempfile$$
+
+sed <$1 >$TMP -e '/[[:space:]]*#/d'
+
+if grep -q '{.*,.*}' $TMP; then
+  echo "$1: Might use {} Brace Expansion"
+  rm $TMP
+  exit 1
+fi
+
+if grep -q "[[:space:]]~" $TMP; then
+  echo "$1: Might use ~ Tilde Expansion"
+  rm $TMP
+  exit 1
+fi
+
+if grep -q '&>' $TMP; then
+  echo "$1: Might use special Redirection Symbol &>"
+  rm $TMP
+  exit 1
+fi
+
+if grep -q select $TMP; then
+  echo "$1 Might use the select Statement"
+  rm $TMP
+  exit 1
+fi
+
+rm $TMP
+exit 0

@@ -1,0 +1,134 @@
+<html>
+<head>
+<title>Binary vs. Decimal Measurements</title>
+</head>
+<body>
+<p>Binary vs. Decimal Measurements</b></u></p>
+<p>From http://www.pcguide.com</p>
+
+<p>One of the most confusing problems regarding PC statistics and measurements is the fact
+that the computing world has two different definitions for most of its measurement terms.
+:^) Capacity measurements are usually expressed in kilobytes (thousands of bytes), in
+megabytes (millions of bytes), or gigabytes (billions of bytes). Due to a mathematical
+coincidence, however, there are two different meanings for each of these measures.</p>
+
+<p>Computers are digital and <a href="../works/comput_Math.htm">store data using binary
+numbers</a>, or powers of two, while humans normally use <em>decimal</em> numbers,
+expressed as powers of ten. As it turns out, two to the tenth power, 2^10, is 1,024, which
+is very close in value to 1,000 (10^3).&nbsp; Similarly, 2^20 is 1,048,576, which is
+approximately 1,000,000 (10^6), and 2^30 is 1,073,741,824, close to 1,000,000,000 (10^9).
+When computers and binary numbers first began to be used regularly, computer scientists
+noticed this similarity, and for convenience, &quot;hijacked&quot; the abbreviations
+normally used for decimal numbers and began applying them to binary numbers. Thus, 2^10
+was given the prefix &quot;kilo&quot;, 2^20 was called &quot;mega&quot;, and 2^30
+&quot;giga&quot;.</p>
+
+<p>This shorthand worked fairly well when used only by technicians who worked regularly
+with computers; they knew what they were talking about, and nobody else really cared. Over
+the years however, computers have become mainstream, and the dual notation has led to
+quite a bit of confusion and inconsistency. In many areas of the PC, only binary measures
+are used. For example, &quot;64 MB of system RAM&quot; always means 64 times 1,048,576
+bytes of RAM, never 64,000,000. In other areas, only decimal measures are found--a
+&quot;28.8K modem&quot; works at a maximum speed of 28,800 bits per second, not 29,491.</p>
+
+<p>Storage devices however are where the real confusion comes in. Some companies and
+software packages use binary megabytes and gigabytes, and some use decimal megabytes and
+gigabytes. What's worse is that the percentage discrepancy between the decimal and binary
+measures increases as the numbers get larger: there is only a 2.4% difference between a
+decimal and a binary kilobyte, which isn't that big of a deal. However, this increases to
+around a 5% difference for megabytes, and around 7.5% for gigabytes, which is actually
+fairly significant. This is why with today's larger hard disks, more people are starting
+to notice the difference between the two measures. Hard disk capacities are always stated
+in decimal gigabytes, while most software uses binary. So, someone will buy a &quot;30 GB
+hard disk&quot;, partition and format it, and then be told by Windows that the disk is
+&quot;27.94 gigabytes&quot; and wonder &quot;where the other 2 gigabytes went&quot;. Well,
+the disk <em>is</em> 27.94 gigabytes--27.94 <em>binary</em> gigabytes. The 2 gigabytes
+didn't go anywhere.</p>
+
+<p>Another thing to be careful of is converting between binary gigabytes and binary
+megabytes. <i>Decimal</i> gigabytes and megabytes differ by a factor of 1,000 but of
+course the binary measures differ by 1,024. So this same 30 GB hard disk is 30,000 MB in
+decimal terms. But its 27.94 binary gigabytes are equal to 28,610 binary megabytes (27.94
+times 1,024).</p>
+
+<p>One final &quot;gotcha&quot; in this area is related to arithmetic done between units
+that have different definitions of &quot;mega&quot; or &quot;giga&quot;. For example: most
+people would say that the <a href="../../ref/mbsys/buses/types/pci.htm">PCI bus</a> has a
+maximum theoretical bandwidth of 133.3 Mbytes/second, because it is 4 bytes wide and runs
+at 33.3 MHz. The problem here is that the &quot;M&quot; in &quot;MHz&quot; is 1,000,000;
+but the &quot;M&quot; in &quot;Mbytes/second&quot; is 1,048,576. So the bandwidth of the
+PCI bus is more properly stated as 127.2 Mbytes/second (4 times 33,333,333 divided by
+1,048,576).</p>
+
+<p>There's potential good news regarding this whole binary/decimal conundrum. The <a href="http://www.ieee.org"><em>IEEE</em></a> has proposed a new naming convention for the
+binary numbers, to hopefully eliminate some of the confusion. Under this proposal, for
+binary numbers the third and fourth letters in the prefix are changed to &quot;bi&quot;,
+so &quot;mega&quot; becomes &quot;mebi&quot; for example. Thus, one megabyte would be 10^6
+bytes, but one <em>mebibyte</em> would be 2^20 bytes. The abbreviation would become
+&quot;1 MiB&quot; instead of &quot;1 MB&quot;. &quot;Mebibyte&quot; sounds goofy, but hey,
+I'm sure &quot;byte&quot; did too, 30 years ago. ;^) Here's a summary table showing the
+decimal and binary measurements and their abbreviations and values (&quot;bytes&quot; are
+shown as an example unit here, but the prefices could apply to any unit of measure):</p>
+
+<table border="1" cellspacing="2" bordercolor="#000000" cellpadding="4" width="537" bordercolorlight="#C0C0C0">
+  <tr>
+    <td width="62" bgcolor="#808080"><font size="2"><b><p align="CENTER">Decimal Name</b></font></td>
+    <td width="34" bgcolor="#808080"><font size="2"><b><p align="CENTER">Decimal Abbr.</b></font></td>
+    <td width="54" bgcolor="#808080"><font size="2"><b><p align="CENTER">Decimal Power</b></font></td>
+    <td width="139" bgcolor="#808080"><font size="2"><b><p align="RIGHT">Decimal Value</b></font></td>
+    <td width="41" bgcolor="#808080"><font size="2"><p align="CENTER"><strong>Binary Name</strong></font></td>
+    <td width="41" bgcolor="#808080"><font size="2"><b><p align="CENTER">Binary Abbr.</b></font></td>
+    <td width="43" bgcolor="#808080"><font size="2"><b><p align="CENTER">Binary Power</b></font></td>
+    <td width="124" bgcolor="#808080"><font size="2"><b><p align="RIGHT">Binary Value</b></font></td>
+  </tr>
+  <tr>
+    <td width="62" bgcolor="#C0C0C0"><font size="2"><b><p align="CENTER">Kilobyte</b></font></td>
+    <td width="34"><font size="2"><b><p align="CENTER">kB</b></font></td>
+    <td width="54"><font size="2"><p align="CENTER">10^3</font></td>
+    <td width="139"><font size="2"><p align="RIGHT">1,000</font></td>
+    <td width="41" bgcolor="#C0C0C0"><font size="2"><p align="CENTER"><strong>Kibibyte</strong></font></td>
+    <td width="41"><font size="2"><p align="CENTER"><strong>kiB</strong></font></td>
+    <td width="43"><font size="2"><p align="CENTER">2^10</font></td>
+    <td width="124"><font size="2"><p align="RIGHT">1,024</font></td>
+  </tr>
+  <tr>
+    <td width="62" bgcolor="#C0C0C0"><font size="2"><b><p align="CENTER">Megabyte</b></font></td>
+    <td width="34"><font size="2"><b><p align="CENTER">MB</b></font></td>
+    <td width="54"><font size="2"><p align="CENTER">10^6</font></td>
+    <td width="139"><font size="2"><p align="RIGHT">1,000,000</font></td>
+    <td width="41" bgcolor="#C0C0C0"><font size="2"><p align="CENTER"><strong>Mebibyte</strong></font></td>
+    <td width="41"><font size="2"><p align="CENTER"><strong>MiB</strong></font></td>
+    <td width="43"><font size="2"><p align="CENTER">2^20</font></td>
+    <td width="124"><font size="2"><p align="RIGHT">1,048,576</font></td>
+  </tr>
+  <tr>
+    <td width="62" bgcolor="#C0C0C0"><font size="2"><b><p align="CENTER">Gigabyte</b></font></td>
+    <td width="34"><font size="2"><b><p align="CENTER">GB</b></font></td>
+    <td width="54"><font size="2"><p align="CENTER">10^9</font></td>
+    <td width="139"><font size="2"><p align="RIGHT">1,000,000,000</font></td>
+    <td width="41" bgcolor="#C0C0C0"><font size="2"><p align="CENTER"><strong>Gibibyte</strong></font></td>
+    <td width="41"><font size="2"><p align="CENTER"><strong>GiB</strong></font></td>
+    <td width="43"><font size="2"><p align="CENTER">2^30</font></td>
+    <td width="124"><font size="2"><p align="RIGHT">1,073,741,824</font></td>
+  </tr>
+  <tr>
+    <td width="62" bgcolor="#C0C0C0"><font size="2"><b><p align="CENTER">Terabyte</b></font></td>
+    <td width="34"><font size="2"><b><p align="CENTER">TB</b></font></td>
+    <td width="54"><font size="2"><p align="CENTER">10^12</font></td>
+    <td width="139"><font size="2"><p align="RIGHT">1,000,000,000,000</font></td>
+    <td width="41" bgcolor="#C0C0C0"><font size="2"><p align="CENTER"><strong>Tebibyte</strong></font></td>
+    <td width="41"><font size="2"><p align="CENTER"><strong>TiB</strong></font></td>
+    <td width="43"><font size="2"><p align="CENTER">2^40</font></td>
+    <td width="124"><font size="2"><p align="RIGHT">1,099,511,627,776</font></td>
+  </tr>
+</table>
+
+<p>Only time will tell if this standard, which you can read about <a href="http://physics.nist.gov/cuu/Units/binary.html"><em>here</em></a>, will catch on--old
+habits die hard. I for one will be doing my share though. As I update various portions of
+the site, I will be changing places where I used terms such as &quot;kB&quot; and
+&quot;MB&quot; for binary numbers into &quot;kiB&quot; and &quot;MiB&quot;. This may be
+confusing at first but I think we'll get used to it, and at least it will eliminate much
+of the confusion.</p>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+Adapted from http://docs.sun.com/db/doc/805-7228/6j6q7uepd?a=view
+
+E.g. start database at boot, kill at shutdown:
+
+# cp -i ~bheckel/src/mysql-4.0.20/support-files/mysql.server /etc/init.d/
+# chmod 744 /etc/init.d/mysql.server
+# chown root:sys /etc/init.d/mysql.server
+Kill database at shutdown (NOTE: hardlinks!)
+# cd /etc/rc0.d/ && ln /etc/init.d/mysql.server /etc/rc0.d/K01mysql
+Test:
+# /etc/rc0.d/K19mysql stop
+Start database at boot:
+# cd /etc/rc3.d/ && ln /etc/init.d/mysql.server /etc/rc3.d/S99mysql
+Test:
+# /etc/rc3.d/S99mysql start

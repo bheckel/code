@@ -1,0 +1,71 @@
+#!/bin/bash
+##############################################################################
+#     Name: cyginstall
+#
+#  Summary: Install Cygwin tarballs better than that perennial piece of 
+#           crap setup.exe
+#
+#           Needs bash for getopts()
+#
+#           TODO how to warn before overwriting old Cygwin files?  tar --diff
+#           doesn't seem to work.  For now, just using tar's -k
+#
+#  Created: Thu 07 Jun 2001 10:06:09 (Bob Heckel)
+# Modified: Sun 21 Dec 2003 22:02:39 (Bob Heckel)
+##############################################################################
+
+if [ $# = 0 ]; then
+  echo 'Installs a Cygwin tarball without setup.exe'
+	echo '  Allows review of files to be installed'
+  echo '  Usage: cyginstall [-k] tarball.[gz|bz2]'
+  echo '         -k to avoid overwriting existing files (keep)'
+  exit 1
+fi
+
+while getopts kK: the_option
+do
+  case "$the_option" in
+     k | K )  kopt=k;;  # both gzip and bunzip2 take a 'k' safety switch
+     \?    )  echo >&2 "$0: try -k.  Exiting."
+              exit 1
+              ;;
+  esac
+done
+shift `expr $OPTIND - 1` 
+
+basenm=`basename $1`
+dirnm=`dirname $1`
+
+if [ $dirnm = '.' ]; then
+  dirnm="`pwd`"    # get fully qualified path
+fi
+
+# Give visual clues as to what user will be getting.
+extension=${basenm##*.}
+
+if [ $extension = 'gz' ]; then
+  tar tvfz$kopt "${dirnm}/${basenm}"
+elif [ $extension = 'bz2' ]; then
+  tar tvfj$kopt "${dirnm}/${basenm}"
+else
+  echo "Unsupported file extension: $extension  Exiting."
+  exit 2
+fi
+
+cd / || exit 3
+
+echo -n "OK to untar ${dirnm}/${basenm} to `pwd` ? [y/n] "
+read yesno
+if [ "$yesno" = 'y' ]; then
+  if [ $extension = 'gz' ]; then
+    tar xvfz$kopt ${dirnm}/${basenm}
+  elif [ $extension = 'bz2' ]; then
+    tar xvfj$kopt ${dirnm}/${basenm}
+  fi
+  exit 0
+else 
+  echo 'Canceled by user'
+  exit 4
+fi
+
+exit 0

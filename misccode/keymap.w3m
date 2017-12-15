@@ -1,0 +1,35 @@
+# Modified: Wed 31 Dec 2014 09:31:35 (Bob Heckel)
+# Overrides /sys/pkg/share/doc/w3m/doc/keymap.default
+# ln -s keymap.w3m ~/.w3m/keymap  # symlinks FAIL!
+#
+# Ctrl  : C-, ^
+# Escape: ESC-, M-, ^[
+# Space : SPC, ' '
+# Tab   : TAB, ^i, ^I
+# Delete: DEL, ^?
+# Up    : UP, ^[[A
+# Down  : DOWN, ^[[B
+# Right : RIGHT, ^[[C
+# Left  : LEFT, ^[[D
+
+# Emulate vi
+keymap  LEFT MOVE_LEFT
+keymap  b PREV_WORD
+keymap  C-b PREV_PAGE
+keymap  C-y DOWN
+keymap  C-e UP
+keymap  C-r RELOAD
+keymap  C-w CLOSE_TAB
+keymap  0 LINE_BEGIN
+keymap  ? HELP
+keymap  m MENU
+keymap  h BACK
+keymap  x SUSPEND  # boss key
+
+###keymap S SELECT_MENU
+###keymap s SAVE
+# TODO not relative to current window
+###keymap  H GOTO_LINE 1
+###keymap  M GOTO_LINE 25
+###keymap  L GOTO_LINE 35
+###keymap  L GOTO_LINE +30

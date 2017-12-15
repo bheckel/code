@@ -1,0 +1,35 @@
+#!/bin/sh
+##############################################################################
+#     Name: clean
+#
+#  Summary: Clean out temp files.
+#
+#  Adapted: Mon 04 Feb 2002 12:13:43 (Bob Heckel -- UGU Tip 02/04/02)
+# Modified: Thu 29 Jan 2004 08:49:56 (Bob Heckel)
+##############################################################################
+
+if [ "$#" -lt 1 ]; then 
+  cat <<EOT
+Usage: $0 mydir
+  Recursively delete temp files like a.out *.bak, etc. in given dir 
+  (prompts first)'
+  E.g. $0 .
+EOT
+  exit 1
+fi
+
+Tmps() {
+  find "$1" \( -name 'a.out' -o -name '*.o' -o -name core -o -name 'a.exe' \
+               -o -name '*.bak' \) -exec $2 {} \;
+}
+
+# List what will be rm'd
+Tmps "$1" 'echo'
+
+echo -n 'OK to delete these files? '
+
+read yn
+
+if [ $yn = 'y' ]; then
+  Tmps "$1" 'rm'
+fi

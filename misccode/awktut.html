@@ -1,0 +1,1769 @@
+<HEADER>
+<TITLE> AN INTRODUCTION TO AWK</TITLE>
+</HEADER>
+<BODY>
+<H1><B> <P><Center> Introduction to akw</Center> <P>
+Part 1 of 3</B></H1><p>
+<HR SIZE=4>
+Original Author : Brian Brown, CIT<P>
+Revision : 1.0<P>
+Date : 05/05/94<P>
+<HR>
+<!A HREF="default.htm"><!IMG SRC="images/menu.gif"></A>
+<!A HREF="awk001.htm"><!IMG SRC="images/next.gif"></A>
+
+<h2><B>INTRODUCTION</B></h2>
+awk is a programming language designed to search for, match patterns, and perform 
+actions on files. awk programs are generally quite small, and are interpreted. This 
+makes it a good language for prototyping.<P>
+
+<HR>
+<H3><B>THE STRUCTURE OF AN AWK PROGRAM</B></H3>
+awk scans input lines one after the other, searching each line to see if it matches a set 
+of patterns or conditions specified in the awk program.<P>
+For each pattern, an action is specified. The action is performed when the pattern matches 
+that of the input line.<P>
+Thus, an awk program consists of a number of patterns and associated actions. Actions 
+are enclosed using curly braces, and separated using semi-colons.
+<PRE>
+	pattern  { action }
+	pattern  { action }
+
+</PRE>
+<HR>
+<H3><B>INPUT LINES TO awk</B></H3>
+When awk scans an input line, it breaks it down into a number of fields. Fields are 
+separated by a space or tab character. Fields are numbered beginning at one, and the dollar 
+symbol ($) is used to represent a field.<P>
+<P>
+For instance, the following line in a file
+<PRE>
+	I like money.
+</PRE>
+has three fields. They are
+<PRE>
+	$1	I
+	$2	like
+	$3	money.
+</PRE>
+Field zero ($0) refers to the entire line.<P>
+<P>
+awk scans lines from a file(s) or standard input.<P>
+<P>
+<HR>
+<H3><B>Your first awk program</B></H3>
+Consider the following simple awk program.
+<PRE>
+	{ print $0 }
+
+</PRE>
+There is no pattern to match, only an action expressed. This means that for every line 
+encountered, perform the action.<P>
+
+The action <I>prints</I> field 0 (the entire line). <P>
+
+<B>Using a text editor, create a file called <I>myawk1</I> and place the above statement 
+in it. Save the file and return to the Unix shell prompt.</B><P>
+
+<HR>
+<H3><B>Running an awk program</B></H3>
+To run the above program, <B>type</B> following command
+<PRE>
+	awk   -f myawk1  /etc/group
+
+</PRE>
+awk interprets the actions specified in the program file <I>myawk1</I>, and applies this to each 
+line read from the file <I>/etc/group</I>. The effect is to print out each input line read from the 
+file, in effect, displaying the file on the screen (same as the Unix command <I>cat</I>).<P>
+<HR>
+<H3><B>Searching for a string within an input line</B></H3>
+To search for an occurrence of a string in an input line, specify it as a pattern and 
+enclose it using a forward slash symbol. In the example below, it searches each input line 
+for the string <I>brian</I>, and the action prints the entire line.
+<PRE>
+	/brian/   { print  $0 }
+
+</PRE>
+<B>Edit <I>myawk1</I> and change the search string to your username. Run the program 
+on the files <I>/etc/group</I> and <I>/etc/passwd</I></B>
+<PRE>
+	awk  -fmyawk1  /etc/group
+
+	awk  -fmyawk1  /etc/passwd
+
+</PRE>
+<B>Compared to the previous example where there was no pattern specified, what is the 
+difference in the output of this program.</B>
+<PRE>
+	............................................................................................
+
+	............................................................................................
+
+	............................................................................................
+</PRE>
+<B>Type the following command.</B> This runs the program <I>who</I> and sends its 
+output of who is logged on the system to the awk program which scans each line for the 
+search string. It will thus list out a line containing your login name, terminal number and 
+login date/time.
+<PRE>
+	who  |  awk -f myawk1
+
+</PRE>
+<B>Change the contents of <I>myawk1</I> to read</B> (replace the search string with your 
+login name)
+<PRE>
+	/brian/   { print $1, $2 }
+
+</PRE>
+<B>What do you expect the output of the program to be? (what fields will it print out?)</B>
+<PRE>
+	............................................................................................
+
+	............................................................................................
+
+	............................................................................................
+
+</PRE>
+<B>Now type the command</B>
+<PRE>
+	who | awk -f myawk1
+
+</PRE>
+<B>What happened? How is the output different than before.</B>
+<PRE>
+	............................................................................................
+
+	............................................................................................
+
+	............................................................................................
+
+</PRE>
+<HR>
+<H3><B>Using awk programs with form files</B></H3>
+awk programs are particularly suited to generating reports or forms. In the following 
+examples, we shall use the following textual data as the input file. The file is available from 
+your tutor, can be typed in using a UNIX editor, or is available on the ftp host 
+<I>brian.cit.ac.nz</I>, in the <I>OS202</I> subdirectory as the file <I>awktext</I>. A heading 
+has been provided here for clarity, there is no header in the data file.
+<PRE>
+<B>	Type	Memory (Kb)	Location	Serial #	HD Size (Mb)</B>
+	XT	640		D402		MG0010		0
+	386	2048		D403		MG0011		100
+	486	4096		D404		MG0012		270
+	386	8192		A423		CC0177		400
+	486	8192		A424		CC0182		670
+	286	4096		A423		CC0183		100
+	286	4096		A425		CC0184		80
+	Mac	4096		B407		EE1027		80
+	Apple	4096		B406		EE1028		40
+	68020	2048		B406		EE1029		80
+	68030	2048		B410		EE1030		100
+	$unix	16636		A405		CC0185		660
+	"trs80"	64		Z101		EL0020		0
+
+</PRE>
+In addition, all examples (awk program files myawk<I>nn</I>) are available from your 
+tutor or by <B>ftp</B> from the ftp host <I>brian.cit.ac.nz</I> in the <I>OS202</I> 
+subdirectory (username=<I>guest</I>, password=<I>os2</I>). A public domain 
+MSDOS awk program (<I>awk.exe</I>) is also located in this subdirectory.<P>
+<HR>
+<H3><B>Simple Pattern Selection</B></H3>
+This involves specifying a pattern to match for each input line scanned. The following 
+awk program (myawk2) compares field one ($1) and if the field matches the string "386", 
+the specific action is performed (the entire line is printed).
+<PRE>
+	$1 == "386"  { print $0 }
+</PRE>
+Note: The <B>==</B> symbol represents an equality test, thus in the above pattern, it 
+compares the string of field one against the constant string "386", and performs the action 
+if it matches.
+<PRE>
+<B>	Create the program</B>
+
+		$ <B>cat  -  &gt   myawk2
+		$1 == "386"  { print $0 }
+		&lt ctrl-d&gt </B>
+		$
+		
+		Note: &lt ctrl-d&gt  is a keypress to terminate input to the shell. Hold 
+		down the ctrl key and then press d. User input is shown in bold type.
+
+
+<B>	Run The Program</B>
+
+		$ <B>awk  -f  myawk2   awktext</B>
+
+
+<B>	Sample Program Output</B>
+
+		386     2048            D403            MG0011    100
+		386     8192            A423            CC0177    400
+
+		The program prints out all input lines where the computer type is a 
+		"386".
+
+
+</PRE>
+<B>Write</B> an awk program which prints out all input lines where a computer has 
+4096 Kb of memory. After running the program successfully, enter it in the space provided 
+below.
+<PRE>
+	..................................................................................
+
+</PRE>
+<HR>
+<H3><B>Using Comments In awk Programs</B></H3>
+Comments begin with the hash (#) symbol and continue till the end of the line. The 
+awk program below adds a comment to a previous awk program shown earlier
+<PRE>
+	#myawk3, same as myawk2 but has a comment in it
+	$1 == "386"  { print $0 }
+
+</PRE>
+Comments can be placed anywhere on the line. The example below shows the comment 
+placed after the action.
+<PRE>
+	$1 == "386"  { print $0 }   # print all records where the computer is a 386
+
+</PRE>
+Remember that the comment ends at the end of the line. The following program is thus 
+wrong, as the closing brace of the action is treated as part of the comment.
+<PRE>
+	$1 == "386  { print $0    #print out all records  }
+
+</PRE>
+<HR>
+<H3><B>Relational Expressions</B></H3>
+We have already seen the equality test. Detailed below are the other relational 
+operators used in comparing expressions.
+<PRE>
+	&lt 	less than
+	&lt =	less than or equal to
+	==	equal to
+	!=	not equal
+	&gt =	greater than or equal to
+	&gt 	greater than
+	~	matches
+	!~	does not match
+
+</PRE>
+<P>
+<B>Some Examples Of Using Relational Operators</B>
+<PRE>
+	# myawk4, an awk program to display all input lines for computers 
+	# with less than 1024 Kb of memory 
+	$2 &lt  1024  { print $0 }
+
+<B>	myawk4 Program Output</B>
+	XT	640		D402		MG0010	0
+	"trs80"	64		Z101		EL0020	0
+
+	===================================================================
+	# myawk5
+	# an awk program to print the location/serial number of 486 computers
+	$1 == "486"  { print $3, $4 }
+
+<B>	myawk5 Program Output</B>
+	D404  MG0012
+	A424  CC0182
+
+	===================================================================
+	# myawk6 
+	# an awk program to print out all computers belonging to management.
+	/MG/  { print $0 }
+
+<B>	myawk6 Program Output</B>
+	XT	640		D402		MG0010	0
+	386	2048		D403		MG0011	100
+	486	4096		D404		MG0012	270
+
+</PRE>
+The awk program <I>myawk6</I> scans each input line searching for the occurrence of the 
+string <B>MG</B>. When found, the action prints out the line. The problem with this is it might 
+be possible for the string <B>MG</B> to occur in another field, but the serial number indicate that 
+it belongs to another department. <P>
+What is necessary is a means of matching only a specific field. To apply a search to a 
+specific field, the match (<B>~</B>) symbol is used. The modified awk program shown 
+below searches field 4 for the string <B>MG</B>.
+<PRE>
+	# myawk6A
+	# improved awk program, print out all computers belonging to management.
+	$4 ~ /MG/  { print $0 }
+
+<B>	myawk6a Program Output</B>
+	XT	640		D402		MG0010	0
+	386	2048		D403		MG0011	100
+	486	4096		D404		MG0012	270
+
+</PRE>
+<B>What do the following examples do?</B>
+<PRE>
+	$2 != "4096"  { print $0 }
+
+		....................................................................................
+
+		....................................................................................
+
+
+	$5 &gt  100    { print $4 }
+
+		....................................................................................
+
+		....................................................................................
+
+
+	$4 !~ /CC/    { print $0 }
+
+		....................................................................................
+
+		....................................................................................
+
+</PRE>
+<B>Write</B> an awk program to display the location of all computers belonging to the 
+computer centre (code CC). Test the program, and after running the program successfully, 
+enter the program in the space provided below.
+<PRE>
+	..................................................................................
+
+</PRE>
+<HR>
+<H3><B>Making the output a bit more meaningful</B></H3>
+In all the previous examples, the output of the awk program has been either the entire 
+line or fields within the line. Lets add some text to make the output more meaningful. 
+Consider the following awk program,
+<PRE>
+	# myawk7
+	# list computers located in D block, type and location
+	$3 ~ /D/  { print "Location = ", $3, "  type = ", $1 }
+
+<B>	myawk7</B> <B>Program Output</B>
+	Location =   D402  type =   XT
+	Location =   D403  type =   386
+	Location =   D404  type =   486
+
+</PRE>
+<HR>
+<H3><B>Text And Formatted Output Using printf</B></H3>
+We shall tidy the output information by using a built in function of awk called 
+<I>printf</I>. C programmers will have no difficulty using this, as it operates the same 
+way as in the C programming language. <P>
+<HR>
+<H3><B>Printing A Text String</B></H3>
+Lets examine how to print out some simple text. Consider the following 
+statement,
+<PRE>
+	printf( "Location : " );
+</PRE>
+The <I>printf</I> statement is terminated by a semi-colon. Brackets are used to 
+enclose the argument, and the text is enclosed using double quotes. Now lets 
+combine it into an actual awk program which displays the location of all 286 
+type computers.
+<PRE>
+	#myawk8
+	$1 == "286" {  printf( "Location : ");   print $3 }
+
+<B>	myawk8 Program Output</B>
+	Location : A423
+	Location : A425
+
+</PRE>
+<HR>
+<H3><B>Printing A Field Which Is A Text String</B></H3>
+Lets now examine how to use printf to display a field which is a text 
+string. In the previous program, a separate statement (print $3) was used to 
+write the room location. In the program below, this will be combined into the 
+<I>printf</I> statement also.
+<PRE>
+	#myawk9
+	$1 == "286"  {  printf( "Location is %s\n", $3 );  }
+
+<B>	myawk9 Program Output</B>
+	Location is A423
+	Location is A425
+</PRE>
+<B>Note:</B> The symbol \n causes subsequent output to begin on a new line. The 
+symbol %s informs printf to print out a text string, in this case it is the 
+contents of the field $3.
+<P>
+Consider the following awk program which prints the location and serial 
+number of all 286 computers.
+<PRE>
+	#myawk10
+	$1=="286" { printf( "Location = %s, serial # = %s\n", $3, $4 ); }
+
+<B>	myawk10 Program Output</B>
+	Location = A423, serial # = CC0183
+	Location = A425, serial # = CC0184
+</PRE>
+<B>Write</B> an awk program which lists the serial numbers of all 
+computers belonging to the management school. After running the program 
+successfully, enter it in the space provided below.
+<PRE>
+		...............................................................................
+
+</PRE>
+<HR>
+<H3><B>Printing A Numeric Value</B></H3>
+Lets now see how to print a numeric value. The symbol %d is used for 
+numeric values. The following awk program lists the location and disk 
+capacity of all 486 computers.
+<PRE>
+	#myawk11
+	$1=="486" { printf("Location = %s, disk = %dKb\n", $3, $5 );  }
+
+<B>	myawk11 Program Output</B>
+	Location = D404, disk = 270Kb
+	Location = A424, disk = 670Kb
+</PRE>
+<B>Write</B> an awk program which lists the memory size and serial 
+number of all computers which have a hard disk greater than 80Mb in size. 
+After running the program successfully, enter it in the space provided 
+below.
+<PRE>
+	...............................................................................
+
+</PRE>
+<HR>
+<H3><B>Formatting Output</B></H3>
+Lets see how to format the output information into specific field widths. 
+A modifier to the %s symbol specifies the size of the field width, which by 
+default is right justified.<P>
+<PRE>
+	#myawk12
+	# formatting the output using a field width
+	$1=="286" {printf("Location = %10s, disk = %5dKb\n",$3,$5);}
+
+<B>	myawk12 Program Output</B>
+	Location =       A423, disk =   100Kb
+	Location =       A425, disk =     80Kb
+</PRE>
+10%s specifies to print out field $3 using a field width of 10 characters, and 
+%5d specifies to print out field $5 using a field width of 5 digits.<P>
+<P>
+<HR SIZE=4>
+<H3><B>Summary of printf so far</B></H3>
+Below lists the options to printf covered above. [n] indicates optional 
+arguments.
+<PRE>
+	%[n]s		print a text string
+	%[n]d		print a numeric value
+	\n		print a new-line
+
+</PRE>
+<HR>
+<H3><B>The BEGIN And END Statements Of An awk Program</B></H3>
+The keywords BEGIN and END are used to perform specific actions relative to the 
+programs execution.
+<PRE>
+<B>	BEGIN</B>	The action associated with this keyword is executed before the
+		first input line is read.
+
+<B>	END</B>	The action associated with this keyword is executed after all
+		input lines have been processed.
+</PRE>
+The <b>BEGIN</B> keyword is normally associated with printing titles and setting default values, 
+whilst the <B>END</B> keyword is normally associated with printing totals.<P>
+
+Consider the following awk program, which uses BEGIN to print a title.
+<PRE>
+	#myawk13
+	BEGIN   { print "Location of 286 Computers" }
+	$1 == "286"  { print $3 }
+
+<B>	myawk13 Program Output</B>
+	Location of 286 Computers
+	A423
+	A425
+
+</PRE>
+<HR>
+<H3><B>Introducing awk Defined Variables</B></H3>
+awk programs support a number of pre-defined variables.
+<PRE>
+	NR	the current input line number
+	NF	number of fields in the input line
+
+
+	#myawk14
+	# print the number of computers
+	END	{ print "There are ", NR, "computers" }
+
+<B>	myawk14 Program Output</B>
+	There are  13 computers
+
+</PRE>
+<HR>
+<H3><B>User Defined Variables In An awk Program</B></H3>
+awk programs support the use of variables. Consider an example where we want to 
+count the number of 486 computers we have. Variables are explicitly initialised to zero by 
+awk, so there is no need to assign a value of zero to them.<P>
+
+The following awk program counts the number of 486 computers, and uses the <B>END</B> 
+keyword to print out the total after all input lines have been processed. When each input 
+line is read, field one is checked to see if it matches <I>486</I>. If it does, the awk variable 
+<I>computers</I> is incremented (the symbol ++ means increment by one).
+<PRE>
+	#myawk15
+	$1 == "486"  { computers++ }
+	END	{  printf("The number of 486 computers is %d\n", computers);  }
+
+<B>	myawk15 Program Output</B>
+	The number of 486 computers is 2
+
+	Note: There is no need to explicitly initialise the variable 'computers' to 
+	zero. awk does this by default.
+
+</PRE>
+<B>Write</B> an awk program which counts the number of computers which have 
+8192Kb or greater amounts of memory, then prints the number found at the end of the 
+program. After running the program successfully, enter it in the space provided below.
+<PRE>
+		...............................................................................
+
+		...............................................................................
+
+</PRE>
+<B>Write</B> an awk program which sums the disk space of all computers, then 
+prints the total disk space at the end of the program. After running the program 
+successfully, enter it in the space provided below.
+<PRE>
+		...............................................................................
+
+		...............................................................................
+
+</PRE>
+<HR>
+<!A HREF="default.htm"><!IMG="images/menu.gif">
+<!A HREF="awk001.htm"><!IMG SRC="images/next.gif"></A><p>
+</BODY>
+
+
+
+
+<HR>
+<HEADER>
+<TITLE> AN INTRODUCTION TO AWK</TITLE>
+</HEADER>
+<BODY>
+<H1><B> <P><Center> Introduction to akw </Center> <P>
+Part 2 of 3</B></H1><p>
+<HR SIZE=4>
+Original Author : Brian Brown, CIT<P>
+Revision : 1.0<P>
+Date : 05/05/94<P>
+ref awk.doc<P>
+<HR>
+<!A HREF="default.htm"><!IMG SRC="images/menu.gif"></A>
+<!A HREF="awk000.htm"><!IMG SRC="images/previous.gif"></A>
+<!A HREF="awk002.htm"><!IMG SRC="images/next.gif"></A>
+
+<H3><B>Regular Expressions</B></H3>
+awk provides pattern searching which is more comprehensive than the simple 
+examples outlined previously. These patterns are called <I>regular expressions</I>, and 
+are similar to those supported by other UNIX utilities like <B>grep</B>.<P>
+
+The simplest regular expression is a string enclosed in slashes,
+<PRE>
+	/386/
+</PRE>
+In the above example, any input line containing the string <I>386</I> will be printed. To restrict 
+a search to a specific field,  the match (or not match) symbol is used. In the following 
+example, field one of the input line is searched for the string <I>386</I>.
+<PRE>
+	$1  ~  /386/
+</PRE>
+In regular expressions, the following symbols are metacharacters with special 
+meanings.
+<PRE>
+	\  ^  $  .  [  ]  *  +  ?  (  )  |
+
+	^	matches the first character of a string
+	$	matches the last character of a string
+	.	matches a single character of a string
+	[ ]	defines a set of characters
+	( )	used for grouping
+	|	specifies alternatives
+
+</PRE>
+A group of characters enclosed in brackets matches to any one of the enclosed characters. 
+In the example below (myawk16), field one is matched against either "8" or "6".
+<PRE>
+	#myawk16, display all x8x computer types
+	$1 ~ /[86]/  { print $0 }
+
+<B>	myawk16 Program Output</B>
+	386	2048		D403		MG0011	100
+	486	4096		D404		MG0012	270
+	386	8192		A423		CC0177	400
+	486	8192		A424		CC0182	670
+	286	4096		A423		CC0183	100
+	286	4096		A425		CC0184	80
+	68020	2048		B406		EE1029	80
+	68030	2048		B410		EE1030	100
+	"trs80"	64		Z101		EL0020	0
+</PRE>
+Note: In this example, field one is searched for the character '8' and '6', in any order of 
+occurrence and position.<P>
+
+If the first character after the opening bracket ([) is a caret (^) symbol, this complements 
+the set so that it matches any character NOT IN the set. The following example 
+(myawk17) shows this, matching field one with any character except "2" "3" "4" "8" or "6".
+<PRE>
+	#myawk17
+	# display all which do not contain 2, 3, 4, 6 or 8 in first field
+	$1  ~  /[^23468]/  { print $0 }
+
+<B>	myawk17 Program Output</B>
+	XT	640		D402		MG0010	0
+	Mac	4096		B407		EE1027	80
+	Apple	4096		B406		EE1028	40
+	68020	2048		B406		EE1029	80
+	68030	2048		B410		EE1030	100
+	$unix	16636		A405		CC0185	660
+	"trs80"	64		Z101		EL0020	0
+
+<B>	Why are the lines containing "68020", "68030" and "trs80" also displayed?</B>
+
+	............................................................................................
+
+	............................................................................................
+
+	............................................................................................
+
+
+
+	#myawk18
+	# display all lines where field one contains A-Z, a-z
+	$1  ~  /[a-zA-Z]/  { print $0 }
+
+<B>	myawk18 Program Output</B>
+	XT	640		D402		MG0010	0
+	Mac	4096		B407		EE1027	80
+	Apple	4096		B406		EE1028	40
+	$unix	16636		A405		CC0185	660
+	"trs80"	64		Z101		EL0020	0
+</PRE>
+Parentheses are used to group options together, and the vertical bar is used for 
+alternatives. In the following example (myawk19), it searches all input lines for the string 
+"Apple", "Mac", "68020" or "68030".
+<PRE>
+	#myawk19
+	# illustrate multiple searching using alternatives
+	/(Apple|Mac|68020|68030)/   { print $0 }
+
+<B>	myawk19 Program Output</B>
+	Mac	4096		B407		EE1027	80
+	Apple	4096		B406		EE1028	40
+	68020	2048		B406		EE1029	80
+	68030	2048		B410		EE1030	100
+</PRE>
+<P>
+To use metacharacters as part of a search string, their special meaning must be disabled. 
+This is done by preceding them with the backslash (\) symbol. The following example 
+prints all input lines which contain the string "b$".
+<PRE>
+	/b\$/   { print $0 }
+
+</PRE>
+<B>Write</B> an awk program which prints out all input lines for computers which 
+belong to the school of management (using metacharacters). After running the program 
+successfully, enter it in the space provided below.
+<PRE>
+		...............................................................................
+
+</PRE>
+<B>Write</B> an awk program which prints out all input lines for computer types which 
+begin with a dollar ($) symbol (using metacharacters). After running the program 
+successfully, enter it in the space provided below.
+<PRE>
+		...............................................................................
+
+</PRE>
+<HR>
+<H3><B>Special symbols recognised by awk</B></H3>
+In addition to metacharacters, awk recognises the following C programming 
+language escape sequences within regular expressions and strings.
+<PRE>
+	\b	backspace
+	\f	formfeed
+	\r	carriage return
+	\t	tab
+	\"	double quote
+
+</PRE>
+The following example prints all input lines which contain a tab character
+<PRE>
+	/\t/  { print $0 }
+
+</PRE>
+Consider also the use of string concatenation in pattern matching. The plus (+) symbol 
+concatenates one or more strings in pattern matching. The following awk program 
+(myawk16a) searches for computer types which begin with a dollar ($) symbol and are 
+followed by an alphabetic character (a-z, A-Z), and the last character in the string is the 
+symbol x.
+<PRE>
+	#myawk16a
+	$1  ~  /^\$+[a-zA-Z]+x$/  { print $0 }
+
+<B>	myawk16 Program Output</B>
+	$unix	16636		A405		CC0185	660
+
+</PRE>
+<B>Write</B> an awk program which prints out all input lines for computer types which 
+are enclosed in double quotes (using metacharacters). After running the program 
+successfully, enter it in the space provided below.
+<PRE>
+		...............................................................................
+</PRE>
+awk interprets any string or variable on the right side of a ~ or !~ as a regular expression. 
+This means the regular expression can be assigned to a variable, and the variable used later 
+in pattern matching. An earlier awk program (myawk17) searched for input lines where 
+field one did not contain the digits 2, 3, 4, 6 or 8. 
+<PRE>
+	#myawk17
+	# display all which do not contain 2, 3, 4, 6 or 8 in first field
+	$1  ~  /[^23468]/  { print $0 }
+</PRE>
+<P>
+The awk program below shows how to rewrite this (myawk17) using a variable which is 
+assigned the regular expression.
+<PRE>
+	#myawk20
+	BEGIN  { matchstr = "[^23468]" }
+	$1  ~  matchstr  { print $0 }
+
+<B>	myawk20 Program Output</B>
+	XT	640		D402		MG0010	0
+	Mac	4096		B407		EE1027	80
+	Apple	4096		B406		EE1028	40
+	68020	2048		B406		EE1029	80
+	68030	2048		B410		EE1030	100
+	$unix	16636		A405		CC0185	660
+	"trs80"	64		Z101		EL0020	0
+</PRE>
+Consider the following example, which searches for all lines which contain the 
+double quote character (").
+<PRE>
+	#myawk21
+	BEGIN  {  matchstr = "\"" }
+	$1 ~ matchstr  {  print  $0  }
+
+
+<B>	myawk21 Program Output</B>
+	"trs80"	64		Z101		EL0020	0
+
+</PRE>
+<HR>
+<H3><B>Combining Patterns</B></H3>
+Patterns can be combined to provide more powerful and complex matching. The following 
+symbols are used to combine patterns.
+<PRE>
+	||		logical or, either pattern can match
+	&amp&amp 		logical and, both patterns must match
+	!		logical not, patterns not matching
+</PRE>
+Lets suppose we want a list of all "486" computers which have more than 250Mb of hard 
+disk space. The following awk pattern uses the logical and to construct the necessary 
+pattern string.
+<PRE>
+	#myawk22
+	$1 == "486"  &amp&amp   $5 &gt  250  { print  $0 }
+
+<B>	myawk22 Program Output</B>
+	486	4096		D404		MG0012	270
+	486	8192		A424		CC0182	670
+</PRE>
+<B>Write</B> and awk program which lists all computers of type "286" which have 2Mb or more 
+memory. After running the program successfully, enter it in the space provided below.
+<PRE>
+		...............................................................................
+
+</PRE>
+<B>Write</B> and awk program which lists all computers of type "286", "386" and 
+"486"  which have a hard disk fitted. After running the program successfully, enter it in the space 
+provided below.
+<PRE>
+		...............................................................................
+
+</PRE>
+<HR>
+<H3><B>awk Pattern Ranges</B></H3>
+A pattern range is two patterns separated by a comma. The action is performed for each 
+input line between the occurrence of the first and second pattern.
+<PRE>
+	#myawk23
+	# demonstrate the use of pattern ranges
+	/XT/, /Mac/   { print $0 }
+
+<B>	myawk23 Program Output</B>
+	XT	640		D402		MG0010	0
+	386	2048		D403		MG0011	100
+	486	4096		D404		MG0012	270
+	386	8192		A423		CC0177	400
+	486	8192		A424		CC0182	670
+	286	4096		A423		CC0183	100
+	286	4096		A425		CC0184	80
+	Mac	4096		B407		EE1027	80
+</PRE>
+The awk program <I>myawk23 </I>prints out all input lines between the first occurrence 
+of "XT" and the next occurrence of  "Mac".<P>
+<P>
+<B>Write</B> an awk program using a pattern range to print out all input lines 
+beginning with the first computer fitted with 8192Kb of memory, up to the next computer 
+which has less than 80Mb of hard disk. After running the program successfully, enter it in 
+the space provided below.
+<PRE>
+		...............................................................................
+
+</PRE>
+<HR>
+<H3><B>awks Built In Variables</B></H3>
+awk provides a number of internal variables which it uses to process files. These 
+variables are accessible by the programmer. The following is a summary of awk's built-in 
+variables.
+<PRE>
+	ARGC		number of command-line arguments
+	ARGV		array of command-line arguments
+	FILENAME	name of current input file
+	FNR		record number in current file
+	FS		input field separator (default= space and tab characters)
+	NF		number of fields in input line
+	NR		number of input lines read so far
+	OFMT		output format for numbers (default=%.6)
+	OFS		output field separator (default=space)
+	ORS		output line separator (default=newline)
+	RS		input line separator (default=newline)
+	RSTART		index of first character matched by <B>match()</B>
+	RLENGTH		length of string matched by <B>match()</B>
+	SUBSEP		subscript separator (default="\034")
+
+
+	#myawk24
+	# print the first five input lines of a file, bit like <I>head</I>
+	FNR == 1, FNR == 5  {  print $0 }
+
+<B>	myawk24 Program Output</B>
+	XT	640		D402		MG0010	0
+	386	2048		D403		MG0011	100
+	486	4096		D404		MG0012	270
+	386	8192		A423		CC0177	400
+	486	8192		A424		CC0182	670
+
+	===================================================================
+	#myawk25
+	# print each input line preceded with a line number
+	# print the heading which includes the name of the file
+	BEGIN  {  print "File:", FILENAME }
+	{ print NR, ":\t", $0 }
+
+<B>	myawk25 Program Output</B>
+	File:  awktext
+	1 :	XT	640		D402		MG0010	0
+	2 :	386	2048		D403		MG0011	100
+	3 :	486	4096		D404		MG0012	270
+	4 :	386	8192		A423		CC0177	400
+	5 :	486	8192		A424		CC0182	670
+	6 :	286	4096		A423		CC0183	100
+	7 :	286	4096		A425		CC0184	80
+	8 :	Mac	4096		B407		EE1027	80
+	9 :	Apple	4096		B406		EE1028	40
+	10 :	68020	2048		B406		EE1029	80
+	11 :	68030	2048		B410		EE1030	100
+	12 :	$unix	16636		A405		CC0185	660
+	13 :	"trs80"	64		Z101		EL0020	0
+
+	===================================================================
+	#myawk26
+	# demonstrate use of argc and argv parameters
+	BEGIN  {  print "There are ",ARGC, "parameters on the command line";
+	               print "The first argument is ", ARGV[0];
+	               print "The second argument is ", ARGV[1]
+	        }
+
+<B>	myawk26 Program Output</B>
+	(invoked using  <I>awk -fmyawk26 awktext</I>)
+
+	There are  2 parameters on the command line
+	The first argument is  awk
+	The second argument is  awktext
+
+
+	===================================================================
+	#myawk27
+	# print out the number of fields in each input line
+	{  print "Input line", NR, "has", NF, "fields" }
+
+<B>	myawk27 Program Output</B>
+	Input line 1 has 5 fields
+	Input line 2 has 5 fields
+	Input line 3 has 5 fields
+	Input line 4 has 5 fields
+	Input line 5 has 5 fields
+	Input line 6 has 5 fields
+	Input line 7 has 5 fields
+	Input line 8 has 5 fields
+	Input line 9 has 5 fields
+	Input line 10 has 5 fields
+	Input line 11 has 5 fields
+	Input line 12 has 5 fields
+	Input line 13 has 5 fields
+
+</PRE>
+Using the <B>BEGIN</B> statement, it is often desirable to change both <B>FS</B> (the symbol used to 
+separate fields) and <B>RS</B> (the symbol used to separate input lines). The following text file 
+(<I>awktext2</I>) is used for the program <I>myawk28</I>. The test file separates each 
+field using a dollar symbol ($), and each input line by a carat symbol (^). The program 
+reads the file and prints out the username and password for each users record. A heading 
+is shown only for clarity.
+<PRE>
+<B>	awktext2 data format</B>
+	(username$address$password$privledge$downloadlimit$protocol^)
+	Joe Bloggs$767 Main Rd Tawa$smidgy$clerk$500$zmodem^Sam Blue$1023
+	Kent Drive Porirua$yougessedit$normal$100$xmodem^Bobby Williams$96
+	Banana Grove$mymum$sysop$3000$zmodem^
+
+	
+	#myawk28
+	# a program which shows use of FS and RS, scans awktext2
+	BEGIN  { FS = "\$"; RS = "\^" }
+	{ print "User = ", $1, " Password:", $3 }
+
+<B>	myawk28 Program Output</B>
+	User =  Joe Bloggs  Password: smidgy
+	User =  Sam Blue  Password: yougessedit
+	User =  Bobby Williams  Password: mymum
+	User =    Password:
+
+</PRE>
+<B>Write </B>an awk program which works with the text file <I>awktext2</I>. The 
+program is to print out all names of users who have a privilege level of "sysop" or "clerk". 
+After running the program successfully, enter it in the space provided below.
+<PRE>
+		...............................................................................
+
+		...............................................................................
+
+		...............................................................................
+
+</PRE>
+<HR>
+<H3><B>awks Assignment Operators</B></H3>
+The following is a summary of awk's assignment operators.
+<PRE>
+	+		add
+	-		subtract
+	*		multiply
+	/		divide
+	++		increment
+	--		decrement
+	%		modulus
+	^		exponential
+	+=		plus equals
+	-=		minus equals
+	*=		multiply equals
+	/=		divide equals
+	%=		modulus equals
+	^=		exponential equals
+
+</PRE>
+Now some examples,
+<PRE>
+	sum = sum + 3		# same as sum += 3
+	sum = x / y
+	n++			# same as n = n + 1
+
+</PRE>
+The following awk program displays the average installed memory capacity for an IBM 
+type computer (XT - 486). Note the use of <B>%f</B> within the <I>printf 
+</I>statement to print out the result in floating point format. The use of <B>.2</B> 
+between the % and f symbols specify two decimal places.
+<PRE>
+	#myawk29
+	/(XT|286|386|486)/   { computers++,  ram += $2 }
+	END  { avgmem = ram / computers;
+	              printf(" The average memory per PC = %.2f", avgmem )
+	           }
+
+<B>	myawk29 Program Output</B>
+	The average memory per PC = 4480.00
+
+</PRE>
+<B>Write </B>an awk program to print out all the total cost (to the nearest cent) of disk 
+space for computers belonging to the school of management. Assume that disk space has 
+been costed at $10.20 per megabtye. After running the program successfully, enter it in 
+the space provided below.
+<PRE>
+		...............................................................................
+
+		...............................................................................
+
+		...............................................................................
+
+</PRE>
+<B>Write </B>an awk program to print out the percentage (to one decimal place) of 
+computers which have 2048Kb or less of memory. After running the program successfully, 
+enter it in the space provided below.
+<PRE>
+		...............................................................................
+
+		...............................................................................
+
+		...............................................................................
+
+</PRE>
+<HR>
+<H3><B>awks Built In Arithmetic Operators and Functions</B></H3>
+The following is a summary of awk's built-in arithmetic operators and functions. All 
+operations are done in floating point format.
+<PRE>
+	atan2(y,x)	arctangent of y/x in radians
+	cos(x)		cosine of x, with x in radians
+	exp(x)		exponential function of x
+	int(x)		integer part of x truncated towards 0
+	log(x)		natural logarithm of x
+	rand()		random number between 0 and 1
+	sin(x)		sine of x, with x in radians
+	sqrt(x)		square root of x
+	srand(x)	x is new seed for rand()
+
+</PRE>
+Consider the following awk program (myawk30) which prints the square root of an 
+inputted value. This program also shows interactive use, by entering the file that awk 
+processes directly from the keyboard. If no data file is specified (as in the example below, 
+awk reads from the keyboard).
+<PRE>
+	#myawk30, to print the square root of a number
+	{  print  sqrt( $1 ) }
+
+<B>	Running myawk30</B>
+	awk  -fmyawk30
+
+<B>	myawk30 Sample Program Output</B> (user entry shown in bold)
+<B>	2</B>
+	1.41421
+<B>	3</B>
+	1.73205
+<B>	4</B>
+	2
+</PRE>
+Note: The user pressed CTRL-D (F6 for MSDOS) to signify the end of data input.<P>
+<P>
+<B>Write</B> an awk program to calculate and print out (to three decimal places) the natural 
+logarithm of a value entered from the keyboard. After running the program successfully, 
+enter it (and the command used to invoke it) in the space provided.
+<PRE>
+command:	...............................................................................
+
+program:	...............................................................................
+
+</PRE>
+<HR>
+<H3><B>awks Built In String Functions</B></H3>
+The following is a summary of awk's built-in string functions. An awk string is 
+created by enclosing characters within quotes ("). A string can contain C language escape 
+sequences. The following awk string contains the escape sequence for a new-line 
+character.
+<PRE>
+	"hello\n"
+
+
+	gsub(r,s)	substitutes s for r globally in current input line, returns the 
+			number of substitutions
+	gsub(r,s,t)	substitutes s for r in t globally, returns number of substitutions
+	index(s,t)	returns position of string t in s, 0 if not present
+	length(s)	returns length of s
+	match(s,r)	returns position in s where r occurs, 0 if not present
+	split(s,a)	splits s into array a on FS, returns number of fields
+	split(s,a,r)	splits s into array a on r, returns number of fields
+	sprintf(fmt, expr-list)	returns expr-list formatted according to format string
+			specified by fmt
+	sub(r,s)	substitutes s for first r in current input line, returns number of 
+			substitutions
+	sub(r,s,t)	substitutes s for first r in t, returns number of substitutions
+	substr(s,p)	returns suffix s starting at position p
+	substr(s,p,n)	returns substring of s length n starting at position p
+</PRE>
+<P>
+The following awk program (myawk31) uses the string function <B>gsub</B> to replace 
+each occurrence of <I>286</I> with the string <I>AT</I>.
+<PRE>
+	#myawk31
+	{ gsub( /286/, "AT" ); print $0 }
+
+<B>	myawk31 Program Output</B>
+	XT	640		D402		MG0010	0
+	386	2048		D403		MG0011	100
+	486	4096		D404		MG0012	270
+	386	8192		A423		CC0177	400
+	486	8192		A424		CC0182	670
+	AT	4096		A423		CC0183	100
+	AT	4096		A425		CC0184	80
+	Mac	4096		B407		EE1027	80
+	Apple	4096		B406		EE1028	40
+	68020	2048		B406		EE1029	80
+	68030	2048		B410		EE1030	100
+	$unix	16636		A405		CC0185	660
+	"trs80"	64		Z101		EL0020	0
+</PRE>
+<P>
+<B>Write </B>an awk program to find and print out the longest computer name 
+(hint: use the <I>length</I> function as a pattern). After running the program 
+successfully, enter it in the space provided below.
+<PRE>
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+</PRE>
+<HR>
+<!A HREF="default.htm"><!IMG SRC="images/menu.gif"></A>
+<!A HREF="awk000.htm"><!IMG SRC="images/previous.gif"></A>
+<!A HREF="awk002.htm"><!IMG SRC="images/next.gif"></A><p>
+</BODY>
+
+
+
+
+
+
+
+
+   <HR>
+<HEADER>
+<TITLE> AN INTRODUCTION TO AWK</TITLE>
+</HEADER>
+<BODY>
+<H1><B> <P><Center> Introduction to akw </Center><P>
+Part 3 of 3</B></H1><p>
+<HR SIZE=4>
+Original Author : Brian Brown, CIT<P>
+Revision : 1.0<P>
+Date : 05/05/94<P>
+ref awk.doc<P>
+<HR>
+<!A HREF="default.htm"><!IMG SRC="images/menu.gif"></A>
+<!A HREF="awk001.htm"><!IMG SRC="images/previous.gif"></A>
+
+<H3><B>awk Control Flow Statements</B></H3>
+awk provides a number of constructs to implement selection and iteration. These are 
+similar to C language constructs.
+<PRE>
+<B>	if ( <I> expression</I> ) <I> statement1</I> else <I> statement2</B></I>
+</PRE>
+</B>The <I>expression</I> can include the relational operators, the regular 
+expression matching operators, the logical operators and parentheses for 
+grouping.<P>
+<P>
+<I>expression</I> is evaluated first, and if NON-ZERO then <I>statement1</I> 
+is executed, otherwise <I>statement2</I> is executed.<P>
+<P>
+In the following awk program (myawk32), each input line is scanned and field $5 
+is compared against the value of the awk user defined variable <I>disksize</I> 
+(awk initialises it to 0). When field $5 is greater, it is assigned to <I>disksize</I>, 
+and the input line is saved in the other user defined variable <I>computer</I>. 
+Note the use of the braces { } to group the program statements as belonging to the 
+<B>if</B> statement (same syntax as in the C language).
+<PRE>
+	#myawk32
+	#demonstrate use of if statement, find biggest disk
+	{    if( disksize &lt  $5 )
+	      {
+	           disksize = $5
+	           computer = $0
+	       }
+	}
+	END  { print computer }
+
+<B>	myawk32 Program Output</B>
+	486	8192		A424		CC0182	670
+
+</PRE>
+<B>Write </B>an awk program to print out only those computers which are type 
+"486" with 4096Kb or more memory. Use an <B>if</B> statement to perform 
+this. After running the program successfully, enter it in the space provided 
+below.
+<PRE>
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+</PRE>
+<HR>
+<PRE>
+<B>	while ( <I> expression</I> )  <I> statement</B></I>
+</PRE>
+<I>expression</I> is evaluated, and if NON-ZERO then <I>statement</I> 
+is executed, then <I>expression</I> is re-evaluated. This continues until 
+<I>expression</I> evaluates as ZERO, at which time the <B>while</B> 
+statement terminates.
+<PRE>
+	#myawk33
+	# a while statement to print out each second field only for "286" computers
+	BEGIN  { printf("Type\tLoc\tDisk\n")  }
+	/286/  {  field = 1
+	              while(  field &lt = NF ) 
+	              {
+	                    printf("%s\t", $field )
+	                    field += 2
+	               }
+	               print ""
+	           }
+	
+
+<B>	myawk33 Program Output</B>
+	Type	Loc	Disk
+	286	A423	100
+	286	A425	80
+
+</PRE>
+<HR>
+The following data file (awktext3) contains a list of computers per department in 
+an organisation.
+<PRE>
+Management		22	Electronics	46	Engineering	12
+Health_Science		5	Tourism		20	Registry	18
+Computing_Centre	300	Library		4	Halls		2
+</PRE>
+<B>Write </B>an awk program to print out the total number of computers held 
+by the organisation using the data file <I>awktext3</I>. Use a <B>while</B> 
+statement to perform this (Hint: look at <I>myawk33</I>). After running the 
+program successfully, enter it in the space provided below.
+<PRE>
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+</PRE>
+<HR>
+<PRE>
+<B>	for ( <I> expression</I>1; <I> expression</I>; <I> expression</I>2 ) <I> statement</B></I>
+</PRE>
+The for statement provides repetition of a statement. <I>expression1</I> is 
+executed first, and is normally used to initialise variables used within the for loop. 
+<I>expression</I> is a re-evaluation which determines whether the loop should 
+continue. <I>expression2</I> is performed at the end of each iteration of the 
+loop, before the re-evaluation test is performed.
+<PRE>
+	1. <I>expression1</I>
+	2. <I>expression</I> is evaluated. If non-zero got step 3 else exit
+	3. <I>statement</I> is executed
+	4. <I>expression2</I> is executed
+	5. goto step 2
+</PRE>
+Consider the following awk program (<I>myawk34</I>) which is the same as 
+<I>myawk33</I> shown earlier.
+<PRE>
+	#myawk34
+	# a for statement to print out each second field only for "286" computers
+	BEGIN  { printf("Type\tLoc\tDisk\n")  }
+	/286/  {  for( field = 1; field &lt = NF; field += 2)  printf("%s\t", $field )
+	              print ""
+	          }
+
+<B>	myawk34 Program Output</B>
+	Type	Loc	Disk
+	286	A423	100
+	286	A425	80
+
+</PRE>
+<B>Write </B>an awk program to print out the total number of computers held 
+by the organisation using the data file <I>awktext3</I>. Use a <B>for</B> 
+statement to perform this (Hint: look at your solution using the while statement 
+previously). After running the program successfully, enter it in the space provided 
+below.
+<PRE>
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+</PRE>
+<HR>
+<PRE>
+<B>	do <I> statement</I> while( <I> expression</I> )</B>
+</PRE>
+The <I>statement</I> is executed repeatedly until the value of expression is 
+ZERO. <I>statement</I> is executed at least once.
+<PRE>
+	#myawk35
+	# print out every second field for "286" computers
+	BEGIN { field = 1 }
+	$1 == "286" { do {
+        		printf("%s\t", $field)
+			field += 2
+		}  while( field &lt = NF )
+	}
+
+<B>	myawk35 Program Output</B>
+	286	A423	100
+
+</PRE>
+<HR>
+<PRE>
+	</B><B>break, continue, next, exit</B>
+</PRE>
+The <B>break</B> statement causes an immediate exit from within a 
+<B>while</B> or <B>for</B> loop.<P>
+
+The <B>continue</B> statement causes the next iteration of a loop.<P>
+
+The <B>next</B> statement skips to the next input line then re-starts from the 
+first pattern-action statement.<P>
+
+The <B>exit</B> statement causes the program to branch to the END statement 
+(if one exists), else it exits the program.
+<PRE>
+	#myawk36
+	#print out computer types  "286" using a next statement
+	  { while( $1 != "286" ) next;  print $0 }
+
+<B>	myawk36 Program Output</B>
+	286	4096		A423		CC0183	100
+	286	4096		A425		CC0184	80
+
+</PRE>
+<HR SIZE=4>
+<H3><B>Arrays in awk programs</B></H3>
+awk provides single dimensioned arrays. Arrays need not be declared, they are 
+created in the same manner as awk user defined variables.<P>
+
+Elements can be specified as numeric or string values. Consider the following awk 
+program (<I>myawk37</I>) which uses arrays to hold the number of "486" computers 
+and the disk space totals for all computers.
+<PRE>
+	#myawk37
+	# diskspace[] holds sum of disk space for all computers
+	# computers[] holds number of computers of specified type
+	$1 == "486"  { computers["486"]++ }
+	$5 &gt  0  { diskspace[0] += $5 }
+	END  { print "Number of 486 computers =", computers[486];
+	             print "Total disk space = ",diskspace[0]
+	           }
+
+<B>	myawk37 Program Output</B>
+	Number of 486 computers = 2
+	Total disk space =  2580
+
+</PRE>
+<B>Note</B> that the previous program (<I>myawk37</I>) uses TWO pattern action 
+statements for each input line. The first pattern action statement handles the number of 
+"486" type computers, whilst the second handles the total disk space for all computer 
+types.<P>
+
+<B>Write </B>an awk program to print out the total disk space for computer types 
+"286", "386" and "486". Use arrays to hold the disk space totals. After running the 
+program successfully, enter it in the space provided below.
+<PRE>
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+</PRE>
+Consider the following awk program (<I>myawk38</I>) which uses the <B>in</B> 
+statement associated with processing areas. The program .....
+<PRE>
+	#myawk38
+	{ computers[$1]++ }
+	END  {  for ( name in computers )
+	                 print  "The number of ",name,"computers is",computers[name]
+	           }
+
+<B>	myawk38 Program Output</B>
+	The number of  "trs80" computers is 1
+	The number of  $unix computers is 1
+	The number of  286 computers is 2
+	The number of  386 computers is 2
+	The number of  486 computers is 2
+	The number of  68020 computers is 1
+	The number of  68030 computers is 1
+	The number of  Apple computers is 1
+	The number of  Mac computers is 1
+	The number of  XT computers is 1
+
+</PRE>
+<HR>
+<H3><B>awk User Defined Functions</B></H3>
+awk supports user defined functions. The syntax is
+<PRE>
+<B>	function</B>  <I> name</I>(<I> argument-list</I> )  {
+<I>		statements</I>
+	}
+</PRE>
+The definition of a function can occur anywhere a pattern-action statement can. 
+<I>argument-list</I> is a list of variable names separated by commas. There must be NO 
+space between the function name and the left bracket of the argument-list.<P>
+
+The <B>return</B> statement is used to return a value by the function.<P>
+
+Consider the following awk program (<I>myawk39</I>) which calculates the factorial of 
+an inputted number.
+<PRE>
+	#myawk39
+	function factorial( n ) {
+	    if( n &lt = 1 )  return 1
+	    else  return  n *  factorial( n - 1)
+	}
+	{  print "the factorial of ", $1, "is ", factorial($1) }
+
+<B>	Sample myawk39 Program Output (awk -fmyawk39)</B>
+<B>	10</B>
+	the factorial of  10 is  3628800
+<B>	3</B>
+	the factorial of  3 is  6
+<B>	1</B>
+	the factorial of  1 is  1
+<B>	4</B>
+	the factorial of  4 is  24
+
+</PRE>
+<HR>
+<H3><B>awk Output</B></H3>
+The statements <B>print</B> and <B>printf</B> are used in awk programs to 
+generate output. awk uses two variables, <B>OFS</B> (output field separator) and 
+<B>ORS</B> (output record separator)  to delineate fields and output lines. These can 
+be changed at any time.<P>
+
+The special characters used in printf, which follow the % symbol, are,
+<PRE>
+	c	single character
+	d	decimal integer
+	e	double number, scientific notation
+	f	floating point number
+	g	use e or f, whichever is shortest
+	o	octal
+	s	string
+	x	hexadecimal
+	%	the % symbol
+</PRE>
+The default output format is <B>%.6g</B> and is changed by assigning a new value to 
+<B>OFMT</B>.<P>
+<HR>
+<H3><B>awk Output To Files</B></H3>
+awks output generated by <B>print</B> and <B>printf</B> can be redirected to a file 
+by using the redirection symbols <B>&gt </B> (create/write) and <B>&gt &gt  
+</B>(append). The names of files MUST be in quotes.
+<PRE>
+	#myawk40
+	# demonstrates sending output to a file
+	$1 == "486"  { print "Type=",$1, "Location=",$3 &gt  "comp486.dat"
+
+<B>	Sample output contained in 'comp486.dat'</B>
+	Type= 486 Location= D404
+	Type= 486 Location= A424
+
+</PRE>
+<B>Write </B>an awk program to print out the total disk space for computer types 
+"286", "386" and "486". Use arrays to hold the disk space totals. The output will be stored 
+in the file 'dspace.dat'. After running the program successfully, enter it in the space 
+provided below.
+<PRE>
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+</PRE>
+<HR>
+<H3><B>awk Output To Pipes</B></H3>
+The output of awk programs can be piped into a UNIX command. The statement
+<PRE>
+	print "    ",$1  |  "sort"
+</PRE>
+causes the output of the <B>print</B> command to be piped to the UNIX <B>sort</B> 
+command.<P>
+<B>Write </B>an awk program to print out a sorted list of all "286", "386" and "486" 
+computers sorted according to disk size. After running the program successfully, enter it 
+in the space provided below.
+<PRE>
+	...............................................................................
+
+	...............................................................................
+
+	...............................................................................
+
+</PRE>
+<HR SIZE=4>
+<H2><B>awk Input</B></H2>
+<H3><B>Data Files</B></H3>
+We have seen TWO methods to give file input to an awk program. The first specified the 
+filename on the command line, the other left it blank, and awk read from the keyboard 
+(examples were <I>myawk30</I> and <I>myawk39</I>). <P>
+
+<H3><B>Program Files</B></H3>
+We have used the <B>-f</B> parameter to specify the file containing the awk program. 
+awk programs can also be specified on the command-line enclosed in single quotes, as the 
+following example shows.
+<PRE>
+	awk  '/286/  {print $0 }'  awktext
+</PRE>
+Note: For MSDOS systems, a double quote must be used to enclose the awk program 
+when specified on the command line.<P>
+<P>
+<HR>
+<H3><B>The getline function</B></H3>
+awk provides the function <B>getline</B> to read input from the current input file or 
+from a file or pipe. <P>
+
+<B>getline</B> reads the next input line, splitting it into fields according to the settings 
+of NF, NR and FNR. It returns 1 for success, 0 for end-of-file, and -1 on error.<P>
+
+The statement
+<PRE>
+<B>	getline data</B>
+</PRE>
+reads the next input line into the user defined variable <I>data</I>. No splitting of fields 
+is done and NF is not set.<P>
+
+The statement
+<PRE>
+<B>	getline &lt "temp.dat"</B>
+</PRE>
+reads the next input line from the file "temp.dat", field splitting is performed, and NF is 
+set.<P>
+
+The statement
+<PRE>
+<B>	getline data &lt "temp.dat"</B>
+</PRE>
+reads the next input line from the file "temp.dat" into the user defined variable 
+<I>data</I>, no field splitting is done, and NF, NR and FNR are not altered.<P>
+Consider the following example, which pipes the output of the UNIX command 
+<I> who</I> into <I> getline</I>. Each time through the <I>while</I> loop, another line 
+is read from <I>who</I>, and the user defined variable <I>users</I> is incremented. The 
+program counts the number of users on the host system.
+<PRE>
+	while ( "who" | getline )
+	    users++
+
+</PRE>
+<B>Write</B> an awk program to list all details of type "286" computers. Prefix the list with the 
+current date (Hint: see the previous example, and the UNIX command <I>date</I>). 
+After running the program successfully, enter it in the space provided below.
+<PRE>
+	...............................................................................
+
+	...............................................................................
+
+</PRE>
+<HR SIZE=4>
+<H2><B>awk Summary</B></H2>
+The following is a summary of the most common awk statements and features.<P>
+<PRE>
+<B>Command Line</B>
+
+<B>	awk</B><I>  program  filenames</I>
+<B>	awk  -f</B><I>  program-file  filenames</I>
+<B>	awk -F</B><I>s</I>
+	(sets field separator to string <I>s</I>, <B>-Ft</B> sets separator to tab)
+
+<B>Patterns</B>
+
+	BEGIN
+	END
+	/<I>regular expression</I>/
+<I>	relational expression</I>
+	pattern <B></I>&amp &amp </B><I> pattern</I>
+	pattern <B></I>||</B><I> pattern</I>
+	(<I>pattern</I>)
+	!<I>pattern</I>
+<I>	pattern</I>, <I>pattern</I>
+
+
+<B>Control Flow Statements</B>
+
+<B>	if</B> (<I> expr)  statement </I>[<B> else</B><I> statement</I>]
+<B>	if</B> (<I> subscript <B></I> in</B> <I> array</I>) <I> statement</I> [<B> else</B> <I> statement</I>]
+<B>	while</B> (<I> expr</I>) <I> statement</I>
+<B>	for</B> (<I> expr</I> <B>;</B> <I> expr</I> <B>;</B> <I> expr</I> ) <I> statement</I>
+<B>	for</B> ( <I> var</I> <B> in</B> <I> array</I> ) <I> statement</I>
+<B>	do</B><I> statement <B></I> while</B> (<I> expr</I>)
+<B>	break</B>
+<B>	continue</B>
+<B>	next</B>
+<B>	exit</B> [<I> expr</I>]
+<B>	return</B> [<I> expr</I>]
+
+
+<B>Input Output</B>
+
+<B>	close</B>( <I> filename</I> )		close file
+<B>	getline</B>				set $0 form next input line, set NF, NR, FNR
+<B>	getline</B> &lt <I> file</I>			set $0 from next input line of file, set NF
+<B>	getline</B><I> var</I>			set var from next input line, net NR, FNR
+<B>	getline</B><I> var</I> &lt <I> file</I>		set var from next input line of file
+<B>	print</B>				print current input line
+<B>	print</B><I> expr-list</I>			print expressions
+<B>	print</B><I> expr-list</I> &gt <I> file</I>		print expressions to file
+<B>	printf</B><I> fmt, expr-list</I>		format and print
+<B>	printf</B><I> fmt, expr-list </I> &gt <I> file</I>	format and print to file
+<B>	system</B>(<I> cmd-line</I> )		execute command cmd-line, return status
+
+In <B>print</B> and <B>printf</B> above, &gt &gt  appends to a <I>file</I>, and the | <I>command</I> writes to 
+a pipe. Similarly, <I>command</I> | <B>getline</B> pipes into <B>getline</B>. The function <B>getline</B> returns 
+0 on the end of a file, -1 on an error.
+
+
+<B>Functions</B>
+
+<B>	func</B> <I> name</I>( <I> parameter list</I> ) { <I> statement</I> }
+<B>	function</B> <I> name</I> ( <I> parameter list</I> ) { <I> statement</I> }
+<I>	function-name</I> ( <I>expr</I>, <I>expr</I>, ... )
+
+
+<B>String Functions</B>
+
+<B>	gsub</B>(<I>r,s,t</I>)	substitutes <I>s</I> for <I>r</I> in <I>t</I> globally, returns number of  substitutions
+<B>	index</B>(<I>s,t</I>)	returns position of string <I>t</I> in <I>s</I>, 0 if not present
+<B>	length</B>(<I>s</I>)	returns length of <I>s</I>
+<B>	match</B>(<I>s,r</I>)	returns position in <I>s</I> where <I>r</I> occurs, 0 if not present
+<B>	split</B>(<I>s,a,r</I>)	splits <I>s</I> into array <I>a</I> on <I>r</I>, returns number of fields
+<B>	sprintf</B>(<I>fmt, expr-list</I>)	returns <I>expr-list</I> formatted according to format string specified by <I>fmt</I>
+<B>	sub</B>(<I>r,s,t</I>)	substitutes <I>s</I> for first <I>r</I> in <I>t</I>, returns number of substitutions
+<B>	substr</B>(<I>s,p,n</I>)	returns substring of <I>s</I> length <I>n</I> starting at position <I>p</I>
+
+
+<B>Arithmetic Functions</B>
+
+<B>	atan2</B>(<I>y,x</I>)	arctangent of <I>y/x</I> in radians
+<B>	cos</B>(<I>x</I>)		cosine of <I>x</I>, with <I>x</I> in radians
+<B>	exp</B>(<I>x</I>)		exponential function of <I>x</I>
+<B>	int</B>(<I>x</I>)		integer part of <I>x</I> truncated towards 0
+<B>	log</B>(<I>x</I>)		natural logarithm of <I>x</I>
+<B>	rand</B>()		random number between 0 and 1
+<B>	sin</B>(<I>x</I>)		sine of <I>x</I>, with <I>x</I> in radians
+<B>	sqrt</B>(<I>x</I>)		square root of <I>x</I>
+<B>	srand</B>(<I>x</I>)	<I>x</I> is new seed for <B>rand()</B>
+	
+
+<B>Operators (increasing precedence)</B>
+	=   +=   -=   *=   /=   %=   ^=		assignment
+	?:					conditional expression
+	||					logical or
+	&amp &amp 					logical and
+	~   !~					regular expression match, negated match
+	&lt    &lt =   &gt    &gt =   !=   ==		relationals
+<I>	blank</I>					string concatenation
+	+   - 					add, subtract
+	*   /   %				multiply, divide, modulus
+	+   -   !				unary plus, unary minus, logical negation
+	^					exponentional
+	++   --					increment, decrement
+	$					field
+
+
+<B>Regular Expressions (increasing precedence)</B>
+
+<I>	c</I>			matches no-metacharacter <I>c</I>
+	\<I>c</I>			matches literal character <I>c</I>
+	.			matches any character except newline
+	^			matches beginning of line or string
+	$			matches end of line or string
+	[<I>abc...</I>]		character class matches any of <I>abc...</I>
+	[^<I>abc...</I>]		negated class matches any but <I>abc...</I> and newline
+	r1 | r2			matches either r1 or r2
+	r1r2			concatenation: matches r1, then r2
+	r+			matches one or more r's
+	r*			matches zero or more r's
+	r?			matches zeor or more r's
+	(r)			grouping: matches r
+
+
+<B>Built-In Variables</B>
+
+<B>	ARGC</B>		number of command-line arguments
+<B>	ARGV</B>		array of command-line arguments (0..ARGC-1fR)
+<B>	FILENAME</B>	name of current input file
+<B>	FNR</B>		input line number number in current file
+<B>	FS</B>		input field separator (default blank)
+<B>	NF</B>		number of fields in input line
+<B>	NR</B>		number of input lines read so far
+<B>	OFMT</B>		output format for numbers (default=%.6g)
+<B>	OFS</B>		output field separator (default=space)
+<B>	ORS</B>		output line separator (default=newline)
+<B>	RS</B>		input line separator (default=newline)
+<B>	RSTART</B>		index of first character matched by <B>match()</B>
+<B>	RLENGTH</B>		length of string matched by <B>match()</B>
+<B>	SUBSEP</B>		subscript separator (default=\034")
+
+
+<B>Limits</B>
+Each implementation of awk imposes some limits. Below are typical limits
+
+	100 fields
+	2500 characters per input line
+	2500 characters per output line
+	1024 characters per individual field
+	1024 characters per printf string
+	400 characters maximum quoted string
+	400 characters in character class
+	15 open files
+	1 pipe
+
+</PRE>
+<HR>
+<H3><B>Converting files between MSDOS and UNIX format</B></H3>
+MSDOS uses a CR and LF to separate each line of a file. The carriage return 
+character appears as a ^M symbol in the editor <I>vi</I>. In addition, some MSDOS 
+editors mark the end of a file using the CTRL-Z character.<P>
+
+UNIX uses a LF to separate each line of a file. There is no end of file character.<P>
+
+SCO UNIX provides a mechanism for converting between MSDOS and UNIX file 
+formats.
+<PRE>
+<B>	dtox</B>
+	converts a MSDOS file to UNIX format (does not strip the end-of-file
+	character).
+
+<I>		dtox  awktext  &gt   awktext.unx</I>
+
+	It may also be necessary to load the file into an editor and remove the end-
+	of-file character.
+
+
+<B>	xtod</B>
+	converts a UNIX file to MSDOS format.
+
+<I>		xtod  awktext.unx &gt  awktext</I>
+
+</PRE>
+<HR>  
+<A HREF="unix.html">
+<H3> <CENTER><STRONG>Regreso a la Página del Diplomado en Unix</STRONG></CENTER></H3>
+<!A HREF="default.htm"><!IMG SRC="images/menu.gif"></A>
+<!A HREF="awk001.htm"><!IMG SRC="images/previous.gif"></A><P>
+</BODY>
+
+

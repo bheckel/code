@@ -1,0 +1,41 @@
+#! /usr/bin/expect
+##############################################################################
+# Sample expect give and take.  Requires passport.pl in same directory.
+# Created: Fri 18 May 2001 14:08:36 (Bob Heckel)
+##############################################################################
+
+# Disable timeouts.
+set timeout -1
+
+spawn perl test.pl
+
+expect "passport:"                            
+exec sleep 1
+send aaa\r                                       
+
+# Wait for the next question.
+expect "you again? passport:"
+exec sleep 1
+send bbb\r
+
+exec sleep 1
+send exit\r
+# Wait for completion message.
+expect "endd normally"
+exec sleep 1
+exit
+
+# passport.pl:
+####!/usr/bin/perl -w
+###
+###while ( 1 ) {
+###  print STDERR 'passport:' if !$foo;
+###  print STDERR 'you again? passport:' if $foo;
+###  $foo = <STDIN>;
+###  chomp $foo;
+###  print STDERR "move along $foo\n";
+###  exit if $foo eq 'exit';
+###  sleep 5;
+###}
+###
+###print 'ended normally';

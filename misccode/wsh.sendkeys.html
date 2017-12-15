@@ -1,0 +1,81 @@
+<html>
+<h2 class="header">SendKeys Method</h2>
+<p><span class="category">Description</span><br>The SendKeys method is used to send keystrokes to the currently active window as if they where typed from the keyboard.
+</p><p><i>object</i>.<b>SendKeys</b> <i>Keystrokes</i>
+</p><p>
+Single alphanumeric keystrokes can simply be specified using a string
+representation of the character required. For example, to send the
+letter S the command would be <code>object.<b>SendKeys</b> "S"</code>.
+
+</p><p>
+To send multiple characters combine them into one string. For example, to send A, B and C the command would be <code>object.<b>SendKeys</b> "ABC"</code>.
+</p><p>
+The plus sign "+", caret "^", percent sign "%", tilde "~", and
+parentheses "()" all have special meanings and must be enclosed within
+braces "{}". Square brackets "[]" must also be enclosed within braces
+although they have no special meaning. To specify brace characters
+themselves, use "{{}" and "{}}".
+</p><p>Below is a table of characters that can not be directly
+represent by a keyboard character to use one of these, specify the
+appropriate <i>Code</i>.
+</p><p>
+<table border="1" bordercolor="#dddddd" cellpadding="5" cellspacing="0" width="100%">
+<tbody><tr><td bgcolor="#dddddd" valign="top"><font style="font-size: 9pt; font-family: verdana,arial;"><b>Key</b></font></td><td bgcolor="#dddddd" valign="top"><font style="font-size: 9pt; font-family: verdana,arial;"><b>Code</b></font></td></tr>
+
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Backspace</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{BACKSPACE}, {BKSP} or {BS}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Break</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{BREAK}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Caps Lock</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{CAPSLOCK}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Delete</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{DELETE} or {DEL}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Down Arrow</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{DOWN}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">End</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{END}</font></td></tr>
+
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Enter</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{ENTER} or ~</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Escape</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{ESC}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Help</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{HELP}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Home</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{HOME}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Insert</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{INSERT} or {INS}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Left Arrow</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{LEFT}</font></td></tr>
+
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Num Lock</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{NUMLOCK}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Page Down</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{PGDN}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Page Up</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{PGUP}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Print Screen</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{PRTSC}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Right Arrow</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{RIGHT}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Scroll Lock</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{SCROLLLOCK}</font></td></tr>
+
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Tab</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{TAB}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Up Arrow</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{UP}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F1</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F1}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F2</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F2}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F3</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F3}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F4</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F4}</font></td></tr>
+
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F5</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F5}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F6</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F6}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F7</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F7}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F8</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F8}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F9</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F9}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F10</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F10}</font></td></tr>
+
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F11</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F11}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F12</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F12}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F13</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F13}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F14</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F14}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F15</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F15}</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">F16</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">{F16}</font></td></tr>
+
+</tbody></table>
+</p><p>
+To specify characters combinations use the following codes:
+</p><p>
+<table border="1" bordercolor="#dddddd" cellpadding="5" cellspacing="0" width="100%">
+<tbody><tr><td bgcolor="#dddddd" valign="top"><font style="font-size: 9pt; font-family: verdana,arial;"><b>Key</b></font></td><td bgcolor="#dddddd" valign="top"><font style="font-size: 9pt; font-family: verdana,arial;"><b>Code</b></font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Alt</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">%</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Ctrl</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">^</font></td></tr>
+<tr><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">Shift Lock</font></td><td valign="top"><font style="font-size: 9pt; font-family: verdana,arial;">+</font></td></tr>
+
+</tbody></table>
+For example to specify CTRL and C, the code would be <code>object.<b>SendKeys</b> "^C"</code> and for SHIFT F5 <code>object.<b>SendKeys</b> "+{F5}"</code>. To specify multiple combination sets such as ALT A Z, you use parentheses, for example, <code>object.<b>SendKeys</b> "%(AZ)"</code>.
+
+</p><p><span class="category">Example</span><br></p><div class="code"><font color="#007f00">'VBScript Example<br></font><font color="#00007f">Set</font> WshShell = <font color="#00007f">WScript</font>.<font color="#00007f">CreateObject</font>("WScript.Shell")<br><br>WshShell.Run "%windir%\notepad.exe"<br>WshShell.<font color="#00007f">AppActivate</font> "Notepad"<br><br>WshShell.<font color="#00007f">SendKeys</font> "Hello World!"<br>WshShell.<font color="#00007f">SendKeys</font> "{ENTER}"<br>WshShell.<font color="#00007f">SendKeys</font> "abc"<br>WshShell.<font color="#00007f">SendKeys</font> "{CAPSLOCK}"<br>WshShell.<font color="#00007f">SendKeys</font> "def"</div>
+</html>

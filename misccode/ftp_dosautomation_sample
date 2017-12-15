@@ -1,0 +1,24 @@
+After saving the stuff below the dots to test.ftp, cd in a DOS window to where
+you save it then run this:
+
+ftp -n -s:test.ftp 47.143.17.10
+
+
+.............................................................
+
+
+rem Name: test.ftp
+rem Summary: Sample of commandline ftp automation.
+
+user cm1 cm1cm1
+lcd \todel
+cd /test/ServOpsFinance/bsh
+prompt
+hash
+get output.xls
+mget *op.xls
+literal site umask 022
+binary
+mput *.xls
+mdelete *ZZZ.xls
+quit

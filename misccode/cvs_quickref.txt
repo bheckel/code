@@ -1,0 +1,161 @@
+{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}
+                             CVS Quick Reference
+
+  Created: Wed, 08 Nov 2000 09:04:27 (Bob Heckel)
+ Modified: Mon 05 May 2003 12:54:21 (Bob Heckel)
+{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}
+
+U -- already exists in repository, no local mods
+N -- new file added to repository
+C -- conflicts exist, must merge (>>>>>>>>> and <<<<<<<<<) deltas
+I -- ignored
+L -- ignored, symlink
+M -- modified since last checkout (and the modifications have not yet been
+                                   committed to repos)
+
+..............................................................................
+
+                             Common Abbreviations
+                             --------------------
+                               checkout  co
+                                 commit  ci
+                                   diff  di
+                                release  rel
+                                 remove  rm
+                                 update  up
+
+..............................................................................
+
+                                Common Actions
+                                --------------
+
+List dirs in repository (ie CVS projects on this server):  ls $CVSROOT
+
+
+Review logfile: cvs log [specific_file_of_interest] <---gives a blizzard 
+                                                        of info if don't
+                                                        specify file
+                cvs log > junk    <---more readable b/c Vim highlights
+
+
+Review status:  cvsls myproj          <---Mark H's custom pgm in ~/bin
+                cvs annotate [-r1.3]  <---show lines changed by version number
+                cvs annotate [-D "2 weeks ago"] foo.txt
+
+
+Checkout:  Subdir will be created (using the projname) by this process.
+           cd [root_dir_you_want_your_working_copy_placed]
+           cvs co myproj                        <--- e.g. cvs co IWS/fujifiles
+           cvs -d /myrepository co myproj       <--- If no $CVSROOT is set
+
+
+Make checked out copy up-to-date: Best to stand in dir of interest then...
+                                  cvs -n -q update  <---to preview
+                                  cvs update     <---do frequently to keep up
+                                  cvs -d update     <---run occasionaly to
+                                                        check for new dirs
+
+                                  You are updating against all committed
+                                  changes that have occurred since your co.
+                                  Hopefully get all 'M's (no C collisions) or
+                                  A's (to be added).
+                                  ? indicates you must cvs add this file,
+                                  then it'll turn to an A
+                                  If C, your original will get the <<< >>>
+                                  lines added to it.  You must re-edit.
+
+
+Commit changes:  cvs commit   <---should do cvs update first
+                              Will take you to your $EDITOR if changes have
+                              been made.
+                                   
+
+
+Clean up after commit:  cvs release -d IWS       <---while standing above IWS/
+                                                     Prompts before deleting.
+                                                     Will warn with a '?' if
+                                                     any files exist in the
+                                                     dir structure that have
+                                                     not been cvs add 'ed.
+
+
+Rollback:  cvs checkout -D '1 year ago' foo.txt  <---CVS understands English
+           cvs checkout -r1.4 foo.txt            <---more specific
+
+
+Add single file:  cvs add foo.txt
+
+
+Add directory:  mkdir myprojsubdir/; cvs add myprojsubdir <---CVS/ added to 
+                                                              the myprojsubdir
+                cd myprojsubdir/; cvs add *  <---will complain about CVS/ dir,
+                                                 it's OK.
+                cd ..
+                cvsls myprojsubdir   <---optionally to confirm status
+                cvs commit
+
+
+Remove single file:  rm foo.txt; cvs remove foo.txt; cvs commit foo.txt
+
+
+Remove directory:  rm *; cd ..; cvs remove; cvs commit  <---will get warnings
+                                                            for the files you
+                                                            want to keep
+                                                            (which is good,
+                                                            they won't be del)
+                   Then to delete the now empty dirs and subdirs:
+                   cvs update -P   <---to prune
+
+
+Modify an existing log entry:  cd foodir;    <---to where file was committed
+                               cvs log foo.txt;   <---optional, get rev 1.2
+                               cvs admin -m 1.2:"Presto changeo" foo.txt;
+                               (can only do one at a time)
+
+
+Initialize new repos:  cvs -d /repository init  (no feedback on success, new
+                                                 dir CVSROOT/ will exist under
+                                                 /repository)
+You only need one repository dir per box.  The projects will fall under it.
+
+
+Create new module:  Stand in directory of interest (ok to have subdirs,
+                    they'll be slurped).
+                    Create ./.cvsignore if needed.
+                    the_projname becomes the project name given when you
+                    checkout to your home dir.  It is usually the same name as
+                    the directory you're standing in. 
+
+                    $ cvs import the_projname fooirrelevant start  
+
+                    You'll see something like this (N means new file):
+                     "N cvstestdir/foo1.txt
+                      N cvstestdir/foo2.txt
+                      N cvstestdir/foo3.txt
+
+                      No conflicts created by this import"
+
+                    Optionally wipe out your originals to avoid confusion:
+                    $ cd ..; rm -rf the_projname/
+                    Then checkout to test.
+                    $ cvs co cvstestdir
+
+
+Remote login:  cvs -d :pserver:bheckel@zrtph128:/repository login
+               rsh way to do this (on development box):
+               $ export CVSROOT=:ext:bheckel@parsifal:/home/bheckel/repository
+               $ cvs co eandb
+               
+
+
+Find differences between 2 versions:  cvs diff -r 1.7 -r 1.6 grput.bat
+
+
+..............................................................................
+
+                                 Common Tags
+                                 -----------
+            $Date$     $Id$     $Revision$     $Source$     $Log$
+
+..............................................................................
+

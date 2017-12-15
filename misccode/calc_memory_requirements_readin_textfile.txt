@@ -1,0 +1,16 @@
+
+1.5M lines in t.txt
+120 columns in t.txt
+all numeric (8 bytes)
+
+1500000 x 120 x 8bytes
+
+1440000000 bytes
+
+1440000000/2^20
+
+1373.29 MB
+
+1373.29/2^10
+
+1.37 GB memory (plus overhead) required for R to read-in file

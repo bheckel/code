@@ -1,0 +1,22 @@
+#!/bin/sh
+
+###for svr in rtpsh005 rtpsh004; do
+for svr in rtpsh004; do
+  echo "$svr 1: ";
+  ssh $svr ps -ae | grep lms_nmgr;
+  echo;
+  echo "$svr 3: ";
+  ssh $svr ps -ae | grep java;
+  echo;
+  echo "$svr 2: ";
+  ssh $svr ps -ef | grep lms_eval*;
+  echo;
+  echo "$svr 4: ";
+  ssh $svr ps -ef | grep lms_qucp*;
+  echo;
+  echo "$svr 1: ";
+  ssh $svr ps -ef | grep lms_lmck*;
+  echo;
+  echo "$svr 1: ";
+  ssh $svr ps -ef | grep daemonUCP*;
+done

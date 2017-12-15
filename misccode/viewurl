@@ -1,0 +1,17 @@
+#!/bin/sh
+##############################################################################
+#     Name: viewurl
+#
+#  Summary: View a URL (using this code directly in .muttrc causes mutt to use 
+#           the previously clipboarded value instead of the one you want).
+#           Chompclip to remove newlines from the contents of the clipboard,
+#           then start the default browser.
+#
+#           Windows specific code!
+#
+#  Created: Sat 09 Mar 2002 12:54:53 (Bob Heckel)
+# Modified: Wed 04 Sep 2002 08:31:29 (Bob Heckel)
+##############################################################################
+
+clipboard=`getclip | perl -pe 's/\n?\r?//g'`
+cygstart $clipboard

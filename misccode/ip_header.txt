@@ -1,0 +1,62 @@
+Adapted: Fri 16 Mar 2001 15:54:52 (Bob Heckel --
+          http://www.oreillynet.com/pub/a/bsd/2001/03/14/FreeBSD_Basics.html)
+
+Layer 3 (IP) header
+
+|   4   |   8   |       16      |           32 bits            |
+================================================================
+|  Ver  |  IHL  |  Type of svc  |        Total length          |   <---1 hdr
+----------------------------------------------------------------
+|         Identification        | Flags |   Fragment offset    |   <---2 hdr
+----------------------------------------------------------------
+| Time to live  |    Protocol   |      Header checksum         |   <---3 hdr
+----------------------------------------------------------------
+|                   Source address                             |   <---4 hdr
+----------------------------------------------------------------
+|                 Destination address                          |   <---5 hdr
+----------------------------------------------------------------
+|                  Option + Padding                            |   <---6 opthdr
+----------------------------------------------------------------
+|                        Data                                  |
+----------------------------------------------------------------
+
+
+Ver: IP version e.g. IPv4 is 0100
+
+IHL: 5 rows (minimum) x 32 bits wide = 160 bits min (or 160/8 = 20 bytes)
+     packet header size.  This assumes no Options (and of course no Data).
+
+     Maximum header size is 60 bytes (1111 is 16 high; 16-1 is 15; 15x4 is
+     60).  Subtract the one b/c can't have length of 0. 
+     Must have 10 rows of header Options to hit this max.
+
+TOS: prioritization, seldom used
+
+Datagram Length: Min is 21 bytes (20 header + 1 data).  Max is 1111 1111 i.e.
+                 2^16 - 1 or 65,535 bytes.
+
+Identification: number used to reassemble packet fragments (if fragmented).             
+
+Flags: fragment-related
+
+Fragment offset: in 8 byte multiples
+                 e.g. 128 bytes was fragged, 1st frag will have offset 0, the
+                 2nd frag will have 8 (8 byte multiple of this field x 8 bytes
+                 or 64 bytes)
+
+TTL: Max is 2^8 - 1 i.e. 255.  Each time packet passes thru a router, this
+     count is decreased by one.  Discarded at 0.
+
+Protocol: 1 is ICMP, 6 is TCP/IP (TCP header will follow after IP header but
+          before actual data being delivered), 17 is UDP (UDP header will 
+          follow...).
+
+Header checksum: CRC run at creation and delivery.
+
+Source address: yes it is
+
+Destination address: yes it is
+
+Option + Padding: special instructions, max 40 bytes (see IHL above, 60 - 
+                  20 is 40) in 32 bit words.
+

@@ -1,0 +1,32 @@
+#!/bin/sh
+##############################################################################
+#     Name: mcp
+#
+#  Summary: Copy to multiple locations, multiple copy.
+#
+#  Adapted: Fri 18 May 2001 11:09:13 (Bob Heckel -- p.216 Learning the Bash
+#                                     Shell)
+# Modified: Tue 15 Feb 2005 16:21:03 (Bob Heckel)
+##############################################################################
+  
+Usage() {
+  echo " Usage: `basename $0` origfile copyone copytwo ...
+  Creates multiple copies from a single original file.
+    e.g. mcp 2004/gaold.sas7bdat y1999.sas7bdat y2000.sas7bdat y2001.sas7bdat"
+
+  exit 1
+}
+
+N_MIN_ARGS=2
+
+if [ $# -lt $N_MIN_ARGS ]; then 
+  Usage
+  exit 1
+fi
+
+file=$1
+shift
+
+for dest in "$@"; do
+  cp $file $dest
+done

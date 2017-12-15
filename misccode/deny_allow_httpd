@@ -1,0 +1,14 @@
+# From grserver's httpd.conf preventing all traffic except that on our
+# subnets.
+# Created: Tue 08 May 2001 15:02:52 (Bob Heckel)
+
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+
+    order deny,allow
+    Deny from all
+    Allow from 47.143.208.0/20
+    Allow from 47.23.32.0/20
+</Directory>
+

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+###function uls(){
+  echo "$fg_green~~~~~~~~~~$1~~~~~~~~~~~~~~$normal"
+  $HOME/code/sas/ultimate_log_scanner.sh $1 | less --RAW-CONTROL-CHARS --quit-if-one-screen
+  echo
+  echo "$fg_green~~~~~~press enter~~~~~~~~$normal"
+  read
+###}
+

@@ -1,0 +1,16 @@
+[[:alnum:]] 	  	letters and digits
+[[:alpha:]]     	letters
+[[:blank:]] 	    space and tab characters
+[[:cntrl:]] 	    control characters
+[[:digit:]] 	    decimal digits
+[[:graph:]] 	    printable characters excluding space
+[[:lower:]] 	    lowercase letters (all letters when 'ignorecase' is used)
+[[:print:]] 	    printable characters including space
+[[:punct:]] 	    punctuation characters
+[[:space:]] 	    whitespace characters
+[[:upper:]] 	    uppercase letters (all letters when 'ignorecase' is used)
+[[:xdigit:]] 	    hexadecimal digits
+[[:return:]] 	    the <CR> character
+[[:tab:]] 	      the <Tab> character
+[[:escape:]] 	    the <Esc> character
+[[:backspace:]] 	the <BS> character

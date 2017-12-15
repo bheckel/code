@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Test all users for potentially expired passwords.
+#
+# Can do paste "bye <carriagereturn>" to do this rapidfire.
+#
+# Created: Mon Jun 21 16:17:50 2004 (Bob Heckel)
+# Modified: Tue 31 Aug 2004 17:09:37 (Bob Heckel)
+
+if [ "$@" ]; then
+  FTPHOST=$1
+else
+  FTPHOST=rdrtp
+fi
+
+PW=dAebrpt5 
+
+echo -n 'check all users [Y/n]? '
+read yn
+
+if [ "$yn" != 'n' ];then
+  for u in alm5 bhb6 bqh0 bxj9 ckj1 cmc6 \
+           dwj2 ekm2 hdg7 kjk4 mbj1 pyh9 \
+           rev2 slm6 vdj2 ces0 cwt4; 
+    do echo "testing ${fg_red}$u${normal}"; 
+      ncftp -u $u -p $PW $FTPHOST; 
+    done
+fi

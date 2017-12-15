@@ -1,0 +1,26 @@
+Dear [ ]:
+
+I was excited to find the job posting for a SAS Programmer on your website.  
+After searching for a SAS position for a while now, they all seemed to branch 
+out into an unusual requirement.  As a SAS Programmer for more than a decade 
+(Institute-certified for the last 8), I know I will be able to bring the skills 
+you need to meet your client's requirements.
+
+My resume will provide details into my career, in all but one role I performed
+Base SAS programming.  I truly enjoy creating programs that help solve business 
+problems.  At the CDC I was involved in time series analysis reports that 
+helped statisticians identify trends in birth and death records.  At 
+Comprehensive Neuroscience I enhanced programs used to determine unusual 
+prescriptions from prescribing doctors.  And at my current role with GSK I 
+designed a data warehouse app that pulls in data from multiple sources to 
+present trending of lab results.
+
+I've worked on mainframe, PC and Unix (my favorite) platforms.
+
+I think my background would be very useful in helping you to [ job description 
+words ].  I appreciate your taking the time to review my credentials, I look 
+forward to hearing from you.
+
+Kind Regards,
+
+Bob

@@ -1,0 +1,10 @@
+
+Static vs. Shared Libraries
+
+On Linux, static libraries have names like libname.a, while shared libraries
+are called libname.so.x.y.z where x.y.z is some form of version number. Shared
+libraries often also have links pointing to them, which are important.  The
+standard libraries come in both shared and static formats.
+You can find out what shared libraries a program requires by using ldd (List
+Dynamic Dependencies) 
+$ ldd /usr/bin/lynx

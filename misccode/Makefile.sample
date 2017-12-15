@@ -1,0 +1,55 @@
+#  Created: Tue Jul 30 15:19:18 2002 (Bob Heckel)
+# Modified: Thu 01 Aug 2002 15:41:33 (Bob Heckel) 
+
+OBJECTS = build.o bwords.o buildutl.o hashhead.o bpairs.o \
+          bsingle.o bruns.o bnorm.o clioutl.o bweights.o normlook.o
+	
+
+###COPTS = g -mno-cygwin
+COPTS = -g
+
+all: $(OBJECTS)
+	gcc $(COPTS) -o build.exe $(OBJECTS)
+
+build.o: build.c
+	gcc $(COPTS) -c build.c
+
+bwords.o: bwords.c
+	gcc $(COPTS) -c bwords.c
+
+buildutl.o: buildutl.c
+	gcc $(COPTS) -c buildutl.c
+
+hashhead.o: hashhead.c
+	gcc $(COPTS) -c hashhead.c
+
+bpairs.o: bpairs.c
+	gcc $(COPTS) -c bpairs.c
+
+bsingle.o: bsingle.c
+	gcc $(COPTS) -c bsingle.c
+
+bruns.o: bruns.c
+	gcc $(COPTS) -c bruns.c
+
+bnorm.o: bnorm.c
+	gcc $(COPTS) -c bnorm.c
+
+clioutl.o: ../clioutl.c
+	gcc $(COPTS) -c ../clioutl.c
+
+# bobh didn't work
+###clioutl.o: clioutl.c
+###	gcc $(COPTS) -c clioutl.c
+
+normlook.o: normlook.c
+	gcc $(COPTS) -c normlook.c
+
+bweights.o: bweights.c
+	gcc $(COPTS) -c bweights.c
+
+clean:
+  # Keep going if can't rm
+	-rm Xingle*.hsh
+	-rm *.o
+	-rm ./build.exe

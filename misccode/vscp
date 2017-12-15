@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Hackaround for Cygwin vim scp:// fail
+if [ $# -lt 1 ]; then
+  echo "usage examples:"
+  echo "vscp 'rsh86800@rtpsh005:/opt/QCServer/A.05.00/svr/files/Inspec_Results-0410.log'"
+  echo "vscp 'rsh86800@rtpsh005:/opt/QCServer/A.05.00/svr/files/Error.log'"
+  exit;
+fi
+scp -q "$1" $TMP/0.log
+vi $TMP/0.log
+rm $TMP/0.log

@@ -1,0 +1,191 @@
+#! /bin/sh
+#  -*- Mode: Sh -*- 
+# ----------------------------------------------------------------------
+# ldd --- an unix ldd(1) work-alike for cygwin
+#
+# Author:	      Gary V. Vaughan <garyv@oranda.demon.co.uk>
+# Maintainer:	      Gary V. Vaughan <garyv@oranda.demon.co.uk>
+# Created:	      Tue Dec  8 08:43:00 1998
+# Last Modified:      Thu Apr 22 10:26:08 1999				      
+#            by:      Gary V. Vaughan <garyv@oranda.demon.co.uk>	      
+#
+# ----------------------------------------------------------------------
+# @(#) $Id: ldd,v 1.7 1999/04/23 14:58:03 garyv Exp $
+# ----------------------------------------------------------------------
+# Copyright (C) 1998, 1999 Gary V. Vaughan
+
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+# Code:
+
+while test $# -gt 0; do
+  case "$1" in
+  --v | --ve | --ver | --vers | --versi | --versio | --version)
+    echo 'ldd 1.1'
+    echo "Copyright (C) 1998 Gary V. Vaughan
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    exit 0
+    ;;
+  --h | --he | --hel | --help)
+    echo "ldd [OPTION]... FILE
+      --help              print this help and exit
+      --version           print version information and exit
+Report bugs to <gvaughan@oranda.demon.co.uk>."
+    exit 0
+    ;;
+  --)           # Stop option processing.
+    shift; break
+    ;;
+  -*)
+    echo >&2 'ldd:' "unrecognized option" "\`$1'"
+    echo 
+    exit 1
+    ;;
+  *)
+    break
+    ;;
+  esac
+done
+
+if test $# != 1; then
+  echo >&2 'ldd:' "missing file arguments"
+  echo >&2 "Try \`ldd --help' for more information."
+  exit 1
+fi
+
+LDDPATH=${LDDPATH=$PATH}
+
+OBJDUMP=${OBJDUMP=objdump}
+OBJDUMP_FLAGS=${OBJDUMP_FLAGS='-p -j idata'}
+
+to_lower="tr 'A-Z' 'a-z'"		# convert to lower case
+basename="sed s,^.*[/\\\\],,g"		# extract the basename from a path
+dirname="sed s,[/\\\\][^/\\\\]*\$,,"	# extract the dirname from a path
+
+# Sed substitution that helps us do robust quoting.  It backslashifies
+# metacharacters that are still active within double-quoted strings.
+sed_quote_subst='s,\([\\"\\`$\\\\]\),\\\1,g'
+
+RE_dll='^	DLL Name: '
+
+exts="exe dll"			# valid extensions
+seen=""				# list of objects examined already
+object=$1			# the object from the command line
+
+case "$object" in
+  /* | [A-Z]:* ) path=$object ;;
+  */* | *\\* )   dir=`echo "$object"|$dirname`
+                 path=`cd $dir && pwd`/`echo "$object"|$basename` ;;
+  * )            path="" ;;
+esac
+objects=`echo "$object"|$basename|$to_lower`
+
+# Add the executable's working dir and the current dir to LDDPATH
+LDDPATH=`echo "$path"|$dirname`:.:$LDDPATH
+
+# In a vain attempt to squeeze a bit of speed out of the main loop
+# we try to remove any invalid directories or duplicates from the path.
+#LDDPATH=`echo "$LDDPATH"| $to_lower`
+lddpath=""
+IFS="${IFS= 	}"; save_ifs="$IFS"; IFS=':'
+for dir in $LDDPATH; do
+  IFS="$save_ifs"
+  lower_dir=`echo "$dir"|$to_lower`
+  if test -z "`echo \":$lddpath:\" | $to_lower | grep \":$lower_dir:\"`"; then
+     test -d "$dir" && lddpath="$lddpath:$dir"
+  fi
+done
+LDDPATH=`echo "$lddpath"|sed 's,^:,,'`
+
+
+# MAIN LOOP:
+############
+while test -n "$objects"
+do
+  newobjects=""
+  for object in $objects; do
+
+    # if we have no dir for object, search the LDDPATH for it
+    if test -z "$path"; then
+      IFS="${IFS= 	}"; save_ifs="$IFS"; IFS=':'
+      for dir in $LDDPATH; do
+        IFS="$save_ifs"
+        for ext in $exts; do
+          if test -f "$dir/$object.$ext"; then
+	    object="$object.$ext"
+            path="$dir/$object"
+  	    break
+          fi
+        done
+        if test -z "$path" && test -f "$dir/$object"; then
+          path="$dir/$object"
+        fi
+	# stop searching if we have a match
+        test -z "$path" || break
+      done
+    else
+      # we have a path, so just check for extensions
+      dir=`echo "$path"|$dirname`
+      for ext in $exts; do
+        if test -f "$dir/$object.$ext"; then
+	  object="$object.$ext"
+          path="$dir/$object"
+  	  break
+        fi
+      done
+    fi
+    test -n "$path" || path="not found"
+
+    # show what we have so far
+    echo "$object	-> $path"
+
+    # start the next search if OBJECT was not found
+    test -f "$path" || { path=""; continue; }
+
+    case $object in
+      *.exe)
+        # ...being (a bit) careful not to introduce duplicates
+        LDDPATH="$dir:."`echo ":${LDDPATH}:" | \
+	    sed -e "s,:$dir:,:,;s,:\.:,:,;s,:\$,,"`
+	;;
+    esac
+
+    # escape any shell meta characters for the eval below
+    path=`echo $path|sed -e "$sed_quote_subst"`
+    
+    # extract dependencies from current object
+    new=`eval ${OBJDUMP} ${OBJDUMP_FLAGS} \""$path"\" \
+	 | grep "$RE_dll"  | sed "s,$RE_dll,," | $to_lower`
+    newobjects="$new $newobjects"
+    seen="$seen $object"
+    path=""
+
+    # only add NEWOBJECTS that we have not seen yet
+    new=""
+    for pending in $newobjects; do
+      test -z "`echo \" $seen $new \" | grep \" $pending \"`" && new="$new $pending"
+    done
+    newobjects=$new
+  done
+  
+  # maintain the loop invariants
+  objects="$newobjects"
+done
+
+exit 0
+
+# ldd ends here

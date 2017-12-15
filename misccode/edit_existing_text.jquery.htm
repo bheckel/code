@@ -1,0 +1,19 @@
+<html>
+<!-- http://www.jquery-tutorial.net/dom-manipulation/getting-and-setting-content/ -->
+  <head>
+    <script type="text/javascript" src="jquery-1.7.2.js"></script>
+  </head>
+  <body>
+    <p>Paragraph 1</p>
+    <p>Paragraph 2</p>
+    <p>Paragraph 3</p>
+
+    <script type="text/javascript">
+    $(function() {
+            $("p").text(function(index, oldText) {
+                    return "Existing text: " + oldText + ". New text: A dynamically set text (#" + index + ")";
+            });
+    });
+    </script>
+  </body>
+</html>
