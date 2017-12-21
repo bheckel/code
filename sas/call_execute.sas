@@ -27,6 +27,21 @@ options nosource;
   */
 options source NOreplace;
 
+libname db6 ODBC dsn='db6dev' schema='public' user=&user. password=&jasperpassword.;
+data _null_;
+  set db6.dashboardclients(obs=5);
+
+  array a[2] $11 _TEMPORARY_ ('19NOV2017' '20NOV2017');
+  do i=1 to 2;
+    /* str = cats('%m(clientid=', clientid, ');'); */
+    str = '%dashboarddir_individual(clientid=' || strip(clientid) || ',' || "measurementdate='" || strip(a[i]) || "');";
+    put str=;
+  end;
+  /* call execute(str); */
+run;  
+
+
+
 %macro m(clid=);
   %put &clid;
 %mend;
