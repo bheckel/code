@@ -1,4 +1,3 @@
-
 options mprint mautosource sasautos=('/Drugs/Macros', sasautos) mprint mprintnest nocenter sgen set=SAS_HADOOP_JAR_PATH="/sas/sashome/SAS_HADOOP_JAR_PATH"; %dbpassword;
 
 %macro m(clid=, projected_build_date=);
@@ -24,6 +23,6 @@ options mprint mautosource sasautos=('/Drugs/Macros', sasautos) mprint mprintnes
 data _null_;
   set FUNCDATA.tmm_targeted_list_refresh(keep= clid projected_build_date obs=2);
   str = cats('%m(clid=', clid, ', projected_build_date=', "'", put(projected_build_date,YYMMDD10.), "'", ');');
-  /* put str=; */
-  call execute(str);
+  put str=;
+  /* call execute(str); */
 run;  
