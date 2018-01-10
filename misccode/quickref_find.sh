@@ -96,6 +96,7 @@ qr perl2
 qr perl3
 qr plsql
 qr powershell
+qr python
 qr R
 qr regex
 qr regex2
@@ -233,6 +234,9 @@ elif [ "$1" = 'git4' ]; then
   Html http://gitref.org
 elif [ "$1" = 'android' ]; then
   Html http://developer.android.com/guide/faq/commontasks.html
+else
+elif [ "$1" = 'python' ]; then
+  Html https://developers.google.com/edu/python
 else
   echo "error - quickref not implemented for $1"
   exit 1
