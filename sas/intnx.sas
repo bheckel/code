@@ -79,3 +79,14 @@ run;
   %let date_exec2=%sysfunc(intnx(year, "&date_exec"d, 0, B), DATE9.);
 %end;
 %put &=thismo &=date_exec &=date_exec2;
+
+
+
+/* We want e.g. 2017-12-01 if the refresh that builds the 20180101 folder on the 16th hasn't happened yet this month */
+%if  %sysfunc(day("&SYSDATE"d)) le 16 %then %do;
+  %let bom=%sysfunc(intnx(month, "&SYSDATE"d, -1, b), yymmddN8.); %put A. &=bom;
+%end;
+%else %do;
+  /* We want e.g. 2018-01-01 if the current refresh on 15th has happened this month */
+  %let bom=%sysfunc(intnx(month, "&SYSDATE"d, 0, b), yymmddN8.); %put B. &=bom;
+%end;
