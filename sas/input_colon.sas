@@ -46,7 +46,6 @@ data FUNCDATA.tmm_targeted_list_refresh;
 run;
 title "&SYSDSN";proc print data=_LAST_(obs=10) width=minimum heading=H;run;title;
 
-endsas;
 
 
 data work.tmp;
@@ -91,7 +90,7 @@ data work.tmp2;
   ;
 run;
 proc print; run;
-endsas;
+
 
 
 title "This is one (less obfuscated but less concise) way around it";

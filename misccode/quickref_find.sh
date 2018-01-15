@@ -89,6 +89,7 @@ qr javascript
 qr javascript2
 qr javascript3
 qr jquery
+qr markdown
 qr mutt
 qr oracle
 qr perl
@@ -234,6 +235,8 @@ elif [ "$1" = 'git4' ]; then
   Html http://gitref.org
 elif [ "$1" = 'android' ]; then
   Html http://developer.android.com/guide/faq/commontasks.html
+elif [ "$1" = 'markdown' ]; then
+  Html https://guides.github.com/features/mastering-markdown/
 else
 elif [ "$1" = 'python' ]; then
   Html https://developers.google.com/edu/python

@@ -29,7 +29,8 @@ proc means data=sashelp.cars maxdec=0;
   var mpg_city;
 run;
 title "&SYSDSN";proc print data=t(obs=10) width=minimum heading=H;run;title;
-endsas;
+
+
 
 proc means data=sashelp.cars maxdec=0 MEDIAN;
   output out=t median=;
@@ -39,7 +40,6 @@ run;
 title "&SYSDSN";proc print data=_LAST_(obs=10) width=minimum heading=H;run;title;
 
 
-endsas;
 
  /* NOprint makes proc means the same as proc summary except automatic DATA1.sas7bdat */
 proc means data=sashelp.shoes /*NOprint*/;
