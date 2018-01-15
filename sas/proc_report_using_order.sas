@@ -1,6 +1,6 @@
 options NOsource;
  /*---------------------------------------------------------------------------
-  *     Name: report_using_order.sas
+  *     Name: proc_report_using_order.sas
   *
   *  Summary: Demo of proc report that uses the horrible order and order=
   *
@@ -46,3 +46,21 @@ proc report headline split='~' nowd;
 
   break after pid / skip;
 run;
+/*
+  pid  test               daten  course            result
+  -------------------------------------------------------
+  03   AST/SGOT         25JUL00  SCREENING             63
+                        19SEP00  POST-TX WEEK 4       241
+       Alkaline Phosph  25JUL00  SCREENING            452
+                        08AUG00  CRS 1 DAY 8          660
+                        22AUG00  CRS 2 DAY 1          649
+                        12SEP00  DISCONTINUATION      662
+       Total Bilirubin  25JUL00  SCREENING              1
+                        19SEP00  POST-TX WEEK 4       5.2
+                                                         
+  15   Potassium (Low)  04DEC00  SCREENING              5
+                        07FEB01  POST-TX WEEK 4       2.9
+       Sodium (Low)     04DEC00  SCREENING            128
+                                 CRS 1 DAY 1          128
+                        08JAN01  CRS 2 DAY 1          128
+*/

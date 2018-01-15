@@ -5,7 +5,7 @@ options NOsource;
   *  Summary: Demo of proc report (a supercharged proc print).
   *
   *           Also see proc_transpose.sas.
-  *           Also see report_using_order.sas
+  *           Also see proc_report_using_order.sas
   *
   *           To repeat header after a break use ID in the DEFINE
   *
