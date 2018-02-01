@@ -14,7 +14,7 @@ data left;
   put _all_;
   cards;
 1   88   99
-2   66   x7
+2   66   .
 3   44   55
   ;
 run;

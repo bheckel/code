@@ -1,4 +1,4 @@
-/* A LINK question was in the Tekmetrics exam */
+ /* See also goto.sas */
 
  /* SUGI 179-2008: Link statements are used to separate code from the normal
   * flow of the DATA Step in order that the code can be executed from any
@@ -50,7 +50,7 @@ run;
 proc print; run;
 
 
-  /* The above example isn't useful outside an obfuscation contest */
+ /* The above example isn't useful outside an obfuscation contest */
 data e;
   set sales;
   if region ne 'WEST' then delete; 

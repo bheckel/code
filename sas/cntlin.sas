@@ -7,10 +7,53 @@ options NOsource;
   *           See also read_ds_create_sasformat.sas and key_value_hash.sas
   *
   *  Created: Sun 22 Jun 2003 11:19:15 (Bob Heckel)
-  * Modified: Thu 26 Apr 2012 11:00:56 (Bob Heckel)
+  * Modified: Tue 30 Jan 2018 11:40:55 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
+
+data ids;
+  input id;
+  cards;
+2
+3
+4
+  ;
+run;
+
+data fmt(rename=(id=START));
+  retain fmtname 'key' type 'C' LABEL 'Y' ;
+  /* assume sorted */
+  set ids end=eof;
+
+  output;
+
+  if eof then do;
+    LABEL = 'N' ;  /* values as 'N' */
+    HLO = 'O' ;    /* format all Other */
+    output;
+  end;
+run;
+proc format cntlin=fmt fmtlib; run; 
+/*
+                            ----------------------------------------------------------------------------
+                            |       FORMAT NAME: $KEY     LENGTH:    1   NUMBER OF VALUES:    4        |
+                            |   MIN LENGTH:   1  MAX LENGTH:  40  DEFAULT LENGTH:   1  FUZZ:        0  |
+                            |--------------------------------------------------------------------------|
+                            |START           |END             |LABEL  (VER. V7|V8   30JAN2018:11:42:01)|
+                            |----------------+----------------+----------------------------------------|
+                            |2               |2               |Y                                       |
+                            |3               |3               |Y                                       |
+                            |4               |4               |Y                                       |
+                            |**OTHER**       |**OTHER**       |N                                       |
+                            ----------------------------------------------------------------------------
+*/
+data subset;
+  set large;
+  where put(id,$key.) = 'Y' ;
+run; 
+
+
 
 data scaleds;
   input begin $ 1-2 finish $ 5-8 amount $ 10-15;

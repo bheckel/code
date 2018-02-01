@@ -30,7 +30,6 @@ data t2;
   format discharge DATE9.;
 run;
 proc print data=_LAST_(obs=max) width=minimum; run;
-endsas;
 
 
 

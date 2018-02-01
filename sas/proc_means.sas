@@ -76,19 +76,54 @@ proc print; run;
 proc sort; by store; run;
 proc means;
   output out=tmp2;
-  by store;  /* gives separate table output, use CLASS for a single table */
+  /* gives separate table output, use CLASS for a single table */
+  /* by store; */
+  class store;
   var totdol;
 run;
 proc print data=_LAST_(obs=max) width=minimum; run;
+/*
+Obs    store    _TYPE_    _FREQ_    _STAT_     totdol
 
+  1                0         7       N           6.00
+  2                0         7       MIN       400.00
+  3                0         7       MAX      6000.00
+  4                0         7       MEAN     2866.67
+  5                0         7       STD      2258.02
+  6     abc        1         5       N           4.00
+  7     abc        1         5       MIN       400.00
+  8     abc        1         5       MAX      6000.00
+  9     abc        1         5       MEAN     3350.00
+ 10     abc        1         5       STD      2599.36
+ 11     abd        1         1       N           1.00
+ 12     abd        1         1       MIN      3000.00
+ 13     abd        1         1       MAX      3000.00
+ 14     abd        1         1       MEAN     3000.00
+ 15     abd        1         1       STD          .  
+ 16     abe        1         1       N           1.00
+ 17     abe        1         1       MIN       800.00
+ 18     abe        1         1       MAX       800.00
+ 19     abe        1         1       MEAN      800.00
+ 20     abe        1         1       STD          .  
+*/
 
 title 'Simple MIN MAX MEAN using a flip';
-proc transpose data=foo(where=(_TYPE_ eq 1 and _STAT_ ne 'STD'));
+proc transpose data=tmp2(where=(_TYPE_ eq 1 and _STAT_ ne 'STD'));
   by store;
   id _STAT_;
   var totdol;
 run;
 proc print data=_LAST_(obs=max) width=minimum; run;
+/*
+Simple MIN MAX MEAN using a flip                                                                                                                                                  14
+
+Obs    store    _NAME_    N     MIN     MAX    MEAN
+
+ 1      abc     totdol    4     400    6000    3350
+ 2      abd     totdol    1    3000    3000    3000
+ 3      abe     totdol    1     800     800     800
+*/
+endsas;
 
 
 title 'Total ordered dollar amount for each store';
@@ -112,6 +147,7 @@ run;
   * figure out the default numeric value.
   */
 proc print; run;
+endsas;
 
 title 'Total ordered dollar amount BY STORE BY YEAR';
 proc means data=tmp nway chartype noprint;

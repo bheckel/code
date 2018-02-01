@@ -32,7 +32,7 @@ proc means noprint;
   var salary;
   output out=stats sum=s_sal;
 run;
-title 'class dept, var salary'; proc print data=_LAST_(obs=max) width=minimum; run; title;
+/* title 'class dept, var salary'; proc print data=_LAST_(obs=max) width=minimum; run; title; */
 
 /*
 Obs    dept       _TYPE_    _FREQ_     s_sal
@@ -57,7 +57,7 @@ data final;
   pctofdept=(salary/symget('s_'||dept))*100;
   pctoftot=(salary/&s_tot)*100;
 run;
-title 'datastep'; proc print data=_LAST_(obs=max) width=minimum; run;
+/* title 'datastep'; proc print data=_LAST_(obs=max) width=minimum; run; */
 
 
  /* Compare */
@@ -66,14 +66,16 @@ proc sql;
   select a.*,
          a.salary/a.totdeptsal as pctofdept,
          b.salary/b.totsal as pctoftot
-  from (select *, sum(salary) as totdeptsal from pay group by dept) as a  JOIN  (select name, salary, sum(salary) as totsal from pay) as b  ON  a.name=b.name
+  from (select *, sum(salary) as totdeptsal from pay group by dept) as a JOIN (select name, salary, sum(salary) as totsal from pay) as b ON a.name=b.name
   ;
 quit;
 
 
  /* Compare */
-/***title 'proc freq';***/
-/***proc freq data=pay; run;***/
+title 'proc freq';
+proc freq data=pay; run;
+title "&SYSDSN";proc print data=_LAST_ width=minimum heading=H;run;title;
+endsas;
 
 
 

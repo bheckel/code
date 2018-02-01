@@ -43,7 +43,6 @@ run;
 
 
 
-endsas;
 data _NULL_;
   ***s='BQH0.PGM.LIB(FOO)';
   s='BQH0.PGM.LIB.FOO';

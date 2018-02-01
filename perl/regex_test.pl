@@ -3,8 +3,14 @@
 #     Name: regex_test.pl
 #
 #  Summary: Test regular expressions when this is not sufficient:
-
-#             $ perl -e 'print "found" if "a"=~/[^1-9]/'
+#
+#           $ perl -e 'print "found" if "a"=~/[^1-9]/'
+#
+#           or this
+#           $ perl -de 0
+#           <DEBUG> $x = 'test string'
+#           <DEBUG> $x =~ /^(test).*/; $y = $1
+#           <DEBUG> $y <---produces 'test'
 #
 #  Created: Fri 08 Jul 2016 09:32:17 (Bob Heckel)
 ##############################################################################

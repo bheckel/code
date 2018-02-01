@@ -23,7 +23,8 @@ proc freq data=sashelp.cars order=freq;
   tables make / maxlevels=5;
 run;
 
-endsas;
+
+
  /* V9+ */
 ods output nlevels=NLevels_out;
 data t;
@@ -35,7 +36,8 @@ proc freq data=t nlevels;
 run;
 proc print data=NLevels_out(obs=max) width=minimum; run;
 
-endsas;
+
+
 data work.orders;
   infile cards;
   ***length coffee $5;
@@ -82,7 +84,7 @@ proc freq data=work.orders(where=(coffee ne 'kon'));
 run;
 
 
-endsas;
+
  /* Compare with: */
 proc tabulate data=work.orders;
   title 'Proc Tabulate';

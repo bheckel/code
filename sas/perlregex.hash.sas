@@ -19,7 +19,7 @@ data negation_concepts;
   infile cards TRUNCOVER;
   input @01 key $4.  @05 negterms $100.;
 
-  /*     /no evidence of (PRE(\s|\-)?ECLAMPSIA)/i            */
+  /* E.g. /no evidence of (PRE(\s|\-)?ECLAMPSIA)/i          */
   regex='/'||strip(negterms)||' '||"(PRE(\s|\-)?ECLAMPSIA)/i";
 
   cards;
@@ -40,7 +40,7 @@ not pregnant                 5 b
 eclampsia possible           7 c
 rule out PRE-ECLAMPSIA       8 d
 pre-eclampsia possible       7 c
-no evidence of PRE eclampsia 0 e
+no evidence of PRe eclampsia 0 e
   ;
 run;
 proc print data=_LAST_(obs=max) width=minimum; run;
@@ -51,41 +51,36 @@ data cond_possible rule_out;
   set clinical_notes;
 
   if _N_ eq 1 then do;
-    declare hash myhash(dataset:"WORK.negation_concepts", ordered:'YES');
-    rc=myhash.DEFINEKEY('key');  /* var from negation_concepts ds */
-    rc=myhash.DEFINEDATA('key', 'regex');  /* vars from negation_concepts ds */
+    declare HASH myhash(dataset:"WORK.negation_concepts", ordered:'YES');
+    rc=myhash.DEFINEKEY('key');  /* var 'key' from negation_concepts ds */
+    rc=myhash.DEFINEDATA('key', 'regex');  /* vars 'key' & 'regex' from negation_concepts ds */
     rc=myhash.DEFINEDONE();
     call missing(key, regex);
-    /*      SAS keyword          */
-    /*      _____                */
-    declare hiter myiter('myhash');
+    declare HITER myiter('myhash');
   end;
 
-  /* Copies the contents of the first item from myhash into the data variable
-   * 'regex'. While there are items to be read (rc=0), each item of the hash
-   * table is accessed one by one in the DO loop.
+  /* Copies the contents of the first item from myhash into the data variable 'regex'. While there are items to be read (rc=0), each item 
+   * of the hash table is accessed one by one in the DO loop.
    */
   rc=myiter.first();
-  /* The hash object searches for regex matches against the free text var
-   * 'phrase' in the clinical_notes data set.  This loop looks for matches but
-   * that's not what the task is, so the cond_possible ds is the answer to our
-   * question.
+
+  /* The hash object searches for regex matches against the free text var 'phrase' in the clinical_notes data set.  This loop looks 
+   * for matches but that's not what our task is, instead, the cond_possible ds is the answer to our question.
    */
-  do while (rc eq 0);
+  do while ( rc eq 0 );
     rx=prxparse(strip(regex));
-    if prxmatch(rx, phrase)>0 then do;
+
+    if prxmatch(rx, phrase)>0 then do;  /* rc is 160038 due to match on 'rule out' etc. */
       put 'match: ' (_all_)(=);  /* DEBUG */
-      /* All variables from clinical_note plus data variables from DEFINEDATA
-       * are outputted into rule_out dataset
-       */
+      /* All variables from clinical_note plus data variables from DEFINEDATA are outputted into rule_out dataset */
       output rule_out;
-      call prxfree(rx);
+      /* call prxfree(rx); */
       goto NEXT_OBS;
     end;
     else
       put 'no match: ' (_all_)(=);  /* DEBUG */
 
-    call prxfree(rx);
+    /* call prxfree(rx); */
     rc=myiter.next();
   end;
 
@@ -94,5 +89,5 @@ data cond_possible rule_out;
   NEXT_OBS:;
   put;  /* DEBUG cosmetic, add a blank line between groups */
 run;
-proc print data=cond_possible(obs=max) width=minimum; run;
-proc print data=rule_out(obs=max) width=minimum; run;
+title 'cond_possible'; proc print data=cond_possible(obs=max) width=minimum; run;
+title 'rule_out'; proc print data=rule_out(obs=max) width=minimum; run;

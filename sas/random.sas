@@ -9,16 +9,16 @@
   *           For X obs by Y vars see build_dummy_ds_100_random_variables.sas
   *
   *  Created: Fri Apr 30 1999 15:37:03 (Bob Heckel)
-  * Modified: Thu 07 Jul 2016 15:17:18 (Bob Heckel)
+  * Modified: Fri 26 Jan 2018 15:25:50 (Bob Heckel)
   *----------------------------------------------------------------------------
   */
 
-proc sql outobs=10;
-  select make, model
-  from sashelp.cars
-  order by ranuni(1234)
-  ;
-quit;
+data _null_;
+  call streaminit(12345);  /* same rand each run */
+  x=rand('NORMAL',70,10);
+  put x=;
+run;
+
 
 
 data a;

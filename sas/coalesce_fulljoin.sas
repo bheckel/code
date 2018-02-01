@@ -39,7 +39,7 @@ data two;
 run;
 
 
-title 'merge';
+title 'match-merge';
 data three;
   merge one two;
   by num;
@@ -57,12 +57,16 @@ num    ch1    ch2
 
 
  /* same */
-title 'coalesce full join';
+title 'full join with a coalesce';
 proc sql;
   create table three as
+  /* This leaves var 'num' missing for #3 & #5 */
+  /* select one.num, ch1, ch2 */
+  /* So use this */
   select coalesce(one.num, two.num) as num, ch1, ch2
   /* [INNER] JOIN won't work */
   /* from one JOIN two  ON one.num=two.num */
+  /* So use this */
   from one FULL JOIN two  ON one.num=two.num
   ;
 quit;

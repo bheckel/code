@@ -30,6 +30,7 @@
  *
  *  Adapted: Mon Jun 07 1999 16:03:03 (Bob Heckel)
  * Modified: Thu 10 Sep 2009 11:15:18 (Bob Heckel -- SUGI 354-2009)
+ * Modified: Wed 17 Jan 2018 14:31:13 (Bob Heckel)
  *----------------------------------------------------------------------------
  */
 options linesize=80 pagesize=32767 nodate source source2 notes mprint
@@ -87,6 +88,17 @@ data define (drop=x y z i j);
    */
   if e then output;
 run;
+title "&SYSDSN";proc print data=_LAST_ width=minimum heading=H;run;title;
+/*
+WORK    DEFINE                                                                 2
+
+Obs    a1    a2    a3    a4    a5    a6    a7    a8    a9    a10    a11    a12
+
+ 1      1     2     3     .     .     .     .     .     .      .      .      .
+ 2      1     2     3     4     5     6     .     .     .      .      .      .
+ 3      1     2     3     4     5     6     7     8     9      .      .      .
+ 4      1     2     3     4     5     6     7     8     9     10     11     12  <---
+*/
 
 
 
@@ -118,6 +130,16 @@ data scores(keep=name score1-score3);
   if last.name then output;
   i+1;
 run;
+title "&SYSDSN";proc print data=_LAST_(obs=10) width=minimum heading=H;run;title;
+/*
+WORK    SCORES                                                                 3
+
+Obs     name      score1    score2    score3
+
+ 1     Deborah      89        90        95  
+ 2     Martin       90         .         .  
+ 3     Stefan       89        76         .  
+*/
 
 
 

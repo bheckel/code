@@ -37,3 +37,12 @@ data _null_;
 3
   ;
 run;
+
+
+data _null_;
+  /* retain _all_; */  /* doesn't matter */
+  put "PDV4 before: " _all_;  /* printout PDV */
+  set sashelp.class(obs=2);
+  put "PDV4 after:  " _all_;
+  ;
+run;
