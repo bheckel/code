@@ -7,10 +7,21 @@ options NOsource;
   *           Requires ---SAS/ACCESS Interface to PC Files
   *
   *  Created: Mon 09 Jun 2003 12:53:56 (Bob Heckel)
-  * Modified: Wed 17 Aug 2016 09:48:07 (Bob Heckel)
+  * Modified: Mon 05 Feb 2018 14:47:22 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
+
+ /* Excel is forcing to numeric but we want char so we resort to tricks */
+proc import datafile='/Drugs/Cron/Daily/HarpsPriorityTasks/patients_to_target.xlsx' out=targets(rename=(a=pharmacypatientid)) dbms=xlsx;
+  getnames=no;
+run;
+data targets;
+  set targets(firstobs=2);
+run;
+proc contents;run;
+
+
 
  /* v9.4 */
 proc import datafile='~/code/sas/Book1.xlsx' out=work.tmp dbms=XLSX REPLACE;
@@ -21,7 +32,6 @@ title "&SYSDSN";proc print data=_LAST_ width=minimum heading=H;run;title;
 
 
 
-endsas;
  /* v9+ */
 /***proc import datafile='JurongReports_SXReport.xls' out=work.tmp dbms=XLS;***/
 proc import datafile='JurongReports_SXReport.xlsx' out=work.tmp dbms=XLSX REPLACE;

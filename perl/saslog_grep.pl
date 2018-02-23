@@ -155,6 +155,7 @@ while (my $line = <$fh>) {
     next if $line =~ /WARNING: Libref funcdata may not have assigned correctly/;
     next if $line =~ /WARNING: Multiple lengths were specified for the variable/;
     next if $line =~ /WARNING: This CREATE TABLE statement recursively references the target table/;
+    next if $line =~ /WARNING: CPATID.CPATID/;
   }
 
   unless ( $seen{$line} ) {

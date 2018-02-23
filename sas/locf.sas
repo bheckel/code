@@ -4,10 +4,11 @@ options NOsource ls=180;
   *
   *  Summary: Last observation carried forward.  This example determines
   *           each patient's baseline cholesterol level, defined as the number
-  *           recorded just prior to dosing.
+  *           recorded just prior to dosing, if it's close enough (within 5
+  *           days)
   *
   *  Adapted: Fri 19 Oct 2012 14:35:08 (Bob Heckel--Jack Shostak Pharma book)
-  * Modified: Thu 03 Nov 2016 14:41:46 (Bob Heckel)
+  * Modified: Thu 01 Feb 2018 11:50:46 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source NOcenter dsoptions=note2err;
@@ -75,3 +76,10 @@ put 'DEBUG: '; if subject eq '103' then put _all_;
 run;
 title 'for patient 102, 01OCT is not within 5 days of 07OCT so cannot carry forward the 200, must set missing';
 proc print data=_LAST_(obs=max) width=minimum ; run;
+/*
+Obs    subject    b_hdl    b_ldl    b_trig
+
+ 1       101        49      185       108 
+ 2       102        52        .       360 
+ 3       103        32      240       880 
+*/
