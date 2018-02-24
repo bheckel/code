@@ -4,6 +4,8 @@ options NOsource;
   *
   *  Summary: v9 hash tables
   *
+  * data subset; if _N_=1 then do; declare hash h(dataset:'small'); h.defineKey('id'); h.defineDone(); end; set large; if h.find() = 0 then output; run;
+  *
   *           https://support.sas.com/rnd/base/datastep/dot/hash-tip-sheet.pdf
   *
   *  See http://support.sas.com/resources/papers/proceedings14/1482-2014.pdf
@@ -12,10 +14,50 @@ options NOsource;
   *           Error if find() used instead of e.g. h.find()
   *
   *  Adapted: Fri 30 Jan 2004 18:10:38 (Bob Heckel)
-  * Modified: Mon 09 Nov 2015 09:30:02 (Bob Heckel)
+  * Modified: Thu 01 Feb 2018 11:47:36 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
+
+
+ /* Lookup */
+data largefile;
+  infile cards;
+  input drug_code $;
+  cards;
+k1
+k3
+k5
+k7
+k3
+  ;
+run;
+
+ /* We only care about data in largefile that relates to the drug codes we have here */
+data smallfile;
+  infile cards;
+  input drug_code $ price name $;
+  cards;
+k66 10 lexapro
+k3 100 advair
+  ;
+run;
+
+data subset;
+  if _N_=1 then do;
+    set smallfile;
+    declare hash h(dataset:'smallfile', multidata:'y');
+    h.defineKey('drug_code'); 
+    h.definedata("price","name"); 
+    h.defineDone();
+  end;
+  set largefile; if h.find() = 0 then output;
+run;
+title "&SYSDSN";proc print data=_LAST_ width=minimum heading=H;run;title;
+endsas;
+
+
+
 
  /* SESUGI 2015 Dorfman duplicate key hashes */
  %macro bobh0911151455; /* {{{ */

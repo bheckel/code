@@ -3,7 +3,7 @@
 # Quick reference to either local files or websites
 
 #  Created: Sun 22 Dec 2013 10:59:11 (Bob Heckel)
-# Modified: Tue 22 Jul 2014 11:28:55 (Bob Heckel)
+# Modified: Thu 15 Feb 2018 08:46:28 (Bob Heckel)
 
 # S/b aliased, not symlinked, as qr
 
@@ -32,6 +32,7 @@ function Html() {
       return
     else
       echo 'w3m not available'
+      $HOME/code/perl/striphtml $HOME/$1 | less
       return
     fi
   fi
@@ -166,8 +167,6 @@ elif [ "$1" = 'jquery' ]; then
 elif [ "$1" = 'awk' ]; then
   vim $HOME/code/misccode/awk_quickref.txt
 elif [ "$1" = 'bash' ]; then
-  rme bash
-elif [ "$1" = 'bash2' ]; then  # more detail
   ###cygstart "$PROGRAMFILES/mozilla firefox/firefox" bashref2_05.html
   ###Html $HOME/code/misccode bashref2_05.html
   Html code/misccode/bashref2_05.html
@@ -237,7 +236,6 @@ elif [ "$1" = 'android' ]; then
   Html http://developer.android.com/guide/faq/commontasks.html
 elif [ "$1" = 'markdown' ]; then
   Html https://guides.github.com/features/mastering-markdown/
-else
 elif [ "$1" = 'python' ]; then
   Html https://developers.google.com/edu/python
 else

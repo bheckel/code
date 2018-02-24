@@ -1,5 +1,17 @@
  /* See also inplace_edit.sas */
 
+ /* Write dataset and text file simultaneously */
+filename txt 't.txt';
+data t;
+  file txt;
+  x = 1;
+  put x;
+  output;
+run;
+title "&SYSDSN";proc print data=_LAST_(obs=10) width=minimum heading=H;run;title;
+
+
+
 filename MYXML "&DPPATH\CODE\_WSIP21.xml";
 data _null_;
   infile MYXML TRUNCOVER;
@@ -13,8 +25,6 @@ run;
 
 
 
-endsas;
-
 filename IN 'junk';
 filename OUT 'junk2';
 
@@ -25,7 +35,6 @@ data tmp;
   input @1 block $80.;
 run;
 
-
 data _NULL_;
   set tmp;
   file OUT;
@@ -34,7 +43,6 @@ run;
 
 
 
-endsas;
 filename in "in.txt";
 data _null_;
    file in;

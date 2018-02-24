@@ -29,24 +29,37 @@
   *           (could use FORMAT instead).
   *
   *  Adapted: Thu 11 Apr 2002 14:41:23 (Bob Heckel -- Little SAS Book sect 3.9)
-  * Modified: Fri 13 Jul 2012 15:19:37 (Bob Heckel)
+  * Modified: Thu 01 Feb 2018 10:44:05 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 
 data t;
-  retain foo;  /* does not appear in t because it's not assigned a value */
+  retain foo;    /* does not appear in t because it's not assigned a value */
   retain bar .;  /* does appear */
-  retain baz; 
+  retain baz;    /* '.' for first 2 obs then stays as 42 from _n_ eq 3 to end of dataset */
   set sashelp.shoes;
 
-  if _N_ eq 3 then baz=42;  /* also 42 for 4, 5, 6... */
+  if _N_ eq 3 then baz=42;
 run;
 proc print data=_LAST_(obs=9) width=minimum; run;
+/*
+Obs    bar    baz    Region    Product           Subsidiary     Stores     Sales      Inventory    Returns
+
+  1     .       .    Africa    Boot              Addis Ababa      12       $29,761    $191,821       $769 
+  2     .       .    Africa    Men's Casual      Addis Ababa       4       $67,242    $118,036     $2,284 
+  3     .      42    Africa    Men's Dress       Addis Ababa       7       $76,793    $136,273     $2,433 
+  4     .      42    Africa    Sandal            Addis Ababa      10       $62,819    $204,284     $1,861 
+  5     .      42    Africa    Slipper           Addis Ababa      14       $68,641    $279,795     $1,771 
+  6     .      42    Africa    Sport Shoe        Addis Ababa       4        $1,690     $16,634        $79 
+  7     .      42    Africa    Women's Casual    Addis Ababa       2       $51,541     $98,641       $940 
+  8     .      42    Africa    Women's Dress     Addis Ababa      12      $108,942    $311,017     $3,233 
+  9     .      42    Africa    Boot              Algiers          21       $21,297     $73,737       $710 
+*/
 
 
- /* Compare SUM statement with SUM function */
+ /* Compare SUM function with SUM statement */
 data t2;
-  retain sumfunc;  /* this approach is useless unless you initialize with non-0 */
+  retain sumfunc;  /* required for function */
   set sashelp.shoes;
 
   sumfunc = sum(sumfunc, sales);

@@ -1,0 +1,1561 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>
+Perl in 20 pages
+</TITLE>
+</HEAD>
+<BODY>
+
+
+<p>  
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><center><H1><FONT color=#003300>Perl in 20 pages</FONT></H1></center>
+
+<p><center><H3><FONT color=teal>A guide to Perl 5 for C/C++, awk, and shell programmers</FONT></H3></center>
+
+<p><center><H3><FONT color=teal>Russell Quong</FONT></H3></center>
+<center><H3><FONT color=teal>Jun  9 1999 - Document version 99b </FONT></H3></center>
+
+<p>
+
+<p>Keywords: Perl documentation, Perl tutorial, Perl beginners, Guide to
+Perl.  (For internet search engines.)
+
+<p><hr><H2><FONT color=black>Introduction</FONT></H2>
+
+<p>Perl is an interpreted scripting language with high-level support for
+text processing, file/directory management, and networking.  Perl
+originated on Unix but as of 1997 has been ported to numerous platforms
+including the Win32 API (on which Win95/NT are based).  It is the
+defacto language for CGI scripts.  If I had to learn just one
+scripting language, it would be Perl.
+
+<p>This document is not meant to be a thorough reference manual; instead,
+see the concisely-written manual pages ("man pages") or buy the Perl
+book (Programming Perl 2nd Edition, by Wall, Christianson and Schwartz,
+ISBN 1-56592-149-6 <font size=-1>[Note: Like the K&amp;R book on C, this definitive
+reference on a popular language is dense and insightful, but not for all
+tastes]</font>.  This document attempts to help an experienced programmer
+unfamiliar with Perl up to speed as quickly as possible on the most
+commonly used features of Perl.  For the experience Perl programmer
+looking for a reference, I recommend Perl in a Nutshell, by Ellen
+Siever, Stephen Spainhour and Nathan Patwardhan, ISBN 1-56592-286-7.
+
+<p>I am willing to sacrifice 100% correctness if there is a much simpler
+view that is correct 99% of the time.  There are several reasons for
+taking this approach (I need to finish this paragraph).
+
+<p>My Perl programming philosophy emphasizes reuse and clarity over
+brevity.  We happily acknowledge that much of the Perl code presented
+could easily be written in half the number of lines of code and with
+greater efficiency.
+
+<p><OL>
+  <li><strong></strong> I name variables and avoid using the implicit
+<SAMP>$_</SAMP> or <CODE><FONT color=#000099>@_</FONT></CODE> variables whenever possible.
+  <li><strong></strong> I use subroutines to hold all code.
+  <li><strong></strong> I use local variables and avoid globals whenever possible.
+</OL>
+
+<p>The <a href="http://www.best.com/~quong/perlin20/perlin20.html"> latest version of this
+document </a> can be found at
+http://www.best.com/~quong/perlin20/.  A gzipped <a href="http://www.best.com/~quong/perlin20/perlin20.2.ps.gz"> 2-up (US letter) Postscript
+version of this document </a> is
+available, too.  I expect to update this document every 4-6 months.
+
+<p><EM>License/use:</EM> You are free to reproduce/redistribute this
+document in its entirety in any form for any use so long as <i>(i)</i> this
+license is maintained, and <i>(ii)</i> you make no claims about the authorship.
+I, Russell Quong, have copyrighted this document.  I would appreciate
+notification of any large scale reproduction and/or feedback.
+
+<p>As of Jun 99, this document is fairly complete; continued work will
+be sporadic.
+
+<p>
+
+<p><H3><FONT color=teal>Perl Versions</FONT></H3>
+
+<p>This document covers Perl version 5.  If you have an older version,
+upgrade immediately.  As of 2/98, version 5.004 (and as of 9/98, 5.005)
+is available<font size=-1>[Note: I used 5.003 when initially writing this document
+4/98]</font>.  Run <CODE><FONT color=#000099>perl -v</FONT></CODE> to see the version.
+
+<p>Before version 5, Perl was a cryptic language in large part to its use
+of variables.  In Version 4 most built-in variables were named via
+single punctuation symbols, such as <CODE><FONT color=#000099>$]</FONT></CODE>, <CODE><FONT color=#000099>$_</FONT></CODE> and,
+even worse, most statements operated on an implicit variable, named
+<SAMP>_</SAMP> (yes, the variable named underscore) to increase brevity.
+In Perl 5, released sometime in late 1995 (?), most of built-in
+variables now have descriptive english names and all statements can be
+rewritten to show explicitly the variables being used.
+
+<p>
+
+<p><hr><H2><FONT color=black>Obtaining Perl binaries, documentation</FONT></H2>
+
+<p>Check CPAN (the Comprehensive Perl Archive) for any Perl related
+material, documentation, source or modules.  If anything, there is too
+much information at CPAN.  CPAN is mirrored at <a href="ftp://ftp.cdrom.com/pub/perl/CPAN/SITES.html"> many (over 40)
+different sites </a>.  Pick
+one near you.
+
+<p>As of 3/98, the latest Win32 port of Perl is available at any of the
+CPAN sites at <TT><FONT color=#660000>authors/Gurusamy_Sarathy/x86</FONT></TT>.  For example, here
+are a few locations
+<UL>
+  <li><strong></strong> <a href="ftp://ftp.digital.com/pub/plan/perl/CPAN/authors/Gurusamy_Sarathy/"> USA West coast mirror </a>.
+  <li><strong></strong> <a href="ftp://ftp.epix.net/pub/languages/perl/authors/Gurusamy_Sarathy/"> USA East coast mirror </a>.
+</UL>
+
+<p>On a Unix system or Win32 system with Perl properly installed, 
+
+<p><hr><H2><FONT color=black>Basics</FONT></H2>
+
+<p>Perl is a polymorphic, interpreted language with built in support for
+textual processing, regular expressions, file/directory manipulation,
+command execution, networking, associative arrays, lists, and dbm
+access.  We next present three increasingly complicated examples using
+perl
+
+<p><hr><H2><FONT color=black>Command line usage: substituting text</FONT></H2>
+
+<p>In some cases, a script is not needed.  For example, I often want to
+replace all occurrences of a regex (regular expression) <CODE><FONT color=#000099>FROMX</FONT></CODE> to
+a new value <CODE><FONT color=#000099>TOX</FONT></CODE> in one more files <CODE><FONT color=#000099>FILESX</FONT></CODE>.
+
+<p>Here's the command:
+<FONT color=navy><PRE>
+  ## replace FROM with TOX in all files FILESX, renaming originals with .bak
+  % perl -p -i.bak -e "s/FROM/TOX/;" FILESX
+
+<p>  ## replace FROM with TOX in all files FILESX, overwriting originals
+  % perl -p -i -e "s/FROM/TOX/;"  FILESX
+</PRE></FONT>
+
+<p><hr><H2><FONT color=black>A simpler one-shot script</FONT></H2>
+
+<p>Sometimes you need a simple throw-away script to do a task once or
+twice, in which case the full-blown script in the next section is just
+too much.  The following script <a href="one-shot.pl"> one-shot.pl </a> reads all files
+specified as command line arguments and prints out each line preceded by
+the file name and the line number.  You may need to make the script file
+executable (via the Unix command <CODE><FONT color=#000099>chmod 755 oneShot.pl</FONT></CODE>) first.
+
+<p>To run the script type
+<FONT color=navy><PRE>
+  % oneShot.pl input-file(s)
+or
+  % perl -w oneShot.pl input-file(s)
+</PRE></FONT>
+
+<p><hr><H2><FONT color=black>A prototype Perl script</FONT></H2>
+
+<p>We present a non-trivial prototype Perl script that illustrates many
+common Perl script operations, including
+
+<p><UL>
+  <li><strong></strong> command line flag handling
+  <li><strong></strong> variables, defining/calling functions, parameter syntax
+  <li><strong></strong> read multiple files
+  <li><strong></strong> write the results to a file
+  <li><strong></strong> text searching and matching using regular expressions,
+  <li><strong></strong> sorting an array of strings alphabetically
+</UL>
+ 
+<p>If this script is too much for your needs, use the preceding prototype
+script for simpler one-shot tasks in the next section.  Remember,
+though, its much easier to remove parts from a big script than to add to
+a smalll script.  (Retrospective: even after writing this prototype
+script, I resisted using it because it seemed too long, but in most
+cases I ended up cutting/pasting from it to my new script; since then, I
+just start with this script and wittle away.)
+
+<p>By breaking each of the majors steps into a separate function, you can
+modify this prototype script for your needs with minimial changes.
+Although this script is long, it should be fairly easy to read.
+
+<p>This example script <TT><FONT color=#660000>proto-getH1.pl</FONT></TT> extracts and then
+sorts (alphabetizes) all the high-level headings from one or more HTML
+files, by looking for lines that contain
+
+<p><FONT color=navy><PRE>
+  &lt;Hn&gt; ... &lt;/Hn&gt;
+</PRE></FONT>
+
+<p>
+This script <a href="proto-getH1.pl"> proto-getH1.pl </a> is run via:
+
+<p><FONT color=navy><PRE>
+  % perl -w proto-getH1.pl [-o outputfile] input-file(s)
+or
+  % proto-getH1.pl [-o outputfile] input-file(s)
+</PRE></FONT>
+
+<p>All HTML headers are sent to the <EM>output file</EM>, which
+is <CODE><FONT color=#000099>stdout</FONT></CODE> by default, or the file specified after the
+<SAMP>-o</SAMP> command line flag.
+
+<p>
+
+<p><FONT color=#000066><pre>
+  1  #! /usr/bin/perl -w
+  2  
+  3  # Example perl file - extract H1,H2 or H3 headers from HTML files
+  4  # Run via:
+  5  #   perl this-perl-script.pl [-o outputfile] input-file(s)
+  6  # E.g.
+  7  #   perl proto-getH1.pl -o headers *.html
+  8  #   perl proto-getH1.pl -o output.txt homepage.htm
+  9  #
+ 10  # Russell Quong         2/19/98
+ 11  
+ 12  require 5.003;			# need this version of Perl or newer
+ 13  use English;			# use English names, not cryptic ones
+ 14  use FileHandle;			# use FileHandles instead of open(),close()
+ 15  use Carp;                       # get standard error / warning messages
+ 16  use strict;			# force disciplined use of variables
+ 17  
+ 18  ## define some variables.
+ 19  my($author) = "Russell W. Quong";
+ 20  my($version) = "Version 1.0";
+ 21  my($reldate) = "Jan 1998";
+ 22  
+ 23  my($lineno) = 0;                # variable, current line number
+ 24  my($OUT) = \*STDOUT;            # default output file stream, stdout
+ 25  my(@headerArr) = ();            # array of HTML headers
+ 26  
+ 27    # print out a non-crucial for-your-information messages.
+ 28    # By making fyi() a function, we enable/disable debugging messages easily.
+ 29  sub fyi ($) {
+ 30      my($str) = @_;
+ 31      print "$str\n";
+ 32  }
+ 33  
+ 34  sub main () {
+ 35      fyi("perl script = $PROGRAM_NAME, $version, $author, $reldate.");
+ 36      handle_flags();
+ 37        # handle remaining command line args, namely the input files
+ 38      if (@ARGV == 0) {           # @ARGV used in scalar context = number of args
+ 39          handle_file('-');
+ 40      } else {
+ 41          my($i);
+ 42          foreach $i (@ARGV) {
+ 43              handle_file($i);
+ 44          }
+ 45      }
+ 46      postProcess();              # additional processing after reading input
+ 47  }
+ 48  
+ 49    # handle all the arguments, in the @ARGV array.
+ 50    # we assume flags begin with a '-' (dash or minus sign).
+ 51    #
+ 52  sub handle_flags () {
+ 53      my($a, $oname) = (undef, undef);
+ 54      foreach $a (@ARGV) {
+ 55          if ($a =~ /^-o/) {
+ 56              shift @ARGV;                # discard ARGV[0] = the -o flag
+ 57              $oname = $ARGV[0];          # get arg after -o
+ 58              shift @ARGV;                # discard ARGV[0] = output file name
+ 59              $OUT = new FileHandle "&gt; $oname";
+ 60              if (! defined($OUT) ) {
+ 61                  croak "Unable to open output file: $oname.  Bye-bye.";
+ 62                  exit(1);
+ 63              }
+ 64          } else {
+ 65              last;                       # break out of this loop
+ 66          }
+ 67      }
+ 68  }
+ 69  
+ 70    # handle_file (FILENAME);
+ 71    #   open a file handle or input stream for the file named FILENAME.
+ 72    # if FILENAME == '-' use stdin instead.
+ 73  sub handle_file ($) {
+ 74      my($infile) = @_;
+ 75      fyi(" handle_file($infile)");
+ 76      if ($infile eq "-") {
+ 77          read_file(\*STDIN, "[stdin]");  # \*STDIN=input stream for STDIN.
+ 78      } else {
+ 79          my($IN) = new FileHandle "$infile";
+ 80          if (! defined($IN)) {
+ 81              fyi("Can't open spec file $infile: $!\n");
+ 82              return;
+ 83          }
+ 84          read_file($IN, "$infile");      # $IN = file handle for $infile
+ 85          $IN-&gt;close();           # done, close the file.
+ 86      }
+ 87  }
+ 88  
+ 89    # read_file (INPUT_STREAM, filename);
+ 90    #   
+ 91  sub read_file ($$) {
+ 92      my($IN, $filename) = @_;
+ 93      my($line, $from) = ("", "");
+ 94      $lineno = 0;                        # reset line number for this file
+ 95      while ( defined($line = &lt;$IN&gt;) ) {
+ 96          $lineno++;
+ 97          chomp($line);                   # strip off trailing '\n' (newline)
+ 98          do_line($line, $lineno, $filename);
+ 99      }
+100  }
+101  
+102    # do_line(line of text data, line number, filename);
+103    #   process a line of text.  
+104  sub do_line ($$$) {
+105      my($line, $lineno, $filename) = @_;
+106      my($heading, $htype) = undef;
+107      # search for a &lt;Hx&gt; .... &lt;/Hx&gt;  line, save the .... in $header.
+108      # where Hx = H1, H2 or H3.
+109      if ( $line =~ m:(&lt;H[123]&gt;)(.*)&lt;/H[123]&gt;:i ) {
+110          $htype = $1;            # either H1, H2, or H3
+111          $heading = $2;          # text matched in the parethesis in the regex
+112          fyi("FYI: $filename, $lineno: Found ($heading)");       
+113          print $OUT "$filename, $lineno: $heading\n";    
+114  
+115            # we'll also save the all the headers in an array, headerArr
+116          push(@headerArr, "$heading ($filename, $lineno)");
+117      }
+118  }
+119      
+120    # print out headers sorted alphabetically
+121    #
+122  sub postProcess() {
+123      my(@sorted) = sort { $a cmp $b } @headerArr;	# example using sort
+124      print $OUT "\n--- SORTED HEADERS ---\n";
+125      my($h);
+126      foreach $h (@sorted) {
+127          print $OUT "$h\n";
+128      }
+129      my $now = localtime();
+130      print $OUT "\nGenerated $now.\n"
+131  
+132  }
+133   # start executing at main()
+134   # 
+135  main();
+136  0;              # return 0 (no error from this script)
+</pre>
+</FONT>
+
+
+<p>
+
+<p><hr><H2><FONT color=black>Control constructs</FONT></H2>
+
+<p>Perl has the similar syntax as C/C++/Java for control constructs such as
+<CODE><FONT color=#000099>if</FONT></CODE>, <CODE><FONT color=#000099>while</FONT></CODE>, <CODE><FONT color=#000099>for</FONT></CODE> statements.  The following
+table compares the control constructs between C and Perl.  In Perl, the
+values <CODE><FONT color=#000099>0</FONT></CODE>, <CODE><FONT color=#000099>"0"</FONT></CODE>, and <CODE><FONT color=#000099>""</FONT></CODE> (the empty string) are
+false; any other value is true when evaluating a condition in an
+if/for/while statement.
+
+<p><DIV ALIGN=center>
+  <SAMP>
+  <table border>
+<TR> <TD align=left> &nbsp; </TD> <TD align=left> C </TD> <TD align=left> Perl (braces required) </TD></TR>
+<TR> <TD align=left>     same </TD> <TD align=left> if () { ... } </TD> <TD align=left> if () { ... } </TD></TR>
+<TR> <TD align=left>     diff </TD> <TD align=left> } else if () { ... } </TD> <TD align=left> } elsif () { ... } </TD></TR>
+<TR> <TD align=left>     same </TD> <TD align=left> while () { ... } </TD> <TD align=left> while () { ... } </TD></TR>
+<TR> <TD align=left>     diff </TD> <TD align=left> do   while (); </TD> <TD align=left> do <font color=maroon><em> Unknown LaTeX command </em> ( </font> <font color=maroon><em>  </em>  </font> while (); (See below) </TD></TR>
+<TR> <TD align=left>     same </TD> <TD align=left> for (aaa;bbb;ccc) { ... } </TD> <TD align=left> for (aaa;bbb;ccc) { ... } </TD></TR>
+<TR> <TD align=left>     diff </TD> <TD align=left> N/A </TD> <TD align=left> foreach $var (@array) { ... } </TD></TR>
+<TR> <TD align=left>     diff </TD> <TD align=left> break </TD> <TD align=left> last </TD></TR>
+<TR> <TD align=left>     diff </TD> <TD align=left> continue </TD> <TD align=left> next </TD></TR>
+<TR> <TD align=left>     similar </TD> <TD align=left> 0 is FALSE </TD> <TD align=left> 0, "0", and "" is FALSE </TD></TR>
+<TR> <TD align=left>     similar </TD> <TD align=left> != 0 is TRUE </TD> <TD align=left> anything not false is TRUE </TD></TR>
+  </table>
+  </SAMP>
+</DIV>
+
+<p>Note in Perl, the curly braces around a block are required, even if the
+block contains a single statement.  Also you must use <SAMP>elsif</SAMP> in
+Perl, rather than <SAMP>else if</SAMP> as shown below.
+
+<pre>
+  if ( conditionAAA ) {
+     ...
+  } elsif ( conditionBBB ) {
+     ...
+  } else {
+     ...
+  }
+</pre>
+<p>
+Finally, although the <CODE><FONT color=#000099>do { body } while (...)</FONT></CODE> is legal Perl,
+it is not an actual loop construct in Perl.  Instead, it is the
+<CODE><FONT color=#000099>do</FONT></CODE> statement with a <CODE><FONT color=#000099>while</FONT></CODE> modifier.  In particular,
+<CODE><FONT color=#000099>last</FONT></CODE> and <CODE><FONT color=#000099>next</FONT></CODE> will not work inside the body.
+
+<p><hr><H2><FONT color=black>Variables</FONT></H2>
+
+<p>
+
+<p>There are four types of data in Perl, scalars, arrays, hashes and
+references.  Scalars and arrays are ubiquitious (used everywhere).
+Hashes are common in large programs and not unusual in smaller programs.
+References are scalars that point to other data, namely a reference is a
+pointer.  Referencs are an advanced topic and can be ignored initially;
+there is a sparse coverage of references later in this document.  In the
+following listing, the initial symbol is the context specifier for that
+type.
+
+<p><OL>
+  <li><strong></strong> (<CODE><FONT color=#000099>$</FONT></CODE>) A <em><FONT color=#000099>scalar</FONT></em> is a single string or numeric
+value.  More advanced scalar types include references, and typeglobs.
+
+<p>  <li><strong></strong> (<CODE><FONT color=#000099>@</FONT></CODE>) A <em><FONT color=#000099>list</FONT></em> or <em><FONT color=#000099>array</FONT></em> is a
+one-dimensional vector of zero or more scalars.  Arrays/lists are
+indexed as arrays via [ ]; the starting index is 0, like C/C++.  The Perl
+reference documentation intermixes the terms <em><FONT color=#000099>list</FONT></em> and
+<em><FONT color=#000099>array</FONT></em> freely; so shall we.
+
+<p>  <li><strong></strong> (<CODE><FONT color=#000099>%</FONT></CODE>) A <em><FONT color=#000099>hash</FONT></em> is a list of <EM>(key, value)</EM>
+pairs, in which you can search for a particular <EM>key</EM>
+efficiently.  In practice, a hash is implemented via in a hash table,
+hence the name.
+
+<p>  <li><strong></strong> (<CODE><FONT color=#000099>\</FONT></CODE>) A <em><FONT color=#000099>reference</FONT></em> refers to another value,
+much like a pointer in C/C++ refers to some other value.
+</OL>
+
+<p><H3><FONT color=teal>Scalar types</FONT></H3>
+
+<p>
+
+<p>A scalar holds a single value; an array or list holds zero or more
+values. The scalar <em><FONT color=#000099>types</FONT></em> in Perl are string, number, and
+reference<font size=-1>[Note: There is also a symbol table entry scalar type,
+poorly named a <EM>typeglob</EM> in Perl, but you are not likely to use
+it initially]</font>.  Like <SAMP>awk</SAMP>, a scalar data value in Perl contains
+either a string or a (floating point) number.  For reference we create
+scalars of all four types.
+
+<pre>
+  $numx = 3.14159;              # numeric
+  $strx = "The constant pi";    # string        
+  $refx = \$numx;               # reference
+  $tglobx = *numx;              # typeglob (different from file name globbing)
+</pre>
+<p>
+A numeric value is a real or floating point value and can use any of the
+standard C specifications, e.g. (1.2, 12+e
+
+<p>A string value is enclosed in matching single or double quotes.  Within
+double quotes, variable references (but not expressions involving
+operators) are evaluated, like <SAMP>t/csh</SAMP>; within single quotes
+nothing is evaluated.  Double quotes are especially convenient when
+printing out values.
+
+<pre>
+  $i = 123;
+  print('i = $i\n');                       # print: i = $i\n
+  print("i = $i\n");                       # print: i = 234
+  print("i = $i+4\n");                     # print: i = 123+4
+  print("i = " . ($i+4) . "\n");           # print: i = 127
+  print("i = " . $i+4 . "\n");             # print: 4
+  print((("i = " . $i) + 4) . "\n");       # print: 4 (same as previous)
+</pre>
+<p>
+<H3><FONT color=teal>String or number</FONT></H3>
+
+<p>Perl automatically converts from string to number or vice versa as
+needed, based on the operation being done.  Below, <CODE><FONT color=#000099>+</FONT></CODE> is
+arithmetic plus and <SAMP>.</SAMP> is string concatenation.
+
+<pre>
+  $pi = "3.14";                  
+  $two_pi = 2 * $pi;            # $two_pi = 6.28
+  $pi_pi = $pi . $pi;           # $pi_pi = "3.143.14"
+</pre>
+<p>
+The following table shows that a non-numeric string value is viewed as 0
+(zero), and a numeric value viewed as a string is the ASCII
+representation of the number.
+
+<p><DIV ALIGN=center>
+  <SAMP>
+  <table border>
+<TR> <TD align=left>     Type of $x </TD> <TD align=left> (Value of) $x </TD> <TD align=left> $x+1 </TD> <TD align=left> $x . "::" </TD> <TD align=left> if ($x) { </TD></TR>
+<TR> <TD align=left>     string     </TD> <TD align=left> "abc"  </TD> <TD align=left> 1  </TD> <TD align=left> abc:: </TD> <TD align=left> true </TD></TR>
+<TR> <TD align=left>     number     </TD> <TD align=left> 3      </TD> <TD align=left> 4  </TD> <TD align=left> 3::   </TD> <TD align=left> true </TD></TR>
+<TR> <TD align=left>     string     </TD> <TD align=left> "45.0" </TD> <TD align=left> 46 </TD> <TD align=left> 45.0::  </TD> <TD align=left> true </TD></TR>
+<TR> <TD align=left>     number     </TD> <TD align=left> 0      </TD> <TD align=left> 1  </TD> <TD align=left> 0::   </TD> <TD align=left> false </TD></TR>
+<TR> <TD align=left>     string     </TD> <TD align=left> ""     </TD> <TD align=left> 0  </TD> <TD align=left> ::    </TD> <TD align=left> false </TD></TR>
+<TR> <TD align=left>     undefined  </TD> <TD align=left> ""     </TD> <TD align=left> 0  </TD> <TD align=left> ::    </TD> <TD align=left> false </TD></TR>
+  </table>
+  </SAMP>
+</DIV>
+
+<p>Because strings are converted to numbers on demand and vice versa, there
+is no practical difference between a number and its string equivalent.
+Thus, in the following statements <CODE><FONT color=#000099>i</FONT></CODE> and <CODE><FONT color=#000099>j</FONT></CODE> are assigned
+the same value.
+
+<pre>
+  $i = 3;         # same as $i = "3"
+  $j = "3";       # same as $j = 3
+  $k = $i + $j;   # $k = 6
+  $s = $i . $j;   # $s = "33"
+  $f = "3.0"      # not the same as "3" as $f . 1 would give "3.01"
+</pre>
+<p>
+<H3><FONT color=teal>Null string/zero versus no value</FONT></H3>
+
+<p>A scalar variable that has a valid string or numeric value, such as 4.3
+or "hello" or even "" (the empty string), is <EM>defined</EM>.  In
+contrast, if a variable without a valid value is <EM>undefined</EM>.
+The builtin value <SAMP>undef</SAMP> represents this undefined value, much
+like <SAMP>NULL</SAMP> in C/C++, <SAMP>null</SAMP> in Java or <SAMP>nil</SAMP> in
+Lisp/Ada are undefined values.  An array is defined if has previously
+held data.  The empty array () is undefined; all other array values are
+considered defined.  Use the <SAMP>defined()</SAMP> function to test if a
+variable is defined.
+
+<pre>
+  my($emptystr) = "";
+  my(@nonemptylist) = ( undef );
+  if ( defined($emptystr) && defined(@nonemptylist) ) {
+     print "will see this\n";
+  }
+  my($invalid);
+  my(@empylist) = ();
+  if ( defined($invalid) || defined(@emptylist)) {
+     print "will NOT see this\n";
+  }
+  @emptylist = (1, 2);
+  @emptylist = ();
+  if ( defined(@emptylist)) {
+     print "emptylist is empty but is defined now\n";
+  }
+</pre>
+<p>
+If you read or access an undefined variable <CODE><FONT color=#000099>var</FONT></CODE> as a string or
+number, you get the undefined value, which is then converted to
+<CODE><FONT color=#000099>""</FONT></CODE> or <CODE><FONT color=#000099>0</FONT></CODE>.  Thus an undefined variable is considered
+false.
+
+<p>An entry for a key KKK in a hash can contain the undefined value.  This
+situation is different than the key KKK not existing in the hash.  Use
+the perl functions <CODE><FONT color=#000099>exists</FONT></CODE> and <CODE><FONT color=#000099>defined</FONT></CODE> to distinguish
+the difference.
+
+<pre>
+sub hashdefined () {
+  my(%hhh);
+  $hhh{"red"} = undef;
+  if (! exists $hhh{"nowhere"} ) {
+      print "key nowhere is not in hash hhh.\n";        # YES
+  }
+  if (! exists $hhh{"red"} ) {
+      print "key red is not in hash hhh.\n";            # NOPE
+  }
+  if (exists $hhh{"nowhere"} && ! defined($hhh{"nowhere"}) ) {
+      print "key nowhere exists but has the undefined value.\n";  # NOPE
+  }
+  if (exists $hhh{"red"} && ! defined($hhh{"red"}) ) {
+      print "key red exists but has the undefined value.\n";    # YES
+  }
+}
+</pre>
+<p>
+<H3><FONT color=teal>Operators</FONT></H3>
+
+<p>Most Perl operators, such as <SAMP>+</SAMP> or <SAMP>&lt;</SAMP> or <SAMP>.</SAMP> work
+either on numbers or on strings but not both.
+
+<p><DIV ALIGN=center>
+  <table border>
+<TR> <TD align=left>     Description </TD> <TD align=center> string op </TD> <TD align=center> numeric op </TD></TR>
+<TR> <TD align=left>     equality    </TD> <TD align=center> <SAMP>eq</SAMP>      </TD> <TD align=center> <SAMP>==</SAMP>    </TD></TR>
+<TR> <TD align=left>     inequality  </TD> <TD align=center> <SAMP>ne</SAMP>     </TD> <TD align=center> <SAMP>!=</SAMP>    </TD></TR>
+<TR> <TD align=left>     ternary compare </TD> <TD align=center> <SAMP>cmp</SAMP> </TD> <TD align=center> &lt;=&gt;   </TD></TR>
+<TR> <TD align=left>     concatenation </TD> <TD align=center> <CODE><FONT color=#000099>.</FONT></CODE> (a dot)  </TD> <TD align=center>  N/A    </TD></TR>
+<TR> <TD align=left>     arithmetic    </TD> <TD align=center>  N/A    </TD> <TD align=center> <SAMP>+, -, *, /</SAMP> </TD></TR>
+<TR> <TD align=left>     relational   </TD> <TD align=center> <SAMP>lt, le, gt, gt</SAMP> </TD> <TD align=center> <SAMP><i>&lt;, &lt;=, &gt;, &gt;=</i></SAMP> </TD></TR> 
+<TR> <TD align=left>     ANSI C ops </TD> <TD align=center> &nbsp; </TD> <TD align=center> &nbsp; </TD></TR>
+  </table>
+</DIV>
+
+<p>ASCII strings are ordered character by character based on the underlying
+ASCII value.  For purely alphabetic strings, this results in normal
+alphabetization, as A &lt; B &lt; ... &lt; Z &lt; a &lt; b &lt; ... &lt; z.  In
+general, strings are ordered using the local collating property.  The
+ternary compare operations <CODE><FONT color=#000099>xx cmp yy</FONT></CODE> or <CODE><FONT color=#000099>xx &lt;=&gt; yy</FONT></CODE>,
+returns -1, 0, or 1 if <CODE><FONT color=#000099>xx</FONT></CODE> is less than, equal or greater than
+<CODE><FONT color=#000099>yy</FONT></CODE> for strings and numbers respectively.
+
+<p>
+
+<p><H3><FONT color=teal>Lists/arrays</FONT></H3>
+
+<p>
+
+<p>A list/array is a one-dimensional vector that holds zero or more values.
+To Perl, lists and arrays are identical, and we shall use the terms
+interchangably, using the poor justification the existing documentation
+does so, too.  In Perl, a list/array value is denoted by scalars
+enclosed in parethesis.  Arrays can be indexed; like C/C++/Java, the
+first element has index 0.
+
+<pre>
+  @fib = (0, 1, 1, 2, 3, 5);
+  @mixed = ("quiet", +4, 3.14, "hot dog");
+  @empty = ();
+  @emptyAlso = ( (), (), () );
+  $five = pop @fib;               # get $five
+  $three = $fib[4];
+</pre>
+<p>
+The length or size of an array is can be obtained in two different ways.
+
+<pre>
+  $len = @array          ## need SCALAR CONTEXT.  Number of items in the array.
+  $last_index = $#array    ## index of last element in the array.
+</pre>
+<p>
+Finally, here are three ways to iterate through an array, <CODE><FONT color=#000099>@arr</FONT></CODE>.
+In this example, we simply print out each element.  For accessing each
+element, I prefer <SAMP>foreach</SAMP>; if the index is needed too, I
+use the second method.
+
+<pre>
+my($item);
+foreach $item (@arr) {          ## cleanest, but no index
+  print $item;
+}
+my($i);
+for ($i=0; $i&lt;@arr; $i++) {     ## just like C
+  print $arr[$i];
+}
+my($j);         
+for ($j=0; $i&lt;=$#arr; $j++) {   ## I don't use this much
+  print $arr[$j];
+}
+</pre>
+<p>
+The next block shows some common array operations.  Push and pop
+add/remove elements at the right-end of the array.  We show how to
+construct the list ("one1", "two2", "three3", "four4") in the following
+steps.
+
+<pre>
+  @list = ("one1");
+  push(@list, "two2");
+  $list[2] =  "three3";
+  $nelements = @list;             # get three, as there are three elements
+  $list[$nelements] = "four" . "4";
+</pre>
+<p>
+Perl automatically and dynamically enlarges an array so you do not have
+predeclare the size of an array.  However, if you know you will need a
+very large array, <SAMP>largeArr</SAMP>, you can pre-allocate space by
+assigning to <CODE><FONT color=#000099>$#largeArr</FONT></CODE>.  Pre-allocating is slightly more
+efficient, but potentially wastes a lot of space, and should only be
+done for arrays bigger than 16K elements.
+
+<p><FONT color=navy><PRE>
+  $#largeArr = 987654;          ## preallocate 987K worth of space.
+</PRE></FONT>
+
+<p><H3><FONT color=teal>Hashes</FONT></H3>
+
+<p>A <EM>hash</EM> variable stores a map of <SAMP>(key, value)</SAMP> pairs.
+Typically, the key and value are different but related values, such as a
+person's name and phone number.  A <EM>hash</EM> is implemented in Perl
+so that you can quickly look up the value given the key, when there are
+many (key, value) pairs.  From a computer science data structures
+standpoint, a Perl hash implements a dictionary.
+
+<p>For example, given the name of a state, such as <CODE><FONT color=#000099>california</FONT></CODE>, I
+want the Postal abbreviation, <CODE><FONT color=#000099>CA</FONT></CODE>.  We define, initialize, and
+modify, and use a hash, <CODE><FONT color=#000099>%abbrevTable</FONT></CODE> as follows.
+
+<pre>
+my(%abbrevTable) = (           # this is the initialization syntax.
+    "california" =&gt; "CA",      # key = california, value = CA
+    "oregon" =&gt; "OR",
+);
+sub printAbbrev($) {
+    my($state) = @_;
+    if (exists $abbrevTable{$state}) {
+        print "Abbreviation for $state = $abbrevTable{$state} \n";
+    } else {
+        print "No known abbreviation for $state\n";
+    }
+}
+sub hashdemo () {
+    printAbbrev("arizona");             # no such key
+    $abbrevTable{"arizona"} = "AZ";     # add a new (key, value) pair
+    printAbbrev("arizona");             # this will succeed 
+}
+</pre>
+<p>
+Calling the function <CODE><FONT color=#000099>hashdemo()</FONT></CODE> gives
+
+<p><p align=left>
+&nbsp;<CODE><FONT color=#000099>No known abbreviation for arizona</FONT></CODE><br>
+&nbsp;<CODE><FONT color=#000099>Abbreviation for arizona = AZ</FONT></CODE>
+
+<p>
+Note that we use the <CODE><FONT color=#000099>exists $hash{$key}</FONT></CODE> syntax to test if a
+key exists in the hash table.  Also a hash is assymetric in that we can
+lookup up entries based on the key, not the value.
+
+<p>If treated as an normal array/list, a hash will appear as
+<pre>
+  (keyA, valueA, keyB, valueB, keyC, valueC, ... ).
+</pre>
+
+<p>The order of the keys will appear random<font size=-1>[Note: The key order is based
+on the underlying hash function being used, we are simply listing the
+hash table buckets.]</font>.
+
+<p><H3><FONT color=teal>Variables declaration</FONT></H3>
+
+<p>Declare local variables using the <CODE><FONT color=#000099>my(var-decl)</FONT></CODE>, which creates
+list context, or <CODE><FONT color=#000099>my scalar-var</FONT></CODE>, which creates scalar syntax.  A
+local variable only exists in and can only be used in the function (or
+block) where it was declared.
+
+<pre>
+sub some_function () {
+  my($i, $mesg) = (0, "hi");    # local variables for some_function
+  foreach $i (@ARGV) {
+    my($arg) = $ARGV[$i];       # $arg only exists in the for loop
+  }
+  print $arg;                   # Arghh.  ERROR, $arg does not exist here.
+}
+</pre>
+<p>
+In older Perl code, you may see the <CODE><FONT color=#000099>local</FONT></CODE> keyword instead of
+<CODE><FONT color=#000099>my</FONT></CODE>.  If in doubt, use <CODE><FONT color=#000099>my</FONT></CODE> instead of
+<CODE><FONT color=#000099>local</FONT></CODE><font size=-1>[Note: There are advanced situations, beyond the scope
+of this document, where <CODE><FONT color=#000099>local</FONT></CODE> must be used.]</font>.  A <CODE><FONT color=#000099>local</FONT></CODE>
+variable is dynamically-scoped<font size=-1>[Note: With dynamic scoping, we use the
+variable in the closest function-call stack frame, which means that the
+same line of code might use different non-local variables as it depends
+on the function call nesting.]</font>; a <CODE><FONT color=#000099>my</FONT></CODE> variable is
+statically-scope, which is faster and almost certainly what you want.
+For example, C/C++/Java use static scoping.
+
+<p><H3><FONT color=teal>Barewords</FONT></H3>
+
+<p>A <em><FONT color=#000099>bareword</FONT></em> is a unquoted literal not used as a variable or
+function name.  Barewords are used mainly for labels and for filehandles
+<font size=-1>[Note: and for package names, but this is an advanced topic]</font>.  The
+following code snippet shows three bare words, <CODE><FONT color=#000099>A_FILE_HANDLE</FONT></CODE>,
+<CODE><FONT color=#000099>bare</FONT></CODE> and <CODE><FONT color=#000099>bareword</FONT></CODE>.  filehandles are uppercase to avoid
+naming conflicts, and to follow the normal Perl naming convention.  (If
+you use the FileHandle package, you don't need to make your own file
+handles.)
+
+<pre>
+  open(A_FILE_HANDLE, "./perlscript.pl");
+  bare: while ($line = &lt;A_FILE_HANDLE&gt;) {
+    bareword: while ($line[$i] ne "") {
+      if ($line[$i] =~ /\s*#/) {
+        next bare;
+      }
+    }
+  }
+</pre>
+<p>
+A bareword not used as a filehandle or label, and which is not a known
+function, is viewed as string constant.
+
+<pre>
+  $str = hi;            # AVOID.   Use of bareword hi, same as "hi".  
+  $str = "hi";          # same, but much easier to read.
+</pre>
+<p>
+We advise against use barewords as strings, since it impedes clarity, as
+function calls are typically barewords.  Instead, put your strings in
+double quotes, which is standard across most languages.  
+
+<p><hr><H2><FONT color=black>Context: scalar, list, hash or reference</FONT></H2>
+
+<p>A context specifier, which is one of the characters $, @, % must be
+used before all variable references.  The context indicates the kind
+value that will be used or assigned.  The context is not part of a
+variable name.  Consider the following assignment statements.
+
+<pre>
+$eight = 8;                     # numeric scalar
+@nulllist = ();                 # null or empty list.
+$four = $eight / 2;             #
+@cubes = (1, 8, 27, 64);        # assign an entire array/list.
+$eight = $cubes[1];             # huh?  cubes is an array, why not @cubes[1].
+</pre>
+<p>
+The $ specifier in the statement <EM>... = $varX ...</EM> means
+that we expect to read a scalar value from a variable named
+<CODE><FONT color=#000099>varX</FONT></CODE>.  Thus, Perl uses the scalar variable named <CODE><FONT color=#000099>varX</FONT></CODE>.
+Similarly, the <SAMP>@</SAMP> specifier in <EM>... = @varX</EM> means
+that we expect to read an array/list value from a variable
+<CODE><FONT color=#000099>varX</FONT></CODE>; Perl uses the array/list variable <CODE><FONT color=#000099>varX</FONT></CODE>.
+
+<p>While it might seem that the <SAMP>$</SAMP> and the <SAMP>@</SAMP> are part of
+the variable names in <CODE><FONT color=#000099>$varX</FONT></CODE> and <CODE><FONT color=#000099>@varX</FONT></CODE>, <STRONG>this
+view is wong</STRONG>.  In reality, there are two different variables, each
+named <CODE><FONT color=#000099>varX</FONT></CODE>; one is a scalar, the other an array.  In an
+expression like <SAMP>varX[...]</SAMP>, because array subscripting is used,
+Perl selects the array variable.  The last statement in the preceding
+example <CODE><FONT color=#000099>$eight = $cubes[1];</FONT></CODE> illustrates the preceding rule.
+
+<p>An expression like <CODE><FONT color=#000099>@aaa = @bbb[$ccc]</FONT></CODE> means that we expect the
+element bbb[$ccc] to produce an list/array value, which is probably
+wrong thinking.  Since Perl arrays elements must be scalars,
+<CODE><FONT color=#000099>@bbb[$ccc]</FONT></CODE> results in a one-element array containing
+$bbb[$ccc], namely <CODE><FONT color=#000099>( $bbb[$ccc] )</FONT></CODE>. <font size=-1>[Note: If
+<CODE><FONT color=#000099>$bbb[$ccc]</FONT></CODE> is undefined, we get the array <CODE><FONT color=#000099>( undef )</FONT></CODE>
+]</font>
+
+<p>In an expression like <CODE><FONT color=#000099> ... = $varX[kk]</FONT></CODE>, we first interpret the
+array brackets, which means <EM>varX</EM> must be an array.  We get the
+<EM>kk</EM>th element.  Finally the leading <SAMP>$</SAMP> specifier
+indicates we expect this element to be a scalar value.
+
+<p>What happens if the LHS and RHS contexts do not match in an assignment
+statement?  Perl uses the following rules which are often convenient 
+but sometimes unexpected.
+
+<p><table border>
+<TR> <TD align=center colspan=4>Value assigned to LHS in LL = RR </TD></TR>
+<TR> <TD align=left>  LHS  </TD> <TD align=center colspan=3>Original RHS Value </TD></TR>
+<TR> <TD align=left>  Value </TD> <TD align=left> Scalar $RR </TD> <TD align=left> List @RR </TD> <TD align=left> Hash %RR </TD></TR>
+<TR> <TD align=left> &nbsp; </TD> <TD align=left> <SAMP>"hi</SAMP>" </TD> <TD align=left> <SAMP>(1, 4, 9)</SAMP> </TD> <TD align=left> <SAMP>("one", 1, "two", 2)</SAMP> </TD></TR>
+<TR> <TD align=left>  scalar, $LL </TD> <TD align=left> <SAMP>"hi</SAMP>" </TD> <TD align=left> 9 [last element] </TD> <TD align=left> used/alloc </TD></TR>
+<TR> <TD align=left>  list, @LL   </TD> <TD align=left> <SAMP>("hi")</SAMP> </TD> <TD align=left> <SAMP>(1, 4, 9)</SAMP> </TD> <TD align=left> <SAMP>("one", 1, "two", 2)</SAMP> </TD></TR>
+<TR> <TD align=left>  hash, %LL </TD> <TD align=left> [empty hash] </TD> <TD align=left> <SAMP>(1, 4)</SAMP> </TD> <TD align=left> <SAMP>("one", 1, "two", 2)</SAMP>
+</TD></TR>
+</table>
+
+<p>Variables of different types (scalar, list, hash) can have the same
+name, because each type has its own namespace.  Thus, the following code
+refers to three different variables, so that no data values are
+overwritten.
+
+<pre>
+$xyz = "my foot";                               # scalar mode variable
+@xyz = ("tulip", "rose", "mum is the word");    # list mode variable
+%xyz{$xyz} = $xyz[1];                           # %xyz{"my foot"} = "rose";
+</pre>
+<p>
+Even the Perl book is misleading as it states that "all variable names
+start with a <CODE><FONT color=#000099>$</FONT></CODE>, <CODE><FONT color=#000099></FONT></CODE> or <CODE><FONT color=#000099>%</FONT></CODE>,'' (page 37) which
+would imply that <CODE><FONT color=#000099>$cubes[1]</FONT></CODE> is using the <CODE><FONT color=#000099>$cubes</FONT></CODE>
+variable, <EM>which is incorrect</EM>.  (It is accurate to say that all
+variable uses begin with a $, @ or a %
+
+<p>The condition of an if-statement or while-loop is evaluated in scalar
+context.  Thus it is acceptable and indeed common Perl programming
+practice to say
+<pre>
+  if ( @array &gt; 4 ) {            ## @array ==&gt; number of items in it.
+     ...
+  }
+</pre>
+
+<p>Many functions and operators behave differently depending on the
+context.  Beware that using <CODE><FONT color=#000099>my($var)</FONT></CODE> produces a list context,
+because the parenthesis denote a list.  Thus, to get a single string of
+the current time here several correct ways.  The following table shows
+some commonly encountered cases.
+
+<pre>
+  my($now1) = scalar(localtime());      # CORRECT, force scalar context
+  my $now2 = localtime();               # CORRECT, no parens, scalar context
+  my($now3);
+  $now3 = localtime();                  # CORRECT, 
+  my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();  # OK
+  my($nowWRONG) = localtime();          # WRONG, list context, get $sec
+</pre>
+<p>
+<H3><FONT color=teal>Forcing scalar or list context</FONT></H3>
+
+<p>Use the <CODE><FONT color=#000099>scalar(...)</FONT></CODE> function to force scalar context.  Use
+<CODE><FONT color=#000099>(...)</FONT></CODE> to force array/list context.
+
+<pre>
+  $scalarVar = scalar(@arrayVar);       # force scalar context.
+  my($line) = scalar( &lt; file &gt; );       # just read one line
+
+  
+</pre>
+<p>
+<hr><H2><FONT color=black>Functions</FONT></H2>
+
+<p><H3><FONT color=teal>Calling functions</FONT></H3>
+
+<p>Perl functions take a single list/array as a parameter, which naturally
+handles the case of passing several scalars.  Parameters are separated
+by commas, because they are separate elements of the parameter
+list/array.
+
+<pre>
+  $two = sqrt 4.00;               # square root of 4
+  open FILEHANDLE, "input.txt";   # open the file input.txt for reading
+  $i = index "abcdefg", "cde";    # index of substring cde in abcdefg
+  print "i = $i \bsl n";          # print value of i
+  if (defined $somevar) { ... }   # test if $somevar has been used
+</pre>
+<p>
+You may optionally put parenthesis around the arguments, resulting in
+the standard call-syntax of most langauges as shown below.  I personally
+prefer using parenthesis.  However, I prefer no parenthesis if the
+function call is the entire conditional of an <SAMP>if</SAMP> or
+<SAMP>while</SAMP> statement.
+
+<pre>
+  $two = sqrt(4.00);              # square root of 4
+  open (FILEHANDLE, "input.txt"); # open the file input.txt for reading
+  $i = index("abcdefg", "cde");   # index of substring cde in abcdefg
+  print ("i = $i \bsl n");        # print value of i.
+  if (defined($somevar)) { ... }  # test if $somevar has been used (ugly)
+</pre>
+<p>
+A few functions, such as <CODE><FONT color=#000099>print</FONT></CODE>, <CODE><FONT color=#000099>grep</FONT></CODE>, <CODE><FONT color=#000099>map</FONT></CODE>,
+and <CODE><FONT color=#000099>sort</FONT></CODE> have secondary syntaxes that require spaces after the
+first parameter.  If you use parenthesis around the arguments, you must
+still use a space.
+
+<pre>
+  print STDERR "i = $i \bsl n";          # print value of i to STDERR
+  print(STDERR "i = $i \bsl n");         # print value of i to STDERR
+  print(STDERR, "i = $i \bsl n");        # (ACK) print 'STDERR' followed by i
+</pre>
+<p>
+Beware that the first set of outermost parenthesis fully delimit the
+parameters, so that subsequent values are not parameters.  Whitespace
+does not affect things.
+
+<pre>
+  $ten = sqrt (1+3)*5;            # Ack. same as $ten = (sqrt(4)) * 5;
+  $ten = 5 * sqrt (1+3);          # Arithmetically the same as preceding.
+  $n = sqrt ((1+3)*5);            # Good.  $n = sqrt (20);
+</pre>
+<p>
+<H3><FONT color=teal>Defining functions</FONT></H3>
+
+<p>A function definition looks as follows.  All the parameters to the
+function are passed in the <CODE><FONT color=#000099>@_</FONT></CODE> list/array.  This is one time
+where use of this cryptic variable cannot be avoided.  I always
+immediately rename the parameters as shown in the prototype code.
+
+<pre>
+sub do_line ($$$) {
+    my($line, $lineno, $filename) = @_;
+    ...
+}
+</pre>
+<p>
+As of Perl 5.002, you can pre-declare the number and types of the
+function parameters (see <a href=ftp://ftp.digital.com/pub/plan/perl/CPAN/doc/manual/html/perlsub.html>Section Prototypes in perlsub</a>) using a function
+prototype, so that the parameters can be interpreted in a user specified
+manner.  In the function declaration <CODE><FONT color=#000099>sub do_line ($$$) {</FONT></CODE>,
+each of the $ signifies a single scalar parameter.  A <CODE><FONT color=#000099>@</FONT></CODE> in the
+parameter list signifies a list; nothing can follow it as the list
+parameter gobbles up all remaining parameters.  Warning: the
+function-prototype for a function <EM>fn</EM> must be seen before
+calling <EM>fn</EM> for Perl to do parameter checking.
+
+<p><H3><FONT color=teal>Returning values</FONT></H3>
+
+<p>A Perl function can return any type of value including a scalar, an
+array, or nothing (void).  Unfortunately, the return type of a function
+cannot be specified in the function prototype.  If a function returns
+one type, say an array, and you expect a scalar, Perl will silently do a
+conversion.
+
+<p>You can write functions that return different types based on expected
+return type (known as <EM>the calling context)</EM> by using the
+<CODE><FONT color=#000099>wantarray</FONT></CODE> function.  For example,
+<pre>
+sub scalarOrList () {
+    return wantarray ? ("red", "green", "blue") : 88;
+}
+  ...
+  $i = scalarOrList();            # scalar context, get 88
+  @color = scalarOrList();        # list context, get ("red", "green", "blue")
+</pre>
+
+<p><H3><FONT color=teal>Optional parameters</FONT></H3>
+
+<p>If a function takes optional trailing parameters, they are declared and
+fetched as follows.
+
+<pre>
+# called as:
+#    dieMessage("Whoops, that hurt.");		# one parameter
+#    dieMessage("Whoops, that hurt.", 0);	# two parameters
+#
+sub dieMessage ($;$) {
+  my($message) = shift @_;
+  my($shouldDie) = (@_ &gt; 0) ? shift @_ : 1;  ## 1 = default value if no param
+}  
+</pre>
+<p>
+<hr><H2><FONT color=black>Regular Expressions</FONT></H2>
+
+<p><H3><FONT color=teal>Symbols, syntax</FONT></H3>
+
+<p>In regular expressions, Perl understands the following convenient
+character set symbols which match a single character.  Thus, to handle
+arbitrary blank space you must use <SAMP>\s+</SAMP>.  You may use these
+symbols in a character set.  For example, when looking for a hex integer
+you might look for <CODE><FONT color=#000099>[a-fA-F\d]</FONT></CODE>.  Also, the term
+<EM>regex</EM> is short for regular expressions.
+
+<p><DIV ALIGN=center>
+  <table border>
+<TR> <TD align=left>     Symbol </TD> <TD align=left> Equiv </TD> <TD align=left> Description </TD></TR>
+<TR> <TD align=left>      \w </TD> <TD align=left> <SAMP>[a-zA-Z0-9_]</SAMP> </TD> <TD align=left> A "word" character (alphanumeric plus "_")
+  </TD></TR>
+<TR> <TD align=left>      \W </TD> <TD align=left> <SAMP>[&#094;a-zA-Z0-9_]</SAMP> </TD> <TD align=left> Match a non-word character </TD></TR>
+<TR> <TD align=left>      \s </TD> <TD align=left> <SAMP>[ \t\n\f\r]</SAMP> </TD> <TD align=left> Match a whitespace character </TD></TR>
+<TR> <TD align=left>      \S </TD> <TD align=left> <SAMP>[&#094;\s]</SAMP> </TD> <TD align=left> Match a non-whitespace character </TD></TR>
+<TR> <TD align=left>      \d </TD> <TD align=left> <SAMP>[0-9]</SAMP> </TD> <TD align=left> Match a digit character </TD></TR>
+<TR> <TD align=left>      \D </TD> <TD align=left> <SAMP>[&#094;0-9]</SAMP> </TD> <TD align=left> Match a non-digit character </TD></TR>
+  </table>
+</DIV>
+
+<p>
+ Perl has the standard regex quantifiers or closures, where <i>r</i> is any
+regular expressions.
+
+<p><DIV ALIGN=center>
+  <table border>
+<TR> <TD align=left>     <i>r</i>* </TD> <TD align=left> Zero or more occurences of <i>r</i> (greedy match). </TD></TR>
+<TR> <TD align=left>     <i>r</i>+ </TD> <TD align=left> One or more occurences of <i>r</i> (greedy match). </TD></TR>
+<TR> <TD align=left>     <i>r</i>? </TD> <TD align=left> Zero or one occurence of <i>r</i> (greedy match). </TD></TR>
+<TR> <TD align=left>     <i>r</i>*? </TD> <TD align=left> Zero or more occurences of <i>r</i> (match minimal). </TD></TR>
+<TR> <TD align=left>     <i>r</i>+? </TD> <TD align=left> One or more occurences of <i>r</i> (match minimal). </TD></TR>
+<TR> <TD align=left>     <i>r</i>?? </TD> <TD align=left> Zero or one occurence of <i>r</i> (match minimal). </TD></TR>
+  </table>
+</DIV>
+
+<p>Let <i>q</i> be a regex with a quantifier.  If there are many ways for <i>q</i> to
+match some text, a greedy quantifier will match (or "eats up") as much
+text as possible; a minimal matcher does the opposite.  If a regex
+contains more than one quantifier, the quantifiers are "fed" left to
+right.
+
+<p><H3><FONT color=teal>Searching and substituting</FONT></H3>
+
+<p>The two main regex operations are searching/finding and substituting.
+In searching, we test if a string contains a regular
+expression<font size=-1>[Note: "Regex searching'' is often incorrectly called
+"regex matching''.]</font>.  In substituting, we replace part of the original
+string with a new string; the new string is often based on the original.
+Both of these operations use the regular expression operator
+<table border><tr><td><SAMP>=~</SAMP></td></tr></table>, which consists of two characters.  This
+operator is not related to either equals <SAMP>=</SAMP> or
+<SAMP>~</SAMP><font size=-1>[Note: (1) The choice of symbols was quite
+confusing to me initially.  (2) The <CODE><FONT color=#000099>=~</FONT></CODE> is officially
+called the "binding operator", as there are other non-regex operations
+that use it.]</font>
+
+<p><EM>Searching:</EM> For example, to determine if the string
+<SAMP>$line</SAMP> <EM>contains</EM> a recent year such as 1998 or 1983, we
+use the search operator <CODE><FONT color=#000099>=~ /.../</FONT></CODE>.  Here the slashes
+'/' <EM>delimit</EM> or mark the beginning and the end of the regular
+expression.
+
+<pre>
+  if ($line =~ /19[89]\d/) {
+    # we found a year in $line
+  }
+</pre>
+<p>
+In general, to determine if string <CODE><FONT color=#000099>$var</FONT></CODE> contains the regular
+expression <EM>re</EM> use any of the following forms.  If the regular
+expression contains a slash '/' itself, then you must use
+<CODE><FONT color=#000099>m<i>X</i>\textslre<i>X</i></FONT></CODE> form, where each <i>X</i> is the same single
+character not appearing in <EM>re</EM>.
+
+<p>In <CODE><FONT color=#000099>mX...X</FONT></CODE>, the <CODE><FONT color=#000099>m</FONT></CODE> stands for "match".
+
+<pre>
+  if ($var =~ /re/) { ... }
+  if ($var =~ m:re:) { ... }     # can replace ':' with any other character
+  while ($var =~ m/re/) { ... }  # can replace '/' with any other character
+</pre>
+<p>
+To access the substring in <CODE><FONT color=#000099>$var</FONT></CODE> matched by part of the regular
+expression <EM>re</EM>, put the part of <EM>re</EM> in parenthesis.  The
+matched text is accessible via the variables $1, $2, ..., $<i>k</i>, where
+$<i>k</i> matches the k-th parenthesized part of the regular expression.
+For example to break up an e-mail address <SAMP>user@machine</SAMP> in
+<CODE><FONT color=#000099>$line</FONT></CODE> we could do
+
+<pre>
+  if ($line =~ /(\S+)@(\S+)/) {         # \S = any non-space character
+      my($user, $machine) = ($1, $2);
+      ...
+  }
+</pre>
+<p>
+The submatch variables $1, $2, ... $<i>k</i> are updated after each
+<EM>successful</EM> regex operation, which wipes out the previous
+values.  I store these submatch values into other well-named variable
+immediately after the regex operation, if I want them.
+
+<p>Use \<i>k</i>, not $<i>k</i>, in the regular expression itself to refer to a
+previously matched substring.  For example, to search for identical
+begining and ending HTML tags <CODE><FONT color=#000099>&lt;xyz&gt;</FONT></CODE> ... <CODE><FONT color=#000099>&lt;/xyz&gt;</FONT></CODE>
+on a single line <CODE><FONT color=#000099>$line</FONT></CODE> use
+
+<pre>
+  if ($line =~ m|&lt;(.*)&gt;(.*)&lt;/\1&gt;|) {      # search for: &lt;xyz&gt;stuff&lt;/xyz&gt;
+     my($stuff) = $2;
+     ...
+  }
+</pre>
+<p>
+<EM>Substitution:</EM> To replace or substitute text in <CODE><FONT color=#000099>$var</FONT></CODE>
+from the regular expression <EM>old</EM> to <EM>new</EM> use the
+following form.  
+
+<pre>
+  $var =~ s/old/new/;                   # replace old with new
+  if ($var =~ s:old:new:) { ... }       # replace ':' with any other character
+</pre>
+<p>
+To use part of the actual text matched by the <EM>old</EM> regex, the
+<EM>new</EM> regex can use the $<i>k</i> variables.  Taking our previous
+example involving years, to replace the year <CODE><FONT color=#000099>19xy</FONT></CODE> with
+<CODE><FONT color=#000099>xy</FONT></CODE>, use
+<pre>
+  $line =~ s/19(\d\d)/$1/;
+</pre>
+
+<p><EM>Modifiers:</EM> When searching or substituing, there are several
+optional modifiers you can use to alter the regular expression.  For
+example, in <CODE><FONT color=#000099>if ($var =~<font color=maroon><em> Unknown LaTeX command </em> ( </font><font color=maroon><em>  </em>  </font> /&lt;title&gt;/i)</FONT></CODE>, the
+<CODE><FONT color=#000099>i</FONT></CODE> at the end specifies a case-insensitive search.  We use
+<CODE><FONT color=#000099>m//</FONT></CODE> and <CODE><FONT color=#000099>s///</FONT></CODE> to represent searching and substituing.
+
+<p><DIV ALIGN=center>
+  <table border>
+<TR> <TD align=left>     Option </TD> <TD align=left> Where </TD> <TD align=left> What </TD></TR>
+<TR> <TD align=left>     i </TD> <TD align=left> m//, s/// </TD> <TD align=left> case insensitive (upper=lower case) pattern </TD></TR>
+<TR> <TD align=left>     m </TD> <TD align=left> m//, s/// </TD> <TD align=left> $var as multiple lines </TD></TR>
+<TR> <TD align=left>     g </TD> <TD align=left> s/// </TD> <TD align=left> replace all orig with new.  I.e. apply repeatedly. </TD></TR>
+<TR> <TD align=left>     g </TD> <TD align=left> m/// </TD> <TD align=left> (Adv) search for all occurences.  On next evaluation, continue
+  where previous search left off. </TD></TR>
+<TR> <TD align=left>     s </TD> <TD align=left> m//, s/// </TD> <TD align=left> (Adv) treat $var as a single line, even if imbedded
+  '\n' chars </TD></TR>
+<TR> <TD align=left>     x </TD> <TD align=left> m//, s/// </TD> <TD align=left> (Adv) allow extended regex syntax.  Ignore spaces in
+  the regex (for readability) </TD></TR>
+  </table>
+</DIV>
+
+<p>The regex operations return different results depending on the context.
+For clarity, I recommend using the scalar context 
+
+<p><DIV ALIGN=center>
+  <table border>
+<TR> <TD align=left>     context </TD> <TD align=left> return value </TD></TR>
+<TR> <TD align=left>     scalar </TD> <TD align=left> true, if there was a match (or substitution) </TD></TR>
+<TR> <TD align=left>     list/array  </TD> <TD align=left> list of sub-matches ($1, $2, ...) found in the match </TD></TR>
+  </table>
+</DIV>
+
+<p><hr><H2><FONT color=black>Built-in Perl functions</FONT></H2>
+
+<p>Perl has many built-in functions.
+
+<p>There are numerous ways to access documentation about Perl functions.
+<UL>
+  <li><strong></strong> On a Unix system with Perl installed, run <CODE><FONT color=#000099>%man
+perfunc</FONT></CODE>.
+  <li><strong></strong> On a Win 95 PC with standard Perl installed in <TT><FONT color=#660000>perldir</FONT></TT>
+on, look at <TT><FONT color=#660000>perldir/lib/Pod/perlfunc.html</FONT></TT>.
+
+<p></UL>
+
+<p>Here are some of the more common functions I've used.  If the function
+has additional options for a function, the description starts with a (+).
+
+<p><table border>
+<TR> <TD align=left>   <SAMP>@arr=split(/[ t:]+/, $line);</SAMP> </TD> <TD align=left>
+  (+) Split $line into words.  Words are seprated by spaces or colons
+(but not tabs).  Store words in @arr, spaces and colons are discarded.
+</TD></TR>
+<TR> <TD align=left>   <SAMP>@arr = stat(filename);</SAMP> </TD> <TD align=left>
+  Returns a 13 element list <CODE><FONT color=#000099>($dev, $ino, $mode (permissions
+on this file), $nlink, $uid, $gid, $rdev, $size (in bytes),
+$atime, $mtime (last modification time), $ctime, $blksize,
+$blocks)</FONT></CODE> containing information about a file. </TD></TR>
+<TR> <TD align=left>   <SAMP>$str = join("::", @arr);</SAMP> </TD> <TD align=left>
+  Concatenate all elements of <CODE><FONT color=#000099>@arr</FONT></CODE> into a single scalar string;
+separate all the elements by a double colon.  Useful when printing out
+an array. </TD></TR>
+</table>
+
+<p><H3><FONT color=teal>File tests</FONT></H3>
+
+<p>Perl has several functions which test properties about files.  These
+functions have the name <CODE><FONT color=#000099>-X</FONT></CODE>, for some character X.  (Yes, the
+function name starts with a dash.)  These names mimic the Unix
+<CODE><FONT color=#000099>csh</FONT></CODE> and the Unix <CODE><FONT color=#000099>sh test</FONT></CODE> operations.  These functions
+take a filename or a file handle, as in <CODE><FONT color=#000099>-X filename</FONT></CODE>.
+
+<p>For example, if you want to run a command <CODE><FONT color=#000099>/bin/ccc</FONT></CODE> on the data
+file <TT><FONT color=#660000>../input/ddd</FONT></TT>, you might want to check if <CODE><FONT color=#000099>ccc</FONT></CODE> is
+executable and <CODE><FONT color=#000099>ddd</FONT></CODE> is readable first.
+<pre>
+  if ( (-x "/bin/ccc") && (-r "../input/ddd") ) {
+     my(@cccout) = `/bin/ccc ../input/ddd`;   # run the command.
+  } else {
+     ... complain ...
+  }
+</pre>
+
+<p>I give the descriptions directly from the <CODE><FONT color=#000099>perlfunc</FONT></CODE> manual page,
+listed from most common to least common, based on my own usage.
+
+<p><DIV ALIGN=center>
+  <table border>
+<TR> <TD align=left>      -f </TD> <TD align=left> File is a plain file. </TD></TR>
+<TR> <TD align=left>      -e </TD> <TD align=left> File exists. </TD></TR>
+<TR> <TD align=left>      -d </TD> <TD align=left> File is a directory. </TD></TR>
+<TR> <TD align=left>      -l </TD> <TD align=left> File is a symbolic link. </TD></TR>
+<TR> <TD align=left>      -r </TD> <TD align=left> File is readable by effective uid/gid. </TD></TR>
+<TR> <TD align=left>      -x </TD> <TD align=left> File is executable by effective uid/gid. </TD></TR>
+<TR> <TD align=left>      -w </TD> <TD align=left> File is writable by effective uid/gid. </TD></TR>
+<TR> <TD align=left>      -z </TD> <TD align=left> File has zero size. </TD></TR>
+<TR> <TD align=left>      -s </TD> <TD align=left> File has non-zero size (returns size). </TD></TR>
+<TR> <TD align=left>      -o </TD> <TD align=left> File is owned by effective uid. </TD></TR>
+<TR> <TD align=left>      -R </TD> <TD align=left> File is readable by real uid/gid. </TD></TR>
+<TR> <TD align=left>      -W </TD> <TD align=left> File is writable by real uid/gid. </TD></TR>
+<TR> <TD align=left>      -X </TD> <TD align=left> File is executable by real uid/gid. </TD></TR>
+<TR> <TD align=left>      -O </TD> <TD align=left> File is owned by real uid. </TD></TR>
+  </table>
+  <table border>
+<TR> <TD align=left>      -p </TD> <TD align=left> File is a named pipe (FIFO). </TD></TR>
+<TR> <TD align=left>      -S </TD> <TD align=left> File is a socket. </TD></TR>
+<TR> <TD align=left>      -b </TD> <TD align=left> File is a block special file. </TD></TR>
+<TR> <TD align=left>      -c </TD> <TD align=left> File is a character special file. </TD></TR>
+<TR> <TD align=left>      -t </TD> <TD align=left> Filehandle is opened to a tty. </TD></TR>
+<TR> <TD align=left>      -u </TD> <TD align=left> File has setuid bit set. </TD></TR>
+<TR> <TD align=left>      -g </TD> <TD align=left> File has setgid bit set. </TD></TR>
+<TR> <TD align=left>      -k </TD> <TD align=left> File has sticky bit set. </TD></TR>
+<TR> <TD align=left>      -T </TD> <TD align=left> File is a text file. </TD></TR>
+<TR> <TD align=left>      -B </TD> <TD align=left> File is a binary file (opposite of -T). </TD></TR>
+<TR> <TD align=left>      -M </TD> <TD align=left> Age of file in days when script started. </TD></TR>
+<TR> <TD align=left>      -A </TD> <TD align=left> Same for access time. </TD></TR>
+<TR> <TD align=left>      -C </TD> <TD align=left> Same for inode change time. </TD></TR>
+  </table>
+</DIV>
+
+<p><hr><H2><FONT color=black>Command line arguments</FONT></H2>
+
+<p>When you run a Perl script, perl puts the command line arguments in the
+global array <CODE><FONT color=#000099>@ARGV</FONT></CODE>.  For example, if you run the command
+
+<p><FONT color=navy><PRE>
+  % perl somescript.pl -o abc -t one.html two.html
+</PRE></FONT>
+
+<p>will result in
+
+<p><DIV ALIGN=center>
+  <SAMP>
+  <table border>
+<TR> <TD align=left>     $ARGV[0] </TD> <TD align=left> -o </TD></TR>
+<TR> <TD align=left>     $ARGV[1] </TD> <TD align=left> abc </TD></TR>
+<TR> <TD align=left>     $ARGV[2] </TD> <TD align=left> -t </TD></TR>
+<TR> <TD align=left>     $ARGV[3] </TD> <TD align=left> one.html </TD></TR>
+<TR> <TD align=left>     $ARGV[4] </TD> <TD align=left> two.html </TD></TR>
+  </table>
+  </SAMP>
+</DIV>
+
+<p>The prototype code at the begining of this document shows one way to
+process <CODE><FONT color=#000099>@ARGV</FONT></CODE>.
+
+<p><hr><H2><FONT color=black>File I/O</FONT></H2>
+
+<p>See the prototype example for reading/writing from/to a file.
+
+<p>Given a file handle <CODE><FONT color=#000099>FH</FONT></CODE> from either <CODE><FONT color=#000099>open()</FONT></CODE> or a
+<CODE><FONT color=#000099>new FileHandle</FONT></CODE>, the operation <CODE><FONT color=#000099>&lt;FH&gt;</FONT></CODE> reads the next
+line in scalar context or the entire file in list context.
+
+<pre>
+while ( $line = &lt;FILE_DATA&gt; ) {         # read a line at a time.
+    if ( $line =~ /keyboard/ ) {
+        print $line;
+    }
+}
+
+my(@whole_file) = &lt;FILE_DATA&gt;;          # be careful, file could be BIG.
+my($numlines) = scalar(@whole_file);    # 
+</pre>
+<p>
+If you only want to read from stdin, use an use
+<pre>
+  while ($line = &lt;STDIN&gt;) {	# read a line at a time
+    ...
+  }
+</pre>
+
+<p>But how can we read from a file sometime and from STDIN at other times
+in the same Perl script?  The routines <CODE><FONT color=#000099>handle_file()</FONT></CODE> and
+<CODE><FONT color=#000099>read_file()</FONT></CODE> in the prototype code show how read from
+<EM>any</EM> <EM>input stream</EM> such as a file, <SAMP>stdin</SAMP> (which
+itself could be a file, the keyboard or a network connection), a network
+connection, the keyboard, and so on.<font size=-1>[Note: An input stream is any
+source of input data and is a generalization of an input file. In C an
+input stream is a file descriptor or a FILE* pointer (from
+<SAMP>stdio.h</SAMP>), such as <CODE><FONT color=#000099>stdin</FONT></CODE>.  In C++ an input stream is an
+<CODE><FONT color=#000099>istream</FONT></CODE>, such as <CODE><FONT color=#000099>cin</FONT></CODE>.]</font>  The function
+<CODE><FONT color=#000099>handle_file()</FONT></CODE> is a "driver" for <CODE><FONT color=#000099>read_file()</FONT></CODE> that
+passes as a parameter either <CODE><FONT color=#000099>STDIN</FONT></CODE> or a <CODE><FONT color=#000099>FileHandle</FONT></CODE>
+input stream to <CODE><FONT color=#000099>read_file()</FONT></CODE>.
+
+<p>In <CODE><FONT color=#000099>read_file(istream, fname)</FONT></CODE> the first parameter,
+<CODE><FONT color=#000099>istream</FONT></CODE>, is the input stream, from whic we read input data.
+The second parameter <CODE><FONT color=#000099>fname</FONT></CODE> is the file name, which is used for
+say, reporting errors.  To pass <CODE><FONT color=#000099>STDIN</FONT></CODE> as a parameter to
+<CODE><FONT color=#000099>read_file()</FONT></CODE>, we use <CODE><FONT color=#000099>\*STDIN</FONT></CODE><font size=-1>[Note: This is a
+very advanced topic as we are passing a reference to the typeglob for
+STDIN.]</font>  Sadly explaining <CODE><FONT color=#000099>\*STDIN</FONT></CODE> is beyond the scope of
+this document.
+
+<p><hr><H2><FONT color=black>Running external commands</FONT></H2>
+
+<p>(This may or may not work on Win32) You can run an external command,
+such as <CODE><FONT color=#000099>ls -l</FONT></CODE> by placing it in back quotes (also known as back
+ticks or grave accents, <CODE><FONT color=#000099><b><font color=#000099>`</font></b>ls -l<b><font color=#000099>`</font></b></FONT></CODE>.  The returned value is the
+output the command sends to stdout.  In scalar context, you get one big
+string, with a <CODE><FONT color=#000099>\n</FONT></CODE> character separating lines; in array
+context, each output line is a separate array item.
+
+<p>Thus, see the contents of a tar file, <TT><FONT color=#660000>xyz.tar</FONT></TT> in Perl, you
+could do
+<FONT color=navy><PRE>
+  my(@tarlist) = <b><font color=#000099>`</font></b>tar tfv xyz.tar<b><font color=#000099>`</font></b>;
+</PRE></FONT>
+
+<p>Commands are run in current working directory, which is initially the
+directory where you started the Perl script.  You can change the current
+working directory to DDD by calling the built-in Perl function
+<CODE><FONT color=#000099>chdir DDD</FONT></CODE>.
+
+<p><hr><H2><FONT color=black>References</FONT></H2>
+
+<p>A reference in Perl is equivalent to a pointer in C.  Any Perl scalar
+value/variable can be a reference.  The address-of operator in Perl is
+the <CODE><FONT color=#000099>\</FONT></CODE> (backslash); the dereference operator is
+sadly and confusingly the <CODE><FONT color=#000099>$</FONT></CODE> (dollar sign).
+
+<p>Thus the following lines are equivalent in Perl and C; in both cases we
+change the value of <CODE><FONT color=#000099>str</FONT></CODE> from <SAMP>"hi"</SAMP> to <SAMP>"bye"</SAMP>
+via <CODE><FONT color=#000099>ptr</FONT></CODE> and we add 5 to the value of <CODE><FONT color=#000099>num</FONT></CODE> via a
+pointer.  In Perl, we can use the same reference variable <CODE><FONT color=#000099>ptr</FONT></CODE>
+becuse references are not typed; in C we must use different pointers
+<CODE><FONT color=#000099>sptr</FONT></CODE> and <CODE><FONT color=#000099>iptr</FONT></CODE>.
+
+<p><DIV ALIGN=center>
+  <SAMP>
+  <table border>
+<TR> <TD align=left>      Perl  </TD> <TD align=left>  C/C++ </TD></TR>
+<TR> <TD align=left>      $str = "hi"; </TD> <TD align=left> char* str = "hi"; </TD></TR>
+<TR> <TD align=left>      $ptr = \$str; </TD> <TD align=left> char** sptr = &amp;str; </TD></TR>
+<TR> <TD align=left>      $$ptr = "bye"; </TD> <TD align=left> *sptr = "bye"; </TD></TR>
+<TR> <TD align=left>      $num = 4; </TD> <TD align=left> int num = 4; </TD></TR>
+<TR> <TD align=left>      $ptr = \$num; </TD> <TD align=left> int* iptr = &amp;num; </TD></TR>
+<TR> <TD align=left>      $$ptr += 5; </TD> <TD align=left> (*iptr) += 5; </TD></TR>
+  </table>
+  </SAMP>
+</DIV>
+
+<p>In the last line, the double dollar sign <CODE><FONT color=#000099>$$ptr</FONT></CODE> is pretty
+ugly; as a notational convenience, for a reference to an array or hash,
+the postfix <CODE><FONT color=#000099>-&gt;</FONT></CODE> operator can be used.  Thus, dereference the
+array reference <CODE><FONT color=#000099>arrRef</FONT></CODE>, we can use either
+ <P align=center><CODE><FONT color=#000099>$arrRef-&gt;[...]</FONT></CODE>.<br></P>
+or
+ <P align=center><CODE><FONT color=#000099>$$arrRef[...]</FONT></CODE>.<br></P>.
+ An analoguous notation is used for hashes passed by reference.  The
+following table shows how to use an array/hash versus a reference to it.
+There should be no surprises to an experienced C programmers.
+
+<p><table border>
+<TR> <TD align=left>   Var </TD> <TD align=left> whole array </TD> <TD align=left> k-th item </TD> <TD align=left> address-of array </TD></TR>
+<TR> <TD align=left>   <CODE><FONT color=#000099>@arr</FONT></CODE> </TD> <TD align=left> <CODE><FONT color=#000099>@arr</FONT></CODE>
+  </TD> <TD align=left> <CODE><FONT color=#000099>$arr[k]</FONT></CODE> </TD> <TD align=left> <CODE><FONT color=#000099>\@arr</FONT></CODE> </TD></TR>
+<TR> <TD align=left> 
+  <CODE><FONT color=#000099>$aref = \arr</FONT></CODE> </TD> <TD align=left> <CODE><FONT color=#000099>@$aref</FONT></CODE>
+  </TD> <TD align=left> <CODE><FONT color=#000099>$aref-&gt;[k]</FONT></CODE> or <CODE><FONT color=#000099>$$aref[k]</FONT></CODE> </TD> <TD align=left> <CODE><FONT color=#000099>$aref</FONT></CODE> </TD></TR>
+<TR> <TD align=left> 
+  </TD></TR> 
+<TR> <TD align=left>   Var </TD> <TD align=left> whole hash </TD> <TD align=left> key lookup  </TD> <TD align=left> address-of hash </TD></TR>
+<TR> <TD align=left>   <CODE><FONT color=#000099>%hash</FONT></CODE> </TD> <TD align=left> <CODE><FONT color=#000099>%hash</FONT></CODE>
+  </TD> <TD align=left> <CODE><FONT color=#000099>$hash[k]</FONT></CODE> </TD> <TD align=left> <CODE><FONT color=#000099>\%hash</FONT></CODE> </TD></TR>
+<TR> <TD align=left> 
+  <CODE><FONT color=#000099>$href = \hash</FONT></CODE> </TD> <TD align=left> <CODE><FONT color=#000099>%$href</FONT></CODE>
+  </TD> <TD align=left> <CODE><FONT color=#000099>$href-&gt;{key}</FONT></CODE> or <CODE><FONT color=#000099>$$href{key}</FONT></CODE> </TD> <TD align=left> <CODE><FONT color=#000099>$href</FONT></CODE> </TD></TR>
+<TR> <TD align=left>
+</table>
+
+<p>
+<H3><FONT color=teal>Passing references to functions</FONT></H3>
+
+<p>I typically pass arrays and hashes as references like C/C++, because
+this method is fast (as we only pass a scalar) and it allows the array
+to be modified.  The basic scheme is declare the formal parameters as
+scalars; the actual parameters passed are "the-address-of" of the array
+or hash.
+
+<pre>
+
+# call via:
+#    toBeCalled (array-reference, hash-reference);
+#
+sub toBeCalled ($$) {		# declare params to be scalars
+  my($ref2arr, $ref2hash) = @_;
+  ...
+  $ref2arr-&gt;[idx] = ...
+  ...
+  $ref2hash-&gt;{key} = ...
+  ...
+  foreach item in ( @$ref2arr ) {
+    ...
+  }
+}
+
+sub caller () {
+  my(@arr) = ( ... );
+  my(%hash) = ();
+  ...
+  toBeCalled(\@arr, \%hash);
+}
+</pre>
+<p>
+Here's an example of a function <CODE><FONT color=#000099>clearEntry</FONT></CODE> which clears the
+specified index <CODE><FONT color=#000099>idx</FONT></CODE> of an array of strings <CODE><FONT color=#000099>arr</FONT></CODE> and
+increments index.  Because both variables are modified, they are both
+passed as references.  
+
+<pre>
+  sub clearEntry ($$) {
+      my($idx, $arr) = @_;
+      $arr-&gt;[$$idx] = "";
+      $$idx ++;
+  }
+  sub callClear () {
+      my(@stuff) = ("aa", "bb", "cc", "dd");
+      my($indexer) = 1;
+      print "BEFORE indexer = $indexer " . join(":", @stuff) . "\n";
+      clearEntry(\$indexer, \@stuff);
+      print "AFTER  indexer = $indexer " . join(":", @stuff) . "\n";
+  }
+</pre>
+<p>
+Calling <CODE><FONT color=#000099>callClear()</FONT></CODE> gives
+
+<p><FONT color=navy><PRE>
+  BEFORE indexer = 1 aa:bb:cc:dd
+  AFTER  indexer = 2 aa::cc:dd
+</PRE></FONT>
+
+<p><hr><H2><FONT color=black>Quoting</FONT></H2>
+
+<p>There are a variety of other quoting mechanisms as summarized in the
+table below, which borrows directly from the <a href=ftp://ftp.digital.com/pub/plan/perl/CPAN/doc/manual/html/perlop.html>Section Quote and
+Quotelike Operators in perlop</a>.  Interpolates means that variables are evaluated,
+which in turn means that all variable references starting with $, @, or
+% are fully evaluated.
+
+<pre>
+  @squares = (0, 1, 4, 9, 16, 25);
+  $i = 2;
+  print("i = $i, 3+i = (3+$i)\n");          # print: i = 2, 3+i=(3+2)
+  print("squares[i+3] = $squares[$i+3]\n"); # print: squares[i+3] = 23
+</pre>
+<p>
+In the first <CODE><FONT color=#000099>print()</FONT></CODE> statement, the arithmetic expression
+<CODE><FONT color=#000099>(3+i)</FONT></CODE> is not evaluated, because it is not a variable; however,
+the reference to <SAMP>$squares[$i+3]</SAMP> is fully evaluated.
+
+<p><DIV ALIGN=center>
+<table border>
+<TR> <TD align=left>    Customary </TD> <TD align=left>  Generic    </TD> <TD align=left>    Meaning      </TD> <TD align=left> Interpolates </TD></TR>
+<TR> <TD align=left>      'xxx'   </TD> <TD align=left>    q:xxx:   </TD> <TD align=left>    Literal      </TD> <TD align=left>    no </TD></TR>
+<TR> <TD align=left>      "xxx"   </TD> <TD align=left>   qq:xxx:   </TD> <TD align=left>    Literal      </TD> <TD align=left>    yes </TD></TR>
+<TR> <TD align=left>      <b><font color=#000099>`</font></b>xxx<b><font color=#000099>`</font></b>   </TD> <TD align=left>   qx:xxx:   </TD> <TD align=left>    Command      </TD> <TD align=left>    yes </TD></TR>
+<TR> <TD align=left>      none    </TD> <TD align=left>   qw:xxx:   </TD> <TD align=left>   Word list     </TD> <TD align=left>    no </TD></TR>
+<TR> <TD align=left>      /xxx/   </TD> <TD align=left>    m:xxx:   </TD> <TD align=left>  Pattern match  </TD> <TD align=left>     yes </TD></TR>
+<TR> <TD align=left>      none    </TD> <TD align=left>  s:xxx:yyy: </TD> <TD align=left>  Substitution   </TD> <TD align=left>    yes </TD></TR>
+<TR> <TD align=left>      none    </TD> <TD align=left> tr:xxx:yyy: </TD> <TD align=left>  Translation    </TD> <TD align=left>    no </TD></TR>
+</table>
+</DIV>
+
+<p>The generic quoting mechanism allows you to delimit a string with
+arbitrary characters, which is especially convenient when the string
+contains single and/or double quotes.
+
+<pre>
+  $where = "a hot dog stand";
+  $proverb =  'Don't buy sushi from a hot dog stand.';
+  $proverb = q/Don't buy sushi from a hot dog stand./;
+  $proverb = q(Don't buy sushi from a hot dog stand.);
+  $proverb =   "Don't buy sushi from $where.";
+  $proverb = qq/Don't buy sushi from $where./;
+  $proverb = qq(Don't buy sushi from $where.);
+</pre>
+<p>
+<hr><H2><FONT color=black>Packages, Modules, Records and Objects in Perl</FONT></H2>
+
+<p>I have no plans to cover these topics in this introductory document.
+Perhaps in a not-in-the-near future "Reusable Perl code in 10 pages"
+document.
+
+<p><hr><H2><FONT color=black>Feedback, motivation and afterthoughts</FONT></H2>
+
+<p>I welcome any constructive feedback on this document.  
+
+
+
+<p>I am writing this document because I wish some one had done so when I
+was learning Perl.
+
+<p>This document &copy; Russell W Quong, 1998.  You may freely copy,
+and distribute this document so long as the copyright is left intact.
+You may freely copy and post <EM>unaltered</EM> versions of this
+document in HTML and Postscript formats on a web site or ftp site.
+
+<p>
+<HR>
+<font size=+0> <EM>[LaTeX -> HTML by <a href="http://www.best.com/~quong/ltoh">ltoh</a>]</EM></font><br>
+<ADDRESS>
+<font size=+0><A href="http://www.best.com/~quong">Russell W. Quong</A>
+(<A href="mailto:quong@best.com"><SAMP>quong@best.com</SAMP></A>)
+<br>Last modified: <font color=maroon><samp>Jun  9 1999</samp></font>
+</font></ADDRESS>
+</BODY>
+</HTML>

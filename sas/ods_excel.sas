@@ -16,6 +16,14 @@ options NOsource;
   */
 options source;
 
+ods excel file="~/bob/tmp/migration.xlsx";
+  ods excel options(sheet_name="&SYSDATE");
+  proc report data=sashelp.class; run;
+ods excel close;
+
+
+
+endsas;
 options nobyline;
 ODS EXCEL FILE="/Drugs/RD/015/11/N-2237/Reports/Independents RFR RFD.xml" options(sheet_name="#BYVAL(gpi)" autofilter='all');
 proc print data=l.final NOobs;

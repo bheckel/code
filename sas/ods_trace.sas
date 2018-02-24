@@ -6,7 +6,7 @@ options NOsource;
   *           We're using PROC CONTENTS but it applies to other procs as well.
   *
   *  Created: Wed 02 Apr 2008 10:06:55 (Bob Heckel)
-  * Modified: Fri 03 Apr 2015 14:25:32 (Bob Heckel)
+  * Modified: Wed 24 Jan 2018 15:59:34 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source NOcenter;
@@ -15,14 +15,16 @@ options source NOcenter;
 ***ods NOproctitle;
 
 title '..............trace..............';
- /* Figure out the 3rd CONTENTS section's 'Name:' */
- /* Print ods details to .lst */
-***ods trace on / listing;
- /* Print ods details to .log */
+ /* Print ods details to Log */
 ods trace on / label;
-  proc contents data=sashelp.shoes; 
-  run;
+  proc contents data=sashelp.shoes; run;
 ods trace off;
+
+ /* Print ods details to List */
+/* ods trace on / listing; */
+/*   proc contents data=sashelp.shoes; run; */
+/* ods trace off; */
+
 /*
 Output Added:
 -------------
@@ -54,11 +56,10 @@ Label Path: 'The Contents Procedure'.'SASHELP.SHOES'.'Variables'
 
 title '..............include..............';
  /* Then use only that 'Name:' All 3 approaches are the same. */
-ods select Variables;
-***ods select contents.dataset.VariablesAlpha;
-***ods select 'The Contents Procedure'.'SASHELP.SHOES'.'Variables';
-  proc contents data=sashelp.shoes; 
-  run;
+/* ods select Variables; */
+ods select contents.dataset.Variables;
+/* ods select 'The Contents Procedure'.'SASHELP.SHOES'.'Variables'; */
+  proc contents data=sashelp.shoes; run;
 ods select off;
 
 title '..............exclude..............';

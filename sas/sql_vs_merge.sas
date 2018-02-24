@@ -11,14 +11,12 @@
   *           SQL - duplicate matching column is not automatically overlaid
   *
   *  Created: Wed, 03 Nov 1999 12:14:11 (Bob Heckel)
-  * Modified: Thu 22 Jan 2015 14:50:57 (Bob Heckel)
+  * Modified: Mon 22 Jan 2018 15:37:57 (Bob Heckel)
   *----------------------------------------------------------------------------
   */
 options linesize=80 pagesize=32767 nodate source source2 notes mprint
         symbolgen mlogic obs=max errors=5 nostimer nonumber serror merror
         noreplace;
-
-title; footnote;
 
 /******** Example 1 (http://www.lexjansen.com/pharmasug/2008/cc/cc07.pdf) ****************/
 
@@ -38,10 +36,11 @@ proc sort data=b; by x; run;
 data c1;
   merge a(in=aa) b(in=bb);
   by x;
-  /* doesn't matter */
-/***  if aa;***/
+  /* neither matters */
+  /* if aa; */
+  /* if aa and bb; */
 run; 
-proc print data=_LAST_(obs=max) width=minimum; run;
+/* proc print data=_LAST_(obs=max) width=minimum; run; */
 /*
 Obs    x     y     z
 
@@ -58,7 +57,7 @@ proc sql;
   from a, b
   where a.x=b.x;
 quit; 
-proc print data=_LAST_(obs=max) width=minimum; run;
+/* proc print data=_LAST_(obs=max) width=minimum; run; */
 /*
 Obs    x     y     z
 
@@ -73,7 +72,6 @@ Obs    x     y     z
 
 
 
-endsas;
 /******** Example 2 ****************/
 
 
@@ -87,7 +85,7 @@ B 5
 C 8
 ;
 run;
-title 'original one'; proc print data=_LAST_(obs=max); run;
+/* title 'original one'; proc print data=_LAST_(obs=max); run; */
 
  /* Data table has duplicate account numbers */
 data two;
@@ -99,7 +97,7 @@ A 30
 D 40
 ;
 run;
-title 'original two'; proc print data=_LAST_(obs=max); run;
+/* title 'original two'; proc print data=_LAST_(obs=max); run; */
  /*                                            */
  /**********************************************/
 
@@ -115,21 +113,56 @@ data work.both1;
   merge one two;
   by acct;
 run;
-proc print data=_LAST_(obs=max) noobs; run;
+/* proc print data=_LAST_(obs=max) noobs; run; */
+/*
+                            acct    rate    balance
+
+                             A        1        10  
+                             A        1        20  
+                             A        1        30  
+                             B        5         .  
+                             C        8         .  
+                             D        .        40  
+*/
+
 data work.both1;
   merge one(in=ina) two(in=inb);
   by acct;
   if ina or inb;
 run;
-title 'same';proc print data=_LAST_(obs=max) noobs; run;
+/* title 'same';proc print data=_LAST_(obs=max) noobs; run; */
+/*
+                                      same
 
-proc sql;
+                            acct    rate    balance
+
+                             A        1        10  
+                             A        1        20  
+                             A        1        30  
+                             B        5         .  
+                             C        8         .  
+                             D        .        40  
+*/
+
+proc sql noprint;
   select coalesce(one.acct, two.acct) as a, rate, balance
   /* [INNER] JOIN won't work */
   from one FULL JOIN two  ON one.acct=two.acct
   ;
 quit;
 title;
+/*
+                                      same
+
+                          a             rate   balance
+                          ----------------------------
+                          A                1        10
+                          A                1        20
+                          A                1        30
+                          B                5         .
+                          C                8         .
+                          D                .        40
+*/
 /************/
 
 
@@ -145,15 +178,29 @@ data work.both1;
   by acct;
   if ina & inb;
 run;
-proc print data=_LAST_(obs=max) noobs; run;
+/* proc print data=_LAST_(obs=max) noobs; run; */
 
 title 'same';
-proc sql;
+proc sql noprint;
   select a.acct, a.rate, b.balance
   from one a JOIN two b  ON one.acct=two.acct
   ;
 quit;
 title;
+/*
+                            acct    rate    balance
+
+                             A        1        10  
+                             A        1        20  
+                             A        1        30  
+                                      same
+
+                          acct          rate   balance
+                          ----------------------------
+                          A                1        10
+                          A                1        20
+                          A                1        30
+*/
 /************/
 
 
@@ -195,7 +242,7 @@ proc sql;
   where not (a.acct in(select acct from two))
   ;
 quit;
- /* or better? */
+ /* or better */
 title 'same';
 proc sql;
   select a.acct, a.rate

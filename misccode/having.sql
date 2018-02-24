@@ -15,6 +15,16 @@
 -- aggregates, but it's wasteful: The same condition could be used more
 -- efficiently at the WHERE stage.) 
 
+-- want patients with only 1 drug
+proc sql NOprint;
+  create table ntfct_upids as
+  select upid
+  from ntct
+  group by upid
+  having count(*)=1
+  ;
+quit;
+
 proc sql NOprint;
   create table t1 as
   select upid, count(distinct ndc)

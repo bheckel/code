@@ -16,8 +16,20 @@ options nosource;
   *     proc transpose data=wide out=long(where=(COL1 ne .));
   *       by id;
   *       var s1-s4;
-  *     run;  
+  *     run;
   *  ---
+  *
+  * BY-group variable(s), e.g. the NAME column
+  * ID variable - values of this variable will be used as column names in the transposed table, e.g. SUBJECT column is an ID variable.
+  * VAR variable - values of this variable will be transposed, e.g. the VALUE column
+  *
+  * NAME SUBJECT VALUE
+  * Jack id_num 101
+  * Jack new_patient 1
+  * Jack expense 65.20
+  * Lisa id_num 102
+  * Lisa new_patient 0
+  * Lisa expense 27.35
   *
   *  Created: Thu 11 Apr 2002 14:41:23 (Bob Heckel)
   * Modified: Thu 11 Aug 2016 10:11:29 (Bob Heckel)
