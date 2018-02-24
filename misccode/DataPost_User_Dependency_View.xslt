@@ -1063,7 +1063,7 @@
         </b>
       </p>
       <p>
-        If you have a requirement for an Extract or Transform that is not currrently available please contact <a href="mailto:andrew.s.scaife@gsk.com?subject=DataPost User Requirement Request">Andy Scaife</a>.
+        If you have a requirement for an Extract or Transform that is not currrently available please contact <a href="mailto:andrew.s.scaife@sgk.com?subject=DataPost User Requirement Request">Andy Scaife</a>.
       </p>
     </div>
 

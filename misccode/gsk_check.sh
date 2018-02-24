@@ -262,7 +262,7 @@ function Serevent() {
   ###echo 'Checking for non-TSR batches...'
   ###echo
   ###if [ -d '\\prtdscel01dm06\rsh86800$' ]; then
-  ###  if [ `sqlplus -S sasreport/sasreport@usprd259 @u:\serevent_batches.sql|grep -c '^no rows selected'` -ne 1 ];then
+  ###  if [ `sqlplus -S sasreport/sasreport@suprd259 @u:\serevent_batches.sql|grep -c '^no rows selected'` -ne 1 ];then
   ###    echo 'warning - non-TSR batches may exist!'
   ###    catchWarning
   ###  else
@@ -561,8 +561,8 @@ function LIMS() {
   echo "Checking LIMS databases tnsping..."
   echo "$normal"
   echo
-  echo 'Production usprd259'
-  tnsping usprd259
+  echo 'Production suprd259'
+  tnsping suprd259
   echo
 
   ###echo 'tns long'
@@ -588,7 +588,7 @@ function LIMS() {
   ###echo "$fg_green"
   ###date
   ###echo "$normal"
-  ###sqlplus -S sasreport/sasreport@usprd259 @donothing
+  ###sqlplus -S sasreport/sasreport@suprd259 @donothing
   ###echo "$fg_green"
   ###date
   ###echo "$normal"
@@ -1168,8 +1168,8 @@ function Retain() {
   # retain.sql:
   # select nvl(max(prod_sel_dt), to_date('01/01/1900','MM/DD/YYYY')) from retain.fnsh_prod;
   # quit;
-  ###(cd $UDRV && sqlplus retain_user/retainu409@usprd581 @retain.sql)
-  (cd $GSKDIR && sqlplus -S retain_user/retainpu731@usprd731 @retain.sql)
+  ###(cd $UDRV && sqlplus retain_user/retainu409@suprd581 @retain.sql)
+  (cd $GSKDIR && sqlplus -S retain_user/retainpu731@suprd731 @retain.sql)
   echo
 }
 #

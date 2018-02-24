@@ -21,7 +21,7 @@
 #           on junk.sql to cleanup Excel's doublequoting mess - you'll know
 #           when oracle spews errors after this command runs:
 #           
-#           $ sqlplus pks_user/pksu409@usprd409 @c:/cygwin/home/bheckel/code/perl/junk
+#           $ sqlplus pks_user/pksu409@suprd409 @c:/cygwin/home/bheckel/code/perl/junk
 #
 #           Should see "1 row created." for each successful insert.
 #           When you manually exit sqlplus it should autocommit (but you can do a

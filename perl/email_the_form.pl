@@ -58,7 +58,7 @@ if ( $ENV{HTTP_COOKIE} ) {
 # ------------------------ End Standard Header ----------------------------
 
 
-###open(MAIL, "|/usr/sbin/sendmail robertheckel\@solectron.com") 
+###open(MAIL, "|/usr/sbin/sendmail robertheckel\@olectron.com") 
   ###                                           || HTMLdie('no open');
 
 ###print MAIL "Submitted from $0: $FORM{name} and $FORM{message}";

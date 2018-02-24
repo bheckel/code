@@ -1,5 +1,5 @@
 
--- sqlplus sasreport/sasreport@usprd259 @do.sql 326652; vi do.out
+-- sqlplus sasreport/sasreport@suprd259 @do.sql 326652; vi do.out
 
 set termout off;
 spool u:/do.out

@@ -6,7 +6,7 @@
 
 while [ 1 ];
   do if [ `date +%H` -eq 23 -a `date +%M` -eq 58 ]; then 
-    echo 'archive_files.sh and Compress_Tars.sh running' | mailx -s 'arch_cronish on rtpsh005' rsh86800@gsk.com
+    echo 'archive_files.sh and Compress_Tars.sh running' | mailx -s 'arch_cronish on rtpsh005' rsh86800@sgk.com
     /home/chemlms/Scripts/archive_files.sh && 
     /home/chemlms/Scripts/Compress_Tars.sh
     echo ok
