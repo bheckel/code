@@ -20,7 +20,7 @@ group by e.first_name||' '||e.last_name
 -- 1006|IWS|employee_id||15833
 
 -- employee_data tbl sample:
--- HECKEL|ROBERT|3R1610|224-5146|MA-2107|||919-844-0641|RobertHeckel@solectron.com|15833|5/22/2001 10:28:44 AM
+-- HECKEL|ROBERT|3R1610|224-5146|MA-2107|||919-844-0641|RobertHeckel@olectron.com|15833|5/22/2001 10:28:44 AM
 
 -- time_transacts tbl sample:
 -- 103|7/12/2001 11:18:42 AM|15833|3R1610|1|2|vaca|7/5/2001|9|ok

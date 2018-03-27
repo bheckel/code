@@ -14,7 +14,7 @@ use Net::SMTP;
 
 use constant USAGEMSG => <<USAGE;
 Usage: email smtp from to subject
-       e.g. email smtphub.glaxo.com rsh86800\@gsk.com bheckel\@gmail.com all should go on subj line for now
+       e.g. email smtphub.glaxo.com rsh86800\@sgk.com bheckel\@gmail.com all should go on subj line for now
 USAGE
 
 $svr = shift;
@@ -37,11 +37,11 @@ $smtp->quit();
 
 __END__
 $smtp = Net::SMTP->new('smtphub.glaxo.com');
-$smtp->mail('rsh86800@gsk.com'); # sender address
-$smtp->to('rsh86800@gsk.com',{ SkipBad => 1}); # address to userlist
+$smtp->mail('rsh86800@sgk.com'); # sender address
+$smtp->to('rsh86800@sgk.com',{ SkipBad => 1}); # address to userlist
 $smtp->data();
 ###$smtp->datasend("To: bheckel\@gmail\n"); # human to section
-$smtp->datasend("To: rsh86800\@gsk.com\n"); # human to section
+$smtp->datasend("To: rsh86800\@sgk.com\n"); # human to section
 $smtp->datasend("Subject: test\n"); # subject
 ###$smtp->datasend("X-Priority: $pri\n"); # Priority (translates to importance)
 $smtp->datasend("\n"); # end Header

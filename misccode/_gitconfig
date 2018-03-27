@@ -1,6 +1,6 @@
 [user]
 	name = Bob Heckel
-	email = rsh86800@gsk.com
+	email = rsh86800@sgk.com
 [core]
 	editor = vim
 	pager = less -+F -+S -+X

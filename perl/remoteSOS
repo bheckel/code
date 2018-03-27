@@ -15,7 +15,7 @@ use LWP::Simple;
 $MAIL          =  '/usr/sbin/sendmail';
 $MAIL_FLAGS    =  '-t -oi';
 $NAME          =  'Bob';
-$WEBMASTER     =  'robertheckel@solectron.com';
+$WEBMASTER     =  'robertheckel@olectron.com';
 $WEBMASTERHOME =  'rsh@technologist.com';
 
 foreach (sort keys %SERVERS) {

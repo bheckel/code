@@ -1,7 +1,7 @@
 ##
 ## httpd.conf -- Apache HTTP server configuration file
 ##
-## Host-dependent Configuration for Solectron RTP
+## Host-dependent Configuration for olectron RTP
 ##
 ## This file SHOULD NOT be copied to other hosts, as it contains
 ## host-specific configuration items (like ServerName)
@@ -262,7 +262,7 @@ Group www
 # e-mailed.  This address appears on some server-generated pages, such
 # as error documents.
 #
-ServerAdmin MarkHewett@solectron.com
+ServerAdmin MarkHewett@olectron.com
 
 #
 # ServerName allows you to set a host name which is sent back to clients for
