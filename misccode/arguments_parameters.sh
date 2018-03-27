@@ -9,7 +9,13 @@
 #
 #  Adapted: Fri 07 Sep 2001 15:55:11 (Bob Heckel--
 #                http://www.linuxdoc.org/LDP/abs/html/internalvariables.html)
+# Modified: Wed 14 Mar 2018 13:41:10 (Bob Heckel) 
 ##############################################################################
+
+[ $# -eq 0 ] && echo no parms
+[ $# -eq 1 ] && echo one parm
+
+
 
 if [ ! -n "$1" ]; then
   echo "Usage: `basename $0` argument1 argument2 etc."

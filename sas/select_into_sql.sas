@@ -14,10 +14,21 @@ options NOsource;
   * select count(distinct uid), min(dt), max(dt) into :IGNORE, :MINDT, :MAXDT
   *
   *  Created: Fri 06 Jun 2008 13:52:42 (Bob Heckel)
-  * Modified: Wed 20 Sep 2017 15:29:00 (Bob Heckel)
+  * Modified: Mon 26 Mar 2018 14:57:09 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source mprint mlogic sgen;
+
+proc sql noprint;
+  connect to postgres as myconn(user=&user password=&password dsn="db6" readbuff=7000);
+
+    select clientid into :clids separated by ',' from connection to myconn(
+      select distinct clientid from dshbrd.dashboardclients;
+    );
+  disconnect from myconn;
+quit;
+
+
 
  /* Single quoted comma separated list into a macrovar */
 proc sql NOprint;
