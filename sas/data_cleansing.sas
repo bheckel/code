@@ -247,7 +247,7 @@ options mautosource sasautos=('/Drugs/RTS/Monthly/Macros' '/Drugs/Macros' sasaut
   quit;
 
 
-   /* Patient phone number criterion: "Note the percentage of phone numbers that are valid (10 digits) - Ateb will not be able to call any phone number with more or less digits" */
+   /* Patient phone number criterion: "Note the percentage of phone numbers that are valid (10 digits) - We will not be able to call any phone number with more or less digits" */
   proc sql;
     create table _err_patientphonenbr as
     select distinct (select count(*) from qc_status where length(patientphonenbr) ne 10) / (select count(*) from qc_status) as pct, '_err_patientphonenbr' as ds
@@ -382,7 +382,7 @@ options mautosource sasautos=('/Drugs/RTS/Monthly/Macros' '/Drugs/Macros' sasaut
   %if %sysfunc(attrn(%sysfunc(open(error_count)), NLOBSF)) gt 0 %then %do;
     %put ERROR: QC fail;
     /*DEBUG*/
-    /* data _null_; to='bob.heckel@ateb.com'; file DUMMY email filevar=to subject="Error during &SYSPROCESSNAME execution" attach=("/Drugs/TMMEligibility/&clientfolder./Imports/ClientQC_&Cname"); run; */
+    /* data _null_; to='bob.heckel@taeb.com'; file DUMMY email filevar=to subject="Error during &SYSPROCESSNAME execution" attach=("/Drugs/TMMEligibility/&clientfolder./Imports/ClientQC_&Cname"); run; */
     data _NULL_; abort abend 008; run;
   %end;
   %else %do;
