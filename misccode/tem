@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# TODO case insensitive using find
+[ $# -eq 0 ] && ls ~/template_*
+[ $# -eq 1 ] && ~/usr/local/bin/vim ~/template_*${1}*
