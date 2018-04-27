@@ -71,3 +71,56 @@ join patient.patientaddress pa on pa.atebpatientid = ap.atebpatientid
 
 where pp.clientid = 19 and ap.clientid = 19 and pn.clientid = 19 and pd.clientid = 19 and pcon.clientid = 19 and
 pa.clientid = 19
+
+
+
+with actions as (
+    select apa.auditatebpatientactionid, apa.atebpatientid, apa.created, pua.pmapuserid, pu.loginname, pua.actiontypeid, a.actiontypegroupname
+    , a.name as actiontype
+    , row_number() over (partition by apa.atebpatientid order by apa.atebpatientid, apa.created desc, apa.auditatebpatientactionid desc)
+    from pmap.auditatebpatientaction apa
+    join pmap.auditpmapuseraction pua on pua.auditpmapuseractionid = apa.auditpmapuseractionid and pua.clientid = apa.clientid
+    join pmap.pmapuser pu on pu.pmapuserid = pua.pmapuserid
+    join pmap.actiontype a on a.actiontypeid = pua.actiontypeid
+    where a.actiontypeid = 39 and apa.clientid = 2000000 and apa.created::date >= date('now')-interval '1 day'
+  ) , userauth as (
+    select pu.pmapuserid, pu.loginname, pr.pmaproleid, pr.name as pmaprole
+      , coalesce(s.num_store,0) as num_store, coalesce(ch.num_chain,0) as num_chain, coalesce(cl.num_client,0) as num_client
+      , s.store, ch.chain, cl.client
+      from pmap.pmapuser pu
+      join pmap.pmapuserrole pur on pur.pmapuserid = pu.pmapuserid
+      join pmap.pmaprole pr on pr.pmaproleid = pur.pmaproleid
+      left join (
+        select pmapuserid, count(*) as num_store, array_agg(distinct cs.clientstoreid) as store
+        from pmap.pmapuserstore pus
+        join client.store cs on cs.storeid = pus.storeid
+        group by 1
+      ) s on s.pmapuserid = pu.pmapuserid
+      left join (
+        select pmapuserid, count(*) as num_chain, array_agg(distinct ch.name) as chain
+        from pmap.pmapuserchain puc
+        join client.chain ch on ch.chainid = puc.chainid
+        group by 1
+      ) ch on ch.pmapuserid = pu.pmapuserid
+      left join (
+        select pmapuserid, count(*) as num_client, array_agg(distinct cl.name) as client
+        from pmap.pmapuserclient puc
+        join client.client cl on cl.clientid = puc.clientid
+        group by 1
+      ) cl on cl.pmapuserid = pu.pmapuserid
+  )
+  select coalesce(pp.statusmodifieddate,pp.lastmodified)::date as statusdate, cs.clientstoreid, ap.pharmacypatientid
+    , current_timestamp::timestamp as current_timestamp, a.pmapuserid, a.loginname, a.actiontypeid, a.actiontypegroupname, a.actiontype
+    , u.pmaproleid, u.pmaprole, u.num_store, u.num_chain, u.num_client, pp.reasontext, pn.firstname, pn.lastname, pd.dateofbirth
+  from pmap.patientparticipation pp
+     join pmap.pmapcampaign pc on pc.pmapcampaignid = pp.pmapcampaignid and pc.pmapfeatureid = 1
+     join patient.atebpatient ap on ap.atebpatientid = pp.atebpatientid and ap.clientid = pp.clientid
+     join patient.patientname pn on pn.atebpatientid = pp.atebpatientid and pn.clientid = pp.clientid
+     join patient.patientdemographic pd on pd.atebpatientid = pp.atebpatientid and pd.clientid = pp.clientid
+     join client.store cs on cs.storeid = pp.nextfillstoreid
+     left join actions a on a.atebpatientid = pp.atebpatientid and a.row_number = 1
+     left join userauth u on u.pmapuserid = a.pmapuserid
+     where pp.clientid = 2000000
+     and coalesce(pp.statusmodifieddate,pp.lastmodified)::date >= date('now')-interval '1 day'
+     and pp.patientstatusid = 5
+     ;

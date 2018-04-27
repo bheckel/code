@@ -156,6 +156,7 @@ while (my $line = <$fh>) {
     next if $line =~ /WARNING: Multiple lengths were specified for the variable/;
     next if $line =~ /WARNING: This CREATE TABLE statement recursively references the target table/;
     next if $line =~ /WARNING: CPATID.CPATID/;
+    next if $line =~ /WARNING: No output destinations active/;
   }
 
   unless ( $seen{$line} ) {
