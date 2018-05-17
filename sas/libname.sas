@@ -7,7 +7,7 @@ options NOsource;
   *           See dictionary_proc_sql.sas for interrogating libnames
   *
   *  Created: Mon 22 Mar 2004 14:12:35 (Bob Heckel)
-  * Modified: Thu 10 Mar 2011 14:31:02 (Bob Heckel)
+  * Modified: Wed 16 May 2018 14:09:32 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
@@ -31,3 +31,12 @@ run;
 ***libname _ALL_ clear;
  /* Fails!  Must do one at a time (or _ALL_ at once). */
 ***libname RO RW clear; 
+
+
+
+%let bom_previous=%sysfunc(intnx(MONTH, "&SYSDATE"d, -1, B),YYMMDDN.); 
+data _null_;
+  if fileexist("/Drugs/TMMEligibility/BRStores/Dashboard/&bom_previous") then do;
+    call execute("libname l '/Drugs/TMMEligibility/BRStores/Dashboard/&bom_previous' access=readonly;");
+  end;
+run;

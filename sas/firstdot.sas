@@ -3,16 +3,69 @@ options nosource;
   *     Name: firstdot.sas (see also lastdot.sas for a shorter example)
   *
   *  Summary: Demo of counting the number of records for each ID using 
-  *           first-dot and last-dot, automatic boolean SAS variables.
+  *           first-dot and last-dot, automatic boolean SAS variables
   *
 	*           See also sum_group_add_obs.sas, bygroup_processing.sas
   *
   *  Created: Wed 19 Jun 2002 17:07:14 (Bob Heckel)
-  * Modified: Fri 19 Jun 2015 08:07:18 (Bob Heckel)
+  *  Adapted: Wed 09 May 2018 09:53:45 (Bob Heckel -- https://blogs.sas.com/content/iml/2018/02/26/how-to-use-first-variable-and-last-variable-in-a-by-group-analysis-in-sas.html) 
   *---------------------------------------------------------------------------
   */
 options source;
 
+data Patients;
+  informat Date date7.;
+  format Date date7. PatientID Z4.;
+  input PatientID Date Weight @@;
+  datalines;
+1021 04Jan16  302  1042 06Jan16  285
+1053 07Jan16  325  1063 11Jan16  291
+1053 01Feb16  299  1021 01Feb16  288
+1063 09Feb16  283  1042 16Feb16  279
+1021 07Mar16  280  1063 09Mar16  272
+1042 28Mar16  272  1021 04Apr16  273
+1063 20Apr16  270  1053 28Apr16  289
+1053 13May16  295  1063 31May16  269
+  ;
+run;
+
+proc sort data=Patients;
+  by PatientID Date;
+run;
+ 
+data weightLoss;
+   set Patients;
+   by PatientID;                               /* create two indicator variables - FIRST. to initialze a summary statistic and LAST. to output */ 
+   retain startDate startWeight;               /* RETAIN the starting values */
+   if FIRST.PatientID then do;
+      startDate = Date; startWeight = Weight;  /* remember the initial values */
+   end;
+   if LAST.PatientID then do;
+      endDate = Date; endWeight = Weight;
+      elapsedWeeks = intck('WEEK', startDate, endDate);
+      weightLoss = startWeight - endWeight;
+      AvgWeightLossPerWk = weightLoss / elapsedWeeks;
+      output;                                  /* output only the last record in each group */
+   end;
+run;
+ 
+proc print noobs; 
+  var PatientID elapsedWeeks startWeight endWeight weightLoss AvgWeightLossPerWk;
+run;
+/*
+                                                      Avg
+Patient    elapsed     start      end     weight     Weight
+  ID         Days     Weight    Weight     Loss       Loss
+
+ 1021         91        302       273       29      0.31868
+ 1042         82        285       272       13      0.15854
+ 1053        127        325       295       30      0.23622
+ 1063        141        291       269       22      0.15603
+*/
+
+
+
+endsas;
 data t;
    input x $ y $ 9-17 z $ 19-26; 
    datalines; 

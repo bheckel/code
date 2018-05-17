@@ -4,9 +4,9 @@ options NOsource;
   *
   *  Summary: Demo of building Excel spreadsheet outputs
   *
-  *           See also:
+  *           For all Excel attributes see also:
+  *           excel_attributes.txt
   *           http://support.sas.com/rnd/base/ods/odsmarkup/excelxp_help.html
-  *           http://www.msdn.microsoft.com/library/default.asp?url=/library/en-us/dnoffxml/html/ofxml2k.asp
   *
   *  Adapted: Wed 21 May 2003 14:48:01 (Bob Heckel -- 
   *                                     Phil Mason tips #18 /Chevell Parker)
@@ -16,9 +16,11 @@ options NOsource;
   */
 options source;
 
-ods excel file="~/bob/tmp/migration.xlsx";
-  ods excel options(sheet_name="&SYSDATE");
-  proc report data=sashelp.class; run;
+options NOcenter; footnote 'Date Range Nov 2017 - May 2018';
+ods excel file="/Drugs/RFD/&y/&m/&j/Reports/RFD_&j..xlsx";
+  /* Excel has a 28 char max */
+  ods excel options(sheet_name="GE Shingrix Campaign Volume" absolute_column_width='30,15' embedded_footnotes='yes');
+  proc print data=DATA.final NOobs; format Count COMMA.; run;
 ods excel close;
 
 

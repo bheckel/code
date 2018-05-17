@@ -1,0 +1,65 @@
+Name  Default value Description
+ASCII_DOTS  yes Turn off/on leading dots in textual 'batch' output
+AUTOFILTER  none  Turn on auto filter for all columns or a range of columns
+AUTOFILTER_TABLE  1 Which table on the worksheet should get the filters
+ABSOLUTE_COLUMN_WIDTH none  List of widths to use for each column in a table no matter what
+AUTOFIT_HEIGHT  no  If yes, no row heights will be specified
+AUTO_SUBTOTALS  no  Add a subtotal function to the summary line of proc print
+BLACKANDWHITE no  This value turns on black and white for printing
+BLANK_SHEET Create a Blank Worksheet with the name given
+CENTER_VERTICAL no  This value controls vertical centering for printing
+CENTER_HORIZONTAL no  This value controls horizontal centering for printing
+COLUMN_REPEAT none  Repeat columns across pages when printing
+CONTENTS  no  Create a worksheet that will contain a table of contents
+CONTENTS_WORKBOOK Contents, Index Create a workbook with a table of contents and/or an index of workbooks and/or an index of worksheets
+CONVERT_PERCENTAGES yes Remove percent symbol, apply Excel percent format, and multiply by 100
+CURRENCY_SYMBOL $ Used for detection of currency formats and for removing symbols so Excel will see currency as numbers
+CURRENCY_FORMAT Currency  The currency format specified for Excel to use
+DECIMAL_SEPARATOR . The character used for the decimal point
+DEFAULT_COLUMN_WIDTH  none  List of widths to use for each column in a table, if there are no widths
+DOC none  Documentation for this tagset. Values are Help, Options, Quick, Settings, and Changelog
+DPI 300 This value determines the dots per inch for printing
+DRAFTQUALITY  no  This value turns on draft quality for printing
+EMBED_TITLES_ONCE no  If yes, embedded titles will only appear at the top of each worksheet
+EMBED_FOOTERS_ONCE  no  If yes, embedded footers will only appear at the bottom of each worksheet
+EMBEDDED_FOOTNOTES  no  Put footnotes in the worksheet
+EMBEDDED_TITLES no  Put titles in the worksheet
+FITTOPAGE no  Fit to Page when printing
+FORMULAS  yes Data values that start with an '=' will become formulas
+FROZEN_HEADERS  no  Freeze rows from scrolling with the scrollbar
+FROZEN_ROWHEADERS no  Freeze columns from scrolling with the scrollbar
+GRIDLINES no  This value turns on gridlines for printing
+HIDDEN_COLUMNS  none  range or list of column numbers to hide
+INDEX no  Create a worksheet that will contain a index of worksheets
+MERGE_TITLES_FOOTNOTES  no  Merge left justified titles and footnotes.
+MINIMIZE_STYLE  no  Minimize the styles written to the stylesheet. Can cause unloadable XML files
+MISSING_ALIGN r Sets the alignment for missing values
+NUMERIC_TEST_FORMAT 12. Used for determining if a value is numeric or not
+ORIENTATION Portrait  Print orientation for the worksheet, Portrait or Landscape
+PAGE_ORDER_ACROSS no  If set to yes, the worksheet page order will be set to print across, then down
+PAGEBREAKS  no  Insert page break lines in the worksheet
+PAGES_FITWIDTH  1 This value determines the number of pages to fit the worksheet across when printing
+PAGES_FITHEIGHT 1 This value determines the number of pages down to fit the worksheet when printing
+PRINT_FOOTER  None  If there are no footers, or embedded footnotes are on, this value will be used as the footer for printing
+PRINT_FOOTER_MARGIN none  This is the footer margin as set in the page setup dialog window
+PRINT_HEADER  None  If there are no titles or embedded titles are on, this value will be used as the header for printing
+PRINT_HEADER_MARGIN none  This is the header margin as set in the page setup dialog window
+ROW_HEIGHT_FUDGE  4 A fudge value to add to the row height for each row
+ROW_HEIGHTS 0,0,0,0,0,0,0 Positional list of point sizes to use for row heights
+ROW_REPEAT  none  Repeat rows across pages when printing
+ROWCOLHEADINGS  no  This value turns on row and column headings for printing
+SCALE 100 This value determines the scale level for printing
+SHEET_INTERVAL  Table Interval to divide the output between worksheets. Values are Table, Page, Bygroup, Proc, or None
+SHEET_NAME  none  Worksheet name to use for the next worksheet
+SHEET_LABEL none  Replace the prefix of the worksheet name with this value
+SKIP_SPACE  1,0,1,1,1 Multiplier for the space that follows the different types of output
+SUPPRESS_BYLINES  no  Suppresses bylines in the worksheet
+THOUSANDS_SEPARATOR , The character used for indicating thousands in numeric values
+TITLE_FOOTNOTE_WIDTH  0 The number of columns titles and footnotes are allowed to span.
+WIDTH_FUDGE 0.75  This value is used along with Width_Points and column width to calculate an approximate width for the table columns
+WIDTH_POINTS  none  Override value for width calculations
+WRAPTEXT  yes This value turns wraptext on and off for all style definitions.
+ZOOM  100 This value determines the zoom level on the worksheet
+DEBUG_LEVEL 0 Numeric value to turn on various debug messages
+CONFIGURATION_FILE  none  An ini file to read option settings from
+CONFIGURATION_NAME  none  A section name in an ini file that holds option settings

@@ -2,14 +2,13 @@ options NOsource;
  /*---------------------------------------------------------------------------
   *     Name: restore_option.sas
   *
-  *  Summary: Determine current SAS options and restore later.
+  *  Summary: Determine current SAS options and restore later
   *
   *  Created: Fri 16 Jan 2009 10:12:10 (Bob Heckel)
+  * Modified: Tue 08 May 2018 14:28:23 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source pagesize=20 mlogic;
-
- /* TODO not working */
 
 proc sql;
 /***describe table DICTIONARY.options***/
@@ -19,9 +18,7 @@ proc sql;
   ;
 quit;
 
-options nomlogic;
-
-data _null_;
-  call execute('options ' || &TMPMLOGIC || ';');
-run;
-
+%macro m;
+  %if &TMPMLOGIC eq MLOGIC %then %do; options NOMLOGIC; %end;
+  proc options; run;
+%mend; %m;

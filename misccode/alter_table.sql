@@ -1,3 +1,9 @@
+BEGIN;
+ALTER TABLE dshbrd.dashboardclients ADD COLUMN deactivated boolean NOT NULL DEFAULT FALSE;
+ALTER TABLE dshbrd.dashboardclients ADD COLUMN version integer;
+COMMIT;
+
+
 
  /* http://sql.learncodethehardway.org/book/ex12.html */
 
