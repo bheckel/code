@@ -1,3 +1,1 @@
-insert into megaliths_copy
-  select *
-  from megaliths
+create temp table _bob as select atebpatientid from public.hppatientstarpdc;

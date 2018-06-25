@@ -1,4 +1,13 @@
 
+proc sql;
+  connect to postgres as myconn (user=&user password=&password database=TAEBMART server='db-dev-01.twa.taeb.com' readbuff=7000);
+  select * from connection to myconn (
+    select count(*) as before from public.hppatientstarpdc3;
+  );
+  disconnect from myconn;
+quit;
+
+
 proc sql noprint;
   connect to postgres as myconn(user=&user password=&password dsn="db6dev" readbuff=7000);
 
