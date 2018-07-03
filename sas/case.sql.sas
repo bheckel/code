@@ -15,21 +15,32 @@ options NOsource;
   *           END
   *
   *  Created: Thu 02 Dec 2010 10:49:31 (Bob Heckel)
-  * Modified: Tue 03 Oct 2017 08:56:08 (Bob Heckel)
+  * Modified: Fri 29 Jun 2018 13:57:25 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source NOcenter;
 
+proc print data=SASHELP.shoes(obs=10) width=minimum heading=H;run;title;
+proc sql;
+  select region,
+         sum(sales) as sales format=DOLLAR16.,
+         sum(case when Product='Boot' then sales else 0 end) format=DOLLAR16. as bootsales,
+         sum(case when Product='Boot' then sales else 0 end) / sum(sales) as boot_sales_ratio format=PERCENT10.2
+  from SASHELP.shoes
+  group by region;
+quit;
+
+
+
 proc sql;
   create table stages as
   select upid, (case when nrx ge 3 then 1
-                    when nrx eq 2 and isstar=1 then 2
-                    else 3
+                     when nrx eq 2 and isstar=1 then 2
+                     else 3
                 end) as stage
   from fnl0_4_a
   ;
 quit;  
-
 
 
 
@@ -57,7 +68,7 @@ run;
  /* Count number of distinct y values when x is less than 30: */
 proc sql;
   select count(distinct y) as unique_y,
-  count(distinct case when x < 30 then y else . end) as unique_criteria
+         count(distinct case when x < 30 then y else . end) as unique_criteria
   from temp;
 quit;
 title "&SYSDSN";proc print data=_LAST_(obs=10) width=minimum heading=H;run;title;
@@ -97,13 +108,3 @@ data t(keep= region etype);
   end;
 run;
 proc print data=_LAST_(obs=max) width=minimum NOobs; run;
-
-
-proc sql;
-  select region,
-         sum(sales) as sales format=DOLLAR16.,
-         sum(case when Product='Boot' then sales else 0 end) format=DOLLAR16.,
-         sum(case when Product='Boot' then sales else 0 end) / sum(sales) as boot_sales_ratio format=PERCENT10.2
-  from SASHELP.shoes
-  group by region;
-quit;

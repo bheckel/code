@@ -1,4 +1,8 @@
 
+/* backup first */
+/* CREATE TABLE public.hppatientstarpdc (LIKE dshbrd.hppatientstarpdc INCLUDING ALL); */
+/* INSERT INTO public.hppatientstarpdc SELECT * FROM dshbrd.hppatientstarpdc; */
+
 options ls=180 ps=max; libname l '~/tmp';
 
 proc sql;

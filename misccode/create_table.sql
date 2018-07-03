@@ -1,3 +1,17 @@
+-- postgres
+CREATE TABLE priorityprogram.uhcclients
+(
+  uhcclientsid serial NOT NULL,
+  clientid integer,
+  planyear date NOT NULL DEFAULT date_part('year',current_date),
+  deactivated boolean NOT NULL DEFAULT FALSE,
+  cap integer NOT NULL DEFAULT 9999999,
+  created timestamp without time zone NOT NULL DEFAULT now(),
+  lastmodified timestamp without time zone NOT NULL DEFAULT now(),
+  lastmodifiedby text NOT NULL DEFAULT "current_user"()
+);
+
+
 
 CREATE TABLE public.enrollchgdashboard
 (

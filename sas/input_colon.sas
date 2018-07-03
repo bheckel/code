@@ -56,11 +56,12 @@ data work.tmp;
    *           Not needed here since default numeric is 8.
    *                                 _____________
    */
-  input anum  ssnstring :$11.  nickname $  salary :COMMA.  position $3.;
+  input anum  ssnstring :$11.  nickname $  salary :??COMMA.  position $3.;
   datalines;
 123 134-56-9094x Megan 45,000 serf
 123 160-58-1223 Kathrynnn 47,000,123 serf2
 123 161-60-5881 Joshua 46000 drone
+123 161-60-5881 Joshu a drone
 123 123-45-6 Bob 10,000 drone2
   ;
 run;
