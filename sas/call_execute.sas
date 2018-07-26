@@ -42,15 +42,32 @@ run;
 
 
 
-%macro m(clid=);
-  %put &clid;
+%macro m(clid=, projected_build_date=);
+  proc sql;
+    connect to postgres as myconn(user=&user password=&password dsn="db6" readbuff=7000);
+    /* connect to postgres as myconn(user=&user password=&password dsn="db6dev" readbuff=7000); */
+
+    execute (
+      select * from aar.tmmtgt_client_build_config(_clientid:=&clid);
+    ) by myconn;
+
+    execute (
+      update aar.tmmtgtbuild set builddate=&projected_build_date where clientid=&clid;
+    ) by myconn;
+
+    execute (
+      update aar.tmmtgtbuild set rundatacheck=false where clientid=&clid;
+    ) by myconn;
+
+    disconnect from myconn;
+  quit;
 %mend;
 
 data _null_;
   set FUNCDATA.tmm_targeted_list_refresh(keep= clid projected_build_date obs=5);
   str = cats('%m(clid=', clid, ');');
   put str=;
-  call execute(str);
+  /* call execute(str); */
 run;  
 
 

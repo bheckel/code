@@ -183,3 +183,23 @@ proc print data=for_debugging_only(obs=max) width=minimum; run;
                             29 palms                                                           
 */
 
+
+
+ods html body=_WEBOUT (dynamic title='Register History Query Results') style=statdoc rs=none;
+proc report data=WORK.qryresults nowd;
+ column stabbrev mergefile rec_count userid date_update;
+
+ define stabbrev    / order;
+ define date_update / order descending format=f_date.;
+ define rec_count   / format=COMMA8.;
+ define userid      / width=8;
+
+ /* Stripe for readability. */
+ compute rec_count;
+   row+1;
+   if mod(row, 2) then do;
+     call define(_ROW_, "style", "style=[background=#eeeeee]");
+   end;
+ endcomp;
+run;
+ods html close;
