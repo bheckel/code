@@ -9,10 +9,11 @@
 #           TODO tail -f the log as it runs
 #
 #  Created: Fri 17 May 2002 14:14:22 (Bob Heckel)
-# Modified: Thu 05 Jan 2017 08:42:55 (Bob Heckel)
+# Modified: Tue 07 Aug 2018 13:49:53 (Bob Heckel)
 ##############################################################################
 
 # Avoid writing tempfiles in a dir that might not be ours
+# TMPSASCODE="$HOME/tmp/tmpsas.$$.sas"  # tmpsas.MYPID.* are deleted at successful completion
 TMPSASCODE="$HOME/tmp/tmpsas.$$.sas"  # tmpsas.MYPID.* are deleted at successful completion
 TMPLOG="$HOME/tmp/tmpsas.$$.log"
 TMPLST="$HOME/tmp/tmpsas.$$.lst"
@@ -23,11 +24,12 @@ USER=`whoami`
 SAS8WIN=C:/PROGRA~1/SASINS~1/SAS/V8/sas.exe
 SAS91WIN=C:/PROGRA~1/SAS/SAS9~1.1/sas.exe
 SAS93WIN=C:/PROGRA~1/SASHome/SASFoundation/9.3/sas.exe
-SAS94WIN=E:/Progra~1/SASHome/SASFoundation/9.4/sas.exe
+SAS94WIN=C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe
 SAS94UX=/usr/local/SAS94/sashome/SASFoundation/9.4/sas
 SAS94UX2=/sas/sashome/SASFoundation/9.4/sas
 SAS94UXNICE="nice -n19 /sas/sashome/SASFoundation/9.4/sas"
-SASDEFAULT=$SAS94UX2
+# SASDEFAULT=$SAS94UX2
+SASDEFAULT=$SAS94WIN
 
 
 Usage() {
@@ -210,7 +212,7 @@ done
 
 # Fall-through (no switch received from user)
 if [ -f "$1" ]; then
-###  cat "$1" >> $TMPSASCODE
+  # cat "$1" >> $TMPSASCODE
   cp "$1" $TMPSASCODE
   Exec_SAS_sysin
 else

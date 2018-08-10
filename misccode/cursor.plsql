@@ -1,3 +1,47 @@
+-- A cursor is a pointer to this context area. PL/SQL controls the context area
+-- through a cursor. A cursor holds the rows (one or more) returned by a SQL
+-- statement. The set of rows the cursor holds is referred to as the active set.
+--
+-- Declaring the cursor defines the cursor with a name and the associated SELECT
+-- statement.
+-- 
+-- CURSOR c_customers IS 
+--    SELECT id, name, address FROM customers; 
+-- 
+-- Opening the cursor allocates the memory for the cursor and makes it ready for
+-- fetching the rows returned by the SQL statement into it. For example, we will
+-- open the above defined cursor as follows
+-- 
+-- OPEN c_customers; 
+-- 
+-- Fetching the cursor involves accessing one row at a time. For example, we will
+-- fetch rows from the above-opened cursor as follows
+-- 
+-- FETCH c_customers INTO c_id, c_name, c_addr; 
+-- 
+-- Closing the cursor means releasing the allocated memory.
+-- 
+-- CLOSE c_customers;
+
+
+
+DECLARE 
+   CURSOR c_customers is 
+   SELECT  name FROM tmpcustomers; 
+   type c_list is varray (6) of customers.name%type; 
+   name_list c_list := c_list(); 
+   counter integer :=0; 
+BEGIN 
+   FOR n IN c_customers LOOP 
+      counter := counter + 1; 
+      name_list.extend; 
+      name_list(counter)  := n.name; 
+      dbms_output.put_line('Customer('||counter ||'):'||name_list(counter)); 
+   END LOOP; 
+END;
+
+
+
 -- For queries that return more than one row, you must declare an explicit
 -- cursor and use OPEN, FETCH, CLOSE
 

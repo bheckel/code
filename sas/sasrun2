@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Simplified version
+
+# Modified: Fri 10 Aug 2018 10:46:25 (Bob Heckel)
+
+TMPSASCODE="c:/tmp/tmpsas.$$.sas"
+TMPLOG="c:/tmp/tmpsas.$$.log"
+TMPLST="c:/tmp/tmpsas.$$.lst"
+
+SAS94WIN=C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe
+
+cat "$1" >| $TMPSASCODE
+
+$SAS94WIN $TMPSASCODE -log $TMPLOG -print $TMPLST
+
+#TODO
+chmod 777  $TMPLOG 
+
+if [ -e $TMPLST ];then
+  $EDITOR -R -n -o -c '/^ERROR.*:/' $TMPLOG $TMPLST
+  mv $TMPLOG c:/tmp/tmpsas.lastrun.sasrun.log
+  mv $TMPLST c:/tmp/tmpsas.lastrun.sasrun.lst
+else
+  $EDITOR -R -n -o -c '/^ERROR.*:/' $TMPLOG
+  mv $TMPLOG c:/tmp/tmpsas.lastrun.sasrun.log
+fi
+
+rm $TMPSASCODE
+
+echo 'vi -R c:/tmp/tmpsas.lastrun.sasrun.lst c:/tmp/tmpsas.lastrun.sasrun.log'
