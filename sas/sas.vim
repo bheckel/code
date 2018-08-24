@@ -325,7 +325,7 @@ if version >= 508 || !exists("did_sas_syntax_inits")
    hi sasSymbolg     ctermfg=LightBlue guifg=LightBlue
    hi sasUnderscore  ctermfg=Green guifg=Green cterm=bold gui=bold
    hi sasWild        ctermfg=Red guifg=Red
-   hi sasComment ctermbg=Black ctermfg=DarkGray guifg=DarkGray guibg=Blac
+   hi sasComment ctermbg=Black ctermfg=DarkGray guifg=DarkGray guibg=Black
 
    " Defaults via .vimrc:
    " HiLink sasComment     Comment

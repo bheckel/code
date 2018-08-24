@@ -1,3 +1,4 @@
+--sqlplus -S setars/xxxx1@sed @query.sql && vi $c/temp/query.out
 
 set termout off;
 set linesize 2000;

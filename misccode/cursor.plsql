@@ -1,3 +1,41 @@
+PROCEDURE test(in_aid contact_base.account_name_id%TYPE) IS
+	v_in_aid contact_base.account_name_id%TYPE;
+	v_gonereason BOOLEAN;
+ 
+	CURSOR contactCursor IS
+		SELECT contact_id, gonereason
+		FROM contact_base c
+		WHERE c.account_name_id in in_aid;
+	 
+	BEGIN
+		<< loopy >>
+		FOR c IN contactCursor LOOP
+			v_in_aid := c.contact_id;
+			v_gonereason := (c.gonereason = 0);
+			IF v_gonereason THEN
+				DBMS_OUTPUT.PUT_LINE ('not gone: ' || v_in_aid );
+			END IF;
+		END LOOP loopy;
+END test;
+
+
+
+procedure move_salesgroup2(sg_old in varchar2, sg_new in varchar2) is
+	
+	cursor cur1 is select distinct salesgroup from tmp_account_base;
+	
+	begin
+		 if (sg_old = sg_new) then
+			 RETURN;
+		 end if;
+
+		 for curr_c in cur1 loop
+			 DBMS_OUTPUT.put_line('ok ' || sg_old || sg_new || curr_c.salesgroup);
+		 end loop;
+  end move_salesgroup2;
+
+
+
 -- A cursor is a pointer to this context area. PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL
 -- statement. The set of rows the cursor holds is referred to as the active set.
@@ -26,10 +64,12 @@
 
 
 DECLARE 
-   CURSOR c_customers is 
-   SELECT  name FROM tmpcustomers; 
+   CURSOR c_customers is SELECT  name FROM tmpcustomers; 
+
    type c_list is varray (6) of customers.name%type; 
+
    name_list c_list := c_list(); 
+
    counter integer :=0; 
 BEGIN 
    FOR n IN c_customers LOOP 
@@ -64,7 +104,6 @@ END;
 /
 
 
- /* new example */
 
 SET serveroutput on;
 SHOW ERRORS;
