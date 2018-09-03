@@ -1,14 +1,12 @@
 #!/usr/bin/perl -w
 ##############################################################################
-#     Name: random.pl
+#     Name: random_wallpaper.pl
 #
-#  Summary: Print a random array value.
+#  Summary: Rotate fluxbox wallpaper
 #
-#  Created: Fri, 17 Dec 1999 08:39:46 (Bob Heckel)
-# Modified: Sat 19 May 2018 12:40:24 (Bob Heckel)
+#  Created: Sun 20 May 2018 13:25:20 (Bob Heckel)
 ##############################################################################
 
-# @files = ("randomlygen1.gif", "randomlygen2.gif", "randomlygen3.gif");
 @files = (
 "/home/bheckel/Dropbox/Public/misc/computer/wallpaper/papers.co-sc85-amnesia-night-crazy-blur-6-wallpaper-340x340.jpg",
 "/usr/share/backgrounds/TCP118v1_by_Tiziano_Consonni.jpg",
@@ -18,5 +16,5 @@
 
 $surprise = $files[rand @files];
 
-print $surprise, "\n";
-
+# print "fbsetbg -a $surprise\n";
+system "fbsetbg -a $surprise";
