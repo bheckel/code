@@ -29,7 +29,12 @@ set serveroutput on;
 /*    dbms_output.put_line ('Package value is: ' || TO_CHAR(test_ora04068_2.c_number)); */
 /* END; */
 
-BEGIN test_ora04068.set_variable(5); END;
+/* BEGIN test_ora04068.set_variable(5); END; */
+SELECT   distinct OBJECT_NAME
+    from dba_procedures --dba_objects
+    WHERE OWNER = 'ESTARS' AND OBJECT_TYPE IN( 'PROCEDURE' , 'PACKAGE','FUNCTION') AND procedure_name IS NOT NULL
+order BY object_name --, procedure_name;
+
 
 -------------------------
 /
