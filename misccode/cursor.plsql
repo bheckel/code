@@ -1,11 +1,13 @@
+--  As long as you do not have DML inside the loop, use the cursor FOR loop
+
 PROCEDURE test(in_aid contact_base.account_name_id%TYPE) IS
 	v_in_aid contact_base.account_name_id%TYPE;
 	v_gonereason BOOLEAN;
  
 	CURSOR contactCursor IS
 		SELECT contact_id, gonereason
-		FROM contact_base c
-		WHERE c.account_name_id in in_aid;
+		FROM contact_base
+		WHERE account_name_id in in_aid;
 	 
 	BEGIN
 		<< loopy >>

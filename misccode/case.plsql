@@ -1,3 +1,12 @@
+CASE riskStatusTable(i)
+	WHEN 'In Progress' THEN riskStatusTable(i) := 'I';
+	WHEN 'Lost' THEN riskStatusTable(i) := 'L';
+	WHEN 'Ongoing Risk' THEN riskStatusTable(i) := 'O';
+	WHEN 'Saved' THEN riskStatusTable(i) := 'S';
+	WHEN 'Waiting For Approval' THEN riskStatusTable(i) := 'W';
+END CASE;
+
+
 
  /* "Simple" CASE statement */
 DECLARE

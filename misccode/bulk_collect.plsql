@@ -1,17 +1,13 @@
 CREATE TABLE plch_stuff
 (
    id       NUMBER PRIMARY KEY
- ,  rating   INTEGER
+ , rating   INTEGER
 )
 /
 
 BEGIN
-   INSERT INTO plch_stuff
-        VALUES (100, 50);
-
-   INSERT INTO plch_stuff
-        VALUES (200, 25);
-
+   INSERT INTO plch_stuff VALUES (100, 50);
+   INSERT INTO plch_stuff VALUES (200, 25);
    COMMIT;
 END;
 /
@@ -27,15 +23,15 @@ BEGIN
      FROM plch_stuff;
 
    /* First is always 1, and COUNT = count of rows fetched. */
-   DBMS_OUTPUT.put_line (l_stuff.FIRST);
-   DBMS_OUTPUT.put_line (l_stuff.COUNT);
+   DBMS_OUTPUT.put_line(l_stuff.FIRST);
+   DBMS_OUTPUT.put_line(l_stuff.COUNT);
 
-   for i in 1 ..l_stuff.count
-   loop
+   FOR i IN 1 ..l_stuff.COUNT
+   LOOP
     --x := l_stuff(i).rating;
     --dbms_output.put_line(x);
     dbms_output.put_line(l_stuff(i).rating);
-   end loop;
+   END LOOP;
 
    /* Now do it again - will see same count */
    SELECT *
@@ -50,8 +46,6 @@ END;
 
 DROP TABLE plch_stuff
 /
-
----
 
 
 
@@ -84,7 +78,7 @@ BEGIN
       BULK COLLECT INTO l_employees LIMIT limit_in;
       FOR indx IN 1 .. l_employees.COUNT
       LOOP
-         process_each_employees (l_employees (indx));
+         process_each_employees(l_employees (indx));
       END LOOP;
       EXIT WHEN employees_cur%NOTFOUND;
    END LOOP;

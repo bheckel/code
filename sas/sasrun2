@@ -8,11 +8,12 @@ TMPSASCODE="c:/tmp/tmpsas.$$.sas"
 TMPLOG="c:/tmp/tmpsas.$$.log"
 TMPLST="c:/tmp/tmpsas.$$.lst"
 
-SAS94WIN=C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe
+# SAS94WIN=C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe
+SAS94WIN='C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -config C:\Progra~1\SASHome\SASFoundation\9.4\nls\u8\sasv9.cfg'
 
 cat "$1" >| $TMPSASCODE
 
-$SAS94WIN $TMPSASCODE -log $TMPLOG -print $TMPLST
+$SAS94WIN -sysin $TMPSASCODE -log $TMPLOG -print $TMPLST
 
 #TODO
 chmod 777  $TMPLOG 
