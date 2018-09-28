@@ -1,3 +1,8 @@
+EXECUTE IMMEDIATE 'update ref_corporate_initiative set corporate_initiative = ''Customer Intelligence'' where corporate_initiative = ''CI''';
+COMMIT;
+
+---
+
 DECLARE
   l_employee  omag_employees%ROWTYPE;
 BEGIN
