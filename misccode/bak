@@ -4,13 +4,13 @@
 #
 #  Summary: Simple backup/restore of file(s).
 #
-#           Should be aliased in .bashrc:
 #           alias bak="$HOME/code/misccode/bak"
 #           alias unbak="$HOME/code/misccode/bak -u "
 #
 #           This only makes a backup, leaving the original file intact but
 #           overwriting any prior .bak instances.
-#           Also can reverse itself via -u
+#
+#           It can reverse itself via -u
 #
 #           TODO bak -v to backup then edit (:w%.bak in vim might be as easy)
 #           TODO verbose switch

@@ -1,3 +1,22 @@
+DECLARE 
+  AS_User VARCHAR2(4000); 
+  actual_AS_User VARCHAR2(4000); 
+  app_context VARCHAR2(4000); 
+  foo VARCHAR2(4000); 
+  bar VARCHAR2(4000); 
+BEGIN
+  select sys_context('tars_context', 'employee_id'),
+         sys_context('tars_context', 'actual_employee_id'),
+         sys_context('tars_context', 'context'),
+         sys_context('tars_context', 'accessCode')
+         ,ON_CALL.GET_FULL_ACCESS_CODE
+         into AS_User, actual_AS_User, app_context, foo, bar
+   from dual;
+  dbms_output.put_line(foo || chr(10) ||bar);
+END;
+
+
+
 -- F5 in Toad to execute
 -- or
 -- $ sqlplus pks/dev123dba@usdev388 @hello2.plsql
