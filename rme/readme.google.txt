@@ -1,0 +1,130 @@
+Safe Mode  Disable all the Labs features. http://mail.google.com/mail/?labs=0
+
+Basic Mode The plain old HTML mode. http://mail.google.com/mail/?ui=html
+
+-----
+
+intitle:"index.of" mp3 day.of.the.eagle -html -htm -php -asp -cf -jsp
+
+-----
+
+search term ~elderly returns aged, older, senior, etc
+
+-----
+
+Leading '-' indicates NOT e.g. editor -emacs
+
+
+Adapted from http://dmiessler.com/study/google/index.html
+
+Don't need quotes for multi word after the colon.
+
+
+ intitle: to find things that exist only in the title of web pages.
+
+ inurl: to find things that exist only in the url of a webpage.
+        inurl:06 site:stevemcconnell.com
+
+ intext: to find things that exist only in the body of a webpage.
+
+ inanchor: to find things that exist only in the anchor of a webpage.
+           An anchor is the text associated with a link that helps to
+           identify it.  
+           inanchor:daycare OR babysitter
+
+ site: to isolate a search to just a certain website or domain. This,
+       by the way, is a far better way to search the Microsoft site than
+       using their built-in search feature.  
+       site:microsoft.com "securing windows 98" (good luck)
+
+ link: to find all pages that link to a given site: 
+       link:slashdot.org
+
+ cache: to find the cached version of a certain site.  A cache is a
+        snapshot copy of the site which is helpful if the site is offline or
+        changed from when you saw it last.  
+        cache:www.cnn.com/  or  cache:www.cnn.com/newsy.html
+
+ filetype: to find various file types that exist on the Internet.
+           This is very powerful when combined with other search options.
+           filetype:pdf "nursing education"
+
+ related: to find pages that are related in type/classification to
+          the input given. 'related:www.slashdot.org', for example, will yield
+          hits like www.userfriendly.org because they are both
+          "geek-oriented".  
+          related:www.securityfocus.com
+
+ info: to get all Google-related information (cache, stocks, links,
+       related, etc.) about a given site.  
+       info:www.microsoft.com
+
+ phonebook: to find phone number and address information about people and
+            businesses.  To get more specific, just add the city to the query
+            as well.  There are three different phonebook related searches
+            available - phonebook, rphonebook, and bphonebook.  No spaces
+            after the colon!
+            phonebook:smith ca 
+            bphonebook:round table, fremont
+            rphonebook:smith fremont
+
+ stocks: to check stock and other company information for a given company.  
+         stocks:CSCO
+
+ define:  definitions
+          e.g. http://www.google.com/search?q=define:pty
+
+Conversion -- "80 calories in joules"
+
+
+Tips
+====
+Put the most pertinent search terms first.
+
+Repetition matters. Entering a particular search term multiple times will, at
+the very least, change the order of your results. In general, the term with
+multiple instances (and therefore more weight) will be more prevalent in the
+search results.
+
+Case does not matter.  Except for the word OR
+
+Use double quotes when looking for exact phrases.
+
+Do not include words like a, to, and the in your queries; they are omitted by
+Google anyway due to how common they are, and don't help your search in any
+way. If you really want to use one, add a '+' (plus) to it and it will force
+Google to include it in the query.  Also, when using quotes to search for
+phrases, these words are not omitted; the entire phrase you entered within the
+quotes is searched for.
+
+By default, Google uses the Boolean AND operator when performing searches when
+given multiple arguments.
+
+You can use 'OR' to search instead of the default 'AND' by putting an 'OR'
+between search terms.  You can also use '|' (the pipe character) as OR.  house
+OR car cat | dog
+
+When you perform a query and get your results back, the blue bar located under
+the search tabs will say, "Searched _ pages for *your_terms". If *your_term*
+was a word with a definition at dictionary.com, the word *your_term* will be a
+link to the definition of the word at dictionary.com.
+
+You can group search terms using both the default 'AND' and the 'OR'
+operations together.  cats (pets OR wild) plants green (ocean | land)
+
+It is possible to remove results that contain certain words by using the '-'
+(minus) sign.  This allows you to filter out results that you know don't
+pertain to what you are looking for.  ford mustang -horse
+
+You can use an '*' (asterisk) as a full-word wildcard in a phrase lookup.
+This is helpful when you want to fill in gaps in a search phrase with any full
+word.  "rule of *"
+
+http://images.google.com/images?q=%s&filter=0&hl=e n&ie=UTF-8&oe=UTF-8&safe=off
+Give the bookmark a keyword such as "gis". Now, when you type "gis foo" into
+the address bar, it goes to this URL, replacing the "%s" in the URL with "foo"
+
+google.com/unclesam
+google.com/linux
+google.com/microsoft
+google.com/bsd

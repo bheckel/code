@@ -1,0 +1,259 @@
+29-Apr-11
+
+SELECT TO_CHAR(b, 'YYYY/MM/DD') AS b
+
+MM 	  Numeric month (e.g., 07)
+MON 	Abbreviated month name (e.g., JUL)
+MONTH Full month name (e.g., JULY)
+DD 	  Day of month (e.g., 24)
+DY 	  Abbreviated name of day (e.g., FRI)
+YYYY 	4-digit year (e.g., 1998)
+YY 	  Last 2 digits of the year (e.g., 98)
+RR 	  Like YY, but the two digits are ``rounded'' to a year in the range 1950 to 2049. Thus, 06 is considered 2006 instead of 1906
+AM (or PM) 	Meridian indicator
+HH 	  Hour of day (1-12)
+HH24 	Hour of day (0-23)
+MI 	  Minute (0-59)
+SS 	  Second (0-59)
+
+---
+
+2009-02-10
+Determine version v9+:
+
+SQL> SET SERVEROUT ON;
+SQL> EXEC DBMS_OUTPUT.PUT_LINE (DBMS_DB_VERSION.VERSION);
+
+---
+
+SQL*Plus will work under Cygwin rxvt, use gvim to copy/paste simple queries
+(see readme.sqlplus.txt) or use oracle_sql_tmplt.sas for a visual Toad-like
+approach)
+
+Determine /d01/home/oracle/dist/8.1.5
+$ find / -name sqlplus 2>/dev/null
+$ export ORACLE_HOME=/d01/home/oracle/dist/8.1.5
+$ $ORACLE_HOME/bin/sqlplus
+  username:  iws@oradev        <---good for testing
+  pw:        iws2b
+
+---
+Test orapro:
+SQL> desc user_tables
+Better, view tables you care about:
+SQL> select table_name from user_tables;
+SQL> select * from iws.employee_data;
+SQL> exit
+
+or, better, use ~/code/misccode/sqlplus_tmplt.sql (must end in SQL!)
+SQL> @sqlplus_tmplt.sql
+
+---
+Password change (from within SQL*Plus):
+PASSW bheckel
+
+
+---
+See if database is reachable, show fq hostname, etc.
+tnsping usdev100
+
+---
+---
+
+
+sqlplus ods_zeb/ZEBODS_ZB842@ukprd613
+sqlplus pks/dev123dba@usdev388
+sqlplus sasreport/sasreport@usprd259 @wantsampid $1
+sqlplus gist2_stat/stab09stat@usprd117
+sqlplus chemlms/chemlms@usdev259
+
+---
+
+SQL> connect system
+...key the password
+
+or 
+
+SQL> connect system/mypassword
+
+---
+
+
+Save this as ~/tmp/1.sql:
+
+set termout off;
+spool c:/temp/adddSR;
+select meth_spec_nm,meth_var_nm from tst_rslt_summary where samp_id=204098 ;
+spool off;
+spool c:/temp/adddIR;
+select meth_spec_nm,meth_var_nm from indvl_tst_rslt where samp_id=204098 ;
+spool off;
+set termout on;
+
+Run:
+
+@c:/cygwin/home/bheckel/tmp/1
+or
+$ sqlplus sasreport/sasreport@usprd259 @c:\temp\1.sql
+
+---
+
+See also readme.oracle.txt and _sqlplusrc.sql
+See oracle_sql_tmplt.sas for a Toad-like replacement using SAS as GUI
+
+
+In GUI Edit:Editor:Define Editor
+gvim -c "set filetype=sql"
+or use this in _sqlplusrc.sql:
+DEFINE _EDITOR='c:/program files/vim/vim70/gvim -c "set filetype=sql"'
+
+
+---
+
+SQL*Plus and Vim:
+
+For bash and korn shells:
+echo $EDITOR                # displays the current OS editor
+export EDITOR=/usr/bin/vim  # sets the OS editor to vim 
+
+In Windows you have to modify the contents of the
+%ORACLE_HOME%\sqlplus\admin\glogin.sql file and add the following line:
+
+DEFINE _EDITOR='c:/program files/vim/vim70/gvim -c "set filetype=sql"'
+
+You can do this in UNIX too; it will launch Vim with syntax highlighting for
+SQL files.
+
+So from now on when you need to edit the contents of the SQL*Plus buffer,
+simply type EDIT (or better, ed), and the Vim editor will start with syntax
+settings for the SQL files. When you have finished editing the SQL, simply
+exit Vim (:wq). You will be back at the SQL*Plus command prompt, and you can
+run the contents of the buffer as usual with the slash (/) or r command.
+
+---
+
+
+-- Current settings
+SQL> show all
+
+
+-- Change buffer (probably easier to use ed[it] on afiedt.buf)
+SQL> c /meth_spec_nm/meth_var_nm/;
+SQL> run;  <--- or just  r
+
+
+-- Format & query all at once
+column meth_spec_nm format a15;
+column meth_var_nm format a15;
+column meth_peak_nm format a25;
+column lab_tst_desc format a30;
+column meth_rslt_char format a15;
+-- Note: a numeric that was defined as a char will probably appear missing in
+-- SQL*Plus' output window.
+column meth_rslt_numeric format 99999.999;
+column checked_by_user_id format a15;
+column samp_tst_dt format a15;
+column checked_dt format a15;
+select meth_spec_nm,meth_var_nm,meth_peak_nm,lab_tst_desc,meth_rslt_char,meth_rslt_numeric,checked_by_user_id,samp_tst_dt,checked_dt from tst_rslt_summary where meth_spec_nm in(select distinct meth_spec_nm from pks_extraction_control where prod_nm like 'Zan%') and samp_id=174283;
+select meth_spec_nm,meth_var_nm,indvl_tst_rslt_time_pt,indvl_meth_stage_nm,indvl_tst_rslt_device,indvl_tst_rslt_val_num,indvl_tst_rslt_val_char from indvl_tst_rslt where meth_spec_nm in (select distinct meth_spec_nm from pks_extraction_control where prod_nm like 'Zan%') and samp_id=174283;
+
+
+-- if column too wide that truncation occurs in sql*plus window:
+sql> column MFG_SPEC_TXT_A format a15
+
+
+-- Alternative to using afiedt.buf:
+login sql*plus
+edit t.sql in same dir
+type @t to run it in the sql*plus window
+
+
+set termout off;
+set flush on;
+-- avoid truncation of results
+set linesize 1000;
+set pagesize 9999;
+
+
+-- File must not already exist and DO NOT use .LST extension, Oracle has 
+-- to do that
+spool c:/cygwin/home/bheckel/tmp/testing/sqlplus
+@c:/cygwin/home/bheckel/tmp/testing/t.sql
+
+
+-- type ed to invoke editor on afiedt.buf then r[un]
+
+
+--insert into time_transacts
+--values (transaction_number.nextval,
+--        sysdate, -
+--        (select attribute_value from users
+--                   where (user_id = '1005' and attribute = 'employee_id')),
+--        '3R123',
+--        '1',
+--        '1',
+--        'sust',
+--        to_date('7/7/2000', 'MM/DD/YYYY'),
+--        25,
+--        'some comments'
+--       );
+
+
+
+Vim Tip
+
+Use Vim as a virtual command line (with tab completion) in SQL*Plus
+===================================================================
+
+There have been a few approaches mentioned in Tips to help overcome SQL*Plus'
+lack of features for editing SQL statements.  Here's my quick 'n' dirty
+approach to hack around the lack of tab completion (and history):
+
+
+If you don't already use Vim under SQL*Plus (assuming we're using a GUI):
+Click Edit:Editor:Define Editor
+Then enter this in the text box:
+
+gvim -c "set filetype=sql"
+
+
+Then capture the database elements that you'll want tab completion on:
+
+E.g.
+SQL> spool c:/spool/mydb/mytable
+SQL> desc mytable1;
+SQL> spool off
+SQL> spool c:/spool/mydb/mytable2
+SQL> desc mytable2;
+SQL> spool off
+
+If 2 tables hold the same field, uppercase one of them so that both filenames
+are shown during completion (if 3+ you probably don't want to use my approach)
+
+In .vimrc add something like this (change the numbers to accomodate your
+screen size):
+
+" This places a hidden window in your afiedt.buf session to allow completions.
+" Especially nice with version 7+'s dropdown menus:
+au GUIEnter afiedt.buf winpos 37 55 | se lines=20 | se columns=170 | se tw=999999 | :new | silent :e c:/spool/mydb/*.LST | :hide
+
+" Poor-man's history:  TODO not working 2006-10-03
+au VimLeavePre afiedt.buf execute "w ~/tmp/afiedt.buf." . strftime("%m_%d-%H_%M_%S")
+
+
+Now from within SQL*Plus, type ed[it] - gvim should open Oracle's default
+afiedt.buf file and (if you've configured Vim for tab completion), allow you
+to avoid having to remember all tables and fields.  
+
+:wq 
+type r[un] after returning to SQL*Plus
+
+
+---
+
+Oracle annoyance note:
+afiedt.buf seems to only be available after you've entered a query so you may
+want to "seed" it with something like t.sql:
+select 1 from dual;
+and run @t as your 1st query
+then use Oracle's ed command

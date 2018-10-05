@@ -1,0 +1,751 @@
+
+Email:
+put this line in /sas/sashome/SASFoundation/9.4/autoexec.sas for batch/cron and /sas/config/Lev2/SASApp/appserver_autoexec_usermods.sas for EG:
+
+options emailsys=SMTP emailhost='smtp-01.twa.taeb.com' emailport=25;
+
+---
+
+/sas/config/Lev1/Web/SASEnvironmentManager/agent-5.8.0-EE/log/wrapper.log
+
+---
+
+/sas/config/Lev1/level_env.sh
+export ateb_stack etc:
+/sas/config/Lev1/level_env_usermods.sh
+vi /sas/sashome/SASFoundation/9.4/autoexec.sas
+
+---
+
+sudo su - sas
+/sas/config/Lev1/SASMeta/MetadataServer/MetadataServer.sh status
+/sas/config/Lev1/Web/gemfire/instances/ins_41415/gemfire-locator.sh status
+
+---
+
+04-Feb-16 Cygwin/X
+$ xinit -- -multiwindow
+# Wait for white default xterm then use it:
+$ ssh -l bheckel -Y sas-01.twa.taeb.com
+$ /sas/sashome/SASManagementConsole/9.4/sasmc
+# see also readme.ssh.txt for secure (-X) access
+
+---
+
+$ sudo /sas/sashome/SASFoundation/9.4/utilities/bin/cleanwork /saswork  # toggle -n on for dryrun                                                                                                                                                      │-rwxrws---.  1 1000035 sas    14K Nov  2  2015 Project.egp
+
+---
+
+12-Feb-16 license renewal
+
+0 bheckel@sas-01.twa.taeb.com ~/ Thu Feb 11 16:27:35
+$ sudo su - sas
+[sas@sas-01 ~]$ set -o vi
+[sas@sas-01 ~]$ ls -l /sas/sashome/licenses/
+total 8
+-rw-r--r--. 1 sas sas 2105 May 21  2015 SAS94_9B9ND8_70097989_LINUX_X86-64.txt
+-rw-rw-r--. 1 sas sas 2104 Feb  4 11:05 SAS94_9BFRPJ_70097989_LINUX_X86-64.txt
+[sas@sas-01 ~]$ vi /sas/sashome/licenses/SAS94_9BFRPJ_70097989_LINUX_X86-64.txt
+[sas@sas-01 ~]$ /sas/config/Lev1/sas.servers status
+SAS servers status:
+SAS Web Infrastructure Data Server is UP
+SAS Metadata Server 1 is UP
+SAS Object Spawner 1 is UP
+SAS DIP Job Runner 1 is UP
+SAS JMS Broker is UP
+SAS Cache Locator Service ins_41415 is UP
+SAS Web Server is UP
+SAS Web App Server SASServer1_1 is UP
+SAS Environment Manager is UP
+SAS Environment Manager Agent is UP
+[sas@sas-01 ~]$ /sas/config/Lev1/sas.servers stop
+Stopping SAS servers
+Stopping SAS Environment Manager Agent
+Stopping SAS Environment Manager
+Stopping SAS Web App Server: SASServer1_1
+Stopping SAS Web Server
+Stopping SAS Cache Locator Service: ins_41415
+Stopping SAS JMS Broker
+Stopping SAS Web Infrastructure Data Server
+[sas@sas-01 ~]$ /sas/sashome/SASFoundation/9.4/sassetup
+
+Welcome to SAS Setup, the program used to renew your SAS software.
+
+Some conventions used throughout SAS Setup are:
+       *   indicates which menu selection is the default choice
+     ( )   indicates the default response to a prompt
+       !   starts a sub-shell on your system
+       h   displays help for a menu selection or prompt
+       g   goes back to a previous menu selection or prompt
+       q   quits SAS Setup at any point
+
+
+Setup Utilities Menu
+--------------------
+ * 1.  Renew SAS Software
+   -------------------------------
+   g: Go back   q: Quit    h: Help
+   -------------------------------
+Action? (1) 1
+
+
+SAS Installation Data (SID) is a text file required to install a customized
+version of SAS. The SID was e-mailed to your SAS Installation Representative. If
+you would like to receive the SID via e-mail now, please use URL to retrieve it
+before continuing the installation.
+
+   http://support.sas.com/adminservices-SID
+
+
+
+Specify the file containing SAS Installation Data.
+-->/sas/sashome/licenses/SAS94_9BFRPJ_70097989_LINUX_X86-64.txt
+
+SAS Installation Data retrieved successfully.
+
+_______________________________________________________________________________
+
+Applying SAS Installation Data
+Please wait...
+
+SAS Installation Data application is complete.
+
+_______________________________________________________________________________
+
+Setup Utilities Menu
+--------------------
+ * 1.  Renew SAS Software
+   -------------------------------
+   g: Go back   q: Quit    h: Help
+   -------------------------------
+Action? (1) q
+
+
+Do you want to exit the SAS installation? (N)
+-->y
+Please review your installation log file, found in:
+  /sas/sashome/SASFoundation/9.4/install/admin/logs/install_log_160211.000
+
+
+Exiting SAS Setup...
+[sas@sas-01 ~]$ /sas/config/Lev1/sas.servers start
+Starting SAS servers
+Starting SAS Web Infrastructure Data Server
+SAS Metadata Server 1 is UP
+SAS Object Spawner 1 is UP
+SAS DIP Job Runner 1 is UP
+Starting SAS JMS Broker
+Starting SAS Cache Locator Service: ins_41415
+waiting 30 ...
+Starting SAS Web Server
+Starting SAS Web App Server: SASServer1_1
+(this can take a while)
+Note: SASServer1_1 server.log rolled over during startup.
+waiting 30 ...
+waiting 30 ...
+waiting 30 ...
+waiting 30 ...
+waiting 60 ...
+waiting 60 ...
+waiting 60 ...
+waiting 60 ...
+waiting 60 ...
+Starting SAS Environment Manager
+Starting SAS Environment Manager Agent
+[sas@sas-01 ~]$ /sas/sashome/SASDeploymentAgent/9.4/agent.sh start
+SAS Deployment Agent failed to start.
+        agentadmin.sh: agent start: SAS Deployment Agent is already running. Process Identifier (PID) is 15880
+
+[sas@sas-01 ~]$ /sas/config/Lev1/sas.servers status
+SAS servers status:
+SAS Web Infrastructure Data Server is UP
+SAS Metadata Server 1 is UP
+SAS Object Spawner 1 is UP
+SAS DIP Job Runner 1 is UP
+SAS JMS Broker is UP
+SAS Cache Locator Service ins_41415 is UP
+SAS Web Server is UP
+SAS Web App Server SASServer1_1 is UP
+SAS Environment Manager is UP
+SAS Environment Manager Agent is UP
+[sas@sas-01 ~]$ exit
+
+---
+
+bookmarks 09-Dec-15 
+http://support.sas.com/documentation/94/index.html
+http://support.sas.com/documentation/onlinedoc/bookshelf/94/desktop.html
+http://support.sas.com/documentation/cdl/en/lefunctionsref/67398/HTML/default/viewer.htm#n1mj2bizbsd7ktn1sf9lz111kku3.htm
+http://support.sas.com/documentation/cdl/en/lestmtsref/67407/HTML/default/viewer.htm#p08st7rzfn0dgin1fml8hq40hlho.htm
+http://support.sas.com/documentation/cdl/en/biasag/63854/PDF/default/biasag.pdf
+http://support.sas.com/documentation/cdl/en/mastergl/62860/HTML/default/viewer.htm#glossary.htm
+https://cse.google.com/cse/publicurl?cx=010607753212634691007:asatkkvqmk4
+
+---
+
+Error email "A problem occurred in executing a "Deployment Backup and Recovery" operation.  Operation Status : NOT_STARTED" 
+solution deployment agent is not running
+
+$ sudo su - sas
+$ /sas/sashome/SASDeploymentAgent/9.4/agent.sh start
+
+backupid is /sas/config/Lev1/Backup/Logs/2015-09-03T13_20_00
+$ vim /sas/config/Lev1/Backup/Logs/2015-09-03T13_20_00
+
+Verify backup:
+$ sudo su - sas
+$ /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-display-backup -host sas-01.twa.foo.com  -port 7980 -user sasadm@saspw -password sasadm -id thu1320 -backupid 2015-09-03T13_20_00
+
+$ sudo su - sas
+
+$ /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-list-backup-schedule -host sas-01.twa.foo.com -port 7980 -user sasdemo -password sasdemo sas-list-backup-schedule
+        name:   ScheduleList
+        start:  1
+        limit:  1
+        count:  1
+        items
+                dayOfWeek:      Sunday
+                time:   01:00
+                id:     sun0100
+                inValidInput:   false
+
+
+$ cat /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/conf/sample/sas-set-backup-schedule.json
+{
+                "dayOfWeek": "sunday",
+                "time": "13:45"
+}
+
+
+$ /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-set-backup-schedule -host sas-01.twa.foo.com  -port 7980 -user sasadm@saspw -password sasadm -inputdata /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/conf/sample/sas-set-backup-schedule.json
+
+$ /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-list-backup-schedule -host sas-01.twa.foo.com  -port 7980 -user sasdemo -password sasdemo sas-list-backup-schedule
+        name:   ScheduleList
+        start:  1
+        limit:  2
+        count:  2
+        items
+                dayOfWeek:      Sunday
+                time:   01:00
+                id:     sun0100
+                inValidInput:   false
+
+                dayOfWeek:      Sunday
+                time:   13:45
+                id:     sun1345
+                inValidInput:   false
+
+
+$ /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-remove-backup-schedule -host sas-01.twa.foo.com  -port 7980 -user sasadm@saspw -password sasadm -id sun0100
+
+$ /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-list-backup-schedule -host sas-01.twa.foo.com  -port 7980 -user sasdemo -password sasdemo sas-list-backup-schedule
+sas-list-backup-schedule
+        name:   ScheduleList
+        start:  1
+        limit:  1
+        count:  1
+        items
+                dayOfWeek:      Sunday
+                time:   13:45
+                id:     sun1345
+                inValidInput:   false
+
+
+---
+Deployment Backup on sas-01
+
+Make sure agent is started:
+
+/sas/sashome/SASDeploymentAgent/9.4/agent.sh start
+
+
+Edit schedule:
+
+vi /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/conf/sample/sas-set-backup-schedule.json
+
+{
+                "dayOfWeek": "sunday",
+                "time": "01:45"
+}
+
+Set new schedule:
+
+/sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-set-backup-schedule -host sas-01.twa.ateb.com  -port 7980 -user sasadm@saspw -password sasadm -inputdata /sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/conf/sample/sas-set-backup-schedule.json
+
+Remove an old schedule:
+
+/sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-remove-backup-schedule -host sas-01.twa.ateb.com  -port 7980 -user sasadm@saspw -password sasadm -id thu1320
+
+List current schedule:
+
+/sas/sashome/SASPlatformObjectFramework/9.4/tools/admin/sas-list-backup-schedule -host sas-01.twa.ateb.com  -port 7980 -user sasdemo -password sasdemo sas-list-backup-schedule
+
+sas-list-backup-schedule
+        name:   ScheduleList
+        start:  1
+        limit:  1
+        count:  1
+        items
+                dayOfWeek:      Sunday
+                time:   01:45
+                id:     sun0145
+                inValidInput:   false
+
+---
+
+/sas/config/Lev1/sas.servers status
+
+---
+
+License setinit update
+
+root@talon3 ~ > /usr/local/SAS94/sasconfig/Lev2/sas.servers stop
+root@talon3 ~ > cp -i ~bheckel/bheckel_moya/SAS94_9BBL21_70097989_LINUX_X86-64.txt /usr/local/SAS94/sashome/SASFoundation/9.4/
+mv -i SAS94_9BBL21_70097989_LINUX_X86-64.txt setinit2.sas
+root@talon3 /usr/local/SAS94/sashome/SASFoundation/9.4 > /usr/local/SAS94/sashome/SASFoundation/9.4/sassetup
+
+Welcome to SAS Setup, the program used to renew your SAS software.
+
+Some conventions used throughout SAS Setup are:
+       *   indicates which menu selection is the default choice
+     ( )   indicates the default response to a prompt
+       !   starts a sub-shell on your system
+       h   displays help for a menu selection or prompt
+       g   goes back to a previous menu selection or prompt
+       q   quits SAS Setup at any point
+
+
+Setup Utilities Menu
+--------------------
+ * 1.  Renew SAS Software
+   -------------------------------
+   g: Go back   q: Quit    h: Help
+   -------------------------------
+Action? (1) 1
+
+
+SAS Installation Data (SID) is a text file required to install a customized
+version of SAS. The SID was e-mailed to your SAS Installation Representative. If
+you would like to receive the SID via e-mail now, please use URL to retrieve it
+before continuing the installation.
+
+   http://support.sas.com/adminservices-SID
+
+
+
+Specify the file containing SAS Installation Data.
+-->/usr/local/SAS94/sashome/SASFoundation/9.4/setinit2.sas
+
+SAS Installation Data retrieved successfully.
+
+_______________________________________________________________________________
+
+Applying SAS Installation Data
+Please wait...
+
+SAS Installation Data application is complete.
+
+_______________________________________________________________________________
+
+---
+
+/sasinstall/SAS-Software-Depot/setup.sh -record
+
+---
+
+sas keys:
+
+                               Enterprise Guide
+                               ================
+run: F8
+select vertical block of code: Alt+mousemove
+set bookmark: Ctl+F2 (return to bookmark: F2)
+comment out: Ctl+/
+uncomment out: Ctl+Shift+/
+tidy format: Ctrl+i
+
+SAS Enterprise Guide settings options http://support.sas.com/resources/papers/proceedings14/SAS331-2014.pdf
+
+---
+
+
+
+                                Enhanced Editor
+                                ===============
+
+Collapse all folding blocks:              Alt + Ctrl + Number pad - 
+Collapse current line:                    Alt + Number pad - 
+Comment the selection with line comments: Ctrl + / 
+Undo the Comment:                         Ctrl + Shift + / 
+
+
+---
+
+                               Display Manager
+                               ===============
+
+F11 or Home to get to commandline.
+
+Shift-F7 Shift-F8 to move up/down.
+
+Widen window (command not needed) cursor on edge start, press enter, move
+cursor to new spot, press enter.
+
+
+Command ===>
+?          recall previously *typed* commandline history command (not same as 
+            RECALL !! more like F3 in DOS or ESC k in bash)
+BY[E]      exit SAS
+CAS[CADE]  show all windows
+CLE[AR]    clear the current window
+DIR        show contents of 'Work'
+END        closes or "closes" current window
+ENDS[AS]   exit SAS
+FILE 'BQH0.JUNK' [R] save current window contents to a file [quietly overwrite]
+HELP       context-sensitive
+INCLUDE 'BQH0.PGM.LIB(JUNK)' read in code to current window
+KEYS       show available function keys (may be mapped to F11)
+LOG        takes you to Log Window
+MSG        popup message window
+NEXT       cycle thru open windows (usually F8 is mapped)
+NOTE[PAD]  scratch area (maintained across sessions)
+NUM        show numbers (toggles line numbers)
+OPTIONS    show SAS system options
+OUT[PUT]   takes you to Output Window
+PROG       takes you to Non-Enhanced Program Editor Window
+PG[M]      takes you to Non-Enhanced Program Editor Window
+WPG[M]     takes you to Enhanced Program Editor Window - why not EPGM??!!
+REC[ALL]   brings back your submitted code (NOT same as '?')
+SUB[MIT]   run job
+TILE       tiles all windows (RESIZE puts you back where you were)
+VAR        show properties of _LAST_
+ZO[OM]     goes fullscreen (and unzooms if you type ZOOM again)!!!!!!!!!!!!!!
+
+F9 Keys Window
+===> up 42
+===> down 42   or press enter 42 times
+
+-----
+
+
+ /* Mainframe */
+=6
+sas609
+sas90
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Program Editor
+COPIED FROM SAS HELP SCREENS
+Thu, 11 Nov 1999 10:32:29 (Bob Heckel)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C<n>    
+
+The C (copy) command copies one or n lines to another location in  the file.    
+
+To copy lines, type C on the number of the line to be copied and an   A on the
+number of the line the copied line is to be after, a B on  the number of the
+line it is to be before, or an O on the number of  the line it is to
+overlay.    
+
+Specify n number of lines to be copied by following C with a number  and a
+blank space. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CC    
+
+The CC (copy block) command copies a block of lines to another  location in
+the file indicated by a target line command. 
+
+To copy blocks of lines, type CC on the numbers of the first and  last lines
+of the block to be copied and an A on the number of the  line the copied block
+is to be after, a B on the number of the line  it is to be before, or an  O on
+the number of the line on which  overlaying is to begin. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CCL    
+
+The CCL (case lower block) command sets all characters in a  designated block
+of lines to lowercase. 
+
+Type CCL on the line numbers of the first and last lines of the  block of
+lines to be converted to lowercase. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CL<n>    
+
+The CL (case lower) command sets all characters on a line to  lowercase.    
+
+Specify n number of lines to be lowercased by following the CL with  a number
+and a blank space. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CU<n>    
+
+The CU (case upper) command sets all characters on a line to  uppercase.    
+
+Specify n number of lines to be uppercased by following the CU with  a number
+and a blank space. 
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+DD    
+
+The DD (delete block) command deletes a block of lines.  Type DD on  the line 
+numbers of the first and last numbers of the block of  lines to be deleted. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+D<n>    
+
+The D (delete) command deletes one or n lines.    
+
+Indicate D on the line number of the line to be deleted.  By  default, one
+line is deleted.  To delete more than one line, follow  D with a number and a
+blank space. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+I<n>    
+
+The I (insert) command inserts one or n new lines after the current  line.  To
+insert more than one line, follow I with a number and a  blank space. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IA<n>    
+
+The IA (insert after) command inserts one or n new lines after the  current
+line.  To insert more than one line, follow IA with a  number and a blank
+space. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IB<n>    
+
+The IB (insert before) command inserts one or n new lines before  the current
+line.  To insert more than one line, follow IB with a  number and a blank
+space. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JC<n>    
+
+The JC (justify center) command centers text.    
+
+You can specify a number to indicate a position other than the  center of the
+line to be used for centering the text. 
+
+Note:
+The JC command honors the current  BOUNDS setting, if bounds  are set, 
+instead of the line size. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JJC<n>    
+
+The JJC (justify center block) centers the text of a designated  block of
+lines.  Type JJC on the line numbers of the first and last  lines of the block
+of lines to be centered. 
+
+You can specify a number to indicate a position, other than the  center of the
+line, to be used for centering the text. 
+
+Note:
+The JJC command honors the current  BOUNDS setting, if bounds  are set, 
+instead of the line size. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JL<n>    
+
+The JL (justify left) command aligns a line of text at the left  margin.  You
+can specify n to indicate a left boundary other than  the margin of a window. 
+
+Note:
+The JL command honors the current  BOUNDS setting, if bounds  are set, 
+instead of the line size. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JR<n>    
+
+The JR (justify right) command aligns a line of text at the right  margin.
+You can specify n to indicate a right boundary other than  the margin of a
+window. 
+
+Note:
+The JR command honors the current  BOUNDS setting, if bounds  are set, 
+instead of the line size. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+M<n>    
+
+The M (move) command moves one or n lines to another location in  the file 
+indicated by a target line command. 
+
+Type M on the number of the line to be moved and an  A on the number  of the
+line the moved line is to be after, a B on the number of the  line it is to be
+before, or an  O on the line it is to overlay. 
+
+To move more than one line, follow M with a number and a blank  space.    
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+MM    
+
+The MM (move block) command moves a block of lines to another  location in the
+file indicated by a target line command. 
+
+To move a block of lines, type MM on the numbers of the first and  last lines
+of the block of lines to be moved and an A on the number  of the line the
+moved block is to be after, a B on the number of  the line it is to be before,
+or an  O on the number of the line on  which overlaying is to begin. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+MCL    
+
+The MCL command lowercases all marked text in the text editor,  including
+multiple blocks and multiple lines of marked text that  are separated by
+unmarked text.  After you mark the text, you can  issue the command from any
+numeric field to lowercase all marked  text in the text editor. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+MCU    
+
+The MCU command uppercases all marked text in the text editor,  including
+multiple blocks and multiple lines of marked text that  are separated by
+unmarked text.  After you mark the text, you can  issue the command from any
+numeric field to uppercase all marked  text in the text editor. 
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+TC    
+
+The TC (text connect) command connects two lines together.    
+
+Type TC on the number of the first line you want flowed with the  following
+line.    
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+TF <A> <n>    
+
+You can use the TF command to move text into space left at the  ends of
+lines.    
+
+You can use the following arguments with the TF command:   
+
+no argument  
+
+flows text to the first blank line or to the end of text,  whichever comes
+first, honoring left and right boundary settings. 
+
+A  
+
+flows a paragraph to the end of the text be removing trailing  blanks
+continuing over but not deleting blank lines. 
+
+n  
+
+specifies a right boundary to temporarily override the right  boundary set by
+the  BOUNDS command.   
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+><n>    
+
+The > (shift right) command shifts text one or more spaces to the  right.    
+
+Type >, or > followed by a number and a blank space, on the number  of the line 
+whose text is to be shifted. 
+
+Note:
+The > command allows no loss of text.  Text is shifted to  the amount 
+specified or the border, whichever comes first. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+TS<n>    
+
+The TS (text split) command moves text following the current cursor  position
+to the line immediately following the split line. 
+
+Note:
+The TS command honors the current  BOUNDS setting instead  of the line 
+size, when the AUTOFLOW option is ON. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>><n>    
+
+The >> (shift right block) command shifts a block of lines one or  more spaces
+to the right. 
+
+Type >>, or >> followed by a number and a blank space, on the  numbers of the
+first and last lines of the block of lines to be  shifted. 
+
+   Note:  The >> command allows no loss of text.  Text is shifted
+          to the amount specified or the border, whichever comes
+          first.
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<<n>    
+
+The < (shift left) command shifts text one or more spaces to the  left.    
+
+Type <, or < followed by a number and a blank space, on the number  of the line 
+whose text is to be shifted. 
+
+Note:
+The < command allows no loss of text.  Text is shifted  to the amount 
+specified or the border, whichever comes  first. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<<<n>    
+
+The << (shift left block) command shifts a block of lines one or  more spaces
+to the left. 
+
+Type <<, or << followed by a number and a blank space, on the  numbers of the
+first and last lines of the block of lines to be  shifted. 
+
+Note:
+The << command allows no loss of text.  Text is shifted  to the amount 
+specified or the border, whichever comes  first. 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+))<n>    
+
+The )) (shift right block) command shifts a block of lines one or  more spaces
+to the right. 
+
+Type )), or )) followed by a number and a blank space, on the  numbers of the
+first and last lines of the block of lines to be  shifted. 
+
+   Note:  The )) command differs from the >> command in that it
+          allows the loss of text.  If shifting moves text past the
+          end of the current line, those characters are lost.
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+((<n>    
+
+The (( (shift left block) command shifts a block of lines one or  more spaces
+to the left. 
+
+Type ((, or (( followed by a number and a blank space, on the  numbers of the
+first and last lines of the block of lines to be  shifted. 
+
+   Note:  The (( command differs from the << command in that it
+          allows the loss of text.  If shifting moves text past the
+          beginning of the current line, those characters are lost.

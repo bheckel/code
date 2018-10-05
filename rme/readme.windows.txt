@@ -1,0 +1,918 @@
+Remote Desktop .rdp omnicell 22-May-18 
+
+screen mode id:i:2
+use multimon:i:1
+desktopwidth:i:1920
+desktopheight:i:1080
+session bpp:i:24
+winposstr:s:0,1,3,3,3837,1076
+compression:i:1
+keyboardhook:i:1
+audiocapturemode:i:0
+videoplaybackmode:i:1
+connection type:i:7
+networkautodetect:i:1
+bandwidthautodetect:i:1
+displayconnectionbar:i:1
+enableworkspacereconnect:i:0
+disable wallpaper:i:1
+allow font smoothing:i:1
+allow desktop composition:i:0
+disable full window drag:i:1
+disable menu anims:i:1
+disable themes:i:0
+disable cursor setting:i:0
+bitmapcachepersistenable:i:1
+full address:s:twavws-05-bheck.ateb.com
+audiomode:i:0
+redirectprinters:i:1
+redirectcomports:i:0
+redirectsmartcards:i:1
+redirectclipboard:i:1
+redirectposdevices:i:0
+autoreconnection enabled:i:1
+authentication level:i:2
+prompt for credentials:i:0
+negotiate security layer:i:1
+remoteapplicationmode:i:0
+alternate shell:s:
+shell working directory:s:
+gatewayhostname:s:
+gatewayusagemethod:i:4
+gatewaycredentialssource:i:4
+gatewayprofileusagemethod:i:0
+promptcredentialonce:i:0
+gatewaybrokeringtype:i:0
+use redirection server name:i:0
+rdgiskdcproxy:i:0
+kdcproxyname:s:
+drivestoredirect:s:
+span monitors:i:1
+enablesuperpan:i:1
+
+---
+
+ Win7 administrator command prompt - instead of hitting the Enter key, use
+ Ctrl+Shift + Enter
+
+May have to use the Start search box, then type cmd (instead of Run dialog box)
+
+---
+
+:: Send To folder
+%APPDATA%\Microsoft\Windows\SendTo
+
+---
+
+http://www.howtogeek.com/howto/windows-vista/prevent-windows-update-from-forcibly-rebooting-your-computer/
+
+In HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\
+create a new 32-bit DWORD value named NoAutoRebootWithLoggedOnUsers and give it
+a value of 1 to prevent automatic reboot while users are logged on. Delete the
+value to put things back to the way they were.
+
+see ~/code/misccode/noreboot.reg for gsk version
+
+-----
+
+If command prompt is locked down:
+Open Notepad and type: command.com then save as cmd.bat You now have a command prompt.
+Now, open the command prompt and type ping http://www.website.com/to find the IP
+address of any website that is "blocked"
+
+-----
+
+2011-05-21
+Pin bat file to taskbar
+Make shortcut, edit Properties:
+cmd.exe /C C:\cygwin\Cygwin.bat
+Rightclick choose Pin
+
+-----
+2010-05-19
+
+Win7 quicklaunch fix:
+
+Right-click the taskbar, choose Toolbars / New Toolbar
+In the folder selection dialog, enter the following string and hit OK:
+%userprofile%\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch
+
+Right click taskbar, unlock, right click the grip to uncheck Show Title
+& Show Text items
+
+-----
+
+2010-04-22
+Avoid corporate timeout and lock at least for XP:
+\HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop\
+ScreenSaverIsSecure 0
+
+-----
+
+2009-01-13
+on zebwl it's
+\HKEY_CURRENT_USER\.DEFAULT\Control Panel\Desktop\MenuShowDelay
+
+-----
+
+2006-10-25
+Speed up menu pauses: \HKEY_CURRENT_USER\Control Panel\Desktop\MenuShowDelay
+change from default 400 to 2
+To run chkdsk w/o a reboot:
+cmd
+chkdsk /f f:
+
+-----
+
+To enable automatic command completion for Cmd.exe, use Registry Editor
+(Regedt32.exe) to view the following registry key:
+
+HKEY_CURRENT_USER/Software/Microsoft/Command Processor
+
+Edit the CompletionChar value, and set the value of REG_DWORD to 9
+Do not need to restart computer
+
+-----
+
+The accelerator setting also controls how far the cursor moves when the Ctrl
+key is pressed. The 1, 3, 7 and 9 keys move the cursor diagonally. The Del,
+Ins, /, - and * keys modify how the mouse buttons work.  - forces the 5 to be
+a single left mouse click, not a right mouse click.
+
+-----
+
+Reassociate an extension:
+Explorer : Tools : Folder Exts : File Types : New readd e.g. .sas, Advanced 
+select GVIM, OK re-add msg, OK : Change, select Vi Improved (don't have a Gvim
+entry)
+
+-----
+
+
+Commandline via Run:
+
+timedate.cpl 
+services.msc
+control admintools
+control printers 
+control mouse
+control keyboard
+control fonts
+control desktop
+ipconfig /displaydns
+Removable Storage:
+ntmsmgr.msc
+Add/Remove:
+appwiz.cpl 
+
+-----
+
+2005-10-22 parsifal virtual memory adjustment
+Changed Intial size (MB) 384 to recommended 512
+        Maximum size (MB) 768 to 1024
+
+format d: /FS:NTFS /V:saswork
+
+-----
+
+Eliminate the annoying Adobe icon in Outlook by deleting
+C:\Program Files\Adobe\Acrobat 6.0\PDFMaker\Mail\Outlook\PDFMOutlook.dll
+
+-----
+
+Replace notepad.exe with WinVi.exe -- rename WinVi.exe to notepad.exe then
+quickly cp to c:\winnt\system32\dllcache and c:\winnt\system32\
+Or delete the dllcache notepad.exe first.
+
+-----
+
+If W2K telnet gives 2 lines for every <Enter> keypress:
+
+C:\> telnet
+Microsoft Telnet> unset CRLF
+
+-----
+
+To fax, must set "Fax Service" to Manual in Services applet.
+Then "print" to Fax from Word, etc. 
+Automatically dials, etc.
+It also redials after about 5 minutes if the line is busy.  Don't know how to
+adjust that setting...
+
+(this probably works; untested)
+To receive fax, must set "Fax Service" to Manual in Services applet.
+Then Programs:Accessories:Communications:Fax:Fax Service Mgmt
+Click Devices, doubleclick SupraMax56i Modem, click Receive ckbox.
+Wait for phone to ring.
+
+-----
+
+In regedit:
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FindExtensions\Static]
+Delete all but ShellSearch (eliminate RealSearch, etc.)
+
+-----
+
+Open Explorer from command line: 2005-12-24 doesn't work on W2K
+c:> explorer /e, .
+c:> explorer /e, \install
+
+use this in jumpy's [autorun] to open to c:
+open=explorer /e
+
+-----
+
+Hidden startup executables (not found in Programs:StartUp):
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+or under Cygwin:
+$ regtool -v list '\machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Run'
+
+-----
+
+Exchange Outlook read archive.pst:
+Rightclick Outlook Today
+Open Other Folder
+Personal Folders File (pst)
+Choose it
+Rightclick Close to get rid of it
+
+-----
+
+Always disable Messenger in Services (and set to manual) to avoid spam popups.
+Can set Alerter in Services as well (I think).
+
+-----
+
+Restore autorun:
+
+REGEDIT4
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+"NoDriveTypeAutoRun"=hex:00,00,00,95
+
+Must restart Windows.
+
+
+-----
+
+Show all the commands on the menus:
+From Outlook:
+On the Tools menu, click Customize, and then click the Options tab.
+
+Clear the Menus show recently used commands first check box. 
+Note   The Menus show recently used commands first check box affects all of
+your Microsoft Office programs.
+
+
+-----
+
+Create a boot floppy that includes at least format.com and a CDROM driver for
+your CDROM unit.
+
+Boot the PC with the floppy in drive A:\
+
+Make sure you can access your CDROM:
+Type:
+  d:
+  dir
+
+Go back to drive A:\
+  a:
+
+Type:
+format c: /s
+Accept all warnings.
+
+Test the reformatting:
+Type:
+  c:
+  dir
+You should see autoexec.bat, command.com, etc. but no directories.
+
+Now that you've created a useless block of cheese, place Win98 CD in d:
+
+Type:
+  d:
+  setup
+
+Then follow the Windows installer directions.  Hopefully Windows will
+recognize your modem, sound card, video card, etc. when you reboot.
+
+-----
+
+DNS that seems to work with the HECKNET
+
+HECKNET properties:
+IP: 192.168.0.104
+subnet mask: 255.255.255.0
+default gway: 192.168.0.1
+(blank Preferred & Alternate DNS server)
+Append primary and connection specific DNS suffixes
+Register this connections s/b blank (unchecked)
+
+parsifal properties:
+parsifal IP: 192.168.0.104
+subnet mask: 255.255.255.0
+default gway: 192.168.0.1
+Preferred DNS server: 204.127.160.1 (Wnet's dns)
+Alternate DNS server: 204.127.129.1 (Wnet's dns)
+Use default gateway s/b checked
+Append primary and connection specific DNS suffixes
+Register this connections s/b blank (unchecked)
+
+-----
+
+Defrag the Icon cache:
+$ rm /c/WINNT/ShellIconCache  <---automatically replaced by W2K
+Logout & login
+
+-----
+
+Outlook
+Tools : Customize : Always show full menus
+
+-----
+
+If your USB port name contains "Universal Host", then your port is version 1.1.
+If you see both "Universal Host" and "Enhanced Host", then it is version 2.0.
+
+---
+Some Useful Windows Run Commands
+
+ADDUSERS Add or list users to/from a CSV file
+
+ARP Address Resolution Protocol
+
+ASSOC Change file extension associations
+
+ASSOCIAT One step file association
+
+AT Schedule a command to run at a later time
+
+ATTRIB Change file attributes
+
+BOOTCFG Edit Windows boot settings
+
+BROWSTAT Get domain, browser and PDC info
+
+CACLS Change file permissions
+
+CALL Call one batch program from another
+
+CD Change Directory  - move to a specific Folder
+
+CHANGE Change Terminal Server Session properties
+
+CHKDSK Check Disk  - check and repair disk problems
+
+CHKNTFS Check the NTFS file system
+
+CHOICE Accept keyboard input to a batch file
+
+CIPHER Encrypt or Decrypt files/folders
+
+CleanMgr Automated cleanup of Temp files, recycle bin
+
+CLEARMEM Clear memory leaks
+CLIP Copy STDIN to the Windows clipboard.
+
+CLS Clear the screen
+CLUSTER Windows Clustering
+CMD Start a new CMD shell
+
+COLOR Change colors of the CMD window
+
+COMP Compare the contents of two files or sets of files
+
+COMPACT Compress files or folders on an NTFS partition
+COMPRESS Compress individual files on an NTFS partition
+CON2PRT Connect or disconnect a Printer
+
+CONVERT Convert a FAT drive to NTFS.
+COPY Copy one or more files to another location
+
+CSCcmd Client-side caching (Offline Files)
+
+CSVDE Import or Export Active Directory data
+
+DATE Display or set the date
+
+Dcomcnfg DCOM Configuration Utility
+DEFRAG Defragment hard drive
+
+DEL Delete one or more files
+
+DELPROF Delete NT user profiles
+
+DELTREE Delete a folder and all subfolders
+
+DevCon Device Manager Command Line Utility
+
+DIR Display a list of files and folders
+
+DIRUSE Display disk usage
+
+DISKCOMP Compare the contents of two floppy disks
+
+DISKCOPY Copy the contents of one floppy disk to another
+
+DNSSTAT DNS Statistics
+DOSKEY Edit command line, recall commands, and create macros
+
+DSADD Add user (computer, group..) to active directory
+DSQUERY List items in active directory
+DSMOD Modify user (computer, group..) in active directory
+
+ECHO Display message on screen
+
+ENDLOCAL End localisation of environment changes in a batch file
+
+ERASE Delete one or more files
+
+EXIT Quit the CMD shell
+
+EXPAND Uncompress files
+
+EXTRACT Uncompress CAB files
+
+FC Compare two files
+
+FDISK Disk Format and partition
+
+FIND Search for a text string in a file
+
+FINDSTR Search for strings in files
+
+FOR /F Loop command: against a set of files
+
+FOR /F Loop command: against the results of another command
+
+FOR Loop command: all options Files, Directory, List
+
+FORFILES Batch process multiple files
+
+FORMAT Format a disk
+
+FREEDISK Check free disk space (in bytes)
+FSUTIL File and Volume utilities
+
+FTP File Transfer Protocol
+
+FTYPE Display or modify file types used in file extension associations
+
+GLOBAL Display membership of global groups
+
+GOTO Direct a batch program to jump to a labelled line
+
+HELP Online Help
+
+HFNETCHK Network Security Hotfix Checker
+
+IF Conditionally perform a command
+
+IFMEMBER Is the current user in an NT Workgroup
+
+IPCONFIG Configure IP
+
+KILL Remove a program from memory
+
+LABEL Edit a disk label
+
+LOCAL Display membership of local groups
+
+LOGEVENT Write text to the NT event viewer.
+
+LOGOFF Log a user off
+
+LOGTIME Log the date and time in a file
+
+MAPISEND Send email from the command line
+
+MEM Display memory usage
+
+MD Create new folders
+
+MKLINK Create a symbolic link (linkd)
+
+MODE Configure a system device
+
+MORE Display output, one screen at a time
+
+MOUNTVOL Manage a volume mount point
+
+MOVE Move files from one folder to another
+
+MOVEUSER Move a user from one domain to another
+
+MSG Send a message
+
+MSIEXEC Microsoft Windows Installer
+
+MSINFO Windows NT diagnostics
+
+MSTSC Terminal Server Connection (Remote Desktop Protocol)
+
+MUNGE Find and Replace text within file(s)
+
+NETDOM Domain Manager
+
+NETSH Configure network protocols
+
+NETSVC Command-line Service Controller
+
+NBTSTAT Display networking statistics (NetBIOS over TCP/IP)
+
+NETSTAT Display networking statistics (TCP/IP)
+
+NOW Display the current Date and Time
+
+NSLOOKUP Name server lookup
+
+NTBACKUP Backup folders to tape
+
+NTRIGHTS Edit user account rights
+
+PATH Display or set a search path for executable files
+
+PATHPING Trace route plus network latency and packet loss
+
+PAUSE Suspend processing of a batch file and display a message
+
+PERMS Show permissions for a user
+
+PERFMON Performance Monitor
+
+PING Test a network connection
+
+POPD Restore the previous value of the current directory saved by PUSHD
+PORTQRY Display the status of ports and services
+
+PRINT Print a text file
+
+PRNCNFG Display, configure or rename a printer
+
+PRNMNGR Add, delete, list printers set the default printer
+
+PROMPT Change the command prompt
+
+PsExec Execute process remotely
+
+PsFile Show files opened remotely
+
+PsGetSid Display the SID of a computer or a user
+
+PsInfo List information about a system
+
+PsKill Kill processes by name or process ID
+
+PsList List detailed information about processes
+
+PsLoggedOn Whos logged on (locally or via resource sharing)
+
+PsLogList Event log records
+
+PsPasswd Change account password
+
+PsService View and control services
+
+PsShutdown Shutdown or reboot a computer
+
+PsSuspend Suspend processes
+
+PUSHD Save and then change the current directory
+
+QGREP Search file(s) for lines that match a given pattern.
+
+RASDIAL Manage RAS connections
+
+RASPHONE Manage RAS connections
+
+RECOVER Recover a damaged file from a defective disk.
+
+REG Registry: Read, Set, Export, Delete keys and values
+
+REGEDIT Import or export registry settings
+
+REGSVR32 Register or unregister a DLL
+
+REGINI Change Registry Permissions
+
+REM Record comments (remarks) in a batch file
+
+REN Rename a file or files.
+
+REPLACE Replace or update one file with another
+
+RD Delete folder(s)
+
+RDISK Create a Recovery Disk
+
+RMTSHARE Share a folder or a printer
+
+ROBOCOPY Robust File and Folder Copy
+
+ROUTE Manipulate network routing tables
+
+RUNAS Execute a program under a different user account
+
+RUNDLL32 Run a DLL command (add/remove print connections)
+
+SC Service Control
+
+SCHTASKS Create or Edit Scheduled Tasks
+
+SCLIST Display NT Services
+
+ScriptIt Control GUI applications
+
+SET Display, set, or remove environment variables
+
+SETLOCAL Control the visibility of environment variables
+
+SETX Set environment variables permanently
+
+SHARE List or edit a file share or print share
+
+SHIFT Shift the position of replaceable parameters in a batch file
+
+SHORTCUT Create a windows shortcut (.LNK file)
+
+SHOWGRPS List the NT Workgroups a user has joined
+
+SHOWMBRS List the Users who are members of a Workgroup
+
+SHUTDOWN Shutdown the computer
+
+SLEEP Wait for x seconds
+
+SOON Schedule a command to run in the near future
+
+SORT Sort input
+
+START Start a separate window to run a specified program or command
+SU Switch User
+
+SUBINACL Edit file and folder Permissions, Ownership and Domain
+
+SUBST Associate a path with a drive letter
+
+SYSTEMINFO List system configuration
+
+TASKLIST List running applications and services
+
+TIME Display or set the system time
+
+TIMEOUT Delay processing of a batch file
+
+TITLE Set the window title for a CMD.EXE session
+
+TOUCH Change file timestamps
+
+TRACERT Trace route to a remote host
+
+TREE Graphical display of folder structure
+TYPE Display the contents of a text file
+
+USRSTAT List domain usernames and last login
+VER Display version information
+
+VERIFY Verify that files have been saved
+
+VOL Display a disk label
+
+WHERE Locate and display files in a directory tree
+
+WHOAMI Output the current UserName and domain
+
+WINDIFF Compare the contents of two files or sets of files
+
+WINMSD Windows system diagnostics
+
+WINMSDP Windows system diagnostics II
+WMIC WMI Commands
+
+XCACLS Change file permissions
+
+XCOPY Copy files and folders
+
+Useful Run Commands for Windows
+
+To Access Run Command
+Accessibility Controls access.cpl
+Add Hardware Wizard hdwwiz.cpl
+Add/Remove Programs appwiz.cpl
+Administrative Tools control admintools
+Automatic Updates wuaucpl.cpl
+Bluetooth Transfer Wizard fsquirt
+Calculator calc
+Certificate Manager certmgr.msc
+Character Map charmap
+Check Disk Utility chkdsk
+Clipboard Viewer clipbrd
+Command Prompt cmd
+Component Services dcomcnfg
+Computer Management compmgmt.msc
+Date and Time Properties timedate.cpl
+DDE Shares ddeshare
+Device Manager devmgmt.msc
+Direct X Control Panel (If Installed)* directx.cpl
+Direct X Troubleshooter dxdiag
+Disk Cleanup Utility cleanmgr
+Disk Defragment dfrg.msc
+Disk Management diskmgmt.msc
+Disk Partition Manager diskpart
+Display Properties control desktop
+Display Properties desk.cpl
+Display Properties (w/Appearance Tab Preselected) control color
+Dr. Watson System Troubleshooting Utility drwtsn32
+Driver Verifier Utility verifier
+Event Viewer eventvwr.msc
+File Signature Verification Tool sigverif
+Findfast findfast.cpl
+Folders Properties control folders
+Fonts control fonts
+Fonts Folder fonts
+Free Cell Card Game freecell
+Game Controllers joy.cpl
+Group Policy Editor (XP Prof) gpedit.msc
+Hearts Card Game mshearts
+Iexpress Wizard iexpress
+Indexing Service ciadv.msc
+Internet Properties inetcpl.cpl
+IP Configuration (Display Connection Configuration) ipconfig /all
+IP Configuration (Display DNS Cache Contents) ipconfig /displaydns
+IP Configuration (Delete DNS Cache Contents) ipconfig /flushdns
+IP Configuration (Release All Connections) ipconfig /release
+IP Configuration (Renew All Connections) ipconfig /renew
+IP Configuration (Refreshes DHCP & Re-Registers DNS) ipconfig /registerdns
+IP Configuration (Display DHCP Class ID) ipconfig /showclassid
+IP Configuration (Modifies DHCP Class ID) ipconfig /setclassid
+Java Control Panel (If Installed) jpicpl32.cpl
+Java Control Panel (If Installed) javaws
+Keyboard Properties control keyboard
+Local Security Settings secpol.msc
+Local Users and Groups lusrmgr.msc
+Logs You Out Of Windows logoff
+Microsoft Chat
+winchat
+Minesweeper Game winmine
+Mouse Properties control mouse
+Mouse Properties main.cpl
+Network Connections control netconnections
+Network Connections ncpa.cpl
+Network Setup Wizard netsetup.cpl
+Notepad notepad
+Nview Desktop Manager(If Installed) nvtuicpl.cpl
+Object Packager packager
+ODBC Data Source Administrator odbccp32.cpl
+On Screen Keyboard osk
+Opens AC3 Filter (If Installed) ac3filter.cpl
+Password Properties password.cpl
+Performance Monitor perfmon.msc
+Performance Monitor perfmon
+Phone and Modem Options telephon.cpl
+Power Configuration powercfg.cpl
+Printers and Faxes control printers
+Printers Folder printers
+Private Character Editor eudcedit
+Quicktime (If Installed) QuickTime.cpl
+Regional Settings intl.cpl
+Registry Editor regedit
+Registry Editor regedit32
+Remote Desktop mstsc
+Removable Storage ntmsmgr.msc
+Removable Storage Operator Requests ntmsoprq.msc
+Resultant Set of Policy (XP Prof) rsop.msc
+Scanners and Cameras sticpl.cpl
+Scheduled Tasks control schedtasks
+Security Center wscui.cpl
+Services services.msc
+Shared Folders fsmgmt.msc
+Shuts Down Windows shutdown
+Sounds and Audio mmsys.cpl
+Spider Solitare Card Game spider
+SQL Client Configuration cliconfg
+System Configuration Editor sysedit
+System Configuration Utility msconfig
+System File Checker Utility (Scan Immediately) sfc /scannow
+System File Checker Utility (Scan Once At Next Boot) sfc /scanonce
+System File Checker Utility (Scan On Every Boot) sfc /scanboot
+System File Checker Utility (Return to Default Setting) sfc /revert
+System File Checker Utility (Purge File Cache) sfc /purgecache
+System File Checker Utility (Set Cache Size to size x) sfc /cachesize=x
+System Properties sysdm.cpl
+Task Manager taskmgr
+Telnet Client telnet
+User Account Management nusrmgr.cpl
+Utility Manager utilman
+Windows Firewall firewall.cpl
+Windows Magnifier magnify
+Windows Management Infrastructure wmimgmt.msc
+Windows System Security Tool syskey
+Windows Update Launches wupdmgr
+Windows XP Tour Wizard tourstart
+Wordpad write
+
+ciadv.msc  - indexing service
+compmgmt.msc  - Computer management
+devmgmt.msc  - Device manager
+dfrg.msc  - Disk defragment
+diskmgmt.msc  - Disk management
+eventvwr.msc  - Event viewer
+fsmgmt.msc  - Shared folders
+gpedit.msc  - Group policies
+lusrmgr.msc  - Local users and groups
+ntmsmgr.msc  - removable storage operator request
+perfmon.msc  - Performance monitor
+rsop.msc  - Resultant set of policies
+secpol.msc  - Local security settings
+services.msc  - Various Services
+secpol.msc  - local security settings
+certmgr.msc  - certificate manager
+wmimgmt.msc  - windows management infrastructure
+cpl commands
+ac3filter.cpl  - ac3 filter(if installed)
+access.cpl  - accessibility option control
+appwiz.cpl  - Add/Remove Programs control
+desk.cpl  - Display Properties control
+directx.cpl  - direct x control panel(if installed)
+findfast.cpl  - FindFast control
+firewall.cpl  - windows firewall
+hdwwiz.cpl  - add hardware wizard
+inetcpl.cpl  - Internet Properties control
+intl.cpl  - regional and language options
+joy.cpl  - game controlloers control
+jpicpl32.cpl  - java control panel(if installed)
+main.cpl  - Mouse Properties control
+mmsys.cpl  - Multimedia Properties control
+ncpa.cpl  - network control
+netsetup.cpl  - network setup wizard
+nusrmgr.cpl- user accounts control
+odbccp32.cpl -odbc data souce adminstrator
+password.cpl  - Password Properties control
+powercfg.cpl  - power options properties control
+joy.cpl  - game controlloers control
+sysdm.cpl- System Properties control
+sticpl.cpl -scanner and camera control
+tlephon.cpl -telephone and moden options
+timedate.cpl  - Date/Time Properties control
+waaucpl.cpl  - automatic updates
+wscui.cpl  - security center
+control admintools  - Amdinistrative tools
+control color  - display properties(appearence)
+control desktop  - desktop properties
+control folders  - folder properties
+control fonts  - fonts properties
+control keyboard  - keyboard properties
+control netconnections  - network connections
+control mouse  - mouse properties
+control printers  - printer and fax options
+control schedtasks -schedualed tasks
+dxdiag  - direct x trounbleshooter
+ddeshare  - dde share
+cliconfg  - sql client configaration
+cmd -command prompt
+dcomcnfg  - component services
+clipbrd  - clipboard
+chkdsk  - check disk utility
+fsquirt  - bluetooth transfer wizard
+folders  - folders properties
+font  - fonts folder
+freecell  - freecell
+calc  - caculator
+charmap  - carater graph
+cleanmgr  - too long to explain but useful
+command  - Opens command prompt
+diskpart  - disk partition manager
+explorer  - Explorer
+iexpress -iexpress wizard
+javaws  - java control panel(in installed)
+logoff  - logs you out of windows
+magnity  - windows magnifier
+msconfig  - System Configuration Utility
+msinfo32 _ System Infomation
+msimn= letterbox
+mailto: _ Opens default email client
+notepad= notepad
+osk= keyboard
+packager  - object packager
+perfmon  - performance minitor
+prefetch  - the thing windows prepairs
+regedit  - Registry Editor
+regedit32
+sfc  - system file checker utility
+taskmgr  - task manager
+telnet  - telnet client
+wab= windows address book
+wabmig= windows address book (adding something)
+win.ini _ windows loading information(also system.ini)
+winver _ Shows current version of windows
+winchat  - microsoft chat
+sysedit  - System Edit
+tourstart= tour pub when xp is installed
+drwtsn32  - dr. watson troubleshooting utility
+verifier -driver verifier utility
+sigverif  - file signature verification tool
+write  - wordpad
+utelman  - utility manager
+control userpassword2  - user accounts.

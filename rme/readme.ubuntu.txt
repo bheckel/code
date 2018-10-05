@@ -1,0 +1,594 @@
+Setup new printer
+system-config-printer
+
+---
+
+OBSOLETE
+Change printer default:
+
+$ lpstat -p -a
+printer blake is idle.  enabled since Sat 07 Oct 2017 09:29:06 AM EDT
+EDTWaiting for printer to finish.
+printer blake2 is idle.  enabled since Sat 19 Aug 2017 09:58:48 AM EDT
+printer kab disabled since Sat 09 May 2015 03:06:44 PM EDT -
+EDTUnplugged or turned off
+printer MG3100-series disabled since Sat 09 May 2015 03:06:44 PM EDT -
+EDTUnplugged or turned off
+blake accepting requests since Sat 07 Oct 2017 09:29:06 AM EDT
+blake2 accepting requests since Sat 19 Aug 2017 09:58:48 AM EDT
+kab accepting requests since Sat 09 May 2015 03:06:44 PM EDT
+MG3100-series accepting requests since Sat 09 May 2015 03:06:44 PM EDT
+0 bheckel@appa ~/ Sat Oct 07 09:36:43  
+$ lpoptions -d blake
+copies=1 device-uri=socket://192.168.0.113:9100 finishings=3 job-hold-until=no-hold job-priority=50 job-sheets=none,none marker-change-time=0 number-up=1 ppd-timestamp=* printer-info=blake printer-is-accepting-jobs=true printer-is-colormanaged=true printer-make-and-model='Local Raw Printer' printer-state=3 printer-state-change-time=1507382946 printer-state-reasons=none printer-type=4 printer-uri-supported=ipp://localhost:631/printers/blake
+0 bheckel@appa ~/ Sat Oct 07 09:37:31  
+$ lpstat -s
+system default destination: blake
+device for blake: socket://192.168.0.113:9100
+device for blake2: dnssd://Deskjet%202540%20series%20%5BC3DC7A%5D._ipp._tcp.local/
+device for kab: usb://Canon/MG3100%20series?serial=C0416D&interface=1
+device for MG3100-series: usb://Canon/MG3100%20series?serial=C0416D&interface=1
+
+---
+
+Save alsamixer settings
+$ sudo alsactl store
+
+---
+
+sudo mount -t vfat /dev/sdb1 /media/brinno/ -o uid=1000,gid=100,utf8,dmask=027,fmask=137
+# Download from Treasury Direct
+wine sbwsetup.exe
+wine ~/.wine/drive_c/Program\ Files\ \(x87\)/Savings\ Bond\ Wizard/SBWizard.exe
+# Save results in an unusual /media/brinno/SAVINGSBONDS.SBW.bak, ok to
+# delete the old .sbw then rename the new .bak
+sudo umount /media/brinno
+
+---
+
+Change default Nautilus to Thunar:
+
+$ xdg-mime query default inode/directory
+nautilus-folder-handler.desktop
+$ xdg-mime default thunar.desktop inode/directory application
+$ xdg-mime query default inode/directory
+thunar.desktop
+
+---
+
+appa Install Irfanview from W2K installer - (did not touch winecfg):
+
+$ sudo apt-get install wine
+$ wine ~/Dropbox/Public/misc/computer/Linux/yoniso/iview423_setup.exe
+errors occurred
+$ winetricks mfc42
+Then step thru irfanview installler take defaults
+$ ~/.wine/drive_c/Program\ Files\ \(x86\)/IrfanView/i_view32.exe
+
+---
+
+Add printer
+
+lpinfo -v  # choose the wireless from this list
+lpstat -s  # verify added
+
+---
+
+Logitech headset
+sudo vi /etc/pulse/default.pa
+load-module module-switch-on-connect
+pulseaudio -k
+
+---
+
+# Printer
+# didn't actually need to do:
+lpinfo -m|grep 3122
+# didn't actually need to do:
+lpadmin -p kab -E -v "usb://Canon/MG3100%20series?serial=C0416D&interface=1"
+lpinfo -v
+lpstat -s
+lpq  # list queue
+lprm  # clear queue
+
+---
+
+sudo add-apt-repository ppa:costales/anoise
+sudo apt-get update && sudo apt-get install anoise
+sudo apt-get install anoise-gui
+anoise&
+
+---
+
+# Fix random un-suspend problem:
+cd /etc/apt/apt.conf.d/
+sudo vi 10periodic # set 14 to 0, most were 0 already
+
+---
+
+sudo apt-get install cpuburn  # stress test, use  $ burnP6  for Celeron
+
+---
+
+# Bandwidth monitor:
+watch -n1 "ifconfig wlan0 | grep 'RX'"
+
+---
+
+# Set fluxbox background to black:
+fbsetbg -c /home/bheckel/Dropbox/Public/misc/nexus/17842d1303660198-use-black-background-pure-black-960x800.jpg
+
+---
+
+Open from Pictures with mtPaint, crop, save (not saveas)
+Open with 1st Image Viewer, copy
+Paste to gmail window
+
+---
+
+network info:
+sudo lshw -C network
+
+---
+
+wifi info:
+# set IPv6 method to "ignore" from "auto" 16-Nov-14 may fix timeouts
+sudo vi /etc/NetworkManager/system-connections/ylimeekalb
+
+---
+
+Enable ctrl+alt+backspace for partial (crashes out all apps) desktop reset
+reboot on freeze:
+
+sudo vi /etc/default/keyboard
+XKBOPTIONS="terminate:ctrl_alt_bksp"
+
+---
+
+# turn off power management to speed up wifi (required each bootup)
+/sbin/iwconfig wlan0 power off
+# or manually
+sudo iw wlan0 set power_save off
+
+---
+
+# which version of ubuntu am i running:
+lsb_release -a
+
+---
+
+# Reduce swap from 60
+sudo vi /etc/sysctl.conf
+# add vm.swappiness=10
+cat /proc/sys/vm/swappiness
+
+---
+
+# Required each bootup, can't do as a one-liner somehow:
+$ nohup ssh-agent $SHELL  # TODO does this do anything??
+$ ssh-add  # check agent: ssh-add -l
+
+---
+
+feh isafastimageviewer.jpg
+
+---
+
+Delete all USB partitions and create new one for an .iso:
+gnome-disks
+
+---
+
+# Watch network activity
+sudo watch netstat -anlp
+
+---
+
+appa
+sudo apt-get install unity-tweak-tool
+sudo apt-get install lm-sensors
+sudo apt-get install conky-all
+###sudo apt-get install vim-common
+###sudo apt-get install vim-runtime
+sudo apt-get install vim
+sudo apt-get install vim-gui-common
+sudo apt-get install vlc
+sudo apt-get install xfe
+sudo apt-get install w3m
+sudo apt-get install par
+sudo apt-get install xclip
+
+
+add noatime to /etc/fstab for SSD e.g.:
+UUID=f0ae2c59-83d2-42e7-81c4-2e870b6b255d / ext4 noatime,errors=remount-ro   0   1
+Add  fstrim -v /  to
+sudo vi /etc/rc.local
+
+symlink _bashrc _vimrc _inputrc
+cp ~/code/misccode/_xferc .config/xfe/xferc  # won't symlink
+
+Firefox about:config add for SSD
+browser.cache.disk.enable set to false
+browser.cache.memory.capacity
+set to -1 (dynamic)
+
+---
+
+# 14.04 after full online update Etekcity usb adapter probably required:
+sudo apt-get install ndiswrapper-common
+# and maybe required
+sudo apt-get install --reinstall linux-headers-$(uname -r) linux-headers-generic build-essential dkms
+
+---
+
+# Configuration
+dconf-editor
+
+---
+
+# Get Consolas font:
+
+#!/bin/sh
+set -e
+set -x
+mkdir temp
+cd temp
+wget http://download.microsoft.com/download/E/6/7/E675FFFC-2A6D-4AB0-B3EB-27C9F8C8F696/PowerPointViewer.exe
+cabextract -L -F ppviewer.cab PowerPointViewer.exe
+cabextract ppviewer.cab
+
+sudo apt-get install font-manager
+point it to ~/misc/computer/fonts_microsoft/
+
+---
+
+# Only way to edit root crontab w/o vim errors:
+# https://bugs.launchpad.net/ubuntu/+source/vim/+bug/372588
+$ sudo EDITOR=vim crontab -e
+
+---
+
+15-Dec-13 make hostname appear in Tomato wifi router:
+$ sudo vi /etc/dhcp/dhclient.conf
+# change line: send host-name "yoniso";
+
+---
+
+26-Jan-13 Disable mysterious power saving screen off DID NOT WORK
+sudo -e /etc/xdg/autostart/gnome-settings-daemon.desktop
+
+---
+
+System info:
+
+df -h && free -m && grep name /proc/cpuinfo | uniq && lspci | grep VGA && xrandr | grep connected && uname -rms
+
+---
+
+Edit themes like Equinox background color, font, etc.: lxappearance
+
+---
+
+# Minimize the impact of the hog for now.  Probably should remove apt-xapian-index.
+sudo mv /etc/cron.weekly/apt-xapian-index /etc/cron.monthly/apt-xapian-index
+
+---
+
+cron test:
+
+02 13 * * *  echo "Nightly Backup Successful: $(date)" >> /tmp/mybackup.log
+^M <--- !!!has to be a newline at end of file (bug 16-Sep-12)
+
+---
+
+# Avoid GNOMEy freakouts in fluxbox plus Ubuntu pkg doesn't have a 7zip GUI
+
+# Installs fine
+$ wine ~/Downloads/7z920.exe
+
+$ ln -s /home/bheckel/.wine/dosdevices/c:/"Program Files"/7-Zip/7zFM.exe 7zip
+
+# Then set working dir to ~/Downloads and associate ~/bin/7zip in Xfe
+
+---
+
+# yoniso manual startup (if not relying on ~/.fluxbox/startup):
+$ xmodmap "$HOME/.Xmodmap"
+$ nohup conky -x 5 -y 0 &
+$ nohup nm-applet &
+$ nohup ssh-agent $SHELL && ssh-add  # check: ssh-add -l
+$ dropbox start
+
+---
+
+# Is there a network wifi card?
+iwconfig
+iwlist scan
+
+---
+
+# Install downloaded debian package
+sudo dpkg -i package.deb
+
+---
+
+# List all installed apt-get packages
+dpkg -l
+
+---
+
+sudo apt-get update && sudo apt-get upgrade
+
+---
+
+$ sudo visudo
+# Add this line for unlimited timeout
+Defaults:bheckel	timestamp_timeout=-1
+# Add this to the last line (important) of sudoers for menu based shutdown
+bheckel ALL=NOPASSWD:/sbin/shutdown
+bheckel ALL=NOPASSWD:/usr/sbin/pm-suspend
+
+---
+
+# Mount USB jump mini micro drives:
+
+sudo mkdir -p /media/generic  # one time
+# To read the layout of the physical disks in the system:
+sudo fdisk -l  # after inserting to determine if FAT32, if so:
+sudo mount -t vfat /dev/sdb1 /media/generic -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
+lsusb  # make sure it's there
+mount  # returns /dev/sdc1 on /media/generic type vfat (rw,uid=1000,gid=1000,utf8,dmask=027,fmask=137)
+sudo umount /media/generic  # ok to pull out
+
+sudo mount -t vfat /dev/sdb /media/Nexus -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
+sudo umount /media/Nexus
+
+sudo mkdisk -p /media/Win2k  # one time
+sudo fdisk -l  # e.g. find /dev/sda1 ... HPFS/NTFS/exFAT
+sudo mount -t ntfs /dev/sda1 /media/Win2k -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
+sudo umount /media/Win2k
+
+---
+
+sudo /usr/sbin/pm-suspend
+
+---
+
+left-handed
+xmodmap -e "pointer = 3 2 1 4 5"
+
+---
+
+Gnome
+But basically I just edited the file: /usr/share/gnome-shell/js/ui/panel.js
+
+And removed the line: 'a11y': imports.ui.status.accessibility.ATIndicator,
+
+const STANDARD_TRAY_ICON_SHELL_IMPLEMENTATION = {
+- 'a11y': imports.ui.status.accessibility.ATIndicator,
+'volume': imports.ui.status.volume.Indicator,
+'battery': imports.ui.status.power.Indicator,
+'keyboard': imports.ui.status.keyboard.XKBIndicator
+
+---
+
+sudo gedit /etc/gnome/defaults.list
+
+Change the following setting
+
+text/plain=gedit.desktop
+
+to
+
+text/plain=gvim.desktop
+
+---
+
+Switch desktops Ctrl-Alt-left/right arrows
+
+---
+sudo apt-get install gtk2-engines-equinox
+sudo apt-get install faenza-icon-theme
+sudo apt-get install gnome-tweak-tool
+
+---
+
+Remove mail and chat icons from Panel:
+sudo apt-get remove indicator-me indicator-messages
+
+---
+
+System Load Indicator:
+sudo add-apt-repository ppa:indicator-multiload/stable-daily
+sudo apt-get update
+sudo apt-get install indicator-multiload
+
+System Settings > Startup Applications > Add.  Then navigate to
+/usr/bin/indicator-sysmonitor  It will load every time you boot.
+
+---
+
+sudo apt-get install unity-2d-default-settings
+
+---
+
+~/.fonts/PRISTINA.TTF
+
+---
+
+Ubuntu RGB purple: #29001F (or #292900001F1F in gconf-editor value)
+
+---
+
+# Fan speed, temperature
+$ sensors -f
+
+---
+
+sudo su
+echo "export LIBOVERLAY_SCROLLBAR=0" > /etc/X11/Xsession.d/80overlayscrollbars
+
+---
+
+sudo add-apt-repository ppa:ubuntu-wine/ppa && sudo apt-get update
+sudo apt-get install wine playonlinux
+
+# May not need playonlinux nor winetricks - need this to install SyncBack.exe as a Win98 box
+$ winecfg
+
+---
+
+Install Irfanview from W2K installer - (did not touch winecfg):
+
+$ sudo apt-get install wine
+$ wine /home/bheckel/misc/computer/Linux/iview423_setup.exe
+err:module:import_dll Library MFC42.DLL (which is needed by L"Z:\\home\\bheckel\\Downloads\\iview433_setup.exe") not found
+err:module:LdrInitializeThunk Main exe initialization for L"Z:\\home\\bheckel\\Downloads\\iview433_setup.exe" failed, status c0000135
+0 bheckel@yoniso ~/ Sun May 27 10:34:20  
+$ winetricks mfc42
+Executing w_do_call mfc42
+Executing load_mfc42
+Executing cabextract -q /home/bheckel/.cache/winetricks/vcrun6/vcredist.exe -d /home/bheckel/.wine/dosdevices/c:/windows/system32 -F mfc42*.dll
+You opted in, so reporting 'mfc42 ' to the winetricks maintainer so he knows which winetricks verbs get used and which don't.  Use --optout to disable future reports.
+0 bheckel@yoniso ~/ Sun May 27 10:36:08  
+$ wine /home/bheckel/misc/computer/Linux/iview423_setup.exe
+Then step thru irfanview installler
+
+Like syncbackse:
+$ ln -s /home/bheckel/.wine/drive_c/Program\ Files/IrfanView/i_view32.exe ~/bin/iview
+
+But xfe will not work - the non-Windows path it passes freaks out iview.
+07-Dec-13 Workaround - set to open with 
+/home/bheckel/.wine/drive_c/Program\ Files/IrfanView/i_view32.exe
+This will fail but will open iview, then drag .png into the iview window
+
+---
+
+2011-07-16 remove Unity Place search files and apps icons from launcher:
+
+sudo vi /usr/share/unity/places/applications.place
+add ShowEntry=false to last line in [Entry:Files]
+
+sudo vi /usr/share/unity/places/files.place
+add ShowEntry=false to last line in [Entry:Files]
+
+---
+
+sudo apt-get install vim-nox
+
+---
+
+sudo apt-get install xbacklight
+
+then
+
+Navigate to System -> Preferences -> Keyboard Shortcuts, click to open it.
+After the setup window is opened, click the Add button at the bottom right of
+the window. In the new window, enter the name you want the shortcut to be, for
+example, increase brightness.
+
+xbacklight -inc 20
+xbacklight -dec 10
+
+
+---
+
+The simple command line way to stop keyring prompt is to remove the
+rm ~/.gnome2/keyrings/login.keyring  # may not be necessary!
+
+Go to  Passwords and Encryption Keys
+"Passwords" tab you see "Passwords: default" select it, then  Edit -> Delete
+Then File New Password Keyring
+Insert 'Default' as name, and a blank password, accept warning
+Next login will prompt only for Wifi pw
+
+---
+
+Alt-Tab slow to appear for me, is because of the default 0.2
+second delay before it get shown in the compiz config. I think it should be
+defaulted to 0.0. Option name is : Popup Window Delay (popup_delay)
+
+(use Advanced Compiz search for 'pop' or 'static' then see Static Window Switcher)
+
+---
+
+2011-05-12
+Disable locking on suspend (11-Sep-11 bug exists, avoid menu Suspend, use Ctr+Alt+Del):
+
+Applications > System Tools > Configuration Editor (or just gconf-editor&)
+apps/gnome-power-manager/locks, check: "use_screensaver_settings"
+Under apps/gnome-screensaver, uncheck: "lock_enabled"
+
+gnome-power-manager lock should only have use_screensaver_settings checked
+
+or
+
+As you've probably already done, uncheck: "lock screen when screen saver is
+activated" in the System->Preferences->Screen Saver menu. 2. Type gconf-editor
+in a terminal. Under apps/gnome-power-manager/locks check:
+"use_screensaver_settings". 
+
+---
+
+Ubuntu Unity Shortcuts
+Super Key(Windows Key) - Opens dash.
+Hold Super Key - Invokes Launcher.
+Hold Super Key and hit 1, 2, 3 etc - Open an Application from Launcher. When you hold the Super Key, specific numbers will be displayed in order above each application.
+Alt + F1 - Put keyboard focus on the Launcher, use arrow keys to navigate, Enter launches the application, Right arrow exposes the quicklists if an application has them.
+Alt + F2 - Opens dash in special mode to run any commands. 
+Super + A - Opens up application window from launcher.
+Super + F - Opens up files and folders window from launcher. Both these shortcuts can be viewed by simply holding the Super Key as well.
+Super + W - Spread mode, zoom out on all windows in all workspaces.
+Super + D - Minimize all windows(acts as Show Desktop). Hitting it again restores them.
+Super + T - Opens trash can.
+Super + S - Expo mode (for everything), zooms out on all the workspaces and let's you manage windows.
+Ctrl + Alt + T - Launch Terminal.
+Ctrl + Alt + L - Lock Screen.
+Ctrl + Alt + Left/Right/Up/Down - Move to new workspace.
+Ctrl + Alt + Shift + Left/Right/Up/Down - Place window to a new workspace.
+F10 - Open the first menu on top panel, use arrows keys to browse across the menus.
+
+---
+
+2010-05-08
+
+After wubi install from win7:
+http://www.techdrivein.com/2011/04/12-things-i-did-after-installing-new.html
+
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install ubuntu-restricted-extras
+Check For Availability of Proprietary Hardware Drivers (GUI)
+sudo apt-get install compizconfig-settings-manager
+sudo add-apt-repository ppa:tiheum/equinox
+sudo apt-get update
+sudo apt-get install gtk2-engines-equinox equinox-theme faenza-icon-theme
+
+http://wiki.dropbox.com/TipsAndTricks/TextBasedLinuxInstall
+wget -O dropbox.tar.gz "http://www.dropbox.com/download/?plat=lnx.x86_64" 
+tar -xvzf dropbox.tar.gz
+~/.dropbox-dist/dropboxd 
+GUI wizard
+Post-installation:
+~/.dropbox-dist/dropboxd& 
+
+---
+
+Move Appearance buttons to the, Windows standard, rightside
+$ gconf-editor&
+Open /apps/metacity/general using the side pane and double-click the button_layout item.
+Change the value to:
+menu:minimize,maximize,close
+
+---
+
+2007-03-11 Use OpenDNS
+
+If your settings get revoked after reboots, or after periods of inactivity,
+you can try this:
+
+$ sudo cp /etc/resolv.conf /etc/resolv.conf.auto
+$ sudo gedit /etc/dhcp3/dhclient.conf
+# append the following line to the document
+prepend domain-name-servers 208.67.222.222,208.67.220.220;
+# save and exit
+$ sudo ifdown eth0 && sudo ifup eth0 
