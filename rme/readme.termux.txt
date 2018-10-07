@@ -1,3 +1,8 @@
+
+#!/data/data/com.termux/files/usr/bin/bash
+
+---
+
 * vol up e    escape
 * vol up t    tab
 
