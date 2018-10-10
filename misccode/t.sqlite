@@ -1,7 +1,0 @@
-
--- sqlite> .header on
--- sqlite> .read t.sqlite
-  update Professor
-  set salary=salary*1.1, Dept="IT"
-  where dept='555'
-  ;

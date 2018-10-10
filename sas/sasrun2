@@ -2,31 +2,32 @@
 
 # Simplified version
 
-# Modified: Fri 10 Aug 2018 10:46:25 (Bob Heckel)
+# Modified: Mon 08 Oct 2018 08:34:38 (Bob Heckel)
 
-TMPSASCODE="c:/tmp/tmpsas.$$.sas"
-TMPLOG="c:/tmp/tmpsas.$$.log"
-TMPLST="c:/tmp/tmpsas.$$.lst"
+tmpCODE="c:/temp/tmpsas.$$.sas"
+tmpLOG="c:/temp/tmpsas.$$.log"
+tmpLST="c:/temp/tmpsas.$$.lst"
 
 # SAS94WIN=C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe
 SAS94WIN='C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -config C:\Progra~1\SASHome\SASFoundation\9.4\nls\u8\sasv9.cfg'
 
-cat "$1" >| $TMPSASCODE
+cat "$1" >| $tmpCODE
 
-$SAS94WIN -sysin $TMPSASCODE -log $TMPLOG -print $TMPLST
+$SAS94WIN -sysin $tmpCODE -log $tmpLOG -print $tmpLST
 
 #TODO
-chmod 777  $TMPLOG 
+chmod 777  $tmpLOG 
 
-if [ -e $TMPLST ];then
-  $EDITOR -R -n -o -c '/^ERROR.*:/' $TMPLOG $TMPLST
-  mv $TMPLOG c:/tmp/tmpsas.lastrun.sasrun.log
-  mv $TMPLST c:/tmp/tmpsas.lastrun.sasrun.lst
+if [ -e $tmpLST ];then
+  $EDITOR -R -n -o -c '/^ERROR.*:/' $tmpLOG $tmpLST
+  mv $tmpLOG c:/temp/tmpsas.lastrun.sasrun.log
+  mv $tmpLST c:/temp/tmpsas.lastrun.sasrun.lst
 else
-  $EDITOR -R -n -o -c '/^ERROR.*:/' $TMPLOG
-  mv $TMPLOG c:/tmp/tmpsas.lastrun.sasrun.log
+  $EDITOR -R -n -o -c '/^ERROR.*:/' $tmpLOG
+  mv $tmpLOG c:/temp/tmpsas.lastrun.sasrun.log
 fi
 
-rm $TMPSASCODE
+rm $tmpCODE
 
-echo 'vi -R c:/tmp/tmpsas.lastrun.sasrun.lst c:/tmp/tmpsas.lastrun.sasrun.log'
+echo 'View previous run: vi -R c:/temp/tmpsas.lastrun.sasrun.lst c:/temp/tmpsas.lastrun.sasrun.log'
+

@@ -1,3 +1,8 @@
+Treat nested tables like either fixed-size arrays (and use only DELETE) or
+stacks (and use only TRIM and EXTEND)
+
+---
+
     SELECT *
       BULK COLLECT INTO initiativeTable
       FROM z_bob_orion30537;

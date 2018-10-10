@@ -1,5 +1,6 @@
 
 /* You can compare varray variables to the value NULL or to each other */
+/* Always dense */
 
 DECLARE
   TYPE Foursome IS VARRAY(4) OF VARCHAR2(15);
