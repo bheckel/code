@@ -68,8 +68,8 @@ IS
       FROM employees
       WHERE department_id = dept_id_in;
 
-   TYPE employee_tt IS TABLE OF employees_cur%ROWTYPE INDEX BY PLS_INTEGER;
-   l_employees   employee_tt;
+   TYPE employee_ntt IS TABLE OF employees_cur%ROWTYPE INDEX BY PLS_INTEGER;
+   l_employees   employee_ntt;
 
 BEGIN
    OPEN employees_cur;
@@ -84,3 +84,28 @@ BEGIN
    END LOOP;
    CLOSE employees_cur;
 END bulk_with_limit;
+
+
+
+DECLARE
+  TYPE empcurtyp IS REF CURSOR;
+  TYPE namelist_ntt IS TABLE OF employees.last_name%TYPE;
+  TYPE sallist_ntt  IS TABLE OF employees.salary%TYPE;
+  emp_cv  empcurtyp;
+  names   namelist_ntt;
+  sals    sallist_ntt;
+BEGIN
+  OPEN emp_cv FOR
+    SELECT last_name, salary FROM employees
+    WHERE job_id = 'SA_REP'
+    ORDER BY salary DESC;
+
+  FETCH emp_cv BULK COLLECT INTO names, sals;
+  CLOSE emp_cv;
+  -- loop through the names and sals collections
+  FOR i IN names.FIRST .. names.LAST
+  LOOP
+    DBMS_OUTPUT.PUT_LINE('Name = ' || names(i) || ', salary = ' || sals(i));
+  END LOOP;
+END;
+/
