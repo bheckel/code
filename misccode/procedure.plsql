@@ -39,7 +39,7 @@ execute raise_salary(176,10)
 
 ---
 
--- Native Dynamic SQL
+-- Use Native Dynamic SQL to pass a record to a procedure that will fill that record based on your parms
 
 CREATE OR REPLACE PACKAGE pkg AUTHID DEFINER AS
  

@@ -47,18 +47,34 @@ remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
 To github.sas.com:orion/data.git
    07ae678951a..6b7ce657a4d  develop -> develop
 
+git branch -d feature/ORION-31587
+git push origin --delete feature/ORION-31587
+
 ---
 
-# New feature branch
+# New feature branch CANONICAL
 git checkout develop
 git pull
 git branch feature/ORION-26857
 git checkout feature/ORION-26857
 # or just git checkout -b feature/ORION-26857
+
 git push --set-upstream origin feature/ORION-26857
+Total 0 (delta 0), reused 0 (delta 0)
+To github.sas.com:orion/data.git
+ * [new branch]              feature/ORION-26857 -> feature/ORION-26857
+ Branch 'feature/ORION-26857' set up to track remote branch 'feature/ORION-26857' from 'origin'.
+
 vi SET_CONTACT_MATCH_CODE.prc
-git add . && git commit -m 'ORION-26857: Replace SET_CONTACT_MATCH_CODE DBMS_SQL cursors with SQL and modify INSERT/UPDATE to a MERGE'
-git push
+git add . && git commit -m 'ORION-26857: Replace SET_CONTACT_MATCH_CODE'
+git push  # PR initiated
+# ...approval occurs
+$ git checkout develop
+$ git pull
+$ git merge --no-ff feature/ORION-26857
+$ git push origin develop
+git branch -d feature/ORION-26857
+git push origin --delete feature/ORION-26857
 
 ---
 
@@ -668,16 +684,6 @@ git update-index --no-assume-unchanged foo.txt
 git rm --cached foo.txt
 git ls-files  # verify foo.txt is gone (but still exists on the filesystem)
 
-# Usually this can't be done with networked server repos (so see git push but
-# it's non-trivial):
-cd ..
-git clone hello cloned_hello
-cd cloned_hello
-git fetch  # no merges occur automatically so next must...
-git merge origin/master  # ...now it's there
-# or to combine the two steps:
-git pull
-
 git log --oneline
 git log --pretty=oneline  # not exactly pretty, just shows full hash
 git log --graph --pretty=oneline --abbrev-commit 
@@ -841,12 +847,9 @@ sudo apt-get install git-core git-gui git-doc
 
 cd ~/.ssh
 
-ssh-keygen -t rsa -C "b.heckel@gmail.com"
+ssh-keygen -t rsa -C "heckel@gmail.com"
 
 paste id_rsa.pub into webform
 
 git config --global user.name "Bob Heckel"
 git config --global user.email "rsh@rshdev.com"
-
-get dcc... from website
-git config --global github.token dcc4109809ea83ef65c8dc1bac431439

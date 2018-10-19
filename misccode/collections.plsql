@@ -1,5 +1,5 @@
-Treat nested tables like either fixed-size arrays (and use only DELETE) or
-stacks (and use only TRIM and EXTEND)
+-- Treat nested tables like either fixed-size arrays (and use only DELETE) or
+-- stacks (and use only TRIM and EXTEND)
 
 ---
 
@@ -37,7 +37,7 @@ BEGIN
    END LOOP; 
 END;
 
-
+---
 
 DECLARE 
    CURSOR c_customers IS 
