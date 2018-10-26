@@ -1,3 +1,5 @@
+-- See also plch_employees_createtable.plsql
+
 CREATE TABLE tmpbobh (
   fooN  NUMBER,
   fooC  VARCHAR2(5),

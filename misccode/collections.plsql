@@ -3,18 +3,6 @@
 
 ---
 
-    SELECT *
-      BULK COLLECT INTO initiativeTable
-      FROM z_bob_orion30537;
-    
-      FOR i IN 1 .. initiativeTable.COUNT LOOP
-        rowcnt := rowcnt + 1;
-      
-        DBMS_OUTPUT.put_line(rowcnt || ' ' || initiativeTable(i).reference_id || ' ' || initiativeTable(i).core_initiative);
-...
-
----
-
 -- https://www.tutorialspoint.com/plsql/plsql_collections.htm
 
 DECLARE 

@@ -1,3 +1,7 @@
+
+/* See also insert_invitations.pck */
+
+
 /* https://blogs.oracle.com/oraclemagazine/bulk-processing-with-bulk-collect-and-forall */
 
  /* If the SQL engine raises an error, the PL/SQL engine will save that
