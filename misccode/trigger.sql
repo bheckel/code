@@ -9,28 +9,23 @@ begin
 end;
 
 
-
-create trigger mailing_list_registration_date
-before insert on mailing_list
-for each row
-when (new.registration_date is null)
-begin
- :new.registration_date := sysdate;
+create or replace trigger mailing_list_registration_date
+  before insert on mailing_list
+    for each row
+    when (new.registration_date is null)
+  begin
+   :new.registration_date := sysdate;
 end;
 
 
-
 create or replace trigger mailing_list_update
-before update on mailing_list
-for each row
-when (new.name <> old.name)
-begin
-  -- user is changing his or her name
-  -- record the fact in an audit table
-  insert into mailing_list_name_changes
-    (old_name, new_name)
-  values
-    (:old.name, :new.name);
+  before update on mailing_list
+    for each row
+    when (new.name <> old.name)
+  begin
+    -- user is changing his or her name record the fact in an audit table
+    insert into mailing_list_name_changes (old_name, new_name)
+    values (:old.name, :new.name);
 end;
 /
 show errors

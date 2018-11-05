@@ -1,3 +1,15 @@
+
+...
+CURSOR c_dun_nbr IS
+  SELECT aa.duns_nbr FROM account_base ab;
+...
+BEGIN
+	FOR rec IN c_dun_nbr LOOP
+		dbms_output.put_line(rec.duns_nbr);
+	END LOOP;
+
+---
+
 DECLARE
   v_employees employees%ROWTYPE;
   CURSOR c1 is SELECT * FROM employees;

@@ -227,7 +227,7 @@ git pull  # or git pull origin develop
 git checkout -b feature/ORION-31044
 vi Source/SQL_Views/rpt_account_address.sql
 git add . && git commit -m 'ORION-31044: Add View to Include Addresses for Accounts Not Used in Orion'
-git push --set-upstream origin feature/ORION-31044  # first time only then just  git push
+git push --set-upstream origin feature/ORION-31044  # first time only then just  git push OR  git branch --set-upstream-to=origin feature/ORION-31044
 # click button for approval ...
 # ... approved
 ???git pull origin develop
@@ -819,15 +819,6 @@ git fshow master..junk  # files updated in junk since branching
 # but not in 'master'.) - use  git fshow master  to check.
 git difftool master:cfg/Configuration.xml 5fcb8eb:cfg/Configuration.xml
 git difftool master:cfg/Configuration.xml trip:cfg/Configuration.xml
-
-# Canonical yoniso to github
-cd ~/code/misccode
-git branch -rv
-gs|grep modif  # what has changed then list them here:
-#                                                                   github   PC
-git add _bashrc _vimrc oneliners && git commit -m 'mod' && git push origin master
-
-# Commit w/o -m to start editing in vim.  Then a blank line separates subject from details in git log
 
 # Dry run (-n) deletion of untracked files including ones in .gitignore (-x):
 git clean -n -d -x .
