@@ -1,15 +1,16 @@
 DECLARE
   TYPE name_rec IS RECORD (
-    first  employees.first_name%TYPE,
-    last   employees.last_name%TYPE
+    first employees.first_name%TYPE,
+    last  employees.last_name%TYPE
   );
  
-  TYPE contact IS RECORD (
-    name  name_rec,                    -- nested record
+  TYPE contact_rec IS RECORD (
+    name  name_rec,  -- nested record
     phone employees.phone_number%TYPE
   );
  
-  friend contact;
+  friend contact_rec;
+
 BEGIN
   friend.name.first := 'John';
   friend.name.last := 'Smith';

@@ -1,4 +1,5 @@
 -- https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01115
+-- See also run_all_procedures.plsql
 
 CREATE OR REPLACE PROCEDURE plch_change_table AUTHID DEFINER
 IS

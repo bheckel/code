@@ -106,14 +106,11 @@ my $rc = 0;  # success
 
 if ( $foundflag ) { 
   printf("Found %d hit%s...", $found, $found==1 ? "" : "s");
-###  print "Spawning $ENV{EDITOR}...\n";
   print "Spawning vim...\n";
   # Force vim to first occurrance of searchword (-c for execute vim command,
   # \c for case insensitive search).  Assumes hlsearch is au set in .vimrc for
   # .grep files.
-###  system("$ENV{EDITOR} -c \'/\\c$searchword\' $DATFILE") 
-  system("vim -c \'/\\c$searchword\' $DATFILE") 
-                   ###&& die "bgrep: Problem starting $ENV{EDITOR}.  Exiting.\n";
+  system("vim -c \'/\\c$searchword\' -c ':se hls' $DATFILE") 
                    && die "bgrep: Problem starting vim.  Exiting.\n";
 	print "\n";
 } else {

@@ -7,14 +7,15 @@ CREATE OR REPLACE PACKAGE department_pkg AUTHID DEFINER IS
   );
  
   -- Function declaration
-  -- The best candidates for result-caching are functions that are invoked frequently but depend on information that changes infrequently 
-  -- or never
+  -- The best candidates for result-caching are functions that are invoked frequently but 
+  -- depend on information that changes infrequently or never
   FUNCTION get_dept_info(dept_id NUMBER)
     RETURN dept_info_record
     RESULT_CACHE;
  
 END department_pkg;
 /
+
 CREATE OR REPLACE PACKAGE BODY department_pkg IS
   -- Function definition
   FUNCTION get_dept_info(dept_id NUMBER)

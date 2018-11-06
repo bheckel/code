@@ -31,3 +31,26 @@ insert into rating
 select 207, mid, 5, NULL
 from movie
 where mid in(select distinct mid from movie)
+
+
+
+insert into target_table ( col1, col2, ...)
+  select col1, col2, ...
+  from   source_table;
+
+
+
+insert all  
+  into teddies values ('Dinosaur King', 'red')  
+  into bricks values ('sphere', 'green', 100)  
+  select * from dual;
+
+
+
+insert all
+  into people values (full_name)
+  when hire_date is not null then 
+    into staff values (hire_date)
+  when nhs_number is not null then 
+    into patients values (nhs_number)
+  select * from people_details;
