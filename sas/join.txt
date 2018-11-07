@@ -1,37 +1,3 @@
-15-Feb-13 intedeteminate usefulness
-
-         ------------------------------------------- 
-      TYPE OF 
-       JOIN      ---CODE--- 
-         ------------------------------------------- 
-         1)  Cartesian  ...FROM file1, file2 <,file3,..> 
-     
-         2a) INNER  ...FROM file1, file2 <,file3,..> 
-             WHERE key-field-condition 
-
-               Note: keywords like JOIN replace commas between table names
-               in 2b-5:
-     
-         2b) INNER  ...FROM file1 INNER JOIN file2 
-                       ON key-field-condition 
-     
-         2c) INNER  ...FROM file1 JOIN file2 
-                       ON key-field-condition 
-     
-         3)  LEFT   ...FROM file1 LEFT JOIN file2 
-             OUTER     ON key-field-condition 
-     
-         4)  FULL   ...FROM file1 FULL JOIN file2 
-             OUTER     ON key-field-condition 
-     
-         5)  RIGHT  ...FROM file1 RIGHT JOIN file2 
-             OUTER     ON key-field-condition 
-         ------------------------------------------- 
-
-We're assuming equi-joins for this file
-
-
----
 
 Partially from http://www.dbasupport.com/oracle/ora9i/ansi_joins2.shtml
 

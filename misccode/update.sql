@@ -1,3 +1,9 @@
+-- If this is the first statement in your transaction it will lock both of these rows.
+-- Session 2 must wait until the first commits. Thus deadlock is impossible.
+select * from accounts where account_id in (1, 2) for update;
+
+---
+
 -- When you run an update it locks the rows defined by your where clause. No
 -- other sessions can change these rows until your update completes and you
 -- commit it or roll it back.

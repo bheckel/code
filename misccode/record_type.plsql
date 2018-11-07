@@ -24,6 +24,8 @@ CREATE OR REPLACE PACKAGE BODY department_pkg IS
   IS
     rec  dept_info_record;
   BEGIN
+    -- Populate the record 'rec':
+
     SELECT department_name INTO rec.dept_name
     FROM departments
     WHERE department_id = dept_id;
@@ -54,8 +56,15 @@ DECLARE
   name2 name_rec;
  
 BEGIN
+  -- John Doe
+  DBMS_OUTPUT.PUT_LINE('name1: ' || name1.first || ' ' || name1.last);
+
+  -- Jane Smith
   name1.first := 'Jane'; name1.last := 'Smith'; 
   DBMS_OUTPUT.PUT_LINE('name1: ' || name1.first || ' ' || name1.last);
+
+  -- Assign one record to another
+  -- Jane Smith
   name2 := name1;
   DBMS_OUTPUT.PUT_LINE('name2: ' || name2.first || ' ' || name2.last); 
 END;

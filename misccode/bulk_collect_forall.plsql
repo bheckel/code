@@ -1,4 +1,73 @@
-/* Fill a collection */
+CREATE OR REPLACE PACKAGE DemoBCFA_Pkg IS
+
+ PROCEDURE DemoBCFA;
+
+END DemoBCFA_Pkg;
+/
+CREATE OR REPLACE PACKAGE BODY DemoBCFA_Pkg IS
+
+  PROCEDURE DemoBCFA IS
+    l_tbl_rows     PLS_INTEGER := 0;
+    l_tbl_rows_tot PLS_INTEGER := 0;
+    l_limit_group  PLS_INTEGER := 0;
+
+    failure_in_forall EXCEPTION;  
+    PRAGMA EXCEPTION_INIT (failure_in_forall, -24381);  -- ORA-24381: error(s) in array DML  
+
+    CURSOR c IS 
+      select id from employees where id=162298785905044046182375853313120458719;
+    
+    TYPE t_emp_tbl_type IS TABLE OF c%ROWTYPE;
+
+    t_emp_tbl t_emp_tbl_type;
+
+    BEGIN
+      OPEN c;
+      LOOP
+        FETCH c BULK COLLECT INTO t_emp_tbl LIMIT 300;
+
+        l_limit_group := l_limit_group + 1;
+        l_tbl_rows := t_emp_tbl.COUNT;
+        l_tbl_rows_tot := l_tbl_rows_tot + l_tbl_rows;
+        
+        -- Message assumes each FORALL loop *will* process these counts, not that we *have* processed them
+        dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processing ' || l_tbl_rows || ' records' || ' total ' || l_tbl_rows_tot);
+
+        EXIT WHEN l_tbl_rows = 0;
+
+        BEGIN
+          -- A FORALL statement is usually much faster than an equivalent FOR
+          -- LOOP statement. However, a FOR LOOP statement can contain multiple DML
+          -- statements, while a FORALL statement can contain only one. The batch of
+          -- DML statements that a FORALL statement sends to SQL differ only in
+          -- their VALUES and WHERE clauses. The values in those clauses must come
+          -- from existing, populated collections.
+          FORALL i IN 1 .. l_tbl_rows SAVE EXCEPTIONS
+            DELETE FROM employees WHERE id=t_emp_tbl(i).id;
+            --raise failure_in_forall;
+
+        EXCEPTION
+            WHEN failure_in_forall THEN   
+              DBMS_OUTPUT.put_line(DBMS_UTILITY.format_error_stack);   
+              DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows prior to EXCEPTION');
+   
+              FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
+                DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on index ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX || '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
+                                       ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
+              END LOOP; 
+              -- Now keep doing the next l_limit_group...
+        END;
+        COMMIT;  -- 500 rows to minimize locks
+      END LOOP;
+      COMMIT;
+    CLOSE c;
+    
+  END DemoBCFA;
+
+END DemoBCFA_Pkg;
+/
+
+---
 
 CREATE TABLE plch_employees
 (
@@ -22,7 +91,7 @@ BEGIN
 END;
 /
 
-/* With an explicit cursor: */
+/* Fill a collection with an explicit cursor: */
 
 DECLARE
    CURSOR plch_employees_cur
@@ -44,7 +113,7 @@ BEGIN
 END;
 /
 
-/* With an implicit cursor: */
+/* Fill a collection with an implicit cursor: */
 
 DECLARE
    TYPE plch_employees_aat
@@ -59,12 +128,10 @@ BEGIN
 END;
 /
 
-/* With a dynamic SQL statement (Oracle 9i Release 2 and above): */
+/* Fill a collection with a dynamic SQL statement (Oracle 9i Release 2 and above): */
 
 DECLARE
-   TYPE plch_employees_aat
-      IS TABLE OF plch_employees%ROWTYPE
-            INDEX BY BINARY_INTEGER;
+   TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
 
    l_plch_employees   plch_employees_aat;
 BEGIN
@@ -150,8 +217,7 @@ DROP TABLE plch_stuff
 -- data at a time into a record or a set of individual variables, BULK COLLECT
 -- lets us retrieve hundreds, thousands, even tens of thousands of rows with a
 -- single context switch to the SQL engine and deposit all that data into a
--- collection. The resulting performance improvement can be an order of magnitude
--- or greater.
+-- collection.
 
 PROCEDURE bulk_with_limit (
    dept_id_in   IN   employees.department_id%TYPE
@@ -198,7 +264,7 @@ BEGIN
 
   FETCH emp_cv BULK COLLECT INTO names, sals;
   CLOSE emp_cv;
-  -- loop through the names and sals collections
+  -- Loop through the names and sals collections
   FOR i IN names.FIRST .. names.LAST
   LOOP
     DBMS_OUTPUT.PUT_LINE('Name = ' || names(i) || ', salary = ' || sals(i));
@@ -221,8 +287,7 @@ END;
 BEGIN
    FORALL indx IN 1 .. l_eligible_ids.COUNT SAVE EXCEPTIONS
       UPDATE employees emp
-         SET emp.salary =
-                emp.salary + emp.salary * increase_pct_in
+         SET emp.salary = emp.salary + emp.salary * increase_pct_in
        WHERE emp.employee_id = l_eligible_ids (indx);
 EXCEPTION
    WHEN OTHERS
@@ -281,58 +346,4 @@ BEGIN
 END;
 
 
----
 
-CREATE OR REPLACE PACKAGE ORION32598 IS
-
- PROCEDURE ptgcleanup;
-
-END ORION32598;
-/
-CREATE OR REPLACE PACKAGE BODY ORION32598 IS
-
-  PROCEDURE ptgcleanup IS
-    l_defect_num   VARCHAR2(50)   := 'ORION-32598';
-    l_release_num  VARCHAR2(50)   := 'N/A';
-    l_description  VARCHAR2(4000) := 'Delete (move to hist table) Inactive and > 6 month-old PLAN_TO_GOAL records';
-    l_tab_size     PLS_INTEGER    := 0;
-    l_tab_size_tot PLS_INTEGER    := 0;
-    l_limit_group  PLS_INTEGER    := 0;
-
-    CURSOR c IS 
-      select x.plan_to_goal_id
-      ...
-    ;
-    
-    TYPE t_ptg_tab_type IS TABLE OF c%ROWTYPE;
-
-    t_ptg t_ptg_tab_type;
-
-    BEGIN
-      OPEN c;
-      LOOP
-        FETCH c BULK COLLECT INTO t_ptg LIMIT 300;
-
-        l_limit_group := l_limit_group + 1;
-        l_tab_size := t_ptg.COUNT;
-        l_tab_size_tot := l_tab_size_tot + l_tab_size;
-        
-        dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processed ' || l_tab_size || ' records' || ' total ' || l_tab_size_tot);
-
-        EXIT WHEN l_tab_size = 0;
-
-        /* Implicit update of plan_to_goal_hist */
-        FORALL i IN 1 .. l_tab_size
-          DELETE from plan_to_goal where plan_to_goal_id=t_ptg(i).plan_to_goal_id;
-
-        --ROLLBACK;
-        COMMIT;
-      END LOOP;
-    CLOSE c;
-    
-    MAINT.logdatachange(step => 0, status => l_description, release => l_release_num, defect => l_defect_num, startTime => SYSDATE); 
-
-  END ptgcleanup;
-
-END ORION32598;
-/
