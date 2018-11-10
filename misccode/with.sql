@@ -1,3 +1,17 @@
+-- Subquery factoring to determine which color brick has a greater than average count
+with brick_colour_counts as (
+  select colour, count(*) colour_count
+  from   bricks
+  group  by colour
+), avg_bricks_per_colour as (
+  select avg ( colour_count ) mean_colours 
+  from   brick_colour_counts
+)
+  select colour
+  from   brick_colour_counts bcc join   avg_bricks_per_colour abpc on     bcc.colour_count > abpc.mean_colours;
+
+---
+
 with v as (
           select date '2000-01-01' d, 10 amt from dual
 union all select date '2000-01-02', 11 from dual
