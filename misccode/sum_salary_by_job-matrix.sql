@@ -1,4 +1,15 @@
--- http://www.orafaq.com/scripts/sql/matrix.txt
+-- Transpose and sum http://www.orafaq.com/scripts/sql/matrix.txt
+
+-- EMPNO		ENAME			JOB					MGR				HIREDATE			SAL			COMM			DEPTNO
+-- ...
+-- 7566			JONES			MANAGER			7839			02-APR-81			2975			-			20
+-- 7788			SCOTT			ANALYST			7566			19-APR-87			3000			-			20
+-- 7902			FORD			ANALYST			7566			03-DEC-81			3000			-			20
+-- 7369			SMITH			CLERK				7902			17-DEC-80			800				-			20
+-- 7876			ADAMS			CLERK				7788			23-MAY-87			1100			-			20
+-- ...
+
+-- select sum(sal) from scott.emp where deptno=10 and job='CLERK'  -- 1300
 
 SELECT job,
   sum(decode(deptno,10,sal)) DEPT10,
@@ -14,11 +25,3 @@ GROUP BY job
 -- SALESMAN		-				-					5600						-
 -- MANAGER		2450			2975			2850					-
 -- PRESIDENT	5000			-					-							-
--- 
--- 
--- EMPNO		ENAME			JOB					MGR				HIREDATE			SAL			COMM			DEPTNO
--- 7566			JONES			MANAGER			7839			02-APR-81			2975			-			20
--- 7788			SCOTT			ANALYST			7566			19-APR-87			3000			-			20
--- 7902			FORD			ANALYST			7566			03-DEC-81			3000			-			20
--- 7369			SMITH			CLERK				7902			17-DEC-80			800				-			20
--- 7876			ADAMS			CLERK				7788			23-MAY-87			1100			-			20

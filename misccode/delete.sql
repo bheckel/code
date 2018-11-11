@@ -6,13 +6,13 @@ where trandt = '1/1/2003';
 
 
 -- Remove all records
-delete
-from foo
+delete from foo
 
+delete foo
 
 -- Oracle - remove one of two duplicates - first find unique identifier:
 
-select rowid
+select ROWID
 from pks_extraction_control
 where meth_spec_nm='AM0735CUHPLC' and meth_var_nm='PEAKINFO';
 
@@ -21,6 +21,4 @@ delete
 from pks_extraction_control
 where rowid='AAB5QNACDAAARalAAo';
 
--- don't forget to 
 COMMIT;
-

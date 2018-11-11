@@ -1,9 +1,0 @@
-Syntactic restriction on the form of the SELECT and HAVING clauses in queries
-involving aggregate functions and/or the GROUP BY clause:
-
-Only those columns explicitly listed in the GROUP BY clause may appear
-un-aggregated (i.e. not as a parameter of an aggr. function) in the SELECT or
-HAVING clauses.
-
-Put negatively, It is prohibited to use an un-aggregated column in the SELECT
-or HAVING clauses, unless it is explicitly listed in the GROUP BY clause.

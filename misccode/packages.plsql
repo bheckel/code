@@ -1,4 +1,28 @@
-CREATE OR REPLACE PACKAGE testpkg AS
+CREATE OR REPLACE PACKAGE ztestbob AS
+  
+  PROCEDURE delay_buffer_test;
+
+END ztestbob;
+/
+CREATE OR REPLACE PACKAGE BODY ztestbob AS
+
+  PROCEDURE delay_buffer_test
+  IS
+    l_now DATE;
+
+  BEGIN
+    dbms_output.put_line('ok1');
+    SELECT sysdate INTO l_now FROM DUAL; LOOP EXIT WHEN l_now +(10 * (1 / 86400)) = sysdate; END LOOP;
+    dbms_output.put_line('ok2');
+  END;
+
+END ztestbob;
+
+
+---
+
+
+CREATE OR REPLACE PACKAGE manage_students AS
 
   PROCEDURE find_sname(i_student_id IN student.student_id%TYPE,
                        o_first_name OUT student.first_name%TYPE,
@@ -6,7 +30,7 @@ CREATE OR REPLACE PACKAGE testpkg AS
 
   FUNCTION id_is_good(i_student_id IN student.student_id%TYPE) RETURN BOOLEAN;
 
-END testpkg;
+END manage_students;
 
 
 CREATE OR REPLACE PACKAGE BODY manage_students AS

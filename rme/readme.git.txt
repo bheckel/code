@@ -1,4 +1,104 @@
 
+Post PR Approval:
+
+bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (feature/ORION-31587)
+$ git checkout develop
+Switched to branch 'develop'
+Your branch is up to date with 'origin/develop'.
+
+bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (develop)
+$ git pull
+remote: Counting objects: 17, done.
+remote: Compressing objects: 100% (4/4), done.
+remote: Total 17 (delta 13), reused 17 (delta 13), pack-reused 0
+Unpacking objects: 100% (17/17), done.
+From github.sas.com:orion/data
+   8dcbba3a644..07ae678951a  develop    -> origin/develop
+Updating 8dcbba3a644..07ae678951a
+Fast-forward
+ Source/SQL/3.48OrionScripts/3.48_GoLive_Script.sql |  3 +
+ .../3.48OrionScripts/ORION-30739_data_change.sql   | 72 ++++++++++++++++++++++
+ Source/SQL_Views/RPT_OATS_ACCOUNT_ACTIVITY.sql     | 22 ++++---
+ Source/SQL_Views/RPT_OATS_OPP_ACTIVITY.sql         | 26 +++++---
+ 4 files changed, 107 insertions(+), 16 deletions(-)
+ create mode 100644 Source/SQL/3.48OrionScripts/ORION-30739_data_change.sql
+
+bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (develop)
+$ git merge --no-ff feature/ORION-31587
+Merge made by the 'recursive' strategy.
+ .../3.48OrionScripts/ORION-31587_ddl_change.sql    |  12 +
+ Source/SQL/SALES_CREDITS.pck                       | 521 +++++++++------------
+ Source/SQL/SALES_CREDITS_TYPES.pck                 |  86 ++++
+ Source/SQL/USER_ON_CALL.pck                        |  20 +-
+ Source/SQL/USER_ON_CALL_TYPES.pck                  |  19 +
+ 5 files changed, 344 insertions(+), 314 deletions(-)
+ create mode 100644 Source/SQL/SALES_CREDITS_TYPES.pck
+ create mode 100644 Source/SQL/USER_ON_CALL_TYPES.pck
+
+bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (develop)
+$ git push origin develop
+Enumerating objects: 13, done.
+Counting objects: 100% (13/13), done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 492 bytes | 492.00 KiB/s, done.
+Total 5 (delta 4), reused 0 (delta 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To github.sas.com:orion/data.git
+   07ae678951a..6b7ce657a4d  develop -> develop
+
+git branch -d feature/ORION-31587
+git push origin --delete feature/ORION-31587
+
+---
+
+# New feature branch CANONICAL
+git checkout develop
+git pull
+git branch feature/ORION-26857
+git checkout feature/ORION-26857
+# or just git checkout -b feature/ORION-26857
+
+git push --set-upstream origin feature/ORION-26857
+Total 0 (delta 0), reused 0 (delta 0)
+To github.sas.com:orion/data.git
+ * [new branch]              feature/ORION-26857 -> feature/ORION-26857
+ Branch 'feature/ORION-26857' set up to track remote branch 'feature/ORION-26857' from 'origin'.
+
+vi SET_CONTACT_MATCH_CODE.prc
+git add . && git commit -m 'ORION-26857: Replace SET_CONTACT_MATCH_CODE'
+git push  # PR initiated
+# ...approval occurs
+$ git checkout develop
+$ git pull
+$ git merge --no-ff feature/ORION-26857
+$ git push origin develop
+git branch -d feature/ORION-26857
+git push origin --delete feature/ORION-26857
+
+---
+
+Approved PR collision https://bocoup.com/blog/git-workflow-walkthrough-merging-pull-requests
+
+# github merge PR button is not available
+git checkout master
+git fetch origin master
+git checkout docs
+git merge master
+# fix conflict... test code on this feature branch...
+git add . && git commit -m 'Fix'
+git push
+# ...github merge PR button is available now so click it or do:
+git checkout master
+git pull origin master
+git merge --no-ff docs
+# Take my master and make it the remote's master
+git push origin master
+git branch -d docs
+git push origin --delete docs
+
+---
+
 # What changed between commits
 git log
 git difftool b15580136e5 7932c1cd095
@@ -7,7 +107,7 @@ git difftool b15580136e5 7932c1cd095
 
 # The name on the left is your name, and the name on the right is their name.
 # Remember that when you run git push, you are using two Gits, with two different
-# repositories. You are telling your Git to call up some remote Git. Once your
+# repositories. You are telling your Git to call up someremote Git. Once your
 # Git has the other Git on the Internet-phone (via https or ssh or whatever),
 # your Git sends some of your commits to their Git, and then your Git asks them
 # to set their branches, usually based on the commits you just sent.
@@ -84,7 +184,8 @@ git push
 ---
 
 # https://www.atlassian.com/git/tutorials/syncing
-# Upload the local state of <branch-name> to the remote repository specified by <remote-name>
+# Upload the local state of <branch-name> to the remote repository specified by
+# <remote-name> (i.e. URL shortcut origin) 
 git push <remote-name> <branch-name>
 
 ---
@@ -126,12 +227,10 @@ git pull  # or git pull origin develop
 git checkout -b feature/ORION-31044
 vi Source/SQL_Views/rpt_account_address.sql
 git add . && git commit -m 'ORION-31044: Add View to Include Addresses for Accounts Not Used in Orion'
-git push --set-upstream origin feature/ORION-31044  # first time only then just  git push
+git push --set-upstream origin feature/ORION-31044  # first time only then just  git push OR  git branch --set-upstream-to=origin feature/ORION-31044
 # click button for approval ...
 # ... approved
-git pull origin feature/ORION-31044  # we're still sitting in branch
-# nothing.
-git pull origin develop
+???git pull origin develop
 git checkout develop
 git pull origin develop
 git merge --no-ff feature/ORION-31044
@@ -585,16 +684,6 @@ git update-index --no-assume-unchanged foo.txt
 git rm --cached foo.txt
 git ls-files  # verify foo.txt is gone (but still exists on the filesystem)
 
-# Usually this can't be done with networked server repos (so see git push but
-# it's non-trivial):
-cd ..
-git clone hello cloned_hello
-cd cloned_hello
-git fetch  # no merges occur automatically so next must...
-git merge origin/master  # ...now it's there
-# or to combine the two steps:
-git pull
-
 git log --oneline
 git log --pretty=oneline  # not exactly pretty, just shows full hash
 git log --graph --pretty=oneline --abbrev-commit 
@@ -641,8 +730,8 @@ git branch mynewbranch 2f13ab6  # branch from a specific commit
 $ git checkout master  # branch switch
 $ git merge ccf1
 
-# Merge collision CONFLICT - edit out the git <<< >>> stuff in foo.txt, choosing which
-# edit to keep then  git add foo.txt
+# Merge collision CONFLICT - edit out the git <<< (theirs) >>>(yours) stuff in
+foo.txt, choosing which edit to keep then  git add foo.txt
 
 # View a merge conflict (don't use for binary collisions!):
 git show :1:code/_ADO_LIFT.qry  # common base
@@ -731,15 +820,6 @@ git fshow master..junk  # files updated in junk since branching
 git difftool master:cfg/Configuration.xml 5fcb8eb:cfg/Configuration.xml
 git difftool master:cfg/Configuration.xml trip:cfg/Configuration.xml
 
-# Canonical yoniso to github
-cd ~/code/misccode
-git branch -rv
-gs|grep modif  # what has changed then list them here:
-#                                                                   github   PC
-git add _bashrc _vimrc oneliners && git commit -m 'mod' && git push origin master
-
-# Commit w/o -m to start editing in vim.  Then a blank line separates subject from details in git log
-
 # Dry run (-n) deletion of untracked files including ones in .gitignore (-x):
 git clean -n -d -x .
 
@@ -758,12 +838,9 @@ sudo apt-get install git-core git-gui git-doc
 
 cd ~/.ssh
 
-ssh-keygen -t rsa -C "b.heckel@gmail.com"
+ssh-keygen -t rsa -C "heckel@gmail.com"
 
 paste id_rsa.pub into webform
 
 git config --global user.name "Bob Heckel"
 git config --global user.email "rsh@rshdev.com"
-
-get dcc... from website
-git config --global github.token dcc4109809ea83ef65c8dc1bac431439

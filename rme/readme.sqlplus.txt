@@ -1,3 +1,10 @@
+-- Good defaults:
+set colsep '|'
+set linesize 167
+set pagesize 30
+set pagesize 1000
+
+---
 
 -- avoid sqlplus default 9 char date truncation
 select to_char(min(test_status_date), 'DDMONYY HH24:MI:SS') as mintsd, to_char(max(test_status_date), 'DDMONYY HH24:MI:SS') as maxtsd

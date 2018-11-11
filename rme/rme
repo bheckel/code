@@ -8,7 +8,7 @@
 # Modified: Fri 13 Apr 2018 11:02:23 (Bob Heckel)
 ##############################################################################
   
-location=$HOME/rme
+location=$HOME/code/rme
 
 # TODO enable for -h
 # usage() {
