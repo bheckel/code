@@ -73,31 +73,77 @@ DECLARE
   TYPE NumTab IS TABLE OF hr.employees.employee_id%TYPE;
   TYPE NameTab IS TABLE OF hr.employees.last_name%TYPE;
  
-  enums NumTab;
+  nums  NumTab;
   names NameTab;
  
   PROCEDURE print_first_n (n POSITIVE) IS
   BEGIN
-    IF enums.COUNT = 0 THEN
+    IF nums.COUNT = 0 THEN
       DBMS_OUTPUT.PUT_LINE ('Collections are empty.');
     ELSE
       DBMS_OUTPUT.PUT_LINE ('First ' || n || ' employees:');
  
       FOR i IN 1 .. n LOOP
-        DBMS_OUTPUT.PUT_LINE (
-          '  Employee #' || enums(i) || ': ' || names(i));
+        DBMS_OUTPUT.PUT_LINE ('  Employee #' || nums(i) || ': ' || names(i));
       END LOOP;
     END IF;
   END;
  
 BEGIN
   SELECT employee_id, last_name
-  BULK COLLECT INTO enums, names
+  BULK COLLECT INTO nums, names
   FROM hr.employees
   ORDER BY employee_id;
  
   print_first_n(3);
   print_first_n(6);
+END;
+/
+
+---
+
+DECLARE
+  TYPE NumList IS TABLE OF employees.employee_id%TYPE;
+  nums  NumList;
+  TYPE NameList IS TABLE OF employees.last_name%TYPE;
+  names  NameList;
+BEGIN
+  DELETE FROM emp_temp
+  WHERE department_id = 30
+  RETURNING employee_id, last_name
+  BULK COLLECT INTO nums, names;
+
+  DBMS_OUTPUT.PUT_LINE ('Deleted ' || SQL%ROWCOUNT || ' rows:');
+
+  FOR i IN nums.FIRST .. nums.LAST LOOP
+    DBMS_OUTPUT.PUT_LINE ('Employee #' || nums(i) || ': ' || names(i));
+  END LOOP;
+END;
+/
+
+-- Better:
+DECLARE
+  TYPE NumList IS TABLE OF NUMBER;
+  depts  NumList := NumList(10,20,30);
+
+  TYPE enum_t IS TABLE OF employees.employee_id%TYPE;
+  e_ids  enum_t;
+
+  TYPE dept_t IS TABLE OF employees.department_id%TYPE;
+  d_ids  dept_t;
+
+BEGIN
+  FORALL d IN depts.FIRST..depts.LAST
+    DELETE FROM emp_temp
+    WHERE department_id = depts(d)
+    RETURNING employee_id, department_id
+    BULK COLLECT INTO e_ids, d_ids;
+
+  DBMS_OUTPUT.PUT_LINE ('Deleted ' || SQL%ROWCOUNT || ' rows:');
+
+  FOR e IN e_ids.FIRST .. e_ids.LAST LOOP
+    DBMS_OUTPUT.PUT_LINE ('Employee #' || e_ids(e) || ' from dept #' || d_ids(e));
+  END LOOP;
 END;
 /
 

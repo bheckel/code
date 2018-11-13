@@ -1,4 +1,21 @@
 DECLARE
+  TYPE SalList IS TABLE OF employees.salary%TYPE;
+  sals SalList;
+
+BEGIN
+  SELECT salary BULK COLLECT INTO sals FROM employees
+    WHERE ROWNUM <= 50;
+ 
+  SELECT salary BULK COLLECT INTO sals FROM employees
+    SAMPLE (10);
+ 
+  SELECT salary BULK COLLECT INTO sals FROM employees
+    FETCH FIRST 50 ROWS ONLY;
+END;
+
+---
+
+DECLARE
   TYPE RecordTyp IS RECORD (
     last employees.last_name%TYPE,
     id   employees.employee_id%TYPE
@@ -16,7 +33,7 @@ END;
 ---
 
 -- If you need to retrieve a single row and you know that at most one row
--- should be retrieved, you should use a SELECT INTO statement, as in the following:
+-- should be retrieved, you should use a SELECT INTO statement:
 --
 -- The implicit SELECT INTO offers the most-efficient means of returning that
 -- single row of information to your PL/SQL program. In addition, the use of SELECT INTO states 
@@ -30,6 +47,6 @@ BEGIN
    SELECT e.last_name
      INTO l_last_name
      FROM employees e
-   WHERE e.employee_id = process_employee.id_in;
+    WHERE e.employee_id = process_employee.id_in;
    ...
 END process_employee;

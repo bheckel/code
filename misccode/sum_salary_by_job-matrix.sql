@@ -1,4 +1,5 @@
 -- Transpose and sum http://www.orafaq.com/scripts/sql/matrix.txt
+-- See also pivot_rows_to_columns_sum.sql
 
 -- EMPNO		ENAME			JOB					MGR				HIREDATE			SAL			COMM			DEPTNO
 -- ...
