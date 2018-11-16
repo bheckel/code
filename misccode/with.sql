@@ -28,7 +28,7 @@ FROM v;
 ---
 
 with a as(
-  select sys_connect_by_path (job, '/') job_path,sys_connect_by_path (ename, '/') ename_path
+  select sys_connect_by_path(job, '/') job_path, sys_connect_by_path(ename, '/') ename_path
   from scott.emp
   start with mgr is null
   connect by prior empno = mgr)
@@ -40,7 +40,7 @@ select regexp_substr(ename_path, '[^/]+', 1, 1) e1,
        regexp_substr(job_path, '[^/]+', 1, 3) j3
 from a
 
---same
+-- same
 
 select regexp_substr(ename_path, '[^/]+', 1, 1) e1,
        regexp_substr(job_path, '[^/]+', 1, 1) j1,
@@ -49,7 +49,7 @@ select regexp_substr(ename_path, '[^/]+', 1, 1) e1,
        regexp_substr(ename_path, '[^/]+', 1, 3) e3,
        regexp_substr(job_path, '[^/]+', 1, 3) j3
 from (
-  select sys_connect_by_path (job, '/') job_path,sys_connect_by_path (ename, '/') ename_path
+  select sys_connect_by_path(job, '/') job_path,sys_connect_by_path(ename, '/') ename_path
   from scott.emp
   start with mgr is null
   connect by prior empno = mgr
@@ -66,7 +66,7 @@ from (
          regexp_substr(ename_path, '[^/]+', 1, 3) e3,
          regexp_substr(job_path, '[^/]+', 1, 3) j3
   from (
-    select sys_connect_by_path (job, '/') job_path,sys_connect_by_path (ename, '/') ename_path
+    select sys_connect_by_path(job, '/') job_path,sys_connect_by_path(ename, '/') ename_path
     from scott.emp
     start with mgr is null
     connect by prior empno = mgr

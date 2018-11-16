@@ -27,16 +27,10 @@ BEGIN
     comments => 'Compiling weekly Maintenance(GO_WEEKLY)and check nonusedinsetars_contacts into one package');
 END;
 
-BEGIN sys.Dbms_Scheduler.disable('SETARS.ztestbob_job'); END;  -- can pass comma-separated list 'foo, bar'
-BEGIN sys.Dbms_Scheduler.enable('SETARS.ztestbob_job'); END;  -- can pass comma-separated list 'foo, bar'
-
-BEGIN  
-  sys.dbms_scheduler.set_attribute(
-    name => 'SETARS.ztestbob_job',
-    ATTRIBUTE => 'start_date',
-    VALUE => '12-NOV-18 09.50.00AM EST5EDT'
-  );
-END;
+-- Update job (if disabled)
+BEGIN sys.Dbms_Scheduler.enable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;  -- can pass comma-separated list 'foo, bar'
+BEGIN sys.dbms_scheduler.set_attribute(name => 'SETARS.PERIODICLIFECYCLEUPDATE', ATTRIBUTE => 'start_date',VALUE => '15-NOV-18 09.00.00.856890 AM EST5EDT');END;
+BEGIN sys.Dbms_Scheduler.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
 
 ---
 
