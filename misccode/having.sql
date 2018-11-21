@@ -104,3 +104,23 @@ where guid in (select distinct guid
                group by guid
                having count(guid)=2)
 order by guid
+
+---
+
+select shape, 
+       sum ( case when colour = 'red' then weight end ) red_tot_weight, 
+       sum ( case when colour = 'blue' then weight end ) blue_tot_weight
+from   bricks 
+group  by shape
+having sum ( case when colour = 'red' then weight end ) +
+       sum ( case when colour = 'blue' then weight end ) > 5
+order  by shape;
+
+-- same (better)
+select shape,  
+       sum ( case when colour = 'red' then weight end ) red_tot_weight,  
+       sum ( case when colour = 'blue' then weight end ) blue_tot_weight 
+from   bricks  
+group  by shape 
+having sum ( weight ) > 5 
+order  by shape;

@@ -34,19 +34,14 @@ BEGIN sys.Dbms_Scheduler.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
 
 ---
 
-PROCEDURE contact_save_jms_msg_job(in_account_id   NUMBER,
-																	 in_num_attempts NUMBER DEFAULT 1,
-																	 in_email        VARCHAR2) IS
-BEGIN
-	DBMS_SCHEDULER.CREATE_JOB(job_name   => DBMS_SCHEDULER.GENERATE_JOB_NAME('CONT_'),
-														job_type   => 'PLSQL_BLOCK',
-														job_action => 'BEGIN cdhub_jms.contact_save_jms_msg_action(' ||
-																						in_account_id || ',' ||
-																						in_num_attempts || ',''' ||
-																						in_email || '''); END;',
-														start_date => CAST(sysdate + interval '1'
-																							 minute AS TIMESTAMP),
-														enabled    => TRUE,
-														auto_drop  => TRUE,
-														comments   => 'CDHub CONTACT SAVE JOB for ACCT#' || in_account_id);
-END;
+DBMS_SCHEDULER.CREATE_JOB(job_name   => 'SET_DNB_JOB_' || account_id_cnt,
+													job_type   => 'PLSQL_BLOCK',
+													job_action => 'BEGIN USER_ON_CALL.SET_DNB_AS_INPUTSOURCE(' ||
+																					 acct.account_id || ',' ||
+																					 request_id_quoted || 
+																					 '); END;',
+										--start_date => CAST(sysdate + interval '1' minute AS TIMESTAMP),
+													start_date => cast(SYSTIMESTAMP + (.000694 * wait_minutes) AS TIMESTAMP),
+													enabled    => TRUE,
+													auto_drop  => TRUE,
+													comments   => 'Set DNB as input source');

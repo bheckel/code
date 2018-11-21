@@ -48,6 +48,7 @@ To github.sas.com:orion/data.git
    07ae678951a..6b7ce657a4d  develop -> develop
 
 git branch -d feature/ORION-31587
+git fetch -p  # prune other's deleted branches
 git push origin --delete feature/ORION-31587
 
 ---
@@ -72,9 +73,11 @@ git push  # PR initiated
 $ git checkout develop
 $ git pull
 $ git merge --no-ff feature/ORION-26857
-$ git push origin develop
+$ git push [origin develop]
 git branch -d feature/ORION-26857
 git push origin --delete feature/ORION-26857
+git fetch -p  # prune other's deleted branches
+git branch -a  # confirm
 
 ---
 
