@@ -1,3 +1,14 @@
+
+SELECT ids, ab.account_id 
+FROM (WITH DATA AS
+      (SELECT '432803,434768,439324' ids FROM dual)
+      SELECT to_number(TRIM(regexp_substr(ids, '[^,]+', 1, LEVEL))) ids
+      FROM DATA
+      CONNECT BY instr(ids, ',', 1, LEVEL - 1) > 0) csv
+LEFT JOIN account_base ab ON csv.ids=ab.account_id
+
+---
+
 -- Subquery factoring to determine which color brick has a greater than average count
 with brick_colour_counts as (
   select colour, count(*) colour_count
@@ -12,6 +23,7 @@ with brick_colour_counts as (
 
 ---
 
+-- Dummy up data
 with v as (
           select date '2000-01-01' d, 10 amt from dual
 union all select date '2000-01-02', 11 from dual

@@ -158,32 +158,23 @@ CREATE TABLE plch_employees
 /
 
 BEGIN
-   INSERT INTO plch_employees
-        VALUES (100, 'Ellison', 1000000);
-
-   INSERT INTO plch_employees
-        VALUES (200, 'Gates', 1000000);
-
-   INSERT INTO plch_employees
-        VALUES (300, 'Zuckerberg', 1000000);
-
+   INSERT INTO plch_employees VALUES (100, 'Ellison', 1000000);
+   INSERT INTO plch_employees VALUES (200, 'Gates', 1000000);
+   INSERT INTO plch_employees VALUES (300, 'Zuckerberg', 1000000);
    COMMIT;
 END;
 /
 
 /* Fill a collection with an explicit cursor: */
-
 DECLARE
    CURSOR plch_employees_cur
    IS
       SELECT * FROM plch_employees;
 
    /* Must index by number if using assoc array collection */
-   TYPE plch_employees_aat
-      IS TABLE OF plch_employees%ROWTYPE
-            INDEX BY BINARY_INTEGER;
+   TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
 
-   l_plch_employees   plch_employees_aat;
+   l_plch_employees plch_employees_aat;
 BEGIN
    OPEN plch_employees_cur;
 
@@ -194,13 +185,10 @@ END;
 /
 
 /* Fill a collection with an implicit cursor: */
-
 DECLARE
-   TYPE plch_employees_aat
-      IS TABLE OF plch_employees%ROWTYPE
-            INDEX BY BINARY_INTEGER;
+   TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
 
-   l_plch_employees   plch_employees_aat;
+   l_plch_employees plch_employees_aat;
 BEGIN
    SELECT *
      BULK COLLECT INTO l_plch_employees
@@ -209,11 +197,10 @@ END;
 /
 
 /* Fill a collection with a dynamic SQL statement (Oracle 9i Release 2 and above): */
-
 DECLARE
    TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
 
-   l_plch_employees   plch_employees_aat;
+   l_plch_employees plch_employees_aat;
 BEGIN
    EXECUTE IMMEDIATE 'SELECT * FROM plch_employees'
       BULK COLLECT INTO l_plch_employees;
@@ -221,7 +208,6 @@ END;
 /
 
 /* And here's an example of using BULK COLLECT with a cursor variable: */
-
 DECLARE
    l_cursor   SYS_REFCURSOR;
    l_list     DBMS_SQL.varchar2s;
@@ -327,7 +313,7 @@ BEGIN
    CLOSE employees_cur;
 END bulk_with_limit;
 
-
+---
 
 DECLARE
   TYPE empcurtyp IS REF CURSOR;
@@ -355,7 +341,6 @@ END;
 ---
 
 /* See also insert_invitations.pck */
-
 
 /* https://blogs.oracle.com/oraclemagazine/bulk-processing-with-bulk-collect-and-forall */
 
@@ -417,7 +402,7 @@ BEGIN
          UPDATE RISK_PRODUCT
          SET    UPDATED = UPDATED, UPDATEDBY = UPDATEDBY,
                 AT_RISK_AMOUNT = t_tab(i).AT_RISK_AMOUNT
-         where  risk_product_id = t_tab(i).risk_product_id;
+         WHERE  risk_product_id = t_tab(i).risk_product_id;
          
      COMMIT;
           

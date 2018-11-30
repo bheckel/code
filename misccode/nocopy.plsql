@@ -27,6 +27,7 @@ BEGIN
 
   emp_tab.EXTEND(499999, 1);  -- copy element 1 into 2 .. 500000
   
+  -- Benchmark performance
   SELECT SYSTIMESTAMP INTO t1 FROM DUAL;
   do_nothing1(emp_tab);  -- pass IN OUT parameter
   SELECT SYSTIMESTAMP INTO t2 FROM DUAL;

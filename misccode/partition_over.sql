@@ -1,4 +1,4 @@
-/* See also greater_than_average.sql */
+/* Windowing function.  See also greater_than_average.sql */
 
 with v as (
           select date '2000-01-01' d, 10 amt from dual
@@ -16,3 +16,21 @@ select d
       --,dense_rank() over (order by d) orderbydt -- 1,2,3...
       ,rank() over (order by d) orderbydt -- 1,3,3...
 FROM v;
+
+---
+
+-- Running total balance
+SELECT
+  t.*,
+  t.current_balance - NVL(
+    SUM(t.amount) OVER (
+      PARTITION by t.account_id
+      ORDER BY     t.value_date DESC,
+                   t.id         DESC
+      ROWS BETWEEN UNBOUNDED PRECEDING
+           AND     1         PRECEDING
+    ),
+  0) AS balance
+FROM     transactions t
+WHERE    t.account_id = 1
+ORDER BY t.value_date DESC, t.id DESC

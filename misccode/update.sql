@@ -1,3 +1,17 @@
+-- Update target tbl using source tbl
+update target_bricks tb 
+set ( tb.colour, tb.shape ) = ( 
+  select sb.colour, sb.shape  
+  from   source_bricks sb 
+  where  sb.brick_id=tb.brick_id 
+) 
+where exists ( 
+  select * from source_bricks sb 
+  where  sb.brick_id=tb.brick_id 
+); 
+
+---
+
 -- If this is the first statement in your transaction it will lock both of these rows.
 -- Session 2 must wait until the first commits. Thus deadlock is impossible.
 select * from accounts where account_id in (1, 2) for update;

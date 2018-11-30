@@ -17,7 +17,8 @@ set wrap off;
 set feedback off;
 set colsep ',';
 
-desc account_attribute;
+/* desc employee_base; */
+         select * from cdhub_error ce where ce.orion_entity_id ='2416206';
 
 --SELECT DISTINCT
 --    R.SampId        AS Samp_Id,
