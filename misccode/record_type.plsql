@@ -1,9 +1,58 @@
+DECLARE
+	CURSOR course_cur IS
+		SELECT * FROM course WHERE rownum < 2;
+
+	TYPE course_type IS RECORD (
+    course_no NUMBER(38)
+   ,description VARCHAR2(50)
+   ,cost NUMBER(9,2)
+   ,prerequisite NUMBER(8)
+   ,created_by VARCHAR2(30)
+   ,created_date DATE
+   ,modified_by VARCHAR2(30)
+   ,modified_date DATE
+  );
+
+  course_rec1 course%ROWTYPE;     -- table-based record
+  course_rec2 course_cur%ROWTYPE; -- cursor-based record
+  course_rec3 course_type;        -- user-defined record
+
+BEGIN
+  -- Populate table-based record
+  SELECT *
+  INTO course_rec1
+  FROM course
+  WHERE course_no = 10;
+
+  -- Populate cursor-based record
+  OPEN course_cur;
+  LOOP
+    FETCH course_cur INTO course_rec2;
+    EXIT WHEN course_cur%NOTFOUND;
+  END LOOP;
+
+  -- Assign COURSE_REC2 to COURSE_REC1 and COURSE_REC3
+  course_rec1 := course_rec2;
+  course_rec3 := course_rec2;
+
+  DBMS_OUTPUT.PUT_LINE(course_rec1.course_no||' - '||course_rec1.description);
+  DBMS_OUTPUT.PUT_LINE(course_rec2.course_no||' - '||course_rec2.description);
+  DBMS_OUTPUT.PUT_LINE(course_rec3.course_no||' - '||course_rec3.description);
+END;
+
+---
+
+-- Records cannot be tested for nullity, equality, or inequality
+
+---
+
 CREATE OR REPLACE PACKAGE department_pkg AUTHID DEFINER IS
  
   TYPE dept_info_record IS RECORD (
     dept_name  departments.department_name%TYPE,
     mgr_name   employees.last_name%TYPE,
     dept_size  PLS_INTEGER
+    dept_cnt   PLS_INTEGER := 10;
   );
  
   -- Function declaration

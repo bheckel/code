@@ -27,6 +27,9 @@ BEGIN
     comments => 'Compiling weekly Maintenance(GO_WEEKLY)and check nonusedinsetars_contacts into one package');
 END;
 
+-- Update job
+BEGIN sys.dbms_scheduler.set_attribute(name => 'SET_CUSTOMER_FLAG_JOB', ATTRIBUTE => 'job_action', VALUE => 'BEGIN ESTARS.SET_CUSTOMER_FLAG(inAccount_ID => 0, do_commit =>1); END;'); END;
+
 -- Update job (if disabled)
 BEGIN sys.Dbms_Scheduler.enable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;  -- can pass comma-separated list 'foo, bar'
 BEGIN sys.dbms_scheduler.set_attribute(name => 'SETARS.PERIODICLIFECYCLEUPDATE', ATTRIBUTE => 'start_date',VALUE => '15-NOV-18 09.00.00.856890 AM EST5EDT');END;
@@ -45,3 +48,47 @@ DBMS_SCHEDULER.CREATE_JOB(job_name   => 'SET_DNB_JOB_' || account_id_cnt,
 													enabled    => TRUE,
 													auto_drop  => TRUE,
 													comments   => 'Set DNB as input source');
+
+---
+
+CREATE OR REPLACE PACKAGE orion33427 AS
+  
+  PROCEDURE t;
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY orion33427 AS
+
+  PROCEDURE t
+  IS
+  
+    CURSOR c IS
+      select 'ESTARS.'||a.job_name full_job_name, a.job_name, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, 
+             a.JOB_CLASS, a.ENABLED, a.SCHEDULE_NAME, a.SCHEDULE_TYPE, regexp_replace(a.start_date, ' -\d\d:\d\d.*$', ' EST5EDT') new_start_date
+        from all_scheduler_jobs a
+       WHERE to_char(a.start_date, 'TZR') !='EST5EDT'
+       ORDER BY 2;
+    
+  BEGIN
+    
+    FOR j IN c LOOP
+      dbms_output.put_line('modifying: ' || rpad(j.full_job_name, 35) || ' ' || j.start_date || ' to ' || j.new_start_date || '    ' || j.schedule_name || ' ' || j.schedule_type);
+      
+      IF j.schedule_type = 'NAMED' THEN
+        dbms_output.put_line('ok1');
+        sys.dbms_scheduler.set_attribute(name => j.schedule_name, ATTRIBUTE => 'start_date',VALUE => j.new_start_date);
+      ELSIF j.schedule_type = 'CALENDAR' THEN
+        dbms_output.put_line('ok2');
+        sys.dbms_scheduler.set_attribute(name => j.full_job_name, ATTRIBUTE => 'start_date', VALUE => j.new_start_date);
+      END IF;
+    END LOOP;
+  
+  EXCEPTION
+    WHEN others THEN
+      dbms_output.put_line(SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+      RAISE;
+
+  END;  
+END;
+/
+

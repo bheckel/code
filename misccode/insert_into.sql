@@ -1,3 +1,12 @@
+-- Two records from one
+INSERT ALL
+ INTO plch_tickers (ticker, pricetype, price)
+VALUES (ticker, 'O', open_price)
+ INTO plch_tickers (ticker, pricetype, price)
+VALUES (ticker, 'C', close_price)
+	SELECT ticker, open_price, close_price FROM plch_stocks;
+
+---
 
 insert into mailing_list (name, email) values ('Philip Greenspun','philg@mit.edu');
 

@@ -1,57 +1,48 @@
+-- See also associative_array_table_indexby.plsql, varray.plsql
 
-CREATE OR REPLACE TYPE strings_ntt IS TABLE OF VARCHAR2 (100);
-/
+DECLARE
+	TYPE last_name_type IS TABLE OF student.last_name%TYPE;
+  -- Initialized at the time of declaration, it's empty but not NULL
+	last_name_tab last_name_type := last_name_type();
 
-CREATE OR REPLACE PACKAGE tf
-IS
-   FUNCTION queryme(count_in IN INTEGER) RETURN strings_ntt;
+	i PLS_INTEGER := 0;
+
+	CURSOR name_cur IS
+		SELECT last_name FROM student WHERE rownum < 10;
+BEGIN
+	FOR rec IN name_cur LOOP
+		i := i + 1;
+		last_name_tab.EXTEND;
+		last_name_tab(i) := rec.last_name;
+    DBMS_OUTPUT.PUT_LINE ('last_name('||i||'): '||last_name_tab(i));
+  END LOOP;
 END;
-/
 
-CREATE OR REPLACE PACKAGE BODY tf
-IS
-   FUNCTION queryme(count_in IN INTEGER) RETURN strings_ntt
-   IS
+---
 
-   stringx strings_ntt := strings_ntt();
-   
-   BEGIN
-     FOR i IN 1 .. count_in LOOP
-       stringx.EXTEND();
-       stringx(i) := 'abc';
-     END LOOP;
-    
-    RETURN stringx;
-   END;
-END;
-/
-
-SELECT COLUMN_VALUE my_string FROM TABLE (tf.queryme(5))
-/
+/* You can compare nested table variables to the value NULL or to each other */
 
 ---
 
 /* https://docs.oracle.com/database/121/LNPLS/composites.htm#LNPLS99981 */
 
-/* You can compare nested table variables to the value NULL or to each other */
-
+-- Schema-level declaration is ok for nested tables, not associated arrays
 DECLARE
   TYPE Roster IS TABLE OF VARCHAR2(15);  -- nested table type
  
-  -- nested table variable initialized with constructor:
- 
+  -- Initialized with constructor:
   names Roster := Roster('D Caruso', 'J Hamil', 'D Piro', 'R Singh');
  
-  PROCEDURE print_names (heading VARCHAR2) IS
-  BEGIN
-    DBMS_OUTPUT.PUT_LINE(heading);
- 
-    FOR i IN names.FIRST .. names.LAST LOOP  -- For first to last element
-      DBMS_OUTPUT.PUT_LINE(names(i));
-    END LOOP;
- 
-    DBMS_OUTPUT.PUT_LINE('---');
-  END;
+  PROCEDURE print_names(heading VARCHAR2) IS
+    BEGIN
+      DBMS_OUTPUT.PUT_LINE(heading);
+   
+      FOR i IN names.FIRST .. names.LAST LOOP  -- For first to last element
+        DBMS_OUTPUT.PUT_LINE(names(i));
+      END LOOP;
+   
+      DBMS_OUTPUT.PUT_LINE('---');
+    END;
   
 BEGIN 
   print_names('Initial Values:');
