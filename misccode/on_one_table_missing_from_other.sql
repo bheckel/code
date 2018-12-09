@@ -1,3 +1,5 @@
+-- See also csv_list_to_table.sql
+
 CREATE TABLE zorion32822_missing as
 select orion_contact_id from zorion32822@eds
 MINUS

@@ -27,3 +27,14 @@ select d
       ,sum(amt) over (order by d rows between unbounded preceding and current row) cumulative_sum
 FROM v;
 
+---
+
+-- 10k records
+INSERT INTO stocks
+       SELECT 'STK' || LEVEL,
+              SYSDATE,
+              LEVEL,
+              LEVEL + 15
+         FROM DUAL
+   CONNECT BY LEVEL <= 10000
+/   

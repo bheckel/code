@@ -1,3 +1,56 @@
+-- To do bulk binds with SELECT statements, you include the BULK COLLECT clause in the SELECT statement instead of using INTO clause (or FETCH INTO, RETURNING INTO)
+DECLARE
+  TYPE NumTab IS TABLE OF hr.employees.employee_id%TYPE;
+  TYPE NameTab IS TABLE OF hr.employees.last_name%TYPE;
+ 
+  -- Collections to bulk collect into:
+  nums  NumTab;
+  names NameTab;
+ 
+  PROCEDURE print_first_n(n POSITIVE) IS
+		BEGIN
+			IF nums.COUNT = 0 THEN
+				DBMS_OUTPUT.PUT_LINE ('Collections are empty.');
+			ELSE
+				DBMS_OUTPUT.PUT_LINE ('First ' || n || ' employees:');
+	 
+				FOR i IN 1 .. n LOOP
+					DBMS_OUTPUT.PUT_LINE ('  Employee #' || nums(i) || ': ' || names(i));
+				END LOOP;
+			END IF;
+		END;
+ 
+BEGIN
+  SELECT employee_id, last_name
+  BULK COLLECT INTO nums, names
+  FROM hr.employees
+  ORDER BY employee_id;
+ 
+  print_first_n(3);
+  print_first_n(6);
+END;
+/
+
+
+-- To do bulk binds with INSERT, UPDATE, and DELETE statements, you enclose the SQL statement within a PL/SQL FORALL statement
+DECLARE
+  TYPE NumList IS VARRAY(20) OF NUMBER;
+  depts NumList := NumList(10, 30, 70);
+BEGIN
+  FORALL i IN depts.FIRST..depts.LAST
+    DELETE FROM emp WHERE deptno = depts(i);
+END;
+
+DECLARE
+  TYPE NumList IS VARRAY(10) OF NUMBER;
+  depts NumList := NumList(20, 30, 50, 55, 57, 60, 70, 75, 90, 92);
+BEGIN
+  FORALL j IN 4..7  -- bulk-bind only part of varray
+    UPDATE emp SET sal = sal * 1.10 WHERE deptno = depts(j);
+END;
+
+---
+
 CREATE OR REPLACE PACKAGE DemoBCFA_Pkg IS
 
  PROCEDURE DemoBCFA;
@@ -15,7 +68,7 @@ CREATE OR REPLACE PACKAGE BODY DemoBCFA_Pkg IS
     PRAGMA EXCEPTION_INIT (failure_in_forall, -24381);  -- ORA-24381: error(s) in array DML  
 
     CURSOR c IS 
-      select id from employees where id=162298785905044046182375853313120458719;
+      select id from employees where id=162;
     
     TYPE t_emp_tbl_type IS TABLE OF c%ROWTYPE;
 
@@ -42,7 +95,7 @@ CREATE OR REPLACE PACKAGE BODY DemoBCFA_Pkg IS
           -- DML statements that a FORALL statement sends to SQL differ only in
           -- their VALUES and WHERE clauses. The values in those clauses must come
           -- from existing, populated collections.
-          FORALL i IN 1 .. l_tbl_rows SAVE EXCEPTIONS
+          FORALL i IN 1 .. l_tbl_rows SAVE EXCEPTIONS  -- to have a bulk bind complete despite errors, add keywords SAVE EXCEPTIONS
             DELETE FROM employees WHERE id=t_emp_tbl(i).id;
             --raise failure_in_forall;
 
@@ -52,12 +105,12 @@ CREATE OR REPLACE PACKAGE BODY DemoBCFA_Pkg IS
               DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows prior to EXCEPTION');
    
               FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
-                DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on index ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX || '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
+                DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX || '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
                                        ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
               END LOOP; 
               -- Now keep doing the next l_limit_group...
         END;
-        COMMIT;  -- 500 rows to minimize locks
+        COMMIT;  -- 300 rows to minimize locks
       END LOOP;
       COMMIT;
     CLOSE c;
@@ -69,59 +122,6 @@ END DemoBCFA_Pkg;
 
 ---
 
-DECLARE
-  TYPE NumTab IS TABLE OF hr.employees.employee_id%TYPE;
-  TYPE NameTab IS TABLE OF hr.employees.last_name%TYPE;
- 
-  nums  NumTab;
-  names NameTab;
- 
-  PROCEDURE print_first_n (n POSITIVE) IS
-  BEGIN
-    IF nums.COUNT = 0 THEN
-      DBMS_OUTPUT.PUT_LINE ('Collections are empty.');
-    ELSE
-      DBMS_OUTPUT.PUT_LINE ('First ' || n || ' employees:');
- 
-      FOR i IN 1 .. n LOOP
-        DBMS_OUTPUT.PUT_LINE ('  Employee #' || nums(i) || ': ' || names(i));
-      END LOOP;
-    END IF;
-  END;
- 
-BEGIN
-  SELECT employee_id, last_name
-  BULK COLLECT INTO nums, names
-  FROM hr.employees
-  ORDER BY employee_id;
- 
-  print_first_n(3);
-  print_first_n(6);
-END;
-/
-
----
-
-DECLARE
-  TYPE NumList IS TABLE OF employees.employee_id%TYPE;
-  nums  NumList;
-  TYPE NameList IS TABLE OF employees.last_name%TYPE;
-  names  NameList;
-BEGIN
-  DELETE FROM emp_temp
-  WHERE department_id = 30
-  RETURNING employee_id, last_name
-  BULK COLLECT INTO nums, names;
-
-  DBMS_OUTPUT.PUT_LINE ('Deleted ' || SQL%ROWCOUNT || ' rows:');
-
-  FOR i IN nums.FIRST .. nums.LAST LOOP
-    DBMS_OUTPUT.PUT_LINE ('Employee #' || nums(i) || ': ' || names(i));
-  END LOOP;
-END;
-/
-
--- Better:
 DECLARE
   TYPE NumList IS TABLE OF NUMBER;
   depts  NumList := NumList(10,20,30);
@@ -149,41 +149,31 @@ END;
 
 ---
 
-CREATE TABLE plch_employees
-(
-   employee_id   INTEGER
- ,  last_name    VARCHAR2 (100)
- ,  salary       NUMBER
+CREATE TABLE plch_employees (
+  employee_id   INTEGER
+  , last_name   VARCHAR2(100)
+  , salary      NUMBER
 )
 /
 
 BEGIN
-   INSERT INTO plch_employees
-        VALUES (100, 'Ellison', 1000000);
-
-   INSERT INTO plch_employees
-        VALUES (200, 'Gates', 1000000);
-
-   INSERT INTO plch_employees
-        VALUES (300, 'Zuckerberg', 1000000);
-
+   INSERT INTO plch_employees VALUES (100, 'Ellison', 1000000);
+   INSERT INTO plch_employees VALUES (200, 'Gates', 1000000);
+   INSERT INTO plch_employees VALUES (300, 'Zuckerberg', 1000000);
    COMMIT;
 END;
 /
 
 /* Fill a collection with an explicit cursor: */
-
 DECLARE
    CURSOR plch_employees_cur
    IS
       SELECT * FROM plch_employees;
 
    /* Must index by number if using assoc array collection */
-   TYPE plch_employees_aat
-      IS TABLE OF plch_employees%ROWTYPE
-            INDEX BY BINARY_INTEGER;
+   TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
 
-   l_plch_employees   plch_employees_aat;
+   l_plch_employees plch_employees_aat;
 BEGIN
    OPEN plch_employees_cur;
 
@@ -194,13 +184,10 @@ END;
 /
 
 /* Fill a collection with an implicit cursor: */
-
 DECLARE
-   TYPE plch_employees_aat
-      IS TABLE OF plch_employees%ROWTYPE
-            INDEX BY BINARY_INTEGER;
+   TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
 
-   l_plch_employees   plch_employees_aat;
+   l_plch_employees plch_employees_aat;
 BEGIN
    SELECT *
      BULK COLLECT INTO l_plch_employees
@@ -209,19 +196,17 @@ END;
 /
 
 /* Fill a collection with a dynamic SQL statement (Oracle 9i Release 2 and above): */
-
 DECLARE
    TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
 
-   l_plch_employees   plch_employees_aat;
+   l_plch_employees plch_employees_aat;
 BEGIN
    EXECUTE IMMEDIATE 'SELECT * FROM plch_employees'
       BULK COLLECT INTO l_plch_employees;
 END;
 /
 
-/* And here's an example of using BULK COLLECT with a cursor variable: */
-
+/* Fill a collection with a strong cursor variable: */
 DECLARE
    l_cursor   SYS_REFCURSOR;
    l_list     DBMS_SQL.varchar2s;
@@ -243,8 +228,7 @@ DROP TABLE plch_employees
 
 ---
 
-CREATE TABLE plch_stuff
-(
+CREATE TABLE plch_stuff (
    id       NUMBER PRIMARY KEY
  , rating   INTEGER
 )
@@ -261,7 +245,7 @@ DECLARE
    TYPE stuff_t IS TABLE OF plch_stuff%ROWTYPE;
 
    l_stuff   stuff_t;
-   x number;
+   x NUMBER;
 BEGIN
    SELECT *
      BULK COLLECT INTO l_stuff
@@ -273,8 +257,8 @@ BEGIN
 
    FOR i IN 1 ..l_stuff.COUNT
    LOOP
-    --x := l_stuff(i).rating;
-    --dbms_output.put_line(x);
+    x := l_stuff(i).rating;
+    dbms_output.put_line(x);
     dbms_output.put_line(l_stuff(i).rating);
    END LOOP;
 
@@ -327,35 +311,9 @@ BEGIN
    CLOSE employees_cur;
 END bulk_with_limit;
 
-
-
-DECLARE
-  TYPE empcurtyp IS REF CURSOR;
-  TYPE namelist_ntt IS TABLE OF employees.last_name%TYPE;
-  TYPE sallist_ntt  IS TABLE OF employees.salary%TYPE;
-  emp_cv  empcurtyp;
-  names   namelist_ntt;
-  sals    sallist_ntt;
-BEGIN
-  OPEN emp_cv FOR
-    SELECT last_name, salary FROM employees
-    WHERE job_id = 'SA_REP'
-    ORDER BY salary DESC;
-
-  FETCH emp_cv BULK COLLECT INTO names, sals;
-  CLOSE emp_cv;
-  -- Loop through the names and sals collections
-  FOR i IN names.FIRST .. names.LAST
-  LOOP
-    DBMS_OUTPUT.PUT_LINE('Name = ' || names(i) || ', salary = ' || sals(i));
-  END LOOP;
-END;
-/
-
 ---
 
 /* See also insert_invitations.pck */
-
 
 /* https://blogs.oracle.com/oraclemagazine/bulk-processing-with-bulk-collect-and-forall */
 
@@ -368,7 +326,7 @@ BEGIN
    FORALL indx IN 1 .. l_eligible_ids.COUNT SAVE EXCEPTIONS
       UPDATE employees emp
          SET emp.salary = emp.salary + emp.salary * increase_pct_in
-       WHERE emp.employee_id = l_eligible_ids (indx);
+       WHERE emp.employee_id = l_eligible_ids(indx);
 EXCEPTION
    WHEN OTHERS
    THEN
@@ -417,13 +375,10 @@ BEGIN
          UPDATE RISK_PRODUCT
          SET    UPDATED = UPDATED, UPDATEDBY = UPDATEDBY,
                 AT_RISK_AMOUNT = t_tab(i).AT_RISK_AMOUNT
-         where  risk_product_id = t_tab(i).risk_product_id;
+         WHERE  risk_product_id = t_tab(i).risk_product_id;
          
      COMMIT;
           
   END LOOP;
   CLOSE c;
 END;
-
-
-

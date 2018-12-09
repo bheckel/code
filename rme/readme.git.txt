@@ -87,7 +87,7 @@ Approved PR collision https://bocoup.com/blog/git-workflow-walkthrough-merging-p
 git checkout master
 git fetch origin master
 git checkout docs
-git merge master
+git merge master  # or this?? git mergetool
 # fix conflict... test code on this feature branch...
 git add . && git commit -m 'Fix'
 git push

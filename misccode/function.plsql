@@ -1,3 +1,36 @@
+CREATE OR REPLACE FUNCTION SUP_HAS_ACTIVE_SITES(in_account_id IN NUMBER) RETURN BOOLEAN IS
+----------------------------------------------------------------------------
+-- Author:  Bob Heckel (boheck)
+-- Date:    12-Nov-18
+-- Purpose: Determine if any account in SUP hierarchy has active sites
+-- JIRA:    ORION-33077
+----------------------------------------------------------------------------
+  has_active BOOLEAN;  
+  cnt        PLS_INTEGER := 0;
+  
+BEGIN
+  SELECT SUM(a.existing_customer)
+  INTO cnt
+  FROM account_search a
+  WHERE a.sup_account_id = in_account_id
+  GROUP BY a.sup_account_id;
+       
+   IF cnt > 0 THEN
+     has_active := TRUE;
+   ELSE
+     has_active := FALSE;
+   END IF;
+   
+  RETURN has_active;
+  
+EXCEPTION 
+  WHEN NO_DATA_FOUND THEN
+    RETURN FALSE;
+    
+end SUP_HAS_ACTIVE_SITES;
+
+---
+
 FUNCTION getIndustryLOVId(naics_in IN VARCHAR2) RETURN NUMBER IS
 	naics_value     VARCHAR2(10);
 	industry_lov_id NUMBER := NULL;
