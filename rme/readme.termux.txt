@@ -15,15 +15,8 @@ deprecated
 
 ---
 
-# git
-
-cd dotfiles && git pull origin master
-
 cd transfer && git add readme.termux.txt && git commit -m'mod' && git push origin master
-
-apt update && apt upgrade
 
 ---
 
-# Termux shebang:
-#!/data/data/com.termux/files/usr/bin/bash
+apt update && apt upgrade

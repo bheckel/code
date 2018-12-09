@@ -18,4 +18,6 @@ BoldCyan=189,219,219
 White=217,217,217
 BoldWhite=255,255,255
 
+--
+
 $ mintty.exe --loadconfig white.minttyrc  
