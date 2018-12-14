@@ -1,3 +1,24 @@
+select empno, ename, job, sal,
+       -- "Olympic" 1,2,2,4,5...
+       rank() OVER (order by sal) as sal_rank,
+       -- 1,2,2,3,4...
+       dense_rank() OVER (order by sal) as sal_dense_rank,
+       -- 1,2,3,4,5... ties are indeterminant
+       row_number() OVER (order by sal) as sal_row_number
+       -- 1,2,3,4,5... with tie-breaker
+       row_number() OVER (order by sal, empno) as sal_row_number
+       rank() OVER (order by sal DESC NULLS LAST ) as sal_rank,
+from emp
+
+
+select name, gross_sales,
+       100*cume_dist() OVER ( order by gross_sales ) as cumedist
+       100*percent_rank() OVER ( order by gross_sales ) as pctrank
+       ntile(4) OVER ( order by gross_sales DESC ) as quartile
+from movies
+
+---
+
 /* Windowing function.  See also greater_than_average.sql */
 
 with v as (

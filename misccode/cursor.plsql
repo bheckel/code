@@ -20,24 +20,6 @@ PROCEDURE test(in_aid contact_base.account_name_id%TYPE) IS
 		END LOOP loopy;
 END test;
 
-
-
-procedure move_salesgroup2(sg_old in varchar2, sg_new in varchar2) is
-	
-	cursor cur1 is select distinct salesgroup from tmp_account_base;
-	
-	begin
-		 if (sg_old = sg_new) then
-			 RETURN;
-		 end if;
-
-		 for curr_c in cur1 loop
-			 DBMS_OUTPUT.put_line('ok ' || sg_old || sg_new || curr_c.salesgroup);
-		 end loop;
-  end move_salesgroup2;
-
-
-
 -- A cursor is a pointer to this context area. PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL
 -- statement. The set of rows the cursor holds is referred to as the active set.
@@ -105,7 +87,7 @@ BEGIN
 END;
 /
 
-
+---
 
 SET serveroutput on;
 SHOW ERRORS;

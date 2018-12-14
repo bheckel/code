@@ -1,3 +1,88 @@
+
+CREATE OR REPLACE PACKAGE ORION34136 IS
+  -- ----------------------------------------------------------------------------
+  -- Author: Bob Heckel
+  -- Date:   
+  -- Usage:  
+  -- JIRA:   ORION-
+  -- ----------------------------------------------------------------------------
+          
+ failure_in_forall EXCEPTION;  
+ PRAGMA EXCEPTION_INIT (failure_in_forall, -24381);  -- ORA-24381: error(s) in array DML  
+ 
+ PROCEDURE upd;
+
+END ORION34136;
+/
+CREATE OR REPLACE PACKAGE BODY ORION34136 IS
+
+  PROCEDURE upd IS
+    l_limit_group  PLS_INTEGER := 0;
+    l_tab_size     PLS_INTEGER := 0;
+    l_tab_size_tot PLS_INTEGER := 0;
+
+    CURSOR c1 IS
+      SELECT o.opportunity_id
+        FROM opportunity_base o
+       WHERE o.status_achieved_date < ADD_MONTHS(sysdate, -3) 
+         AND o.opportunity_id IN ( SELECT oo.opportunity_id FROM zOPPORTUNITY_OPT_OUT oo WHERE NVL(oo.POOR_CLOSEOUT_OPT_OUT, 0) != 1 )
+AND ROWNUM<600
+      ;
+
+    TYPE t1 IS TABLE OF c1%ROWTYPE;
+    l_recs t1;
+            
+    BEGIN
+    
+      OPEN c1;
+      LOOP
+        FETCH c1 BULK COLLECT INTO l_recs LIMIT 500;  
+        
+        l_limit_group := l_limit_group + 1;
+        l_tab_size := l_recs.COUNT;
+        l_tab_size_tot := l_tab_size_tot + l_tab_size;
+        dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processing ' || l_tab_size || ' records' || ' total ' || l_tab_size_tot);
+        
+        EXIT WHEN l_tab_size = 0;
+        
+        BEGIN
+          -- A FORALL statement is usually much faster than an equivalent FOR
+          -- LOOP statement. However, a FOR LOOP statement can contain multiple DML
+          -- statements, while a FORALL statement can contain only one. The batch of
+          -- DML statements that a FORALL statement sends to SQL differ only in
+          -- their VALUES and WHERE clauses. The values in those clauses must come
+          -- from existing, populated collections.
+          FORALL i IN 1 .. l_tab_size SAVE EXCEPTIONS
+            UPDATE zOPPORTUNITY_OPT_OUT
+               SET POOR_CLOSEOUT_OPT_OUT = 1
+             WHERE OPPORTUNITY_ID = l_recs(i).opportunity_id
+            ;
+            --raise failure_in_forall;
+          
+        EXCEPTION
+          WHEN failure_in_forall THEN   
+            DBMS_OUTPUT.put_line(DBMS_UTILITY.format_error_stack);   
+            DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows prior to EXCEPTION');
+   
+            FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
+              DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX || '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
+                                       ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
+            END LOOP;
+            -- Now keep doing the next l_limit_group...
+        END;
+        
+        COMMIT;  -- 300 rows to minimize locks
+      END LOOP;
+
+      CLOSE c1;
+      
+  END upd;
+
+END ORION34136;
+/
+
+---
+
 -- To do bulk binds with SELECT statements, you include the BULK COLLECT clause in the SELECT statement instead of using INTO clause (or FETCH INTO, RETURNING INTO)
 DECLARE
   TYPE NumTab IS TABLE OF hr.employees.employee_id%TYPE;
@@ -48,77 +133,6 @@ BEGIN
   FORALL j IN 4..7  -- bulk-bind only part of varray
     UPDATE emp SET sal = sal * 1.10 WHERE deptno = depts(j);
 END;
-
----
-
-CREATE OR REPLACE PACKAGE DemoBCFA_Pkg IS
-
- PROCEDURE DemoBCFA;
-
-END DemoBCFA_Pkg;
-/
-CREATE OR REPLACE PACKAGE BODY DemoBCFA_Pkg IS
-
-  PROCEDURE DemoBCFA IS
-    l_tbl_rows     PLS_INTEGER := 0;
-    l_tbl_rows_tot PLS_INTEGER := 0;
-    l_limit_group  PLS_INTEGER := 0;
-
-    failure_in_forall EXCEPTION;  
-    PRAGMA EXCEPTION_INIT (failure_in_forall, -24381);  -- ORA-24381: error(s) in array DML  
-
-    CURSOR c IS 
-      select id from employees where id=162;
-    
-    TYPE t_emp_tbl_type IS TABLE OF c%ROWTYPE;
-
-    t_emp_tbl t_emp_tbl_type;
-
-    BEGIN
-      OPEN c;
-      LOOP
-        FETCH c BULK COLLECT INTO t_emp_tbl LIMIT 300;
-
-        l_limit_group := l_limit_group + 1;
-        l_tbl_rows := t_emp_tbl.COUNT;
-        l_tbl_rows_tot := l_tbl_rows_tot + l_tbl_rows;
-        
-        -- Message assumes each FORALL loop *will* process these counts, not that we *have* processed them
-        dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processing ' || l_tbl_rows || ' records' || ' total ' || l_tbl_rows_tot);
-
-        EXIT WHEN l_tbl_rows = 0;
-
-        BEGIN
-          -- A FORALL statement is usually much faster than an equivalent FOR
-          -- LOOP statement. However, a FOR LOOP statement can contain multiple DML
-          -- statements, while a FORALL statement can contain only one. The batch of
-          -- DML statements that a FORALL statement sends to SQL differ only in
-          -- their VALUES and WHERE clauses. The values in those clauses must come
-          -- from existing, populated collections.
-          FORALL i IN 1 .. l_tbl_rows SAVE EXCEPTIONS  -- to have a bulk bind complete despite errors, add keywords SAVE EXCEPTIONS
-            DELETE FROM employees WHERE id=t_emp_tbl(i).id;
-            --raise failure_in_forall;
-
-        EXCEPTION
-            WHEN failure_in_forall THEN   
-              DBMS_OUTPUT.put_line(DBMS_UTILITY.format_error_stack);   
-              DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows prior to EXCEPTION');
-   
-              FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
-                DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX || '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
-                                       ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
-              END LOOP; 
-              -- Now keep doing the next l_limit_group...
-        END;
-        COMMIT;  -- 300 rows to minimize locks
-      END LOOP;
-      COMMIT;
-    CLOSE c;
-    
-  END DemoBCFA;
-
-END DemoBCFA_Pkg;
-/
 
 ---
 

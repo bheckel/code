@@ -1,3 +1,8 @@
+create table dummy_table as
+  select date '2010-01-01'+rownum x, rownum y from dual connect by level <= 365*5;
+
+---
+
 -- See also plch_employees_createtable.plsql
 
 CREATE TABLE tmpbobh (

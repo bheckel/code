@@ -1,3 +1,16 @@
+12-Dec-18 
+https://github.com/vim/vim-win32-installer/releases
+gvim_8.1.0577_x86.zip
+unzip
+
+run gvim.exe (associate)
+
+:vert diffsplit
+drag file 2
+:diffthis
+
+---
+
 " C:\Users\boheck\.vimrc
 if has('unix')
   source /c/cygwin64/home/boheck/dotfiles/_vimrc
@@ -6,6 +19,7 @@ else
 endif
 
 ---
+
 mkdir -p .vim/syntax && cp ~/code/sas/sas.vim .vim/syntax/
 
 ---

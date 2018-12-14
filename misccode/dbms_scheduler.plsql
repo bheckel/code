@@ -1,5 +1,13 @@
 -- https://docs.oracle.com/cd/B19306_01/server.102/b14231/scheduse.htm#i1019182
 
+BEGIN  
+  sys.dbms_scheduler.create_schedule(
+    schedule_name => 'ZTESTBOBSCH', 
+    start_date => '12-NOV-18 09.50.00AM -5:00', 
+    repeat_interval => 'FREQ=MINUTELY;INTERVAL=10;'); 
+END;
+
+
 -- details
 --select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments from all_scheduler_jobs a ORDER BY 1
 -- log
@@ -10,7 +18,7 @@
 -- Drop job
 BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 
--- Recreate job
+-- (Re)create job
 BEGIN
   sys.dbms_scheduler.create_job(
     job_name => 'SETARS.DAILY_DATA_MAINTENANCE_JOB',

@@ -1,4 +1,4 @@
--- oracle
+-- Oracle
 CREATE TABLE TMPCUSTOMERS( 
    ID   INT NOT NULL, 
    NAME VARCHAR (20) NOT NULL, 
@@ -26,6 +26,107 @@ VALUES (5, 'Hardik', 27, 'Bhopal', 8500.00 );
 INSERT INTO TMPCUSTOMERS (ID,NAME,AGE,ADDRESS,SALARY) 
 VALUES (6, 'Komal', 22, 'MP', 4500.00 ); 
 
+
+-- Oracle
+create sequence UID_OPPORTUNITY_OPT_OUT
+minvalue 1000
+maxvalue 999999999999999999999999999
+start with 1001
+increment by 1
+cache 5;
+
+-- Create table
+create table OPPORTUNITY_OPT_OUT
+(
+  OPPORTUNITY_OPT_OUT_ID     NUMBER,
+  OPPORTUNITY_ID             NUMBER,
+  POOR_CLOSEOUT_OPT_OUT      NUMBER,
+  POOR_CLOSEOUT_EMAIL_1_SENT DATE, 
+  POOR_CLOSEOUT_REASON       VARCHAR2(255),
+  PTG_INVOICED_OPT_OUT       NUMBER,
+  CREATED                    DATE,
+  CREATEDBY                  NUMBER,
+  UPDATED                    DATE,
+  UPDATEDBY                  NUMBER,
+  H_VERSION                  NUMBER default 0,
+  actual_updated             TIMESTAMP(6),
+  actual_updatedby           NUMBER,
+  retired_time               TIMESTAMP(6),
+  audit_source               VARCHAR2(255)
+)
+tablespace ES_01
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table OPPORTUNITY_OPT_OUT
+  add constraint OPPORTUNITY_OPT_OUT_PK primary key (OPPORTUNITY_OPT_OUT_ID)
+  using index 
+  tablespace ES_01
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create unique index OPPORTUNITY_OPT_OUT_OPP_ID_IX on OPPORTUNITY_OPT_OUT (OPPORTUNITY_ID)
+  tablespace ES_01
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+create index OPPORTUNITY_OPT_OUT_POOR_IX1 on OPPORTUNITY_OPT_OUT (POOR_CLOSEOUT_OPT_OUT)
+  tablespace ES_01
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate check constraints 
+alter table OPPORTUNITY_OPT_OUT
+  add constraint NN_OPPOPTOUT_CREATEDBY_01
+  check ("CREATEDBY" IS NOT NULL);
+alter table OPPORTUNITY_OPT_OUT
+  add constraint NN_OPPOPTOUT_CREATED_02
+  check ("CREATED" IS NOT NULL);
+alter table OPPORTUNITY_OPT_OUT
+  add constraint NN_OPPOPTOUT_UPDATED_03
+  check ("UPDATED" IS NOT NULL);
+alter table OPPORTUNITY_OPT_OUT
+  add constraint NN_OPPOPTOUT_UPDATEDBY_04
+  check ("UPDATEDBY" IS NOT NULL);
+alter table OPPORTUNITY_OPT_OUT
+  add constraint NN_OPPOPTOUT_HVERSION_05
+  check ("H_VERSION" IS NOT NULL);
+alter table OPPORTUNITY_OPT_OUT
+  add constraint NN_OPPOPTOUT_OPPID_06
+  check ("OPPORTUNITY_ID" IS NOT NULL);
+
+-- Grant/Revoke object privileges 
+grant select on OPPORTUNITY_OPT_OUT to SEKMC;
+
+-- exec ESTARS_HISTORY.CREATE_HIST_TABLE('OPPORTUNITY_OPT_OUT');
 
 
 -- postgres
