@@ -1,3 +1,45 @@
+-- Simple update < 5 records so no bulk collecting
+PROCEDURE SYNC_SG_COUNTRY_NAMES(reportAll NUMBER) IS
+	proc_name varchar2(200) := ' <B>SYNC_SG_COUNTRY_NAMES</B> Procedure<P>';
+	rowsChanged PLS_INTEGER := 0;
+
+	CURSOR c1 IS
+		SELECT lov.value_description, lov.value, sg.code, sg.country_name
+		FROM 
+		 (select lov.value_description, lov.value
+		 from list_of_values lov, custom_list cl, custom_level_list cll
+		 where cl.list_name = 'Country'
+		 and cll.custom_list_id = cl.custom_list_id
+		 and lov.list_of_values_id = cll.list_of_values_id) lov
+		LEFT JOIN 
+		 (select salesgroup, code, country_name
+		 from salesgroup_country) sg ON lov.value=sg.code
+		WHERE DECODE(value_description, country_name, 0, 1) = 1 AND (value_description is NOT NULL AND country_name IS NOT NULL)
+		;
+					
+	BEGIN
+	
+		-- Not bulk collecting because daily updates will usually be minimal or zero
+		FOR l_rec IN c1 LOOP
+			dbms_output.put_line('ok '||l_rec.value_description);
+			
+			UPDATE Zsalesgroup_country
+				 SET country_name = l_rec.value_description -- e.g. should be LOV 'Bosnia and Herzegovina' not 'Bosnia-Herzegovina'
+			 WHERE code = l_rec.value -- 'BA'
+			;
+
+			rowsChanged := rowsChanged + SQL%ROWCOUNT;
+							
+			COMMIT;
+		END LOOP;
+
+	IF ((rowsChanged > 0) AND (reportAll = 1)) THEN
+		dbms_output.put_line('ok2 '||proc_name|| ' ' ||rowsChanged);
+	END IF;
+
+END SYNC_SG_COUNTRY_NAMES;
+
+---
 
 create or replace package body ORION32721 is
   /*

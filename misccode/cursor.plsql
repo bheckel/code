@@ -1,4 +1,10 @@
+-- https://oracle-base.com/articles/misc/implicit-vs-explicit-cursors-in-oracle-plsql
+
+---
+
 --  As long as you do not have DML inside the loop, use the cursor FOR loop
+
+---
 
 PROCEDURE test(in_aid contact_base.account_name_id%TYPE) IS
 	v_in_aid contact_base.account_name_id%TYPE;

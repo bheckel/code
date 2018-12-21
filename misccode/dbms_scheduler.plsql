@@ -1,10 +1,11 @@
 -- https://docs.oracle.com/cd/B19306_01/server.102/b14231/scheduse.htm#i1019182
 
 BEGIN  
-  sys.dbms_scheduler.create_schedule(
-    schedule_name => 'ZTESTBOBSCH', 
-    start_date => '12-NOV-18 09.50.00AM -5:00', 
-    repeat_interval => 'FREQ=MINUTELY;INTERVAL=10;'); 
+  DBMS_SCHEDULER.create_schedule(
+    schedule_name   => 'AUTO_ACCEPT_TARGETS_SCHEDULE',
+    repeat_interval => 'FREQ=MINUTELY; INTERVAL=5;',
+    end_date        => null,
+    comments        => 'Schedule for auto_acknowledge_targets job.');
 END;
 
 
@@ -18,7 +19,7 @@ END;
 -- Drop job
 BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 
--- (Re)create job
+-- Create job (must drop first to avoid error if already exists)
 BEGIN
   sys.dbms_scheduler.create_job(
     job_name => 'SETARS.DAILY_DATA_MAINTENANCE_JOB',
@@ -31,7 +32,11 @@ BEGIN
     end_date => to_date(null),
     job_class => 'DEFAULT_JOB_CLASS',
     enabled => true,
-    auto_drop => false,  -- run more than once
+    -- Jobs are automatically dropped by default after they complete, setting
+    -- auto_drop to FALSE causes the job to persist-note that repeating jobs are
+    -- not auto-dropped unless the job end date passes, the maximum number of runs
+    -- (max_runs) is reached, or the maximum number of failures is reached (max_failures)
+    auto_drop => false,
     comments => 'Compiling weekly Maintenance(GO_WEEKLY)and check nonusedinsetars_contacts into one package');
 END;
 
