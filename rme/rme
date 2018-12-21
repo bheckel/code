@@ -7,6 +7,7 @@
 #  Created: Wed 11 Dec 2002 15:47:36 (Bob Heckel)
 # Modified: Sat 24 Nov 2018 12:42:19 (Bob Heckel)
 ##############################################################################
+echo 'wtf'
   
 location=$HOME/code/rme
 
@@ -44,6 +45,7 @@ location=$HOME/code/rme
 # shift `expr $OPTIND - 1`    # move argument pointer to next
 
 # $EDITOR "$location/readme.$1.txt"
+echo "$location/readme.*${1}*"
 
 [ $# -eq 0 ] && ls $location/readme.*
-[ $# -eq 1 ] && $EDITOR $location/readme.*${1}*
+[ $# -eq 1 ] && $EDITOR "$location/readme.*${1}*"
