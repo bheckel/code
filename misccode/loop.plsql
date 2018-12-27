@@ -1,3 +1,28 @@
+Simple (a.k.a., basic) loop
+
+LOOP
+   statements
+END LOOP;
+Note: one of your statements in a simple loop should be EXIT or EXIT WHEN to ensure that you don't end up with an infinite loop.
+
+WHILE loop
+
+WHILE condition
+LOOP
+   statements
+END LOOP;
+FOR loop
+
+FOR iterator IN low_value .. high_value
+LOOP
+   statements
+END LOOP;
+
+FOR record IN [cursor | (SELECT statement) ]
+LOOP
+   statements
+END LOOP;
+
 -- See also for.plsql
 
 DECLARE
