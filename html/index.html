@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-16" http-equiv="refresh" content="8500">
+  <!-- Modified: Sat 26 Jul 2014 09:04:52 (Bob Heckel) -->
+  <title>Equanimity</title>
+  <link rel="shortcut icon" href="../favicon.ico"/>
+  <meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+  <style>
+    body {
+      background:fixed #110110 url(a_Cakka.gif);
+      font-family:Liberation Serif;
+    }
+    a:link { color:#77B999; }
+    a:hover {
+      background-color:#660060;
+      text-decoration:underline;
+    }
+    a:active { color:#FFFFFF; }
+    a:visited { color:#C9FFC9; }
+    hr { border-width:thin; }
+    h2 {
+      color:#FFFF99;
+      font-weight:bold;
+      width:70%;
+      padding:40px;
+    }
+    #quote, table { 
+      text-align:center;
+      margin-right:auto;
+      margin-left:auto;
+      padding:50px;
+      color:#FFFF99;
+      font-family:Tinos,Liberation Serif;
+      font-size:135%;
+      font-style:italic;
+      width:70%;
+      border:0px dashed;
+    }
+    #fivedaily { 
+      text-align:center;
+      margin-right:auto;
+      margin-left:auto;
+      padding:50px;
+      color:#FFFF99;
+      font-weight:bold;
+      font-size:85%;
+      font-style:italic;
+      width:45%;
+      border:0px dashed;
+    }
+    #ati {
+      text-align:center;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    #aticaption:hover { opacity:1; } 
+    #aticaption { 
+      opacity: 0;
+       -webkit-transition: opacity 3.0s ease-out;  
+       -moz-transition: opacity 3.0s ease-out;  
+       -ms-transition: opacity 3.0s ease-out;  
+       -o-transition: opacity 3.0s ease-out;  
+      transition: opacity 3.0s ease-out;
+      text-align:center;
+      color:#FFFF99;
+      font-family:Tinos,Verajja;
+      font-size:90%;
+      font-style:italic;
+      border:0px dashed;
+    }
+  </style>
+
+  <script>
+    function RandomNumberGenerator(seed){
+      var d = new Date();
+      this.M = 2147483647;
+      this.oneOverM = 1.0 / this.M;
+      return this;
+    }
+
+    function createRandomNumber(seed, Min, Max){
+      var rand = new RandomNumberGenerator(seed);
+      return Math.round((Max-Min) * Math.random(seed) + Min);
+    }
+
+    function ChangeText(txt) {
+      var low = 1;
+      var high = 219;  // xxx
+      var retval = 0;
+      var str;
+      var x;
+      var y;
+      var t;
+
+      while ( (retval < low) || (retval > high) ) {
+        var seed = new Date()
+        retval = createRandomNumber(seed, 0, high);
+      }
+
+      if ( retval == 1 ) {
+        str="anicca - masked by continuity";
+      } else if ( retval == 2 ) {
+        str="anatta - masked by compactness";
+      } else if ( retval == 3 ) {
+        str="dukkha - masked by movement";
+      } else if ( retval == 4 ) {
+        str="This is NOT mine, This I am NOT, This is NOT my Self";
+      } else if ( retval == 5 ) {
+        str="As we notice the mind wandering off to explore a gratifying train of thought, or as we notice the body's urging to nudge ourselves into a more comfortable position, we gently abandon the impulse and return attention to the primary object of awareness. We do this again and again, until the mind becomes content with being fully present with what is manifesting here and now in the field of experience, rather than rushing off for some other form of stimulation.";
+      } else if ( retval == 6 ) {
+        str="<img src='DependentOriginationGreen.png' width='90%' height='85%' border='1'>";
+      } else if ( retval == 7 ) {
+        str="";
+      } else if ( retval == 8 ) {
+        str="do not let yourself be tortured by the misdeeds of others (don't blame the trigger; don't act in an unskillful way<BR>NO MATTER HOW BADLY PROVOKED)<BR><img src='jack.jpg' border='1'>";
+      } else if ( retval == 9 ) {
+        str="All that may be wished for will fade naturally to nothing";
+      } else if ( retval == 10 ) {
+        str="by effort you will cross the raging flood; by energy you will pass by sorrow";
+      } else if ( retval == 11 ) {
+        str="all phenomena are unworthy of attachment";
+      } else if ( retval == 12 ) {
+        str="notice the difference between the activity taking place in awareness and awareness itself";
+      } else if ( retval == 13 ) {
+        str="<img src='mindfulness.jpg' border='1'><BR><BR>existence which occurs at a given moment, independent of our desires";
+      } else if ( retval == 14 ) {
+        str="pain in the aggregates is inevitable (and natural), suffering is optional";
+      } else if ( retval == 15 ) {
+        str="dukkha: constant oppression by burning, rise and fall, and the insubstantial compositional nature of sankharas";
+      } else if ( retval == 16 ) {
+        str="vibrant contentment, unruffled equanimity";
+      } else if ( retval == 17 ) {
+        str="avoid & overcome; develop & sustain";
+      } else if ( retval == 18 ) {
+        str="<br><br><img src='LotusFlower.jpg' border='1'><br><br><br><br><br><br><br>";
+      } else if ( retval == 19 ) {
+        str="to act without attachment to the fruit of the action";
+      } else if ( retval == 20 ) {
+        str="Pain x Resistance = Suffering<BR>Pleasure x Grasping = Suffering";
+      } else if ( retval == 21 ) {
+        str="This is NOT mine (taṇhā rejected), This I am NOT (māṇa rejected), This is NOT my Self (ditthi rejected)";
+      } else if ( retval == 22 ) {
+        str="to act without attachment to the fruit of the action";
+      } else if ( retval == 23 ) {
+        str="where attention goes, energy flows";
+      } else if ( retval == 24 ) {
+        str="The royal  chariots, which are so exquisite and splendid, decay and become old...";
+      } else if ( retval == 25 ) {
+        str="practice non-reactivity to current conditions (the causes are not here)";
+      } else if ( retval == 26 ) {
+        str="If by renouncing a lesser happiness<br> one may realize a greater happiness,<br> let the wise one renounce the lesser,<br> having regard for the greater.";
+      } else if ( retval == 27 ) {
+        str="drop the world's bait and look for peace";
+      } else if ( retval == 28 ) {
+        str="The good renounce (attachment for) everything.<BR> The virtuous do not prattle with a yearning for pleasures.<BR> The wise show no elation or depression<BR> when touched by happiness or sorrow.";
+      } else if ( retval == 29 ) {
+        str="don't add suffering to the pain already there";
+      } else if ( retval == 30 ) {
+        str="anicca (masked by continuity), dukkha (masked by movement), anatta (masked by solidity)";
+      } else if ( retval == 31 ) {
+        str="here and now; body/mind; judgement-free awareness";
+      } else if ( retval == 32 ) {
+        str="dukkha - masked by changing position";
+      } else if ( retval == 33 ) {
+        str="Then, Bahiya, you should train yourself thus:<BR><BR>In reference to the seen, there will be only the seen. <BR><BR>In reference to the heard, only the heard.<BR><BR> In reference to the sensed, only the sensed.<BR><BR> In reference to the cognized, only the cognized.<BR><BR> That is how you should train yourself.<BR><BR> When for you there will be only the seen in reference to the seen, only the heard in reference to the heard, only the sensed in reference to the sensed, only the cognized in reference to the cognized, then, Bahiya, there is no you in connection with that.<BR><BR> When there is no you in connection with that, there is no you there.<BR><BR> When there is no you there, you are neither here nor yonder nor between the two.<BR><BR>  This, just this, is the end of dukkha.";
+      } else if ( retval == 34 ) {
+        str="Lokadhamma:<BR><BR>praise<~~~>blame<BR><BR>gain<~~~>loss<BR><BR>fame<~~~>shame<BR><BR>pleasure<~~~>pain";
+      } else if ( retval == 35 ) {
+        str="The uncomfortable truly is the norm; the comfortable will set you adrift on the current of samsara.";
+      } else if ( retval == 36 ) {
+        str="Keep Calmly Knowing Change";
+      } else if ( retval == 37 ) {
+        str="unsatisfactoriness is inevitable (and natural), suffering is optional";
+      } else if ( retval == 38 ) {
+        str="Once you are able to extend the range of the objects to be noted and are able observe without strain, you clearly see that whatever you see or hear instantly disappears, and that two consecutive moments are not connected but separate units. This is understanding as it really is.";
+      } else if ( retval == 39 ) {
+        str="give up the aggregates, for they are not truly yours";
+      } else if ( retval == 40 ) {
+        str="<img src='dependent.jpg' border='1'>";
+      } else if ( retval == 41 ) {
+        str="<img src='flower.jpg' border='1'>";
+      } else if ( retval == 42 ) {
+        str="Desire is a state of disequilibrium between what is arising and what one WANTS to be arising.";
+      } else if ( retval == 43 ) {
+        str="Try to be mindful, and let things take their natural course.<BR><BR>Then your mind will become still in any surroundings, like a clear forest pool.<BR><BR> All kinds of wonderful, rare animals will come to drink at the pool, and you will clearly see the nature of all things.<BR><BR> You will see many strange and wonderful things come and go, but you will be still.<BR><BR> This is the happiness of the Buddha."
+      } else if ( retval == 44 ) {
+        str="Life is swept along, next-to-nothing its span.  For one swept to old age no shelters exist.  Perceiving this danger in death, one should drop the world's bait and look for peace.";
+      } else if ( retval == 45 ) {
+        str="how can the practice of mindfulness be performed under these very circumstances?";
+      } else if ( retval == 46 ) {
+        str="everything is burning, monks";
+      } else if ( retval == 47 ) {
+        str="You are a psychophysical process with the characteristics of impermanence, unsatisfactoriness and corelessness occurring in a cause-effect relationship, subject to the laws of kamma.  Nibbana is the extinction of this incessant psychophysical process.";
+      } else if ( retval == 48 ) {
+        str="mindfulness: undistractedness; not collapsing nor floating away";
+      } else if ( retval == 49 ) {
+        str="May all beings be free from enmity and danger<BR>Free from mental suffering<BR>Free from physical suffering<BR>Care for themselves happily";
+      } else if ( retval == 50 ) {
+        str="The Truth (Dhamma) of the present moment is that when an itch or any other sensation arises, it is there.  What you do with this Dhamma dictates whether you will suffer more or not. Resisting the itch and trying to think it away only produces more subtle and gross pain.";
+      } else if ( retval == 51 ) {
+        str="Mindfulness: observing power; not floating away";
+      } else if ( retval == 52 ) {
+        str="Mere phenomena alone exist, devoid of self or of anything pertaining  to a self. <BR>They arise and pass away in accordance with their conditions. They do not come from anywhere, they do not go anywhere, they are not established anywhere. <BR>There is no agency in anything whatsoever.";
+      } else if ( retval == 53 ) {
+        str="Strong opinions about what is or is not supposed to be happening incite the mind; judgments of good and bad seldom lead to calm. <BR>Attachment to a self-image also tends to be agitating. <BR>It can be liberating to realize that we don't have to believe every thought we have.";
+      } else if ( retval == 54 ) {
+        str="Between the stimulus and the response there is a space, and therein lies our freedom.";
+      } else if ( retval == 55 ) {
+        str="When the mind is unified and isn't chasing after desires, or trying to defend itself, when it's not caught up in the world being one way or another, then there can develop a deep sense of well-being that is much more satisfying than the physical senses.";
+      } else if ( retval == 56 ) {
+        str="One who drinks deep the Dhamma<BR>lives happily with a tranquil mind.<BR>The wise one ever delights in the Dhamma <BR>made known by the Noble One.";
+      } else if ( retval == 57 ) {
+        str="Sabbe sankhara anicca.<BR>Sabbe sankhara dukkha.<BR>Sabbe dhamma anatta.";
+      } else if ( retval == 58 ) {
+        str="happiness is NOT the opposite of suffering; a fully present, relaxed mind is the opposite of suffering";
+      } else if ( retval == 59 ) {
+        str="mindfulness: observing power; not floating away";
+      } else if ( retval == 60 ) {
+        str="Things don't happen because you WANT them to happen.  They happen because conditions are right.";
+      } else if ( retval == 61 ) {
+        str="When faced with the vicissitudes of life,<br> one's mind remains unshaken,<br> sorrowless, stainless, secure;<br> this is the greatest welfare.<br>";
+      } else if ( retval == 62 ) {
+        str="Release or return the body and the mind to nature. Let nature own them. We no longer become the owners of these things. Nirvana will be our experience, the end of dukkha.";
+      } else if ( retval == 63 ) {
+        str="As we simply develop the causes and conditions that will remove the obscurations to wisdom, insights will <i>spontaneously arise on their own</i>";
+      } else if ( retval == 64 ) {
+        str="We take care of what needs to be done without taking it personally or being attached to the results of the action";
+      } else if ( retval == 65 ) {
+        str="Ah so...";
+      } else if ( retval == 66 ) {
+        str="It is the development of attention that is of primary significance; the object of attention is secondary.  Patiently let go of the 'doer'."
+      } else if ( retval == 67 ) {
+        str="That bhikkhu who has crossed the mire,<br> Crushed the thorn of sensual desire,<br> And reached the destruction of delusion<br> Is not perturbed by pleasures and pains."
+      } else if ( retval == 68 ) {
+        str="Mindfulness should be directed to its object like a stone (not a cork) thrown into a lake"
+      } else if ( retval == 69 ) {
+        str="Suffering and its causes happen in the present. Although it may appear that our suffering is a consequence from something that happened in the past, in reality, our suffering is the result from a PRESENT thought about a memory from the dead PAST, or an anticipated, but wholly uncertain, FUTURE."
+      } else if ( retval == 70 ) {
+        str="For a human being, life in the present time is always imperfect because the mind is full of craving in a world of delusion in which things are pleasant and unpleasant"
+      } else if ( retval == 71 ) {
+        str="Avijja > Sankhara > Vinnana > Nama-Rupa > Salayatana > Phassa > Vedana > Taṇhā > Upadana > Bhava > Jati > Jara Marana";
+      } else if ( retval == 72 ) {
+        str="We have to transcend both the seduction of samsaric pleasure that turns out to be so illusory and the seduction of our spiritual goal that appears to be offering eternal happiness. Once the pull between these two poles is harmonized and transcended, we are ready to return home.";
+      } else if ( retval == 73 ) {
+        str="We thus witness the amusing spectacle of a changing being pursuing a changing object...";
+      } else if ( retval == 74 ) {
+        str="there is no continuing, unchanging person and no experience that is still happening";
+      } else if ( retval == 75 ) {
+        str="We still have preferences, but we begin to develop a wise relationship with our preferences, such that our sense of well-being is not contingent upon them being met.";
+      } else if ( retval == 76 ) {
+        str="When a habitual preference is denied us, then we assume we're unhappy, which may or may not be true.";
+      } else if ( retval == 77 ) {
+        str="During walking meditation you may see a visual object even though your attention is supposed to be on the touch sensation of the feet. <BR> If you are aware of the shift of attention (not caught up in the visual details of the distracting object) you will naturally come back to the bodily touch sensation.";
+      } else if ( retval == 78 ) {
+        str="Feeling-tone is the direct result of a sensory contact.  There is no other way for a 'feeling' to arise.";
+      } else if ( retval == 79 ) {
+        str="Were there a mountain all made of gold,<BR> doubled that would not be enough<BR> to satisfy a single person:<BR> know this and live accordingly.";
+      } else if ( retval == 80 ) {
+        str="When thoughts of self and other end, there is no basis for the compulsions to crave and cling.<br><br>Emptiness stops papañca.";
+      } else if ( retval == 81 ) {
+        str="Buddham saranam gacchami<BR> Dhammam saranam gacchami<BR> Sangham saranam gacchami";
+      } else if ( retval == 82 ) {
+        str="depending upon life going according to your wishes and plans is not a reliable path to happiness";
+      } else if ( retval == 83 ) {
+        str="vayadhammā saṅkhārā appamādena sampādethāti";
+      } else if ( retval == 84 ) {
+        str="Even when obstacles crowd in,<BR> the path to Nibbana can be won<BR> by those who establish mindfulness<BR> and bring to perfection equipoise.";
+      } else if ( retval == 85 ) {
+        str="Teach us to care and not to care";
+      } else if ( retval == 86 ) {
+        str="Only I can destroy my peace, and I choose not to";
+      } else if ( retval == 87 ) {
+        str="Practice is not moving forward, but there is forward movement. <BR>At the same time, it is not moving back, but there is backward movement. <BR>And, finally, practice is not stopping and being still, but there is stopping and being still.";
+      } else if ( retval == 88 ) {
+        str="<img src='birds.jpg' border='1'>";
+      } else if ( retval == 89 ) {
+        str="The remedy here is a wise and penetrative form of attention that goes beyond the superficial appearance of things in order to come to know their true nature, however disappointing this may be.";
+      } else if ( retval == 90 ) {
+        str="<table><tr><td>1st Noble Truth - the 5 aggregates affected by clinging - to be understood<tr><td>2nd Noble Truth - ignorance and craving - to be abandoned<tr><td>3rd Noble Truth - knowledge and liberation - to be realized<tr><td>4th Noble Truth - tranquility and insight - to be cultivated</table>";
+      } else if ( retval == 91 ) {
+        str="";
+      } else if ( retval == 92 ) {
+        str="Namo tasa bhagavato arahato sammasambuddhasa<BR>Namo tasa bhagavato arahato sammasambuddhasa<BR>Namo tasa bhagavato arahato sammasambuddhasa<BR>";
+      } else if ( retval == 93 ) {
+        str="Don't always react so predictably to pleasure and pain.";
+      } else if ( retval == 94 ) {
+        str="Notice the feeling of equanimity that arises when you care and yet you are NOT attached to the outcome. <BR> Then notice how it feels when you lose this equanimity.";
+      } else if ( retval == 95 ) {
+        str="Just as a solid rock is not shaken by the storm, even so the wise are not affected by praise or blame.";
+      } else if ( retval == 96 ) {
+        str="Nonself means that all the phenomena in the universe arise because of conditions which are not amenable to control by anyone's will.<BR><BR>We can still effect changes, but only by creating the right causes, not by sheer willpower.  And creating those causes takes time.";
+      } else if ( retval == 97 ) {
+        str="We are not free if happiness depends on the situation we are in, and the way others behave towards us.  We are easily disturbed during that dependency.";
+      } else if ( retval == 98 ) {
+        str="not listening to true Dhamma ==> lack of faith ==> unwise consideration ==> absence of mindfulness ==> non-restraint of the senses = HINDRANCES";
+      } else if ( retval == 99 ) {
+        str="Discipline is for the sake of restraint,<BR>restraint for the sake of freedom from remorse,<BR>freedom from remorse for the sake of joy,<BR>joy for the sake of rapture,<BR>rapture for the sake of tranquillity,<BR>tranquillity for the sake of pleasure,<BR>pleasure for the sake of concentration,<BR>concentration for the sake of knowledge and vision of things as they are,<BR>knowledge and vision of things as they are for the sake of disenchantment,<BR>disenchantment for the sake of release,<BR>release for the sake of knowledge and vision of release,<BR>knowledge and vision of release for the sake of total unbinding without clinging";
+      } else if ( retval == 100 ) {
+        str="But no matter whether the objects we experience are pleasant or unpleasant, we should realize them as elements that arise because of their own conditions and that they do not belong to us.";
+      } else if ( retval == 101 ) {
+        str="<img src='1000s.jpg' border='1'>";
+      } else if ( retval == 102 ) {
+        str="We discover that suffering is not 'our pain', it is 'the pain' the pain of the world. A profound dispassion arises, compassion fills the heart, and we find liberation.";
+      } else if ( retval == 103 ) {
+        str="In walking meditation, we notice with every step the unbidden arising of thoughts, feelings, sensations, only to observe them disappear. <BR>To whom do they belong? Where do they go? Back into the void, which is where yesterday went, as well as our childhood, Socrates, Genghis Khan and the builders of the pyramids.";
+      } else if ( retval == 104 ) {
+        str="Sila, samadhi and pañña bring the mind to non-fashioning where all input into the cycle of kamma is suspended. This opens the way for the experience of the unfabricated.";
+      } else if ( retval == 105 ) {
+        str="NOTHING SPECIAL<BR><BR>Suddenly, in a most ego crushing experience, you will realise that you are part and parcel of the universe - just a grain of sand in a huge bed of sand along a riverbank, nothing special.<BR><BR>In the world of elements, your name and other conventional attributes lose their significance.";
+      } else if ( retval == 106 ) {
+        str="It's easy to let go of a thought that's a guest in your mind; it's harder when you take on the identity of the guest. Who are you going to ask to leave?";
+      } else if ( retval == 107 ) {
+        str="What catches the eye can be dangerous.<BR><BR><img src='bait.jpg' border='1'>"
+      } else if ( retval == 108 ) {
+        str="Desire itself is movement<BR> Not in itself desirable"
+      } else if ( retval == 109 ) {
+        str="the ego is constantly wanting and therefore wanting to think"
+      } else if ( retval == 110 ) {
+        str="na ca so<BR><BR>na ca añño"
+      } else if ( retval == 111 ) {
+        str="The postures are exposed by attention as continuous oppression"
+      } else if ( retval == 112 ) {
+        str="Everything that *can* be lost *will* be lost"
+      } else if ( retval == 113 ) {
+        str="Feelings arise without our invitation.  How can they be 'ours'?"
+      } else if ( retval == 114 ) {
+        str="A yogi who sees the changing and transient nature of phenomena will not discern one object to be better than the other"
+      } else if ( retval == 115 ) {
+        str="Whose mind is like rock, steady, unmoved,<BR>dispassionate for things that spark passion,<BR>unangered by things that spark anger:<BR>When one's mind is developed like this,<BR> from where can there come suffering & stress?"
+      } else if ( retval == 116 ) {
+        str="Again and again, the seeds all get planted;<BR> Again and again, the rain-god sprinkles rain.<BR> Again and again, the farmer farms the field;<BR> Again and again, the food grows in the realm.<BR> <BR><BR> Again and again, beggars do their begging;<BR> Again and again, the givers give out gifts.<BR> Again and again, the giver who has given;<BR> Again and again, goes to a better place.<BR> <BR><BR> Again and again, he tires and he struggles;<BR> Again and again, the fool goes to the womb.<BR> Again and again, he's born and he dies;<BR> Again and again, they bear him to his grave.<BR> <BR><BR> But one whose wisdom is wide as the earth<BR> Is not born again and again,<BR> For he's gained the path<BR> Of not becoming again."
+      } else if ( retval == 117 ) {
+        str="Greed for comfort and aversion to discomfort. They are the two sides of the same coin."
+      } else if ( retval == 118 ) {
+        str="There is only one citta at a time which experiences one object. <BR>And each experience arises because of its appropriate conditions and falls away immediately; there is no 'self' involved.<BR><BR>Then the next citta appears."
+      } else if ( retval == 119 ) {
+        str="Masks - anicca: continuity (fast movie frames), dukkha: movement (always pain induced), anatta: compactness (a seemingly happy, lasting mashup of nama-rupa)"
+      } else if ( retval == 120 ) {
+        str="knowing an object<BR> knowing an object<BR> knowing an object<BR><BR><BR>...there is only process"
+      } else if ( retval == 121 ) {
+        str="Present reality - that which exists independent of our desires - see it via yonisomanasikara - a wise and penetrative form of attention that goes beyond the superficial appearance of things to come to know their true nature, however disappointing that may be"
+      } else if ( retval == 122 ) {
+        str="Keeping the precepts entails going against the stream, going against the old habits, and doing things which are difficult to do, which we don't like to do, and which thereby lead to tension and stress. But that stress is mitigated and feels much less pressing and significant when we have a real understanding of the way the mind works."
+      } else if ( retval == 123 ) {
+        str="Not being a controlling authority (sāmi), a permanent entity (nivāsī), a doer (kāraka), an experiencer of sensations (vedaka).  They are not self, without essence."
+      } else if ( retval == 124 ) {
+        str=""
+      } else if ( retval == 125 ) {
+        str="Home Object or other single unchosen Present Object -> spectator at a distance -> 0 expectations"
+      } else if ( retval == 126 ) {
+        str="As we become more familiar with our thoughts in meditation, we will see how repetitive our thoughts are. We often think very similar things over and over again and it is actually rare to have what can be called a creative, original thought."
+      } else if ( retval == 127 ) {
+        str="When aversion towards pain arises, the aversion can be the object of mindfulness so that it can be seen as only a conditioned nāma"
+      } else if ( retval == 128 ) {
+        str="Substitute the idea of a 'dynamic process of causality' for the conventional, and grammatically necessary, 'I'"
+      } else if ( retval == 129 ) {
+        str="With careful observation, we find that the sensations are dissolving all the time. <BR>What previously seemed like a solid mass of misery is in fact changing from moment to moment. <BR>We may also discover that it was our aversion that made the pain seem really intolerable. <BR>When the aversion dissolves, what is left is much simpler and much less intimidating."
+      } else if ( retval == 130 ) {
+        str="The body does not HAVE suffering, it IS suffering in itself. It also changes rapidly. How can it be \"mine\"?"
+      } else if ( retval == 131 ) {
+        str="Craving 'this is mine' (longing)... Conceit 'this i am' (worse/better/equal)... Wrong View 'this is my self' (dogmas)..."
+      } else if ( retval == 132 ) {
+        str="During the rising-falling exercise, focus on the movement — the subjective experience of motion— instead of on the physical abdomen itself. Motion is perceived as a subtle sensation of tactile pressure. That sensation keeps changing from moment to moment. Your job is to keep being aware of this changing phenomenon in real-time, from second-to-second. That's all you have to do."
+      } else if ( retval == 133 ) {
+        str="The body does not HAVE suffering, it IS suffering in itself. It also changes rapidly. How can it be 'ours'?"
+      } else if ( retval == 134 ) {
+        str="The rising-falling motions are rupa. Regard them with a detached, scientific attitude. Realize that in the ultimate sense, these movements are impersonal phenomena, not your self. They are not the mind. It is nama that knows them. Yet in ultimate terms the mind— what you call 'your mind'— is not a self, either, but just an impersonal faculty whose function is to be aware of something."
+      } else if ( retval == 135 ) {
+        str="Only when we make false assumptions about it does it become a burden we must carry. That is precisely why we suffer from bodily pain and discomfort."
+      } else if ( retval == 136 ) {
+        str="The mind itself is the real culprit, not the lump of physical elements. <BR>The body is not some hostile entity whose constant fluctuations threaten our wellbeing. <BR> It is a separate reality that changes naturally according to its own inherent conditions."
+      } else if ( retval == 137 ) {
+        str="Don't view the pain in personal terms, as an inseparable part of who you are, for that runs counter to pain's true nature."
+      } else if ( retval == 138 ) {
+        str=""
+      } else if ( retval == 139 ) {
+        str="So do not try to create anything; trying to create something is greed. Do not reject what is happening; rejecting what is happening is aversion. Not knowing that something is happening or has stopped happening is delusion."
+      } else if ( retval == 140 ) {
+        str="Liking something means you desire it, disliking something means you have an aversion to it. Desire and aversion are defilements that arise out of ignorance."
+      } else if ( retval == 141 ) {
+        str="vayadhammā saṅkhārā appamādena sampādethāti"
+      } else if ( retval == 142 ) {
+        str="Equanimity: a whole-hearted, unrestricted cooperation with the unavoidable, no matter how disappointing that may be"
+      } else if ( retval == 143 ) {
+        str="If you're mindful enough to see this dukkha (wheel thumping), trace it back to the getting/not-getting.  Then LET GO, accept the circumstance exactly as it is."
+      } else if ( retval == 144 ) {
+        str="Notice how there is an ongoing effort (subtle or intense) to adjust life to be more to your liking. <BR> A constant process of want/don't-want (taṇhā, longing). <BR>During this process there always exists one or more of the 3 kinds of dukkha."
+      } else if ( retval == 145 ) {
+        str="It may be said that these Four Arousings of Mindfulness are taught for casting out the vipallasa concerning beauty, pleasure, permanence, and an ego"
+      } else if ( retval == 146 ) {
+        str="So we are distracted, AND DON'T KNOW THAT WE ARE DISTRACTED. Muttha-sati.  Then we remember.  Sati."
+      } else if ( retval == 147 ) {
+        str="Shifting attention from the emotion to the identification with the emotion, we experience it in a new way."
+      } else if ( retval == 148 ) {
+        str="Sensing a feeling of pleasure, he senses it disjoined from it.<BR> Sensing a feeling of pain, he senses it disjoined from it.<BR> Sensing a feeling of neither-pleasure-nor-pain, he senses it disjoined from it."
+      } else if ( retval == 149 ) {
+        str="Although the physical form of my body appears to be self, since it oppresses me, it is not my self nor my inner core; because it is not amenable to my will, it is unmanageable, not self. I have been mistaken all along in taking it to be my self."
+      } else if ( retval == 150 ) {
+        str="The body does not HAVE suffering, it IS suffering in itself. It also changes rapidly. How can it be 'ours'?"
+      } else if ( retval == 151 ) {
+        str="The beautiful thing about having less obsessions and ambitions—and just sitting straight and watching the breathing—is that nothing will disturb us. Things only disturb us when we have an aim. When we have an aim, we become obsessed. "
+      } else if ( retval == 152 ) {
+        str="Suffering arises through attempting to sustain a mistaken identity built on attachment to transitory mental and physical phenomena. <BR>The process by which this comes about is dependent origination."
+      } else if ( retval == 153 ) {
+        str="Sukha-vedana is taṇhā's prey so be ready to quickly exterminate any taṇhā feeding on vedana: <BR><BR>Vedana nirodha taṇhā nirodho"
+      } else if ( retval == 154 ) {
+        str="The difference between the eye and the mind as faculties is that the former senses the world of colors and visible forms, while the latter senses the world of ideas and thoughts and mental objects"
+      } else if ( retval == 155 ) {
+        str=""
+      } else if ( retval == 156 ) {
+        str="You don't have to be afraid of pain. If it's going to be there, you can let it be there—but don't let the mind be in pain with it. It's simply a sensation that arises and passes away, that's all."
+      } else if ( retval == 157 ) {
+        str="The body does not HAVE suffering, it IS suffering in itself. It also changes rapidly. How can it be 'ours'?"
+      } else if ( retval == 158 ) {
+        str="Eye sensitivity is the materiality that receives the visible object.<BR>The visible object (rupa) is the striker element.<BR>The eye is the receptor element.<BR>When the object strikes the receptor, the ignition element takes place ('seeing-consciousness' occurs)."
+      } else if ( retval == 159 ) {
+        str="Effort of a warrior.  Patience of a saint."
+      } else if ( retval == 160 ) {
+        str="Causes and conditions have dealt you this moment. There is NOTHING you can do to change/improve that.  The only thing you CAN do NOW is to be more mindful right now in order to improve your future conditions."
+      } else if ( retval == 161 ) {
+        str="The Dude Abides."
+      } else if ( retval == 162 ) {
+        str="Equanimity - the subsiding of acquisitiveness and resistance"
+      } else if ( retval == 163 ) {
+        str="The whole teaching here hinges upon two simple words: 'Seeing Thus' – evam passam. Given sufficient clarity of vision – that is, insight into the true nature of things, the fires of passion, hatred and delusion can be completely cooled and extinguished."
+      } else if ( retval == 164 ) {
+        str="A hand in the conventional sense involves self, or ego, whereas the MOVEMENT of the hand is just a form object and is ultimate reality. The hand is conventional truth. The movement of the hand is not a self, person, male, or female, and it arises and falls away. It is impermanence, suffering, and not-self."
+      } else if ( retval == 165 ) {
+        str="0"
+      } else if ( retval == 166 ) {
+        str="If you get caught up on criticism or praise, you're foolish. It's like drinking other people's saliva. When you act rightly, there are people who will say that you're right and those who will say that you're wrong. When you act wrong, there are people who will say you're wrong and those who will say you're right."
+      } else if ( retval == 167 ) {
+        str="The mind that goes out in order to satisfy its moods is the Cause of Suffering (II);<BR><BR> The result that comes from the mind going out in order to satisfy its moods is Suffering (I);<BR><BR> The mind seeing the mind clearly is the Path Leading to the Cessation of Suffering (IV);<BR><BR> The result of the mind seeing the mind clearly is the Cessation of Suffering (III)."
+      } else if ( retval == 168 ) {
+        str="Experiencing an agreeable sensation, the mind is not intoxicated or deluded by it. When deprived of comforts, the mind is firm, unshaken and untroubled. Happiness and suffering are no longer invested into external objects."
+      } else if ( retval == 169 ) {
+        str="...allowing things to be..."
+      } else if ( retval == 170 ) {
+        str="<i>itipi so bhagavā arahaṃ sammāsambuddho<BR>vijjācaraṇasampanno<BR>sugato lokavidū<BR>anuttaro purisadammasārathi<BR>satthā devamanussānaṃ<BR>buddho bhagavā'ti</i>"
+      } else if ( retval == 171 ) {
+        str="na paritassati - not tormented and agitated by craving and fear"
+      } else if ( retval == 172 ) {
+        str="yathā·bhūtaṃ pajānāti - one understands as it is in reality"
+      } else if ( retval == 173 ) {
+        str="just looking at mental anguish or physical pain and seeing it as dukkha rather than as personal misery - just seeing it as dukkha and not reacting to it in a habitual way"
+      } else if ( retval == 174 ) {
+        str="In emptiness, things are just what they are. When we are aware in this way, it doesn't mean that we are indifferent to success or failure and that we don't bother to do anything. We can apply ourselves. We know what we can do; we know what has to be done and we can do it in the right way. Then everything becomes dhamma, the way it is.<br><br>We do things because that is the right thing to be doing at this time and in this place rather than out of a sense of personal ambition or fear of failure."
+      } else if ( retval == 175 ) {
+        str="You have the experience that even though an object might be attractive while it is arising, it changes towards cessation. Then its attractiveness diminishes and we have to find something else to absorb into."
+      } else if ( retval == 176 ) {
+        str="...but being detached, one is not trapped by emotional states and one sees them as mere effects of past conditioning. And in this way they can be harmlessly dissolved."
+      } else if ( retval == 177 ) {
+        str="That's why the Buddha is guarding all the sense doors, and that's why it can be useful for us to look at the sense doors with this informed, accurate kind of vision.  If you look very closely, the simple experience comes first, and then liking or disliking.  Any sense of ownership comes later, on down the line.  Check and see if it's true for you!"
+      } else if ( retval == 178 ) {
+        str="yam kinci samudaya dhammam sabbam tam nirodha dhammam"
+      } else if ( retval == 179 ) {
+        str="self-attenuation"
+      } else if ( retval == 180 ) {
+        str="Endowed with this noble aggregate of virtue, he is inwardly sensitive to the pleasure of being blameless"
+      } else if ( retval == 181 ) {
+        str="It's not that there is no self, but that form, feelings, perceptions, fabrications, consciousness are not worthy of being called “me, myself, or I”. <BR>The result of that analysis is to let go of the perception and attachment of “self” around those aggregates. <BR>In the letting go of those attachments, there's release. <BR>“Not-self” is a strategy for attaining that release."
+      } else if ( retval == 182 ) {
+        str="After all, it is not the words that make you experience what you experience. Suppose the color white appears before your eyes. The whiteness reflects on your eyes. The minds knows it as it is. Only if you want to express what you have seen do you really need words. Yet whiteness is not a word, but what it is. Blackness is not a word, but what it is. The same is true for sweetness, bitterness, sourness, toughness, and everything in your experience."
+      } else if ( retval == 183 ) {
+        str="endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment. endurance. relinquishment..."
+      } else if ( retval == 184 ) {
+        str="When the mind changes, or when it gains a sense of stillness or calm that would rank as a feeling of pleasure or equanimity, try to see in what ways the pleasure or equanimity is inconstant, that it's not you or yours. When you can do this, you'll stop relishing that particular feeling."
+      } else if ( retval == 185 ) {
+        str="Let pain simply be pain, let pleasure simply be pleasure. Let them simply fall into the category of feelings. Don't go thinking that <i>you</i> feel pleasure, that <i>you</i> feel pain. If you can let go of feeling in this way, you'll be able to gain release from suffering and stress because you'll be above and beyond feeling. This way, when aging, illness, and death come, you won't latch onto them thinking that you are aging, that you are ill, that you are dying."
+      } else if ( retval == 186 ) {
+        str="Not wanting is more satisfying than getting."
+      } else if ( retval == 187 ) {
+        str="We change from—'I\'m suffering and I don't want to suffer,' to ‘There is suffering, and it\'s <i>like this</i>.'"
+      } else if ( retval == 188 ) {
+        str="It is therefore important to note the most ‘insignificant' actions of the day, such as opening a door. <BR>We have to abandon all hierarchy, believing that sitting is more important than walking which is more important than eating, and so on."
+      } else if ( retval == 189 ) {
+        str="At the same time, the instability of the system makes it imperative for anyone immersed in such a system to find a way out, for instability threatens any true chance for lasting peace or happiness. The complexity of the system requires that one find a reliable analysis of the sensitive points in the system and how they can be skillfully manipulated in a way that brings the system down from within."
+      } else if ( retval == 190 ) {
+        str="attentive non-intention - an awareness that does not project anything extra into present experience"
+      } else if ( retval == 191 ) {
+        str="Like cotton candy that dissolves before you can sink your teeth into it, pleasure doesn't endure long enough to sustain happiness"
+      } else if ( retval == 192 ) {
+        str="The task here is twofold: staying focused on your frame of reference, and putting aside any greed and distress that would result from shifting your frame of reference back to the world. This is the meaning of 'the body in and of itself.'<br><br> In other words, you try to stay with the experience of the body as it's immediately felt, without referring it to the narratives and views that make up your sense of the world. You stay away from stories of how you have related to your body in the past and how you hope to relate to it in the future. You drop any concern for how your body fits into the world in terms of its beauty, agility, or strength. You simply tune into the body on its own terms -- the direct experience of its breathing, its movements, its postures, its elementary properties, and its inevitable decay."
+      } else if ( retval == 193 ) {
+        str="Whatever is subject to arising is all subject to cessation."
+      } else if ( retval == 194 ) {
+        str="To abide in awareness without asserting our need to CONTROL what is arising suggests a complete restructuring of our view and intention"
+      } else if ( retval == 195 ) {
+        str="The desire for peacefulness is attachment. Plus we can realize the 3 chracteristics in wandering mind more easily than in peaceful mind. It is easy to see how wandering mind is temporary, unsatisfying and out of control (not 'I')."
+      } else if ( retval == 196 ) {
+        str="When one feels sensual desire for another person, it is hard to focus on the unattractive side of that person or on the drawbacks of the desire itself. Similarly, when one feels anger, it is hard not to feel that the anger is justified; when sleepy, it is hard not to feel that one should get some sleep; when worried, it is hard not to believe that one needs to worry."
+      } else if ( retval == 197 ) {
+        str="as you treat thoughts like sensations there's less of a pull to feed on those addictive thoughts because there's always some stress you can feel"
+      } else if ( retval == 198 ) {
+        str="Sensation -> recognition -> craving -> clinging"
+      } else if ( retval == 199 ) {
+        str="We're not here to arrive at the true nature of things in and of themselves, aside from seeing how their <i>behavior</i> makes them inadequate as sources for true happiness"
+      } else if ( retval == 200 ) {
+        str=""
+      } else if ( retval == 201 ) {
+        str="don't leave the present vulnerable to attractions or distractions"
+      } else if ( retval == 202 ) {
+        str="contentment relies on knowing how to derive pleasure from simplicity, and how to escape (even if only for a while) the tyranny of being ourselves"
+      } else if ( retval == 203 ) {
+        str="We learn to see that the pain and our ordinary disliking of it are two different things; that there is really nothing intrinsically 'bad' about the pain itself, nor is it intrinsically 'ours' since we can't change or control it"
+      } else if ( retval == 204 ) {
+        str="During meditation, this moment is perfectly adequate - it is ENOUGH - nothing is lacking - nothing is missing - nothing is better - nothing is worse - there is no moment of greater happiness that can be conjured up."
+      } else if ( retval == 205 ) {
+        str="From where does this 'I' arise?"
+      } else if ( retval == 206 ) {
+        str=""
+      } else if ( retval == 207 ) {
+        str="there are no problems in NOW"
+      } else if ( retval == 208 ) {
+        str="Pain informs and motivates; suffering drives and distorts"
+      } else if ( retval == 209 ) {
+        str="<img src='dasa_parami.png' border='1'>";
+      } else if ( retval == 210 ) {
+        str="Remember that you are an actor in a drama of such sort as the author chooses, – if short, then in a short one; if long, then in a long one. If it be his pleasure that you should enact a poor man, see that you act it well; or a cripple, or a ruler, or a private citizen. For this is your business, to act well the given part; but to choose it, belongs to another.";
+      } else if ( retval == 211 ) {
+        str="We observe the pattern that is common to all conditioned phenomena:<br><br>they arise and pass away (anicca); there is suffering (dukkha), which has a beginning and a cessation; and conditions are not-self (anattā).";
+      } else if ( retval == 212 ) {
+        str="What is it that Buddhas know that unenlightened beings don't know? They know that whatever arises passes away and is not-self.  That's Buddha wisdom. It sounds simple, doesn't it? It doesn't sound like very much, but it's everything, because everything we can know, i.e., perceive, conceive and experience through the senses, everything we identify with as ourselves, as our ego, as me and mine, has this pattern of change. It begins and ends and is not-self. ";
+      } else if ( retval == 213 ) {
+        str="You can't have excitement without boredom. One conditions the other, like all other extremes. And that means you have to be patient when excitement turns to boredom.";
+      } else if ( retval == 214 ) {
+        str="'The present moment is wonderful' and 'It's wonderful to stay in the present' This is more than a semantic quibble. The first statement implies that the bare sensory data occurring in the present are themselves little bits of divinity. The second allows that, by staying in the now, one can be free from the distress that comes from clinging to those sensations.";
+      } else if ( retval == 215 ) {
+        str="Dukkha is a consequence; we can't eliminate a consequence.  We have to eliminate the cause of the consequence. The cause of dukkha is taṇhā, so all we can do about dukkha is to know it, but the cause of dukkha we can eliminate.";
+      } else if ( retval == 216 ) {
+        str="when our minds wander from our immediate experience, what we are considering is almost always more distressful than the actual experience we're having";
+      } else if ( retval == 217 ) {
+        str="Avoid emotional vandalism during a sit";
+      } else if ( retval == 218 ) {
+        str="Nama and Rupa i.e. Five Aggregates exhibit the Tilakkhana";
+      } else if ( retval == 219 ) { // xxx
+        str="";
+      } else {
+        str="error";
+      }
+
+      // 60,000 is 60 seconds
+<!--      t=setTimeout("ChangeText()", 3500);-->
+      t=setTimeout("ChangeText()", 350001);
+
+<!--      prev = document.getElementById('quote').innerHTML+" bye";-->
+      prev = document.getElementById('quote').innerHTML;
+      //alert(prev);
+
+      document.getElementById('quote').innerHTML=str;
+
+      // Simpler version for 0 - 4
+      rnd = Math.floor(Math.random()*5);
+      if ( rnd == 0 ) {
+        str2= 'i am of the nature to decay.  i have not gone beyond decay.'
+      } else if ( rnd == 1 ) {
+        str2= 'i am of the nature to be diseased.  i have not gone beyond disease.'
+      } else if ( rnd == 2 ) {
+        str2= 'i am of the nature to die.  i have not gone beyond death.'
+      } else if ( rnd == 3 ) {
+        str2= 'All that is mine, dear and delightful, will change and vanish.'
+      } else if ( rnd == 4 ) {
+        str2= 'i am of the the owner of my kamma.<BR>i am heir to my kamma.<BR>i am born of my kamma.<BR>i am related to my kamma.<BR>Whatever kamma i create, whether good or evil, that i shall inherit.'
+      }
+
+      document.getElementById('fivedaily').innerHTML=str2;
+
+      rnd2 = Math.floor(Math.random()*50);
+      rnd3 = Math.floor(Math.random()*20000);
+      str3='<a href=http://www.dhammawheel.com/viewtopic.php?f=' + rnd2 + '&t=' + rnd3 + '>Dhammawheel randomizer</a>';
+str3=''
+      document.getElementById('dw').innerHTML=str3;
+
+    }  // end ChangeText()
+
+    function ToggleBox() {
+      $("#divLinks").fadeToggle(3000);
+    }
+
+  </script>
+</head>
+
+<body onLoad="ChangeText('quote')">
+  <hr />
+  <div id="quote">...uppada...thiti...bhanga...</div>  <!--placeholder -->
+  <hr />
+
+  <div id="fivedaily">...uppada...thiti...bhanga...</div>  <!--placeholder -->
+
+  <div id="ati">
+    <a href="https://www.dhammatalks.org/random_sutta.php"><img src="buddha.jpg" border="1"></a>
+    <br>
+    <div id="aticaption">itipi so bhagavā arahaṃ sammāsambuddho<BR>vijjācaraṇasampanno<BR>sugato lokavidū<BR>anuttaro purisadammasārathi<BR>satthā devamanussānaṃ<BR>buddho bhagavā'ti</div>
+  </div>
+
+  <div id="tog" style="color:#FFFF99; font-size:75%"><a href="javascript:void(0);" onclick="ToggleBox();">Toggle links</a></div>
+  <center>
+  <form method=POST action="http://bheckel.sdf.org/np.pl">
+  <input type=text name=myposttextbox size=20 value="np.pl" onClick="this.value='';return false">
+  <input type=submit name=mysubmit style="font size=9" value="NotePad">
+  </form>
+  </center>
+  <div id="divLinks" style="padding: 50px; background-color: #000000; text-align: center; display: none;"/>
+
+  <div id="dw">...uppada...thiti...bhanga...</div>  <!--placeholder -->
+
+  <tr align="center">
+
+  <hr />
+<!--          <center><form method=GET action="http://www.google.com/search"> -->
+<!--                <input type=text name=q size=20 value="google"> -->
+<!--                <input type=submit name=sa style="font size=9" value="Google"> -->
+<!--              </form> -->
+  <a href="http://bheckel.sdf.org/np.htm">Notepad view</a>
+<!--not working 11-Jun-11 
+        <FORM METHOD="POST" ACTION="../up.pl" ENCTYPE="multipart/form-data">
+          <p><INPUT TYPE="file" NAME="filename_fromPC">
+          <p><INPUT TYPE="submit" VALUE="up"
+        </FORM>
+-->
+  <hr>
+  </b>
+  <table><td><hr size=5>
+  <a href="http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager06.html">|| Adobe Flash ||</a>
+  <a href="http://s3.amazonaws.com/bheckel/index.html">|| Amazon AWS ||</a>
+  <a href="http://google.com/android/devicemanager">|| Android Devicemanager ||</a>
+  <hr>
+  <a href="http://www.blogger.com/home">|| Blogger Mindful Equanimity ||</a>
+  <hr>
+  <a href="http://mirrors.kernel.org/sourceware/cygwin/release/">|| Cygwin Mirror ||</a>
+  <a href="http://cygwin.com/ml/cygwin-apps/">|| cygwin-apps mlist ||</a>
+  <a href="http://cygwin.com/ml/cygwin-announce/">|| cygwin-announce mlist ||</a>
+  <hr>
+  <a href="http://tamiflu.com/consumer_zip.asp">|| Flu Tracker ||</a>
+  <a href="http://freeshell.org/index.cgi?status">|| Freeshell Status ||</a>
+  <hr>
+  <a href="https://mail.google.com/mail/?labs=0#"> Gmail https (Safe Mode) /</a>
+  <a href="https://accounts.google.com/Login?hl=en"> Google Account Login</a>
+  <a href="http://www.archive.org/browse.php?collection=GratefulDead&field=year">|| Grateful Dead Archive by Yr ||</a>
+  <hr>
+  <a href="file:///storage/emulated/0/Download/HTipitakaML/tipitaka.htm">|| HTipitakaML (local) ||</a>
+  <hr>
+  <a href="http://www.thehungersite.com/clickToGive/home.faces?siteId=1">|| Hungersite ||</a>
+  <hr>
+  <a href="http://www.ibiblio.org/pub/">|| Ibiblio Pub ||</a>
+  <a href="http://wakegov.illiad.oclc.org/illiad/logon.html">|| InterLibrary Loan ILIAD ||</a>
+  <hr>
+  <a href="http://kidshealth.org/parent/">|| KidsHealth ||</a>
+  <hr>
+  <a href="http://bobheckel.googlepages.com/numericbuddhism">|| Numeric Buddhism ||</a>
+  <hr>
+  <a href="http://accesstoinsight.org/cgi/ran.pl?link_type=all&dom=www.accesstoinsight.org"> Random ATI /</a>
+  <a href="http://www.rfc-editor.org/rfc.html">|| RFC-Search ||</a>
+  <a href="https://www.google.com/a/cpanel/rshdev.com/Dashboard">|| RSHDev Apps Dashboard ||</a>
+  <a href="ftp://rtfm.mit.edu/pub/faqs/">|| RTFM FAQs ||</a>
+  <hr>
+  <a href="http://www.google.com/cse/home?cx=005450833152705498271:hcbjbznmwso">|| Saffron (Google) ||</a>
+  <a href="http://www.google.com/cse/publicurl?cx=010607753212634691007:asatkkvqmk4">|| SAS (Google) ||</a>
+  <hr>
+  <a href="http://bheckel.sdf.org/x/">|| this ||</a>
+  <a href="http://www.worldtimeserver.com/current_time_in_US-NY.aspx">|| Time-current-NY ||</a>
+  <a href="http://visualroute.visualware.com/">|| Traceroute ||</a>
+  <hr>
+  <a href="http://wakeipac.co.wake.nc.us/">|| Wake Cty Library ||</a>
+  <a href="http://www.whatismyip.com/">|| WhatIsMyIP ||</a>
+  <a href="http://www.wral.com/weather/">|| WRAL weather ||</a>
+  <hr>
+  <a href="javascript:back()"><<<</a>
+  <a href="javascript:forward()">>>></a>
+  <a href="javascript:location.reload()">8</a>
+  <a href="javascript:stop()">X</a>
+  <hr>
+  <hr>
+<!--  <a href="../tv.htm">tv</a>-->
+  </tr></td>
+  </table></div>
+</body>
+</html>
