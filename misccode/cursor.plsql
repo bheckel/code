@@ -1,3 +1,30 @@
+-- For small number of UPDATEs only
+PROCEDURE upd IS
+	CURSOR c IS
+		 SELECT * 
+			 FROM reference_employee_base 
+			WHERE employee_id = 1234 
+				AND territory_lov_id IN( SELECT r.territory_lov_id 
+																	 FROM rs_ptg_territory_hierarchy r 
+																	WHERE upper(r.TERRITORY_CODE) LIKE '%QQFC%'  
+																		 OR upper(r.TERRITORY_CODE) LIKE '%QQFS%'
+																		 OR upper(r.TERRITORY_CODE) LIKE '%QQFT%'
+															 );  
+	
+	BEGIN
+	
+		FOR r IN c LOOP
+			UPDATE reference_employee_base
+				 SET employee_id=9999
+			 WHERE reference_id = r.reference_id;
+		
+			dbms_output.put_line(r.reference_id);
+		END LOOP;
+	  COMMIT;
+END upd;
+
+---
+
 -- https://oracle-base.com/articles/misc/implicit-vs-explicit-cursors-in-oracle-plsql
 
 ---
