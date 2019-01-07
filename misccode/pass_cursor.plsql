@@ -1,3 +1,17 @@
+DECLARE
+   cv   sys_refcursor;  -- weak REF CURSOR type can be used in an OPEN FOR statement with either a static or dynamic SQL statement
+BEGIN
+   -- Dynamic works for weak or strong
+   OPEN cv FOR 'select * from SYS.dual';
+   CLOSE cv;
+
+   -- Static works for weak only
+   OPEN cv FOR SELECT * FROM SYS.dual;
+   CLOSE cv;
+END;
+
+---
+
 FUNCTION pass_cursor RETURN sys_refcursor
   IS
     l_contactCursor SYS_REFCURSOR;
@@ -11,7 +25,7 @@ PROCEDURE print_cursor IS
   gonereason BOOLEAN;
   l_contact_id NUMBER;
   l_gonereason NUMBER;
-  l_c SYS_REFCURSOR;
+  l_c SYS_REFCURSOR;  -- weakly typed
    
   BEGIN
     l_c := pass_cursor();
