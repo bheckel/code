@@ -1,18 +1,18 @@
-Simple (a.k.a., basic) loop
+-- See also for.plsql
 
+-- Basic loop ------------
 LOOP
-   statements
+   ...statements
+-- Note: one of your statements in a simple loop should be EXIT or EXIT WHEN to ensure that you don't end up with an infinite loop.
 END LOOP;
-Note: one of your statements in a simple loop should be EXIT or EXIT WHEN to ensure that you don't end up with an infinite loop.
 
-WHILE loop
-
+-- While loop ------------
 WHILE condition
 LOOP
-   statements
+   ...statements
 END LOOP;
-FOR loop
 
+-- For loop -------------
 FOR iterator IN low_value .. high_value
 LOOP
    statements
@@ -23,7 +23,7 @@ LOOP
    statements
 END LOOP;
 
--- See also for.plsql
+---
 
 DECLARE
   s  PLS_INTEGER := 0;
@@ -46,7 +46,6 @@ BEGIN
     ('The sum of products equals: ' || TO_CHAR(s));
 END;
 /
-
 
 
 DECLARE

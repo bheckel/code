@@ -1,11 +1,15 @@
 
 SELECT ids, ab.account_id 
 FROM (WITH DATA AS
-      (SELECT '432803,434768,439324' ids FROM dual)
+      (SELECT '432803,434768' ids FROM dual)
       SELECT to_number(TRIM(regexp_substr(ids, '[^,]+', 1, LEVEL))) ids
       FROM DATA
-      CONNECT BY instr(ids, ',', 1, LEVEL - 1) > 0) csv
-LEFT JOIN account_base ab ON csv.ids=ab.account_id
+      CONNECT BY instr(ids, ',', 1, LEVEL - 1) > 0) csv LEFT JOIN account_base ab ON csv.ids=ab.account_id
+
+-- or
+SELECT ids, ab.account_id 
+FROM (SELECT to_number(column_value) ids
+      FROM xmltable(('"' || REPLACE('432803,434768', ',', '","') || '"'))) csv LEFT JOIN account_base ab ON csv.ids=ab.account_id
 
 ---
 

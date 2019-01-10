@@ -62,9 +62,7 @@ sub Usage {
 Usage: $filename [mm/dd/yy] [+/-]nn
   E.g. datecalc -90
        datecalc 12/24/05 +42
-  Returns the date numdays in future (or past).
-  Leading '+' is optional.
-  Defaults to today as the start date.
+  Returns the date n days in future (or past).  Leading '+' is optional.
 EOT
   exit(__LINE__);
 }

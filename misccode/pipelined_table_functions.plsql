@@ -30,8 +30,8 @@ CREATE OR REPLACE FUNCTION strings
 IS
 BEGIN
    /* Use PIPE ROW to send the data back to the calling SELECT, instead of adding the data to a local collection */
-   PIPE ROW ('abc');
-   RETURN;  /* return nothing (no data) but control */
+   PIPE ROW('abc');
+   RETURN;  /* return nothing but control (no data) */
 END;
 /
 
@@ -199,3 +199,26 @@ SELECT object_name, object_type
   FROM user_objects
  WHERE object_type IN ('TYPE', 'PACKAGE', 'PACKAGE BODY')
 /
+
+---
+
+FUNCTION get_employee_data(in_sql VARCHAR2 DEFAULT 'SELECT * FROM EMPLOYEE_BASE@SEP') RETURN QUOTA_MODELING_TYPES.T_EMPLOYEE_TABLE
+	PIPELINED IS
+	v_employee_table QUOTA_MODELING_TYPES.T_EMPLOYEE_TABLE;
+BEGIN
+	EXECUTE IMMEDIATE in_sql BULK COLLECT
+		INTO v_employee_table;
+
+	FOR i IN 1 .. v_employee_table.COUNT LOOP
+		PIPE ROW(v_employee_table(i));
+	END LOOP;
+
+	RETURN;
+END;
+
+... CURSOR v_geoSecurityCursor(in_qm_geo_id NUMBER) IS
+	SELECT T.*, EB.FIRST_NAME || ' ' || EB.LAST_NAME AS name
+		FROM QM_GEO_SECURITY T, table(get_employee_data()) EB
+	 WHERE T.EMPLOYEE_ID = EB.EMPLOYEE_ID
+...
+

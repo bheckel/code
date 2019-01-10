@@ -49,9 +49,10 @@ BEGIN
   dyn_stmt := 'BEGIN create_dept(:a, :b, :c); END;';
 
  /* Specify bind variables in USING clause.
-    Specify mode for first parameter.
-    Modes of other parameters are correct by default. */
-
+  * Specify mode for first parameter.
+  * Modes of other parameters are correct by default.
+  * See also using.plsql
+  */
   EXECUTE IMMEDIATE dyn_stmt
     USING IN OUT new_deptid, new_dname, new_mgrid;
 END;

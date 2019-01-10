@@ -23,25 +23,23 @@ insert into bricks_2 values ( 2, 'blue', 'cube' );
 commit;
 
 
--- Non-merge:
+-- Non-merge version:
 -- Update-if-exists
 update bricks_1 b1
-set    ( b1.colour, b1.shape ) = ( 
-  select b2.colour, b2.shape 
-  from   bricks_2 b2
-  where  b1.brick_id = b2.brick_id
-);
+   set ( b1.colour, b1.shape ) = ( select b2.colour, b2.shape 
+                                     from bricks_2 b2
+                                    where b1.brick_id = b2.brick_id );
 -- Insert-if-not-exists
 insert into bricks_1
   select *
   from bricks_2 b2
   where not exists (
     select 1 from bricks_1 b1
-    where  b1.brick_id = b2.brick_id
+     where  b1.brick_id = b2.brick_id
   );
 
 
--- Merge:
+-- Merge version:
 merge into bricks_1 b1
 	using bricks_2 b2 on (b1.brick_id=b2.brick_id)
 		when matched then
@@ -49,5 +47,3 @@ merge into bricks_1 b1
 		when not matched then
 			insert ( b1.brick_id, b1.colour, b1.shape )
 			values ( b2.brick_id, b2.colour, b2.shape );
-  
-select * from bricks_1;  
