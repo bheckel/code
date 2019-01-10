@@ -1,4 +1,4 @@
--- Use a comma-separated list like a table
+-- Use a CSV comma-separated list like a table
 
 ---
 

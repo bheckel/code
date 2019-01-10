@@ -1,3 +1,16 @@
+BEGIN
+--ORA-0000: normal, successful completion
+ dbms_output.put_line(SQLERRM(0));
+--User-Defined Exception
+ dbms_output.put_line(SQLERRM(1));
+--ORA-01855: AM/A.M. or PM/P.M. required
+ dbms_output.put_line(SQLERRM(-1855));
+-- -1855: non-ORACLE exception
+ dbms_output.put_line(SQLERRM(1855));
+END;
+
+---
+
 -- Execution continues
 DECLARE
   sal_calc NUMBER(8,2);

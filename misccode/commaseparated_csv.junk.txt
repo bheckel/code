@@ -1,4 +1,0 @@
-theUsername,Function,Passwordage
-Tobias,Normal,10
-Martina,Normal,15
-Cofi,Administrator,-1

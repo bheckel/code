@@ -1,5 +1,5 @@
 
-Post PR Approval:
+Post PR approval manual push CANONICAL:
 
 bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (feature/ORION-31587)
 $ git checkout develop
@@ -18,9 +18,8 @@ Updating 8dcbba3a644..07ae678951a
 Fast-forward
  Source/SQL/3.48OrionScripts/3.48_GoLive_Script.sql |  3 +
  .../3.48OrionScripts/ORION-30739_data_change.sql   | 72 ++++++++++++++++++++++
- Source/SQL_Views/RPT_OATS_ACCOUNT_ACTIVITY.sql     | 22 ++++---
  Source/SQL_Views/RPT_OATS_OPP_ACTIVITY.sql         | 26 +++++---
- 4 files changed, 107 insertions(+), 16 deletions(-)
+ 3 files changed, 107 insertions(+), 16 deletions(-)
  create mode 100644 Source/SQL/3.48OrionScripts/ORION-30739_data_change.sql
 
 bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (develop)
@@ -36,7 +35,8 @@ Merge made by the 'recursive' strategy.
  create mode 100644 Source/SQL/USER_ON_CALL_TYPES.pck
 
 bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (develop)
-$ git push origin develop
+#$ git push origin develop
+$ git push
 Enumerating objects: 13, done.
 Counting objects: 100% (13/13), done.
 Delta compression using up to 8 threads.
@@ -47,19 +47,29 @@ remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
 To github.sas.com:orion/data.git
    07ae678951a..6b7ce657a4d  develop -> develop
 
+bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (develop)
 git branch -d feature/ORION-31587
+Deleted branch feature/ORION-31587 (was ec8d6b73687).
+
+bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (develop)
 git fetch -p  # prune other's deleted branches
+From github.sas.com:orion/data
+ - [deleted]                 (none)     -> origin/feature/ORION-32026
+ - [deleted]                 (none)     -> origin/feature/ORION-33853
+ - [deleted]                 (none)     -> origin/release/3.50
+
+bob@host MINGW64 /c/Orion/workspace/data/Source/SQL (develop)
 git push origin --delete feature/ORION-31587
+To github.sas.com:orion/data.git
+ - [deleted]                 feature/ORION-31587	
 
 ---
 
 # New feature branch CANONICAL
 git checkout develop
 git pull
-git branch feature/ORION-26857
-git checkout feature/ORION-26857
+git branch feature/ORION-26857 && git checkout feature/ORION-26857
 # or just git checkout -b feature/ORION-26857
-
 git push --set-upstream origin feature/ORION-26857
 Total 0 (delta 0), reused 0 (delta 0)
 To github.sas.com:orion/data.git
@@ -139,7 +149,8 @@ git stash clear
 git log --name-only --pretty=format:"%h - %an, %ar : %s"
 # to find  Source/SQL/SALES_COMP_ACCRUAL.pck is 923ab5b2d98
 git show 923ab5b2d98:Source/SQL/SALES_COMP_ACCRUAL.pck
-# or gitk /c/Orion/workspace/data/Source/SQL/SALES_COMP_ACCRUAL.pck
+# or better?
+gitk /c/Orion/workspace/data/Source/SQL/SALES_COMP_ACCRUAL.pck
 
 ---
 
@@ -217,7 +228,6 @@ $ git remote show origin
 
 ---
 
-??
 git pull origin develop  =  pull FROM o to   d
 git push origin develop  =  push TO   o from d
 
@@ -346,11 +356,6 @@ edit .git/config:
 [branch "feature/ORION-31587"]
          remote = origin
          merge = refs/heads/feature/ORION-31587
-
----
-
-# Best passwordless ssh
-ssh-copy-id -i ~/.ssh/id_rsa.pub bheckel@sas-01.twa.taeb.com
 
 ---
 
