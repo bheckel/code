@@ -1,3 +1,8 @@
+
+-- error_code is an integer in the range -20000..-20999 and message is a character string of at most 2048 bytes
+
+---
+
 BEGIN
 --ORA-0000: normal, successful completion
  dbms_output.put_line(SQLERRM(0));
@@ -111,7 +116,7 @@ CREATE PROCEDURE account_status (
 IS
 BEGIN
   IF due_date < today THEN  -- explicitly raise exception 
-    RAISE_APPLICATION_ERROR(-20000, 'Account past due.');  -- error_code is an integer in the range -20000..-20999 and message is a character string of at most 2048 bytes
+    RAISE_APPLICATION_ERROR(-20000, 'Account past due.');
   END IF;
 END;
 /

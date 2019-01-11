@@ -62,3 +62,13 @@ BEGIN
   END LOOP;
 END;
 /
+
+---
+
+FOR r IN cursor1 LOOP
+	SET_CONTACT_MATCH_CODE(r.CONTACT_ID, 1);
+	rowcnt := rowcnt + 1;
+	IF MOD(rowcnt, 100) = 0 THEN
+		COMMIT;
+	END IF;
+END LOOP;
