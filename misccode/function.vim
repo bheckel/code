@@ -3,8 +3,15 @@
 
 " 20 args max
 function PrintDetails(name, title, email)
+  " Pretend we need magic for this function work properly
+  let l:magic = &magic
+  set magic
+
   echo 'Name:   '  a:title  a:name
   echo 'Contact:'  a:email
+
+  " Restore magic
+  let &magic = l:magic
 endfunction
 
 

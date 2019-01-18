@@ -1,12 +1,22 @@
 
+DECLARE 
+  TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
+  mynt mynt_t; 
+  cursor c is select * from my_family;
+BEGIN 
+  open c;
+  loop fetch c bulk collect into mynt limit 2;
+    exit when mynt.count = 0;
+    FOR i in 1..mynt.COUNT LOOP 
+      dbms_output.put_line('Name('||i||'):' || mynt(i).name); 
+    END LOOP; 
+  end loop;
+  close c;
+END;
+
+---
+
 CREATE OR REPLACE PACKAGE ORION34136 IS
-  -- ----------------------------------------------------------------------------
-  -- Author: Bob Heckel
-  -- Date:   
-  -- Usage:  
-  -- JIRA:   ORION-
-  -- ----------------------------------------------------------------------------
-          
  failure_in_forall EXCEPTION;  
  PRAGMA EXCEPTION_INIT (failure_in_forall, -24381);  -- ORA-24381: error(s) in array DML  
  

@@ -31,7 +31,7 @@ CREATE OR REPLACE PACKAGE manage_students AS
   FUNCTION id_is_good(i_student_id IN student.student_id%TYPE) RETURN BOOLEAN;
 
 END manage_students;
-
+/
 
 CREATE OR REPLACE PACKAGE BODY manage_students AS
 

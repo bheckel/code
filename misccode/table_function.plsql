@@ -1,4 +1,5 @@
 /* Adapted: Thu, Nov 29, 2018  2:05:03 PM (Bob Heckel -- https://devgym.oracle.com) */
+/* See also call_function_from_sql.plsql */
 
 -- To invoke a table function inside a SELECT statement, it must be defined at
 -- the schema level, in the specification of a package or in the WITH clause of a

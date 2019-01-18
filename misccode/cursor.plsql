@@ -1,5 +1,7 @@
 -- For small number of UPDATEs only
 PROCEDURE upd IS
+  rc pls_integer := 0;
+
 	CURSOR c IS
 		 SELECT * 
 			 FROM reference_employee_base 
@@ -20,6 +22,8 @@ PROCEDURE upd IS
 		
 			dbms_output.put_line(r.reference_id);
 		END LOOP;
+
+    rc := SQL%ROWCOUNT; dbms_output.put_line('rows affected: ' || rc);
 	  COMMIT;
 END upd;
 
@@ -138,3 +142,16 @@ BEGIN
   END LOOP;
 END;
 /
+
+---
+
+-- Cursor-less
+
+FOR r IN ( SELECT t.msg, t.execute_time
+					 FROM SUER_ONCALL_RESULTS t 
+					 WHERE r.execute_time > (sysdate - 1) AND r.execute_time < to_date('2019-01-16:11:00','YYYY-MM-DD:HH:MI') --debug 
+					 --r.execute_time > (SYSTIMESTAMP - INTERVAL '4' minute)
+					ORDER BY r.execute_time DESC
+) LOOP
+	dbms_output.put_line(r.msg);
+END LOOP;

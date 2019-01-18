@@ -20,4 +20,5 @@ vim t.sql -c ':mksession!'
 echo "$JIRA" >> $JIRA.html
 
 cygstart $JIRA.html
-cygstart ~/onedrive/template_project.prj ~/onedrive/orion-$1_$2/$JIRA.prj
+cp ~/onedrive/template_project.prj ~/onedrive/orion-$1_$2/$JIRA.prj
+cygstart "~/onedrive/orion-$1_$2/$JIRA.prj"

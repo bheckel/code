@@ -1,6 +1,95 @@
 
 -- See also nested_table.plsql, varray.plsql
 
+CREATE TABLE my_family (str VARCHAR2(100),name VARCHAR2 (100));
+INSERT INTO my_family VALUES ('foo1','Veva'); 
+INSERT INTO my_family VALUES ('foo2','Steven'); 
+INSERT INTO my_family VALUES ('foo3','Eli'); 
+INSERT INTO my_family VALUES (null,'xEli'); 
+COMMIT; 
+
+-- Load a string-keyed hash of strings
+declare
+  type myaa_t is table of varchar2(99) index by varchar2(99);
+  myaa myaa_t;
+  
+  begin
+		for r in ( select * from my_family ) loop
+			myaa(r.str) := r.name;
+		end loop;
+
+   dbms_output.put_line(myaa('foo1')); -- Veva
+ end;
+
+-- Load hash with a column
+DECLARE 
+   i integer := 0; 
+
+   CURSOR c is select name from my_family; 
+
+   TYPE myaa_t IS TABLE of my_family.Name%TYPE INDEX BY binary_integer; 
+   myaa myaa_t; 
+BEGIN 
+  FOR rec IN c LOOP 
+    i := i + 1; 
+    myaa(i) := rec.name; 
+    dbms_output.put_line('Name('||i||'):' || myaa(i)); 
+  END LOOP; 
+END;
+
+-- Load hash with a table
+DECLARE 
+   i integer := 0; 
+
+   --CURSOR c is select name, str from my_family; 
+
+   TYPE myaa_t IS TABLE of my_family%ROWTYPE INDEX BY binary_integer; 
+   myaa myaa_t; 
+BEGIN 
+   --FOR rec IN c LOOP 
+  FOR rec IN ( select name, str from my_family ) LOOP 
+    i := i + 1; 
+
+    myaa(i).name := rec.name; 
+    dbms_output.put_line('Name('||i||'):' || myaa(i).name); 
+
+    myaa(i).str := rec.str; 
+    dbms_output.put_line('Str('||i||'):' || myaa(i).str); 
+  END LOOP; 
+END;
+
+-- Compare (better only if small result set): load nested table with a table
+DECLARE 
+  TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
+  mynt mynt_t; 
+BEGIN 
+	select * bulk collect into mynt from my_family;
+  
+  FOR i in 1..mynt.COUNT LOOP 
+    dbms_output.put_line('Name('||i||'):' || mynt(i).name); 
+
+    dbms_output.put_line('Str('||i||'):' || mynt(i).str); 
+  END LOOP; 
+END;
+-- Better?
+DECLARE 
+  TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
+  mynt mynt_t; 
+  cursor c is select * from my_family;
+BEGIN 
+  open c;
+  loop fetch c bulk collect into mynt limit 2;
+    exit when mynt.count = 0;
+    FOR i in 1..mynt.COUNT LOOP 
+      dbms_output.put_line('Name('||i||'):' || mynt(i).name); 
+      dbms_output.put_line('Str('||i||'):' || mynt(i).str); 
+    END LOOP; 
+  end loop;
+  close c;
+END;
+
+---
+
 DECLARE
 	TYPE last_name_type IS TABLE OF student.last_name%TYPE INDEX BY PLS_INTEGER;
   -- No constructor like other collection types - empty by default
