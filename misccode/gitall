@@ -1,7 +1,10 @@
 #!/bin/bash
 
-cd ~/dotfiles && 
-echo "ok to gitup dotfiles dir?" && read && git status && git add . && git commit -m "mod" && git pull origin master && git push origin master
-cd ~/code &&
-echo
-echo "ok to gitup code dir?" && read && git status && git add . && git commit -m "mod" && git pull origin master && git push origin master
+for d in dotfiles code; do
+  cd ~/$d && 
+  echo "ok to gitup $d dir?" && read &&
+  git status
+  git add .
+  git commit -m "mod gitall"
+  git pull origin master && git push origin master
+done

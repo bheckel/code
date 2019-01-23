@@ -833,8 +833,8 @@ git clean -n -d -x .
 
 # Local squash the previous (whoops) commit that should have been done in the 1st commit (hide your whoops):
 git rebase -i HEAD~2  # last two commits will appear in picklist
-replace 'pick' with 's' for the last commit, :wq
-delete the comment from the whoops commit, :wq
+Replace 'pick' with 's' for the last commit, :wq, another window will appear
+Delete the comment from the whoops commit, :wq
 # Now only the first commit and its comment appears in git log
 
 ---

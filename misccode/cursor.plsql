@@ -1,3 +1,39 @@
+create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN NUMBER DEFAULT 1) IS
+  TYPE restore_grants_t IS REF CURSOR;
+  restore_grants_c restore_grants_t;
+  char_back_date VARCHAR2(20);
+  grantStatement varchar2(4000);
+
+  BEGIN
+    char_back_date := to_char(SYSDATE - back_date, 'yyyymmdd');
+     IF (TABLE_NAME IS NOT NULL) THEN
+        BEGIN
+        dbms_output.put_line ('in table_name is ' || table_name);
+        OPEN restore_grants_t FOR
+           'SELECT DISTINCT grant_statement
+             FROM rar_select_restore sr
+            WHERE sr.table_name = ''' || trim(table_name) || ''' AND sr.restoreDate= ''' || trim(char_back_date) || ''' ';
+        END;
+     ELSE
+       BEGIN
+         dbms_output.put_line ('in table_name is null');
+       OPEN restore_grants_t FOR
+          SELECT DISTINCT grant_statement
+             FROM rar_select_restore sr
+            WHERE sr.restoreDate=to_char (SYSDATE - back_date, 'yyyymmdd');
+       END;
+     END IF;
+    LOOP
+       FETCH restore_grants_t INTO grantStatement;
+       EXIT WHEN restore_grants_t%NOTFOUND;
+				 dbms_output.put_line('EXECUTE IMMEDIATE ''' || grantStatement || ''';');
+         -- EXECUTE IMMEDIATE (grantStatement);
+    END LOOP;
+  CLOSE restore_grants;
+END;
+
+---
+
 -- For small number of UPDATEs only
 PROCEDURE upd IS
   rc pls_integer := 0;

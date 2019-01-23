@@ -21,4 +21,4 @@ echo "$JIRA" >> $JIRA.html
 
 cygstart $JIRA.html
 cp ~/onedrive/template_project.prj ~/onedrive/orion-$1_$2/$JIRA.prj
-cygstart "~/onedrive/orion-$1_$2/$JIRA.prj"
+cygstart "C:\Users\boheck\OneDrive - SAS\orion-$1_$2\\$JIRA.prj"

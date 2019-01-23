@@ -1,6 +1,42 @@
 /* Convert rows to columns */
 /* See also sum_salary_by_job-matrix.sql */
 
+-- Quarter's rows to columns
+/*
+QUARTER	PROD_CATEGORY	COUNT(*)
+JAN	Electronics	6398
+APR	Electronics	8709
+JUL	Electronics	10283
+OCT	Electronics	10771
+JAN	Hardware	944
+APR	Hardware	696
+JUL	Hardware	740
+OCT	Hardware	708
+JAN	Peripherals and Accessories	17923
+APR	Peripherals and Accessories	12627
+JUL	Peripherals and Accessories	14254
+OCT	Peripherals and Accessories	14047
+*/
+select prod_category,jan,apr,jul,oct
+from (
+  select to_char(trunc(s.time_id,'Q'),'MON') quarter, prod_category
+  from sh.sales s, sh.products p
+  where s.prod_id = p.prod_id and s.time_Id >= date '2000-01-01'
+)
+PIVOT ( count(*) for quarter in ( 'JAN' as jan,'APR' as apr,'JUL' as jul,'OCT' as oct ) )
+/*
+PROD_CATEGORY	JAN	APR	JUL	OCT
+Electronics	6398	8709	10283	10771
+Hardware	944	696	740	708
+Peripherals and Accessories	17923	12627	14254	14047
+*/
+
+-- Columns to rows unpivot
+...( quantity for quarter in (JAN,APR,JUL,OCT) )
+
+---
+
+
 create table bricks (
   brick_id integer,
   colour   varchar2(10),

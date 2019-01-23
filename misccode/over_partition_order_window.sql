@@ -10,7 +10,8 @@
  * except for the final ORDER BY clause. All joins and all WHERE, GROUP BY, and
  * HAVING clauses are completed *before* the analytic functions are processed.
  * Therefore, analytic functions can appear only in the SELECT list or ORDER BY
- * clause.
+ * clause not in a predicate.  They can often be used to eliminate potentially 
+ * expensive subqueries.
  *
  * P  partition
  * O  order
@@ -65,30 +66,33 @@ union all select date '2000-01-05', 14 from dual
 )
 select d
       ,amt
-      ,row_number() OVER (partition by d order by d) rownumbyday
-      ,rank() OVER (order by d) orderbydt -- 1,2,3,3,5...
-      ,rank() OVER (partition by d order by amt) rank_by_day -- can be top n by day if used as a subquery
-      -- Want first date in a contiguous series otherwise leave blank
-      ,case when nvl(lag(d) over (order by d), d) != d-1 then d end lowval_of_range
-      ,dense_rank() OVER (order by d) orderbydt_dense -- 1,2,3,3,4...
-      ,first_value(amt) OVER (order by d) firstdot
+      ,row_number() OVER (order by d) row_seq_in_dt_order  -- 1,2,3,4,5,6
+      ,rank() OVER (order by d) orderbydt -- 1,2,3,3,5,6 Olympic
+      ,dense_rank() OVER (order by d) orderbydt_dense -- 1,2,3,3,4,5,6
+      ,row_number() OVER (partition by d order by d) rownumbyday  -- 1,1,1,2,1,1
+      ,rank() OVER (partition by d order by amt) rank_by_day -- 1,1,1,1,1,1 can be Top N by day if used as a subquery
+      -- Want only first date in a contiguous series otherwise leave blank
+      ,case when nvl(lag(d) over (order by d), d) != d-1 then d end lowval_of_range  -- 01jan, , , 03jan, , 
+      ,first_value(amt) OVER (order by d) firstdot  -- 10,10,10,10,10,10
       -- Good for cols where only the first appearance holds empno and rest are blank and need to be padded out (like a report for human consumption)
-      ,last_value(amt IGNORE NULLS) OVER (order by d)  lastdot_fillin_the_blank
-      ,nvl(amt, lag(amt IGNORE NULLS) OVER (partition by d order by d)) fillin_the_blank_handle_nulls
-      -- The NTH_VALUE clause lets us identify boundary values that are not necessarily the minima 
-      -- and maxima which could be identified by FIRST_VALUE() and LAST_VALUE()
-      ,nth_value(amt,2) OVER (order by d) second_highest_skip_outliers
-      ,round(amt/nth_value(amt,2) over (order by d),2)*100 percent_diff
-      ,sum(amt) OVER (order by d) as running_total  -- 'unbounded preceding and following' is effectively the same as a SUM on the entire set (by each ticker) and hence would not give a running total here
-      ,sum(amt) OVER (order by d rows between unbounded preceding and current row) running_total2
-      ,avg(amt) OVER (order by d rows between 1 preceding and 1 following) moving_average
---      ,sum(amt) OVER (order by d rows between MYFUNC(foo) preceding and 0 following) running_total2
-      -- Use RANGE not ROWS to avoid missing data
-      ,avg(amt) OVER (order by d range between interval '2' day preceding and current row) moving_average_2day
-      ,sum(amt) OVER (order by d range between interval '2' day preceding and current row) running_total_2day
-      -- Always need a sorting clause for LAG
-      ,lag(amt) OVER (partition by d order by d) amt_before  -- good for status updates when you have daily data
-      ,lead(amt) OVER (partition by d order by d) amt_after  -- good for status updates when you have daily data
+      ,last_value(amt IGNORE NULLS) OVER (order by d)  lastdot_fillin_the_blank  -- 10,11,30,30,10,14
+      ,nvl(amt, lag(amt IGNORE NULLS) OVER (partition by d order by d)) fillin_the_blank_handle_nulls  -- 10,11,30,30,10,14
+      -- The NTH_VALUE clause lets us identify boundary values that are not necessarily the minima and maxima which could be identified by FIRST_VALUE() and LAST_VALUE()
+      ,nth_value(amt,2) OVER (order by d) second_highest_skip_outliers  -- , 11, 11, 11, 11, 11
+      ,round(amt/nth_value(amt,2) over (order by d),2)*100 percent_diff  -- , 100, 273, 273, 91, 127
+      ,sum(amt) OVER (order by d) as running_tot_fail  -- default 'unbounded preceding and following' is effectively the same as a SUM on the entire set (by each ticker) and hence would not give a running total here
+      ,sum(amt) OVER (order by d rows between unbounded preceding and current row) running_total2  -- 10,21,51,81,91,105
+      ,avg(amt) OVER (order by d rows between 1 preceding and 1 following) moving_average  -- 10.5,17,23.6666666,23.333333,18,12
+--      ,sum(amt) OVER (order by d rows between MYFUNC(foo) preceding and 0 following) running_total3
+--      ,sum(amt) OVER (order by d rows between myseq-mytrailing_seq preceding and 0 following) running_total4
+      -- Use time RANGE not physical ROWS to avoid missing data
+      ,sum(amt) OVER (order by d range between interval '2' day preceding and current row) running_total_2day  -- 10,21,81,81,81,84
+      ,avg(amt) OVER (order by d range between interval '2' day preceding and current row) moving_average_2day  -- 10,10.5,20.25,20.25,20.25,21
+      -- Always need a sorting clause for LAG()
+      ,lag(amt) OVER (order by d) amt_before  -- ,10,11,30,30,10
+      ,lead(amt) OVER (partition by d order by d) amt_after  -- , , 30, , ,  good for finding a change in status when you have daily data
+      --_______________________________________ <--still just another aggregation function like count() or sum()
+      ,listagg(d,', ' within group(ordery by d) OVER ( partition by amt ) csv
       ,sum(amt) OVER () grand_sum
       ,avg(amt) OVER () grand_avg
 FROM v;
@@ -99,18 +103,18 @@ FROM v;
 -- in that department.  In the event of a tied salary, choose the employee with
 -- the first name in alphabetic sequence
 
--- Self join version
+-- Self join version:
 select deptno, ename top_emp
 from emp e
 where not exists ( 
   select 1
   from   emp
   where  deptno = e.deptno
-  and    (sal > e.sal) or (sal = e.sal and ename < e.ename)
+    and  (sal > e.sal) or (sal = e.sal and ename < e.ename)
   )
 order by 1;
 
--- Fetch first version:
+-- Compare fetch first version:
 select distinct deptno, 
        ( select ename
          from   emp
@@ -121,7 +125,7 @@ select distinct deptno,
 from emp e
 order by 1;
 
--- best
+-- Compare Analytic Functions version:
 select distinct deptno, 
        first_value(ename) over ( partition by deptno order by sal desc, ename ) as top_emp
 from emp

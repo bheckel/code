@@ -18,3 +18,9 @@ where a.Sno=b.Sno
   and (a.Cno="CS112") and (b.Cno="CS114")
 ;
 
+
+-- This may be more efficient
+select dept.*,
+       nvl2(emp.rowid,emp.empno,null) empno
+from emp partition by (empno) right outer join dept on ( emp.deptno = dept.deptno )
+order by emp.empno, dept.deptno;
