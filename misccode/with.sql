@@ -1,3 +1,21 @@
+with account_name as (
+	select 5645818 account_name_id, 5645818 account_id from dual union all
+	select 7934046 account_name_id, 5645818 account_id from dual union all
+	select 123 account_name_id, 456 account_id from dual union all
+	select 14036780 account_name_id, 5645818 account_id from dual
+) 
+select w.account_id, cw, cwo, cw-cwo diff
+from 
+	(select account_id, count(*) cw
+	from account_name 
+	group by account_id) w,
+	(select account_id, count(*) cwo
+	from account_name 
+	where account_name_id <> account_id
+	group by account_id) wo
+where w.account_id=wo.account_id
+
+---
 
 SELECT ids, ab.account_id 
 FROM (WITH DATA AS

@@ -1,5 +1,5 @@
 -- https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01115
--- See also run_all_procedures.plsql
+-- See also run_all_procedures.plsql, using.plsql
 
 CREATE OR REPLACE PROCEDURE plch_change_table AUTHID DEFINER
 IS
@@ -51,7 +51,6 @@ BEGIN
  /* Specify bind variables in USING clause.
   * Specify mode for first parameter.
   * Modes of other parameters are correct by default.
-  * See also using.plsql
   */
   EXECUTE IMMEDIATE dyn_stmt
     USING IN OUT new_deptid, new_dname, new_mgrid;

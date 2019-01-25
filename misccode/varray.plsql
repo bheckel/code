@@ -1,6 +1,7 @@
 -- See also associative_array_table_indexby.plsql, nested_table.plsql
 
 DECLARE
+  -- Must know max size
 	TYPE last_name_type IS VARRAY(10) OF student.last_name%TYPE;
   -- Initialized at the time of declaration, it's empty but not NULL
 	last_name_varr last_name_type := last_name_type();

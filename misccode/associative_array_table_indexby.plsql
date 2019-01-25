@@ -21,6 +21,7 @@ declare
    dbms_output.put_line(myaa('foo1')); -- Veva
  end;
 
+
 -- Load hash with a column
 DECLARE 
    i integer := 0; 
@@ -37,7 +38,8 @@ BEGIN
   END LOOP; 
 END;
 
--- Load hash with a table
+
+-- Load hash with a db table
 DECLARE 
    i integer := 0; 
 
@@ -58,7 +60,7 @@ BEGIN
   END LOOP; 
 END;
 
--- Compare (better only if small result set): load nested table with a table
+-- Compare (better only if small result set): load nested table with a db table
 DECLARE 
   TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
   mynt mynt_t; 
@@ -71,7 +73,8 @@ BEGIN
     dbms_output.put_line('Str('||i||'):' || mynt(i).str); 
   END LOOP; 
 END;
--- Better?
+
+-- Compare (better for loading large amounts of data) load nested table with a db table
 DECLARE 
   TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
   mynt mynt_t; 

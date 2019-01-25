@@ -62,6 +62,11 @@ AND ROWNUM<600
           -- DML statements that a FORALL statement sends to SQL differ only in
           -- their VALUES and WHERE clauses. The values in those clauses must come
           -- from existing, populated collections.
+          --
+          -- The FORALL statement is not a loop; it is a declarative statement
+          -- to the PL/SQL engine: “Generate all the DML statements that would
+          -- have been executed one row at a time, and send them all across to the
+          -- SQL engine with one context switch”
           FORALL i IN 1 .. l_tab_size SAVE EXCEPTIONS
             UPDATE zOPPORTUNITY_OPT_OUT
                SET POOR_CLOSEOUT_OPT_OUT = 1

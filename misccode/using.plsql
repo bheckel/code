@@ -1,4 +1,5 @@
 --https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01108
+
 CREATE PROCEDURE calc_stats(w NUMBER, x NUMBER, y NUMBER, z NUMBER) IS
 BEGIN
   DBMS_OUTPUT.PUT_LINE(w + x + y + z);
@@ -78,3 +79,14 @@ CREATE OR REPLACE PROCEDURE update_reference_owner IS
 
 		COMMIT; 
 END update_reference_owner;
+
+---
+
+EXCEPTION
+WHEN OTHERS THEN
+  errMsg := SQLERRM;
+  ROLLBACK;
+  EXECUTE IMMEDIATE 'insert into ACCOUNT_TRANSFORMATION_LOG  VALUES (:1, :2, :3)'
+    USING rec.account_id, 'Add New Account Error: ' || errMsg, SYSDATE;
+  COMMIT;                        
+END;

@@ -1,5 +1,29 @@
 -- See also associative_array_table_indexby.plsql, varray.plsql
 
+-- Collection Methods:
+-- EXISTS: This function returns TRUE if a specified element exists in a collection
+--         and can be used to avoid raising SUBSCRIPT_OUTSIDE_LIMIT exceptions.
+-- COUNT: This function returns the total number of elements in a collection.
+-- FIRST and LAST: These functions return subscripts of the first and last elements of
+--       a collection. If the first element of a nested table is deleted, the FIRST method
+--       returns a value greater than 1. If elements are deleted from the middle of a nested
+--       table, the LAST method returns a value greater than the COUNT method.
+-- PRIOR and NEXT: These functions return subscripts that precede and succeed a
+--       specified collection subscript.
+--
+-- Not allowed with associative arrays:
+-- EXTEND: This procedure increases the size of a collection.
+-- TRIM: This procedure removes either one or a specified number of elements from
+--       the end of a collection. PL/SQL does not keep placeholders for the trimmed
+--       elements.
+--
+-- Not allowed with varrays:
+-- DELETE: This procedure deletes either all elements, just the elements in the
+--         specified range, or a particular element from a collection. PL/SQL keeps
+--         placeholders of the deleted elements.
+-- Only allowed with varrays:
+-- LIMIT: Returns the maximum number of elements that a collection can contain
+
 DECLARE
 	TYPE last_name_type IS TABLE OF student.last_name%TYPE;
   -- Initialized at the time of declaration, it's empty but not NULL

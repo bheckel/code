@@ -1,17 +1,38 @@
 
+       EXCEPTION
+        WHEN OTHERS THEN
+          errMsg := SQLERRM;
+          ROLLBACK;
+          EXECUTE IMMEDIATE 'insert into ACCOUNT_TRANSFORMATION_LOG                            
+                              VALUES(:1, :2, :3)'
+            USING rec.account_id, 'Add New Account Error: ' || errMsg, sysdate;
+          COMMIT;                        
+       END;
+
+---
+
 -- error_code is an integer in the range -20000..-20999 and message is a character string of at most 2048 bytes
 
 ---
 
 BEGIN
---ORA-0000: normal, successful completion
- dbms_output.put_line(SQLERRM(0));
---User-Defined Exception
- dbms_output.put_line(SQLERRM(1));
---ORA-01855: AM/A.M. or PM/P.M. required
- dbms_output.put_line(SQLERRM(-1855));
--- -1855: non-ORACLE exception
- dbms_output.put_line(SQLERRM(1855));
+  -- ORA-0000: normal, successful completion
+  dbms_output.put_line(SQLERRM(0));
+  -- User-Defined Exception
+  dbms_output.put_line(SQLERRM(1));
+  -- ORA-01855: AM/A.M. or PM/P.M. required
+  dbms_output.put_line(SQLERRM(-1855));
+  -- -1855: non-ORACLE exception
+  dbms_output.put_line(SQLERRM(1855));
+
+  RAISE TOO_MANY_ROWS;
+
+EXCEPTION
+  WHEN OTHERS
+    -- ORA-01422: exact fetch returns more than requested number of rows
+    dbms_output.put_line(SQLERRM);
+    -- Same (can't use it to lookup errors as you can with SQLERRM) plus won't truncate like SQLERRM
+    dbms_output.put_line (DBMS_UTILITY.format_error_stack);
 END;
 
 ---
