@@ -1,4 +1,14 @@
 
+http://support.sas.com/documentation/cdl/en/syntaxidx/68719/HTML/default/index.htm#/documentation/cdl/en/syntaxidx/68719/HTML/default/shared/start.htm
+http://support.sas.com/documentation/onlinedoc/bookshelf/94/desktop.html
+http://support.sas.com/documentation/cdl/en/lefunctionsref/67960/HTML/default/viewer.htm#n1mj2bizbsd7ktn1sf9lz111kku3.htm
+http://support.sas.com/documentation/cdl/en/lestmtsref/67407/HTML/default/viewer.htm#p08st7rzfn0dgin1fml8hq40hlho.htm
+http://support.sas.com/documentation/cdl/en/allprodsproc/68038/HTML/default/viewer.htm#procedures.htm
+https://support.sas.com/rnd/base/ods/scratch/styles-tips.pdf
+https://support.sas.com/rnd/base/ods/odsmarkup/TipSheet_ods_xl_xp.pdf
+
+---
+
 Email:
 put this line in /sas/sashome/SASFoundation/9.4/autoexec.sas for batch/cron and /sas/config/Lev2/SASApp/appserver_autoexec_usermods.sas for EG:
 

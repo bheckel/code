@@ -7,4 +7,5 @@ for d in dotfiles code; do
   git add .
   git commit -m "mod gitall"
   git pull origin master && git push origin master
+  echo
 done

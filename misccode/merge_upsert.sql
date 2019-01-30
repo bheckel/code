@@ -1,3 +1,39 @@
+  MERGE INTO activity_search
+    USING dual ON (activity_search_id = inActiv_ID)
+    --If ACTIVITY_SEARCH already exists
+    WHEN MATCHED THEN
+      UPDATE
+         set updated         = AS_UPDATE_DATE,
+             updatedby       = AS_UPDATED_BY,
+             account_name    = AS_ACCOUNT_NAME,
+             account_name_id = AS_ACCOUNT_NAME_ID,
+             badabingle      = to_char(sysdate, 'DDMONYYYY HH24:MI:SS')
+       where ACTIVITY_search_id = inActiv_ID
+    WHEN NOT MATCHED THEN  
+      --If ACTIVITY_SEARCH does NOT exist
+      INSERT
+        (ACTIVITY_SEARCH_ID,
+         CREATED,
+         CREATEDBY,
+         UPDATED,
+         UPDATEDBY,
+         SEARCH_MATCH_CODE,
+         ACCOUNT_NAME,
+         ACCOUNT_name_ID,
+         BADABINGLE)
+      Values
+        (inActiv_ID,
+         AS_CREATED_DATE,
+         AS_CREATED_BY,
+         AS_UPDATE_DATE_BASE,
+         AS_UPDATED_BY_BASE,
+         null,
+         AS_ACCOUNT_NAME,
+         AS_ACCOUNT_NAME_ID,
+         to_char(sysdate, 'DDMONYYYY HH24:MI:SS'));
+
+---
+
 -- Insert if we don't have a record to update aka upsert
 -- You can delete rows from the target table. But only those that match a row in the source.
 

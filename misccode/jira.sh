@@ -3,22 +3,24 @@
 # ln -s ~/code/misccode/jira.sh ~/bin
 # jira.sh 33479 existingcust_flaginout
 
-JIRA=${1:-untitled}
+JIRA=${1:-99999999}
+DESC=${2:-untitled}
 
-mkdir -p ~/onedrive/orion-$1_$2
-cd ~/onedrive/orion-$1_$2
+TAG=${JIRA}_${DESC}
 
-cp -i ~/onedrive/template_t.sql ~/onedrive/orion-$1_$2/t.sql
-cp -i ~/onedrive/template_project.prj ~/onedrive/orion-$1_$2/$JIRA.prj
-cp -i ~/onedrive/template_project.dsk ~/onedrive/orion-$1_$2/$JIRA.dsk
-cp -i ~/onedrive/template_pkg.pck ~/onedrive/orion-$1_$2/ORION$JIRA.pck
+mkdir -p ~/onedrive/orion-${TAG} && cd ~/onedrive/orion-${TAG} && \
+cp -i ~/onedrive/template_t.sql ~/onedrive/orion-${TAG}/t.sql && \
+cp -i ~/onedrive/template_project.prj ~/onedrive/orion-${TAG}/$JIRA.prj && \
+cp -i ~/onedrive/template_project.dsk ~/onedrive/orion-${TAG}/$JIRA.dsk && \
+cp -i ~/onedrive/template_pkg.pck ~/onedrive/orion-${TAG}/ORION$JIRA.pck && \
 
 echo >> t.sql
 echo "git checkout -b feature/ORION-$JIRA && git push --set-upstream origin feature/ORION-$JIRA" >> t.sql
 echo >> t.sql
 vim t.sql -c ':mksession!'
-echo "$JIRA" >> $JIRA.html
 
-cygstart $JIRA.html
-cp ~/onedrive/template_project.prj ~/onedrive/orion-$1_$2/$JIRA.prj
-cygstart "C:\Users\boheck\OneDrive - SAS\orion-$1_$2\\$JIRA.prj"
+echo "${JIRA} ${DESC}" >> ${TAG}.html
+cygstart ${TAG}.html
+
+cp ~/onedrive/template_project.prj ~/onedrive/orion-${TAG}/$JIRA.prj
+cygstart "C:\Users\boheck\OneDrive - SAS\orion-${TAG}\\$JIRA.prj"
