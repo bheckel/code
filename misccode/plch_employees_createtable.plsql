@@ -1,8 +1,8 @@
 CREATE TABLE plch_employees
 (
-   employee_id   INTEGER
- , last_name     VARCHAR2 (100)
- , salary        NUMBER
+   employee_id   INTEGER PRIMARY KEY
+ , last_name     VARCHAR2(100)
+ , salary        NUMBER(7)
 )
 /
 BEGIN

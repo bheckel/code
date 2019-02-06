@@ -16,10 +16,12 @@ cp -i ~/onedrive/template_pkg.pck ~/onedrive/orion-${TAG}/ORION$JIRA.pck && \
 
 echo >> t.sql
 echo "git checkout -b feature/ORION-$JIRA && git push --set-upstream origin feature/ORION-$JIRA" >> t.sql
+echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> t.sql
 echo >> t.sql
 vim t.sql -c ':mksession!'
 
-echo "${JIRA} ${DESC}" >> ${TAG}.html
+echo "${JIRA} ${DESC}" > ${TAG}.html
+echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
 cygstart ${TAG}.html
 
 cp ~/onedrive/template_project.prj ~/onedrive/orion-${TAG}/$JIRA.prj

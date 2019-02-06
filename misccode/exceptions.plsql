@@ -1,3 +1,18 @@
+-- The PL/SQL run-time engine will raise exceptions whenever the Oracle
+-- database detects a problem or it executes a RAISE or RAISE_APPLICATION_ERROR
+-- statement in your code. You can then trap or handle these exceptions in the
+-- exception section - or let the exception propagate unhandled to the enclosing
+-- block or host environment.
+--
+-- If you want processing in your block to continue, even if an exception was
+-- raised, enclose the code that might raise an exception in its own BEGIN-END
+-- nested block. Then add an exception to that block, trap the error, record
+-- information about what went wrong, and then allow the (now) outer block to
+-- continue.
+
+-- See also suppress_rowlevel_dml_errors.plsql
+
+---
 
        EXCEPTION
         WHEN OTHERS THEN
@@ -137,7 +152,8 @@ CREATE PROCEDURE account_status (
 IS
 BEGIN
   IF due_date < today THEN  -- explicitly raise exception 
-    RAISE_APPLICATION_ERROR(-20000, 'Account past due.');
+    -- First argument must be an integer value between -20999 and -20000
+    RAISE_APPLICATION_ERROR(-20000, 'Account past due.');  -- goes unhandled, assumes user can't see DBMS_OUTPUT buffer
   END IF;
 END;
 /
@@ -150,8 +166,10 @@ BEGIN
                   TO_DATE('09-JUL-2010', 'DD-MON-YYYY'));   -- invoke procedure
 
 EXCEPTION
-  WHEN past_due THEN                         -- handle exception
+  WHEN past_due THEN  -- handle exception, "WHEN OTHERS" also works here
     DBMS_OUTPUT.PUT_LINE(TO_CHAR(SQLERRM(-20000)));
+    -- Better, doesn't truncate > 512 char messages
+    DBMS_OUTPUT.put_line(DBMS_UTILITY.format_error_stack());
 END;
 /
 

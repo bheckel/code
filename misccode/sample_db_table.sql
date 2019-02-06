@@ -1,9 +1,13 @@
+
+-- See also plch_employees_createtable.plsql
+
+---
+
+
 create table dummy_table as
   select date '2010-01-01'+rownum x, rownum y from dual connect by level <= 365*5;
 
 ---
-
--- See also plch_employees_createtable.plsql
 
 CREATE TABLE tmpbobh (
   fooN  NUMBER,
@@ -34,7 +38,22 @@ FROM v;
 
 ---
 
--- 10k records
+-- Want a new 10k record table
+CREATE TABLE plxx as
+       SELECT 'STK' || LEVEL stkname,
+              SYSDATE        created,
+              LEVEL          level1,
+              LEVEL + 15     level2
+         FROM DUAL
+   CONNECT BY LEVEL <= 100
+/*
+STKNAME	CREATED	LEVEL1	LEVEL2
+STK1	01-FEB-19	1	16
+STK2	01-FEB-19	2	17
+STK3	01-FEB-19	3	18
+*/
+
+-- or if table already exists
 INSERT INTO stocks
        SELECT 'STK' || LEVEL,
               SYSDATE,

@@ -16,6 +16,8 @@ END;
 
 ---
 
+dbms_output.enable(NULL);
+
 CREATE OR REPLACE PACKAGE ORION34136 IS
  failure_in_forall EXCEPTION;  
  PRAGMA EXCEPTION_INIT (failure_in_forall, -24381);  -- ORA-24381: error(s) in array DML  
