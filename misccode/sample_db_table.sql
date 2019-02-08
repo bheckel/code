@@ -3,26 +3,30 @@
 
 ---
 
+create table t1 as
+  select date '2010-01-01'+rownum x, rownum y from dual connect by level <= 10;
 
-create table dummy_table as
-  select date '2010-01-01'+rownum x, rownum y from dual connect by level <= 365*5;
+select * from t1;
+
+drop table t1;
 
 ---
 
-CREATE TABLE tmpbobh (
+CREATE TABLE t1 (
   fooN  NUMBER,
   fooC  VARCHAR2(5),
   fooD  DATE
 );
 
-INSERT INTO tmpbobh (fooN,fooC,fooD) VALUES (66,'one','01-JAN-1960');
-INSERT INTO tmpbobh (fooN,fooC,fooD) VALUES (67,'two','01-FEB-1960');
-INSERT INTO tmpbobh (fooN,fooC,fooD) VALUES (68,'three','01-MAR-1960');
+INSERT INTO t1 (fooN,fooC,fooD) VALUES (66,'one','01-JAN-1960');
+INSERT INTO t1 (fooN,fooC,fooD) VALUES (67,'two','01-FEB-1960');
+INSERT INTO t1 (fooN,fooC,fooD) VALUES (68,'three','01-MAR-1960');
 
-DROP TABLE tmpbobh;
+DROP TABLE t1;
 
 ---
 
+-- Pseudo table:
 with v as (
           select date '2000-01-01' d, 10 amt from dual
 union all select date '2000-01-02', 11 from dual
@@ -38,14 +42,14 @@ FROM v;
 
 ---
 
--- Want a new 10k record table
+-- Want a new large 10k record table
 CREATE TABLE plxx as
        SELECT 'STK' || LEVEL stkname,
               SYSDATE        created,
               LEVEL          level1,
               LEVEL + 15     level2
          FROM DUAL
-   CONNECT BY LEVEL <= 100
+   CONNECT BY LEVEL <= 10000
 /*
 STKNAME	CREATED	LEVEL1	LEVEL2
 STK1	01-FEB-19	1	16

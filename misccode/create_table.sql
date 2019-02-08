@@ -1,3 +1,16 @@
+
+CREATE TABLE target (pk number, data varchar2(10));
+CREATE TABLE source (pk_s number, data_s varchar2(10));
+INSERT INTO target VALUES (1, 'a');
+INSERT INTO target VALUES (3, 'c');
+INSERT INTO source VALUES (1, 'a');
+INSERT INTO source VALUES (2, 'b');
+INSERT INTO source VALUES (3, 'c');
+INSERT INTO source VALUES (4, 'd');
+COMMIT;
+
+---
+
 -- Oracle
 CREATE TABLE TMPCUSTOMERS( 
    ID   INT NOT NULL, 
@@ -26,6 +39,7 @@ VALUES (5, 'Hardik', 27, 'Bhopal', 8500.00 );
 INSERT INTO TMPCUSTOMERS (ID,NAME,AGE,ADDRESS,SALARY) 
 VALUES (6, 'Komal', 22, 'MP', 4500.00 ); 
 
+---
 
 -- Oracle
 create sequence UID_OPPORTUNITY_OPT_OUT
@@ -128,6 +142,7 @@ grant select on OPPORTUNITY_OPT_OUT to SEKMC;
 
 -- exec ESTARS_HISTORY.CREATE_HIST_TABLE('OPPORTUNITY_OPT_OUT');
 
+---
 
 -- postgres
 CREATE TABLE priorityprogram.uhcclients
@@ -170,7 +185,7 @@ GRANT ALL ON TABLE public.enrollchgdashboard TO etl_group;
 COMMENT ON TABLE public.enrollchgdashboard
   IS 'Daily enrollment data for Dashboards';
 
-
+---
 
 use sandbox
 CREATE TABLE #vapharm (
@@ -180,7 +195,7 @@ CREATE TABLE #vapharm (
 
 INSERT #table VALUES ('some id num', 'abba')
 
-
+---
 
 drop table mailing_list;
 

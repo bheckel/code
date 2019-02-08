@@ -1,3 +1,80 @@
+/*
+https://www.oratable.com/oracle-merge-command-for-upsert/
+
+SQL> select * from student;
+
+        ID NAME                 SCORE
+---------- --------------- ----------
+         1 Jack                   540
+         2 Rose
+         3 William                650
+         4 Caledon                620
+         5 Fabrizio               600
+         6 Thomas
+         7 Ruth                   680
+         8 Spacer                 555
+
+SQL> select * from student_n;
+
+        ID NAME                 SCORE
+---------- --------------- ----------
+         7 Ruth                   690
+         8 Spicer                 620
+         9 Wallace                600
+        10 Lizzy
+        11 Brock                  705
+*/
+
+merge into student a
+using
+  (select id, name, score
+   from student_n) b
+on (a.id = b.id)
+when MATCHED then
+  update set a.name = b.name
+           , a.score = b.score
+--delete where a.score < 640
+when NOT MATCHED then
+  insert (a.id, a.name, a.score)
+  values (b.id, b.name, b.score)
+;
+
+-- 5 rows merged.
+
+/*
+SQL> select * from student;
+
+        ID NAME                 SCORE
+---------- --------------- ----------
+         1 Jack                   540
+         2 Rose
+         3 William                650
+         4 Caledon                620
+         5 Fabrizio               600
+         6 Thomas
+         7 Ruth                   690
+        11 Brock                  705
+        10 Lizzy
+         9 Wallace                600
+         8 Spicer                 620
+
+11 rows selected.
+*/
+
+-- You cannot update any of the columns you are merging on, ID in this case.
+--
+-- The delete condition works on the source, not the target so Fabrizio stays undeleted.
+--
+-- Oracle has to be able to identify a single target record for update. The
+-- simplest method of ensuring this is to join source and target tables by the
+-- primary key of the target.
+--
+-- If the source has 3 records and all 3 are identical to the target, MERGE
+-- will report ‘3 rows merged’ though this merge made no difference to the
+-- target table.
+
+---
+
   MERGE INTO activity_search
     USING dual ON (activity_search_id = inActiv_ID)
     --If ACTIVITY_SEARCH already exists

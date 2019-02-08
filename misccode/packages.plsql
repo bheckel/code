@@ -18,9 +18,7 @@ CREATE OR REPLACE PACKAGE BODY ztestbob AS
 
 END ztestbob;
 
-
 ---
-
 
 CREATE OR REPLACE PACKAGE manage_students AS
 
@@ -72,3 +70,42 @@ CREATE OR REPLACE PACKAGE BODY manage_students AS
  END id_is_good;
 
 END manage_students;
+
+---
+
+create or replace package ORION_ERRORS_TEST is
+
+  procedure proc_a;
+  procedure proc_b;
+  procedure proc_c;
+  
+  PROCEDURE force_err(in_status VARCHAR2);
+
+end ORION_ERRORS_TEST;
+/
+create or replace package body ORION_ERRORS_TEST is
+
+  procedure proc_c is
+    begin
+     dbms_output.put_line('Inside procedure c');
+     orion_errors.raise_error(orion_errors.MY_USER_DEFINED_ERROR);
+  end proc_c;
+
+  procedure proc_b is
+    begin
+     dbms_output.put_line('Inside procedure b');
+     proc_c;
+  end proc_b;
+
+  procedure proc_a is
+    begin
+      dbms_output.put_line('Inside procedure a');
+      proc_b;
+  end proc_a;
+
+  procedure force_err(in_status VARCHAR2) is
+    begin
+      dbms_output.put_line('ok ' || in_status);
+  end;
+end ORION_ERRORS_TEST;
+

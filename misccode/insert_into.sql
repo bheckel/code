@@ -1,16 +1,7 @@
--- Two records from one
-INSERT ALL
- INTO plch_tickers (ticker, pricetype, price)
-VALUES (ticker, 'O', open_price)
- INTO plch_tickers (ticker, pricetype, price)
-VALUES (ticker, 'C', close_price)
-	SELECT ticker, open_price, close_price FROM plch_stocks;
 
----
+insert into mailing_list (name, email) values ('Philip Greenspun','philg@foo.edu');
 
-insert into mailing_list (name, email) values ('Philip Greenspun','philg@mit.edu');
-
--- Evil shortcut without specifying phone_numbers fields but instead assuming their order
+-- Shortcut without specifying phone_numbers fields but instead assuming their order
 insert into phone_numbers values ('ogrady@fastbuck.com','work','(800) 555-1212');
 
 ---
@@ -24,11 +15,20 @@ where mid in(select distinct mid from movie)
 
 ---
 
+-- INSERT ALL the shorthand multi-table INSERT
+
 insert all  
   into teddies values ('Dinosaur King', 'red')  
   into bricks values ('sphere', 'green', 100)  
   select * from dual;
 
+-- Two records from one
+INSERT ALL
+ INTO plch_tickers (ticker, pricetype, price)
+VALUES (ticker, 'O', open_price)
+ INTO plch_tickers (ticker, pricetype, price)
+VALUES (ticker, 'C', close_price)
+	SELECT ticker, open_price, close_price FROM plch_stocks;
 
 insert all
   into people values (full_name)
