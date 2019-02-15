@@ -24,23 +24,20 @@ With the Partitioning, Data Mining and Real Application Testing options
 
 SQL> help column
 
+---
 
-###
+--SQL> @c:/temp/t.sql
 
+set termout off
 
-set termout off;
-set linesize 2000;
-set pagesize 9999;
+set pagesize 0
 
-spool u:/serevent.out;
+set linesize 4000
 
--------------------------
+spool c:/temp/t.out
 
-select *
-from
+select text from SYS.USER_SOURCE t WHERE t.name='ORION34858';
 
+spool off
 
--------------------------
-
-spool off;
-quit;
+exit

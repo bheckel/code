@@ -1,3 +1,80 @@
+boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+$ git add . && git commit -m 'ORION-35000: Upgrade e_mail_message procedure'
+[develop e5b334a05c2] ORION-35000: Upgrade e_mail_message procedure
+ 2 files changed, 145 insertions(+), 31 deletions(-)
+ create mode 100644 Source/SQL/3.53OrionScripts/ORION-35000_ddl_change.sql
+
+
+boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+$ gpull
+remote: Counting objects: 42, done.
+remote: Compressing objects: 100% (21/21), done.
+remote: Total 42 (delta 29), reused 34 (delta 21), pack-reused 0
+Unpacking objects: 100% (42/42), done.
+error: cannot open .git/FETCH_HEAD: Permission denied
+
+
+boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+$ gpull
+From github.sas.com:orion/data
+   348396f699f..6302f518da4  develop     -> origin/develop
+ * [new branch]              ORION-35723 -> origin/ORION-35723
+error: Empty commit message.
+Not committing merge; use 'git commit' to complete the merge.
+
+
+ABORT, delete all lines in merge git vim popup
+
+
+boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop|MERGING)
+$ gs
+On branch develop
+Your branch and 'origin/develop' have diverged,
+and have 1 and 6 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+Changes to be committed:
+
+        modified:   3.53OrionScripts/3.53_GoLive_Script.sql
+        new file:   3.53OrionScripts/ORION-35145_ddl_change.sql
+        modified:   3.53OrionScripts/ORION-35347_data_change.sql
+        modified:   MIGRATION.pck
+        modified:   RECOVERY.pck
+        modified:   kill_old_sessions.prc
+
+
+
+boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop|MERGING)
+$ git merge --abort
+
+
+
+boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+$ gs
+On branch develop
+Your branch and 'origin/develop' have diverged,
+and have 1 and 6 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+
+nothing to commit, working tree clean
+
+
+boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+$ git reset --hard HEAD^
+HEAD is now at 348396f699f Merge pull request #399 from orion/feature/ORION-35692
+
+boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+$ gs
+On branch develop
+Your branch is behind 'origin/develop' by 6 commits, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+
+nothing to commit, working tree clean
+
+---
 
 Post PR approval manual push CANONICAL:
 

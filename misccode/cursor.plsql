@@ -1,8 +1,10 @@
+
 create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN NUMBER DEFAULT 1) IS
-  TYPE restore_grants_t IS REF CURSOR;
-  restore_grants_c restore_grants_t;
   char_back_date VARCHAR2(20);
   grantStatement varchar2(4000);
+
+  TYPE restore_grants_t IS REF CURSOR;
+  restore_grants_c restore_grants_t;
 
   BEGIN
     char_back_date := to_char(SYSDATE - back_date, 'yyyymmdd');
