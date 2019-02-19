@@ -16,7 +16,7 @@ set linesize 4000
 
 spool c:/temp/t.out
 
-select text from SYS.USER_SOURCE t WHERE t.name='ORION34858';
+select * from SYS.USER_SOURCE t WHERE t.name = upper('user_on_call') ORDER BY type, line;
 
 spool off
 

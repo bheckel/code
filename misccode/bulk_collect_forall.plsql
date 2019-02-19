@@ -1,4 +1,31 @@
 
+-- Query a nested table then remove any zeros from it:
+
+CREATE OR REPLACE TYPE plch_numbers_t IS TABLE OF NUMBER
+/
+
+CREATE OR REPLACE PROCEDURE plch_squish(numbers_io IN OUT plch_numbers_t) IS
+   l_numbers   plch_numbers_t;
+BEGIN
+   SELECT COLUMN_VALUE
+     BULK COLLECT INTO l_numbers
+     FROM TABLE(numbers_io)
+    WHERE COLUMN_VALUE <> 0;
+
+   numbers_io := l_numbers;
+END;
+/
+
+-- compare with MINUS-ish way
+CREATE OR REPLACE PROCEDURE plch_squish(numbers_io IN OUT plch_numbers_t) IS
+   l_zeroes   plch_numbers_t := plch_numbers_t(0);
+BEGIN
+   numbers_io := numbers_io MULTISET EXCEPT DISTINCT l_zeroes;
+END;
+/
+
+---
+
 PROCEDURE simple_bulkcollect_forall IS
 	cnt PLS_INTEGER := 0;
 
@@ -272,7 +299,7 @@ BEGIN
 END;
 /
 
-/* Fill a collection with a strong cursor variable: */
+/* Fill a collection with a cursor variable: */
 DECLARE
    l_cursor   SYS_REFCURSOR;
    l_list     DBMS_SQL.varchar2s;

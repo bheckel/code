@@ -1,5 +1,6 @@
 
-/* Delete oldest records from a table dynamically */
+/* Generically delete oldest records from a table dynamically */
+/* E.g. PRUNE_TBL_GENERIC('EMAIL_MESSAGES', 'ACTUAL_UPDATED', 'EMAIL_MESSAGES_ID', 365); */
 PROCEDURE PRUNE_TBL_GENERIC(tblnm VARCHAR2, datecol VARCHAR2, idcol VARCHAR2, daysback NUMBER) IS
 	l_cnt      PLS_INTEGER := 0;
 	l_cur      SYS_REFCURSOR;
@@ -9,7 +10,8 @@ PROCEDURE PRUNE_TBL_GENERIC(tblnm VARCHAR2, datecol VARCHAR2, idcol VARCHAR2, da
 	ids ids_t;
 					
 	BEGIN
-		-- E.g. l_sql := 'SELECT user_oncall_results_id FROM user_oncall_results WHERE execute_time < '15Feb19' ';
+		-- Build an expired records cursor
+    -- E.g. SELECT user_oncall_results_id FROM user_oncall_results WHERE execute_time < '15FEB19'
 		l_sql := 'SELECT ' || idcol || ' FROM ' || trim(tblnm) || ' WHERE ' || trim(datecol) || ' < ' || chr(39) || to_char(SYSDATE - daysback, 'DDMONYY') || chr(39);
 		
 		OPEN l_cur FOR l_sql;
