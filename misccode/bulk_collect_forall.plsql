@@ -115,14 +115,18 @@ AND ROWNUM<600
         l_limit_group := l_limit_group + 1;
         l_tab_size := l_recs.COUNT;
         l_tab_size_tot := l_tab_size_tot + l_tab_size;
-        dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processing ' || l_tab_size || ' records' || ' total ' || l_tab_size_tot);
+
+        -- Only print every 100K records
+        IF (MOD(l_limit_group, 1000) = 0) THEN
+          dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processing ' || l_tab_size || ' records' || ' total ' || l_tab_size_tot);
+        END IF;
         
         EXIT WHEN l_tab_size = 0;
         
         BEGIN
           -- A FORALL statement is usually much faster than an equivalent FOR
           -- LOOP statement. However, a FOR LOOP statement can contain multiple DML
-          -- statements, while a FORALL statement can contain only one. The batch of
+          -- statements while a FORALL statement can contain only one. The batch of
           -- DML statements that a FORALL statement sends to SQL differ only in
           -- their VALUES and WHERE clauses. The values in those clauses must come
           -- from existing, populated collections.
@@ -150,7 +154,7 @@ AND ROWNUM<600
             -- Now keep doing the next l_limit_group...
         END;
         
-        COMMIT;  -- 300 rows to minimize locks
+        COMMIT;  -- 500 rows to minimize locks
       END LOOP;
 
       CLOSE c1;

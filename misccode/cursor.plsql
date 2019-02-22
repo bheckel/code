@@ -193,3 +193,38 @@ FOR r IN ( SELECT t.msg, t.execute_time
 ) LOOP
 	dbms_output.put_line(r.msg);
 END LOOP;
+
+---
+
+PROCEDURE do4 IS
+  cnt PLS_INTEGER := 0;
+
+  CURSOR c1 IS
+    SELECT u.user_oncall_results_id, u.execute_time
+    FROM zuser_oncall_results u
+    WHERE u.execute_time < (sysdate - 1470);
+    
+  TYPE t1 IS TABLE OF c1%ROWTYPE;
+  l_recs t1;
+          
+  BEGIN
+    OPEN c1;
+    LOOP
+      FETCH c1 BULK COLLECT INTO l_recs LIMIT 20;  
+      
+      EXIT WHEN l_recs.COUNT = 0;
+      
+      FORALL i IN 1 .. l_recs.COUNT
+        DELETE 
+          FROM zuser_oncall_results u
+         WHERE u.user_oncall_results_id = l_recs(i).user_oncall_results_id;
+      
+        cnt := cnt + SQL%ROWCOUNT;
+        
+        --COMMIT;
+        ROLLBACK;
+    END LOOP;
+    CLOSE c1;
+    dbms_output.put_line(cnt);
+END;
+

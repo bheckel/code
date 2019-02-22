@@ -188,13 +188,13 @@ FROM employees LEFT JOIN orders ON employees.employee_id=orders.employee_id
 ---
 
 
-Full Outer Join. As its name implies, a full outer join returns results from
-both sides of the join equation. The only way to perform a full outer join in
-traditional syntax is via the UNION or UNION ALL operators. However, the ANSI
-syntax provides the FULL OUTER JOIN to accomplish this instead. As you can
-see, the FULL OUTER JOIN syntax results in a much more compact query:
+-- Full Outer Join. As its name implies, a full outer join returns results from
+-- both sides of the join equation. The only way to perform a full outer join in
+-- traditional syntax is via the UNION or UNION ALL operators. However, the ANSI
+-- syntax provides the FULL OUTER JOIN to accomplish this instead. As you can
+-- see, the FULL OUTER JOIN syntax results in a much more compact query:
 
-Traditional Oracle Syntax:
+--Clunky Traditional Oracle Syntax:
 
 SELECT
       d.dept_id,
@@ -205,9 +205,8 @@ FROM
       employees e
 WHERE d.dept_id = e.dept_id (+) 
 GROUP BY d.dept_id, d.dept_name
--- The UNION set operator concatenates the query results that are produced 
--- by the two SELECT clauses
-UNION
+-- The UNION set operator concatenates the two query results
+UNION ALL
 SELECT
       d.dept_id,
       d.dept_name,
@@ -216,10 +215,10 @@ FROM
       depts d,
       employees e
 WHERE d.dept_id (+) = e.dept_id
+  AND d.dept_id is null
 GROUP BY d.dept_id, d.dept_name;
 
-
-ANSI Syntax:
+--ANSI Syntax:
 
 SELECT
    d.dept_id,
