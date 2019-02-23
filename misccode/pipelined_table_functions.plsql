@@ -222,3 +222,26 @@ END;
 	 WHERE T.EMPLOYEE_ID = EB.EMPLOYEE_ID
 ...
 
+---
+
+-- Won't work in a package
+create or REPLACE function f_search_view (par_string in varchar2)
+    return sys.odcivarchar2list
+    pipelined
+  is
+  begin
+    for cur_r in (select view_name, text 
+                  from all_views
+                  where text_length < 32767)
+    loop
+      if instr(cur_r.text, par_string) > 0 then
+         pipe row(cur_r.view_name);
+      end if;
+    end loop;
+
+    return;
+  end;
+
+select * from table(f_search_view('CAE'));
+
+DROP FUNCTION f_search_view

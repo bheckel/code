@@ -81,15 +81,16 @@ END;
 
 ---
 
--- Select from a nested table like it was a relational table
+-- Query select from a nested table like it was a relational table (see also 
+-- nested_table_multiset.plsql and bulk_collect_forall.plsql)
 DECLARE
-  l_numbers1   numbers_t := numbers_t (1 , 2 , 3 , 4 , 5);
-  l_numbers2   numbers_t := numbers_t (1 , 2 , 3 , NULL);
-  l_numbers3   numbers_t := numbers_t ();
+  l_numbers1   numbers_t := numbers_t(1 , 2 , 3 , 4 , 5);
+  l_numbers2   numbers_t := numbers_t(1 , 2 , 3 , NULL);
+  l_numbers3   numbers_t := numbers_t();
     
-  CURSOR cv is SELECT COLUMN_VALUE FROM TABLE (l_numbers1)
+  CURSOR cv is SELECT COLUMN_VALUE FROM TABLE(l_numbers1)
 							 UNION
-							 SELECT COLUMN_VALUE FROM TABLE (l_numbers2);
+							 SELECT COLUMN_VALUE FROM TABLE(l_numbers2);
 BEGIN
   FOR r IN cv LOOP
     dbms_output.put_line(r.column_value);

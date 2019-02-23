@@ -1,4 +1,66 @@
 
+-- Query a nested table then remove any zeros from it:
+
+CREATE OR REPLACE TYPE plch_numbers_t IS TABLE OF NUMBER
+/
+
+CREATE OR REPLACE PROCEDURE plch_squish(numbers_io IN OUT plch_numbers_t) IS
+   l_numbers   plch_numbers_t;
+BEGIN
+   SELECT COLUMN_VALUE
+     BULK COLLECT INTO l_numbers
+     FROM TABLE(numbers_io)
+    WHERE COLUMN_VALUE <> 0;
+
+   numbers_io := l_numbers;
+END;
+/
+
+-- compare with MINUS-ish way
+CREATE OR REPLACE PROCEDURE plch_squish(numbers_io IN OUT plch_numbers_t) IS
+   l_zeroes   plch_numbers_t := plch_numbers_t(0);
+BEGIN
+   numbers_io := numbers_io MULTISET EXCEPT DISTINCT l_zeroes;
+END;
+/
+
+---
+
+PROCEDURE simple_bulkcollect_forall IS
+	cnt PLS_INTEGER := 0;
+
+	CURSOR c1 IS
+		SELECT u.user_oncall_results_id, u.execute_time
+		FROM zuser_oncall_results u
+		WHERE u.execute_time < (sysdate - 1470);
+		
+	TYPE t1 IS TABLE OF c1%ROWTYPE;
+	l_recs t1;
+					
+	BEGIN
+		OPEN c1;
+		LOOP
+			FETCH c1 BULK COLLECT INTO l_recs LIMIT 20;  
+			
+			EXIT WHEN l_recs.COUNT = 0;
+			
+			FORALL i IN 1 .. l_recs.COUNT
+				DELETE 
+					FROM zuser_oncall_results u
+				 WHERE u.user_oncall_results_id = l_recs(i).user_oncall_results_id;
+			
+				cnt := cnt + SQL%ROWCOUNT;
+				
+				--COMMIT;
+				ROLLBACK;
+		END LOOP;
+		CLOSE c1;
+		dbms_output.put_line(cnt);
+END;
+
+---
+
+-- Not using FORALL here
 DECLARE 
   TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
   mynt mynt_t; 
@@ -53,14 +115,18 @@ AND ROWNUM<600
         l_limit_group := l_limit_group + 1;
         l_tab_size := l_recs.COUNT;
         l_tab_size_tot := l_tab_size_tot + l_tab_size;
-        dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processing ' || l_tab_size || ' records' || ' total ' || l_tab_size_tot);
+
+        -- Only print every 100K records
+        IF (MOD(l_limit_group, 1000) = 0) THEN
+          dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processing ' || l_tab_size || ' records' || ' total ' || l_tab_size_tot);
+        END IF;
         
         EXIT WHEN l_tab_size = 0;
         
         BEGIN
           -- A FORALL statement is usually much faster than an equivalent FOR
           -- LOOP statement. However, a FOR LOOP statement can contain multiple DML
-          -- statements, while a FORALL statement can contain only one. The batch of
+          -- statements while a FORALL statement can contain only one. The batch of
           -- DML statements that a FORALL statement sends to SQL differ only in
           -- their VALUES and WHERE clauses. The values in those clauses must come
           -- from existing, populated collections.
@@ -88,7 +154,7 @@ AND ROWNUM<600
             -- Now keep doing the next l_limit_group...
         END;
         
-        COMMIT;  -- 300 rows to minimize locks
+        COMMIT;  -- 500 rows to minimize locks
       END LOOP;
 
       CLOSE c1;
@@ -237,7 +303,7 @@ BEGIN
 END;
 /
 
-/* Fill a collection with a strong cursor variable: */
+/* Fill a collection with a cursor variable: */
 DECLARE
    l_cursor   SYS_REFCURSOR;
    l_list     DBMS_SQL.varchar2s;
