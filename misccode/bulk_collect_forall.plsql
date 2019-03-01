@@ -1,4 +1,38 @@
 
+PROCEDURE bulkdel IS
+  l_cnt PLS_INTEGER := 0;
+
+  CURSOR c1 IS
+    SELECT u.user_oncall_results_id, u.execute_time
+    FROM zuser_oncall_results u
+    WHERE u.execute_time < (sysdate - 1470);
+    
+  TYPE t1 IS TABLE OF c1%ROWTYPE;
+  l_recs t1;
+          
+  BEGIN
+    OPEN c1;
+    LOOP
+      FETCH c1 BULK COLLECT INTO l_recs LIMIT 100;  
+
+      l_cnt := l_cnt + l_recs.COUNT;
+      
+      EXIT WHEN l_recs.COUNT = 0;
+      
+      FORALL i IN 1 .. l_recs.COUNT
+        DELETE 
+          FROM zuser_oncall_results u
+         WHERE u.user_oncall_results_id = l_recs(i).user_oncall_results_id;
+        
+        --COMMIT;
+        ROLLBACK;
+    END LOOP;
+    CLOSE c1;
+    dbms_output.put_line(l_cnt);
+END;
+
+---
+
 -- Query a nested table then remove any zeros from it:
 
 CREATE OR REPLACE TYPE plch_numbers_t IS TABLE OF NUMBER
@@ -60,14 +94,15 @@ END;
 
 ---
 
--- Not using FORALL here
+-- Not using FORALL here so we can debug print
 DECLARE 
   TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
   mynt mynt_t; 
   cursor c is select * from my_family;
 BEGIN 
   open c;
-  loop fetch c bulk collect into mynt limit 2;
+  loop
+    fetch c bulk collect into mynt limit 2;
     exit when mynt.count = 0;
     FOR i in 1..mynt.COUNT LOOP 
       dbms_output.put_line('Name('||i||'):' || mynt(i).name); 
@@ -166,7 +201,9 @@ END ORION34136;
 
 ---
 
--- To do bulk binds with SELECT statements, you include the BULK COLLECT clause in the SELECT statement instead of using INTO clause (or FETCH INTO, RETURNING INTO)
+-- To do bulk binds with SELECT statements, you include the BULK COLLECT clause
+-- in the SELECT statement instead of using INTO clause (or FETCH INTO, RETURNING
+-- INTO)
 DECLARE
   TYPE NumTab IS TABLE OF hr.employees.employee_id%TYPE;
   TYPE NameTab IS TABLE OF hr.employees.last_name%TYPE;
@@ -200,7 +237,8 @@ END;
 /
 
 
--- To do bulk binds with INSERT, UPDATE, and DELETE statements, you enclose the SQL statement within a PL/SQL FORALL statement
+-- To do bulk binds with INSERT, UPDATE, and DELETE statements, you enclose the
+-- SQL statement within a PL/SQL FORALL statement
 DECLARE
   TYPE NumList IS VARRAY(20) OF NUMBER;
   depts NumList := NumList(10, 30, 70);

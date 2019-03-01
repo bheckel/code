@@ -3,6 +3,7 @@ Descriptive statistics - procedures used to summarize, organize and simplify dat
 Inferential statistics - techniques that allow for generalizations about POPULATION
 parameters based on SAMPLE statistics
 
+---
 
 Randomized Experiments (vs. Observational Studies - analysis of correlations):
 
@@ -29,7 +30,7 @@ child, rate of polio in a group of children).  Outcome measures.
 
 Confound - e.g. non-control group person goes to lab but does no memory
 training but becomes more comfortable and scores higher as a result of that
-comfort
+comfort.
 
 Causality - requires true independent variables, random & representative samples, no 
 confounds.  Weaker causality for Observational Studies.
@@ -55,8 +56,8 @@ P(-1.0<=z<=+1.0) = 0.8413-0.1587 = 0.683
 Mean, median & mode are same and fall at the bell curve peak
 Asymptotic tails extend indefinitely, never quite touching the x axis
 
-Skewness & kurtosis the closer to 0 the closer your data is to the normal distribution.
->+1.5 or <-1.5 indicates a non-normal distribution
+Kurtosis measures the peaked-ness of the data.  Light tailed has little or no
+data in the tails, the peak is flatter than normal.
 
 Left/negative skew means left side has a long tail (lump on right side, data
 trailing away on left side), therefore mean < median.  The mean is on the
@@ -65,19 +66,20 @@ E.g.:
 Income distribution is right/positive skewed in histogram: /^^^\...
 SAT scores at Princeton are left/negatively skewed in histogram: .../^^^\
 
+Kurtosis & Skewness: the closer to 0 the closer your data is to the normal distribution.
+>+1.5 or <-1.5 indicates a non-normal distribution
+
 Closer mean is to median, closer your data is to normal distribution
 
 Median is preferred when there are extreme (or skewed) scores in the distribution
-
-Kurtosis measures the peaked-ness of the data.  Light tailed has little or no
-data in the tails, the peak is flatter than normal.
 
 ---
 
 Linear regression is the “best guess” at using a set of data to make some kind of prediction.
 
 E.g. A moderate positive correlation coefficient
-age: 43, 21, 25, 42, 57, 59  glucose: 99, 65, 79, 75, 87, 81
+age (x):     43, 21, 25, 42, 57, 59
+glucose (y): 99, 65, 79, 75, 87, 81
 
  n=6                                 <---
  sum(x) = 247                        <---
@@ -91,8 +93,8 @@ age: 43, 21, 25, 42, 57, 59  glucose: 99, 65, 79, 75, 87, 81
  y^2  99^2=9801, 65^2=4225, ... 
   sum(y^2) 9801+4225+ ... = 40022    <---
 
-r = 6(20485) – (247 × 486) / [√[[6(11409) – (247^2)] × [6(40022) – 486^2]]] = 0.5298
-
+r = 6(20485) – (247 × 486) / [√[[6(11409) – (247^2)] × [6(40022) – 486^2]]]
+r = 0.5298
 
 At r=1.0 everyone in the sample is on the regression line, a perfect model, r=0 is a terrible model for predicting.
 At 0.5  graph arrow goes from SW corner to NE corner
@@ -220,15 +222,16 @@ alternative hypothesis.  It is not an error rate.  In reality, p-value of
 rate that many mistakenly attribute to a p-value of 0.05!
 
 For example, suppose that a vaccine study produced a p-value of 0.01. This
-p-value indicates that if the vaccine had no effect, you’d obtain the observed
-difference or more in only 1% of studies due to random sampling error.  It's
+p-value indicates that if the vaccine had no effect, YOU’D OBTAIN THE OBSERVED
+DIFFERENCE OR MORE IN ONLY 1% OF STUDIES DUE TO RANDOM SAMPLING ERROR.  It's
 not a 1% chance of making a mistake!
 
 A low p-value suggests that your sample provides enough evidence that you can
-REJECT the null hypothesis for the entire population.  A low p-value indicates
-that your data are unlikely assuming a true null hypothesis.
+REJECT the null hypothesis for the entire population.  It indicates that your 
+data are unlikely assuming a true null hypothesis.
 
-High p-values 50% 90% tell you to NOT reject H0.
+High p-values 50% 90% tell you to NOT reject H0 ("not reject" == something is
+not significant, same as placebo etc.)
 
 ---
 
@@ -293,7 +296,7 @@ sigma = sqrt(npq) = sqrt(15*0.6*0.4) = 1.897
 
 ---
 
-Standard deviation example (see also readme.R.txt):
+Standard deviation example:
 
 X:
 455.05 + 459.3 + 462.04 + 448.26
@@ -316,13 +319,12 @@ X:
 1.2321+9.8596+34.5744+62.4100
 108.0761  # SS "sums of squares"
 
-"Mean squares" is calculated by dividing the corresponding "sum of squares" by the degrees of freedom (DF), 3
+'Mean squares' is calculated by dividing the corresponding "sum of squares" by the degrees of freedom (DF), 3
 108.0761/(4-1)
-36.025  # variance or sigma^2 or mean of SS aka MS ("mean squares") - the estimate of population variance
+36.025  # variance or sigma^2 or mean of SS aka 'mean squares' (MS) - the estimate of population variance
 
 sqrt(36.025)
 6.00208297176905077812  # sigma
-
 
 Z = (455.05-456.16)/6.00208297176905077812 = -.18493579732584722730
 Z = (459.3-456.16) /6.00208297176905077812 = .52315171495780206643
@@ -423,6 +425,8 @@ A very small chi square test statistic means that your observed data fits your
 expected data extremely well. In other words, there is a relationship.
 
 ---
+
+Probability:
 
 P(A or B)
 

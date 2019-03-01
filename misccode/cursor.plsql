@@ -121,25 +121,24 @@ END test;
 -- CLOSE c_customers;
 
 
-
 DECLARE 
-   CURSOR c_customers is SELECT  name FROM tmpcustomers; 
+  CURSOR c_customers is SELECT name FROM tmpcustomers; 
 
-   type c_list is varray (6) of customers.name%type; 
+  type c_list is varray(6) of customers.name%type; 
 
-   name_list c_list := c_list(); 
+  name_list c_list := c_list(); 
 
-   counter integer :=0; 
+  counter integer :=0; 
 BEGIN 
-   FOR n IN c_customers LOOP 
-      counter := counter + 1; 
-      name_list.extend; 
-      name_list(counter)  := n.name; 
-      dbms_output.put_line('Customer('||counter ||'):'||name_list(counter)); 
-   END LOOP; 
+  FOR n IN c_customers LOOP 
+     counter := counter + 1; 
+     name_list.extend; 
+     name_list(counter) := n.name; 
+     dbms_output.put_line('Customer('||counter ||'):'||name_list(counter)); 
+  END LOOP; 
 END;
 
-
+---
 
 -- For queries that return more than one row, you must declare an explicit
 -- cursor and use OPEN, FETCH, CLOSE
@@ -184,7 +183,6 @@ END;
 ---
 
 -- Cursor-less
-
 FOR r IN ( SELECT t.msg, t.execute_time
 					 FROM SUER_ONCALL_RESULTS t 
 					 WHERE r.execute_time > (sysdate - 1) AND r.execute_time < to_date('2019-01-16:11:00','YYYY-MM-DD:HH:MI') --debug 
@@ -196,6 +194,7 @@ END LOOP;
 
 ---
 
+-- Use a collection based on a cursor
 PROCEDURE do4 IS
   cnt PLS_INTEGER := 0;
 

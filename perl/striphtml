@@ -1,5 +1,7 @@
 #!/usr/bin/perl -p0777
 #
+# 25-Feb-19 Used by my quickref_find.sh
+#
 #########################################################
 # striphtml ("striff tummel")
 # tchrist@perl.com 

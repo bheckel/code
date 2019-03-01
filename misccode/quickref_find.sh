@@ -3,7 +3,7 @@
 # Quick reference to either local files or websites
 
 #  Created: Sun 22 Dec 2013 10:59:11 (Bob Heckel)
-# Modified: Thu 15 Feb 2018 08:46:28 (Bob Heckel)
+# Modified: Mon 25 Feb 2019 09:29:55 (Bob Heckel)
 
 # S/b aliased, not symlinked, as qr
 
@@ -22,47 +22,55 @@ function Html() {
   if [ "$yn" = 'y' ];then
     echo looking for w3m...
     if [ -e /usr/bin/w3m ];then
-      if [ "${1:0:4}" = 'http' ]; then
+      # if [ "${1:0:4}" = 'http' ]; then
         F=$1
-      else
-        F=$HOME/$1
-      fi
+      # else
+      #   F=$HOME/$1
+      # fi
       echo $F
       w3m ${F}
       return
     else
       echo 'w3m not available'
-      $HOME/code/perl/striphtml $HOME/$1 | less
+      $HOME/code/perl/striphtml $1 | less
       return
-    fi
-  fi
-
-  if [ -e "$BROWSER" ];then
-    ###if [ `uname` = CYGWIN_NT-5.1 ];then
-    if [ ${plat:0:6} = CYGWIN ];then
-      # We're on a Cygwin platform...
-      if [ "${1:0:4}" != 'http' ]; then
-        F=file:///u:/$1
-        echo $F
-        cygstart "$BROWSER" -new-tab "$F"
-      else
-        echo $1
-        cygstart "$BROWSER" -new-tab "$1"
-      fi
-    else
-      echo "we're on non-Cygwin platform..."
-      echo "no browser ($BROWSER) available"
     fi
   else
-    # Probably a Linux box...
-    if [ "${1:0:4}" = 'http' ]; then
-      echo Opening browser on remote file
-      $BROWSER $1
+    echo "'N' so use $BROWSER or Perl"
+    if [ "$BROWSER" = 'cygstart' ];then
+      if [ ${plat:0:6} = CYGWIN ];then
+        echo "we're on a Cygwin platform..."
+        if [ "${1:0:4}" != 'http' ]; then
+          F="c:/cygwin64/$1"
+          echo "open local file $BROWSER $F"
+          cygstart $F
+          return
+        else
+          F=http://$1
+          echo "open remote file $BROWSER $F"
+          cygstart "$F"
+          return
+        fi
+      else
+        echo "we're on non-Cygwin platform..."
+        echo "no browser ($BROWSER) available"
+      fi
     else
-      echo Opening browser on local file
-      $BROWSER file:///$HOME/$1
-      return
+      # Probably a Linux box...
+      if [ "${1:0:4}" = 'http' ]; then
+        echo Opening browser on remote file $BROWSER $1
+        $BROWSER $1
+        return
+      else
+        echo Opening browser on local file file:///$1
+        $BROWSER file:///$1
+        return
+      fi
     fi
+    # Fallthru w3m and Chrome are N/A
+    echo 'using Perl'
+    $HOME/code/perl/striphtml $1 | less
+    return
   fi
 }
 
@@ -85,7 +93,6 @@ qr git
 qr git2
 qr git3
 qr graph sasgraph
-qr html
 qr javascript
 qr javascript2
 qr javascript3
@@ -112,8 +119,6 @@ qr sql2
 qr sqlplus
 qr vba
 qr vim
-qr vimperator
-qr w3
 qr xslt
 
 also see:
@@ -129,8 +134,6 @@ if [ "$1" = 'sas' ]; then
 elif [ "$1" = 'sas2' ]; then
   ###$PDF $HOME/code/sas/quickref_SASFuncsFormatInformat.pdf
   Html http://support.sas.com/documentation/cdl/en/syntaxidx/65757/HTML/default/index.htm#/documentation/cdl/en/syntaxidx/65757/HTML/default/shared/start.htm
-elif [ "$1" = 'html' ]; then
-   Html http://www.w3schools.com/html5/html5_reference.asp
 elif [ "$1" = 'sed' ]; then
   vim $HOME/code/misccode/sed_quickref.txt
 elif [ "$1" = 'sql' ]; then
@@ -152,7 +155,6 @@ elif [ "$1" = 'asp' ]; then
 elif [ "$1" = 'css' ]; then
   Html https://developer.mozilla.org/en-US/docs/Web/CSS/Reference
 elif [ "$1" = 'css2' ]; then
-  ###Html $HOME/code/html CSSQuickReference.htm
   Html http://www.w3schools.com/css/css_examples.asp
 elif [ "$1" = 'c' ]; then
   Html code/c/C++quick-reference.htm
@@ -167,8 +169,6 @@ elif [ "$1" = 'jquery' ]; then
 elif [ "$1" = 'awk' ]; then
   vim $HOME/code/misccode/awk_quickref.txt
 elif [ "$1" = 'bash' ]; then
-  ###cygstart "$PROGRAMFILES/mozilla firefox/firefox" bashref2_05.html
-  ###Html $HOME/code/misccode bashref2_05.html
   Html code/misccode/bashref2_05.html
 elif [ "$1" = 'mutt' ]; then
   vim $HOME/code/misccode/mutt_search_quickref.txt
@@ -202,17 +202,8 @@ elif [ "$1" = 'powershell2' ]; then
   antiword $HOME/code/misccode/powershell_reference.doc | less
 elif [ "$1" = 'bat' ]; then
   Html "http://technet.microsoft.com/en-us/library/cc772390(WS.10).aspx"
-elif [ "$1" = 'w3' ]; then
-  Html http://www.w3schools.com/sitemap/sitemap_references.asp
 elif [ "$1" = 'bat2' ]; then
   vim $HOME/code/misccode/batchbook.txt
-elif [ "$1" = 'vimperator' ]; then
-  echo -n Use  :h index  inside Firefox.  Start Firefox [y/n]?
-  ###cygstart firefox.exe -vimperator "+c ':h index'"
-  read yesno
-  if [ $yesno = 'y' ]; then 
-    cygstart firefox.exe
-  fi
 elif [ "$1" = 'apache' ]; then
   $PDF $HOME/code/misccode/apache-refcard-letter.pdf
 elif [ "$1" = 'dom' ]; then
@@ -224,14 +215,11 @@ elif [ "$1" = 'R' ]; then
 elif [ "$1" = 'R2' ]; then
   $PDF $HOME/code/misccode/Short-refcard.R.pdf
 elif [ "$1" = 'git' ]; then
-  ###Html -s $HOME/code/misccode/GitQuickReference.htm
   Html code/misccode/GitQuickReference.htm
 elif [ "$1" = 'git2' ]; then
   $PDF $HOME/code/misccode/git_cheat_sheet.pdf
 elif [ "$1" = 'git3' ]; then
   Html http://help.github.com/git-cheat-sheets
-elif [ "$1" = 'git4' ]; then
-  Html http://gitref.org
 elif [ "$1" = 'android' ]; then
   Html http://developer.android.com/guide/faq/commontasks.html
 elif [ "$1" = 'markdown' ]; then

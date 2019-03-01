@@ -1,3 +1,4 @@
+
 /* Analytic functions compute an aggregate value based on a group of rows. They
  * differ from aggregate functions in that they RETURN MULTIPLE ROWS FOR EACH
  * GROUP. The group of rows is called a window and is defined by the
@@ -19,25 +20,20 @@
  *
  */
 
+-- Assign integer values to the rows depending on their order
 select empno, ename, job, sal,
+       -- row_number() gives a running serial number to a partition of records, e.g. give separate sets of running serial to employees of each department based on their hire date
        -- 1,2,3,4,5... ties are indeterminant
        row_number() OVER (order by sal) as sal_row_number
        -- 1,2,3,4,5... with tie-breaker being empno
        row_number() OVER (order by sal, empno) as sal_row_number2
-       -- RANK will skip the next number if there are ties "Olympic" 
+       -- RANK will skip the next number if there are ties i.e. Olympic ranking
        -- 1,2,2,4,5... no #3 
        rank() OVER (order by sal) as sal_rank,
        rank() OVER (order by sal DESC NULLS LAST ) as hi_sal_rank_with_nulls
        -- 1,2,2,3,4... two 2s then normal seq resumes
        dense_rank() OVER (order by sal) as sal_dense_rank,
 from emp
-
-
-select name, gross_sales,
-       100*cume_dist() OVER ( order by gross_sales ) as cumedist
-       100*percent_rank() OVER ( order by gross_sales ) as pctrank
-       ntile(4) OVER ( order by gross_sales DESC ) as quartile
-from movies
 
 ---
 
@@ -73,7 +69,7 @@ select d
       ,rank() OVER (partition by d order by amt) rank_by_day -- 1,1,1,1,1,1 can be Top N by day if used as a subquery
       -- Want only first date in a contiguous series otherwise leave blank
       ,case when nvl(lag(d) over (order by d), d) != d-1 then d end lowval_of_range  -- 01jan, , , 03jan, , 
-      ,first_value(amt) OVER (order by d) firstdot  -- 10,10,10,10,10,10
+      ,first_value(amt) OVER (partition by d order by d) firstdot  -- 10,11,30,30,10,14
       -- Good for cols where only the first appearance holds empno and rest are blank and need to be padded out (like a report for human consumption)
       ,last_value(amt IGNORE NULLS) OVER (order by d)  lastdot_fillin_the_blank  -- 10,11,30,30,10,14
       ,nvl(amt, lag(amt IGNORE NULLS) OVER (partition by d order by d)) fillin_the_blank_handle_nulls  -- 10,11,30,30,10,14
@@ -81,20 +77,25 @@ select d
       ,nth_value(amt,2) OVER (order by d) second_highest_skip_outliers  -- , 11, 11, 11, 11, 11
       ,round(amt/nth_value(amt,2) over (order by d),2)*100 percent_diff  -- , 100, 273, 273, 91, 127
       ,sum(amt) OVER (order by d) as running_tot_fail  -- default 'unbounded preceding and following' is effectively the same as a SUM on the entire set (by each ticker) and hence would not give a running total here
-      ,sum(amt) OVER (order by d rows between unbounded preceding and current row) running_total2  -- 10,21,51,81,91,105
-      ,avg(amt) OVER (order by d rows between 1 preceding and 1 following) moving_average  -- 10.5,17,23.6666666,23.333333,18,12
---      ,sum(amt) OVER (order by d rows between MYFUNC(foo) preceding and 0 following) running_total3
---      ,sum(amt) OVER (order by d rows between myseq-mytrailing_seq preceding and 0 following) running_total4
+      -- Window clause to further sub-partition. It is dynamic.
+      ,sum(amt) OVER (order by d ROWS between unbounded preceding and current row) running_total  -- 10,21,51,81,91,105
+--      ,sum(amt) OVER (order by d ROWS between MYFUNC(foo) preceding and 0 following) running_total2
+--      ,sum(amt) OVER (order by d ROWS between MYSEQ-MYTRAILING_SEQ preceding and 0 following) running_total3
+      ,avg(amt) OVER (order by d ROWS between 1 preceding and 1 following) moving_average  -- 10.5,17,23.6666666,23.333333,18,12
       -- Use time RANGE not physical ROWS to avoid missing data
-      ,sum(amt) OVER (order by d range between interval '2' day preceding and current row) running_total_2day  -- 10,21,81,81,81,84
-      ,avg(amt) OVER (order by d range between interval '2' day preceding and current row) moving_average_2day  -- 10,10.5,20.25,20.25,20.25,21
-      -- Always need a sorting clause for LAG()
-      ,lag(amt) OVER (order by d) amt_before  -- ,10,11,30,30,10
+      ,sum(amt) OVER (order by d RANGE between interval '2' day preceding and current row) running_total_2day  -- 10,21,81,81,81,84
+      ,avg(amt) OVER (order by d RANGE between interval '2' day preceding and current row) moving_average_2day  -- 10,10.5,20.25,20.25,20.25,21
+      -- Always need a sorting clause for LAG() & LEAD()
+      ,lag(amt) OVER (order by d) amt_before  -- NULL,10,11,30,30,10
+      ,lag(amt, 2, 0) OVER (order by d) amt_2before_nonull  -- 0,0,10,11,30,30
       ,lead(amt) OVER (partition by d order by d) amt_after  -- , , 30, , ,  good for finding a change in status when you have daily data
       --_______________________________________ <--still just another aggregation function like count() or sum()
-      ,listagg(d,', ' within group(ordery by d) OVER ( partition by amt ) csv
-      ,sum(amt) OVER () grand_sum
-      ,avg(amt) OVER () grand_avg
+      ,listagg(d,', ') within group(order by d) OVER ( partition by amt ) csv
+      ,100*cume_dist() OVER ( order by d) as cumedist  -- 16.666, 33,333, 66,66, 66,66, 83,333, 100
+      ,100*percent_rank() OVER (order by d) as pctrank  -- 0, 20, 40, 40, 80, 100
+      ,ntile(4) OVER (order by amt) as quartile  -- 1(10), 1(10), 2(11), 2(14), 3(30), 4(30)
+      ,sum(amt) OVER () grand_sum  -- 105
+      ,avg(amt) OVER () grand_avg  -- 17.5
 FROM v;
 
 ---
@@ -103,32 +104,32 @@ FROM v;
 -- in that department.  In the event of a tied salary, choose the employee with
 -- the first name in alphabetic sequence
 
--- Self join version:
-select deptno, ename top_emp
-from emp e
+-- Compare self join version:
+select deptno, ename top_emp, sal
+ from scott.emp e
 where not exists ( 
   select 1
-  from   emp
-  where  deptno = e.deptno
-    and  (sal > e.sal) or (sal = e.sal and ename < e.ename)
+    from scott.emp
+   where deptno = e.deptno and (sal > e.sal) or (sal = e.sal and ename < e.ename)
   )
 order by 1;
 
--- Compare fetch first version:
+-- Compare FETCH FIRST version (only one that won't let you add SAL to the select):
 select distinct deptno, 
        ( select ename
-         from   emp
-         where  deptno = e.deptno
+           from scott.emp
+          where deptno = e.deptno
          order by sal desc, ename 
-         fetch first row only
+         FETCH FIRST ROW ONLY
        ) top_emp
-from emp e
+from scott.emp e
 order by 1;
 
 -- Compare Analytic Functions version:
 select distinct deptno, 
-       first_value(ename) over ( partition by deptno order by sal desc, ename ) as top_emp
-from emp
+       first_value(ename) over ( partition by deptno order by sal desc, ename ) as top_emp,
+       first_value(sal)   over ( partition by deptno )                          as sal
+from scott.emp
 order by 1;
 
 ---
@@ -157,3 +158,65 @@ select deptno, empno, ename, job, sal,
          ) as running_total
 from emp
 order by deptno, ename
+
+---
+
+-- aggregate functions vs. analytic functions:
+
+SELECT COUNT(*) DEPT_COUNT
+FROM scott.emp
+WHERE deptno IN (20, 30);
+/*
+DEPT_COUNT
+11
+*/
+
+SELECT empno, deptno, 
+COUNT(*) OVER () DEPT_COUNT
+FROM scott.emp
+WHERE deptno IN (20, 30);
+/*
+EMPNO	DEPTNO	DEPT_COUNT
+7698	30	11
+7566	20	11
+7788	20	11
+7902	20	11
+7369	20	11
+7499	30	11
+7521	30	11
+7654	30	11
+7844	30	11
+7876	20	11
+7900	30	11
+*/
+
+SELECT deptno,
+COUNT(*) DEPT_COUNT
+FROM scott.emp
+WHERE deptno IN (20, 30)
+GROUP BY deptno;
+/*
+
+DEPTNO	DEPT_COUNT
+30	6
+20	5
+*/
+
+SELECT empno, deptno, 
+COUNT(*) OVER (PARTITION BY deptno) DEPT_COUNT
+FROM scott.emp
+WHERE deptno IN (20, 30);
+/*
+EMPNO	DEPTNO	DEPT_COUNT
+7876	20	5
+7369	20	5
+7902	20	5
+7788	20	5
+7566	20	5
+7844	30	6
+7654	30	6
+7521	30	6
+7900	30	6
+7698	30	6
+7499	30	6
+*/
