@@ -230,3 +230,60 @@ CREATE OR REPLACE PROCEDURE update_reference_owner IS
 
 		COMMIT; 
 END update_reference_owner;
+
+---
+
+/* Oracle Dev Gym March 2 2019 Workout */
+CREATE OR REPLACE PROCEDURE proc1
+IS
+BEGIN
+  RAISE NO_DATA_FOUND;  -- D.       -- "line 4" stack 2
+END;
+/
+
+CREATE OR REPLACE PACKAGE pkg1
+IS
+  PROCEDURE proc2;
+END pkg1;
+/
+CREATE OR REPLACE PACKAGE BODY pkg1
+IS
+  PROCEDURE proc2
+  IS
+  BEGIN
+     proc1;  -- C.                -- "line 9" stack 3
+
+  EXCEPTION WHEN OTHERS THEN 
+    RAISE VALUE_ERROR;            -- "line 6" stack 1
+  END;
+END pkg1;
+/
+
+CREATE OR REPLACE PROCEDURE proc3
+IS
+BEGIN
+  FOR indx IN 1 .. 1000
+  LOOP
+     NULL;
+  END LOOP;
+
+  pkg1.proc2;  -- B.             -- "line 9" stack 0
+END;
+/
+
+
+BEGIN
+   proc3;  -- A.
+EXCEPTION
+  WHEN OTHERS THEN  --                                                                                    STACK
+		-- ORA-06502: PL/SQL: numeric or value error                                                            3
+    dbms_output.put_line(SQLERRM);
+    dbms_output.put_line('------');  
+ 	 -- ORA-06502: PL/SQL: numeric or value error ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PKG1", line 9  3
+   -- ORA-01403: no data found ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PROC1", line 4                  2
+   -- ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PKG1", line 6                                            1
+   -- ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PROC3", line 9                                           0
+    dbms_output.put_line(DBMS_UTILITY.FORMAT_ERROR_STACK );  
+    dbms_output.put_line(ASCII(SUBSTR(DBMS_UTILITY.format_error_stack, -1)));  -- 10 (prove linefeed appended)
+END;
+/

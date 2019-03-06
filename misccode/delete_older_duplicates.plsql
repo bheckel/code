@@ -1,3 +1,15 @@
+
+-- Keep only the youngest duplicate by account_id and custom_area_property_id
+DELETE
+  FROM account_flex_field af1
+ WHERE af1.account_flex_field_id IN
+   (SELECT af3.account_flex_field_id
+      FROM (SELECT row_number() OVER (PARTITION BY af2.account_id, af2.custom_area_property_id ORDER BY af2.updated desc) rownumber, af2.account_flex_field_id
+              FROM account_flex_field af2) af3
+     WHERE rownumber != 1)
+
+---
+
 PROCEDURE FLEXFIELD_DUPS_REMOVE IS
   send_email BOOLEAN := FALSE;
   header     VARCHAR2(275) := '<?xml version="1.0" encoding="UTF-8"?><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>' ||
