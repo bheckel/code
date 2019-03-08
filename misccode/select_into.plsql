@@ -38,14 +38,19 @@ END;
 
 ---
 
+-- If you need to retrieve multiple rows
 DECLARE
-  TYPE sals_t IS TABLE OF employees.salary%TYPE;
+  --TYPE sals_t IS TABLE OF scott.emp.sal%TYPE;
+  TYPE sals_t IS TABLE OF scott.emp%ROWTYPE;
+
   sals sals_t;
 
 BEGIN
-  /* SELECT salary BULK COLLECT INTO sals FROM employees WHERE ROWNUM <= 50; */
- 
-  /* SELECT salary BULK COLLECT INTO sals FROM employees SAMPLE (10); */
- 
-  SELECT salary BULK COLLECT INTO sals FROM employees FETCH FIRST 50 ROWS ONLY;
+  --SELECT sal BULK COLLECT INTO sals FROM scott.emp WHERE ROWNUM <= 50;
+  SELECT * BULK COLLECT INTO sals FROM scott.emp FETCH FIRST 50 ROWS ONLY;
+  
+  FOR i IN 1..sals.COUNT LOOP
+    --dbms_output.put_line(sals(i));
+    dbms_output.put_line(sals(i).sal);
+  END LOOP;
 END;

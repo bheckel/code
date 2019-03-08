@@ -4,6 +4,12 @@ insert into mailing_list (name, email) values ('Philip Greenspun','philg@foo.edu
 
 -- Shortcut without specifying phone_numbers fields but instead assuming their
 -- order - the number of values must match the number of columns in the table
+-- which in Oracle can be first verified:
+select column_name 
+from   user_tab_columns
+where  table_name = 'PHONE_NUMBERS'
+order  by column_id;
+
 insert into phone_numbers values ('ogrady@foo.com','work','(800) 555-1212');
 
 ---
@@ -33,25 +39,65 @@ VALUES (ticker, 'O', open_price)
 VALUES (ticker, 'C', close_price)
 	SELECT ticker, open_price, close_price FROM plch_stocks;
 
+---
 
-INSERT ALL
-  into people values (full_name)
-  when hire_date is not null then 
-    into staff values (hire_date)
-  when nhs_number is not null then 
-    into patients values (nhs_number)
-  select * from people_details;
+/* Adapted from Oracle Dev Gym Class */
 
+create table toys ( 
+  toy_id   integer,  
+  toy_name varchar2(30), 
+  price    number, 
+  colour   varchar2(30) 
+);
 
--- E.g. 4 rows in toys gets distributed to these 3 tables: total of 4 rows will exist across those 3 tables
+create table blue_toys ( toy_id integer, toy_name varchar2(30), price number, colour varchar2(30) );
+
+create table cheap_toys ( toy_id integer, toy_name varchar2(30), price number, colour varchar2(30) );
+
+create table expensive_toys ( toy_id integer, toy_name varchar2(30), price number, colour varchar2(30) );
+
+insert into toys values (1, 'Cheapasaurus Rex', 0.99, 'blue');
+insert into toys values (2, 'Cheapasaurus Rex', 0.99, 'red');
+insert into toys values (3, 'Costsalottasaurs', 99.99, 'green');
+insert into toys values (4, 'Bluesaurus', 21.99, 'blue');
+commit;
+
 INSERT FIRST 
+	-- Insert first will only add rows to the first table where the when clause
+  -- is true. This works from top to bottom. A row that has blue for the color and
+  -- price > 20 meets all three criteria. But it will only go in blue_toys, because
+  -- that is the top clause in the statement.
+
+	-- Blue_toys is at the top of the insert. So any rows that meet this (toy_ids
+  -- 1 and 4) will go in this table
   when colour = 'blue' then 
-    into blue_toys values (toy_id, toy_name, price)
+    into blue_toys values (toy_id, toy_name, price, colour)
+  -- Any non-blue rows with a price >= 0 will go in cheap_toys
   when price >= 0 then 
     into cheap_toys values (toy_id, toy_name, price, colour)
+	-- Toy_id 3 costs 99.99. So it meets the criterion for expensive_toys. But
+  -- cheap_toys appears above this in the insert. So it goes in that table and this
+  -- is skipped. Any row where the price is > 20 also has a price >= 0. So the
+  -- insert will never add any rows to this table!
   when price > 20 then 
     into expensive_toys values (toy_id, toy_name, price, colour)
   select toy_id, toy_name, price, colour from toys;
+
+select * from blue_toys
+/*
+TOY_ID	TOY_NAME	PRICE
+1	Cheapasaurus Rex	.99
+4	Bluesaurus	21.99
+*/
+select * from cheap_toys
+/*
+TOY_ID	TOY_NAME	PRICE	COLOUR
+2	Cheapasaurus Rex	.99	red
+3	Costsalottasaurs	99.99	green
+*/
+select * from expensive_toys
+/*
+*/
 
 ---
 

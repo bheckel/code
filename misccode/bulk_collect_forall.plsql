@@ -363,6 +363,8 @@ DROP TABLE plch_employees
 
 ---
 
+-- Cursor-less (can't use LIMIT)
+
 CREATE TABLE plch_stuff (
    id       NUMBER PRIMARY KEY
  , rating   INTEGER
@@ -383,6 +385,7 @@ DECLARE
    x NUMBER;
 BEGIN
    SELECT *
+     -- Must bulk collect if not fetching via a cursor
      BULK COLLECT INTO l_stuff
      FROM plch_stuff;
 

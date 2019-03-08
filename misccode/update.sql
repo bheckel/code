@@ -34,8 +34,14 @@ set width = NULL;
 
 ---
 
+-- Optimistic Locking - Stops lost updates
+-- Verify cols you're not updating are same in WHERE clause.
+
+-- Pessimistic Locking - Stops deadlocks
 -- If this is the first statement in your transaction it will lock both of these rows.
--- Session 2 must wait until the first commits. Thus deadlock is impossible.
+-- Session 2 must wait until the first commits. Thus deadlock is impossible if your 
+-- application is STATEFUL (unlike web apps where reading and writing the data
+-- are separate transactions).
 select * from accounts where account_id in (1, 2) FOR UPDATE;
 
 ---
