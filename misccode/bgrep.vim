@@ -9,8 +9,6 @@ syn clear
 syn case ignore
 
 syn match  bgrepLabel   "^.\{-}="
-"""syn region bgrepHeader start="\[" end="\]"
-"""syn region bgrepHeader start="^" end=":"
 syn region bgrepHeader  start="^" end=" "
 syn match  bgrepComment "^[#,;].*$"
 

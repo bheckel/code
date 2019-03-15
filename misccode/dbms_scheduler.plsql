@@ -11,8 +11,8 @@ END;
 
 -- details
 --select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments from all_scheduler_jobs a ORDER BY 1
--- log
---SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%'
+-- status log
+--SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
 -- next run
 --SELECT * from user_scheduler_jobs@esd WHERE job_name in ('PERIODIC_LIFECYCLE_UPDATE')
 

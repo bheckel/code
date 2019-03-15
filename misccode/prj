@@ -2,4 +2,4 @@
 
 cd ~/onedrive &&
 for f in $(find . | grep orion- | grep -P '.*pck|.*sql|.*prc|.*fnc'); do grep --with-filename "${1}" $f; done >| ~/tmp/prj.out 
-vim ~/tmp/prj.out
+vim -c "/${1}" ~/tmp/prj.out

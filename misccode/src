@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Compare a compiled stored proc to its git version
+
+# This gives us the compiled version
+vim ~/bin/src.sql
+echo 'now:'
+echo 'cd ~/bin && sqlplus -S estars/mypw@sed @src.sql && vi $c/temp/t.out && cd -'
+echo 'cd ~/bin && sqlplus -S estars/mypw@seps @src.sql && vi $c/temp/t.out && cd -'
+echo 'cd ~/bin && sqlplus -S estars/mypw@set @src.sql && vi $c/temp/t.out && cd -'
+echo 'cd ~/bin && sqlplus -S estars/mypw@seuat @src.sql && vi $c/temp/t.out && cd -'
+echo 'cd ~/bin && sqlplus -S estars/mypw@sep @src.sql && vi $c/temp/t.out && cd -'
+
+# This gives us the git version
+echo 'vim -d $c/temp/t.out ~/SQL/X.pck'
