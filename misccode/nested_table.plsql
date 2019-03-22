@@ -3,6 +3,12 @@
 -- Collection Methods:
 -- EXISTS: This function returns TRUE if a specified element exists in a collection
 --         and can be used to avoid raising SUBSCRIPT_OUTSIDE_LIMIT exceptions.
+--         When you try to get an element at an undefined index value, Oracle raises NO_DATA_FOUND
+--         but using EXISTS eliminates that possibility:
+--         IF sons_t.EXISTS(index_in) THEN...
+--         But you should avoid the FOR loop and instead opt for a WHILE loop
+--         and the NEXT or PRIOR methods to help you navigate from one defined index value
+--         to the next
 -- COUNT: This function returns the total number of elements in a collection.
 -- FIRST and LAST: These functions return subscripts of the first and last elements of
 --       a collection. If the first element of a nested table is deleted, the FIRST method

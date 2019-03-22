@@ -37,13 +37,28 @@ confounds.  Weaker causality for Observational Studies.
 
 ---
 
-Descriptive statistics (4 moments of the mean):
+Descriptive statistics:
+
+4 moments of the mean:
+
+The zeroth moment is the total probability (i.e. one)
+
+The first moment is the mean
+The second central moment is the variance
+They provide information on the location and variability
+
+The third standardized moment is the skewness
+The fourth standardized moment is the kurtosis
+They provide information on the shape of the distribution
 
 Mean, median, mode (peak of the histogram) are measures of location or central tendency
 
 Stdev, IQR, variance are measures of spread / variability (how wide is the histogram)
 
-Skewness & Kurtosis are measurements of non-normal distribution histogram shape.
+Skewness (a measure of the symmetry of the shape of a distribution, if a distribution
+is symmetric, the skewness will be zero) & kurtosis (flat-looking distributions are referred 
+to as “platykurtic” while peaked distributions are referred to as “leptokurtic”) are measurements 
+of non-normal distribution histogram shape.
 
 
 Sigma is population standard deviation
@@ -56,15 +71,15 @@ P(-1.0<=z<=+1.0) = 0.8413-0.1587 = 0.683
 Mean, median & mode are same and fall at the bell curve peak
 Asymptotic tails extend indefinitely, never quite touching the x axis
 
-Kurtosis measures the peaked-ness of the data.  Light tailed has little or no
-data in the tails, the peak is flatter than normal.
-
 Left/negative skew means left side has a long tail (lump on right side, data
 trailing away on left side), therefore mean < median.  The mean is on the
 left side of the peak.
 E.g.:
 Income distribution is right/positive skewed in histogram: /^^^\...
 SAT scores at Princeton are left/negatively skewed in histogram: .../^^^\
+
+Kurtosis measures the peaked-ness of the data.  Light tailed has little or no
+data in the tails, the peak is flatter than normal.
 
 Kurtosis & Skewness: the closer to 0 the closer your data is to the normal distribution.
 >+1.5 or <-1.5 indicates a non-normal distribution
@@ -78,8 +93,8 @@ Median is preferred when there are extreme (or skewed) scores in the distributio
 Linear regression is the “best guess” at using a set of data to make some kind of prediction.
 
 E.g. A moderate positive correlation coefficient
-age (x):     43, 21, 25, 42, 57, 59
-glucose (y): 99, 65, 79, 75, 87, 81
+Age (x):     43, 21, 25, 42, 57, 59
+Glucose (y): 99, 65, 79, 75, 87, 81
 
  n=6                                 <---
  sum(x) = 247                        <---
@@ -126,13 +141,13 @@ Covariance = SP/N  (correlation becomes standardized: -1 thru 1)
 
 ---
 
-categorical  - nominal                                 - drink type (beer, wine, gin)
-categorical  - ordinal                                 - cup size (sm med lg)
-quantitative - interval in a range, no true zero point - temperature (80F is NOT twice as warm as 40F)
-quantitative - ratio, there are true zero points       - weight, salary, age (40YO is twice as old as a 20YO)
+Categorical  - nominal                                 - drink type (beer, wine, gin)
+Categorical  - ordinal                                 - cup size (sm med lg)
+Quantitative - interval in a range, no true zero point - temperature (80F is NOT twice as warm as 40F)
+Quantitative - ratio, there are true zero points       - weight, salary, age (40YO is twice as old as a 20YO)
 
-discrete: whole number resulting from COUNTING
-continuous: any value within an interval resulting from MEASURING, e.g. weight, distance, speed, time
+Discrete: whole number resulting from COUNTING
+Continuous: any value within an interval resulting from MEASURING, e.g. weight, distance, speed, time
 
 ---
 
@@ -154,8 +169,7 @@ HA = alternative hypothesis (r>0) i.e. the population mean differs from the hypo
 
 A two-tailed test is used when the hypothesis is stated as an equality:
 
-E.g. dean says college student credit card debt mu = $4100 (therefore a two-tailed hypothesis
-test)
+E.g. dean says college student credit card debt mu = $4100 (therefore a two-tailed hypothesis test)
 
 E.g. college student credit card debt mu != $4100
 
@@ -500,6 +514,7 @@ P(3) = 5!/3!(5-3) * (.6^3) *(.4^(5-3))
 If we calculated P(0), P(1), ..., P(5) the sum would be 1.0
 
 ---
+
 Poisson probability distribution - the number of x occurences in the interval of y
 
 Random variable: the actual number of shoppers during the next (non-overlapping) hour period

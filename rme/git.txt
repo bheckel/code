@@ -1,3 +1,30 @@
+# When you run git push, you are using two Gits, with two different
+# repositories. You are telling your Git to call up someremote Git. Once your
+# Git has the other Git on the Internet-phone (via https or ssh or whatever),
+# your Git sends some of your commits to their Git, and then your Git asks them
+# to set their branches, usually based on the commits you just sent.
+
+# Take local mybranch and make it the remote’s mybranch
+#          TO          FROM
+#                 local    remote
+git push origin mybranch:mybranch
+
+---
+
+Working Directory: Sandbox
+Index: Proposed next commit snapshot, populated by 'git add's. AKA “Staging Area”. This is what Git looks at when you run 'git commit'.
+HEAD: Last commit snapshot, next parent. It’s generally simplest to think of HEAD as the snapshot of your last 'git commit' on that branch.
+
+    WD               Index          HEAD
+     <------checkout the project------
+     -------stage files->
+                         -----commit->
+                         hash id created
+
+'git status' will give us no output when all three trees are the same
+
+---
+
 boheck@l10e523 MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
 $ git add . && git commit -m 'ORION-35000: Upgrade e_mail_message procedure'
 [develop e5b334a05c2] ORION-35000: Upgrade e_mail_message procedure
@@ -189,22 +216,6 @@ git push origin --delete docs
 
 ---
 
-# What changed between commits
-git log
-git difftool b15580136e5 7932c1cd095
-
----
-
-# The name on the left is your name, and the name on the right is their name.
-# Remember that when you run git push, you are using two Gits, with two different
-# repositories. You are telling your Git to call up someremote Git. Once your
-# Git has the other Git on the Internet-phone (via https or ssh or whatever),
-# your Git sends some of your commits to their Git, and then your Git asks them
-# to set their branches, usually based on the commits you just sent.
-git push someremote branch:branch
-
----
-
 git stash list
 # nothing
 
@@ -305,8 +316,8 @@ $ git remote show origin
 
 ---
 
-git pull origin develop  =  pull FROM o to   d
-git push origin develop  =  push TO   o from d
+git pull origin develop  =  PULL FROM o to   d
+git push origin develop  =  PUSH TO   o from d
 
 ---
 

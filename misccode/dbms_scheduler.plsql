@@ -8,16 +8,16 @@ BEGIN
     comments        => 'Schedule for auto_acknowledge_targets job.');
 END;
 
+---
 
--- details
+-- details of what's scheduled
 --select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments from all_scheduler_jobs a ORDER BY 1
--- status log
+-- run status log
 --SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
--- next run
+-- next run details
 --SELECT * from user_scheduler_jobs@esd WHERE job_name in ('PERIODIC_LIFECYCLE_UPDATE')
 
--- Drop job
-BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
+---
 
 -- Create job (must drop first to avoid error if already exists)
 BEGIN
@@ -37,8 +37,13 @@ BEGIN
     -- not auto-dropped unless the job end date passes, the maximum number of runs
     -- (max_runs) is reached, or the maximum number of failures is reached (max_failures)
     auto_drop => false,
-    comments => 'Compiling weekly Maintenance(GO_WEEKLY)and check nonusedinsetars_contacts into one package');
+    comments => 'Compiling weekly Maintenance');
 END;
+
+-- Drop job
+BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
+
+---
 
 -- Update job
 BEGIN sys.dbms_scheduler.set_attribute(name => 'SET_CUSTOMER_FLAG_JOB', ATTRIBUTE => 'job_action', VALUE => 'BEGIN ESTARS.SET_CUSTOMER_FLAG(inAccount_ID => 0, do_commit =>1); END;'); END;
@@ -52,14 +57,11 @@ BEGIN sys.Dbms_Scheduler.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
 
 DBMS_SCHEDULER.CREATE_JOB(job_name   => 'SET_DNB_JOB_' || account_id_cnt,
 													job_type   => 'PLSQL_BLOCK',
-													job_action => 'BEGIN USER_ON_CALL.SET_DNB_AS_INPUTSOURCE(' ||
-																					 acct.account_id || ',' ||
-																					 request_id_quoted || 
-																					 '); END;',
-										--start_date => CAST(sysdate + interval '1' minute AS TIMESTAMP),
-													start_date => cast(SYSTIMESTAMP + (.000694 * wait_minutes) AS TIMESTAMP),
-													enabled    => TRUE,
-													auto_drop  => TRUE,
+													job_action => 'BEGIN USER_ON_CALL.SET_DNB_AS_INPUTSOURCE(' || acct.account_id || ',' || request_id_quoted || '); END;',
+													--start_date => cast(SYSTIMESTAMP + (.000694 * wait_minutes) AS TIMESTAMP),
+										      start_date => CAST(sysdate + interval '1' minute AS TIMESTAMP),
+													enabled    => TRUE,  -- default FALSE
+													auto_drop  => TRUE,  -- default TRUE
 													comments   => 'Set DNB as input source');
 
 ---
@@ -105,3 +107,52 @@ CREATE OR REPLACE PACKAGE BODY orion33427 AS
 END;
 /
 
+---
+
+-- Adapted https://www.oratable.com/running-procedures-asynchronously-with-oracle-job-scheduler/
+-- Non-critical processing asynchronous
+create or replace procedure create_booking(booking_id in varchar2)
+as 
+begin
+  dbms_output.put_line('START create_booking');    
+  -- Critical parts of booking: main flow, any failure 
+  -- here must fail the entire booking
+  allocate_seats;
+  capture_customer_details;
+  receive_payment;
+
+  -- Non-critical parts of booking: wrapped in 
+  -- a separate procedure called asynchronously
+  dbms_output.put_line('Before post_booking_flow_job');
+  -- Post-booking jobs are slow so fork them asynchronously
+  dbms_scheduler.create_job (
+    job_name   =>  'post_booking_flow_job'||booking_id,
+    job_type   => 'PLSQL_BLOCK',
+    job_action => 
+      'BEGIN 
+         post_booking_flow('''||booking_id||''');
+       END;',
+    enabled   =>  TRUE,  
+    auto_drop =>  TRUE, 
+    comments  =>  'Non-critical post-booking steps');
+  
+  dbms_output.put_line('After post_booking_flow_job');  
+  dbms_output.put_line('END create_booking');  
+end;
+/
+
+select client_id, job_type, job_action, enabled, run_count, last_start_date 
+FROM all_scheduler_jobs t 
+WHERE t.job_name LIKE 'POST%'
+
+select job_name, status
+from all_scheduler_job_log
+where job_name like 'POST_BOOKING_FLOW_JOB%'
+and log_date > sysdate - 1/24
+order by log_date desc;
+
+select job_name, status, run_duration
+from all_scheduler_job_run_details
+where job_name like 'POST_BOOKING_FLOW_JOB%'
+and log_date > sysdate - 1/24
+order by log_date desc;

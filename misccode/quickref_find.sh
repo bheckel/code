@@ -22,11 +22,11 @@ function Html() {
   if [ "$yn" = 'y' ];then
     echo looking for w3m...
     if [ -e /usr/bin/w3m ];then
-      # if [ "${1:0:4}" = 'http' ]; then
-        F=$1
-      # else
-      #   F=$HOME/$1
-      # fi
+       if [ "${1:0:4}" = 'http' ]; then
+       F=$1
+       else
+         F=$HOME/$1
+       fi
       echo $F
       w3m ${F}
       return
