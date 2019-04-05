@@ -1,3 +1,29 @@
+-- DevGym 01Apr19
+-- The PL/SQL features that comprise bulk SQL are the FORALL statement and the
+-- BULK COLLECT clause. The FORALL statement sends DML statements from PL/SQL to
+-- SQL in batches rather than one at a time. The BULK COLLECT clause returns
+-- results from SQL to PL/SQL in batches rather than one at a time. If a query or
+-- DML statement affects four or more database rows, then bulk SQL can
+-- significantly improve performance.
+--
+-- If the query does not return any rows, then NO_DATA_FOUND is not raised.
+-- Instead, the collection is emptied.
+DECLARE
+   l_cursor         SYS_REFCURSOR;
+   l_list           DBMS_SQL.varchar2s;
+   c_limit CONSTANT PLS_INTEGER := 2;
+BEGIN
+   OPEN l_cursor FOR SELECT partname FROM plch_parts;
+
+   FETCH l_cursor BULK COLLECT INTO l_list LIMIT c_limit;
+   
+   DBMS_OUTPUT.PUT_LINE(l_list.count);  -- 2
+
+   CLOSE l_cursor;
+END;
+/
+
+---
 
 PROCEDURE bulkdel IS
   l_cnt PLS_INTEGER := 0;
@@ -201,9 +227,7 @@ END ORION34136;
 
 ---
 
--- To do bulk binds with SELECT statements, you include the BULK COLLECT clause
--- in the SELECT statement instead of using INTO clause (or FETCH INTO, RETURNING
--- INTO)
+-- SELECT INTO
 DECLARE
   TYPE NumTab IS TABLE OF hr.employees.employee_id%TYPE;
   TYPE NameTab IS TABLE OF hr.employees.last_name%TYPE;
@@ -215,19 +239,25 @@ DECLARE
   PROCEDURE print_first_n(n POSITIVE) IS
 		BEGIN
 			IF nums.COUNT = 0 THEN
-				DBMS_OUTPUT.PUT_LINE ('Collections are empty.');
+				DBMS_OUTPUT.PUT_LINE('Collections are empty.');  -- not reached in this example
 			ELSE
-				DBMS_OUTPUT.PUT_LINE ('First ' || n || ' employees:');
+				DBMS_OUTPUT.PUT_LINE('First ' || n || ' employees:');
 	 
 				FOR i IN 1 .. n LOOP
-					DBMS_OUTPUT.PUT_LINE ('  Employee #' || nums(i) || ': ' || names(i));
+					DBMS_OUTPUT.PUT_LINE('  Employee #' || nums(i) || ': ' || names(i));
 				END LOOP;
 			END IF;
 		END;
  
 BEGIN
+  -- A SELECT BULK COLLECT INTO statement will move all specified rows into one
+  -- or more collections. This "unlimited" type of bulk query can lead to
+  -- excessive allocation of PGA (process global area) memory.
+  --
+  -- If you need to process a very large number of rows but cannot afford the
+  -- PGA to do them all in one fetch, then use FETCH BULK COLLECT with a LIMIT clause, not this:
   SELECT employee_id, last_name
-  BULK COLLECT INTO nums, names
+  BULK COLLECT INTO nums, names -- LIMIT 100 fails!
   FROM hr.employees
   ORDER BY employee_id;
  
@@ -235,7 +265,21 @@ BEGIN
   print_first_n(6);
 END;
 /
+/*
+First 3 employees:
+Employee #100: King
+Employee #101: Kochhar
+Employee #102: De Haan
+First 6 employees:
+Employee #100: King
+Employee #101: Kochhar
+Employee #102: De Haan
+Employee #103: Hunold
+Employee #104: Ernst
+Employee #105: Austin
+*/
 
+---
 
 -- To do bulk binds with INSERT, UPDATE, and DELETE statements, you enclose the
 -- SQL statement within a PL/SQL FORALL statement

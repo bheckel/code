@@ -14,7 +14,7 @@ cp -i ~/onedrive/template_bulkcollect.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.p
 sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 echo "@C:\Orion\workspace\data\Source\SQL\ OrionScripts\ORION-${JIRA}_ddl_change.sql" >> t.sql
 echo >> t.sql
-echo "-- git checkout -b feature/ORION-$JIRA && git push --set-upstream origin feature/ORION-$JIRA" >> t.sql
+echo "-- git pull && git checkout -b feature/ORION-$JIRA && git push --set-upstream origin feature/ORION-$JIRA" >> t.sql
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> t.sql
 echo >> t.sql
 

@@ -8,6 +8,8 @@ create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN
 
   BEGIN
     char_back_date := to_char(SYSDATE - back_date, 'yyyymmdd');
+
+     -- Choose which cursor to use...
      IF (TABLE_NAME IS NOT NULL) THEN
         BEGIN
         dbms_output.put_line ('in table_name is ' || table_name);
@@ -25,6 +27,7 @@ create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN
             WHERE sr.restoreDate=to_char (SYSDATE - back_date, 'yyyymmdd');
        END;
      END IF;
+    -- ...then loop it
     LOOP
        FETCH restore_grants_t INTO grantStatement;
        EXIT WHEN restore_grants_t%NOTFOUND;

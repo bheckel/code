@@ -124,3 +124,18 @@ from   bricks
 group  by shape 
 having sum ( weight ) > 5 
 order  by shape;
+
+---
+
+-- Can't see the other columns
+select colour from bricks
+group  by colour
+having count(*) >= 2;
+
+-- So use this
+select * from (
+  select b.*,
+         count(*) over ( partition by colour ) colour_count
+  from   bricks b
+)
+where  colour_count >= 2;
