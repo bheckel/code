@@ -93,6 +93,27 @@ END;
 
 ---
 
+-- Load hash with a query:
+PROCEDURE do IS
+	TYPE numtbl IS TABLE OF VARCHAR2(4000) INDEX BY PLS_INTEGER;
+	mytbl numtbl;
+	i NUMBER := 0;
+	
+	BEGIN 
+		FOR r IN (
+			select regexp_substr(s, '.{5}', 1, lvl) chunk
+				from (select s, level lvl 
+								from (select '00000111112222233333' s from dual) 
+							connect by level <= length(s) / 5)
+			 ) LOOP
+			i := i+1;
+			mytbl(i) := r.chunk;
+			dbms_output.put_line(mytbl(i));
+		END LOOP;
+END do;
+
+---
+
 DECLARE
 	TYPE last_name_type IS TABLE OF student.last_name%TYPE INDEX BY PLS_INTEGER;
   -- No constructor like other collection types - empty by default
@@ -112,9 +133,7 @@ END;
 ---
 
 /* https://docs.oracle.com/database/121/LNPLS/composites.htm#LNPLS99969 */
-
 /* You cannot compare associative array variables to the value NULL or to each other */
-
 DECLARE
   -- Associative array indexed by string:
   
@@ -208,24 +227,3 @@ BEGIN
   from foo;
 
 END:
-
----
-
--- Load hash with a query:
-PROCEDURE do IS
-	TYPE numtbl IS TABLE OF VARCHAR2(4000) INDEX BY PLS_INTEGER;
-	mytbl numtbl;
-	i NUMBER := 0;
-	
-	BEGIN 
-		FOR r IN (
-			select regexp_substr(s, '.{5}', 1, lvl) chunk
-				from (select s, level lvl 
-								from (select '00000111112222233333' s from dual) 
-							connect by level <= length(s) / 5)
-			 ) LOOP
-			i := i+1;
-			mytbl(i) := r.chunk;
-			dbms_output.put_line(mytbl(i));
-		END LOOP;
-END do;

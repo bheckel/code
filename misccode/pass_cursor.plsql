@@ -1,3 +1,5 @@
+/* Modified: Mon 15 Apr 2019 13:28:26 (Bob Heckel) */ 
+
 DECLARE
    cv   sys_refcursor;  -- weak REF CURSOR type can be used in an OPEN FOR statement with either a static or dynamic SQL statement
 BEGIN
@@ -22,21 +24,88 @@ END;
 
 
 PROCEDURE print_cursor IS
-  gonereason BOOLEAN;
-  l_contact_id NUMBER;
-  l_gonereason NUMBER;
-  l_c SYS_REFCURSOR;  -- weakly typed
+  gonereason    BOOLEAN;
+  l_contact_id  NUMBER;
+  l_gonereason  NUMBER;
+  l_c           SYS_REFCURSOR;  -- weakly typed
    
   BEGIN
     l_c := pass_cursor();
+
     LOOP
       FETCH l_c INTO l_contact_id, l_gonereason;
+
       gonereason := (l_gonereason = 0);
+
       IF gonereason THEN
         DBMS_OUTPUT.PUT_LINE ('not gone: ' || l_contact_id);
       ELSE
         DBMS_OUTPUT.PUT_LINE ('gone: ' || l_contact_id); 
       END IF;
+
       EXIT WHEN l_c%NOTFOUND;
     END LOOP;
 END;
+
+---
+
+-- Adapted http://blog.mclaughlinsoftware.com/2008/10/11/reference-cursors-why-when-and-how
+-- Creates a function to dynamically open a cursor and return it as a return type.
+CREATE OR REPLACE FUNCTION weakly_typed_cursor(job_segment VARCHAR2) RETURN SYS_REFCURSOR IS
+  weak_cursor SYS_REFCURSOR;
+  stmt VARCHAR2(4000);
+  
+BEGIN
+  -- Dynamic SQL
+  stmt := 'SELECT ename, job '
+       || 'FROM   scott.emp '
+       || 'WHERE  REGEXP_LIKE(ename, :input) or deptno=10';
+       
+  -- Explicit cursor structures are required for system reference cursors
+  OPEN weak_cursor FOR stmt USING job_segment;
+  RETURN weak_cursor;
+END;
+
+-- View cursor results
+declare
+  en varchar2(80);
+  jo varchar2(80);
+  cv sys_refcursor;
+begin
+  cv := weakly_typed_cursor('KING');
+  
+  loop
+    fetch cv into en, jo;
+    exit when cv%notfound;
+    dbms_output.put_line(en || ' is ' || jo);  -- must come after notfound check
+  end loop;
+end;
+
+-- Or better:
+-- Create a structure declaration package, like an interface or abstract class
+CREATE OR REPLACE PACKAGE pipeliner IS
+  -- Declares a row structure that doesn't map to a catalog object
+  TYPE title_structure IS RECORD (item_title    VARCHAR2(60),
+																	item_subtitle VARCHAR2(60));
+  -- Declares an associative array i.e. a collection indexed by a PL/SQL row structure
+  TYPE title_collection IS TABLE OF title_structure;
+END pipeliner;
+
+-- A function that receives a cursor as an input and returns an aggregate TABLE
+CREATE OR REPLACE FUNCTION use_of_bulk_cursor(incoming_cursor SYS_REFCURSOR) RETURN pipeliner.title_collection PIPELINED IS
+  active_collection pipeliner.TITLE_COLLECTION := pipeliner.title_collection();
+  
+BEGIN
+  -- A bulk collect fetch of the already open cursor
+  FETCH incoming_cursor BULK COLLECT INTO active_collection;
+  
+  FOR i IN 1..active_collection.COUNT LOOP -- not FORALL
+	-- Add a row to the aggregate return table
+    PIPE ROW(active_collection(i));
+  END LOOP;
+  
+  CLOSE incoming_cursor;
+  RETURN;
+END;
+
+SELECT * FROM TABLE(use_of_bulk_cursor(weakly_typed_cursor('KING')))

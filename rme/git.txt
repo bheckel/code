@@ -1,3 +1,81 @@
+1. Using git to commit a small fix directly into a local branch directly tracking the same remote branch.  In this example we will commit a small fix into the develop branch
+git checkout develop
+checks out your local develop branch which brings your file system to that version of the files
+
+git pull
+ Fetches any changes from the remote develop and merges them into your local develop branch.  If this is a clean environment (no commits to be pushed) this should be a simple fast forward to the latest commit.
+
+Edit files in IntelliJ or elsewhere
+
+git commit -a
+This commits any tracked files (files git already knows about).  By default it will launch an editor where you can view the modified files, and provide a commit message.  It also provides some summary information about the status of the local branch (for example how many commits it is behind/ahead/etc.
+
+git push
+Pushes your new commit to the remote.  If this was a small enough change, and no one has pushed any additional changes since you last pulled, then this should be seamless.  If not you will need to decide if you want to rebase your change on top of the current commits on the remote, or merge those changes into your local develop branch before pushing again.  In general for small fixes without a lot of commit history I prefer to rebase which will recreate your commit on top of the commit on the remote.   You would have to deal with any merge conflicts at this point.
+
+
+2. Using git to create a feature branch and then merge that feature branch into a remote tracking branch before pushing to the remote.
+git checkout develop
+Check out your local develop branch as that is the branch we want to create our new feature branch from
+
+git pull
+Fetch any changes from the remote we might be missing and then merge them in.
+
+git branch ORION-1111
+Create a new branch based on the current commit which should be the latest develop after the pull above
+
+git checkout ORION-1111
+Switches your active branch from develop to ORION-1111
+
+Make file changes as you work
+
+git commit -a 
+Commit any tracked files, hopefully in logical chunks that help you logically organize the work you have done.
+
+Continue editing (#5 above) and committing (#6) until the feature is complete.  Hopefully with many logical commits.
+
+git checkout develop
+Checkout your develop branch again
+
+git pull
+Catch your development branch back up to the remote
+
+git merge ORION-1111 --no-ff
+Merges your feature branch back into develop.  The "--no-ff" tells git to ALWAYS create a merge commit even if it can fast forward the feature branch commits on top of develop.  At this point you would need to handle any merge conflicts that might have arisen
+
+git push
+Push your merge commit and all the commits it brought in to the remote develop
+
+
+3. Using git to create a feature branch, pushing that feature branch to github to generate a pull request
+git checkout develop
+Check out your local develop branch as that is the branch we want to create our new feature branch from
+
+git pull
+Fetch any changes from the remote we might be missing and then merge them in.
+
+git branch feature/ORION-1111
+Create a new branch based on the current commit which should be the latest develop after the pull above
+
+git checkout feature/ORION-1111
+Switches your active branch from develop to ORION-1111
+
+Make file changes as you work
+
+git commit -a 
+Commit any tracked files, hopefully in logical chunks that help you logically organize the work you have done.
+
+Continue editing (#5 above) and committing (#6) until the feature is complete.  Hopefully with many logical commits.
+
+git push --set-upstream origin feature/ORION-11111
+Set the upstream feature branch for your local feature branch and push (after this you can just git push)
+
+Go to github.sas.com and select the feature branch you would like to create a pull request for.  It will usually notice new feature branches
+
+Once reviewed, you can merge and delete the remote feature branch from github.sas.com if there are no conflicts.
+
+---
+
 # When you run git push, you are using two Gits, with two different
 # repositories. You are telling your Git to call up someremote Git. Once your
 # Git has the other Git on the Internet-phone (via https or ssh or whatever),

@@ -1,3 +1,16 @@
+---
+--want check for other aid "used elsewhere"
+        SELECT ab.account_id
+        from account_base           ab,
+             account_name           an,
+             account_name_attribute ana,
+             account_attribute      aa
+       where ab.account_id = an.account_id
+         and an.account_name_id = ana.account_name_id
+         and ana.account_attribute_id = aa.account_attribute_id
+         and aa.duns_nbr = '201794039'
+
+
 with account_name as (
 	select 5645818 account_name_id, 5645818 account_id from dual union all
 	select 7934046 account_name_id, 5645818 account_id from dual union all
@@ -17,6 +30,8 @@ where w.account_id=wo.account_id
 
 ---
 
+-- Compare table to csv list
+
 SELECT ids, ab.account_id 
 FROM (WITH DATA AS
       (SELECT '432803,434768' ids FROM dual)
@@ -24,10 +39,10 @@ FROM (WITH DATA AS
       FROM DATA
       CONNECT BY instr(ids, ',', 1, LEVEL - 1) > 0) csv LEFT JOIN account_base ab ON csv.ids=ab.account_id
 
--- or
-SELECT ids, ab.account_id 
-FROM (SELECT to_number(column_value) ids
-      FROM xmltable(('"' || REPLACE('432803,434768', ',', '","') || '"'))) csv LEFT JOIN account_base ab ON csv.ids=ab.account_id
+-- or better
+SELECT aid, ab.account_id 
+FROM (SELECT to_number(column_value) aid
+      FROM xmltable(('"' || REPLACE('432803,434768', ',', '","') || '"'))) csv LEFT JOIN account_base ab ON csv.aid=ab.account_id
 
 ---
 

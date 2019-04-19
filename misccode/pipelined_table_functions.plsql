@@ -19,6 +19,8 @@
  * it is a nested table or varray.  Associative arrays (INDEX-BY) are not allowed to be
  * used as the return type.
  */
+
+ /* See also pass_cursor.plsql */
 CREATE OR REPLACE TYPE strings_t IS TABLE OF VARCHAR2(100);
 /
 

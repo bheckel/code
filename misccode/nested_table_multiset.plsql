@@ -33,3 +33,24 @@ END;
 /*
 Count.Last = 6.Part6
 */
+
+---
+
+DECLARE
+  type numbers_t is table of number;
+
+  l_numbers1 numbers_t    := numbers_t(10 , 20 , 30 , 40 , 50);
+  l_numbers2 numbers_t    := numbers_t(10 , 20 , 30 , 60, 60, NULL);
+  l_numbers  numbers_t;    
+
+BEGIN
+  --l_numbers := l_numbers1 multiset union distinct l_numbers2;  -- 10 20 30 40 50 60
+  --l_numbers := set(l_numbers2);  -- 10 20 30 60
+  --l_numbers := l_numbers1 multiset except l_numbers2;  -- 40 50
+  l_numbers := l_numbers1 multiset union l_numbers2;  -- -- 10 20 30 40 50 10 20 30 60
+  
+  for i in l_numbers.first .. l_numbers.last loop
+    dbms_output.put_line(l_numbers(i));
+  end loop;
+  
+END;
