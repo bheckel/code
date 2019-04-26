@@ -1,3 +1,4 @@
+-- See also bulk_collect_forall.plsql
 
 ...
 CURSOR c_dun_nbr IS

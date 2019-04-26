@@ -5,7 +5,7 @@ parameters based on SAMPLE statistics
 
 ---
 
-Randomized Experiments (vs. Observational Studies - analysis of correlations):
+Randomized Experiments (vs. Observational - analysis of correlations):
 
 POPULATION - entire collection of cases to which we want to generalize (e.g. all children
 in the US)
@@ -111,9 +111,9 @@ Glucose (y): 99, 65, 79, 75, 87, 81
 r = 6(20485) – (247 × 486) / [√[[6(11409) – (247^2)] × [6(40022) – 486^2]]]
 r = 0.5298
 
-At r=1.0 everyone in the sample is on the regression line, a perfect model, r=0 is a terrible model for predicting.
+At r=1.0 everyone in the sample is on the regression line, a perfect model for predicting
 At 0.5  graph arrow goes from SW corner to NE corner
-At 0    graph arrow goes from W to E 
+At 0    graph arrow goes from W to E , r=0, a terrible model for predicting
 At -0.5 graph arrow goes from NW corner to SE corner
 
 

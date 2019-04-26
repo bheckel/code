@@ -1,3 +1,11 @@
+BEGIN
+  IF 1 = 1 THEN
+    DBMS_OUTPUT.PUT_LINE ('x');
+  END IF;
+END;
+
+---
+
 SET serveroutput on;
 
 DECLARE

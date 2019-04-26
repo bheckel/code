@@ -1,6 +1,6 @@
 CREATE OR REPLACE TYPE parts_nt IS TABLE OF VARCHAR2 (100);
 
--- Combine two nested tables
+-- Combine two nested tables (won't work for hashes as of 2019)
 
 -- The wrong way:
 DECLARE
@@ -44,13 +44,22 @@ DECLARE
   l_numbers  numbers_t;    
 
 BEGIN
+  --l_numbers := l_numbers1 multiset union l_numbers2;  -- 10 20 30 40 50 10 20 30 60 60
+  -- Unique items only
   --l_numbers := l_numbers1 multiset union distinct l_numbers2;  -- 10 20 30 40 50 60
+  -- De-dup the common items
   --l_numbers := set(l_numbers2);  -- 10 20 30 60
+  -- On one not on the other
   --l_numbers := l_numbers1 multiset except l_numbers2;  -- 40 50
-  l_numbers := l_numbers1 multiset union l_numbers2;  -- -- 10 20 30 40 50 10 20 30 60
+  -- In both
+  l_numbers := l_numbers1 multiset intersect l_numbers2;  -- 10 20 30
   
   for i in l_numbers.first .. l_numbers.last loop
     dbms_output.put_line(l_numbers(i));
   end loop;
   
 END;
+
+---
+
+

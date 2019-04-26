@@ -116,7 +116,7 @@ END do;
 
 DECLARE
 	TYPE last_name_type IS TABLE OF student.last_name%TYPE INDEX BY PLS_INTEGER;
-  -- No constructor like other collection types - empty by default
+  -- NO CONSTRUCTOR like other collection types - empty by default
 	last_name_tab last_name_type;
 	i PLS_INTEGER := 0;
 
@@ -227,3 +227,31 @@ BEGIN
   from foo;
 
 END:
+
+---
+
+DECLARE
+  i binary_integer := 0;
+  --type aa_t is table of scott.emp.deptno%type index by binary_integer;
+  type aa_t is table of scott.emp%rowtype index by binary_integer;
+  aa aa_t;
+  
+  type numbers_t is table of number index by binary_integer;
+  l_numbers  numbers_t;
+
+BEGIN
+ -- 1. Load table into hash
+ for r in ( select * from scott.emp where rownum<4) loop
+   i := i +1;
+   --aa(i) := r.deptno;
+   aa(i).deptno := r.deptno;
+   --dbms_output.put_line(aa(i));
+   dbms_output.put_line(aa(i).deptno);
+ end loop;
+ 
+ -- 2. Iterate hash
+ for ix in aa.first .. aa.last loop
+   l_numbers(ix) := aa(ix).deptno;
+   dbms_output.put_line(l_numbers(ix));
+ end loop;
+END;

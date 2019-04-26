@@ -1,3 +1,5 @@
+
+-- Modified: Thu 25 Apr 2019 11:28:41 (Bob Heckel) 
 -- If your program does not require that an OUT or IN OUT parameter retain its
 -- pre-invocation value if the subprogram ends with an unhandled exception, then
 -- include the NOCOPY hint in the parameter declaration. The NOCOPY hint requests
@@ -10,12 +12,12 @@ DECLARE
   t2 timestamp;
   t3 timestamp;
 
-  PROCEDURE do_nothing1 (tab IN OUT EmpTabTyp) IS
+  PROCEDURE do_nothing1(tab IN OUT EmpTabTyp) IS
   BEGIN
     NULL;
   END;
 
-  PROCEDURE do_nothing2 (tab IN OUT NOCOPY EmpTabTyp) IS
+  PROCEDURE do_nothing2(tab IN OUT NOCOPY EmpTabTyp) IS
   BEGIN
     NULL;
   END;
@@ -29,8 +31,10 @@ BEGIN
   
   -- Benchmark performance
   SELECT SYSTIMESTAMP INTO t1 FROM DUAL;
+
   do_nothing1(emp_tab);  -- pass IN OUT parameter
   SELECT SYSTIMESTAMP INTO t2 FROM DUAL;
+
   do_nothing2(emp_tab);  -- pass IN OUT NOCOPY parameter
   SELECT SYSTIMESTAMP INTO t3 FROM DUAL;
   

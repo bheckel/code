@@ -50,7 +50,7 @@ END;
 ---
 
 -- Adapted http://blog.mclaughlinsoftware.com/2008/10/11/reference-cursors-why-when-and-how
--- Creates a function to dynamically open a cursor and return it as a return type.
+-- Creates a function to dynamically open a cursor and return it as a return type
 CREATE OR REPLACE FUNCTION weakly_typed_cursor(job_segment VARCHAR2) RETURN SYS_REFCURSOR IS
   weak_cursor SYS_REFCURSOR;
   stmt VARCHAR2(4000);
@@ -87,19 +87,21 @@ CREATE OR REPLACE PACKAGE pipeliner IS
   -- Declares a row structure that doesn't map to a catalog object
   TYPE title_structure IS RECORD (item_title    VARCHAR2(60),
 																	item_subtitle VARCHAR2(60));
-  -- Declares an associative array i.e. a collection indexed by a PL/SQL row structure
+
   TYPE title_collection IS TABLE OF title_structure;
 END pipeliner;
 
--- A function that receives a cursor as an input and returns an aggregate TABLE
-CREATE OR REPLACE FUNCTION use_of_bulk_cursor(incoming_cursor SYS_REFCURSOR) RETURN pipeliner.title_collection PIPELINED IS
+-- Receives a cursor as an input and returns an aggregate TABLE
+CREATE OR REPLACE FUNCTION use_of_bulk_cursor(incoming_cursor SYS_REFCURSOR)
+  RETURN pipeliner.title_collection PIPELINED
+IS
   active_collection pipeliner.TITLE_COLLECTION := pipeliner.title_collection();
   
 BEGIN
-  -- A bulk collect fetch of the already open cursor
+  -- Fetch the already open cursor
   FETCH incoming_cursor BULK COLLECT INTO active_collection;
   
-  FOR i IN 1..active_collection.COUNT LOOP -- not FORALL
+  FOR i IN 1..active_collection.COUNT LOOP -- not FORALL!
 	-- Add a row to the aggregate return table
     PIPE ROW(active_collection(i));
   END LOOP;
@@ -109,3 +111,85 @@ BEGIN
 END;
 
 SELECT * FROM TABLE(use_of_bulk_cursor(weakly_typed_cursor('KING')))
+
+---
+
+-- Adapted: Fri, Apr 26, 2019 10:48:03 AM (Bob Heckel -- sfdemo Stephen Feurstein)
+-- Use a procedure to pass cursor
+
+CREATE TABLE jokes (
+   joke_id INTEGER,
+   title VARCHAR2(100),
+   text VARCHAR2(4000)
+)
+/
+CREATE TABLE joke_archive (
+   archived_on DATE, old_stuff VARCHAR2(4000)
+)
+/
+
+BEGIN
+   INSERT INTO jokes
+        VALUES (100, 'Why does an elephant take a shower?'
+               ,'Why does an elephant take a shower? Because he can''t fit in the bathtub!');
+
+   INSERT INTO jokes
+        VALUES (100
+               ,'How can you prevent deseases caused by biting insects?'
+               ,'How can you prevent deseases caused by biting insects? Don''t bite any!');
+
+   COMMIT;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE get_title_or_text(
+   title_like_in IN VARCHAR2
+  ,return_title_in IN BOOLEAN
+  ,joke_count_out OUT PLS_INTEGER
+  ,jokes_out OUT sys_refcursor
+)
+IS
+   c_from_where   VARCHAR2 (100) := ' FROM jokes WHERE title LIKE :your_title';
+   l_colname      all_tab_columns.column_name%TYPE := 'TEXT';
+   l_query        VARCHAR2 (32767);
+BEGIN
+   IF return_title_in
+   THEN
+      l_colname := 'TITLE';
+   END IF;
+
+   l_query := 'SELECT ' || l_colname || c_from_where;
+
+   OPEN jokes_out FOR l_query USING title_like_in;
+
+   EXECUTE IMMEDIATE 'SELECT COUNT(*)' || c_from_where
+                INTO joke_count_out
+               USING title_like_in;
+END get_title_or_text;
+/
+
+DECLARE
+   l_count        PLS_INTEGER;
+   l_jokes        sys_refcursor;
+
+   TYPE jokes_tt IS TABLE OF jokes.text%TYPE;
+
+   l_joke_array   jokes_tt := jokes_tt();
+BEGIN
+   get_title_or_text (title_like_in        => '%insect%'
+                     ,return_title_in      => FALSE
+                     ,joke_count_out       => l_count
+                     ,jokes_out            => l_jokes
+                     );
+   DBMS_OUTPUT.put_line ('Number of jokes found = ' || l_count);
+
+   FETCH l_jokes
+   BULK COLLECT INTO l_joke_array;
+
+   CLOSE l_jokes;
+
+   FORALL indx IN l_joke_array.FIRST .. l_joke_array.LAST
+      INSERT INTO joke_archive
+           VALUES (SYSDATE, l_joke_array (indx));
+END;
+

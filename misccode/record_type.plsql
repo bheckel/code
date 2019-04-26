@@ -1,3 +1,34 @@
+-- Modified: Fri 26 Apr 2019 13:01:44 (Bob Heckel) 
+--
+-- Records cannot be tested for nullity (e.g. IS NULL), equality, or inequality
+
+
+DECLARE
+  TYPE name_rec IS RECORD (
+    first  employees.first_name%TYPE DEFAULT 'John',
+    last   employees.last_name%TYPE DEFAULT 'Doe'
+  );
+ 
+  name1 name_rec;
+  name2 name_rec;
+ 
+BEGIN
+  -- John Doe
+  DBMS_OUTPUT.PUT_LINE('name1: ' || name1.first || ' ' || name1.last);
+
+  -- Jane Smith
+  name1.first := 'Jane'; name1.last := 'Smith'; 
+  DBMS_OUTPUT.PUT_LINE('name1: ' || name1.first || ' ' || name1.last);
+
+  -- Assign one record to another
+  -- Jane Smith
+  name2 := name1;
+  DBMS_OUTPUT.PUT_LINE('name2: ' || name2.first || ' ' || name2.last); 
+END;
+/
+
+---
+
 DECLARE
 	CURSOR course_cur IS
 		SELECT * FROM course WHERE rownum < 2;
@@ -13,8 +44,8 @@ DECLARE
    ,modified_date DATE
   );
 
-  course_rec1 course%ROWTYPE;     -- table-based record
-  course_rec2 course_cur%ROWTYPE; -- cursor-based record
+  course_rec1 course%ROWTYPE;     -- table-based record anchor
+  course_rec2 course_cur%ROWTYPE; -- cursor-based record anchor
   course_rec3 course_type;        -- user-defined record
 
 BEGIN
@@ -39,10 +70,6 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE(course_rec2.course_no||' - '||course_rec2.description);
   DBMS_OUTPUT.PUT_LINE(course_rec3.course_no||' - '||course_rec3.description);
 END;
-
----
-
--- Records cannot be tested for nullity, equality, or inequality
 
 ---
 
@@ -91,30 +118,4 @@ CREATE OR REPLACE PACKAGE BODY department_pkg IS
     RETURN rec;
   END get_dept_info;
 END department_pkg;
-/
-
----
-
-DECLARE
-  TYPE name_rec IS RECORD (
-    first  employees.first_name%TYPE DEFAULT 'John',
-    last   employees.last_name%TYPE DEFAULT 'Doe'
-  );
- 
-  name1 name_rec;
-  name2 name_rec;
- 
-BEGIN
-  -- John Doe
-  DBMS_OUTPUT.PUT_LINE('name1: ' || name1.first || ' ' || name1.last);
-
-  -- Jane Smith
-  name1.first := 'Jane'; name1.last := 'Smith'; 
-  DBMS_OUTPUT.PUT_LINE('name1: ' || name1.first || ' ' || name1.last);
-
-  -- Assign one record to another
-  -- Jane Smith
-  name2 := name1;
-  DBMS_OUTPUT.PUT_LINE('name2: ' || name2.first || ' ' || name2.last); 
-END;
 /

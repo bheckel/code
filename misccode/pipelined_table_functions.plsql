@@ -1,4 +1,5 @@
 /* Adapted: Fri, Nov 30, 2018  3:57:25 PM (Bob Heckel--devgym.oracle.com) */ 
+/* See also pass_cursor.plsql */
 
 /* Pipelined table functions are something of an oddity in PL/SQL: they pass
  * data back to the calling query, even before the function is completed; they
@@ -20,7 +21,6 @@
  * used as the return type.
  */
 
- /* See also pass_cursor.plsql */
 CREATE OR REPLACE TYPE strings_t IS TABLE OF VARCHAR2(100);
 /
 

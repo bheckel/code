@@ -1,13 +1,11 @@
--- Adapted: 01-Feb-19 Oracle Nine Good-to-Knows for PL/SQL Error Management Dev Gym *?
+
+-- Modified: Thu 25 Apr 2019 09:15:42 (Bob Heckel)
+-- See also bulk_collect_forall.plsql which is faster in 11g
 --
 -- When you execute a non-SELECT DML statement against a table and an error
 -- occurs, the statement is terminated and rolled back in its entirety. This can
 -- be wasteful of time and system resources. You can avoid this situation by using
 -- the DML error logging feature.
-
-
----
-
 
 BEGIN  
   DBMS_ERRLOG.create_error_log(dml_table_name => 'EMPLOYEES');  
@@ -27,6 +25,8 @@ BEGIN
   
   DBMS_OUTPUT.put_line ('Before ' || l_count);  
   
+  -- A failure causes the whole insert to roll back, regardless of how many rows were inserted successfully.
+  -- Adding the DML error logging clause allows us to complete the insert of the valid rows.
 	UPDATE employees  
      SET salary = salary * 200  -- this will overflow column salary's datatype max in cases of high earners
   -- We don't care how many errors occur - just keeping going, no longer terminate and roll back the statement
@@ -48,17 +48,15 @@ BEGIN
   END LOOP;
 END; 
 
--- Then you must check
+-- Then you must check:
 -- SELECT COUNT(1) "Number of Failures" FROM err$_employees 
--- SELECT ora_err_mesg$, ora_err_rowid$, ora_err_tag$, last_name  FROM err$_employees 
+SELECT ora_err_number, ora_err_mesg$, ora_err_rowid$, ora_err_tag$, last_name FROM err$_employees 
 
 -- And if you'll try again:
 DELETE FROM err$_employees;  
 COMMIT;  
 
-
 ---
-
 
 CREATE TABLE plch_employees ( 
   employee_id   INTEGER PRIMARY KEY, 
@@ -163,3 +161,114 @@ END;
    END LOOP;
   --~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+---
+
+-- Adapted https://oracle-base.com/articles/10g/dml-error-logging-10gr2
+
+-- Create and populate a source table.
+CREATE TABLE source (
+  id           NUMBER(10)    NOT NULL,
+  code         VARCHAR2(10),
+  description  VARCHAR2(50),
+  CONSTRAINT source_pk PRIMARY KEY (id)
+);
+
+DECLARE
+  TYPE t_tab IS TABLE OF source%ROWTYPE;
+  l_tab  t_tab := t_tab();
+BEGIN
+  FOR i IN 1 .. 10001 LOOP
+    l_tab.extend;
+    l_tab(l_tab.last).id := i;
+    l_tab(l_tab.last).code := TO_CHAR(i);
+    l_tab(l_tab.last).description := 'Description for ' || TO_CHAR(i);
+  END LOOP;
+
+  -- For a possible error condition
+  l_tab(1000).code  := NULL;
+  l_tab(10000).code := NULL;
+
+  FORALL i IN l_tab.first .. l_tab.last
+    INSERT INTO source VALUES l_tab(i);
+
+  COMMIT;
+END;
+/
+
+EXEC DBMS_STATS.gather_table_stats(USER, 'source', cascade => TRUE);
+
+-- Create a destination table
+CREATE TABLE dest (
+  id           NUMBER(10)    NOT NULL,
+  code         VARCHAR2(10)  NOT NULL,
+  description  VARCHAR2(50),
+  CONSTRAINT dest_pk PRIMARY KEY (id)
+);
+
+-- Create a dependant of the destination table
+CREATE TABLE dest_child (
+  id       NUMBER,
+  dest_id  NUMBER,
+  CONSTRAINT child_pk PRIMARY KEY (id),
+  CONSTRAINT dest_child_dest_fk FOREIGN KEY (dest_id) REFERENCES dest(id)
+);
+
+-- Create the error logging table
+BEGIN
+  DBMS_ERRLOG.create_error_log (dml_table_name => 'dest');
+END;
+
+INSERT INTO dest
+SELECT *
+FROM   source
+LOG ERRORS INTO err$_dest ('INSERT') REJECT LIMIT UNLIMITED;
+
+SELECT ora_err_number$, ora_err_mesg$
+FROM   err$_dest
+WHERE  ora_err_tag$ = 'INSERT';
+
+
+TRUNCATE TABLE dest;
+
+-- This hint makes DML Error Logging much faster pre v12:
+INSERT /*+ APPEND */ INTO dest
+SELECT *
+FROM   source
+LOG ERRORS INTO err$_dest ('INSERT APPEND') REJECT LIMIT UNLIMITED;
+
+
+-- And slightly faster than the alternative SAVE EXCEPTIONS:
+TRUNCATE TABLE dest;
+
+DECLARE
+  TYPE t_tab IS TABLE OF dest%ROWTYPE;
+  l_tab t_tab;
+
+  CURSOR c_source IS
+    SELECT * FROM source;
+
+  ex_dml_errors EXCEPTION;
+  PRAGMA EXCEPTION_INIT(ex_dml_errors, -24381);
+
+BEGIN
+  OPEN c_source;
+  LOOP
+    FETCH c_source
+    BULK COLLECT INTO l_tab LIMIT 1000;
+    EXIT WHEN l_tab.count = 0;
+
+    BEGIN
+      FORALL i IN l_tab.first .. l_tab.last SAVE EXCEPTIONS
+        INSERT INTO dest VALUES l_tab(i);
+    EXCEPTION
+      WHEN ex_dml_errors THEN
+        FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
+          DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows (in this LIMIT group) prior to EXCEPTION');
+          DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX ||
+                                '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
+                                ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
+        END LOOP;
+    END;
+  END LOOP;
+  CLOSE c_source;
+END;

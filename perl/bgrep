@@ -59,7 +59,7 @@ unless ( $searchdir =~ m#/$# ) {
   $searchdir = $searchdir . '/';
 }
 
-print STDERR "Searching for \"$searchword\" in $searchdir ...";
+print STDERR "Searching for \"$searchword\" in $searchdir ... ";
 
 if ( $opt_r ) {
   # TODO may replace with sytem("find .") which recurses
@@ -105,8 +105,7 @@ close(TOVIM) || die "Error closing temp file: $!\n";
 my $rc = 0;  # success
 
 if ( $foundflag ) { 
-  printf("Found %d hit%s...", $found, $found==1 ? "" : "s");
-  print "Spawning vim...\n";
+  printf("Found %d hit%s", $found, $found==1 ? "" : "s");
   # Force vim to first occurrance of searchword (-c for execute vim command,
   # \c for case insensitive search).  Assumes hlsearch is au set in .vimrc for
   # .grep files.
