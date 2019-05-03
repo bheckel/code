@@ -1,3 +1,26 @@
+PROCEDURE unique_seq(seq_name IN VARCHAR2, num_seqs_wanted IN PLS_INTEGER, seq_ids IN OUT NUMBER) IS
+	l_current_num     NUMBER := 0;
+	l_max_num NUMBER := 0;
+	l_seq_name VARCHAR2(100);
+	
+	BEGIN   
+		-- Get max from each database
+		l_seq_name := seq_name || '@esd';
+		EXECUTE IMMEDIATE 'SELECT ' || seq_name || '.NEXTVAL FROM dual'
+		INTO l_current_num;
+		
+		IF l_current_num > l_max_num THEN
+			l_max_num := l_current_num;
+		END IF;
+		
+		dbms_output.put_line(l_max_num);
+		
+		
+		seq_ids := '1';
+	END;
+
+---
+
 DECLARE
   emp_num NUMBER(6) := 120;
   bonus   NUMBER(6) := 50;

@@ -1,6 +1,12 @@
 -- https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01115
 -- See also run_all_procedures.plsql, using.plsql
 
+-- To process dynamic SQL statements, you use EXECUTE IMMEDIATE or OPEN-FOR,
+-- FETCH, and CLOSE statements. EXECUTE IMMEDIATE is used for a single-row
+-- SELECT statement, all DML statements, and DDL statements, whereas OPEN-FOR,
+-- FETCH, and CLOSE statements are used for multirow SELECT statements and reference
+-- cursors.
+
 CREATE OR REPLACE PROCEDURE plch_change_table AUTHID DEFINER
 IS
 BEGIN
@@ -17,9 +23,7 @@ BEGIN
 END;
 /
 
-
 ---
-
 
 CREATE OR REPLACE PROCEDURE create_dept (
   deptid IN OUT NUMBER,
@@ -56,9 +60,7 @@ BEGIN
     USING IN OUT new_deptid, new_dname, new_mgrid;
 END;
 
-
 ---
-
 
 DECLARE
   this_is_a_null  CHAR(1);  -- Set to NULL automatically at run time
@@ -67,3 +69,22 @@ BEGIN
     USING this_is_a_null;
 END;
 /
+
+---
+
+SET SERVEROUTPUT ON
+DECLARE
+	sql_stmt     VARCHAR2(200);
+	v_student_id NUMBER := &sv_student_id;
+	v_first_name VARCHAR2(25);
+	v_last_name  VARCHAR2(25);
+
+BEGIN
+	sql_stmt := 'SELECT first_name, last_name'||
+							' FROM student' ||
+							' WHERE student_id = :1';
+
+	EXECUTE IMMEDIATE sql_stmt
+		INTO v_first_name, v_last_name
+		USING v_student_id;
+END;
