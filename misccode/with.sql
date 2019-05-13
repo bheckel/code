@@ -30,7 +30,7 @@ where w.account_id=wo.account_id
 
 ---
 
--- Compare table to csv list
+-- Compare table to csv list of numbers
 
 SELECT ids, ab.account_id 
 FROM (WITH DATA AS
