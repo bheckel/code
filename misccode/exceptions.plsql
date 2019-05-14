@@ -287,3 +287,27 @@ EXCEPTION
     dbms_output.put_line(ASCII(SUBSTR(DBMS_UTILITY.format_error_stack, -1)));  -- 10 (prove linefeed appended)
 END;
 /
+
+---
+
+BEGIN
+  EXECUTE IMMEDIATE 'CREATE SEQUENCE S_TEST START WITH 1 INCREMENT BY 1';
+EXCEPTION
+  WHEN OTHERS THEN
+    IF SQLCODE = -955 THEN
+      NULL; -- suppress ORA-00955 exception
+    ELSE
+      RAISE;
+    END IF;
+END; 
+
+-- or
+DECLARE
+  name_in_use exception; --declare a user defined exception
+  pragma exception_init( name_in_use, -955 ); --bind the error code to the above 
+BEGIN
+  EXECUTE IMMEDIATE 'CREATE SEQUENCE S_TEST START WITH 1 INCREMENT BY 1';
+EXCEPTION
+  WHEN name_in_use THEN
+    NULL; --suppress ORA-00955 exception
+END; 

@@ -1,3 +1,14 @@
+DECLARE
+  dbg boolean := sys.diutil.int_to_bool(1);
+  ids maint_types.numbertable;
+BEGIN maint.get_unique_id_across_all_db(seq_name => 'uid_orion_37551',
+                                        num_seqs_requested => 2,
+                                        ids => ids,
+                                        dbg => dbg);
+END;
+
+---
+
 declare
   -- Boolean parameters are translated from/to integers: 
   -- 0/1/null <--> false/true/null 
