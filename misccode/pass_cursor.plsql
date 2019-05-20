@@ -1,22 +1,36 @@
-/* Modified: Mon 15 Apr 2019 13:28:26 (Bob Heckel) */ 
+-- Modified: Fri 17 May 2019 10:05:28 (Bob Heckel)
+
+-- There are two types of REF CURSORS: strong and weak. A strong REF CURSOR
+-- type is used to declare a cursor variable associated with a specific record
+-- structure (or, to put it another way, a specific SELECT list in a query); a
+-- cursor variable declared based on a weak REF CURSOR type can be associated with
+-- any set of columns or expressions returned by a query. It is almost always used
+-- with dynamic queries.  A cursor variable based on a weak REF CURSOR type cannot be declared 
+-- at the package level (outside of any procedure or function in the package)
+--
+-- There is no way to ask "Are these two cursor variables equal?" That would be
+-- like asking PL/SQL to tell us "Are the contents of this query equal to that of a second one?"
+--
+-- REF CURSOR types (such as SYS_REFCURSOR) cannot be used as the datatype of a collection.
+
+--
 
 DECLARE
-   cv   sys_refcursor;  -- weak REF CURSOR type can be used in an OPEN FOR statement with either a static or dynamic SQL statement
+  cv   sys_refcursor;
 BEGIN
-   -- Dynamic works for weak or strong
-   OPEN cv FOR 'select * from SYS.dual';
-   CLOSE cv;
+  OPEN cv FOR 'select * from SYS.dual';
+  CLOSE cv;
 
-   -- Static works for weak only
-   OPEN cv FOR SELECT * FROM SYS.dual;
-   CLOSE cv;
+  -- same
+  OPEN cv FOR SELECT * FROM SYS.dual;
+  CLOSE cv;
 END;
 
 ---
 
-FUNCTION pass_cursor RETURN sys_refcursor
-  IS
-    l_contactCursor SYS_REFCURSOR;
+FUNCTION pass_cursor RETURN sys_refcursor IS
+  l_contactCursor SYS_REFCURSOR;
+
   BEGIN
     OPEN l_contactCursor FOR q'[SELECT contact_id, gonereason FROM base c WHERE ROWNUM <10]';
     RETURN l_contactCursor;
@@ -27,7 +41,7 @@ PROCEDURE print_cursor IS
   gonereason    BOOLEAN;
   l_contact_id  NUMBER;
   l_gonereason  NUMBER;
-  l_c           SYS_REFCURSOR;  -- weakly typed
+  l_c           SYS_REFCURSOR;
    
   BEGIN
     l_c := pass_cursor();
@@ -62,24 +76,33 @@ BEGIN
        || 'WHERE  REGEXP_LIKE(ename, :input) or deptno=10';
        
   -- Explicit cursor structures are required for system reference cursors
-  OPEN weak_cursor FOR stmt USING job_segment;
+  OPEN weak_cursor FOR stmt
+    USING job_segment;
+
   RETURN weak_cursor;
 END;
 
 -- View cursor results
-declare
+DECLARE
   en varchar2(80);
   jo varchar2(80);
+
+  /* TYPE cv_type IS REF CURSOR; */
+  /* cv cv_type; */
+  -- same
   cv sys_refcursor;
-begin
+
+BEGIN
   cv := weakly_typed_cursor('KING');
   
-  loop
-    fetch cv into en, jo;
-    exit when cv%notfound;
-    dbms_output.put_line(en || ' is ' || jo);  -- must come after notfound check
-  end loop;
-end;
+  LOOP
+    FETCH cv INTO en, jo;
+
+    EXIT WHEN cv%NOTFOUND;
+
+    dbms_output.put_line(en || ' is ' || jo);  -- must come after NOTFOUND check
+  END LOOP;
+END;
 
 -- Or better:
 -- Create a structure declaration package, like an interface or abstract class
@@ -92,21 +115,22 @@ CREATE OR REPLACE PACKAGE pipeliner IS
 END pipeliner;
 
 -- Receives a cursor as an input and returns an aggregate TABLE
-CREATE OR REPLACE FUNCTION use_of_bulk_cursor(incoming_cursor SYS_REFCURSOR)
+CREATE OR REPLACE FUNCTION use_of_bulk_cursor(cursor_in SYS_REFCURSOR)
   RETURN pipeliner.title_collection PIPELINED
 IS
-  active_collection pipeliner.TITLE_COLLECTION := pipeliner.title_collection();
+  active_collection pipeliner.title_collection := pipeliner.title_collection();  -- constructor
   
 BEGIN
-  -- Fetch the already open cursor
-  FETCH incoming_cursor BULK COLLECT INTO active_collection;
+  -- Load the already open cursor into the nested table
+  FETCH cursor_in BULK COLLECT INTO active_collection;
   
   FOR i IN 1..active_collection.COUNT LOOP -- not FORALL!
 	-- Add a row to the aggregate return table
     PIPE ROW(active_collection(i));
   END LOOP;
   
-  CLOSE incoming_cursor;
+  CLOSE cursor_in;
+
   RETURN;
 END;
 
@@ -146,7 +170,7 @@ CREATE OR REPLACE PROCEDURE get_title_or_text(
    title_like_in IN VARCHAR2
   ,return_title_in IN BOOLEAN
   ,joke_count_out OUT PLS_INTEGER
-  ,jokes_out OUT sys_refcursor
+  ,jokes_out OUT SYS_REFCURSOR
 )
 IS
    c_from_where   VARCHAR2 (100) := ' FROM jokes WHERE title LIKE :your_title';
@@ -183,6 +207,7 @@ BEGIN
                      );
    DBMS_OUTPUT.put_line ('Number of jokes found = ' || l_count);
 
+   -- Load cursor into a nested table
    FETCH l_jokes
    BULK COLLECT INTO l_joke_array;
 
@@ -190,6 +215,73 @@ BEGIN
 
    FORALL indx IN l_joke_array.FIRST .. l_joke_array.LAST
       INSERT INTO joke_archive
-           VALUES (SYSDATE, l_joke_array (indx));
+           VALUES (SYSDATE, l_joke_array(indx));
+END;
+
+---
+
+/* Adapted from https://docs.oracle.com/database/121/LNPLS/static.htm#LNPLS494 */
+/* Query a collection */
+
+-- The data type of the collection must either be created at schema level or
+-- declared in a package specification:
+CREATE OR REPLACE PACKAGE pkg AUTHID DEFINER AS
+  TYPE rec IS RECORD(f1 NUMBER, f2 VARCHAR2(30));
+  TYPE aa IS TABLE OF rec INDEX BY pls_integer;
+END;
+/
+DECLARE
+  collection_of_recs  pkg.aa;
+  recs                pkg.rec;
+
+  -- Cursor variable is an SQL query on an associative array of records
+  c1 SYS_REFCURSOR;
+
+BEGIN
+  -- Load associative array
+  collection_of_recs(1).f1 := 1;
+  collection_of_recs(1).f2 := 'two';
+
+  OPEN c1 FOR SELECT * FROM TABLE(collection_of_recs);
+  FETCH c1 INTO recs;
+  CLOSE c1;
+
+  DBMS_OUTPUT.PUT_LINE('Values in record are ' || recs.f1 || ' and ' || recs.f2);
+END;
+
+---
+
+-- Single record
+DECLARE
+   l_cv      SYS_REFCURSOR;
+   l_record  employees%ROWTYPE;
+BEGIN
+   EXECUTE IMMEDIATE 'BEGIN OPEN :cv FOR select * from employees where rownum<2; END;'
+     USING IN OUT l_cv;
+
+   FETCH l_cv INTO l_record;
+
+   DBMS_OUTPUT.put_line(l_record.last_name);
+
+   CLOSE l_cv;
+END;
+
+-- Multiple records
+DECLARE
+   l_cv SYS_REFCURSOR;
+
+   TYPE aa_t IS TABLE of scott.emp%ROWTYPE INDEX BY BINARY_INTEGER;
+   emp_aa aa_t;
+   
+BEGIN
+   -- Load cursor into associated array
+   EXECUTE IMMEDIATE 'BEGIN OPEN :cv FOR select * from scott.emp; END;'
+     USING IN OUT l_cv;
+
+   FETCH l_cv BULK COLLECT INTO emp_aa;
+
+   DBMS_OUTPUT.put_line(emp_aa(3).ename);
+
+   CLOSE l_cv;
 END;
 

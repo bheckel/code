@@ -4,3 +4,4 @@ cd ~/onedrive &&
 find . -type d | grep -i "${1}"
 for f in $(find . | grep orion- | grep -P '.*pck|.*sql|.*prc|.*fnc'); do grep -i --with-filename "${1}" $f; done >| ~/tmp/prj.out 
 vim -c "/${1}" ~/tmp/prj.out
+echo "https://esapps.sas.com/jira/issues/?jql=summary%20~%20%22${1}*%22%20OR%20description%20~%20%22${1}*%22%20ORDER%20BY%20lastViewed%20DESC"

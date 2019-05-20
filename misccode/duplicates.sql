@@ -37,13 +37,13 @@ union all select date '2000-01-05', 14 from dual
 select * from
   (select d
         ,amt
-        ,row_number() OVER (partition by d,amt order by d) rownumbyday
+        ,row_number() OVER (partition by d,amt order by d) r
 
   FROM v
   )
-where rownumbyday = 1
+where r = 1
 /*
-D	AMT	ROWNUMBYDAY
+D	AMT	r
 01-JAN-00	10	1
 02-JAN-00	11	1
 03-JAN-00	30	1
@@ -53,7 +53,7 @@ D	AMT	ROWNUMBYDAY
 */
 
 
-/* Add a younger 2000-01-03 30 and keep only that - the most recent of the dups */
+/* Add a younger amt of 30 and keep only that i.e. the most recent of the dups */
 with v as (
           select date '2000-01-01' d, 10 amt from dual
 union all select date '2000-01-04', 10 from dual
@@ -66,14 +66,13 @@ union all select date '2000-01-03', 31 from dual
 )
 select * from
   (select d
-        ,amt
-        ,row_number() OVER (partition by amt order by d DESC) rownumbyday
-
-  FROM v
+         ,amt
+         ,row_number() OVER (partition by amt order by d DESC) r
+   from v
   )
-where rownumbyday = 1
+where r = 1
 /*
-D	AMT	ROWNUMBYDAY
+D	AMT	r
 1/2/2000	11	1
 1/3/2000	31	1
 1/4/2000	30	1

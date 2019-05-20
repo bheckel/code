@@ -1,103 +1,3 @@
-
-create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN NUMBER DEFAULT 1) IS
-  char_back_date VARCHAR2(20);
-  grantStatement varchar2(4000);
-
-  TYPE restore_grants_t IS REF CURSOR;
-  restore_grants_c restore_grants_t;
-
-  BEGIN
-    char_back_date := to_char(SYSDATE - back_date, 'yyyymmdd');
-
-     -- Choose which cursor to use...
-     IF (TABLE_NAME IS NOT NULL) THEN
-        BEGIN
-        dbms_output.put_line ('in table_name is ' || table_name);
-        OPEN restore_grants_t FOR
-           'SELECT DISTINCT grant_statement
-             FROM rar_select_restore sr
-            WHERE sr.table_name = ''' || trim(table_name) || ''' AND sr.restoreDate= ''' || trim(char_back_date) || ''' ';
-        END;
-     ELSE
-       BEGIN
-         dbms_output.put_line ('in table_name is null');
-       OPEN restore_grants_t FOR
-          SELECT DISTINCT grant_statement
-             FROM rar_select_restore sr
-            WHERE sr.restoreDate=to_char (SYSDATE - back_date, 'yyyymmdd');
-       END;
-     END IF;
-    -- ...then loop it
-    LOOP
-       FETCH restore_grants_t INTO grantStatement;
-       EXIT WHEN restore_grants_t%NOTFOUND;
-				 dbms_output.put_line('EXECUTE IMMEDIATE ''' || grantStatement || ''';');
-         -- EXECUTE IMMEDIATE (grantStatement);
-    END LOOP;
-  CLOSE restore_grants;
-END;
-
----
-
--- For small number of UPDATEs only
-PROCEDURE upd IS
-  rc pls_integer := 0;
-
-	CURSOR c IS
-		 SELECT * 
-			 FROM reference_employee_base 
-			WHERE employee_id = 1234 
-				AND territory_lov_id IN( SELECT r.territory_lov_id 
-																	 FROM rs_ptg_territory_hierarchy r 
-																	WHERE upper(r.TERRITORY_CODE) LIKE '%QQFC%'  
-																		 OR upper(r.TERRITORY_CODE) LIKE '%QQFS%'
-																		 OR upper(r.TERRITORY_CODE) LIKE '%QQFT%'
-															 );  
-	
-	BEGIN
-	
-		FOR r IN c LOOP
-			UPDATE reference_employee_base
-				 SET employee_id=9999
-			 WHERE reference_id = r.reference_id;
-		
-			dbms_output.put_line(r.reference_id);
-		END LOOP;
-
-    rc := SQL%ROWCOUNT; dbms_output.put_line('rows affected: ' || rc);
-	  COMMIT;
-END upd;
-
----
-
--- https://oracle-base.com/articles/misc/implicit-vs-explicit-cursors-in-oracle-plsql
-
----
-
---  As long as you do not have DML inside the loop, use the cursor FOR loop
-
----
-
-PROCEDURE test(in_aid contact_base.account_name_id%TYPE) IS
-	v_in_aid contact_base.account_name_id%TYPE;
-	v_gonereason BOOLEAN;
- 
-	CURSOR contactCursor IS
-		SELECT contact_id, gonereason
-		FROM contact_base
-		WHERE account_name_id in in_aid;
-	 
-	BEGIN
-		<< loopy >>
-		FOR c IN contactCursor LOOP
-			v_in_aid := c.contact_id;
-			v_gonereason := (c.gonereason = 0);
-			IF v_gonereason THEN
-				DBMS_OUTPUT.PUT_LINE ('not gone: ' || v_in_aid );
-			END IF;
-		END LOOP loopy;
-END test;
-
 -- A cursor is a pointer to this context area. PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL
 -- statement. The set of rows the cursor holds is referred to as the active set.
@@ -123,6 +23,64 @@ END test;
 -- 
 -- CLOSE c_customers;
 
+--  As long as you do not have DML inside the loop, use the cursor FOR loop
+
+-- https://oracle-base.com/articles/misc/implicit-vs-explicit-cursors-in-oracle-plsql
+
+---
+
+-- For small number of UPDATEs only
+PROCEDURE upd IS
+  rc pls_integer := 0;
+
+  CURSOR c IS
+     SELECT * 
+       FROM reference_employee_base 
+      WHERE employee_id = 1234 
+        AND territory_lov_id IN( SELECT r.territory_lov_id 
+                                   FROM rs_ptg_territory_hierarchy r 
+                                  WHERE upper(r.TERRITORY_CODE) LIKE '%QQFC%'  
+                                     OR upper(r.TERRITORY_CODE) LIKE '%QQFS%'
+                                     OR upper(r.TERRITORY_CODE) LIKE '%QQFT%'
+                               );  
+  
+  BEGIN
+  
+    FOR r IN c LOOP
+      UPDATE reference_employee_base
+         SET employee_id=9999
+       WHERE reference_id = r.reference_id;
+    
+      dbms_output.put_line(r.reference_id);
+    END LOOP;
+
+    rc := SQL%ROWCOUNT; dbms_output.put_line('rows affected: ' || rc);
+    COMMIT;
+END upd;
+
+---
+
+PROCEDURE test(in_aid contact_base.account_name_id%TYPE) IS
+  v_in_aid contact_base.account_name_id%TYPE;
+  v_gonereason BOOLEAN;
+ 
+  CURSOR contactCursor IS
+    SELECT contact_id, gonereason
+    FROM contact_base
+    WHERE account_name_id in in_aid;
+   
+  BEGIN
+    << loopy >>
+    FOR c IN contactCursor LOOP
+      v_in_aid := c.contact_id;
+      v_gonereason := (c.gonereason = 0);
+      IF v_gonereason THEN
+        DBMS_OUTPUT.PUT_LINE ('not gone: ' || v_in_aid );
+      END IF;
+    END LOOP loopy;
+END test;
+
+---
 
 DECLARE 
   CURSOR c_customers is SELECT name FROM tmpcustomers; 
@@ -185,15 +143,26 @@ END;
 
 ---
 
--- Cursor-less
-FOR r IN ( SELECT t.msg, t.execute_time
-					 FROM SUER_ONCALL_RESULTS t 
-					 WHERE r.execute_time > (sysdate - 1) AND r.execute_time < to_date('2019-01-16:11:00','YYYY-MM-DD:HH:MI') --debug 
-					 --r.execute_time > (SYSTIMESTAMP - INTERVAL '4' minute)
-					ORDER BY r.execute_time DESC
-) LOOP
-	dbms_output.put_line(r.msg);
-END LOOP;
+DECLARE
+   cv SYS_REFCURSOR;
+   r  dual%ROWTYPE;
+
+BEGIN
+   /* OPEN cv FOR 'select * from SYS.dual'; */
+   -- same
+   OPEN cv FOR SELECT * FROM SYS.dual;
+   LOOP
+		 FETCH cv INTO r;
+		 EXIT WHEN cv%NOTFOUND;
+		 dbms_output.put_line(r.dummy);
+   END LOOP;
+   CLOSE cv;
+   
+   -- better - implicit
+   FOR r IN ( SELECT * FROM SYS.dual ) LOOP
+		 dbms_output.put_line(r.dummy);
+   END LOOP;
+END;
 
 ---
 
@@ -230,3 +199,64 @@ PROCEDURE do4 IS
     dbms_output.put_line(cnt);
 END;
 
+---
+
+-- Dynamic cursor.  See also pass_cursor.plsql
+DECLARE
+  rn    NUMBER := 1;
+  myres varchar(1);
+  cv    SYS_REFCURSOR;
+BEGIN
+  OPEN cv FOR 'select * from SYS.dual where rownum = :1'
+    USING rn;
+
+  LOOP
+    FETCH cv INTO myres;
+
+    EXIT WHEN cv%NOTFOUND;
+    
+    dbms_output.put_line(myres);
+  END LOOP;
+
+  CLOSE cv;
+END;
+
+---
+
+create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN NUMBER DEFAULT 1) IS
+  char_back_date VARCHAR2(20);
+  grantStatement varchar2(4000);
+
+  TYPE restore_grants_t IS REF CURSOR;
+  restore_grants_c restore_grants_t;
+
+  BEGIN
+    char_back_date := to_char(SYSDATE - back_date, 'yyyymmdd');
+
+     -- Choose which cursor to use...
+     IF (TABLE_NAME IS NOT NULL) THEN
+        BEGIN
+        dbms_output.put_line ('in table_name is ' || table_name);
+        OPEN restore_grants_t FOR
+           'SELECT DISTINCT grant_statement
+             FROM rar_select_restore sr
+            WHERE sr.table_name = ''' || trim(table_name) || ''' AND sr.restoreDate= ''' || trim(char_back_date) || ''' ';
+        END;
+     ELSE
+       BEGIN
+         dbms_output.put_line ('in table_name is null');
+       OPEN restore_grants_t FOR
+          SELECT DISTINCT grant_statement
+             FROM rar_select_restore sr
+            WHERE sr.restoreDate=to_char (SYSDATE - back_date, 'yyyymmdd');
+       END;
+     END IF;
+    -- ...then loop it
+    LOOP
+       FETCH restore_grants_t INTO grantStatement;
+       EXIT WHEN restore_grants_t%NOTFOUND;
+         dbms_output.put_line('EXECUTE IMMEDIATE ''' || grantStatement || ''';');
+         -- EXECUTE IMMEDIATE (grantStatement);
+    END LOOP;
+  CLOSE restore_grants;
+END;
