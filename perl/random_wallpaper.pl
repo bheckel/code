@@ -17,7 +17,6 @@
 "/usr/share/backgrounds/Black_hole_by_Marek_Koteluk.jpg",
 "/usr/share/backgrounds/Cielo_estrellado_by_Eduardo_Diez_Viñuela.jpg",
 "/usr/share/backgrounds/clock_by_Bernhard_Hanakam.jpg",
-"/usr/share/backgrounds/contest",
 "/usr/share/backgrounds/Dans_ma_bulle_by_Christophe_Weibel.jpg",
 "/usr/share/backgrounds/Flora_by_Marek_Koteluk.jpg",
 "/usr/share/backgrounds/Foggy_Forest_by_Jake_Stewart.jpg",
