@@ -165,9 +165,8 @@ from v;
 
 ---
 
--- Want department number and name of the employee that has the highest salary
--- in that department.  In the event of a tied salary, choose the employee with
--- the first name in alphabetic sequence
+-- Want department number and name of the employee that has the highest salary in that department.
+-- In the event of a ties (same salary), choose the employee with the first name in alphabetic sequence
 
 -- Compare self join version:
 select deptno, ename top_emp, sal

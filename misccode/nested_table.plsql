@@ -48,6 +48,7 @@ DECLARE
 	CURSOR name_cur IS
 		SELECT last_name FROM student WHERE rownum < 10;
 BEGIN
+  -- Load table into collection
 	FOR rec IN name_cur LOOP
 		i := i + 1;
 		last_name_tab.EXTEND;
