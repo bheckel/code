@@ -1,3 +1,4 @@
+-- Modified: Wed 22 May 2019 11:58:13 (Bob Heckel)
 
 -- If you need to retrieve a single row and you know that at most one row
 -- should be retrieved, you should use a SELECT INTO statement:
@@ -6,6 +7,10 @@
 -- single row of information to your PL/SQL program. In addition, the use of SELECT INTO states 
 -- very clearly that you expect at most one row, and the statement will raise exceptions 
 -- (NO_DATA_FOUND or TOO_MANY_ROWS) if your expectations are not met.
+
+--  Use the cursor-less constructs SELECT... INTO when embedded SQL is possible, or
+-- EXECUTE IMMEDIATE... INTO when dynamic SQL is needed
+
 PROCEDURE process_employee (id_in IN employees.employee_id%TYPE)
 IS
    l_last_name employees.last_name%TYPE;

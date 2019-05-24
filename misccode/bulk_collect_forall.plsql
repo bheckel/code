@@ -436,24 +436,22 @@ END;
 
 DECLARE
    TYPE stuff_t IS TABLE OF plch_stuff%ROWTYPE;
-
-   l_stuff   stuff_t;
+   l_stuff stuff_t;
    x NUMBER;
 BEGIN
    SELECT *
-     -- Must bulk collect if not fetching via a cursor
      BULK COLLECT INTO l_stuff
      FROM plch_stuff;
 
-   /* First is always 1, and COUNT = count of rows fetched. */
+   /* First is always 1, and COUNT = count of rows fetched */
    DBMS_OUTPUT.put_line(l_stuff.FIRST);
    DBMS_OUTPUT.put_line(l_stuff.COUNT);
 
-   FOR i IN 1 ..l_stuff.COUNT
-   LOOP
-    x := l_stuff(i).rating;
-    dbms_output.put_line(x);
-    dbms_output.put_line(l_stuff(i).rating);
+   /* Loop skipped if count = 0 */
+   FOR i IN 1 .. l_stuff.COUNT LOOP
+     x := l_stuff(i).rating;
+     dbms_output.put_line(x);
+     dbms_output.put_line(l_stuff(i).rating);
    END LOOP;
 
    /* Now do it again - will see same count */
@@ -461,7 +459,7 @@ BEGIN
      BULK COLLECT INTO l_stuff
      FROM plch_stuff;
 
-   DBMS_OUTPUT.put_line (l_stuff.COUNT);
+   DBMS_OUTPUT.put_line(l_stuff.COUNT);
 END;
 /
 
@@ -474,33 +472,30 @@ DROP TABLE plch_stuff
 -- helps retrieve multiple rows of data quickly. Rather than retrieve one row of
 -- data at a time into a record or a set of individual variables, BULK COLLECT
 -- lets us retrieve hundreds, thousands, even tens of thousands of rows with a
--- single context switch to the SQL engine and deposit all that data into a
--- collection.
+-- single context switch to the SQL engine and deposit all that data into a collection.
 
 PROCEDURE bulk_with_limit (
    dept_id_in   IN   employees.department_id%TYPE
  , limit_in     IN   PLS_INTEGER DEFAULT 100
 )
 IS
-   CURSOR employees_cur
-   IS
-      SELECT *
-      FROM employees
-      WHERE department_id = dept_id_in;
+   CURSOR employees_cur IS
+     SELECT *
+     FROM employees
+     WHERE department_id = dept_id_in;
 
    TYPE employee_ntt IS TABLE OF employees_cur%ROWTYPE INDEX BY PLS_INTEGER;
-   l_employees   employee_ntt;
+   l_employees employee_ntt;
 
 BEGIN
    OPEN employees_cur;
    LOOP
       FETCH employees_cur
       BULK COLLECT INTO l_employees LIMIT limit_in;
-      FOR indx IN 1 .. l_employees.COUNT
-      LOOP
-         process_each_employees(l_employees (indx));
+      FOR indx IN 1 .. l_employees.COUNT LOOP
+         process_each_employees(l_employees(indx));
       END LOOP;
-      EXIT WHEN employees_cur%NOTFOUND;
+      EXIT WHEN employees_cur%NOTFOUND;  -- exit goes here - AFTER you've gone through the collection
    END LOOP;
    CLOSE employees_cur;
 END bulk_with_limit;
@@ -511,10 +506,10 @@ END bulk_with_limit;
 
 /* https://blogs.oracle.com/oraclemagazine/bulk-processing-with-bulk-collect-and-forall */
 
- /* If the SQL engine raises an error, the PL/SQL engine will save that
-  * information in a pseudocollection named SQL%BULK_EXCEPTIONS, and continue
-  * executing statements. When all statements have been attempted, PL/SQL then
-  * raises the ORA-24381 error
+ /* If the SQL engine (NOT the PL/SQL runtime engine!) raises an error, the
+  * PL/SQL engine will save that information in a pseudocollection named
+  * SQL%BULK_EXCEPTIONS, and continue executing statements. When all statements
+  * have been attempted, PL/SQL then raises "ORA-24381: error(s) in array DML"
 */
 BEGIN
    FORALL indx IN 1 .. l_eligible_ids.COUNT SAVE EXCEPTIONS

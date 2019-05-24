@@ -1,31 +1,37 @@
+-- Modified: Wed 22 May 2019 10:46:36 (Bob Heckel)
+
 -- A cursor is a pointer to this context area. PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL
 -- statement. The set of rows the cursor holds is referred to as the active set.
---
+
 -- Declaring the cursor defines the cursor with a name and the associated SELECT
--- statement.
+-- statement:
 -- 
 -- CURSOR c_customers IS 
 --    SELECT id, name, address FROM customers; 
 -- 
 -- Opening the cursor allocates the memory for the cursor and makes it ready for
--- fetching the rows returned by the SQL statement into it. For example, we will
--- open the above defined cursor as follows
+-- fetching the rows returned by the SQL statement into it:
 -- 
 -- OPEN c_customers; 
 -- 
--- Fetching the cursor involves accessing one row at a time. For example, we will
--- fetch rows from the above-opened cursor as follows
+-- Fetching the cursor involves accessing one row at a time:
 -- 
 -- FETCH c_customers INTO c_id, c_name, c_addr; 
 -- 
--- Closing the cursor means releasing the allocated memory.
+-- Closing the cursor means releasing the allocated memory:
 -- 
 -- CLOSE c_customers;
 
 --  As long as you do not have DML inside the loop, use the cursor FOR loop
 
 -- https://oracle-base.com/articles/misc/implicit-vs-explicit-cursors-in-oracle-plsql
+
+-- Strong ref cursor - has the small advantage that you will get a compile-time error rather than a 
+-- run-time error in the case that you attempt to fetch into a record or a set of scalars that don’t 
+-- match the shape of the select list:
+-- TYPE result_t IS RECORD(pk t.pk%TYPE, v1 t.v1%TYPE);
+-- TYPE strong_cur_t IS REF CURSOR RETURN result_t;
 
 ---
 

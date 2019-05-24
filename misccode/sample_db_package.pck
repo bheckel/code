@@ -1,17 +1,17 @@
-CREATE OR REPLACE PACKAGE ztestbob AS
+CREATE OR REPLACE PACKAGE ztest2 AS
   
-  PROCEDURE t;
+  PROCEDURE t(in_x number);
 
-END ztestbob;
-/
-CREATE OR REPLACE PACKAGE BODY ztestbob AS
+END ztest2;
 
-  PROCEDURE t
-  IS
+CREATE OR REPLACE PACKAGE BODY ztest2 AS
 
+  PROCEDURE t(in_x number) IS
+  	x number := 1;
+  	y NUMBER;
   BEGIN
-    dbms_output.put_line('ok ' || systimestamp);
+    dbms_output.put_line('ok ' || SYSTIMESTAMP);
+    y := in_x + 1;
   END;
 
-END ztestbob;
-/
+END ztest2;

@@ -79,3 +79,55 @@ D	AMT	r
 1/4/2000	10	1
 1/5/2000	14	1
 */
+
+---
+
+-- Dedup deduplicate by timestamp - where there are multiple event ids, take the latest tstamp:  
+
+with tbl as (
+          select 1 as num, TIMESTAMP '2000-01-01 08:26:50' tstamp, 10 event from dual
+union all select 2, TIMESTAMP '2000-01-02 08:26:51', 11 from dual
+union all select 3, TIMESTAMP '2000-01-03 08:26:52', 30 from dual
+union all select 3, TIMESTAMP '2000-01-03 08:26:53', 30 from dual
+union all select 5, TIMESTAMP '2000-01-03 08:26:54', 31 from dual
+union all select 1, TIMESTAMP '2000-01-04 08:26:55', 10 from dual
+union all select 7, TIMESTAMP '2000-01-05 08:26:56', 14 from dual
+)
+select a.num,                    -- 2. get latest event value
+       a.tstamp,
+       max(a.event)               -- 3. only want 1 rec per tstamp so keep only the highest one if find >1
+from tbl a JOIN (select num as mynum,    -- 1. get latest tstamp for all num recs
+                        max(tstamp) as mytstamp
+                        from tbl
+                        group by num) b ON a.num=b.mynum and a.tstamp=b.mytstamp
+group by a.num, a.tstamp
+
+-- same
+
+with tbl as (
+          select 1 as num, TIMESTAMP '2000-01-01 08:26:50' tstamp, 10 event from dual
+union all select 2, TIMESTAMP '2000-01-02 08:26:51', 11 from dual
+union all select 3, TIMESTAMP '2000-01-03 08:26:52', 30 from dual
+union all select 3, TIMESTAMP '2000-01-03 08:26:53', 30 from dual
+union all select 5, TIMESTAMP '2000-01-03 08:26:54', 31 from dual
+union all select 1, TIMESTAMP '2000-01-04 08:26:55', 10 from dual
+union all select 7, TIMESTAMP '2000-01-05 08:26:56', 14 from dual
+)
+select *
+from (
+  select num, 
+         tstamp,
+         event,
+         row_number() OVER (PARTITION BY num ORDER BY tstamp DESC) r
+  from tbl 
+)
+where r=1
+order by event
+/*
+   	NUM	TSTAMP	EVENT	R
+1	1	04-JAN-00 08.26.55.000000000 AM	10	1
+2	2	02-JAN-00 08.26.51.000000000 AM	11	1
+3	7	05-JAN-00 08.26.56.000000000 AM	14	1
+4	3	03-JAN-00 08.26.53.000000000 AM	30	1
+5	5	03-JAN-00 08.26.54.000000000 AM	31	1
+*/

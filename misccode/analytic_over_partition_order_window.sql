@@ -124,8 +124,8 @@ select d
       ,amt
       ,count(1) OVER (order by d) cnt_cumul_grp  -- 1,2,4,4,5,6
       ,row_number() OVER (order by d) row_seq_in_dt_order  -- 1,2,3,4,5,6
-      ,rank() OVER (order by d) orderbydt -- 1,2,3,3,5,6 Olympic has holes
-      ,dense_rank() OVER (order by d) orderbydt_dense -- 1,2,3,3,4,5,6 still have dups like Olympic but fill the holes
+      ,rank() OVER (order by d) orderbydt -- 1,2,3,3,5,6 Olympic has dups and holes
+      ,dense_rank() OVER (order by d) orderbydt_dense -- 1,2,3,3,4,5,6 still has dups like Olympic but fills the holes
       ,row_number() OVER (partition by d order by d) rownumbyday  -- 1,1,1,2,1,1
       -- Can be Top N by day if used as a subquery
       ,rank() OVER (partition by d order by amt) rank_by_day -- 1,1,1,1,1,1 would be 1,1,1,1,3,1,1 if union all select date '2000-01-03', 99 from dual existed and dense_rank would make the 3 a 2
@@ -148,7 +148,8 @@ select d
       ,avg(amt) OVER (order by d RANGE between interval '2' day preceding and current row) moving_average_2day  -- 10,10.5,20.25,20.25,20.25,21
       -- Always need an ORDER BY for LAG() & LEAD()
       ,lag(amt) OVER (order by d) amt_before  -- NULL,10,11,30,30,10
-      ,lag(amt, 2, 0) OVER (order by d) amt_2before_nonull  -- 0,0,10,11,30,30
+      ,lag(amt, 1, 0) OVER (order by d) amt_before_nonulls  -- 0,10,11,30,30,10
+      ,lag(amt, 2, 0) OVER (order by d) amt_2before_nonulls  -- 0,0,10,11,30,30
       ,lead(amt) OVER (partition by d order by d) amt_after  -- , , 30, , ,  good for finding a change in status when you have daily data
       -- Want only first date in a contiguous series otherwise leave blank
       ,case when nvl(lag(d) over (order by d), d) != d-1 then d end lowval_of_range  -- 01jan, , , 03jan, , 

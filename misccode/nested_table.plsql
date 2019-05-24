@@ -1,4 +1,5 @@
 -- Modified: Tue 23 Apr 2019 10:29:17 (Bob Heckel)
+--
 -- nested_table.plsql (symlinked as collections.plsql) see also 
 -- associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql
 
@@ -19,7 +20,7 @@
 -- PRIOR and NEXT: These functions return subscripts that precede and succeed a
 --       specified collection subscript.
 --
--- Methods not allowed with associative arrays:
+-- Methods not allowed with index-by associative arrays:
 -- EXTEND: Increases the size of a collection.
 -- TRIM: Removes either one or a specified number of elements from
 --       the end of a collection. PL/SQL does not keep placeholders for the trimmed elements.
@@ -31,7 +32,7 @@
 -- Methods only allowed with varrays:
 -- LIMIT: Returns the maximum number of elements that a collection can contain
 
--- You can compare nested table variables to the value NULL or to each other
+-- You can compare nested table variables to the value NULL or to each other,
 -- see nested_table_multiset.plsql
 
 ---
@@ -89,3 +90,42 @@ BEGIN
   print_names('Current Values:');
 END;
 /
+
+---
+
+-- Adapted: Thu, May 23, 2019 11:48:53 AM (Bob Heckel -- http://www.dba-oracle.com/plsql/t_plsql_sparse.htm) 
+--select * from scott.emp
+--create table forall_test as select * from scott.emp where 1=0
+
+DECLARE
+  TYPE t_forall_test_tab IS TABLE OF scott.emp%ROWTYPE;
+  l_tab  t_forall_test_tab := t_forall_test_tab();
+
+BEGIN
+  FOR i IN 1 .. 100 LOOP
+    l_tab.extend;
+    l_tab(l_tab.last).empno := i;
+    l_tab(l_tab.last).sal   := TO_CHAR(i);
+  END LOOP;
+
+  -- Make collection sparse
+  l_tab.delete(31);
+  l_tab.delete(61);
+  l_tab.delete(91);
+
+  EXECUTE IMMEDIATE 'TRUNCATE TABLE forall_test';
+
+  DBMS_OUTPUT.put_line('Start FORALL');
+
+  -- This will fail due to sparse collection
+ /*FORALL i IN l_tab.FIRST .. l_tab.LAST
+      INSERT INTO forall_test VALUES l_tab(i);
+  END;*/
+
+  FORALL i IN INDICES OF l_tab
+    INSERT INTO forall_test VALUES l_tab(i);
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.put_line(SQLERRM);
+END;

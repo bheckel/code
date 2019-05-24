@@ -1,15 +1,22 @@
 -- https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01115
 -- See also run_all_procedures.plsql, using.plsql
 
--- To process dynamic SQL statements, you use EXECUTE IMMEDIATE or OPEN-FOR,
--- FETCH, and CLOSE statements. EXECUTE IMMEDIATE is used for a single-row
--- SELECT statement, all DML statements, and DDL statements, whereas OPEN-FOR,
--- FETCH, and CLOSE statements are used for multirow SELECT statements and reference
+-- To process dynamic SQL statements, you use EXECUTE IMMEDIATE or OPEN-FOR / FETCH / CLOSE statements.
+-- EXECUTE IMMEDIATE is used for a single-row SELECT statement, all DML statements, and DDL statements,
+-- whereas OPEN-FOR / FETCH / CLOSE statements are used for multirow SELECT statements and reference
 -- cursors.
+
+-- For dynamic SQL, always use native dynamic SQL except when its functionality is insufficient; only 
+-- then, use the DBMS_Sql API. For select, insert, update, delete, and merge statements, native dynamic 
+-- SQL is insufficient when the SQL statement has placeholders or select list items that are not known 
+-- at compile time
 
 CREATE OR REPLACE PROCEDURE plch_change_table AUTHID DEFINER
 IS
 BEGIN
+   -- Native "dynamic" SQL
+   -- The ALTER statement is not supported by embedded SQL and so the use of a
+   -- method where the PL/SQL compiler does not analyze the SQL statement is mandated
    EXECUTE IMMEDIATE 'alter table plch_trees modify tree_name varchar2(10)';
 
    EXECUTE IMMEDIATE
