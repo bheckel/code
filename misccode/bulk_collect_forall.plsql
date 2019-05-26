@@ -130,21 +130,22 @@ END;
 
 ---
 
--- Not using FORALL here so we can debug print
+-- Not using FORALL here so that we can debug print
 DECLARE 
-  TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
+  TYPE mynt_t IS TABLE OF my_family%ROWTYPE; 
   mynt mynt_t; 
-  cursor c is select * from my_family;
+  CURSOR c is select * from my_family;
+
 BEGIN 
   open c;
   loop
-    fetch c bulk collect into mynt limit 2;
-    exit when mynt.count = 0;
+    FETCH c BULK COLLECT into mynt limit 2;
+    EXIT WHEN mynt.count = 0;
     FOR i in 1..mynt.COUNT LOOP 
       dbms_output.put_line('Name('||i||'):' || mynt(i).name); 
     END LOOP; 
-  end loop;
-  close c;
+  END LOOP;
+  CLOSE c;
 END;
 
 ---
@@ -377,8 +378,8 @@ END;
 /* Fill a collection with an implicit cursor: */
 DECLARE
    TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
-
    l_plch_employees plch_employees_aat;
+
 BEGIN
    SELECT *
      BULK COLLECT INTO l_plch_employees
@@ -389,11 +390,11 @@ END;
 /* Fill a collection with a dynamic SQL statement (Oracle 9i Release 2 and above): */
 DECLARE
    TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
-
    l_plch_employees plch_employees_aat;
+
 BEGIN
    EXECUTE IMMEDIATE 'SELECT * FROM plch_employees'
-      BULK COLLECT INTO l_plch_employees;
+     BULK COLLECT INTO l_plch_employees;
 END;
 /
 
@@ -401,6 +402,7 @@ END;
 DECLARE
    l_cursor   SYS_REFCURSOR;
    l_list     DBMS_SQL.varchar2s;
+
 BEGIN
    OPEN l_cursor FOR SELECT last_name FROM plch_employees;
 

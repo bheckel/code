@@ -1,11 +1,12 @@
+-- Modified: Sun 26 May 2019 08:26:18 (Bob Heckel)
 -- See also bulk_collect_forall.plsql
 
 ...
-CURSOR c_dun_nbr IS
+CURSOR c_dun_nbrs IS
   SELECT aa.duns_nbr FROM account_base ab;
 ...
 BEGIN
-	FOR rec IN c_dun_nbr LOOP
+	FOR rec IN c_dun_nbrs LOOP
 		dbms_output.put_line(rec.duns_nbr);
 	END LOOP;
 
@@ -26,7 +27,7 @@ BEGIN
 END;
 /
 
-
+---
 
 DROP TABLE temp;
 CREATE TABLE temp (
@@ -47,7 +48,7 @@ BEGIN
 END;
 /
 
-
+---
 
 -- Any kind of FOR loop is saying, implicitly, “I am going to execute the loop
 -- body for all iterations defined by the loop header” (N through M or SELECT).
@@ -64,7 +65,7 @@ BEGIN
    END LOOP;
 END;
 /
---Better if you only use the "cursor" once
+-- This is better if you only use the "cursor" once
 BEGIN
    FOR rec IN (SELECT * FROM plch_parts)
    LOOP
@@ -73,7 +74,7 @@ BEGIN
 END;
 /
 
-
+---
 
 DECLARE
   v_lower  NUMBER := 1;
