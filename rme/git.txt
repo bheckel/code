@@ -1017,4 +1017,4 @@ ssh-keygen -t rsa -C "heckel@gmail.com"
 paste id_rsa.pub into webform
 
 git config --global user.name "Bob Heckel"
-git config --global user.email "rsh@rshdev.com"
+git config --global user.email "sh@rshdev.com"

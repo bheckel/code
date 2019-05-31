@@ -7,6 +7,9 @@
 -- single row of information to your PL/SQL program. In addition, the use of SELECT INTO states 
 -- very clearly that you expect at most one row, and the statement will raise exceptions 
 -- (NO_DATA_FOUND or TOO_MANY_ROWS) if your expectations are not met.
+--
+-- If your aggregate e.g. SELECT sum(sal)...WHERE impossible=1... returns
+-- nothing you won't get NO_DATA_FOUND instead -- you'll get a count of 0 or a NULL.
 
 --  Use the cursor-less constructs SELECT... INTO when embedded SQL is possible, or
 -- EXECUTE IMMEDIATE... INTO when dynamic SQL is needed

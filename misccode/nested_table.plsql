@@ -1,4 +1,4 @@
--- Modified: Tue 23 Apr 2019 10:29:17 (Bob Heckel)
+-- Modified: Fri 31 May 2019 14:07:45 (Bob Heckel)
 --
 -- nested_table.plsql (symlinked as collections.plsql) see also 
 -- associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql
@@ -34,6 +34,30 @@
 
 -- You can compare nested table variables to the value NULL or to each other,
 -- see nested_table_multiset.plsql
+
+---
+DECLARE
+  TYPE my_ntt IS TABLE OF INTEGER;
+  -- Initialized with constructor:
+  names my_ntt := my_ntt(1,2,3,4);
+  
+	foo VARCHAR2(50);
+ 
+BEGIN 
+  names(3) := 9;  -- change value of one element
+	dbms_output.put_line(names(3));
+ 
+  names := my_ntt(5,6,7,7499);  -- change entire table
+	dbms_output.put_line(names(3));
+
+	select ename
+		into foo
+	 from emp
+	--where empno in (select column_value from table(names));  -- fail
+	where empno in (names(4));
+
+	dbms_output.put_line(foo);
+END;
 
 ---
 

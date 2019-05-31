@@ -1,3 +1,5 @@
+-- Modified: Fri 31 May 2019 13:13:54 (Bob Heckel)
+
 -- The PL/SQL run-time engine will raise exceptions whenever the Oracle
 -- database detects a problem or it executes a RAISE or RAISE_APPLICATION_ERROR
 -- statement in your code. You can then trap or handle these exceptions in the
@@ -80,20 +82,24 @@ END;
 ---
 
 DECLARE 
-   c_id customers.id%type := 8; 
-   c_name customerS.Name%type; 
+   c_id   customers.id%type := 8; 
+   c_name customers.Name%type; 
    c_addr customers.address%type; 
 BEGIN 
-   SELECT  name, address INTO  c_name, c_addr 
-   FROM customers 
-   WHERE id = c_id;  
+   SELECT name, address
+     INTO  c_name, c_addr 
+     FROM customers 
+    WHERE id = c_id;  
+
    DBMS_OUTPUT.PUT_LINE ('Name: '||  c_name); 
    DBMS_OUTPUT.PUT_LINE ('Address: ' || c_addr); 
 
 EXCEPTION 
-   WHEN no_data_found THEN 
+   WHEN NO_DATA_FOUND THEN 
       dbms_output.put_line('No such customer!'); 
-   WHEN others THEN 
+      -- There is no fall-thru to OTHERS here
+
+   WHEN OTHERS THEN 
       dbms_output.put_line(SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
       -- Reraising the exception passes it to the enclosing block, which can handle it further
       RAISE;
