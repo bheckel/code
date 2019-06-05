@@ -83,6 +83,39 @@ EMPNO	DEPTNO	COUNT_BY_DEPT
 
 ---
 
+-- Using the KEEP clause with a GROUP BY to determine the fastest time and on which attempt this time was 
+-- accomplished. If they had more than one attempt where they achieved this same fastest time, then only 
+-- the first of those attempts should be listed.  "By team, sort rows by seconds and keep only those with 
+-- the lowest attempt number"
+
+with races as (
+          	select 'Vikings' team, 1 attempt, 7.1 seconds from dual
+	union all select 'Vikings' team, 2 attempt, 7.0 seconds from dual
+	union all select 'Vikings' team, 3 attempt, 7.3 seconds from dual
+	union all select 'Dragons' team, 1 attempt, 7.2 seconds from dual
+	union all select 'Dragons' team, 2 attempt, 7.2 seconds from dual
+	union all select 'Dragons' team, 3 attempt, 7.5 seconds from dual
+	union all select 'Chuckey' team, 1 attempt, 7.0 seconds from dual
+	union all select 'Chuckey' team, 2 attempt, 6.9 seconds from dual
+	union all select 'Chuckey' team, 3 attempt, 7.1 seconds from dual
+)
+select team
+     , MIN(seconds) as fastest_seconds
+     , MIN(attempt) KEEP (dense_rank FIRST order by seconds) as fastest_attempt
+     , MIN(attempt) KEEP (dense_rank LAST order by seconds DESC) as fastest_attempt2  -- same
+  from races
+ group by team
+ order by fastest_seconds, fastest_attempt
+/*
+TEAM       FASTEST_SECONDS FASTEST_ATTEMPT
+---------- --------------- ---------------
+Chuckey                6.9               2
+Vikings                  7               2
+Dragons                7.2               1
+*/
+
+---
+
 -- Assign integer values to the rows depending on their ORDER BY (mandatory here)
 select empno, ename, job, sal,
        -- row_number() gives a running (unique) serial number to a partition of records, e.g. give separate sets of running serial to employees of each department based on their hire date
@@ -114,11 +147,11 @@ where deptno != 10;
 
 with v as (
           select date '2000-01-01' d, 10 amt from dual
-union all select date '2000-01-02', 11 from dual
-union all select date '2000-01-03', 30 from dual
-union all select date '2000-01-03', 30 from dual
-union all select date '2000-01-04', 10 from dual
-union all select date '2000-01-05', 14 from dual
+union all select date '2000-01-02',   11 from dual
+union all select date '2000-01-03',   30 from dual
+union all select date '2000-01-03',   30 from dual
+union all select date '2000-01-04',   10 from dual
+union all select date '2000-01-05',   14 from dual
 )
 select d
       ,amt
@@ -140,6 +173,7 @@ select d
       ,sum(amt) OVER (order by d) running_total0  -- 10,21,51,81,81,91,105
       -- But usually the default isn't what you want, normally running totals should only include values from previous ROWS
       ,sum(amt) OVER (order by d ROWS between unbounded preceding and current row) running_total1  -- 10,21,51,81,91,105
+      ,sum(amt) OVER (order by d ROWS between unbounded preceding and 1 preceding) balance  -- NULL, 10,21,51,81,91
 --      ,sum(amt) OVER (order by d ROWS between MYFUNC(foo) preceding and 0 following) running_total2
 --      ,sum(amt) OVER (order by d ROWS between MYSEQ-MYTRAILING_SEQ preceding and 0 following) running_total3
       ,avg(amt) OVER (order by d ROWS between 1 preceding and 1 following) moving_average  -- 10.5,17,23.6666666,23.333333,18,12
@@ -150,9 +184,9 @@ select d
       ,lag(amt) OVER (order by d) amt_before  -- NULL,10,11,30,30,10
       ,lag(amt, 1, 0) OVER (order by d) amt_before_nonulls  -- 0,10,11,30,30,10
       ,lag(amt, 2, 0) OVER (order by d) amt_2before_nonulls  -- 0,0,10,11,30,30
-      ,lead(amt) OVER (partition by d order by d) amt_after  -- , , 30, , ,  good for finding a change in status when you have daily data
+      ,lead(amt) OVER (partition by d order by d) amt_after  -- NULL,NULL,30,NULL,NULL,  good for finding a change in status when you have daily data
       -- Want only first date in a contiguous series otherwise leave blank
-      ,case when nvl(lag(d) over (order by d), d) != d-1 then d end lowval_of_range  -- 01jan, , , 03jan, , 
+      ,case when nvl(lag(d) over (order by d), d) != d-1 then d end lowval_of_range  -- 01jan,NULL,NULL,03jan,NULL,NULL
       ,nvl(amt, lag(amt IGNORE NULLS) OVER (partition by d order by d)) fillin_the_blank_handle_nulls  -- 10,11,30,30,10,14
       --_______________________________________ <--still just another aggregation function like count(1) or sum(amt)
       ,listagg(d,', ') within group(order by d) OVER (partition by amt) csv

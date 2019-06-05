@@ -1,5 +1,5 @@
 
-/* Generically delete oldest records from a table dynamically */
+/* Dynamically delete oldest records from a table */
 /* E.g. PRUNE_TBL_GENERIC('EMAIL_MESSAGES', 'ACTUAL_UPDATED', 'EMAIL_MESSAGES_ID', 365); */
 PROCEDURE PRUNE_TBL_GENERIC(tblnm VARCHAR2, datecol VARCHAR2, idcol VARCHAR2, daysback NUMBER) IS
 	l_cnt      PLS_INTEGER := 0;

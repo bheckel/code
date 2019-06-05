@@ -1,3 +1,20 @@
+create table relations
+( id   number       not null primary key
+, name varchar2(30) not null
+)
+
+insert into relations
+select 1, 'Oracle Nederland' from dual union all
+select 2, 'Ciber Nederland' from dual
+
+-- or
+insert into relations
+select level, dbms_random.string('a',30)
+from dual
+connect by level <= 100000
+-- 100000 row(s) inserted.
+
+---
 
 -- Any other fields get NULLs
 insert into mailing_list (name, email) values ('Philip Greenspun','philg@foo.edu');

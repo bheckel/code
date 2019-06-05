@@ -76,7 +76,7 @@ BEGIN
    OPEN retval FOR
         SELECT partname
           FROM plch_parts
-         WHERE partnum IN (SELECT COLUMN_VALUE FROM TABLE (list_in))
+         WHERE partnum IN ( SELECT COLUMN_VALUE FROM TABLE(list_in) )
       ORDER BY partname;
 
    RETURN retval;
@@ -109,3 +109,18 @@ begin
   c := names_for_parts(nums);
 end;
 
+
+-- Also works v10+:
+CREATE OR REPLACE FUNCTION names_for_parts(list_in IN partnums_t)
+   RETURN SYS_REFCURSOR
+IS
+   retval   SYS_REFCURSOR;
+BEGIN
+   OPEN retval FOR
+        SELECT partname
+          FROM plch_parts
+         WHERE partnum MEMBER OF list_in
+      ORDER BY partname;
+
+   RETURN retval;
+END names_for_parts;

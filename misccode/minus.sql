@@ -1,7 +1,7 @@
 
 -- MINUS implements the set difference operator. This returns all the rows in the first table not in the second. 
 -- MINUS is one of the few operators that consider null values equal.
--- See also intersect.sql
+-- See also intersect.sql, notexist.sql
 
 select toy_name from toys_for_sale 
 minus 
