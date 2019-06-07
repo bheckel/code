@@ -1,5 +1,7 @@
 -- Adapted 08-Mar-19 https://devgym.oracle.com
 
+-- See also table_function.plsql
+
 CREATE OR REPLACE TYPE timer_t AS OBJECT 
 (
        start_time INTEGER

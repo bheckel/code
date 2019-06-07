@@ -1,3 +1,5 @@
 #!/bin/bash
 
-cat /etc/*-release | grep VERSION | perl -pe 's/VERSION="//g'
+if [ `date +%H` -eq 12 -o `date +%H` -gt 15 ];then
+  echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+fi

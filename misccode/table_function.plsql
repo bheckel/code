@@ -1,6 +1,18 @@
-/* Adapted: Thu, Nov 29, 2018  2:05:03 PM (Bob Heckel -- https://devgym.oracle.com) */
-/* See also call_function_from_sql.plsql */
+-- Modified: Thu 06 Jun 2019 10:35:05 (Bob Heckel) 
+-- See also call_function_from_sql.plsql
 
+create or replace type myTblType as table of number;
+
+create or replace view v as select * from TABLE( myTblType(1,2,3,4) );
+
+desc v  -- COLUMN_VALUE
+
+select * from table( myTblType(1,2,3,4) );  -- 1 2 3 4
+select sum(column_value) from table( myTblType(1,2,3,4) );  -- 10
+
+---
+
+/* Adapted: Thu, Nov 29, 2018  2:05:03 PM (Bob Heckel -- https://devgym.oracle.com) */
 -- To invoke a table function inside a SELECT statement, it must be defined at
 -- the schema level, in the specification of a package or in the WITH clause of a
 -- SELECT. It cannot be defined as a nested subprogram or a private subprogram.
@@ -48,7 +60,7 @@ CREATE TYPE animal_ot IS OBJECT
 );
 /
 
--- Can't use foo%ROWTYPE we need an object
+-- Can't use foo%ROWTYPE or TYPE RECORD, we need an object
 CREATE TYPE animals_ntt IS TABLE OF animal_ot;
 /
 
@@ -66,7 +78,6 @@ BEGIN
                END
    LOOP
       l_family.EXTEND;
-      /* l_family(l_family.LAST) := animal_ot('BABY' || i, */
       l_family(i) := animal_ot('BABY' || i,
                                mom_in.species,
                                ADD_MONTHS (SYSDATE, -1 * DBMS_RANDOM.VALUE (1, 6)));
@@ -77,8 +88,8 @@ END;
 /
 
 SELECT * --name, species, date_of_birth
-  FROM TABLE (animal_family(animal_ot('Hoppy', 'RABBIT', SYSDATE-500),
-                            animal_ot('Hippy', 'RABBIT', SYSDATE-300)))
+  FROM TABLE(animal_family(animal_ot('Hoppy', 'RABBIT', SYSDATE-500),  -- dad
+                           animal_ot('Hippy', 'RABBIT', SYSDATE-300))) -- mom
 /
 /*
 NAME	SPECIES	DATE_OF_BIRTH
@@ -100,6 +111,5 @@ BABY12	RABBIT	29-SEP-18
 
 INSERT INTO animals
 SELECT name, species, date_of_birth
-  FROM TABLE (
-          animal_family(animal_ot('Hoppy', 'RABBIT', SYSDATE - 500),
-                        animal_ot('Hippy', 'RABBIT', SYSDATE - 300)))
+  FROM TABLE ( animal_family(animal_ot('Hoppy', 'RABBIT', SYSDATE - 500),
+                             animal_ot('Hippy', 'RABBIT', SYSDATE - 300)) )

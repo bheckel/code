@@ -1,10 +1,39 @@
+-- Modified: Thu 06 Jun 2019 09:33:27 (Bob Heckel)
+
+-- Return a nested table.  See also pass_cursor.plsql. Using tables we have to
+-- fetch all of the rows on the PLSQL side. With a ref cursor the client gets the data right away 
+
+CREATE TABLE mytbl AS SELECT hiredate last_ddl_time, job object_name FROM emp;
+CREATE TYPE t_record IS OBJECT ( ts DATE, name VARCHAR2(50) );
+CREATE TYPE t_table IS TABLE OF t_record;
+
+CREATE OR REPLACE PACKAGE mypkg AS
+  FUNCTION tmp_fn RETURN t_table;
+END;
+
+CREATE OR REPLACE PACKAGE BODY mypkg AS
+   FUNCTION tmp_fn RETURN t_table IS
+      l_table   t_table := t_table();
+
+   BEGIN
+      SELECT t_record (last_ddl_time, 'option 1: ' || object_name)
+        BULK COLLECT INTO l_table
+        FROM mytbl;
+
+      RETURN l_table;
+   END;
+END;
+
+SELECT * FROM TABLE(mypkg.tmp_fn);
+
+drop type t_table
+drop type t_record
+drop package mypkg
+drop table mytbl
+
+---
+
 CREATE OR REPLACE FUNCTION SUP_HAS_ACTIVE_SITES(in_account_id IN NUMBER) RETURN BOOLEAN IS
-----------------------------------------------------------------------------
--- Author:  Bob Heckel (boheck)
--- Date:    12-Nov-18
--- Purpose: Determine if any account in SUP hierarchy has active sites
--- JIRA:    ORION-33077
-----------------------------------------------------------------------------
   has_active BOOLEAN;  
   cnt        PLS_INTEGER := 0;
   

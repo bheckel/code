@@ -28,7 +28,7 @@ END;
 
 ---
 
-FUNCTION pass_cursor RETURN sys_refcursor IS
+CREATE OR REPLACE FUNCTION pass_cursor RETURN SYS_REFCURSOR IS
   l_contactCursor SYS_REFCURSOR;
 
   BEGIN
@@ -36,8 +36,7 @@ FUNCTION pass_cursor RETURN sys_refcursor IS
     RETURN l_contactCursor;
 END;
 
-
-PROCEDURE print_cursor IS
+CREATE OR REPLACE PROCEDURE print_cursor IS
   gonereason    BOOLEAN;
   l_contact_id  NUMBER;
   l_gonereason  NUMBER;
