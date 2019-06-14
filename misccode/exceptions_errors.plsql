@@ -1,4 +1,6 @@
--- Modified: Fri 31 May 2019 13:13:54 (Bob Heckel)
+-- Modified: Tue 11 Jun 2019 09:45:42 (Bob Heckel)
+
+-- Predefined PL/SQL Exceptions: https://docs.oracle.com/cd/A97630_01/appdev.920/a96624/07_errs.htm
 
 -- The PL/SQL run-time engine will raise exceptions whenever the Oracle
 -- database detects a problem or it executes a RAISE or RAISE_APPLICATION_ERROR
@@ -13,22 +15,42 @@
 -- continue.
 
 -- See also suppress_rowlevel_dml_errors.plsql
+---
+
+CREATE OR REPLACE PROCEDURE log_error IS
+	BEGIN
+		 DBMS_OUTPUT.put_line ('Error Trapped: ' || SQLCODE);
+END;
+
+DECLARE
+   my_dream   VARCHAR2(5);
+   -- Same because it's already a predefined Oracle error:
+   --VALUE_ERROR EXCEPTION;
+   --PRAGMA EXCEPTION_INIT(VALUE_ERROR, -6502);
+BEGIN
+   my_dream := 'JUSTICE';
+EXCEPTION 
+   WHEN VALUE_ERROR THEN log_error();
+END;
+/*
+Error Trapped: -6502
+*/
 
 ---
 
-       EXCEPTION
-        WHEN OTHERS THEN
-          errMsg := SQLERRM;
-          ROLLBACK;
-          EXECUTE IMMEDIATE 'insert into ACCOUNT_TRANSFORMATION_LOG                            
-                              VALUES(:1, :2, :3)'
-            USING rec.account_id, 'Add New Account Error: ' || errMsg, sysdate;
-          COMMIT;                        
-       END;
+ EXCEPTION
+  WHEN OTHERS THEN
+    errMsg := SQLERRM;
+    ROLLBACK;
+    EXECUTE IMMEDIATE 'insert into ACCOUNT_TRANSFORMATION_LOG                            
+                        VALUES(:1, :2, :3)'
+      USING rec.account_id, 'Add New Account Error: ' || errMsg, sysdate;
+    COMMIT;                        
+ END;
 
 ---
 
--- error_code is an integer in the range -20000..-20999 and message is a character string of at most 2048 bytes
+-- ERROR_CODE is an integer in the range -20000..-20999 and message is a character string of at most 2048 bytes
 
 ---
 

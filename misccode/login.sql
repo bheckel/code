@@ -1,11 +1,13 @@
--- 2009-05-11 
--- This file is auto-sourced by Oracle if it's in PWD
+-- Created: 2009-05-11 (Bob Heckel)
+-- Modified: Fri 14 Jun 2019 15:26:13 (Bob Heckel)
+
+-- This file is auto-sourced by Oracle sqlplus if it's in PWD
 --
--- Something like this should be set in .vimrc:
+-- Something like this could be set in .vimrc:
 -- au GUIEnter afiedt.buf winpos 37 55 | se lines=20 | se columns=170 | se tw=999999 | :new | silent :args c:/spool/links/*.LST | :hide | map :wq :wq! | noremap ZZ :wq!<CR>
 
--- DEFINE _EDITOR=vi
-DEFINE _EDITOR=gvim
+DEFINE _EDITOR=vim
+-- DEFINE _EDITOR=gvim
 
 -- ACCEPT 	Get input from the user
 -- DEFINE 	Declare a variable (short: DEF)
@@ -23,9 +25,6 @@ DEFINE _EDITOR=gvim
 -- SPOOL 	Send output to a file. Eg "spool x" will save STDOUT to a file called x.lst
 -- START 	Run a SQL script file (short: @)
 
--- column employee_id format A7
--- column comments format A2
-set linesize 180
 --set appinfo ON
 --set appinfo "SQL*Plus ~/code/misccode/login.sql"
 --set arraysize 15
@@ -54,7 +53,7 @@ set linesize 180
 --set flush ON
 --set heading ON
 --set headsep "|"
---set linesize 78
+set linesize 268
 --set logsource ""
 --set long 80
 --set longchunksize 80
@@ -84,12 +83,12 @@ set pagesize 999
 --set trimspool OFF
 --set underline "-"
 --set verify ON
-set wrap off
+--set wrap off
 
 -- Avoid having to prime the pump with e.g.  ed c:/cygwin/home/bheckel/t.sql
 -- to make afiedt.buf available immediately
 ---select SYSDATE from dual;
-
+-- or just rely on this as a side-effect:
 -- Build sqlprompt e.g. "pks@usdev100> "
 undefine usr db
 col usr new_value usr
@@ -100,26 +99,12 @@ select lower(user) usr,
        lower(global_name) db
 from   global_name
 /
+
 set termout on
 set sqlprompt '&&usr.@&&db.> '
 
 -- GSK specific
-column meth_spec_nm format a15;
-column meth_var_nm format a15;
-column meth_peak_nm format a20;
-column indvl_meth_stage_nm format a20;
-column indvl_tst_rslt_device format a20;
-column INDVL_TST_RSLT_VAL_CHAR format a20;
-column indvl_tst_rslt_time_pt format a10;
-column column_nm format a25;
-column pks_peak format a25;
-column prod_nm format a20;
-column lab_tst_desc format a30;
-column meth_rslt_char format a15;
-column meth_rslt_numeric format 99999.999;
-column checked_by_user_id format a15;
-column samp_tst_dt format a15;
-column checked_dt format a15;
-column lab_tst_meth_spec_desc format a25;
-column summary_meth_stage_nm format a20;
-
+--column meth_spec_nm format a15;
+--column meth_var_nm format a15;
+--column meth_rslt_numeric format 99999.999;
+--column checked_by_user_id format a15;

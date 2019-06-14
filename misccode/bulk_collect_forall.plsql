@@ -1,6 +1,6 @@
 
+-- Modified: Fri 14 Jun 2019 11:57:13 (Bob Heckel)
 -- DevGym 01Apr19
--- Modified: Tue 23 Apr 2019 14:01:47 (Bob Heckel)
 -- See also suppress_rowlevel_dml_errors.plsql
 --
 -- The PL/SQL features that comprise bulk SQL are the FORALL statement and the
@@ -60,8 +60,8 @@ PROCEDURE bulkdel IS
           FROM zuser_oncall_results u
          WHERE u.user_oncall_results_id = l_recs(i).user_oncall_results_id;
         
-        --COMMIT;
-        ROLLBACK;
+      --COMMIT;
+      ROLLBACK;
     END LOOP;
     CLOSE c1;
     dbms_output.put_line(l_cnt);

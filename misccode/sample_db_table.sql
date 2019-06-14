@@ -1,5 +1,32 @@
+DROP TABLE plch_employees
 
--- See also plch_employees_createtable.plsql
+CREATE TABLE plch_employees
+(
+   employee_id   INTEGER PRIMARY KEY
+ , last_name     VARCHAR2(100)
+ , salary        NUMBER(7)
+)
+/
+BEGIN
+   INSERT INTO plch_employees
+        VALUES (100, 'Jobs', 1000);
+   INSERT INTO plch_employees
+        VALUES (200, 'Ellison', 2000);
+   INSERT INTO plch_employees
+        VALUES (300, 'Gates', 3000);
+   COMMIT;
+END;
+/
+
+-- ...Later requirements:
+
+ALTER TABLE plch_employees ADD first_name VARCHAR2(2000)
+/
+-- Packages stay VALID
+
+ALTER TABLE plch_employees MODIFY last_name VARCHAR2(2000)
+/
+-- Packages become INVALID
 
 ---
 
