@@ -1,4 +1,4 @@
--- Modified: Fri 31 May 2019 14:07:45 (Bob Heckel)
+-- Modified: Tue 18 Jun 2019 11:10:34 (Bob Heckel)
 --
 -- nested_table.plsql (symlinked as collections.plsql) see also 
 -- associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql
@@ -118,7 +118,6 @@ END;
 ---
 
 -- Adapted: Thu, May 23, 2019 11:48:53 AM (Bob Heckel -- http://www.dba-oracle.com/plsql/t_plsql_sparse.htm) 
---select * from scott.emp
 --create table forall_test as select * from scott.emp where 1=0
 
 DECLARE
@@ -153,3 +152,30 @@ BEGIN
     WHEN OTHERS THEN
       DBMS_OUTPUT.put_line(SQLERRM);
 END;
+
+---
+
+/* Populate a collection with dummy data using a loop: */
+CREATE TABLE t (
+  id           NUMBER(10),
+  code         VARCHAR2(10),
+  description  VARCHAR2(80)
+);
+
+SET SERVEROUTPUT ON
+
+DECLARE
+  TYPE t_tab IS TABLE OF t%ROWTYPE;
+  l_tab  t_tab := t_tab();
+BEGIN
+  FOR i IN 1 .. 100 LOOP
+    l_tab.EXTEND;
+
+    l_tab(l_tab.LAST).id          := i;
+    l_tab(l_tab.LAST).code        := TO_CHAR(i);
+    l_tab(l_tab.LAST).description := 'Desc is: ' || TO_CHAR(i);
+  END LOOP;
+
+  EXECUTE IMMEDIATE 'TRUNCATE TABLE t';
+END;
+

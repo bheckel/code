@@ -1,8 +1,9 @@
 
--- Modified: Fri 14 Jun 2019 11:57:13 (Bob Heckel)
--- DevGym 01Apr19
--- See also suppress_rowlevel_dml_errors.plsql
---
+-- Adapted: Tue 01 Apr 2019 10:49:35 (Bob Heckel--DevGym)
+-- Modified: Tue 18 Jun 2019 10:49:35 (Bob Heckel)
+
+-- See also row.plsql suppress_rowlevel_dml_errors.plsql
+
 -- The PL/SQL features that comprise bulk SQL are the FORALL statement and the
 -- BULK COLLECT clause.
 -- The FORALL statement sends DML statements from PL/SQL to SQL in batches rather 
@@ -15,6 +16,31 @@
 --
 -- If the query does not return any rows, then NO_DATA_FOUND is not raised.
 -- Instead, the collection is emptied.
+--
+-- Statement level triggers only fire once at the start and end of the bulk insert operation,
+-- but fire on a row-by-row basis for the bulk update and delete operations:
+-- *** FORALL - INSERT ***
+-- BEFORE STATEMENT - INSERT
+-- BEFORE EACH ROW - INSERT (new.id=1)
+-- AFTER EACH ROW - INSERT (new.id=1)
+-- BEFORE EACH ROW - INSERT (new.id=2)
+-- AFTER EACH ROW - INSERT (new.id=2)
+-- BEFORE EACH ROW - INSERT (new.id=3)
+-- AFTER EACH ROW - INSERT (new.id=3)
+-- AFTER STATEMENT - INSERT
+-- *** FORALL - UPDATE/DELETE ***
+-- BEFORE STATEMENT - UPDATE
+-- BEFORE EACH ROW - UPDATE (new.id=1 old.id=1)
+-- AFTER EACH ROW - UPDATE (new.id=1 old.id=1)
+-- AFTER STATEMENT - UPDATE
+-- BEFORE STATEMENT - UPDATE
+-- BEFORE EACH ROW - UPDATE (new.id=2 old.id=2)
+-- AFTER EACH ROW - UPDATE (new.id=2 old.id=2)
+-- AFTER STATEMENT - UPDATE
+-- BEFORE STATEMENT - UPDATE
+-- BEFORE EACH ROW - UPDATE (new.id=3 old.id=3)
+-- AFTER EACH ROW - UPDATE (new.id=3 old.id=3)
+-- AFTER STATEMENT - UPDATE
 
 ---
 
@@ -182,6 +208,7 @@ AND ROWNUM<600
     
       OPEN c1;
       LOOP
+        -- If you have very few rows, you might want to increase the array size. If you have very wide rows, 100 may be too large.
         FETCH c1 BULK COLLECT INTO l_recs LIMIT 500;  
         
         l_limit_group := l_limit_group + 1;
@@ -356,10 +383,9 @@ BEGIN
 END;
 /
 
-/* Fill a collection with an explicit cursor: */
+/* Populate a collection with an explicit cursor: */
 DECLARE
-   CURSOR plch_employees_cur
-   IS
+   CURSOR plch_employees_cur IS
       SELECT * FROM plch_employees;
 
    /* Must index by number if using assoc array collection */
@@ -375,7 +401,7 @@ BEGIN
 END;
 /
 
-/* Fill a collection with an implicit cursor: */
+/* Populate a collection with an implicit cursor: */
 DECLARE
    TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
    l_plch_employees plch_employees_aat;
@@ -387,7 +413,7 @@ BEGIN
 END;
 /
 
-/* Fill a collection with a dynamic SQL statement (Oracle 9i Release 2 and above): */
+/* Populate a collection with a dynamic SQL statement (Oracle 9i Release 2 and above): */
 DECLARE
    TYPE plch_employees_aat IS TABLE OF plch_employees%ROWTYPE INDEX BY BINARY_INTEGER;
    l_plch_employees plch_employees_aat;
@@ -398,7 +424,7 @@ BEGIN
 END;
 /
 
-/* Fill a collection with a cursor variable: */
+/* Populate a collection with a cursor variable: */
 DECLARE
    l_cursor   SYS_REFCURSOR;
    l_list     DBMS_SQL.varchar2s;

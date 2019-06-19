@@ -1,10 +1,14 @@
+-- Modified: Tue 18 Jun 2019 09:27:02 (Bob Heckel)
 
--- details of what's scheduled
+-- Details of what's scheduled (in job_action)
 --select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments from all_scheduler_jobs a ORDER BY 1
--- run status log
+-- Run status log
 --SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
--- next run details
+-- Next run details
 --SELECT * from user_scheduler_jobs@esd WHERE job_name in ('PERIODIC_LIFECYCLE_UPDATE')
+
+---
+
 BEGIN
  sys.dbms_scheduler.create_job(
    job_name => 'TEST_JOB',
@@ -115,33 +119,32 @@ END;
 
 -- Adapted https://www.oratable.com/running-procedures-asynchronously-with-oracle-job-scheduler/
 -- Non-critical processing asynchronous
-create or replace procedure create_booking(booking_id in varchar2)
-as 
-begin
-  dbms_output.put_line('START create_booking');    
-  -- Critical parts of booking: main flow, any failure 
-  -- here must fail the entire booking
-  allocate_seats;
-  capture_customer_details;
-  receive_payment;
+create or replace procedure create_booking(booking_id in varchar2) as 
+  begin
+    dbms_output.put_line('START create_booking');    
+    -- Critical parts of booking: main flow, any failure 
+    -- here must fail the entire booking
+    allocate_seats;
+    capture_customer_details;
+    receive_payment;
 
-  -- Non-critical parts of booking: wrapped in 
-  -- a separate procedure called asynchronously
-  dbms_output.put_line('Before post_booking_flow_job');
-  -- Post-booking jobs are slow so fork them asynchronously
-  dbms_scheduler.create_job (
-    job_name   =>  'post_booking_flow_job'||booking_id,
-    job_type   => 'PLSQL_BLOCK',
-    job_action => 
-      'BEGIN 
-         post_booking_flow('''||booking_id||''');
-       END;',
-    enabled   =>  TRUE,  
-    auto_drop =>  TRUE, 
-    comments  =>  'Non-critical post-booking steps');
-  
-  dbms_output.put_line('After post_booking_flow_job');  
-  dbms_output.put_line('END create_booking');  
+    -- Non-critical parts of booking: wrapped in 
+    -- a separate procedure called asynchronously
+    dbms_output.put_line('Before post_booking_flow_job');
+    -- Post-booking jobs are slow so fork them asynchronously
+    dbms_scheduler.create_job (
+      job_name   =>  'post_booking_flow_job'||booking_id,
+      job_type   => 'PLSQL_BLOCK',
+      job_action => 
+        'BEGIN 
+           post_booking_flow('''||booking_id||''');
+         END;',
+      enabled   =>  TRUE,  
+      auto_drop =>  TRUE, 
+      comments  =>  'Non-critical post-booking steps');
+    
+    dbms_output.put_line('After post_booking_flow_job');  
+    dbms_output.put_line('END create_booking');  
 end;
 /
 

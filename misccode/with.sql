@@ -1,15 +1,4 @@
----
---want check for other aid "used elsewhere"
-        SELECT ab.account_id
-        from account_base           ab,
-             account_name           an,
-             account_name_attribute ana,
-             account_attribute      aa
-       where ab.account_id = an.account_id
-         and an.account_name_id = ana.account_name_id
-         and ana.account_attribute_id = aa.account_attribute_id
-         and aa.duns_nbr = '201794039'
-
+-- Modified: Wed 19 Jun 2019 08:45:28 (Bob Heckel)
 
 with account_name as (
 	select 5645818 account_name_id, 5645818 account_id from dual union all
@@ -149,15 +138,6 @@ values ('610455','MPDBP')
 ,('610455','ELMSBB')
 ,('610455','MHCP')
 ,('015574','MNPROD1')
-,('017142','MNPROD1')
-,('018315','MNM')
-,('004336','MEDDMCDMN')
-,('004336','MCAIDMN')
-,('015574','ASPROD1')
-,('015574','PWPROD1')
-,('012353','6190000')
-,('600428','6180000')
-,('003858','DE')
 ,('003858','MA')
 ) a
 )

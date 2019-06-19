@@ -65,7 +65,7 @@ set pagesize 999
 --set pause OFF
 --set recsep WRAP
 --set recsepchar " "
---set serveroutput OFF
+set serveroutput ON
 --set shiftinout invisible
 --set showmode OFF
 --set sqlblanklines OFF
@@ -83,9 +83,9 @@ set pagesize 999
 --set trimspool OFF
 --set underline "-"
 --set verify ON
---set wrap off
+--set wrap OFF
 
--- Avoid having to prime the pump with e.g.  ed c:/cygwin/home/bheckel/t.sql
+-- Avoid having to prime the pump with e.g.  ed[it] c:/cygwin/home/bheckel/t.sql
 -- to make afiedt.buf available immediately
 ---select SYSDATE from dual;
 -- or just rely on this as a side-effect:
@@ -103,8 +103,6 @@ from   global_name
 set termout on
 set sqlprompt '&&usr.@&&db.> '
 
--- GSK specific
+-- project specific
 --column meth_spec_nm format a15;
---column meth_var_nm format a15;
 --column meth_rslt_numeric format 99999.999;
---column checked_by_user_id format a15;

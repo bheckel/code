@@ -1,7 +1,20 @@
--- Adapted 08-Mar-19 https://devgym.oracle.com
-
+-- Modified: Mon 17 Jun 2019 11:41:50 (Bob Heckel)
 -- See also table_function.plsql
 
+CREATE TYPE department_typ AS OBJECT(d_name    VARCHAR2(100),
+                                     d_address VARCHAR2(200));
+
+CREATE TABLE departments_obj_t OF department_typ;
+
+INSERT INTO departments_obj_t VALUES ('hr', '10 Main St, Sometown, CA');
+
+select * from departments_obj_t 
+
+desc departments_obj_t 
+
+---
+
+-- Adapted 08-Mar-19 https://devgym.oracle.com
 CREATE OR REPLACE TYPE timer_t AS OBJECT 
 (
        start_time INTEGER
