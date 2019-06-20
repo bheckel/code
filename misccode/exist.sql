@@ -1,3 +1,6 @@
+-- Modified: Wed 19 Jun 2019 13:58:03 (Bob Heckel)
+-- See also csv_list_to_table_xmltable.sql
+
 -- Hierarchy self join - one (181477) is is ultimate parent, other two are children
 
 SELECT sup.account_id, sup.sup_account_id, sup.existing_customer, detail.account_id, detail.sup_account_id, detail.existing_customer
@@ -23,6 +26,14 @@ WHERE b.account_id = 181477
 /*
 1
 */
+
+
+select level, lov.value_description as value, lov.*
+from list_of_values lov
+where lov.retired = 0
+connect by prior lov.list_of_values_id = lov.parent_id
+start with lov.list_of_values_id in ( 1234)
+order siblings by lov.value_description
 
 ---
 

@@ -1,0 +1,297 @@
+
+-- Could go in .hiverc
+hive> set hive.cli.print.headers=true;
+
+---
+
+hive> create table x (a int);
+OK
+Time taken: 11.892 seconds
+hive> select * from x;
+OK
+Time taken: 0.999 seconds
+hive> drop table x;
+OK
+Time taken: 1.767 seconds
+
+---
+
+daily = load 'NYSE_daily' as (exchange, symbol, date, open, high, low, close, volume, adj_close);
+
+rnkd = rank daily by exchange, symbol desc;
+
+store rnkd into 't.out';
+
+-- This sorts the output wrongly
+--x = limit rnkd 5;
+--dump x;
+
+$ pig -x local t.pig
+
+$ cat t.out/part-r-00000
+
+---
+
+# List your hdfs home dir
+$ pig -e fs -ls
+
+---
+
+Client submits MapReduce job (HDFS, java, etc.), these daemons respond, computation is moved to the data:
+
+HDFS - 1 Master NameNode (maintains metadata for HDFS blocks holding data e.g. block location, replication factors etc), 
+       many Slave DataNodes (each stores the actual data in HDFS, sends heartbeat to NameNode)
+
+YARN - 1 ResourceManager (high quality hardware, receives processing requests then allocates resources e.g. container as needed),
+       many NodeManagers (one installed on each DataNode, monitoring its resources then reporting to ResourceManager)
+
+---
+
+[maria_dev@sandbox ~]$ vi information.txt  # tab-delimited
+Shabbir	Khan	908098	bangalore	engineer
+xhabbir	xhan	208098	bangalore	foo
+zhabbir	xhan	208098	zangalore	zoo
+
+[maria_dev@sandbox ~]$ hdfs dfs -copyFromLocal information.txt /user/maria_dev/data
+[maria_dev@sandbox ~]$ hdfs dfs -put information.txt /user/maria_dev/data  # performs checksum
+
+[maria_dev@sandbox ~]$ cat t.pig
+A = LOAD '/user/maria_dev/data/information.txt' using PigStorage ('\t') as (FName: chararray, LName: chararray, MobileNo: chararray, City: chararray, Profession: chararray);
+B = FOREACH A generate FName, MobileNo, Profession;
+DUMP B;
+
+[maria_dev@sandbox ~]$ pig t.pig
+(Shabbir,908098,engineer)
+(xhabbir,208098,foo)
+(zhabbir,208098,zoo)
+
+---
+
+bob.heckel@l-ana-bheckel ~/ Mon Feb 20 15:09:21
+$ scp -P 2222 /cygdrive/c/Users/bob.heckel/Downloads/Geolocation/drivers.csv root@localhost:/root
+bob.heckel@l-ana-bheckel ~/ Mon Feb 20 15:10:05
+$ ssh -l root sandbox.hortonworks.com -p 2222
+
+$ su maria_dev
+$ cd
+$ hdfs dfs -copyFromLocal drivers.csv /user/maria_dev/data
+$ beeline -u jdbc:hive2://sandbox.hortonworks.com:10000 -n maria_dev -p maria_dev --color=true
+> CREATE TABLE temp_drivers (col_value STRING);
+> LOAD DATA INPATH '/user/maria_dev/data/drivers.csv' OVERWRITE INTO TABLE temp_drivers;
+> SELECT * FROM temp_drivers LIMIT 2;
+
++------------------------------------------------------------+
+|                   temp_drivers.col_value                   |
++------------------------------------------------------------+
+| driverId,name,ssn,location,certified,wage-plan             |
+| 10,George Vetticaden,621011971,244-4532 Nulla Rd.,N,miles  |
++------------------------------------------------------------+
+
+> CREATE TABLE drivers (driverId INT, name STRING, ssn BIGINT, location STRING, certified STRING, wageplan STRING);
+> insert overwrite table drivers  
+SELECT  
+  regexp_extract(col_value, '^(?:([^,]*),?){1}', 1) driverId,  
+  regexp_extract(col_value, '^(?:([^,]*),?){2}', 1) name,  
+  regexp_extract(col_value, '^(?:([^,]*),?){3}', 1) ssn,
+  regexp_extract(col_value, '^(?:([^,]*),?){4}', 1) location,  
+  regexp_extract(col_value, '^(?:([^,]*),?){5}', 1) certified,  
+  regexp_extract(col_value, '^(?:([^,]*),?){6}', 1) wageplan
+from temp_drivers;
+
+$ hdfs dfs -usage text
+$ hdfs dfs -help text  # if usage isn't enough help
+$ hdfs dfs -text /user/maria_dev/data/drivers.csv  # view .csv on stdout
+$ hdfs dfs -ls /user/maria_dev/data  # drivers.csv is gone
+
+
+# If we used Pig instead to do a join:
+drivers = LOAD 'drivers.csv' USING PigStorage(',');
+raw_drivers = FILTER drivers BY $0>1;
+drivers_details = FOREACH raw_drivers GENERATE $0 AS driverId, $1 AS name;
+timesheet = LOAD 'timesheet.csv' USING PigStorage(',');
+raw_timesheet = FILTER timesheet by $0>1;
+timesheet_logged = FOREACH raw_timesheet GENERATE $0 AS driverId, $2 AS hours_logged, $3 AS miles_logged;
+grp_logged = GROUP timesheet_logged by driverId;
+sum_logged = FOREACH grp_logged GENERATE group as driverId,
+SUM(timesheet_logged.hours_logged) as sum_hourslogged,
+SUM(timesheet_logged.miles_logged) as sum_mileslogged;
+join_sum_logged = JOIN sum_logged by driverId, drivers_details by driverId;
+join_data = FOREACH join_sum_logged GENERATE $0 as driverId, $4 as name, $1 as hours_logged, $2 as miles_logged;
+dump join_data;
+
+---
+
+[root@sandbox ~]# cat /tmp/pv_2008-06-08.txt
+123,a1,http://foo.com,http://foo.com,12.34.56,us
+124,a2,http://foo2.com,http://foor3.com,12.34.56,us
+
+CREATE EXTERNAL TABLE page_view_stg(viewTime INT, userid BIGINT,
+                page_url STRING, referrer_url STRING,
+                ip STRING COMMENT 'IP Address of the User',
+                country STRING COMMENT 'country of origination')
+COMMENT 'This is the staging page view table'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '44'
+STORED AS TEXTFILE
+LOCATION '/user/data/staging/page_view';
+
+# Deprecated syntax
+hadoop dfs -put /tmp/pv_2008-06-08.txt /user/data/staging/page_view
+
+SELECT * FROM page_view_stg LIMIT 100;
+
+---
+
+-- In Hive
+CREATE TABLE riskfactor (driverid string, events bigint, totmiles double, riskfactor float) STORED AS ORC;
+
+-- Then in Pig
+a = LOAD 'geolocation' USING org.apache.hive.hcatalog.pig.HCatLoader();
+b = FILTER a BY event !='normal';
+c = foreach b generate driverid, event, (int) '1' as occurance;
+d = group c by driverid;
+e = foreach d generate group as driverid, SUM(c.occurance) as t_occ;
+g = LOAD 'drivermileage' USING org.apache.hive.hcatalog.pig.HCatLoader();
+h = join e by driverid, g by driverid;
+
+final_data = foreach h generate $0 as driverid, $1 as events, $3 as totmiles, (float) $3/$1 as riskfactor;
+store final_data into 'riskfactor' using org.apache.hive.hcatalog.pig.HCatStorer();
+
+---
+
+describe formatted geolocation;
+
+CREATE TABLE avg_mileage
+STORED AS ORC
+AS
+SELECT truckid, avg(mpg) avgmpg
+FROM truck_mileage
+GROUP BY truckid;
+
+---
+
+[root@sandbox ~]# su hive
+[hive@sandbox root]$ beeline
+!connect jdbc:hive2://sandbox.hortonworks.com:10000
+Beeline version 1.2.1000.2.5.0.0-1245 by Apache Hive
+beeline> !connect jdbc:hive2://sandbox.hortonworks.com:10000
+Connecting to jdbc:hive2://sandbox.hortonworks.com:10000
+Enter username for jdbc:hive2://sandbox.hortonworks.com:10000: maria_dev
+Enter password for jdbc:hive2://sandbox.hortonworks.com:10000: *********
+Connected to: Apache Hive (version 1.2.1000.2.5.0.0-1245)
+Driver: Hive JDBC (version 1.2.1000.2.5.0.0-1245)
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+
+0: jdbc:hive2://sandbox.hortonworks.com:10000> show tables;
++--------------+--+
+|   tab_name   |
++--------------+--+
+| geolocation  |
+| sample_07    |
+| sample_08    |
+| trucks       |
++--------------+--+
+4 rows selected (0.77 seconds)
+
+0: jdbc:hive2://sandbox.hortonworks.com:10000> desc trucks
++-----------+------------+----------+
+| col_name  | data_type  | comment  |
++-----------+------------+----------+
+| truckid   | string     |          |
+| driverid  | string     |          |
+| rdate     | string     |          |
+| miles     | string     |          |
+| gas       | string     |          |
+| mpg       | double     |          |
++-----------+------------+----------+
+
+0: jdbc:hive2://sandbox.hortonworks.com:10000> select count(1) from truck_mileage;
+
+0: jdbc:hive2://sandbox.hortonworks.com:10000> !q
+Closing: 0: jdbc:hive2://sandbox.hortonworks.com:10000
+
+
+beeline -u jdbc:hive2://sandbox.hortonworks.com:10000 -n maria_dev -p maria_dev --color=true --truncateTable=true
+beeline -u jdbc:hive2://sandbox.hortonworks.com:10000 -n maria_dev -p maria_dev -e "select * from drivermileage where driverid='A1'"
+beeline -u jdbc:hive2://sandbox.hortonworks.com:10000 -n maria_dev -p maria_dev -f t.hql
+
+---
+
+Shut down all HDP services gracefully:
+
+In Ambari:
+1. In Ambari goto > Hosts (http://<your_IP>:8080/#/main/hosts)
+
+2. Select the 'Sandbox' by checking the 1 and only host in the list
+
+3. On Actions > Filtered Hosts > Hosts > Stop all Components
+
+In VirtualBox click X
+Send shutdown signal
+
+---
+
+13-Feb-17
+ssh -l root sandbox.hortonworks.com -p 2222
+
+0 bob.heckel@l-ana-bheckel ~/ Mon Feb 13 13:30:12
+$ cat ~/.ssh/id_rsa.pub  # then paste to sandbox's .ssh/authorized_keys
+
+ambari-admin-password-reset
+# admin:admin
+# If Ambari doesn't restart automatically:
+ambari-agent restart
+
+[root@sandbox ~]# jps  # are daemons running?
+1379 Portmap
+5091 Jps
+1034 EmbeddedServer
+2443 ZeppelinServer
+1868 ApplicationHistoryServer
+781 AmbariServer
+10829 -- process information unavailable
+2030 RunJar
+622 NameNode
+1871 ResourceManager
+848 QuorumPeerMain
+625 DataNode
+1873 NodeManager
+1235 UnixAuthenticationService
+2227 RunJar
+7639 -- process information unavailable
+2137 HistoryServer
+2713 JobHistoryServer
+989 Bootstrap
+1662 RunJar
+
+$ scp -P 2222 /cygdrive/c/Users/bob.heckel/Downloads/Geolocation/geolocation.csv root@localhost:/root
+
+[root@sandbox ~]# hdfs dfs -ls /
+
+# HDFS' $HOME
+$ hdfs dfs -ls ${env:HOME}
+
+$ hdfs dfs -mkdir hdfs:///demofolder
+
+$ hdfs dfs -chmod 777 /user
+
+---
+
+ssh -l hdpsas hwnode-01.hdp.taeb.com
+
+hdfs dfs -ls /user/analytics
+
+beeline
+!connect jdbc:hive2://hwnode-02.hdp.taeb.com:10000
+!q
+
+beeline -u jdbc:hive2://hwnode-02.hdp.taeb.com:10000 -n hive -p hive --color=true --truncateTable=true
+
+!outputformat vertical
+!outputformat table
+!history
+
+show databases;
+describe database patient;
+use patient;
+describe patient;
+select * from patient.patient where  clientid = 4 and patientid = 999 ;

@@ -1,4 +1,19 @@
+-- Modified: Wed 19 Jun 2019 13:55:54 (Bob Heckel) 
 -- Use a CSV comma-separated list like a table
+
+---
+
+-- Find records in list that are not in table
+SELECT a.interaction_id, b.ids
+FROM rpt_caeinteractions a,
+(
+WITH DATA AS (
+SELECT '9999999, 318387999, 320438999, 321588999' ids FROM dual
+)
+SELECT trim(COLUMN_VALUE) ids
+FROM DATA, xmltable(('"' || REPLACE(ids, ',', '","') || '"'))
+) b
+WHERE a.interaction_id(+)=b.ids AND a.interaction_id is NULL
 
 ---
 

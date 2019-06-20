@@ -93,7 +93,7 @@ elif [[ "$HOSTNAME" = 'ZEBWL12H26564' || "$HOSTNAME" = 'ZEBWD12H01067' ]]; then
                  /*-sgio \*/
                  -autoexec u://code/sas/autoexec.sas \
                  -sysin"
-elif [[ "$HOSTNAME" = 'sas-01.twa.ateb.com' || "$HOSTNAME" = 'sasdev-01.twa.ateb.com' ]]; then
+elif [[ "$HOSTNAME" = 'sas-01.foo.com' || "$HOSTNAME" = 'sasdev-01.foo.com' ]]; then
   ###echo reach
   SASEXECUTABLE="$SAS94UX2 \
                  -NOechoauto \
