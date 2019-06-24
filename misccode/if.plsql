@@ -1,3 +1,23 @@
+-- Modified: Sat 22 Jun 2019 08:10:27 (Bob Heckel)
+
+-- See also case.sql
+
+IF TO_CHAR (SYSDATE, 'DY') IN ('SAT', 'SUN')
+   THEN
+      l_day_type := 'Weekend';
+   ELSE
+      l_day_type := 'Weekday';
+END IF;
+
+-- better
+l_day_type :=
+  CASE
+    WHEN TO_CHAR (SYSDATE, 'DY') IN ('SAT', 'SUN') THEN 'Weekend'
+    ELSE 'Weekday'
+  END;
+
+---
+
 -- Avoid clumsy IF statements such as:
 
 IF new_balance < minimum_balance THEN

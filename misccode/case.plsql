@@ -97,3 +97,59 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('No such grade');
 END;
 /
+
+---
+-- Adapted from DevGym 
+
+CREATE OR REPLACE FUNCTION grade_translator (grade_in IN VARCHAR2)
+   RETURN VARCHAR2
+IS
+   retval   VARCHAR2 (100);
+BEGIN
+   IF grade_in = 'A'
+   THEN
+      retval := 'Excellent';
+   ELSIF grade_in = 'B'
+   THEN
+      retval := 'Very Good';
+   ELSIF grade_in = 'C'
+   THEN
+      retval := 'Good';
+   ELSIF grade_in = 'D'
+   THEN
+      retval := 'Fair';
+   ELSIF grade_in = 'F'
+   THEN
+      retval := 'Poor';
+   ELSE
+      retval := 'No such grade';
+   END IF;
+
+   RETURN retval;
+END
+
+-- better, using CASE expression
+CREATE OR REPLACE FUNCTION grade_translator (grade_in IN VARCHAR2)
+   RETURN VARCHAR2
+IS
+BEGIN
+   RETURN CASE grade_in
+             WHEN 'A' THEN 'Excellent'
+             WHEN 'B' THEN 'Very Good'
+             WHEN 'C' THEN 'Good'
+             WHEN 'D' THEN 'Fair'
+             WHEN 'F' THEN 'Poor'
+             ELSE 'No such grade'
+          END;
+END;
+/
+/*
+CASE expressions make it possible to implement conditional logic within a
+PL/SQL expression or from inside a SQL statement.
+
+CASE expressions are terminated with "END" while CASE statements are terminated
+with END CASE.
+
+CASE expressions do not require an ELSE clause. If none of the WHEN clauses are
+executed, then NULL is returned
+*/
