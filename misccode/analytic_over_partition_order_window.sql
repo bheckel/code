@@ -159,6 +159,7 @@ select d
       ,row_number() OVER (order by d) row_seq_in_dt_order  -- 1,2,3,4,5,6
       ,rank() OVER (order by d) orderbydt -- 1,2,3,3,5,6 Olympic has dups and holes
       ,dense_rank() OVER (order by d) orderbydt_dense -- 1,2,3,3,4,5,6 still has dups like Olympic but fills the holes
+      --Group counts e.g. select account_name_id, event_id, dense_rank() OVER (PARTITION BY account_name_id ORDER BY event_id) rownbr FROM event where rownbr<4
       ,row_number() OVER (partition by d order by d) rownumbyday  -- 1,1,1,2,1,1
       -- Can be Top N by day if used as a subquery
       ,rank() OVER (partition by d order by amt) rank_by_day -- 1,1,1,1,1,1 would be 1,1,1,1,3,1,1 if union all select date '2000-01-03', 99 from dual existed and dense_rank would make the 3 a 2
@@ -268,3 +269,10 @@ FROM (
   WHERE  d.LOG_DATE > (SYSDATE-1)
 )
 WHERE rownbr = 1
+
+
+SELECT * 
+FROM (
+SELECT event_id, eventname , dense_rank() OVER (order by event_id) rownbr FROM event_base e WHERE e.account_name_id=99999
+)
+WHERE rownbr <50

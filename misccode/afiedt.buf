@@ -1,2 +1,2 @@
-select tsr_owner from rpt_cae_lifecycles
+SELECT * FROM orion_37551
 /

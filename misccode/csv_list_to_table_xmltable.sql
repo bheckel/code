@@ -3,7 +3,7 @@
 
 ---
 
--- Find records in list that are not in table
+-- Find records in list that are not in table.  See better example on_one_table_missing_from_other.sql
 SELECT a.interaction_id, b.ids
 FROM rpt_caeinteractions a,
 (
