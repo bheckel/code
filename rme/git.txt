@@ -1,3 +1,10 @@
+
+
+#                      git add           git commit              git push
+# UNTRACKED/UNSTAGED -----------> STAGED ----------> LOCAL REPO -------------> REMOTE REPO
+
+---
+
 1. Using git to commit a small fix directly into a local branch directly tracking the same remote branch.  In this example we will commit a small fix into the develop branch
 git checkout develop
 checks out your local develop branch which brings your file system to that version of the files
