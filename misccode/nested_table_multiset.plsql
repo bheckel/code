@@ -1,3 +1,15 @@
+-- Modified: Fri 28 Jun 2019 15:53:59 (Bob Heckel)
+
+-- Nested tables can be manipulated through an integer index, similar to an
+-- associative array, or as a multiset with set operators, such as MULTISET UNION.
+--
+-- MULTISET operators allow you to perform set-level operations on nested
+-- tables, quite similar to the SQL UNION, INTERSECT and MINUS operations.  But
+-- with MULTISET, duplicates are preserved unless you specify that want DISTINCT
+-- values.
+
+---
+
 CREATE OR REPLACE TYPE parts_nt IS TABLE OF VARCHAR2 (100);
 
 -- Combine two nested tables (won't work for hashes as of 2019)

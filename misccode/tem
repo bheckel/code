@@ -1,5 +1,6 @@
 #!/bin/bash
 
 # TODO case insensitive using find
-[ $# -eq 0 ] && ls ~/template_*
-[ $# -eq 1 ] && ~/usr/local/bin/vim ~/template_*${1}*
+[ $# -eq 0 ] && ls /cygdrive/c/Users/boheck/"OneDrive - SAS"/template_*
+# [ $# -eq 1 ] && ~/usr/local/bin/vim ~/template_*${1}*
+[ $# -eq 1 ] && vim /cygdrive/c/Users/boheck/"OneDrive - SAS"/template_*${1}*
