@@ -1,16 +1,21 @@
+Distill
+chrome://flags/#enable-reader-mode 
+
+---
+
 Safe Mode  Disable all the Labs features. http://mail.google.com/mail/?labs=0
 
 Basic Mode The plain old HTML mode. http://mail.google.com/mail/?ui=html
 
------
+---
 
 intitle:"index.of" mp3 day.of.the.eagle -html -htm -php -asp -cf -jsp
 
------
+---
 
 search term ~elderly returns aged, older, senior, etc
 
------
+---
 
 Leading '-' indicates NOT e.g. editor -emacs
 
