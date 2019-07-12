@@ -72,3 +72,14 @@ FOR r IN cursor1 LOOP
 		COMMIT;
 	END IF;
 END LOOP;
+
+---
+
+CREATE OR REPLACE PROCEDURE test_proc AS
+	BEGIN
+		FOR x IN ( SELECT col1, col2 FROM test_table )
+		LOOP
+			dbms_output.put_line(x.col1);
+		END LOOP;
+END;
+

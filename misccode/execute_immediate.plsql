@@ -95,3 +95,14 @@ BEGIN
 		INTO v_first_name, v_last_name
 		USING v_student_id;
 END;
+
+---
+
+declare
+  d date;
+begin
+  for i in ( select high_value from user_tab_partitions where table_name = 'T1' ) loop
+    execute immediate 'select '||i.high_value||' from dual' into d;
+    dbms_output.put_line(d);
+  end loop;
+end;

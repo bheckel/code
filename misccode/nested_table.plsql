@@ -3,6 +3,11 @@
 -- nested_table.plsql (symlinked as collections.plsql) see also 
 -- associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql
 
+-- Associative arrays are particularly good with sparse collections.
+-- Nested tables offer lots of features for set-oriented management of collection contents.
+-- Varrays - doubt you'll ever use a array, intended more for usage as nested columns in relational tables,
+-- offering some performance advantages.
+
 -- Collection Methods:
 -- EXISTS: Returns TRUE if a specified element exists in a collection
 --         and can be used to avoid raising SUBSCRIPT_OUTSIDE_LIMIT exceptions.

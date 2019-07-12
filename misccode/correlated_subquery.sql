@@ -14,3 +14,14 @@ WHERE los >= ( SELECT AVG(length_of_stay) + 2*STD(length_of_stay)
                FROM inpatient_admissions b
                WHERE a.principle_diagnosis=b.principle_diagnosis )
 ;
+
+---
+
+-- Want a record if the account name doesn't already exist in a third table
+SELECT t.account_id, t.account_name, ab.primary_account_attribute_id
+  FROM roion_9999 t, account_base ab
+ WHERE t.account_id = ab.account_id
+   AND NOT EXISTS (select 1
+                     from account_name an
+                    where t.account_id = an.account_id
+                      and t.account_name = an.account_name)
