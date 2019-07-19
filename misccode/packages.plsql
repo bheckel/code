@@ -1,3 +1,5 @@
+-- see also ZTESTBOB.sql
+
 CREATE OR REPLACE PACKAGE ztestbob AS
   
   PROCEDURE delay_buffer_test;
