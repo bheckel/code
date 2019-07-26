@@ -36,7 +36,7 @@
 ---
 
 -- For small number of UPDATEs only
-PROCEDURE upd IS
+CREATE OR REPLACE PROCEDURE upd IS
   rc pls_integer := 0;
 
   CURSOR c IS
@@ -66,7 +66,7 @@ END upd;
 
 ---
 
-PROCEDURE test(in_aid contact_base.account_name_id%TYPE) IS
+CREATE OR REPLACE PROCEDURE test(in_aid contact_base.account_name_id%TYPE) IS
   v_in_aid contact_base.account_name_id%TYPE;
   v_gonereason BOOLEAN;
  
@@ -173,7 +173,7 @@ END;
 ---
 
 -- Use a collection based on a cursor
-PROCEDURE do4 IS
+CREATE OR REPLACE PROCEDURE do4 IS
   cnt PLS_INTEGER := 0;
 
   CURSOR c1 IS

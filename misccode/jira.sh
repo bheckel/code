@@ -25,10 +25,10 @@ echo >> ${JIRA}.sql
 
 echo "${JIRA} ${DESC}" > ${TAG}.html
 echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
-cygstart ${TAG}.html
+# cygstart ${TAG}.html
 
 # cp -i ~/onedrive/template_project.prj ~/onedrive/orion-${TAG}/${TAG}.prj && \
 # cp -i ~/onedrive/template_project.dsk ~/onedrive/orion-${TAG}/${TAG}.dsk && \
 # cygstart "C:\Users\boheck\OneDrive - SAS\orion-${TAG}\\${TAG}.prj"
-# cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/orion-${TAG}
+cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/orion-${TAG}
 # cygstart "C:\Users\boheck\Oracle\sqldeveloper\sqldeveloper\bin\sqldeveloper64W.exe"

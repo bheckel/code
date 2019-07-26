@@ -111,3 +111,44 @@ create or replace package body ORION_ERRORS_TEST is
   end;
 end ORION_ERRORS_TEST;
 
+---
+
+-- Overloading:
+
+CREATE OR REPLACE PACKAGE p
+IS
+   PROCEDURE l(bool IN BOOLEAN);
+
+   /* Display a string */
+   PROCEDURE l(stg IN VARCHAR2);
+
+   /* Display a string and then a Boolean value */
+   PROCEDURE l(
+      stg    IN   VARCHAR2,
+      bool   IN   BOOLEAN
+   );
+END;
+-- ...
+
+-- Call one of them
+DECLARE
+   v_is_valid BOOLEAN := book_info.is_valid_isbn('5-88888-66');
+BEGIN
+   p.l(v_is_valid);
+END;
+
+
+DECLARE
+   PROCEDURE proc1(n IN PLS_INTEGER) IS
+   BEGIN
+      DBMS_OUTPUT.PUT_LINE('pls_integer version');
+   END;
+
+   PROCEDURE proc1(n IN NUMBER) IS
+   BEGIN
+      DBMS_OUTPUT.PUT_LINE('number version');
+   END;
+BEGIN
+   proc1(1.1);
+   proc1(1);
+END;

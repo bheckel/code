@@ -1,4 +1,4 @@
-PROCEDURE unique_seq(seq_name IN VARCHAR2, num_seqs_wanted IN PLS_INTEGER, seq_ids IN OUT NUMBER) IS
+CREATE OR REPLACE PROCEDURE unique_seq(seq_name IN VARCHAR2, num_seqs_wanted IN PLS_INTEGER, seq_ids IN OUT NUMBER) IS
 	l_current_num     NUMBER := 0;
 	l_max_num NUMBER := 0;
 	l_seq_name VARCHAR2(100);
