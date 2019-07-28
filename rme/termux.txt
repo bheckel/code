@@ -1,4 +1,16 @@
 
+.bashrc.local:
+
+rme() {
+  vi ~/code/rme/$1.txt
+} 
+
+alias cal=gcal
+
+gcal
+
+---
+
 $ apt-get install termux-api
 
 --
