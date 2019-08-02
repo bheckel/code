@@ -112,15 +112,15 @@ end;
 
 -- Also works v10+:
 CREATE OR REPLACE FUNCTION names_for_parts(list_in IN partnums_t)
-   RETURN SYS_REFCURSOR
+  RETURN SYS_REFCURSOR
 IS
    retval   SYS_REFCURSOR;
 BEGIN
-   OPEN retval FOR
-        SELECT partname
-          FROM plch_parts
-         WHERE partnum MEMBER OF list_in
-      ORDER BY partname;
+  OPEN retval FOR
+      SELECT partname
+        FROM plch_parts
+       WHERE partnum MEMBER OF list_in  -- where partnum is an element of the collection (no scanning through the collection required)
+    ORDER BY partname;
 
-   RETURN retval;
+  RETURN retval;
 END names_for_parts;

@@ -14,8 +14,8 @@ cp -i ~/onedrive/template_t.sql ~/onedrive/orion-${TAG}/${JIRA}.sql && \
 cp -i ~/onedrive/template_bulkcollect.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.sql && \
 # sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 sed -i "s/99999/${JIRA}/" ORION${JIRA}.sql && \
-echo '--SQL> cd C:\Orion\workspace\data\Source\SQL\OrionScripts\' >> ${JIRA}.sql
-echo '--SQL> @C:\Orion\workspace\data\Source\SQL\OrionScripts\ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
+echo '--SQL> cd C:\Orion\workspace\data\Source\SQL\ OrionScripts\' >> ${JIRA}.sql
+echo '--SQL> @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 echo '-- git pull && git checkout -b feature/ORION-'${JIRA}' && git push --set-upstream origin feature/ORION-'${JIRA} >> ${JIRA}.sql
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> ${JIRA}.sql

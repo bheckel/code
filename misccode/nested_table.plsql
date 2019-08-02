@@ -1,4 +1,5 @@
--- Modified: Tue 18 Jun 2019 11:10:34 (Bob Heckel)
+
+-- Modified: Fri 02 Aug 2019 16:13:37 (Bob Heckel)
 --
 -- nested_table.plsql (symlinked as collections.plsql) see also 
 -- associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql
@@ -7,6 +8,7 @@
 -- Nested tables offer lots of features for set-oriented management of collection contents.
 -- Varrays - doubt you'll ever use a array, intended more for usage as nested columns in relational tables,
 -- offering some performance advantages.
+-- Nested & varrays can be created in a schema object, unlike AA which can be created in a PLSQL block only
 
 -- Collection Methods:
 -- EXISTS: Returns TRUE if a specified element exists in a collection
@@ -25,20 +27,19 @@
 -- PRIOR and NEXT: These functions return subscripts that precede and succeed a
 --       specified collection subscript.
 --
--- Methods not allowed with index-by associative arrays:
+-- Methods NOT allowed with index-by associative arrays:
 -- EXTEND: Increases the size of a collection.
 -- TRIM: Removes either one or a specified number of elements from
 --       the end of a collection. PL/SQL does not keep placeholders for the trimmed elements.
 --
--- Methods not allowed with varrays:
+-- Methods NOT allowed with varrays:
 -- DELETE: deletes either all elements, just the elements in the
 --         specified range, or a particular element from a collection. PL/SQL keeps
 --         placeholders of the deleted elements.
--- Methods only allowed with varrays:
+-- Methods ONLY allowed with varrays:
 -- LIMIT: Returns the maximum number of elements that a collection can contain
 
--- You can compare nested table variables to the value NULL or to each other,
--- see nested_table_multiset.plsql
+-- You can compare nested table variables to the value NULL or to each other see nested_table_multiset.plsql
 
 ---
 DECLARE
@@ -183,4 +184,19 @@ BEGIN
 
   EXECUTE IMMEDIATE 'TRUNCATE TABLE t';
 END;
+
+---
+
+create type numbers_t as table of number;
+declare
+  l_nums numbers_t;  -- no initialization required for bulk collect!
+begin
+  select line+100
+    BULK COLLECT INTO l_nums
+    from all_source
+   where rownum<5
+    ;
+  dbms_output.put_line(l_nums(2));  -- 102
+  dbms_output.put_line(l_nums.last);  -- 4
+end;
 

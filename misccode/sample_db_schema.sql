@@ -1,34 +1,33 @@
 -- create tables
 create table departments (
-    name                           varchar2(255),
-    location                       varchar2(255),
-    country                        varchar2(255)
+    name                    varchar2(255),
+    location                varchar2(255),
+    country                 varchar2(255)
 )
 ;
 
 create table employees (
-    department_id                  number
-                                   constraint employees_department_id_fk
-                                   references departments on delete cascade,
-    name                           varchar2(255),
-    email                          varchar2(255),
-    job                            varchar2(255),
-    hiredate                       date
+    department_id           number 
+                            constraint employees_department_id_fk
+                            references departments on delete cascade,
+    name                    varchar2(255),
+    email                   varchar2(255),
+    job                     varchar2(255),
+    hiredate                date
 )
 ;
 
 create table skills (
-    employee_id                    number
-                                   constraint skills_employee_id_fk
-                                   references employees on delete cascade,
-    skill                          varchar2(255),
-    proficiency                    number constraint skills_proficiency_cc
-                                   check (proficiency in (1,2,3,4,5))
+    employee_id             number
+                            constraint skills_employee_id_fk
+                            references employees on delete cascade,
+    skill                   varchar2(255),
+    proficiency             number constraint skills_proficiency_cc
+                            check (proficiency in (1,2,3,4,5))
 )
 ;
 
-
--- triggers
+-- create triggers
 create or replace trigger departments_biu
     before insert or update 
     on departments
@@ -56,15 +55,14 @@ begin
 end skills_biu;
 /
 
+-- create indexes
+create index employees_di_ix on employees (department_id);
+create index skills_ei_ix on skills (employee_id);
 
--- indexes
-create index employees_i1 on employees (department_id);
-create index skills_i1 on skills (employee_id);
-
--- comments
+-- create comments
 comment on column skills.proficiency is 'with 1 being a novice and 5 being a guru';
+
 -- load data
- 
 insert into departments (
     name,
     location,
@@ -552,4 +550,3 @@ insert into skills (
 );
 
 commit;
-

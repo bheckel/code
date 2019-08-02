@@ -1,3 +1,6 @@
+
+-- Table operator
+
 -- Modified: Thu 06 Jun 2019 10:35:05 (Bob Heckel) 
 -- See also call_function_from_sql.plsql
 
@@ -46,8 +49,9 @@ IS
 END;
 /
 
+-- Call the function in SQL
 --     Oracle keyword
-SELECT COLUMN_VALUE my_string FROM TABLE (tf.queryme(5))
+SELECT COLUMN_VALUE  my_string FROM TABLE(tf.queryme(5))
 /
 
 
@@ -80,7 +84,7 @@ BEGIN
       l_family.EXTEND;
       l_family(i) := animal_ot('BABY' || i,
                                mom_in.species,
-                               ADD_MONTHS (SYSDATE, -1 * DBMS_RANDOM.VALUE (1, 6)));
+                               ADD_MONTHS(SYSDATE, -1 * DBMS_RANDOM.VALUE(1, 6)));
    END LOOP;
 
    RETURN l_family;

@@ -1,11 +1,15 @@
--- Modified: Tue 18 Jun 2019 09:27:02 (Bob Heckel)
+
+-- Modified: Mon 29 Jul 2019 11:31:49 (Bob Heckel)
 
 -- Details of what's scheduled (in job_action)
---select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments from all_scheduler_jobs a ORDER BY 1
+-- select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments
+-- from all_scheduler_jobs a ORDER BY 1
+
 -- Run status log
 --SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
+
 -- Next run details
---SELECT * from user_scheduler_jobs@esd WHERE job_name in ('PERIODIC_LIFECYCLE_UPDATE')
+--SELECT * from user_scheduler_jobs@sed WHERE job_name in ('PERIODIC_LIFE_UPDATE')
 
 ---
 
@@ -22,6 +26,7 @@ BEGIN
    comments => 'test');
 END;
 BEGIN dbms_scheduler.drop_job('TEST_JOB'); END;
+BEGIN sys.dbms_scheduler.disable('TEST_JOB'); END;
 
 ---
 
@@ -122,14 +127,12 @@ END;
 create or replace procedure create_booking(booking_id in varchar2) as 
   begin
     dbms_output.put_line('START create_booking');    
-    -- Critical parts of booking: main flow, any failure 
-    -- here must fail the entire booking
+    -- Critical parts of booking: main flow, any failure here must fail the entire booking
     allocate_seats;
     capture_customer_details;
     receive_payment;
 
-    -- Non-critical parts of booking: wrapped in 
-    -- a separate procedure called asynchronously
+    -- Non-critical parts of booking: wrapped in a separate procedure called asynchronously
     dbms_output.put_line('Before post_booking_flow_job');
     -- Post-booking jobs are slow so fork them asynchronously
     dbms_scheduler.create_job (

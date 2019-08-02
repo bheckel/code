@@ -269,6 +269,7 @@ END;
 
 ---
 -- Implicit cursor
+
 CREATE TABLE test_table ( col1 INTEGER, col2 INTEGER );
 
 insert into test_table values (3, 4)
@@ -279,4 +280,28 @@ CREATE OR REPLACE PROCEDURE test_proc AS
 		LOOP
 			dbms_output.put_line(x.col1);
 		END LOOP;
+END;
+
+---
+
+-- Parameterized cursor with defaults
+DECLARE
+  CURSOR cur_revenue(p_year NUMBER :=2017 , p_customer_id NUMBER := 1) IS
+    SELECT SUM(quantity * unit_price) revenue
+    FROM order_items JOIN orders USING (order_id)
+    WHERE status = 'Shipped' AND EXTRACT(YEAR FROM order_date) = p_year
+    GROUP BY customer_id
+    HAVING customer_id = p_customer_id
+  ;
+
+  rec_revenue cur_revenue%ROWTYPE;
+
+BEGIN
+  OPEN cur_revenue;
+  LOOP
+    FETCH cur_revenue INTO rec_revenue;
+    EXIT WHEN cur_revenue%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(rec_revenue.revenue);
+  END LOOP;
+  CLOSE cur_revenue;
 END;

@@ -1,3 +1,34 @@
+
+-- Created: 30-Jul-19 (Bob Heckel)
+-- Modified: 31-Jul-19 (Bob Heckel) 
+
+---
+
+-- Use B-tree index where cardinality is high (many unique recs e.g. account
+-- IDs) and column is usually part of a WHERE statement and DML is infrequent.
+-- Use bitmap where cardinality is low (e.g. skewed grade scores at Harvard) and DML
+-- is very infrequent (because it locks).
+CREATE INDEX CONTACT_EMP_EVENT_CE_IX on CONTACT_EMPLOYEE_EVENT(CONTACT_EMPLOYEE_ID);
+CREATE INDEX CONTACT_EMP_EVENT_EV_IX on CONTACT_EMPLOYEE_EVENT(EVENT_ID);
+CREATE BITMAP INDEX CONTACT_EMP_EVENT_NE_IX on CONTACT_EMPLOYEE_EVENT(NEW_EVENT);
+create index M_SUBCOMPGRP_FUNCTION_IX on M_SUBCOMP (LOWER(M_SUBCOMP_GROUP_NAME));
+
+
+SELECT * FROM SYS.user_indexes WHERE table_name = 'EMAIL_MESSAGES';  -- does B-tree (NORMAL) index exist?
+
+SELECT * FROM SYS.user_ind_statistics where table_name='EMAIL_MESSAGES';
+
+SELECT * FROM email_messages WHERE created>sysdate-1;
+
+SELECT * FROM v$sql WHERE sql_text like 'SELECT * FROM email_messages WHERE created%';  -- 5ax1juqfgxhnw
+
+-- Explain Plan is hypothetical, this is actual:
+SELECT * FROM v$sql_plan WHERE sql_id = '5ax1juqfgxhnw';  -- did index get used?: BY INDEX ROWID or RANGE SCAN etc.
+
+select sum(email_messages_id) from email_messages;  -- FULL SCAN but no table access
+
+---
+
 EXPLAIN PLAN FOR
   SELECT *
   FROM email_messages t 

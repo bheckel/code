@@ -55,12 +55,15 @@ Error Trapped: -6502
 ---
 
 BEGIN
+  -- Print code descriptions:
+
   -- ORA-0000: normal, successful completion
   dbms_output.put_line(SQLERRM(0));
   -- User-Defined Exception
   dbms_output.put_line(SQLERRM(1));
   -- ORA-01855: AM/A.M. or PM/P.M. required
   dbms_output.put_line(SQLERRM(-1855));
+  -- Positive code
   -- -1855: non-ORACLE exception
   dbms_output.put_line(SQLERRM(1855));
 
@@ -70,8 +73,8 @@ EXCEPTION
   WHEN OTHERS
     -- ORA-01422: exact fetch returns more than requested number of rows
     dbms_output.put_line(SQLERRM);
-    -- Same (can't use it to lookup errors as you can with SQLERRM) plus won't truncate like SQLERRM
-    dbms_output.put_line (DBMS_UTILITY.format_error_stack);
+    -- Same (except can't use it to lookup errors as you can with SQLERRM), upside is it won't truncate like SQLERRM
+    dbms_output.put_line(DBMS_UTILITY.format_error_stack);
 END;
 
 ---
@@ -159,6 +162,17 @@ END;
 
 -- Naming Internally Defined Exception
 -- Things like NO_DATA_FOUND and TOO_MANY_ROWS have this predefined by the STANDARD package
+DECLARE  
+   e_bad_date_format   EXCEPTION;  
+   PRAGMA EXCEPTION_INIT(e_bad_date_format, -1830);  
+BEGIN  
+   DBMS_OUTPUT.put_line(TO_DATE ('2010 10 10 44:55:66', 'YYYSS'));  
+EXCEPTION  
+   WHEN e_bad_date_format THEN  
+     DBMS_OUTPUT.put_line('Bad date format');  
+END; 
+
+-- Override an Oracle predefined code
 DECLARE
   deadlock_detected EXCEPTION;
   -- ORA-00060 (deadlock detected while waiting for resource) 
