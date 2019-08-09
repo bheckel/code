@@ -44,6 +44,35 @@
 
 ---
 
+-- Compare with bulk & without:
+--  3 DECLARE                                                                      |  3 DECLARE
+--  2    TYPE employees_aat IS TABLE OF employees%ROWTYPE INDEX BY BINARY_INTEGER; |  2    TYPE employees_aat IS TABLE OF employees%ROWTYPE INDEX BY BINARY_INTEGER;
+--  1    l_employees   employees_aat;                                              |  1    l_employees         employees_aat;
+--  0                                                                              |  0    CURSOR emp_cur IS
+--  1 BEGIN                                                                        |    ----------------------------------------------------------------------------------------------------------------------------------
+--  2      SELECT *                                                                |  1      SELECT *
+--  3        BULK COLLECT INTO l_employees                                         |    ----------------------------------------------------------------------------------------------------------------------------------
+--  4        FROM employees;                                                       |  2      FROM employees;
+--  5                                                                              |  3
+--    -----------------------------------------------------------------------------|  4 BEGIN
+--    -----------------------------------------------------------------------------|  5    OPEN emp_cur;
+--    -----------------------------------------------------------------------------|  6
+--    -----------------------------------------------------------------------------|  7    LOOP
+--    -----------------------------------------------------------------------------|  8       FETCH emp_cur BULK COLLECT INTO l_employee LIMIT 100;
+--    -----------------------------------------------------------------------------|  9       EXIT WHEN l_employees.COUNT = 0;
+--  6                                                                              | 10
+--  7    FOR indx IN 1 .. l_employees.COUNT                                        | 11       FOR indx IN 1 .. l_employees.COUNT
+--  8    LOOP                                                                      | 12       LOOP
+--  9       DBMS_OUTPUT.put_line (l_employees (indx).last_name);                   | 13         DBMS_OUTPUT.put_line (l_employees (indx).last_name);
+-- 10    END LOOP;                                                                 | 14       END LOOP;
+-- 11                                                                              | 15    END LOOP;
+-- 12                                                                              |    ----------------------------------------------------------------------------------------------------------------------------------
+-- 13                                                                              | 16
+-- 14    CLOSE emp_cur;                                                            | 17    CLOSE emp_cur;
+-- 15 END;                                                                         | 18 END;
+
+---
+
 DECLARE
    l_cursor         SYS_REFCURSOR;
    l_list           DBMS_SQL.varchar2s;

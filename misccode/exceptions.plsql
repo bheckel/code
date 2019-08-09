@@ -24,7 +24,7 @@ END;
 
 DECLARE
    my_dream   VARCHAR2(5);
-   -- Same because it's already a predefined Oracle error:
+   -- Unnecessary because it's already a predefined Oracle error:
    --VALUE_ERROR EXCEPTION;
    --PRAGMA EXCEPTION_INIT(VALUE_ERROR, -6502);
 BEGIN
@@ -57,6 +57,10 @@ Error Trapped: -6502
 BEGIN
   -- Print code descriptions:
 
+  -- Outside the exception handler it returns 0:
+  -- ORA-0000: normal, successful completion
+  dbms_output.put_line(SQLERRM);
+
   -- ORA-0000: normal, successful completion
   dbms_output.put_line(SQLERRM(0));
   -- User-Defined Exception
@@ -66,6 +70,8 @@ BEGIN
   -- Positive code
   -- -1855: non-ORACLE exception
   dbms_output.put_line(SQLERRM(1855));
+  -- ORA-20000: 
+  dbms_output.put_line(SQLERRM(-20000));
 
   RAISE TOO_MANY_ROWS;
 
@@ -140,7 +146,7 @@ DECLARE
    ex_invalid_id  EXCEPTION; 
 BEGIN 
    IF c_id <= 0 THEN 
-      RAISE ex_invalid_id; 
+      RAISE ex_invalid_id;  -- a business rule has been violated
    ELSE 
       SELECT  name, address INTO  c_name, c_addr 
       FROM customers 
@@ -160,8 +166,8 @@ END;
 
 ---
 
--- Naming Internally Defined Exception
--- Things like NO_DATA_FOUND and TOO_MANY_ROWS have this predefined by the STANDARD package
+-- Things like NO_DATA_FOUND and TOO_MANY_ROWS have this system predefined label by the STANDARD package, others
+-- like ORA-01438 "value larger than specified precision..." are un-named system predefined exceptions
 DECLARE  
    e_bad_date_format   EXCEPTION;  
    PRAGMA EXCEPTION_INIT(e_bad_date_format, -1830);  
@@ -201,7 +207,7 @@ END;
 /
  
 DECLARE
-  past_due  EXCEPTION;                       -- declare exception
+  past_due EXCEPTION;                        -- declare exception
   PRAGMA EXCEPTION_INIT (past_due, -20000);  -- assign error code to exception
 BEGIN
   account_status (TO_DATE('01-JUL-2010', 'DD-MON-YYYY'),
@@ -218,7 +224,6 @@ END;
 ---
 
 CREATE OR REPLACE PROCEDURE update_reference_owner IS
-
 	TYPE numberTable IS TABLE OF NUMBER;
 
 	referenceIdTable numberTable;
@@ -226,10 +231,9 @@ CREATE OR REPLACE PROCEDURE update_reference_owner IS
 	v_new_owner number := 9999 ;
 
 	BEGIN
-											
 		EXECUTE IMMEDIATE 'select r.reference_id, re.reference_employee_id
 													from reference r,
-															 REFERENCE_EMPLOYEE_BASE re,
+															 REFERENCE_EMPLOYEE re,
 															 opportunity_employee    oe,
 															 list_of_values          l
 												 where r.reference_id = re.reference_id
@@ -247,17 +251,15 @@ CREATE OR REPLACE PROCEDURE update_reference_owner IS
 				WHERE re2.REFERENCE_EMPLOYEE_ID = referenceEmployeeIdTable(i);
 					 
 			 EXCEPTION
-				 /* If there is another row with the current reference_id / employee_id, delete it
-					*  and re-do the update
-					*/
+				 /* If there is another row with the current reference_id / employee_id, delete it and re-do the update */
 				 WHEN OTHERS THEN
-					 IF (SQLERRM LIKE '%REFERENCE_EMPLOYEE_RE_U_IX%') THEN
+					 IF (SQLERRM LIKE '%REF_EMP_RE_U_IX%') THEN
 						 
-						 DELETE FROM reference_employee_base 
+						 DELETE FROM reference_employee 
 							WHERE reference_id = referenceIdTable(i)
 								AND employee_id = v_new_owner;
 						
-						 UPDATE reference_employee_base re2
+						 UPDATE reference_employee re2
 								SET re2.EMPLOYEE_ID = v_new_owner,
 										re2.territory_lov_id = null,
 										re2.UPDATED     = re2.UPDATED,
@@ -271,7 +273,7 @@ CREATE OR REPLACE PROCEDURE update_reference_owner IS
 		END LOOP;
 
 		COMMIT; 
-END update_reference_owner;
+END;
 
 ---
 

@@ -1,4 +1,4 @@
--- Modified: Wed 22 May 2019 10:46:36 (Bob Heckel)
+-- Modified: Tue 06 Aug 2019 09:50:30 (Bob Heckel)
 
 -- A cursor is a pointer to this context area. PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL
@@ -147,28 +147,6 @@ BEGIN
 END;
 /
 
----
-
-DECLARE
-   cv SYS_REFCURSOR;
-   r  dual%ROWTYPE;
-
-BEGIN
-   /* OPEN cv FOR 'select * from SYS.dual'; */
-   -- same
-   OPEN cv FOR SELECT * FROM SYS.dual;
-   LOOP
-		 FETCH cv INTO r;
-		 EXIT WHEN cv%NOTFOUND;
-		 dbms_output.put_line(r.dummy);
-   END LOOP;
-   CLOSE cv;
-   
-   -- better - implicit
-   FOR r IN ( SELECT * FROM SYS.dual ) LOOP
-		 dbms_output.put_line(r.dummy);
-   END LOOP;
-END;
 
 ---
 
@@ -225,6 +203,53 @@ BEGIN
   END LOOP;
 
   CLOSE cv;
+END;
+
+---
+
+DECLARE
+   cv SYS_REFCURSOR;
+   r  dual%ROWTYPE;
+
+BEGIN
+   /* OPEN cv FOR 'select * from SYS.dual'; */
+   /* OPEN cv FOR my_previously_populated_qrystring; */
+   -- same
+   OPEN cv FOR SELECT * FROM SYS.dual;
+   LOOP
+		 FETCH cv INTO r;
+		 EXIT WHEN cv%NOTFOUND;
+		 dbms_output.put_line(r.dummy);
+   END LOOP;
+   CLOSE cv;
+   
+   -- better - implicit
+   FOR r IN ( SELECT * FROM SYS.dual ) LOOP
+		 dbms_output.put_line(r.dummy);
+   END LOOP;
+END;
+
+---
+
+DECLARE
+  cv SYS_REFCURSOR;
+
+	type numtbl_t is table of number;
+	numtbl numtbl_t;
+
+BEGIN
+   OPEN cv FOR SELECT empno FROM emp;
+   LOOP
+		 FETCH cv bulk collect INTO numtbl limit 10;
+		 --EXIT WHEN cv%NOTFOUND;  -- only gives 10 then quits
+		 exit when numtbl.COUNT = 0;
+
+     for i in 1..numtbl.COUNT loop
+		   dbms_output.put_line(i || ' ' || numtbl(i));
+     end loop;
+   END LOOP;
+
+   CLOSE cv;
 END;
 
 ---

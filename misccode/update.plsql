@@ -1,3 +1,6 @@
+
+-- Created: 09-Feb-19 (Bob Heckel)
+
 -- Simple update < 5 records so no bulk collecting
 PROCEDURE SYNC_SG_COUNTRY_NAMES(reportAll NUMBER) IS
 	proc_name varchar2(200) := ' <B>SYNC_SG_COUNTRY_NAMES</B> Procedure<P>';
@@ -81,8 +84,6 @@ create or replace package body ORION32721 is
       rc := SQL%ROWCOUNT;
       dbms_output.put_line(rc || ' rows affected');
       
-      --MAINT.logdatachange(0, 'ORION-32721', 'N/A', 'N/A', SYSDATE, 0);
-
   END;
   
   
@@ -105,16 +106,12 @@ create or replace package body ORION32721 is
   END;
 end ORION32721;
 
-
 ---
-
 
 EXECUTE IMMEDIATE 'update ref_corporate_initiative set corporate_initiative = ''Customer Intelligence'' where corporate_initiative = ''CI''';
 COMMIT;
 
-
 ---
-
 
 DECLARE
   l_employee  omag_employees%ROWTYPE;
@@ -126,4 +123,3 @@ BEGIN
      SET ROW = l_employee
    WHERE employee_id = 100;
 END;
-

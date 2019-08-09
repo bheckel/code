@@ -1,5 +1,26 @@
--- Modified: Wed 19 Jun 2019 13:58:03 (Bob Heckel)
+
+-- Modified: Fri 09 Aug 2019 15:39:42 (Bob Heckel)
 -- See also csv_list_to_table_xmltable.sql
+
+---
+
+-- Find employees who manage others:
+
+select * 
+from emp e1
+where 1 <= (select count(*)
+            from emp e2
+            where e2.mgr=e1.empno);
+
+-- same
+select * 
+from emp e1
+where exists (select 1
+              from emp e2
+              where e2.mgr=e1.empno);
+              
+
+---
 
 -- Hierarchy self join - one (181477) is is ultimate parent, other two are children
 

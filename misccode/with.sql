@@ -1,5 +1,7 @@
 -- Modified: Wed 19 Jun 2019 08:45:28 (Bob Heckel)
 
+-- Common table expression CTE
+
 with account_name as (
 	select 5645818 account_name_id, 5645818 account_id from dual union all
 	select 7934046 account_name_id, 5645818 account_id from dual union all
