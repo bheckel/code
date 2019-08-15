@@ -4,6 +4,9 @@
 
 ---
 
+-- Oracle indexing
+-- See also https://blogs.oracle.com/sql/how-to-create-and-use-indexes-in-oracle-database
+
 -- Use B-tree index where cardinality is high (many unique recs e.g. account
 -- IDs) and column is usually part of a WHERE statement and DML is infrequent.
 -- Use bitmap where cardinality is low (e.g. skewed grade scores at Harvard) and DML

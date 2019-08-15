@@ -19,3 +19,7 @@ CREATE OR REPLACE PACKAGE BODY ztestbob AS
 
 END ztestbob;
 /
+
+exec ztestbob.test(42);
+
+drop package ztestbob;

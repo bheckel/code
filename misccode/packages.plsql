@@ -1,3 +1,5 @@
+-- Created: Mon 01 Feb 2019 10:45:15 (Bob Heckel) 
+
 -- see also ZTESTBOB.sql
 
 CREATE OR REPLACE PACKAGE ztestbob AS
@@ -81,7 +83,7 @@ create or replace package ORION_ERRORS_TEST is
   procedure proc_b;
   procedure proc_c;
   
-  PROCEDURE force_err(in_status VARCHAR2);
+  procedure force_err(in_status VARCHAR2);
 
 end ORION_ERRORS_TEST;
 /

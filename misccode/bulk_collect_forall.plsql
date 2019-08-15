@@ -641,3 +641,47 @@ END;
 FOR indx IN low_value .. high_value LOOP
   DBMS_OUTPUT.PUT_LINE(SQL%BULK_ROWCOUNT(indx));
 END LOOP;
+
+---
+
+PROCEDURE removeDuplicatedDump IS
+  TYPE numberTable IS TABLE OF NUMBER;
+  acctAttrTable numberTable;
+  
+  rowsAffected  NUMBER := 0;
+
+BEGIN
+  EXECUTE IMMEDIATE 'SELECT DISTINCT FIRST_VALUE(ATTRIBUTE_ID) 
+                            OVER(PARTITION BY dump_NBR ORDER BY dump_nbr, primary_aa_flag desc) AS AAN_ID
+                      FROM (SELECT DISTINCT AAN.ATTRIBUTE_ID,
+                                      AAN.dump_NBR,
+                                      DECODE(AAN.ATTRIBUTE_ID,
+                                             ABN.PRIMARY_ATTRIBUTE_ID,
+                                             1,
+                                             0) AS PRIMARY_AA_FLAG
+                            FROM ATTRIBUTE_NEW      AAN,
+                                 NAME_ATTRIBUTE_NEW ANAN,
+                                 NAME_NEW           ANN,
+                                 BASE_NEW           ABN
+                           WHERE AAN.ATTRIBUTE_ID = ANAN.ATTRIBUTE_ID
+                             AND ANAN.NAME_ID = ANN.NAME_ID
+                             AND ANN.ID = ABN.ID
+                             AND AAN.dump_NBR IN (SELECT dump_NBR
+                                                    FROM ATTRIBUTE_NEW AAN
+                                                   GROUP BY dump_NBR
+                                                  HAVING COUNT(dump_NBR) > 1))'
+     BULK COLLECT INTO acctAttrTable;
+
+  FOR i IN 1 .. acctAttrTable.COUNT LOOP
+    EXECUTE IMMEDIATE 'DELETE FROM ATTRIBUTE_NEW AAN WHERE AAN.ATTRIBUTE_ID = :1'
+      USING acctAttrTable(i);
+  
+    rowsAffected := rowsAffected + SQL%ROWCOUNT;
+  
+    IF (mod(rowsAffected, 10000) = 0) THEN
+      COMMIT;
+    END IF;
+  END LOOP;
+
+  COMMIT;
+END;

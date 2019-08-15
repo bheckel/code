@@ -16,7 +16,7 @@ WHERE salary <ANY
                  WHERE job_id = 'IT_PROG')
 AND job_id <> 'IT_PROG';
 
--- Employees whose salary is less than the salary ofall employees with a job ID of IT_PROG and whose job is not IT_PROG:
+-- Employees whose salary is less than the salary of all employees with a job ID of IT_PROG and whose job is not IT_PROG:
 SELECT employee_id,last_name, salary,job_id
 FROM employees
 WHERE salary <ALL
