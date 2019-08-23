@@ -20,7 +20,17 @@ order by users.email, posted;
 
     8 rows selected.
 
--- Hey! This completely wrecked our outer join! All of the rows where the user had not posted any ads have now disappeared. Why? They didn't meet the and classified_ads.posted > '1999-01-01' constraint. The outer join added NULLs to every column in the report where there was no corresponding row in the classified_ads table. The new constraint is comparing NULL to January 1, 1999 and the answer is... NULL. That's three-valued logic for you. Any computation involving a NULL turns out NULL. Each WHERE clause constraint must evaluate to true for a row to be kept in the result set of the SELECT. What's the solution? A "view on the fly". Instead of OUTER JOINing the users table to the classified_ads, we will OUTER JOIN users to a view of classified_ads that contains only those ads posted since January 1, 1999:
+-- Hey! This completely wrecked our outer join! All of the rows where the user
+-- had not posted any ads have now disappeared. Why? They didn't meet the and
+-- classified_ads.posted > '1999-01-01' constraint. The outer join added NULLs
+-- to every column in the report where there was no corresponding row in the
+-- classified_ads table. The new constraint is comparing NULL to January 1,
+-- 1999 and the answer is... NULL. That's three-valued logic for you. Any
+-- computation involving a NULL turns out NULL. Each WHERE clause constraint
+-- must evaluate to true for a row to be kept in the result set of the SELECT.
+-- What's the solution? A "view on the fly". Instead of OUTER JOINing the users
+-- table to the classified_ads, we will OUTER JOIN users to a view of
+-- classified_ads that contains only those ads posted since January 1, 1999:
 
 select users.user_id, users.email, ad_view.posted
 from 
