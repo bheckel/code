@@ -1,17 +1,16 @@
 -- Modified: Tue 06 Aug 2019 09:50:30 (Bob Heckel)
 
--- A cursor is a pointer to this context area. PL/SQL controls the context area
+-- A cursor is a pointer to a memory location (context area). PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL
 -- statement. The set of rows the cursor holds is referred to as the active set.
 
--- Declaring the cursor defines the cursor with a name and the associated SELECT
--- statement:
+-- Declaring the cursor defines the cursor with a name and the associated SELECT statement:
 -- 
 -- CURSOR c_customers IS 
 --    SELECT id, name, address FROM customers; 
 -- 
 -- Opening the cursor allocates the memory for the cursor and makes it ready for
--- fetching the rows returned by the SQL statement into it:
+-- fetching the rows (returned by the SQL statement) into it:
 -- 
 -- OPEN c_customers; 
 -- 
@@ -24,12 +23,12 @@
 -- CLOSE c_customers;
 
 --  As long as you do not have DML inside the loop, use the cursor FOR loop
-
 -- https://oracle-base.com/articles/misc/implicit-vs-explicit-cursors-in-oracle-plsql
 
 -- Strong ref cursor - has the small advantage that you will get a compile-time error rather than a 
 -- run-time error in the case that you attempt to fetch into a record or a set of scalars that don’t 
 -- match the shape of the select list:
+--
 -- TYPE result_t IS RECORD(pk t.pk%TYPE, v1 t.v1%TYPE);
 -- TYPE strong_cur_t IS REF CURSOR RETURN result_t;
 
@@ -186,12 +185,16 @@ END;
 ---
 
 -- Dynamic cursor.  See also pass_cursor.plsql
+
+-- 1. single column
 DECLARE
-  rn    NUMBER := 1;
-  myres varchar(1);
+  rn    NUMBER := 2;
+  myres varchar(99);
+  -- SYS_REFCURSOR is defined in the STANDARD package as a REF CURSOR (type sys_refcursor is ref cursor;). It is a 
+  -- predefined weak REF CURSOR type, unlike this strong type: TYPE book_data_t IS REF CURSOR RETURN book%ROWTYPE;
   cv    SYS_REFCURSOR;
 BEGIN
-  OPEN cv FOR 'select * from SYS.dual where rownum = :1'
+  OPEN cv FOR 'select ename from emp where rownum <= :1'
     USING rn;
 
   LOOP
@@ -205,28 +208,51 @@ BEGIN
   CLOSE cv;
 END;
 
----
-
+-- 2. multiple columns
 DECLARE
-   cv SYS_REFCURSOR;
-   r  dual%ROWTYPE;
-
+  rn  NUMBER := 2;
+  r   emp%ROWTYPE;
+  cv  SYS_REFCURSOR;
+  i   NUMBER;
 BEGIN
-   /* OPEN cv FOR 'select * from SYS.dual'; */
-   /* OPEN cv FOR my_previously_populated_qrystring; */
-   -- same
-   OPEN cv FOR SELECT * FROM SYS.dual;
-   LOOP
-		 FETCH cv INTO r;
-		 EXIT WHEN cv%NOTFOUND;
-		 dbms_output.put_line(r.dummy);
-   END LOOP;
-   CLOSE cv;
-   
-   -- better - implicit
-   FOR r IN ( SELECT * FROM SYS.dual ) LOOP
-		 dbms_output.put_line(r.dummy);
-   END LOOP;
+  OPEN cv FOR 'select * from emp where rownum <= :1'
+    USING rn;
+
+  LOOP
+    FETCH cv INTO r;
+
+    EXIT WHEN cv%NOTFOUND;
+
+    i := i + 1;
+    
+    dbms_output.put_line(r.ename);
+  END LOOP;
+
+  CLOSE cv;
+END;
+
+-- 3. multiple columns using collection
+DECLARE
+  rn       NUMBER := 2;
+ 	type     char_t is table of emp%rowtype;
+	chartbl  char_t;
+  cv       SYS_REFCURSOR;
+BEGIN
+  OPEN cv FOR 'select * from emp where rownum <= :1'
+    USING rn;
+
+  LOOP
+    FETCH cv bulk collect INTO chartbl;  -- no initialization required for bulk collect! 
+
+    EXIT WHEN chartbl.count = 0;
+
+    for i in 1..chartbl.count loop
+			dbms_output.put_line(chartbl(i).ename);
+    end loop;
+
+  END LOOP;
+
+  CLOSE cv;
 END;
 
 ---
@@ -253,6 +279,8 @@ BEGIN
 END;
 
 ---
+
+-- See also dynamic_procedure.plsql
 
 create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN NUMBER DEFAULT 1) IS
   char_back_date VARCHAR2(20);
