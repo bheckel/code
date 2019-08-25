@@ -1,0 +1,16 @@
+
+sql developer preferences
+
+C:\Users\xxx\AppData\Roaming\SQL Developer\xxx\o.sqldeveloper\
+~/.sqldeveloper/system18.3.0.277.2354/o.sqldeveloper\
+
+---
+
+SQL Developer sample dbs
+
+hr is already unlocked on Oracle VM:
+TNS
+Username hr
+Password hr
+Connection Type TNS
+Network Alias ORCL
