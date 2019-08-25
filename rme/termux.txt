@@ -1,6 +1,7 @@
 
 .bashrc.local:
 
+# Override to read readme files
 rme() {
   vi ~/code/rme/$1.txt
 } 
