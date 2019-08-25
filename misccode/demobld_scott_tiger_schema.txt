@@ -1,0 +1,26 @@
+$ sqlplus sys as sysdba
+
+SQL*Plus: Release 18.0.0.0.0 - Production on Sat Aug 24 12:39:37 2019
+Version 18.3.0.0.0
+
+Copyright (c) 1982, 2018, Oracle.  All rights reserved.
+
+Enter password: oracle
+
+Connected to:
+Oracle Database 18c Enterprise Edition Release 18.0.0.0.0 - Production
+Version 18.3.0.0.0
+
+SQL> CREATE USER SCOTT IDENTIFIED BY TIGER;
+
+SQL> GRANT ALL PRIVILEGES TO SCOTT;         
+
+Grant succeeded.
+
+SQL> connect scott
+
+Enter password: tiger
+
+SQL> @/home/oracle/Downloads/demobld_scott_tiger_schema.sql
+Building demonstration tables. Please wait.
+Demonstration table build is complete.
