@@ -84,3 +84,85 @@ END;
 				key := names.NEXT(key);
 			END LOOP;
   END do_audit;
+
+
+  PROCEDURE do_update(col_in VARCHAR2, inputtbl_in VARCHAR2) IS
+      --exec RION39366.do_update('CREATED', 'rion39366_c@sed');
+    --exec RION39366.do_update('UPDATED', 'rion39366_u@sed');
+    TYPE chartbl IS TABLE OF VARCHAR(128) INDEX BY VARCHAR2(128);
+    TYPE varcharTbl is TABLE OF VARCHAR2(100);
+
+    names       charTbl;
+    rowids      varcharTbl;
+    mindt       DATE;
+    i           NUMBER := 0;
+    key         VARCHAR(50);
+    cnt         NUMBER;
+    c1          SYS_REFCURSOR;
+    c2          SYS_REFCURSOR;
+    sqlstr      VARCHAR(500);
+    sqlstr2     VARCHAR(500);
+    sqlstr3     VARCHAR(500); 
+    table_name  VARCHAR(99);
+    low_value   RAW(32767);
+    t1          INTEGER;
+    t2          INTEGER;
+
+    BEGIN
+      sqlstr := 'SELECT table_name, low_value FROM ' || trim(inputtbl_in);
+      
+      OPEN c1 FOR sqlstr;
+      LOOP
+        FETCH c1 INTO table_name, low_value;
+        EXIT WHEN c1%NOTFOUND;
+        
+        -- Avoid looking for MIN() in each table in schema
+        dbms_stats.convert_raw_value(hextoraw(LOW_VALUE), mindt);
+        
+        IF mindt < '01JAN1970' THEN
+          i := i + 1;
+
+          names(table_name) := to_char(mindt, 'DD-MON-YYYY');
+
+          --dbms_output.put_line(table_name || ' ' || to_char(mindt, 'DD-MON-YYYY'));
+        END IF;
+      END LOOP;
+
+     key := names.FIRST;
+
+     -- For each table with >0 bad dates...
+     WHILE key IS NOT NULL LOOP
+       t1 := dbms_utility.get_time();
+
+       sqlstr2 := 'SELECT rowid FROM ' || key || ' WHERE created < ''01JAN1970''';
+      
+       cnt := 0;
+       
+       -- ...update it 100 recs at a time
+       OPEN c2 FOR sqlstr2;
+         LOOP
+           FETCH c2 BULK COLLECT INTO rowids LIMIT 100;
+           EXIT WHEN rowids.COUNT = 0;
+           FOR i IN 1..rowids.COUNT LOOP
+             cnt := cnt + 1;
+             sqlstr3 := 'UPDATE ' || key || ' SET ' || col_in || ' = ''01JAN1970'' WHERE rowid = ''' || trim(rowids(i)) || '''';
+             EXECUTE IMMEDIATE sqlstr3;
+           END LOOP;
+           --COMMIT; 
+           rollback;
+         END LOOP; 
+       --COMMIT;
+       rollback;
+       CLOSE c2;
+
+       t2 := (dbms_utility.get_time()-t1)/100;
+       dbms_output.put_line(key || ' ' || names(key) || ' ' || cnt || ' ' || t2);
+
+       key := names.NEXT(key);
+     END LOOP;
+
+     EXCEPTION
+       WHEN OTHERS THEN
+         dbms_output.put_line(SQLCODE || ': ' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+         ROLLBACK;
+  END do_update;

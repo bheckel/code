@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE BODY ORION35058 IS
+CREATE OR REPLACE PACKAGE BODY RION35058 IS
 
   PROCEDURE do IS
     rc pls_integer NULL;
@@ -11,6 +11,7 @@ CREATE OR REPLACE PACKAGE BODY ORION35058 IS
     BEGIN
       dbms_output.put_line('ok');
       
+      -- Only for very small number of updates, otherwise see bulk_collect_forall.plsql
       FOR r IN c LOOP
         dbms_output.put_line(r.activity_id || ' ' || r.contact_id || ' ' || r.salesgroup);
         
@@ -33,4 +34,4 @@ CREATE OR REPLACE PACKAGE BODY ORION35058 IS
       END IF;
   END do;
 
-END ORION35058;
+END;

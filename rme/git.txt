@@ -1028,3 +1028,49 @@ paste id_rsa.pub into webform
 
 git config --global user.name "Bob Heckel"
 git config --global user.email "sh@rshdev.com"
+
+---
+
+# on what-if 
+$ gb
+  develop
+  feature/RION-37551
+  feature/RION-37880
+  feature/RION-39245
+  feature/RION-39366
+  feature/RION-39939
+
+$ git remote show origin
+* remote origin
+  Fetch URL: git@github.sas.com:rion/data.git
+  Push  URL: git@github.sas.com:rion/data.git
+  HEAD branch: develop
+  Remote branches:
+    Interaction_attendee_data_work         tracked
+    RION-38469                             new (next fetch will store in remotes/origin)
+    RION-38733                             tracked
+    RION-39866                             tracked
+    develop                                tracked
+    feature/RION-28181                     tracked
+    feature/RION-33319                     tracked
+    feature/RION-39859                     tracked
+    feature/RION-39939                     tracked
+    master                                 tracked
+    refs/remotes/origin/feature/RION-38419 stale (use 'git remote prune' to remove)
+    refs/remotes/origin/feature/RION-38969 stale (use 'git remote prune' to remove)
+    what-if                                 tracked
+  Local branches configured for 'git pull':
+    develop             merges with remote develop
+    feature/RION-37551 merges with remote feature/RION-37551
+    feature/RION-37880 merges with remote feature/RION-37880
+    feature/RION-39245 merges with remote feature/RION-39245
+    feature/RION-39366 merges with remote feature/RION-39366
+    feature/RION-39939 merges with remote feature/RION-39939
+    what-if             merges with remote what-if
+  Local refs configured for 'git push':
+    develop             pushes to develop           (local out of date)
+    feature/RION-37880 pushes to feature/RION-37880 (up to date)
+    feature/RION-39245 pushes to feature/RION-39245 (up to date)
+    feature/RION-39366 pushes to feature/RION-39366 (up to date)
+    feature/RION-39939 pushes to feature/RION-39939 (up to date)
+    what-if             pushes to what-if           (up to date)

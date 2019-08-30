@@ -85,3 +85,42 @@ BEGIN
   END LOOP;
 END;
 
+---
+
+-- FOR vs. FORALL
+
+DECLARE
+  TYPE NumList IS VARRAY(20) OF NUMBER;
+  depts NumList := NumList(10, 30, 70);
+BEGIN
+  FOR i IN depts.FIRST..depts.LAST LOOP
+    DELETE FROM employees_temp
+    WHERE department_id = depts(i);
+  END LOOP;
+END;
+
+-- Any failure rolls everything back
+DECLARE
+  TYPE NumList IS VARRAY(20) OF NUMBER;
+  depts NumList := NumList(10, 30, 70);
+BEGIN
+  FORALL i IN depts.FIRST..depts.LAST  -- no LOOP but only 1 DDL allowed!
+    DELETE FROM employees_temp
+    WHERE department_id = depts(i);
+END;
+
+-- Any failure does NOT roll anything back
+DECLARE
+  TYPE NumList IS VARRAY(20) OF NUMBER;
+  depts NumList := NumList(10, 30, 70);
+BEGIN
+  FORALL i IN depts.FIRST..depts.LAST  -- no LOOP but only 1 DDL allowed!
+    DELETE FROM employees_temp
+    WHERE department_id = depts(i);
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE(SQLERRM);
+      COMMIT;  -- Commit results of the successful updates prior to this one
+      RAISE;
+END;

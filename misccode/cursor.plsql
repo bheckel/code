@@ -107,7 +107,7 @@ END;
 ---
 
 -- For queries that return more than one row, you must declare an explicit
--- cursor and use OPEN, FETCH, CLOSE
+-- cursor and use OPEN, FETCH, CLOSE in a loop
 
 SET serveroutput on;
 SHOW ERRORS;  -- if submitted via @cursor.plsql in SQL*Plus

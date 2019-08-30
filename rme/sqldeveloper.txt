@@ -1,7 +1,7 @@
 
 sql developer preferences
 
-C:\Users\xxx\AppData\Roaming\SQL Developer\xxx\o.sqldeveloper\
+C:\Users\xxx\AppData\Roaming\SQL Developer\system19.2xxx\o.sqldeveloper\
 ~/.sqldeveloper/system18.3.0.277.2354/o.sqldeveloper\
 
 ---
@@ -14,3 +14,5 @@ Username hr
 Password hr
 Connection Type TNS
 Network Alias ORCL
+
+See also ~/code/misccode/demobld_scott_tiger_schema.txt
