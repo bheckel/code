@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# Modified: 31-Aug-19 (Bob Heckel)
+
 for d in dotfiles code; do
   cd ~/$d && 
-  echo "ok to gitup $d dir?" && read &&
   git status
+  echo "ok to gitup $d dir?" && read &&
   git add .
-  git commit -m "mod gitall"
+  git commit -m "mod gitall $MACHTYPE"
   git pull origin master && git push origin master
   echo
 done
