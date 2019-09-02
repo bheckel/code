@@ -184,7 +184,7 @@ END;
 
 ---
 
--- Dynamic cursor.  See also pass_cursor.plsql
+-- Dynamic cursor 'OPEN FOR'.  See also pass_cursor.plsql
 
 -- 1. single column
 DECLARE

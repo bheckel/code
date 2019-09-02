@@ -5,11 +5,12 @@
 -- structure (or, to put it another way, a specific SELECT list in a query); a
 -- cursor variable declared based on a weak REF CURSOR type can be associated with
 -- any set of columns or expressions returned by a query. It is almost always used
--- with dynamic queries.  A cursor variable based on a weak REF CURSOR type cannot be declared 
--- at the package level (outside of any procedure or function in the package)
+-- with dynamic queries.  A cursor variable based on a weak REF CURSOR type CANNOT be 
+-- declared at the package level (outside of any procedure or function in the package)
 --
 -- There is no way to ask "Are these two cursor variables equal?" That would be
--- like asking PL/SQL to tell us "Are the contents of this query equal to that of a second one?"
+-- like asking PL/SQL to tell us "Are the contents of this query equal to that
+-- of a second one?"
 --
 -- REF CURSOR types (such as SYS_REFCURSOR) cannot be used as the datatype of a collection.
 

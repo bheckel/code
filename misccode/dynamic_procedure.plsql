@@ -1,3 +1,6 @@
+-- Modified: 02-Sep-19 (Bob Heckel)
+
+-- see also cursor.plsql
 
 /* Dynamically delete oldest records from a table */
 /* E.g. PRUNE_TBL_GENERIC('EMAIL_MESSAGES', 'ACTUAL_UPDATED', 'EMAIL_MESSAGES_ID', 365); */
