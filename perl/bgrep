@@ -10,6 +10,10 @@
 #          This works similarly but is slower:
 #          find . -type f -exec grep "mystring" /dev/null {} \;
 #
+#          This should really replace bgrep except for its mandatory recursion
+#          that would require -maxdepth:
+#          vim `find . -type f -print0 | xargs -0 grep -i 'Ht.p' | awk -F: '{print $1}' | sort | uniq`
+#
 #          Navigation in the results window assumes autocmds have been setup
 #          in .vimrc.
 #         

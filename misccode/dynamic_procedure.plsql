@@ -41,6 +41,24 @@ END;
 ---
 
   -- Accept a table name as parameter dynamically
+CREATE OR REPLACE PACKAGE rion39366 IS
+  -- ----------------------------------------------------------------------------
+  -- Purpose: CREATED/UPDATED dates should not be before 1970
+  -- Created 23Aug19 bheck
+  --
+  -- DROP PACKAGE RION39366
+  -- ----------------------------------------------------------------------------
+ 
+  PROCEDURE do_audit(col_in VARCHAR2, inputtbl_in VARCHAR2);
+  PROCEDURE do_update(col_in VARCHAR2, inputtbl_in VARCHAR2);
+END;
+/
+
+
+CREATE OR REPLACE PACKAGE BODY rion39366 IS
+
+  --exec RION39366.do_audit('CREATED', 'rion39366_c@esd');
+  --exec RION39366.do_audit('UPDATED', 'rion39366_u@esd');
   PROCEDURE do_audit(col_in VARCHAR2, inputtbl_in VARCHAR2) IS
     TYPE chartbl IS TABLE OF VARCHAR(128) INDEX BY VARCHAR2(128);
 
@@ -54,44 +72,61 @@ END;
     table_name  VARCHAR(99);
     low_value   RAW(32767);
 
-		BEGIN        
-			--sqlstr := 'SELECT table_name, low_value FROM ' || trim(inputtbl_in) || ' WHERE rownum<99';
-			sqlstr := 'SELECT table_name, low_value FROM ' || trim(inputtbl_in);
-			
-			OPEN c1 FOR sqlstr;
-			LOOP
-				FETCH c1 INTO table_name, low_value;
-				EXIT WHEN c1%NOTFOUND;
-				
-				-- Avoid looking for MIN() in each table in schema
-				dbms_stats.convert_raw_value(hextoraw(LOW_VALUE), mindt);
-				
-				IF mindt < '01JAN1970' THEN
-					i := i + 1;
+    -- As a cursor this occasionally hangs for a very long time so Plan B, precompile table names rion39366_c@sed & rion39366_u@sed
+/*    CURSOR c1 IS
+      SELECT table_name, low_value
+        FROM user_tab_columns
+       WHERE table_name IN(
+         SELECT table_name 
+           FROM user_tables
+          WHERE table_name NOT LIKE 'BDG%'
+            AND table_name NOT LIKE 'RIA%'
+            AND table_name NOT LIKE 'CMK%'
+            AND table_name NOT LIKE '%\_BKUP'  ESCAPE '\'
+            AND NOT regexp_like(table_name, '.*\d+$')
+            AND NOT regexp_like(table_name, '^S\d+')
+        )
+          AND column_name = col_in
+        ORDER BY 1
+      ;*/
 
-					names(table_name) := to_char(mindt, 'DD-MON-YYYY');
+      BEGIN
+        sqlstr := 'SELECT table_name, low_value FROM ' || trim(inputtbl_in);
+        
+        OPEN c1 FOR sqlstr;
+        LOOP
+          FETCH c1 INTO table_name, low_value;
+          EXIT WHEN c1%NOTFOUND;
+          
+          -- Avoid looking for MIN() in each table in schema
+          dbms_stats.convert_raw_value(hextoraw(LOW_VALUE), mindt);
+          
+          IF mindt < '01JAN1970' THEN
+            i := i + 1;
 
-					--dbms_output.put_line(table_name || ' ' || to_char(mindt, 'DD-MON-YYYY'));
-				END IF;
-			END LOOP;
+            names(table_name) := to_char(mindt, 'DD-MON-YYYY');
 
-			key := names.FIRST;
+            --dbms_output.put_line(table_name || ' ' || to_char(mindt, 'DD-MON-YYYY'));
+          END IF;
+        END LOOP;
 
-			WHILE key IS NOT NULL LOOP
-				EXECUTE IMMEDIATE 
-					'select count(1) from ' || key || ' where ' || col_in || ' < ''01JAN1970'''
-				INTO cnt;
+        key := names.FIRST;
 
-				dbms_output.put_line(key || ' ' || names(key) || ' ' || cnt);
+        WHILE key IS NOT NULL LOOP
+          EXECUTE IMMEDIATE 
+            'select count(1) from ' || key || ' where ' || col_in || ' < ''01JAN1970'''
+          INTO cnt;
 
-				key := names.NEXT(key);
-			END LOOP;
+          dbms_output.put_line(key || ' ' || names(key) || ' ' || cnt);
+
+          key := names.NEXT(key);
+        END LOOP;
   END do_audit;
 
 
+  --exec RION39366.do_update('CREATED', 'rion39366_c@esd');
+  --exec RION39366.do_update('UPDATED', 'rion39366_u@esd');
   PROCEDURE do_update(col_in VARCHAR2, inputtbl_in VARCHAR2) IS
-      --exec RION39366.do_update('CREATED', 'rion39366_c@sed');
-    --exec RION39366.do_update('UPDATED', 'rion39366_u@sed');
     TYPE chartbl IS TABLE OF VARCHAR(128) INDEX BY VARCHAR2(128);
     TYPE varcharTbl is TABLE OF VARCHAR2(100);
 
@@ -132,34 +167,34 @@ END;
       END LOOP;
 
      key := names.FIRST;
+     
+     cnt := 0;
 
      -- For each table with >0 bad dates...
      WHILE key IS NOT NULL LOOP
        t1 := dbms_utility.get_time();
 
-       sqlstr2 := 'SELECT rowid FROM ' || key || ' WHERE created < ''01JAN1970''';
-      
-       cnt := 0;
-       
-       -- ...update it 100 recs at a time
+      -- Use rowid for identifying bad dates
+       sqlstr2 := 'SELECT rowid FROM ' || key || ' WHERE ' || col_in || ' < ''01JAN1970''';
+                                                                                                                                         
        OPEN c2 FOR sqlstr2;
+         cnt := 0;
          LOOP
-           FETCH c2 BULK COLLECT INTO rowids LIMIT 100;
+           FETCH c2 bulk collect INTO rowids limit 100;
            EXIT WHEN rowids.COUNT = 0;
+           -- Update those bad date rowids to 01JAN1970
            FOR i IN 1..rowids.COUNT LOOP
-             cnt := cnt + 1;
              sqlstr3 := 'UPDATE ' || key || ' SET ' || col_in || ' = ''01JAN1970'' WHERE rowid = ''' || trim(rowids(i)) || '''';
              EXECUTE IMMEDIATE sqlstr3;
+             cnt := cnt + 1;
            END LOOP;
-           --COMMIT; 
-           rollback;
-         END LOOP; 
-       --COMMIT;
-       rollback;
+           COMMIT;
+           --rollback;
+         END LOOP;
        CLOSE c2;
 
        t2 := (dbms_utility.get_time()-t1)/100;
-       dbms_output.put_line(key || ' ' || names(key) || ' ' || cnt || ' ' || t2);
+       dbms_output.put_line(key || ' ' || names(key) || ' cnt ' || cnt || ' seconds ' || t2);
 
        key := names.NEXT(key);
      END LOOP;
@@ -169,3 +204,5 @@ END;
          dbms_output.put_line(SQLCODE || ': ' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
          ROLLBACK;
   END do_update;
+END;
+/

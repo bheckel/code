@@ -6,6 +6,7 @@
 
 -- The PL/SQL features that comprise bulk SQL are the FORALL statement and the
 -- BULK COLLECT clause.
+--
 -- The FORALL statement sends DML statements from PL/SQL to SQL in batches rather 
 -- than one at a time i.e. it binds all the data in a collection into a DML statement.
 -- The BULK COLLECT clause returns results from SQL to PL/SQL in batches rather than 
@@ -14,8 +15,10 @@
 -- If a query or DML statement affects four or more database rows, then bulk SQL can
 -- significantly improve performance but reducing context switches.
 --
--- If the query does not return any rows, then NO_DATA_FOUND is not raised.
--- Instead, the collection is emptied.
+-- If the query does not return any rows, then NO_DATA_FOUND is NOT raised.
+-- Instead, the collection is emptied.  Like FETCH inside a LOOP PL/SQL does
+-- not raise an exception when a statement with a BULK COLLECT clause returns no
+-- rows. You must check the target collection for emptiness.
 --
 -- Statement level triggers only fire once at the start and end of the bulk insert operation,
 -- but fire on a row-by-row basis for the bulk update and delete operations:
@@ -592,6 +595,7 @@ END;
 
 ---
 
+--  BULK COLLECT fetching into nested table of records based on a cursor
 CURSOR c IS
    select ri.risk_id as import_risk_id, ri.new_risk_id, rp.risk_id, 
           asp.account_site_id, asp.product, ri.product_code
@@ -619,8 +623,8 @@ BEGIN
      
      FORALL i IN 1..l_tab_size
          UPDATE RISK_PRODUCT
-         SET    UPDATED = UPDATED, UPDATEDBY = UPDATEDBY,
-                AT_RISK_AMOUNT = t_tab(i).AT_RISK_AMOUNT
+         SET    updated = updated, updatedby = updatedby,
+                at_risk_amount = t_tab(i).at_risk_amount
          WHERE  risk_product_id = t_tab(i).risk_product_id;
          
      COMMIT;
