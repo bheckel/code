@@ -5,6 +5,20 @@
 
 ---
 
+$ git pull && git checkout -b feature/RION-40225 && git push --set-upstream origin feature/RION-40225
+Already up to date.
+Switched to a new branch 'feature/RION-40225'
+Total 0 (delta 0), reused 0 (delta 0)
+remote:
+remote: Create a pull request for 'feature/RION-40225' on GitHub by visiting:
+remote:      https://github.as.com/rion/data/pull/new/feature/RION-40225
+remote:
+To github.as.com:rion/data.git
+ * [new branch]              feature/RION-40225 -> feature/RION-40225
+Branch 'feature/RION-40225' set up to track remote branch 'feature/RION-40225' from 'origin'.
+
+---
+
 1. Using git to commit a small fix directly into a local branch directly tracking the same remote branch.  In this example we will commit a small fix into the develop branch
 git checkout develop
 checks out your local develop branch which brings your file system to that version of the files
