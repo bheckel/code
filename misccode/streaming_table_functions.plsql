@@ -31,7 +31,8 @@ BEGIN
 END;
 /
 
--- My transformation is simple: for each row in the stock table, generate two rows for the tickers table (one row each for the open and close prices):
+-- Transformation: for each row in the stock table, generate two rows for
+-- the tickers table (one row each for the open and close prices):
 
 CREATE TABLE tickers
 (
@@ -56,7 +57,7 @@ CREATE TYPE ticker_ot AUTHID DEFINER IS OBJECT
 CREATE TYPE tickers_nt AS TABLE OF ticker_ot;
 /
 
--- Since we am going to use the table function in a streaming process, we will
+-- Since we are going to use the table function in a streaming process, we will
 -- also need to define a strong REF CURSOR type that will be used as the datatype
 -- of the parameter accepting the dataset inside the SQL statement.
 
@@ -119,16 +120,16 @@ INSERT INTO tickers
 
 select * from tickers;
 
-/* When we add a "singled" fn then we can do things like:
+/* When we add a "singled" fn then we can chain things like:
 
 CREATE TABLE more_stocks
 AS
    SELECT *
      FROM TABLE (
-             singled (
+             singled(
                 CURSOR (
                    SELECT * 
-                     FROM TABLE (doubled (
+                     FROM TABLE (doubled(
                                    CURSOR (SELECT * FROM stocks))))))
 /
 

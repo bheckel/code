@@ -1,32 +1,30 @@
 
--- Modified: Mon 29 Jul 2019 11:31:49 (Bob Heckel)
+-- Modified: Mon 09-Sep-2019 (Bob Heckel)
 
 -- Details of what's scheduled (in job_action)
--- select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments
--- from all_scheduler_jobs a ORDER BY 1
-
+select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments
+from all_scheduler_jobs a ORDER BY 1
 -- Run status log
---SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
-
+SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
 -- Next run details
---SELECT * from user_scheduler_jobs@sed WHERE job_name in ('PERIODIC_LIFE_UPDATE')
+SELECT * from user_scheduler_jobs@sed WHERE job_name in ('PERIODIC_LIFE_UPDATE')
+-- Named Schedule details
+select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'PERI%';
 
 ---
 
+-- ALL_SCHEDULER_JOBS.SCHEDULE_TYPE = 'ONCE' is default
 BEGIN
  sys.dbms_scheduler.create_job(
-   job_name => 'TEST_JOB',
-   job_type => 'PLSQL_BLOCK',
+   job_name   => 'TEST_JOB',
+   job_type   => 'PLSQL_BLOCK',
    job_action => 'begin null;end;',
-   start_date => CAST(sysdate + interval '1' minute AS TIMESTAMP),
-   repeat_interval => 'FREQ=MINUTELY;INTERVAL=60;',
-   end_date => to_date(null),
-   job_class => 'DEFAULT_JOB_CLASS',
-   enabled => true,
-   comments => 'test');
+   start_date => CAST(SYSDATE + interval '1' minute AS TIMESTAMP),
+   end_date   => TO_DATE(NULL),
+   job_class  => 'DEFAULT_JOB_CLASS',
+   enabled    => TRUE,
+   comments   => 'One time run, auto drops');
 END;
-BEGIN dbms_scheduler.drop_job('TEST_JOB'); END;
-BEGIN sys.dbms_scheduler.disable('TEST_JOB'); END;
 
 ---
 
