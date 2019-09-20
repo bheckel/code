@@ -7,34 +7,23 @@
 #          Original motivation was to avoid barfing on binaries in Cygwin 
 #          bash.
 #
-#          This works similarly but is slower:
-#          find . -type f -exec grep "mystring" /dev/null {} \;
-#
-#          This should really replace bgrep except for its mandatory recursion
-#          that would require -maxdepth:
-#          vim `find . -type f -print0 | xargs -0 grep -i 'Ht.p' | awk -F: '{print $1}' | sort | uniq`
-#
 #          Navigation in the results window assumes autocmds have been setup
 #          in .vimrc.
 #         
 #          TODO skip symlinks
 #
 #          Alternatives:
-#          :vimgrep /select.*into/ *.plsql
-#          :vimgrep /\CSELECT.*into/j **/*.plsql
-#          $ find /foo/Macros -type f -print0 |xargs -0 grep -i barstring
+#           :vimgrep /select.*into/ *.plsql
+#           :vimgrep /\CSELECT.*into/j **/*.plsql
+#           $ find /foo/Macros -type f -print0 |xargs -0 grep -i barstring
+#          This works similarly but is slower:
+#           $ find . -type f -exec grep "mystring" /dev/null {} \;
+#          This should really replace bgrep except for its mandatory recursion
+#          that would require -maxdepth:
+#           $ vim `find . -type f -print0 | xargs -0 grep -i 'Ht.p' | awk -F: '{print $1}' | sort | uniq`
 #
-#  Created: Sun, 26 Dec 1999 21:44:34 (Bob Heckel)
-# Modified: Thu Jun 20 10:34:23 2002 (Bob Heckel -- ignore Adobe files) 
-# Modified: Mon 24 Jun 2002 15:23:01 (Bob Heckel -- bugfixes)
-# Modified: Thu 21 Nov 2002 10:48:55 (Bob Heckel -- make case insensitive the
-#                                     deafault search) 
-# Modified: Tue 24 Dec 2002 10:22:17 (Bob Heckel -- bugfix to rm temp file) 
-# Modified: Tue 18 Mar 2003 09:31:07 (Bob Heckel -- added exit code to
-#                                     indicate failure, use STDERR)
-# Modified: Fri 28 Sep 2007 09:10:29 (Bob Heckel -- add dir check on no 
-#                                     results found)
-# Modified: Tue 15 Apr 2014 13:15:24 (Bob Heckel -- remove $EDITOR, just use vim
+#  Created: Sun 26 Dec 1999 21:44:34 (Bob Heckel)
+# Modified: 20-Sep-2019 (Bob Heckel)
 ##############################################################################
 use File::Find;     # used only for recursion
 use Getopt::Std;

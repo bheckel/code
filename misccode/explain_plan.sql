@@ -1,6 +1,6 @@
 
--- Created: 30-Jul-19 (Bob Heckel)
--- Modified: 31-Jul-19 (Bob Heckel) 
+-- Created:  Thu 30-Jul-2019 (Bob Heckel)
+-- Modified: Thu 19-Sep-2019 (Bob Heckel)
 
 ---
 
@@ -101,3 +101,56 @@ set autotrace off
 set echo off
 drop table robtest purge
 /
+
+---
+
+-- https://use-the-index-luke.com
+-- 
+-- Attributes of Explain Plan Operations:
+-- 
+-- There are two different ways databases use indexes to apply the where clauses (predicates):
+-- - ACCESS predicates express the start and stop conditions for the leaf node traversal.
+-- 
+-- - FILTER predicates are applied during the leaf node traversal only. They don't
+--   contribute to the start and stop conditions and do not narrow the scanned range.
+-- 
+-- --------------------------------------------------------------
+-- |Id | Operation                   | Name       | Rows | Cost |
+-- --------------------------------------------------------------
+-- | 0 | SELECT STATEMENT            |            |   17 |  230 |
+-- |*1 |  TABLE ACCESS BY INDEX ROWID| EMPLOYEES  |   17 |  230 |
+-- |*2 |   INDEX RANGE SCAN          | EMPLOYEE_PK|  333 |    2 |
+-- --------------------------------------------------------------
+-- 
+-- Predicate Information (identified by operation id):
+-- ---------------------------------------------------
+--    1 - filter(UPPER("LAST_NAME") LIKE '%INA%')
+--    2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
+-- 
+-- 
+-- CREATE INDEX empsubupnam ON employees (subsidiary_id, UPPER(last_name))
+-- 
+-- --------------------------------------------------------------
+-- |Id | Operation                   | Name       | Rows | Cost |
+-- --------------------------------------------------------------
+-- | 0 | SELECT STATEMENT            |            |   17 |   20 |
+-- | 1 |  TABLE ACCESS BY INDEX ROWID| EMPLOYEES  |   17 |   20 |
+-- |*2 |   INDEX RANGE SCAN          | EMPSUBUPNAM|   17 |    3 | <--- +1 index is bigger due to adding last_name
+-- --------------------------------------------------------------
+-- 
+-- Predicate Information (identified by operation id):
+-- ---------------------------------------------------
+--    2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
+--        filter(UPPER("LAST_NAME") LIKE '%INA%')
+-- 
+-- 
+-- According to the optimizer's estimate, the query ultimately matches 17 records.
+-- The index scan in the first execution plan delivers 333 rows nevertheless. The
+-- database must then load these 333 rows from the table to apply the LIKE filter
+-- which reduces the result to 17 rows. In the second execution plan, the index
+-- access does not deliver those rows in the first place so the database needs to
+-- execute the TABLE ACCESS BY INDEX ROWID operation only 17 times.
+-- 
+-- The biggest performance risk of an INDEX RANGE SCAN is the leaf node traversal.
+-- It is therefore the golden rule of indexing to keep the scanned index range as
+-- small as possible.

@@ -41,7 +41,8 @@ FROM DATA, xmltable(('"' || REPLACE(ids, ',', '","') || '"'))
 
 ---
 
-CREATE OR REPLACE PACKAGE ORION36736 IS
+-- Pass a CSV list as parameter
+CREATE OR REPLACE PACKAGE RION36736 IS
  failure_in_forall EXCEPTION;  
  PRAGMA EXCEPTION_INIT (failure_in_forall, -24381);  -- ORA-24381: error(s) in array DML  
  
@@ -49,7 +50,7 @@ CREATE OR REPLACE PACKAGE ORION36736 IS
 
 END;
 /
-CREATE OR REPLACE PACKAGE BODY ORION36736 IS
+CREATE OR REPLACE PACKAGE BODY RION36736 IS
 
   PROCEDURE upd(in_ids VARCHAR2) IS
     l_limit_group  PLS_INTEGER := 0;
@@ -120,8 +121,6 @@ CREATE OR REPLACE PACKAGE BODY ORION36736 IS
       END LOOP;
       COMMIT;
       --ROLLBACK;
-
-      MAINT.logdatachange(step => 0, status => 'ORION-36736: MM Account to Flag as Used in Orion 3-19-19', release => 'N/A', defect => 'N/A', startTime => SYSDATE, do_commit => 1); 
     END upd;
 END;
 /
