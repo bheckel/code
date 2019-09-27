@@ -108,7 +108,7 @@ drop table robtest purge
 -- 
 -- Attributes of Explain Plan Operations:
 -- 
--- There are two different ways databases use indexes to apply the where clauses (predicates):
+-- There are two different ways databases use indexes to apply the WHERE clauses (predicates):
 -- - ACCESS predicates express the start and stop conditions for the leaf node traversal.
 -- 
 -- - FILTER predicates are applied during the leaf node traversal only. They don't
@@ -151,6 +151,75 @@ drop table robtest purge
 -- access does not deliver those rows in the first place so the database needs to
 -- execute the TABLE ACCESS BY INDEX ROWID operation only 17 times.
 -- 
--- The biggest performance risk of an INDEX RANGE SCAN is the leaf node traversal.
--- It is therefore the golden rule of indexing to keep the scanned index range as
--- small as possible.
+--
+-- INDEX UNIQUE SCAN 
+-- Performs the B-tree traversal only. The database uses this operation if a
+-- unique constraint ensures that the search criteria will match no more than one
+-- entry.
+-- 
+-- INDEX RANGE SCAN 
+-- Performs the B-tree traversal and follows the leaf node chain to find all
+-- matching entries.  The biggest performance risk of an INDEX RANGE SCAN is the
+-- leaf node traversal.  It is therefore the golden rule of indexing to keep the
+-- scanned index range as small as possible.  The so-called index filter
+-- predicates often cause performance problems for an INDEX RANGE SCAN.
+-- 
+-- INDEX FULL SCAN
+-- Reads the entire index *all rows* in index order. Depending on various system
+-- statistics, the database might perform this operation if it needs all rows in
+-- index order—e.g., because of a corresponding order by clause.  Instead, the
+-- optimizer might also use an INDEX FAST FULL SCAN and perform an additional sort
+-- operation.
+-- 
+-- INDEX FAST FULL SCAN
+-- Reads the entire index *all rows* as stored on the disk. This operation is
+-- typically performed instead of a full table scan if all required columns are
+-- available in the index. Similar to TABLE ACCESS FULL, the INDEX FAST FULL SCAN
+-- can benefit from multi-block read operations.
+-- 
+-- TABLE ACCESS BY INDEX ROWID
+-- Retrieves a row from the table using the ROWID retrieved from the preceding
+-- index lookup.
+-- 
+-- TABLE ACCESS FULL
+-- Also known as full table scan. Reads the entire table *all rows AND COLUMNS* 
+-- as stored on the disk. Although multi-block read operations improve the
+-- speed of a full table scan considerably, it is still one of the most expensive
+-- operations. Besides high IO rates, a full table scan must inspect all table
+-- rows so it can also consume a considerable amount of CPU time.
+--
+--
+-- NESTED LOOPS JOIN
+-- Joins two tables by fetching the result from one table and querying the other
+-- table for each row from the first.
+-- 
+-- HASH JOIN
+-- The hash join loads the candidate records from one side of the join into a hash
+-- table that is then probed for each row from the other side of the join.
+-- 
+-- MERGE JOIN
+-- The merge join combines two sorted lists like a zipper. Both sides of the join
+-- must be presorted.
+--
+--
+-- SORT ORDER BY
+-- Sorts the result according to the order by clause. This operation needs large
+-- amounts of memory to materialize the intermediate result (not pipelined).
+-- 
+-- SORT ORDER BY STOPKEY
+-- Sorts a subset of the result according to the order by clause. Used for top-N
+-- queries if pipelined execution is not possible.
+-- 
+-- SORT GROUP BY
+-- Sorts the result set on the group by columns and aggregates the sorted result
+-- in a second step. This operation needs large amounts of memory to materialize
+-- the intermediate result set (not pipelined).
+-- 
+-- SORT GROUP BY NOSORT
+-- Aggregates a presorted set according the group by clause. This operation does
+-- not buffer the intermediate result: it is executed in a pipelined manner.
+-- 
+-- HASH GROUP BY
+-- Groups the result using a hash table. This operation needs large amounts of
+-- memory to materialize the intermediate result set (not pipelined). The output
+-- is not ordered in any meaningful way.

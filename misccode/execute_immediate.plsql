@@ -107,3 +107,9 @@ begin
     dbms_output.put_line(d);
   end loop;
 end;
+
+---
+
+EXECUTE IMMEDIATE q'[
+  CREATE INDEX "SETARS"."ZSP_DETAILS_ACCT_ID_SITE_ID_IX" ON "SETARS"."ZASP_DETAILS" ("ACCOUNT_SITE_ID", "ACCOUNT_ID") 
+]';
