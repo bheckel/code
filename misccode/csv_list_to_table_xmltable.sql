@@ -34,10 +34,19 @@ LEFT JOIN account_base ab ON csv.ids=ab.account_id
 
 ---
 
+-- 4K max len
+
 WITH DATA AS
   (SELECT '409065,93254,1000493402' ids FROM dual)
 SELECT trim(COLUMN_VALUE) ids
 FROM DATA, xmltable(('"' || REPLACE(ids, ',', '","') || '"'))
+
+WITH DATA AS
+  (SELECT 
+'409065,93254,1000493402'
+  ids FROM dual)
+SELECT trim(COLUMN_VALUE) ids
+FROM DATA, xmltable(('"' || REPLACE(ids, ',', '","') || '"'));
 
 ---
 
