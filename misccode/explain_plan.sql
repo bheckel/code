@@ -17,7 +17,7 @@ CREATE BITMAP INDEX CONTACT_EMP_EVENT_NE_IX on CONTACT_EMPLOYEE_EVENT(NEW_EVENT)
 create index M_SUBCOMPGRP_FUNCTION_IX on M_SUBCOMP (LOWER(M_SUBCOMP_GROUP_NAME));
 
 
-SELECT * FROM SYS.user_indexes WHERE table_name = 'EMAIL_MESSAGES';  -- does B-tree (NORMAL) index exist?
+SELECT * FROM SYS.user_indexes WHERE table_name = 'EMAIL_MESSAGES';  -- does a B-tree (NORMAL) index exist for this table?
 
 SELECT * FROM SYS.user_ind_statistics where table_name='EMAIL_MESSAGES';
 
@@ -70,14 +70,14 @@ exec dbms_stats.gather_table_stats(user,'robtest',cascade=>true)
 set autotrace on
 select *
   from robtest
-where code1 = 1
+ where code1 = 1
    and code2 = 1
    and code3 = 1
    and code4 = 1
 /
 select *
   from robtest
-where nvl(code1,-1) = 1
+ where nvl(code1,-1) = 1
    and nvl(code2,-1) = 1
    and nvl(code3,-1) = 1
    and nvl(code4,-1) = 1
@@ -92,7 +92,7 @@ alter table robtest modify code4 constraint nn4 not null
 /
 select *
   from robtest
-where nvl(code1,-1) = 1
+ where nvl(code1,-1) = 1
    and nvl(code2,-1) = 1
    and nvl(code3,-1) = 1
    and nvl(code4,-1) = 1
