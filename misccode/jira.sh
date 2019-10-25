@@ -27,8 +27,8 @@ echo >> ${JIRA}.sql
 
 # vim t.sql -c ':mksession!'
 
-# echo "${JIRA} ${DESC}" > ${TAG}.html
-# echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
+echo "${JIRA} ${DESC}" > ${TAG}.html
+echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
 # cygstart ${TAG}.html
 
 # cp -i ~/onedrive/template_project.prj ~/onedrive/orion-${TAG}/${TAG}.prj && \
