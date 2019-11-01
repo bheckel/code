@@ -1,4 +1,12 @@
 
+create table rion39366x as 
+  SELECT to_number(column_value) account_id,
+         1 to_be_deleted,
+         to_date('01DEC1969','DDMONYYYY') created 
+    FROM xmltable(('"' || REPLACE('6190448,6277610', ',', '","') || '"'));
+
+---
+
 begin
   drop table deptx;
   drop table empx;

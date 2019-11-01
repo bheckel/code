@@ -113,3 +113,34 @@ end;
 EXECUTE IMMEDIATE q'[
   CREATE INDEX "SETARS"."ZSP_DETAILS_ACCT_ID_SITE_ID_IX" ON "SETARS"."ZASP_DETAILS" ("ACCOUNT_SITE_ID", "ACCOUNT_ID") 
 ]';
+
+---
+
+-- Execute DDL based on a query
+DECLARE
+  l_sql       VARCHAR2(4000);
+
+  CURSOR aspCursor IS
+    select 'CREATE INDEX ZSTAGED_CONTACTXX_IX on ZSTAGED_CONTACT(CONTACT_STAGING_ITEM_ID)' index_create from dual;
+  /*
+    select 'CREATE INDEX ' || ucc.table_name || 'XX_IX on ' || ucc.table_name || '(' || ucc.column_name || ')' index_create
+	    from user_constraints uc, user_cons_columns ucc
+     where uc.constraint_name = ucc.constraint_name
+       and uc.constraint_type = 'R'
+       and not exists (select 1
+                         from user_ind_columns uic
+                        where uic.TABLE_NAME = uc.table_name
+                          and uic.COLUMN_NAME = ucc.column_name);
+   */ 
+BEGIN
+    FOR aspRec IN aspCursor LOOP
+        l_sql := aspRec.index_create;
+
+        EXECUTE IMMEDIATE l_sql;
+    END LOOP;
+   
+      EXCEPTION
+        WHEN OTHERS THEN
+          DBMS_OUTPUT.put_line(l_sql || ' FAILED! ' || sqlerrm);
+
+END;

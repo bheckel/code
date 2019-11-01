@@ -12,6 +12,8 @@ Oracle Database 18c Enterprise Edition Release 18.0.0.0.0 - Production
 Version 18.3.0.0.0
 
 SQL> CREATE USER SCOTT IDENTIFIED BY TIGER;
+--or
+SQL> CREATE USER SCOTT IDENTIFIED BY tIGER1234567;
 
 SQL> GRANT ALL PRIVILEGES TO SCOTT;         
 
