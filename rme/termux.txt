@@ -1,14 +1,19 @@
+---
 
-.bashrc.local:
+.bashrc.project:
 
-# Override to read readme files
-rme() {
-  vi ~/code/rme/$1.txt
-} 
+  # Termux additions
+  # Save to ~/termux.txt
 
-alias cal=gcal
+  alias htip='cd ~/storage/external-1/HTipitakaML/ && lynx tipitaka.htm && cd -'
 
-gcal
+  alias cal=gcal
+
+  rme() {
+    vi ~/code/rme/$1.txt
+  } 
+
+  gcal
 
 ---
 
