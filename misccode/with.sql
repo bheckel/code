@@ -21,7 +21,7 @@ where w.account_id=wo.account_id
 
 ---
 
--- Compare table to csv list of numbers
+-- Compare table to csv list (4K max len) of numbers
 
 SELECT ids, ab.account_id 
 FROM (WITH DATA AS

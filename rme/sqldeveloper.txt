@@ -6,11 +6,11 @@ C:\Users\xxx\AppData\Roaming\SQL Developer\system19.2xxx\o.sqldeveloper\
 
 0 bheck@l10 /cygdrive/c/Users/boheck/AppData/Roaming/SQL Developer/system19.2.0.206.2117/ Fri Sep 06 11:43:22
 $ find . -mmin -5 -type f                                                                                         
-./o.ide.13.0.0.1.42.190403.1502/preferences.xml                                                                   
+./o.ide.13.0.0.1.42.190403.1502/preferences.xml          <--has local db info, don't copy
 ./o.ide.13.0.0.1.42.190403.1502/settings.xml                                                                      
 ./o.ide.ceditor.13.0.0.1.42.190403.1502/preferences.xml                                                           
 ./o.sqldeveloper/preferences.xml                                                                                  
-./o.sqldeveloper/product-preferences.xml                                                                          
+./o.sqldeveloper/product-preferences.xml                 <--has local db info, don't copy
 ./o.sqldeveloper/custom_syntax.arbori
 
 ---

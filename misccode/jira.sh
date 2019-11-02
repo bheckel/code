@@ -16,19 +16,19 @@ cp -i ~/onedrive/template_bulkcollect.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.s
 sed -i "s/99999/${JIRA}/" ORION${JIRA}.sql && \
 echo '--SQL> cd C:\Orion\workspace\data\Source\SQL\xOrionScripts\' >> ${JIRA}.sql
 echo '--SQL> @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
-echo '--SQL> DROP PACKAGE ORION'${JIRA} >> ${JIRA}.sql
+echo "--SQL> DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
-echo '-- $ git pull && git checkout -b feature/ORION-'${JIRA}' && git push --set-upstream origin feature/ORION-'${JIRA} >> ${JIRA}.sql
-echo "-- Pushed and ran ${JIRA}_ddl_change.sql on ESD" >> ${JIRA}.sql
 echo "-- ${DESC} https://esapps.sas.com/jira/browse/ORION-${JIRA}" >> ${JIRA}.sql
+echo '-- $ git checkout develop && git pull && git checkout -b feature/ORION-'${JIRA}' && git push --set-upstream origin feature/ORION-'${JIRA} >> ${JIRA}.sql
+echo "-- Pushed and ran ORION-${JIRA}_ddl_change.sql on ESD" >> ${JIRA}.sql
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
 # vim t.sql -c ':mksession!'
 
-# echo "${JIRA} ${DESC}" > ${TAG}.html
-# echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
+echo "${JIRA} ${DESC}" > ${TAG}.html
+echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
 # cygstart ${TAG}.html
 
 # cp -i ~/onedrive/template_project.prj ~/onedrive/orion-${TAG}/${TAG}.prj && \

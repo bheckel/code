@@ -1,3 +1,35 @@
+
+create table rion39366x as 
+  SELECT to_number(column_value) account_id,
+         1 to_be_deleted,
+         to_date('01DEC1969','DDMONYYYY') created 
+    FROM xmltable(('"' || REPLACE('6190448,6277610', ',', '","') || '"'));
+
+---
+
+begin
+  drop table deptx;
+  drop table empx;
+
+  create table deptx(deptx_id number(10) PRIMARY KEY, dname varchar2(20));
+
+  -- Implicit FK on empx constraint
+  create table empx(empxid number(20) PRIMARY KEY, ename varchar2(20), sal number(10,2), deptx_id number(10) REFERENCES deptx(deptx_id) ON DELETE CASCADE);
+
+  insert into deptx values(10,'IT');
+  insert into deptx values(20,'HR');
+  insert into deptx values(30,'MAT');
+
+  insert into empx values(1,'MIKE',20000,10);
+  insert into empx values(2,'JOHN',30000,20);
+  insert into empx values(3,'SUE',20000,20);
+  insert into empx values(4,'TOM',40000,30);
+
+  commit;
+end;
+
+---
+
 CREATE TABLE bulk_collect_test AS
 SELECT owner,
        object_name,
