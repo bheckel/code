@@ -1,3 +1,6 @@
+--TODO analytic function approach
+
+
 -- http://jan.kneschke.de/projects/mysql/groupwise-max/
 
 SELECT co1.continent, co1.name, co1.population

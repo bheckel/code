@@ -6,4 +6,6 @@ cd ~/onedrive &&
 # find . -type d | grep -i "${1}"
 # for f in $(find . | grep orion- | grep -P '.*pck|.*sql|.*prc|.*fnc'); do grep -i --with-filename "${1}" $f; done >| ~/tmp/prj.out 
 # vim -c "/${1}" ~/tmp/prj.out
-vim `find . -type f -print0 -not -name '*.dsk*' -a -not -name '*.prj*' | xargs -0 grep -i "${1}" | awk -F: '{print $1}' | sort | uniq`
+# vim `find . -type f -print0 -not -name '*.dsk*' -a -not -name '*.prj' | xargs -0 grep -i "${1}" | awk -F: '{print $1}' | sort | uniq`
+# find . -type f -not -name '*.dsk*' -a -not -name '*.prj' -print0 | xargs -0 grep -i "${1}" #| awk -F: '{print $1}' | sort | uniq
+find . -type f -not -name '*.dsk*' -a -not -name '*.prj' -print0 | xargs -0 grep -i "${1}" #| awk -F: '{print $1}' | sort | uniq

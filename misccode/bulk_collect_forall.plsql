@@ -7,9 +7,9 @@
 -- The PL/SQL features that comprise bulk SQL are the FORALL statement and the
 -- BULK COLLECT clause.
 --
--- The FORALL statement sends DML statements from PL/SQL to SQL in batches rather 
+-- The FORALL statement *sends* DML statements from PL/SQL to SQL in batches rather 
 -- than one at a time i.e. it binds all the data in a collection into a DML statement.
--- The BULK COLLECT clause returns results from SQL to PL/SQL in batches rather than 
+-- The BULK COLLECT clause *returns* results from SQL to PL/SQL in batches rather than 
 -- one at a time i.e. it pulls multiple rows back into a collection.
 --
 -- If a query or DML statement affects four or more database rows, then bulk SQL can
@@ -151,40 +151,6 @@ BEGIN
    numbers_io := numbers_io MULTISET EXCEPT DISTINCT l_zeroes;
 END;
 /
-
----
-
-PROCEDURE simple_bulkcollect_forall IS
-	cnt PLS_INTEGER := 0;
-
-	CURSOR c1 IS
-		SELECT u.user_oncall_results_id, u.execute_time
-		FROM zuser_oncall_results u
-		WHERE u.execute_time < (sysdate - 1470);
-		
-	TYPE t1 IS TABLE OF c1%ROWTYPE;
-	l_recs t1;
-					
-	BEGIN
-		OPEN c1;
-		LOOP
-			FETCH c1 BULK COLLECT INTO l_recs LIMIT 20;  
-			
-			EXIT WHEN l_recs.COUNT = 0;
-			
-			FORALL i IN 1 .. l_recs.COUNT
-				DELETE 
-					FROM zuser_oncall_results u
-				 WHERE u.user_oncall_results_id = l_recs(i).user_oncall_results_id;
-			
-				cnt := cnt + SQL%ROWCOUNT;
-				
-				--COMMIT;
-				ROLLBACK;
-		END LOOP;
-		CLOSE c1;
-		dbms_output.put_line(cnt);
-END;
 
 ---
 
@@ -689,3 +655,49 @@ BEGIN
 
   COMMIT;
 END;
+
+---
+
+-- Change a column's data type.
+-- But we must first update a temp column with the existing data but since the temporary column doesn't yet exist, we must go dynamic
+DECLARE
+  l_dtype         VARCHAR2(32);
+  l_cnt           NUMBER := 0;
+  l_rows_updated  NUMBER := 0;
+
+  CURSOR c1 IS
+    SELECT ASP_ID
+      FROM ASP;
+
+  TYPE t1 IS TABLE OF NUMBER;
+  l_recs t1;
+
+  BEGIN
+    SELECT data_type
+    INTO l_dtype 
+    FROM user_tab_columns 
+   WHERE table_name='ASP' AND column_name = 'FUTURE_SUP_ACCOUNT_ID';
+
+    -- 1) Change data type
+    IF l_dtype = 'BINARY_DOUBLE' THEN  
+      OPEN c1;
+
+      -- Populate temp column with current IDs
+      LOOP
+        FETCH c1 BULK COLLECT INTO l_recs LIMIT 500;  
+
+        l_cnt := l_cnt + l_recs.COUNT;
+
+        EXIT WHEN l_recs.COUNT = 0;
+
+        FOR i IN 1 .. l_recs.COUNT LOOP
+          EXECUTE IMMEDIATE 'update ASP set FSAID_TMP = FUTURE_SUP_ACCOUNT_ID where ASP_ID = :1'
+            USING l_recs(i);
+          l_rows_updated := SQL%ROWCOUNT;
+        END LOOP;
+
+        COMMIT;
+          
+      END LOOP;
+      CLOSE c1;
+  ...
