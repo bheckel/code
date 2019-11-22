@@ -4,12 +4,31 @@
 -- Details of what's scheduled (in job_action)
 select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments
 from all_scheduler_jobs a ORDER BY 1
--- Run status log
-SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
+
 -- Next run details
 SELECT * from user_scheduler_jobs@sed WHERE job_name in ('PERIODIC_LIFE_UPDATE')
+-- Run status log
+SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
 -- Named Schedule details
 select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'PERI%';
+
+---
+
+BEGIN
+ sys.dbms_scheduler.create_job(
+   job_name        => 'ASP_TO_ATAA_JOB',
+   job_type        => 'PLSQL_BLOCK',
+   --job_action => 'begin null; ASP_PKG.update_ataa_with_asp(p_do_commit => 0); end;',
+   job_action      => 'begin null; end;',
+   repeat_interval => 'FREQ=MINUTELY; INTERVAL=60',
+   end_date        => TO_DATE(NULL),
+   job_class       => 'DEFAULT_JOB_CLASS',
+   enabled         => TRUE,
+   comments        => 'Stage approved ASP records to ATAA');
+END;
+
+SELECT * from user_scheduler_jobs WHERE job_name='ASP_TO_ATAA_JOB';
+SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME = 'ASP_TO_ATAA_JOB';
 
 ---
 
@@ -25,6 +44,7 @@ BEGIN
    enabled    => TRUE,
    comments   => 'One time run, auto drops');
 END;
+-- DBMS_SCHEDULER.create_job does an implicit COMMIT
 
 ---
 
@@ -33,7 +53,7 @@ BEGIN
   DBMS_SCHEDULER.create_schedule(
     schedule_name   => 'AUTO_ACCEPT_TARGETS_SCHEDULE',
     repeat_interval => 'FREQ=MINUTELY; INTERVAL=5;',
-    end_date        => null,
+    end_date        => TO_DATE(NULL),
     comments        => 'Schedule for auto_acknowledge_targets job.');
 END;
 
@@ -68,7 +88,7 @@ BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 ---
 
 -- Update job
-BEGIN sys.dbms_scheduler.set_attribute(name => 'SET_CUSTOMER_FLAG_JOB', ATTRIBUTE => 'job_action', VALUE => 'BEGIN ESTARS.SET_CUSTOMER_FLAG(inAccount_ID => 0, do_commit =>1); END;'); END;
+BEGIN sys.dbms_scheduler.set_attribute(name => 'SET_CUSTOMER_FLAG_JOB', ATTRIBUTE => 'job_action', VALUE => 'BEGIN SETARS.SET_CUSTOMER_FLAG(inAccount_ID => 0, do_commit =>1); END;'); END;
 
 -- Update job (if disabled)
 BEGIN sys.Dbms_Scheduler.enable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;  -- can pass comma-separated list 'foo, bar'

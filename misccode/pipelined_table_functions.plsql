@@ -247,3 +247,55 @@ create or REPLACE function f_search_view (par_string in varchar2)
 select * from table(f_search_view('CAE'));
 
 DROP FUNCTION f_search_view
+
+---
+
+CREATE OR REPLACE PACKAGE rion37368 AUTHID DEFINER IS
+  /* CreatedBy: bheck
+  **   Created: 08-Nov-19 
+  **   Purpose: Allow non-estars access to a job scheduler "PERC alert" view.
+  **            This approach avoids permission failures generated when
+  **            using views to access USER_SCHEDULER_JOBS instead of
+  **            DBA_SCHEDULER_JOBS (RION-37368)
+  **   Updated: 
+  */
+  CURSOR c1 IS
+    SELECT job_name,
+           job_action,
+           CASE WHEN (state = 'SCHEDULED' AND last_run_duration IS NOT NULL) THEN 'CLEAR' ELSE 'ALERT' END AS status,
+           last_run_duration,
+           sysdate - last_start_date AS time_since_last_run,
+           last_start_date,
+           next_run_date
+      FROM USER_SCHEDULER_JOBS 
+     WHERE enabled = 'TRUE';
+ 
+  TYPE t_scheduler_jobs IS TABLE OF c1%rowtype;
+
+  FUNCTION read_scheduler_jobs RETURN t_scheduler_jobs PIPELINED;
+END;
+/
+CREATE OR REPLACE PACKAGE BODY orion37368 IS
+  FUNCTION read_scheduler_jobs RETURN t_scheduler_jobs PIPELINED AS
+    v_scheduler_jobs c1%rowtype; 
+    
+  BEGIN
+    OPEN c1;
+    LOOP
+      FETCH c1 INTO v_scheduler_jobs;
+      EXIT WHEN c1%notfound;
+      PIPE ROW(v_scheduler_jobs);
+    END LOOP;
+    CLOSE c1;
+    RETURN;
+  END;
+END;
+/
+
+SELECT * FROM table(RION37368.read_scheduler_jobs);
+
+CREATE OR REPLACE FORCE VIEW USER_SCHEDULER_JOBS_V3 AS  select * from table(RION37368.read_scheduler_jobs);
+
+GRANT SELECT ON USER_SCHEDULER_JOBS_V3 TO kmc;
+
+SELECT * FROM USER_SCHEDULER_JOBS_V3;
