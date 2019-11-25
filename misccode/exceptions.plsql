@@ -339,7 +339,7 @@ BEGIN
 EXCEPTION
   WHEN OTHERS THEN
     IF SQLCODE = -955 THEN
-      NULL; -- suppress ORA-00955 exception
+      NULL; -- suppress ORA-00955 exception, keep going
     ELSE
       RAISE;
     END IF;
