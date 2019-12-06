@@ -47,7 +47,7 @@
 
 ---
 
--- Compare with bulk & without:
+-- Compare with limit & without:
 --  3 DECLARE                                                                      |  3 DECLARE
 --  2    TYPE employees_aat IS TABLE OF employees%ROWTYPE INDEX BY BINARY_INTEGER; |  2    TYPE employees_aat IS TABLE OF employees%ROWTYPE INDEX BY BINARY_INTEGER;
 --  1    l_employees   employees_aat;                                              |  1    l_employees         employees_aat;
@@ -701,3 +701,48 @@ DECLARE
       END LOOP;
       CLOSE c1;
   ...
+
+---
+
+  PROCEDURE update_from_asp2 IS
+		mytbl ASP_PKG_TYPES.assignTable := ASP_PKG_TYPES.assignTable();
+    v_assign_limit  CONSTANT NUMBER := 10000; -- MANY tests run on this - for whatever reason this seemed to be the optimal number 
+
+		CURSOR update_account_assignment_c IS
+			SELECT account_id, account_team_assignment_id, lead_owner_id, assignment_active
+				FROM account_team_assign_all 
+		   WHERE account_id in (SELECT distinct account_id FROM ACCOUNT_TEAM_ASSIGN_ALL WHERE assignment_active = 0)
+       ORDER BY 1,4,3;
+
+    type mytmp_t  is table of update_account_assignment_c%rowtype;
+    mytmp mytmp_t;
+
+  BEGIN
+    DBMS_OUTPUT.enable(NULL);
+    OPEN update_account_assignment_c;
+    LOOP
+      FETCH update_account_assignment_c BULK COLLECT INTO mytmp limit v_assign_limit;
+      EXIT WHEN mytmp.COUNT = 0;
+
+      FOR i IN 1 .. mytmp.COUNT LOOP
+        /* i := i + 1; */
+        mytbl.EXTEND;
+        mytbl(i).account_id := mytmp(i).account_id;
+        IF mytmp(i).assignment_active = 0 THEN
+          mytbl(i).new_account_team_assignment_id := mytmp(i).account_team_assignment_id;
+        ELSE
+          mytbl(i).old_account_team_assignment_id := mytmp(i).account_team_assignment_id;
+        END IF;
+        mytbl(i).old_lead_owner_id := mytmp(i).lead_owner_id;
+        mytbl(i).assignment_active := mytmp(i).assignment_active;
+        mytbl(i).assign_error := 0;
+        mytbl(i).assign_error_msg := NULL;
+
+        DBMS_OUTPUT.PUT_LINE ('|||> processing account_id: ' || mytbl(i).account_id || ' old_account_team_assignment_id: ' || mytbl(i).old_account_team_assignment_id || ' new_account_team_assignment_id: ' || mytbl(i).new_account_team_assignment_id || ' activ: ' ||  mytbl(i).assignment_active);
+      END LOOP;  
+    END LOOP;
+
+    update_account_assignment(mytbl);
+rollback;
+/* commit; */
+  END update_from_asp2;

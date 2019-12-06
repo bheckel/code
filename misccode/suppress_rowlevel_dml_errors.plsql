@@ -165,7 +165,6 @@ END;
 
 -- Adapted https://oracle-base.com/articles/10g/dml-error-logging-10gr2
 
--- Create and populate a source table.
 CREATE TABLE source (
   id           NUMBER(10)    NOT NULL,
   code         VARCHAR2(10),
@@ -197,7 +196,6 @@ END;
 
 EXEC DBMS_STATS.gather_table_stats(USER, 'source', cascade => TRUE);
 
--- Create a destination table
 CREATE TABLE dest (
   id           NUMBER(10)    NOT NULL,
   code         VARCHAR2(10)  NOT NULL,

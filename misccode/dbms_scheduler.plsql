@@ -6,7 +6,7 @@ select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.
 from all_scheduler_jobs a ORDER BY 1
 
 -- Next run details
-SELECT * from user_scheduler_jobs@sed WHERE job_name in ('PERIODIC_LIFE_UPDATE')
+SELECT * from USER_SCHEDULER_JOBS WHERE job_name in ('PERIODIC_LIFE_UPDATE')
 -- Run status log
 SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
 -- Named Schedule details
