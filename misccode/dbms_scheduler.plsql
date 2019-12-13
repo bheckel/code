@@ -184,3 +184,63 @@ from all_scheduler_job_run_details
 where job_name like 'POST_BOOKING_FLOW_JOB%'
 and log_date > sysdate - 1/24
 order by log_date desc;
+
+---
+
+create table t ( x int );
+create  type my_varray as varray(5) of number;
+
+create or replace
+procedure load_t(v my_varray) is
+begin
+  for i in 1 .. v.count loop
+     insert into t values (v(i));
+  end loop;
+  commit;
+end;
+
+begin
+  dbms_scheduler.create_program (
+    program_name        => 'pgm_load_t',
+    program_type        => 'stored_procedure',
+    program_action      => 'load_t',
+    number_of_arguments => 1,
+    enabled             => false,
+    comments            => 'program to run a stored procedure.');
+
+  dbms_scheduler.define_program_argument (
+    program_name      => 'pgm_load_t',
+    argument_name     => 'v',
+    argument_position => 1,
+    argument_type     => 'my_varray');
+
+  dbms_scheduler.enable (name => 'pgm_load_t');
+end;
+
+declare
+  v my_varray := my_varray(1,2,3,4);
+  a sys.anydata := SYS.ANYDATA.ConvertCollection(v);
+begin
+  dbms_scheduler.create_job (
+    job_name      => 'job_load_t',
+    program_name  => 'pgm_load_t',
+    start_date      => SYSTIMESTAMP,
+    enabled         => false,
+    comments        => 'Job to run pgm');
+
+dbms_scheduler.set_job_anydata_value (
+   job_name           => 'job_load_t',
+   argument_position  => 1,
+   argument_value     => a
+   );
+
+ dbms_scheduler.enable ('job_load_t');
+end;
+
+select * from t;
+
+drop table t;
+drop type my_varray;
+drop procedure load_t;
+SELECT * from user_scheduler_jobs WHERE job_name like 'JOB_LOAD_%';
+SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME  like 'JOB_LOAD_%' order by log_date desc;

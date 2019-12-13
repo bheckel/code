@@ -72,6 +72,5 @@ BEGIN
   
 END;
 
----
-
-
+-- see why fail http://stevenfeuersteinonplsql.blogspot.com/2018/10/why-wont-multiset-work-for-me.html
+-- t_task_table := t_task_table multiset union distinct t_task_table
