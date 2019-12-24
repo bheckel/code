@@ -8,11 +8,14 @@
 -- with MULTISET, duplicates are preserved unless you specify that want DISTINCT
 -- values.
 
+-- see why fail http://stevenfeuersteinonplsql.blogspot.com/2018/10/why-wont-multiset-work-for-me.html
+-- t_task_table := t_task_table multiset union distinct t_task_table
+
 ---
 
 CREATE OR REPLACE TYPE parts_nt IS TABLE OF VARCHAR2 (100);
 
--- Combine two nested tables (won't work for hashes as of 2019)
+-- Combine two nested tables
 
 -- The wrong way:
 DECLARE
@@ -72,5 +75,49 @@ BEGIN
   
 END;
 
--- see why fail http://stevenfeuersteinonplsql.blogspot.com/2018/10/why-wont-multiset-work-for-me.html
--- t_task_table := t_task_table multiset union distinct t_task_table
+---
+
+-- The only way to use DISTINCT	
+
+CREATE OR REPLACE TYPE rec AS OBJECT(name  VARCHAR2(1000),
+  MAP MEMBER FUNCTION sort_key RETURN VARCHAR2);
+/
+
+ CREATE OR REPLACE TYPE BODY rec
+  AS
+    MAP MEMBER FUNCTION sort_key RETURN VARCHAR2
+    IS
+    BEGIN
+  	 RETURN name;
+    END;
+  END;
+/
+
+ CREATE OR REPLACE TYPE ttbl AS TABLE OF rec;
+ /
+
+ declare
+  p ttbl:=ttbl();
+  t ttbl:=ttbl();
+  x ttbl:=ttbl();
+begin
+  for i in 1..10
+  loop
+	 p.extend;
+	 p(i) := rec(i);
+  end loop;
+
+  for j in 1..15
+  loop
+	 t.extend;
+	 t(j) := rec(j);
+  end loop;
+
+  x:= t MULTISET UNION DISTINCT p;
+
+  for k in x.first..x.last
+  loop
+	 dbms_output.put_line(x(k).name);
+  end loop;
+end;
+/

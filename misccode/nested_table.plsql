@@ -200,3 +200,73 @@ begin
   dbms_output.put_line(l_nums.last);  -- 4
 end;
 
+---
+
+-- Sort a collection
+    FOR i IN 1 .. t_assign_table.COUNT LOOP
+      IF t_assign_table(i).assign_error = 0 AND t_assign_table(i).new_account_team_assignment_id IS NOT NULL THEN
+        v_sqltxt := q'[
+                      SELECT tb.task_id,
+                              a.activity_id,
+                              lead_owner_id,
+                              :1,
+                              tb.due_date,
+                              tb.number_of_hours,
+                              tb.status,
+                              tb.outcome,
+                              tb.origin,
+                              tb.category,
+                              tb.origin_task_id,
+                              NVL(c.list_of_values_id, 528090) outcome_lov_id,
+                              tb.contact_id,
+                             0 as task_error,
+                             '' as task_error_msg
+                        FROM ACCOUNT_TEAM_ASSIGN_ALL,
+                             account_name                an,
+                             activity_search             s,
+                             activity                    a,
+                             task_base                   tb,
+                             custom_query_lov_view       c
+                       WHERE an.account_name_id = s.account_name_id
+                         AND s.activity_search_id = a.activity_id
+                         AND a.activity_id = tb.activity_id
+                         AND TB.CURRENT_TASK = 1
+                         AND TB.STATUS != 'Completed'
+                         AND TB.STATUS != 'Deferred'
+                         AND TB.EMPLOYEE_ID = lead_owner_id
+                         AND a.SALESGROUP = C.CUSTOM_LEVEL_VALUE(+)
+                         AND c.list_name(+) = 'LeadOutcome'
+                         AND c.VALUE(+) = 'Reassigned'
+                         AND account_team_assignment_id = :2
+                     ]';
+
+         EXECUTE IMMEDIATE v_sqltxt BULK COLLECT
+           INTO t_task_table
+          USING t_assign_table(i).new_lead_owner_id, t_assign_table(i).new_account_team_assignment_id;
+
+         IF t_task_table.COUNT > 0 THEN
+          t_task_table_dedup := t_task_table MULTISET UNION t_task_table_dedup;
+
+         END IF;  -- there are tasks for this account_team_assignment_id
+      END IF;    -- not an error record
+    END LOOP;   -- each account_team_assignment_id's task is added to t_task_table_dedup
+/* dbms_output.put_line('before dedup ' ||  t_task_table_dedup.COUNT ); */
+
+    -- Sort collection
+    FOR M in t_task_table_dedup.FIRST .. (t_task_table_dedup.LAST - 1) LOOP
+      FOR N in (M+1) .. t_task_table_dedup.LAST LOOP
+        IF t_task_table_dedup(M).task_id > t_task_table_dedup(N).task_id THEN
+          v_tmp := t_task_table_dedup(N).task_id;
+          t_task_table_dedup(N).task_id := t_task_table_dedup(M).task_id;
+          t_task_table_dedup(M).task_id := v_tmp;
+        END IF;
+      END LOOP;
+    END LOOP;
+
+    -- Delete duplicates to avoid reprocessing
+    FOR M in t_task_table_dedup.FIRST .. (t_task_table_dedup.LAST -1) LOOP
+      IF t_task_table_dedup(M).task_id >= t_task_table_dedup(M+1).task_id THEN
+        /* t_task_table_dedup(M).task_id := 0; */
+        t_task_table_dedup.delete(M);
+      END IF;
+    END LOOP;
