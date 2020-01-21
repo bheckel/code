@@ -1,3 +1,9 @@
+grant dwrole to unit_test_repos 
+
+tvL6iXcs@n882!Yp
+
+---
+
 29-Apr-11
 
 SELECT TO_CHAR(b, 'YYYY/MM/DD') AS b
@@ -22,7 +28,7 @@ SS 	  Second (0-59)
 Determine version v9+:
 
 SQL> SET SERVEROUT ON;
-SQL> EXEC DBMS_OUTPUT.PUT_LINE (DBMS_DB_VERSION.VERSION);
+SQL> EXEC DBMS_OUTPUT.PUT_LINE(DBMS_DB_VERSION.VERSION);
 
 ---
 

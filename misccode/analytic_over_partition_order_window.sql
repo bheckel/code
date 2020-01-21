@@ -197,6 +197,7 @@ select d
       ,sum(amt) OVER () grand_sum  -- 105,105,105,105,105,105
       ,avg(amt) OVER () grand_avg  -- 17.5,17.5,17.5,17.5,17.5,17.5
       ,count(1) OVER () grand_sum -- 7,7,7,7,7,7
+      --, lead(account_id) OVER (partition by account_id order by account_id) endgroup_of_accountids_willbenull
 from v;
 
 ---

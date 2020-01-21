@@ -1,3 +1,4 @@
+-- Modified: 16-Jan-2020 (Bob Heckel)
 -- see also explain_plan.sql
 
 with inds as (    
@@ -58,3 +59,34 @@ and s.channel_id = c2.channel_id
 and p.prod_id < 100
 and c2.channel_id = 2
 and c.cust_postal_code = 52773;
+
+---
+
+-- View contents of an index (including function based indexes)
+
+-- Find it
+SELECT
+ i.table_owner,
+ i.table_name,
+ i.index_name,
+ i.uniqueness,
+ c.column_name,
+ f.column_expression
+FROM      all_indexes i
+LEFT JOIN all_ind_columns c
+ ON   i.index_name      = c.index_name
+ AND  i.owner           = c.index_owner
+LEFT JOIN all_ind_expressions f
+ ON   c.index_owner     = f.index_owner
+ AND  c.index_name      = f.index_name
+ AND  c.table_owner     = f.table_owner
+ AND  c.table_name      = f.table_name
+ AND  c.column_position = f.column_position
+WHERE --i.table_owner LIKE UPPER('%someuserpattern%')
+ --AND  i.table_name  LIKE UPPER('%sometablepattern%')
+    i.index_name='ACC_TEAM_ASSIGNMENT_U_ACTIV_IX'
+ORDER BY i.table_owner, i.table_name, i.index_name, c.column_position;
+
+-- Run it
+select DECODE(TO_CHAR("ACCOUNT_SITE_ID"),NULL,'A'||TO_CHAR("ACCOUNT_TEAM_ASSIGNMENT_ID"),'S'||TO_CHAR("ACCOUNT_SITE_ID"))||'-'||TO_CHAR("ASSIGNMENT_ACTIVE")
+from account_team_assign_all;

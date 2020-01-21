@@ -77,6 +77,40 @@
 ---
 
 DECLARE
+  l_cnt PLS_INTEGER := 0;
+
+  CURSOR c1 IS
+    SELECT account_team_assignment_id 
+      FROM account_team_assign_all 
+     WHERE created>(sysdate - interval '48' hour) and audit_source='l10g279' and assignment_active=0;
+    
+  TYPE t1 IS TABLE OF c1%ROWTYPE;
+  l_recs t1;
+          
+  BEGIN
+    OPEN c1;
+    LOOP
+      FETCH c1 BULK COLLECT INTO l_recs LIMIT 200;  
+
+      l_cnt := l_cnt + l_recs.COUNT;
+      
+      EXIT WHEN l_recs.COUNT = 0;
+      
+      FORALL i IN 1 .. l_recs.COUNT
+        DELETE 
+          FROM account_team_assign_all
+         WHERE account_team_assignment_id = l_recs(i).account_team_assignment_id;
+        
+        --COMMIT;
+        ROLLBACK;
+    END LOOP;
+    CLOSE c1;
+    dbms_output.put_line(l_cnt);
+END;
+
+---
+
+DECLARE
    l_cursor         SYS_REFCURSOR;
    l_list           DBMS_SQL.varchar2s;
    c_limit CONSTANT PLS_INTEGER := 2;
@@ -90,40 +124,6 @@ BEGIN
    CLOSE l_cursor;
 END;
 /
-
----
-
-PROCEDURE bulkdel IS
-  l_cnt PLS_INTEGER := 0;
-
-  CURSOR c1 IS
-    SELECT u.user_oncall_results_id, u.execute_time
-    FROM zuser_oncall_results u
-    WHERE u.execute_time < (sysdate - 1470);
-    
-  TYPE t1 IS TABLE OF c1%ROWTYPE;
-  l_recs t1;
-          
-  BEGIN
-    OPEN c1;
-    LOOP
-      FETCH c1 BULK COLLECT INTO l_recs LIMIT 100;  
-
-      l_cnt := l_cnt + l_recs.COUNT;
-      
-      EXIT WHEN l_recs.COUNT = 0;
-      
-      FORALL i IN 1 .. l_recs.COUNT
-        DELETE 
-          FROM zuser_oncall_results u
-         WHERE u.user_oncall_results_id = l_recs(i).user_oncall_results_id;
-        
-      --COMMIT;
-      ROLLBACK;
-    END LOOP;
-    CLOSE c1;
-    dbms_output.put_line(l_cnt);
-END;
 
 ---
 

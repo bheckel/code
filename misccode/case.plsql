@@ -1,5 +1,7 @@
 -- Modified: Mon 02-Sep-2019 (Bob Heckel)
 
+-- See also if.plsql
+
 /*
 CASE expressions make it possible to implement conditional logic within a
 PL/SQL expression or from inside a SQL statement.

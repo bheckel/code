@@ -253,11 +253,11 @@ DROP FUNCTION f_search_view
 CREATE OR REPLACE PACKAGE rion37368 AUTHID DEFINER IS
   /* CreatedBy: bheck
   **   Created: 08-Nov-19 
-  **   Purpose: Allow non-estars access to a job scheduler "PERC alert" view.
+  **   Purpose: Allow non-setars access to a job scheduler "PERC alert" view.
   **            This approach avoids permission failures generated when
   **            using views to access USER_SCHEDULER_JOBS instead of
   **            DBA_SCHEDULER_JOBS (RION-37368)
-  **   Updated: 
+  **            It leverages AUTHID DEFINER to avoid permission failure
   */
   CURSOR c1 IS
     SELECT job_name,

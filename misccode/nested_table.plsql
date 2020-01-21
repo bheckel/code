@@ -270,3 +270,19 @@ end;
         t_task_table_dedup.delete(M);
       END IF;
     END LOOP;
+
+---
+
+-- Populuate a table using a collection
+FOR i IN 1 .. t_assign_table.COUNT LOOP
+  INSERT /*+ APPEND */ INTO tmp_audit_sp VALUES (t_assign_table(i).account_id,
+                                                 t_assign_table(i).old_account_team_assignment_id, t_assign_table(i).new_account_team_assignment_id,
+                                                 t_assign_table(i).old_assign_territory_lov_id, t_assign_table(i).new_assign_territory_lov_id,
+                                                 t_assign_table(i).account_site_id,
+                                                 t_assign_table(i).assignment_active,
+                                                 SYSDATE);
+  IF mod(i, v_assign_limit) = 0 THEN
+    COMMIT;
+  END IF;
+END LOOP;
+COMMIT;

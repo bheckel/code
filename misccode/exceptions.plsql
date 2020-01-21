@@ -355,3 +355,60 @@ EXCEPTION
   WHEN name_in_use THEN
     NULL; --suppress ORA-00955 exception
 END; 
+
+---
+
+-- Run SQL that takes a scalar from a list (cursor) to build its predicate
+declare
+  i number :=0;
+  aid number;
+  cursor c1 is 
+      SELECT distinct a.account_id
+        FROM asp a, asp_approval aa, custom_query_lov_view l
+       WHERE a.future_territory_lov_id = aa.future_territory_lov_id
+         AND a.future_tsr_owner_id IS NOT NULL
+         AND a.future_territory_lov_id IS NOT NULL
+         AND a.future_territory_lov_id = l.list_of_values_id
+         AND l.custom_level_value in ('NL')
+         AND l.value_description not like 'JMP%'
+         and account_site_id is null
+and rownum<99 ;
+begin
+  for r in c1 loop
+    begin
+      dbms_output.put_line(r.account_id);
+      
+--      SELECT account_id into aid FROM (
+--        SELECT a.account_id
+--          FROM asp a, account_search asr
+--         WHERE a.account_id = r.account_id
+--           AND a.account_id = asr.account_id
+--           AND (
+--                 num_sites != (select count(1)-1 from asp where account_id=r.account_id)
+--               or nvl(a.future_sup_account_id,0) != nvl(asr.sup_account_id,0)
+--               or nvl(a.future_sup_account_id,0) != nvl(asr.sup_account_id,0)
+--               )
+--         ORDER BY asr.updated DESC
+--      ) WHERE ROWNUM = 1;  -- only check most recent search record
+-- same?
+      SELECT distinct a.account_id into aid 
+          FROM asp a, account_search asr
+         WHERE a.account_id = r.account_id
+           AND a.account_id = asr.account_id
+           AND (
+                 num_sites != (select count(1)-1 from asp where account_id=r.account_id)
+               or nvl(a.future_sup_account_id,0) != nvl(asr.sup_account_id,0)
+               or nvl(a.future_sup_account_id,0) != nvl(asr.sup_account_id,0)
+               );
+        
+      dbms_output.put_line('found '||aid);
+      i := i+1;
+      
+      EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+					null;
+		end;
+  end loop;
+
+  dbms_output.put_line(i);
+end;

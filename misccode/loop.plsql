@@ -1,3 +1,10 @@
+-- The loop statements are the basic LOOP, FOR LOOP, and WHILE LOOP.
+--
+-- The EXIT statement transfers control to the end of a loop. The CONTINUE
+-- statement exits the current iteration of a loop and transfers control to the
+-- next iteration. Both EXIT and CONTINUE have an optional WHEN clause, where you
+-- can specify a condition.
+
 -- See also for.plsql
 
 -- Basic loop ------------

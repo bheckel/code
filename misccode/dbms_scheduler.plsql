@@ -3,7 +3,9 @@
 
 -- Details of what's scheduled (in job_action)
 select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments
-from all_scheduler_jobs a ORDER BY 1
+from user_scheduler_jobs a
+/* where job_name='FOO' */
+ORDER BY 1
 
 -- Next run details
 SELECT * from USER_SCHEDULER_JOBS WHERE job_name in ('PERIODIC_LIFE_UPDATE')

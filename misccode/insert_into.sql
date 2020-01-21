@@ -124,8 +124,85 @@ BEGIN
    l_employee.employee_id := 500;
    l_employee.last_name := ‘Mondrian’;
    l_employee.salary := 2000;
-   INSERT
-     INTO omag_employees 
-   VALUES l_employee;
+
+   INSERT INTO omag_employees VALUES l_employee;
 END;
 /
+
+---
+
+-- Without conditions:
+    FORALL i IN 1 .. in_oppt_table.COUNT SAVE EXCEPTIONS EXECUTE IMMEDIATE
+      'INSERT INTO OPPORTUNITY_EMPLOYEE_BASE OEB
+        (opportunity_employee_id,
+         opportunity_id,
+         employee_id,
+         territory_lov_id,
+         role_lov_id,
+         owner_type,
+         founder,
+         created,
+         createdby,
+         updated,
+         updatedby)
+      VALUES
+        (
+        uid_opportunity_employee.NEXTVAL,
+         :1,
+         :2,
+         :3,
+         :4,
+         ''S'',
+         0,
+         :5,
+         0,
+         :6,
+         0
+        )'
+       USING in_oppt_table(i).opportunity_id,
+             in_oppt_table(i).new_default_tsr_owner,
+             in_oppt_table(i).new_default_tsr_territory,
+             in_oppt_table(i).new_ip_role_lov_id,
+             v_start_time,
+             v_start_time;
+
+-- With conditions:
+    FORALL i IN 1 .. in_risk_table.COUNT SAVE EXCEPTIONS EXECUTE IMMEDIATE
+      'INSERT INTO RISK_EMPLOYEE RE
+        (risk_employee_id,
+         risk_id,
+         employee_id,
+         ip_role_lov_id,
+         owner,
+         created,
+         createdby,
+         updated,
+         updatedby)
+      SELECT
+         uid_risk_employee.nextval,
+         :1,
+         :2,
+         34615,
+         0,
+         :3,
+         0,
+         :4,
+         0 
+      FROM DUAL 
+      WHERE not exists
+         (select 1
+          from risk_employee 
+          where RISK_ID = :5
+            and EMPLOYEE_ID = :6)
+         AND exists
+        (select 1
+          from risk_base r1, account_name an1, account_base ab1
+          where r1.RISK_ID = :7
+            and r1.risk_status in (''L'',''S'',''E'')
+            and r1.account_name_id = an1.account_name_id
+            and an1.account_id = ab1.account_id
+            and ab1.salesgroup = r1.salesgroup)' USING in_risk_table(i)
+                    .risk_id, in_risk_table(i).new_default_tsr_owner,
+                     v_start_time, v_start_time, in_risk_table(i).risk_id, in_risk_table(i)
+                    .new_default_tsr_owner, in_risk_table(i).risk_id
+      ;

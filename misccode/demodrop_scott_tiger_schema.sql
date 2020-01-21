@@ -25,4 +25,4 @@ DROP TABLE DUMMY;
 SET TERMOUT ON
 PROMPT Demonstration table drop is complete.
 
-EXIT
+--EXIT
