@@ -11,37 +11,44 @@
 -- Nested & varrays can be created in a schema object, unlike AA which can be created in a PLSQL block only
 
 -- Collection Methods:
--- EXISTS: Returns TRUE if a specified element exists in a collection
---         and can be used to avoid raising SUBSCRIPT_OUTSIDE_LIMIT exceptions.
+--
+-- EXISTS: Returns TRUE if a specified element exists in a collection and can be used to avoid raising 
+--         SUBSCRIPT_OUTSIDE_LIMIT exceptions.
 --         When you try to get an element at an undefined index value, Oracle raises NO_DATA_FOUND
 --         but using EXISTS eliminates that possibility:
---         IF sons_t.EXISTS(index_in) THEN...
---         But you should avoid the FOR loop and instead opt for a WHILE loop
---         and the NEXT or PRIOR methods to help you navigate from one defined index value
---         to the next
+--         e.g. IF sons_t.EXISTS(index_in) THEN...
+--         But you should avoid the FOR loop and instead opt for a WHILE loop and the NEXT or PRIOR methods 
+--         to help you navigate from one defined index value to the next.
+--
 -- COUNT: Returns the total number of elements in a collection.
--- FIRST and LAST: Return subscripts of the first and last elements of
---       a collection. If the first element of a nested table is deleted, the FIRST method
---       returns a value greater than 1. If elements are deleted from the middle of a nested
---       table, the LAST method returns a value greater than the COUNT method.
--- PRIOR and NEXT: These functions return subscripts that precede and succeed a
---       specified collection subscript.
+--
+-- FIRST / LAST: Return subscripts of the first and last elements of a collection. If the first element of 
+--               a nested table is deleted, the FIRST method returns a value greater than 1. If elements are 
+--               deleted from the middle of a nested table, the LAST method returns a value greater than 
+--               the COUNT method.
+--
+-- PRIOR / NEXT: These functions return subscripts that precede and succeed a specified collection subscript.
 --
 -- Methods NOT allowed with index-by associative arrays:
 -- EXTEND: Increases the size of a collection.
--- TRIM: Removes either one or a specified number of elements from
---       the end of a collection. PL/SQL does not keep placeholders for the trimmed elements.
+-- TRIM: Removes either one or a specified number of elements from the end of a collection. PL/SQL does not 
+--       keep placeholders for the trimmed elements.
 --
 -- Methods NOT allowed with varrays:
--- DELETE: deletes either all elements, just the elements in the
---         specified range, or a particular element from a collection. PL/SQL keeps
---         placeholders of the deleted elements.
+-- DELETE: deletes either all elements, just the elements in the specified range, or a particular element 
+--         from a collection. PL/SQL keeps placeholders of the deleted elements.
+--
 -- Methods ONLY allowed with varrays:
 -- LIMIT: Returns the maximum number of elements that a collection can contain
 
 -- You can compare nested table variables to the value NULL or to each other see nested_table_multiset.plsql
 
+-- https://docs.oracle.com/database/121/LNPLS/composites.htm#LNPLS99981
+
 ---
+
+-- Hardcoded table
+-- Schema-level declaration is ok for nested tables, not associative arrays
 DECLARE
   TYPE my_ntt IS TABLE OF INTEGER;
   -- Initialized with constructor:
@@ -50,76 +57,57 @@ DECLARE
 	foo VARCHAR2(50);
  
 BEGIN 
-  names(3) := 9;  -- change value of one element
-	dbms_output.put_line(names(3));
+  names(3) := 9;  -- change 1 value
+	dbms_output.put_line('change value of one element: ' || names(3));
  
-  names := my_ntt(5,6,7,7499);  -- change entire table
-	dbms_output.put_line(names(3));
+  names := my_ntt(5,6,7,7499);  -- change whole table
+	dbms_output.put_line('change entire table: ' || names(3));
 
 	select ename
 		into foo
 	 from emp
 	--where empno in (select column_value from table(names));  -- fail
-	where empno in (names(4));
+	where empno = names(4);
 
 	dbms_output.put_line(foo);
 END;
 
----
-
+-- Dynamic table
 DECLARE
-	TYPE last_name_type IS TABLE OF student.last_name%TYPE;
-  -- Uninitialized at the time of declaration, it's NULL so this is ok:  IF last_name_tab IS NULL...
+	/* TYPE last_name_type IS TABLE OF VARCHAR2(50); */
+  -- better
+	TYPE last_name_type IS TABLE OF emp.ename%TYPE;
+  -- Uninitialized at the time of declaration, it's NULL so this works:  IF last_name_tab IS NULL...
+  -- but you have to have  last_name_tab := last_name_type();  prior to the FOR loop if you go this way:
 	/* last_name_tab last_name_type; */
-  -- Initialized at the time of declaration, it's empty but not NULL
+
+  -- Initialized at the time of declaration, it's empty but not NULL:
 	last_name_tab last_name_type := last_name_type();
 
 	i PLS_INTEGER := 0;
 
 	CURSOR name_cur IS
-		SELECT last_name FROM student WHERE rownum < 10;
+		SELECT ename FROM emp WHERE rownum < 10;
+
 BEGIN
-  -- Load table into collection
+  IF last_name_tab IS NULL THEN dbms_output.put_line('ok'); END IF;
+
+  -- Load cursor into our empty collection
 	FOR rec IN name_cur LOOP
 		i := i + 1;
 		last_name_tab.EXTEND;
-		last_name_tab(i) := rec.last_name;
-    DBMS_OUTPUT.PUT_LINE ('last_name('||i||'): '||last_name_tab(i));
+		last_name_tab(i) := rec.ename;
+    DBMS_OUTPUT.PUT_LINE (' loaded last_name('||i||') with '||last_name_tab(i));
   END LOOP;
+
+  /* FOR i IN last_name_tab.FIRST .. last_name_tab.LAST LOOP */
+  -- same
+  FOR i IN 1 .. last_name_tab.COUNT LOOP
+    DBMS_OUTPUT.PUT_LINE ('last_name is: '||last_name_tab(i));
+  END LOOP;
+
+  last_name_tab.DELETE;
 END;
-
----
-
-/* https://docs.oracle.com/database/121/LNPLS/composites.htm#LNPLS99981 */
-
--- Schema-level declaration is ok for nested tables, not associated arrays
-DECLARE
-  TYPE Roster_ntt IS TABLE OF VARCHAR2(15);  -- nested table type
- 
-  -- Initialized with constructor:
-  names Roster_ntt := Roster_ntt('D Caruso', 'J Hamil', 'D Piro', 'R Singh');
- 
-  PROCEDURE print_names(heading VARCHAR2) IS
-    BEGIN
-      DBMS_OUTPUT.PUT_LINE(heading);
-   
-      FOR i IN names.FIRST .. names.LAST LOOP  -- first (i=1) to last (i=4) element
-        DBMS_OUTPUT.PUT_LINE(names(i));
-      END LOOP;
-   
-      DBMS_OUTPUT.PUT_LINE('---');
-    END;
-  
-BEGIN 
-  print_names('Initial Values:');
- 
-  names(3) := 'P Perez';  -- change value of one element
-  print_names('Current Values:');
- 
-  names := Roster_ntt('A Jansen', 'B Gupta');  -- change entire table
-  print_names('Current Values:');
-END;
-/
 
 ---
 
@@ -127,69 +115,51 @@ END;
 --create table forall_test as select * from scott.emp where 1=0
 
 DECLARE
+  bulk_dml_error EXCEPTION;
+  PRAGMA EXCEPTION_INIT(bulk_dml_error, -24381);
+
   TYPE t_forall_test_tab IS TABLE OF scott.emp%ROWTYPE;
   l_tab  t_forall_test_tab := t_forall_test_tab();
 
 BEGIN
   FOR i IN 1 .. 100 LOOP
-    l_tab.extend;
+    l_tab.EXTEND;
     l_tab(l_tab.last).empno := i;
     l_tab(l_tab.last).sal   := TO_CHAR(i);
   END LOOP;
 
-  -- Make collection sparse
-  l_tab.delete(31);
-  l_tab.delete(61);
-  l_tab.delete(91);
+  -- Then make collection sparse
+  l_tab.DELETE(31);
+  l_tab.DELETE(61);
+  l_tab.DELETE(91);
 
   EXECUTE IMMEDIATE 'TRUNCATE TABLE forall_test';
 
   DBMS_OUTPUT.put_line('Start FORALL');
 
   -- This will fail due to sparse collection
- /*FORALL i IN l_tab.FIRST .. l_tab.LAST
+ /*FORALL i IN l_tab.FIRST .. l_tab.LAST SAVE EXCEPTIONS
       INSERT INTO forall_test VALUES l_tab(i);
   END;*/
 
-  FORALL i IN INDICES OF l_tab
+  FORALL i IN INDICES OF l_tab SAVE EXCEPTIONS
     INSERT INTO forall_test VALUES l_tab(i);
 
   EXCEPTION
-    WHEN OTHERS THEN
-      DBMS_OUTPUT.put_line(SQLERRM);
+		WHEN bulk_dml_error THEN 
+			FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP 
+				DBMS_OUTPUT.put_line(SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE))); 
+			END LOOP; 
 END;
 
 ---
 
-/* Populate a collection with dummy data using a loop: */
-CREATE TABLE t (
-  id           NUMBER(10),
-  code         VARCHAR2(10),
-  description  VARCHAR2(80)
-);
+/* create type numbers_t as table of number; */
 
-SET SERVEROUTPUT ON
-
-DECLARE
-  TYPE t_tab IS TABLE OF t%ROWTYPE;
-  l_tab  t_tab := t_tab();
-BEGIN
-  FOR i IN 1 .. 100 LOOP
-    l_tab.EXTEND;
-
-    l_tab(l_tab.LAST).id          := i;
-    l_tab(l_tab.LAST).code        := TO_CHAR(i);
-    l_tab(l_tab.LAST).description := 'Desc is: ' || TO_CHAR(i);
-  END LOOP;
-
-  EXECUTE IMMEDIATE 'TRUNCATE TABLE t';
-END;
-
----
-
-create type numbers_t as table of number;
 declare
+  type numbers_t is table of number;
   l_nums numbers_t;  -- no initialization required for bulk collect!
+
 begin
   select line+100
     BULK COLLECT INTO l_nums
@@ -250,7 +220,6 @@ end;
          END IF;  -- there are tasks for this account_team_assignment_id
       END IF;    -- not an error record
     END LOOP;   -- each account_team_assignment_id's task is added to t_task_table_dedup
-/* dbms_output.put_line('before dedup ' ||  t_task_table_dedup.COUNT ); */
 
     -- Sort collection
     FOR M in t_task_table_dedup.FIRST .. (t_task_table_dedup.LAST - 1) LOOP
@@ -273,7 +242,7 @@ end;
 
 ---
 
--- Populuate a table using a collection
+-- Populate a table using a collection with commit intervals instead of BULK COLLECT)
 FOR i IN 1 .. t_assign_table.COUNT LOOP
   INSERT /*+ APPEND */ INTO tmp_audit_sp VALUES (t_assign_table(i).account_id,
                                                  t_assign_table(i).old_account_team_assignment_id, t_assign_table(i).new_account_team_assignment_id,

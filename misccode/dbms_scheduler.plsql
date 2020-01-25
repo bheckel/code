@@ -1,5 +1,11 @@
 
--- Modified: Mon 09-Sep-2019 (Bob Heckel)
+SELECT * from USER_SCHEDULER_JOBS order by last_start_date desc
+
+select * from user_scheduler_job_log order by log_date desc
+
+SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS order by actual_start_date desc
+
+---
 
 -- Details of what's scheduled (in job_action)
 select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments
@@ -246,3 +252,12 @@ drop type my_varray;
 drop procedure load_t;
 SELECT * from user_scheduler_jobs WHERE job_name like 'JOB_LOAD_%';
 SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME  like 'JOB_LOAD_%' order by log_date desc;
+
+---
+
+DBMS_JOB.submit(job_num,
+                'BEGIN SHADOW_INDEX(''ACCOUNT_SEARCH_BING_IX'', 1, 1, 1); END;',
+                 SYSDATE,
+                 NULL);
+COMMIT;                 
+

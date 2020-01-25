@@ -7,7 +7,7 @@ commit;
 
 ---
 
--- Update target tbl using source tbl
+-- Update target tbl (tb) using source tbl (sb)
 update target_bricks tb 
 set ( tb.colour, tb.shape ) = ( 
   select sb.colour, sb.shape  
@@ -18,6 +18,24 @@ where exists (
   select * from source_bricks sb 
   where  sb.brick_id=tb.brick_id 
 ); 
+
+
+create table z_emp as select * from emp;
+create table z_dept as select * from dept;
+update z_emp set job=null;
+
+UPDATE z_emp tb 
+SET  tb.job  = (
+  select sb.loc  
+    from z_dept sb 
+   where sb.deptno=tb.deptno
+) 
+WHERE EXISTS ( 
+  select 1 
+    from z_dept sb 
+   where sb.deptno=tb.deptno and tb.hiredate>'01JAN82'
+); 
+COMMIT;
 
 ---
 

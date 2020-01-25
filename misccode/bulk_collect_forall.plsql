@@ -245,12 +245,11 @@ AND ROWNUM<600
             DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows prior to EXCEPTION');
    
             FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
-              DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows (in this LIMIT group) prior to EXCEPTION');
               DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX ||
                                     '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
                                     ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
             END LOOP;
-            -- Now keep doing the next l_limit_group...
+            -- Now keep going with the next l_limit_group...
         END;
         
         COMMIT;  -- 500 rows to minimize locks
@@ -550,9 +549,9 @@ EXCEPTION
          FOR indx IN 1 .. SQL%BULK_EXCEPTIONS.COUNT
          LOOP
             DBMS_OUTPUT.put_line (
-                  SQL%BULK_EXCEPTIONS (indx).ERROR_INDEX
+                  SQL%BULK_EXCEPTIONS(indx).ERROR_INDEX
                || ': '
-               || SQL%BULK_EXCEPTIONS (indx).ERROR_CODE);
+               || SQL%BULK_EXCEPTIONS(indx).ERROR_CODE);
          END LOOP;
       ELSE
          RAISE;

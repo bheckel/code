@@ -412,3 +412,24 @@ begin
 
   dbms_output.put_line(i);
 end;
+
+---
+
+...
+
+  bulk_dml_error EXCEPTION;
+  PRAGMA EXCEPTION_INIT(bulk_dml_error, -24381);
+
+...
+
+	FORALL i IN 1 .. in_assign_table.COUNT SAVE EXCEPTIONS
+		EXECUTE IMMEDIATE 'DELETE FROM account_team_assign_all t WHERE t.account_team_assignment_id = :1 AND t.assignment_active = 1'
+			USING in_assign_table(i).old_account_team_assignment_id;
+
+...
+
+EXCEPTION 
+  WHEN bulk_dml_error THEN 
+ 		FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP 
+		  DBMS_OUTPUT.put_line(SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE))); 
+    END LOOP; 

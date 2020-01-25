@@ -169,3 +169,70 @@ begin
     WHEN NO_DATA_FOUND THEN
       dbms_output.put_line('NO_DATA_FOUND');
 end;
+
+---
+
+...
+    t_task_id_table           ASP_PKG_TYPES.numberTable;
+    t_activity_id_table       ASP_PKG_TYPES.numberTable;
+    t_old_lead_owner_id_table ASP_PKG_TYPES.numberTable;
+    t_new_lead_owner_id_table ASP_PKG_TYPES.numberTable;
+    t_due_date_table          ASP_PKG_TYPES.dateTable;
+    t_number_of_hours_table   ASP_PKG_TYPES.numberTable;
+    t_status_table            ASP_PKG_TYPES.varcharTable;
+    t_outcome_table           ASP_PKG_TYPES.varcharTable;
+    t_origin_table            ASP_PKG_TYPES.varcharTable;
+    t_category_table          ASP_PKG_TYPES.varcharTable;
+    t_origin_task_id_table    ASP_PKG_TYPES.numberTable;
+    t_outcome_lov_id_table    ASP_PKG_TYPES.numbertable;
+    t_contact_id_table        ASP_PKG_TYPES.numbertable;
+    t_terr_id_table           ASP_PKG_TYPES.numbertable;
+    ...
+begin
+  ...
+      FORALL i IN 1 .. in_task_table.COUNT SAVE EXCEPTIONS EXECUTE IMMEDIATE
+         'UPDATE TASK_BASE T
+             SET T.END_DATE = :1,
+             T.CURRENT_TASK = 0,
+             T.NEW_TASK = 0,
+             T.OUTCOME = NULL,
+             T.Updatedby = 0,
+             T.Updated = :2,
+             T.Outcome_Lov_Id = :3
+          WHERE T.TASK_ID = :4 
+            AND T.EMPLOYEE_ID != :5
+          RETURNING TASK_ID,
+                    ACTIVITY_ID, 
+                    :6, 
+                    DUE_DATE, 
+                    NUMBER_OF_HOURS,
+                    STATUS,
+                    OUTCOME,
+                    ORIGIN,
+                    CATEGORY,
+                    ORIGIN_TASK_ID,
+                    OUTCOME_LOV_ID,
+                    CONTACT_ID INTO :7, :8, :9, :10, :11, :12, :13, :14, :15, :16, :17, :18'
+         USING v_start_time,
+               v_start_time,
+               in_task_table(i).outcome_lov_id,
+               in_task_table(i).task_id,
+               in_task_table(i).new_employee_id,
+               in_task_table(i).new_employee_id
+         RETURNING BULK COLLECT INTO t_task_id_table,
+         t_activity_id_table, t_new_lead_owner_id_table,
+         t_due_date_table, t_number_of_hours_table,
+         t_status_table, t_outcome_table, t_origin_table,
+         t_category_table, t_origin_task_id_table,
+         t_outcome_lov_id_table, t_contact_id_table
+         ;
+
+...
+
+  FOR i IN 1 .. t_task_id_table.COUNT LOOP
+    dbms_output.put_line('UPDATE TASK_BASE SET OWNER_TERRITORY_LOV_ID = (select territory_lov_id from employee_base where employee_id = ' || t_new_lead_owner_id_table(i) || ') WHERE task_id = ' || t_task_id_table(i));
+  END LOOP;
+
+  FORALL i IN 1 .. t_task_id_table.COUNT SAVE EXCEPTIONS EXECUTE IMMEDIATE
+    'UPDATE TASK_BASE SET OWNER_TERRITORY_LOV_ID = (select territory_lov_id from employee_base where employee_id = :1)  WHERE task_id = :2'
+      USING t_new_lead_owner_id_table(i), t_task_id_table(i);
