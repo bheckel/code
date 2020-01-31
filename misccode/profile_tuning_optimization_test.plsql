@@ -40,3 +40,19 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Time = ' || TO_CHAR(ending_time - starting_time));
 END;
 /
+
+---
+
+/*Create a table for performance test study*/
+CREATE TABLE t_fun_plsql
+(id number,
+ str varchar2(30))
+/
+/*Generate and load random data in the table*/
+INSERT /*+APPEND*/ INTO t_fun_plsql
+SELECT ROWNUM, DBMS_RANDOM.STRING('X', 20)
+FROM dual
+CONNECT BY LEVEL <= 1000000
+/
+COMMIT
+/

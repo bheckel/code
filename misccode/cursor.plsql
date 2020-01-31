@@ -1,4 +1,5 @@
--- Modified: Tue 06 Aug 2019 09:50:30 (Bob Heckel)
+-- Modified: Modified: 31-Jan-2020 (Bob Heckel)
+-- See also pass_cursor.plsql
 
 -- A cursor is a pointer to a memory location (context area). PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL
@@ -12,7 +13,7 @@
 -- Opening the cursor allocates the memory for the cursor and makes it ready for
 -- fetching the rows (returned by the SQL statement) into it:
 -- 
--- OPEN c_customers; 
+-- OPEN c_customers;  -- %ISOPEN is TRUE
 -- 
 -- Fetching the cursor involves accessing one row at a time:
 -- 
@@ -57,7 +58,7 @@ END;
 
 ---
 
--- For small number of UPDATEs only
+-- For small number of UPDATEs only, otherwise BULK COLLECT
 CREATE OR REPLACE PROCEDURE upd IS
   rc pls_integer := 0;
 
@@ -337,7 +338,7 @@ END;
 
 ---
 
--- Parameterized cursor with defaults
+-- Parameterized cursor (with defaults)
 DECLARE
   CURSOR cur_revenue(p_year NUMBER :=2017 , p_customer_id NUMBER := 1) IS
     SELECT SUM(quantity * unit_price) revenue

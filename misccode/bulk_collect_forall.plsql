@@ -745,3 +745,53 @@ DECLARE
 rollback;
 /* commit; */
   END update_from_asp2;
+
+---
+
+DECLARE
+  TYPE emp_tbl IS TABLE OF z_emp%rowtype;
+  emp_data emp_tbl;
+
+  cursor EMPINFO IS
+ 	 SELECT * FROM z_emp;
+
+  errorCnt     NUMBER;
+  errString    varchar2(4000);
+  errCode      NUMBER;
+  dml_errors   exception;
+  pragma exception_init(dml_errors, -24381);
+
+BEGIN
+	OPEN EMPINFO;
+	LOOP
+		FETCH EMPINFO BULK COLLECT INTO emp_data LIMIT 200;
+		EXIT WHEN emp_data.COUNT = 0;
+		BEGIN
+			DBMS_OUTPUT.PUT_LINE('Request rows ' || emp_data.COUNT);
+			FORALL i IN 1..emp_data.COUNT SAVE EXCEPTIONS
+				INSERT INTO z_empbad VALUES emp_data(i);
+
+		EXCEPTION
+			WHEN dml_errors THEN -- Now we figure out what failed and why.
+				errorCnt := SQL%BULK_EXCEPTIONS.COUNT;
+				errString := 'Number of statements that failed: ' || TO_CHAR(errorCnt);
+				dbms_output.put_line(errString);
+
+				FOR i IN 1..errorCnt LOOP
+					IF SQL%BULK_EXCEPTIONS(i).ERROR_CODE > 0 THEN
+						errString := CHR(10) ||  'Error #' || i || CHR(10) || 'Error message is ' ||  SQLERRM(-SQL%BULK_EXCEPTIONS(i).ERROR_CODE);
+						dbms_output.put_line(errString);
+	--      ELSE
+	--        errString := CHR(10) || 'Error #' || i || CHR(10) || 'Error message is ' ||  SQLERRM(-SQL%BULK_EXCEPTIONS(i).ERROR_CODE);
+	--        dbms_output.put_line(errString);
+	--        RAISE;
+					END IF;
+				END LOOP;
+		END;
+	END LOOP;
+END;
+--rollback;
+            
+-- SELECT * FROM z_empbad ;
+--create table z_empbad as select * from z_emp;
+--alter table z_empbad add constraint  unique_emps UNIQUE (empno);

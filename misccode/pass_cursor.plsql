@@ -1,4 +1,5 @@
--- Modified: Fri 17 May 2019 10:05:28 (Bob Heckel)
+-- Modified: 31-Jan-2020 (Bob Heckel)
+-- See also cursor.plsql
 
 -- There are two types of REF CURSORS: strong and weak. A strong REF CURSOR
 -- type is used to declare a cursor variable associated with a specific record
@@ -14,10 +15,51 @@
 --
 -- REF CURSOR types (such as SYS_REFCURSOR) cannot be used as the datatype of a collection.
 
---
+---
 
 DECLARE
-  cv   sys_refcursor;
+  /* Declare a strong REF CURSOR type then we can use  OPEN curv FOR SELECT * FROM emp; */
+  /* TYPE CREF_T IS REF CURSOR RETURN emp%ROWTYPE; */
+  /* curv CREF_T; */
+
+  /* Declare a weak REF cursor type */
+  TYPE CREF_T IS REF CURSOR;
+  /* Declare a cursor variable of REF CURSOR type */
+  curv CREF_T;
+
+  l_ename emp.ename%TYPE;
+  l_sal   emp.sal%TYPE;
+
+  l_deptno dept.deptno%TYPE;
+  l_dname  dept.dname%TYPE;
+BEGIN
+  /* Open the cursor variable for first SELECT statement */
+  OPEN curv FOR
+    SELECT ename, sal
+      FROM emp
+     WHERE ename='JAMES';
+
+   FETCH curv INTO l_ename, l_sal;
+   CLOSE curv;
+   DBMS_OUTPUT.PUT_LINE('Salary of '||L_ENAME||' is '||L_SAL);
+
+  /* Reopen the cursor variable for second SELECT statement */
+  OPEN curv FOR
+    SELECT deptno, dname
+      FROM dept
+     WHERE loc='DALLAS';
+
+  FETCH curv INTO l_deptno, l_dname;
+  CLOSE curv;
+
+  DBMS_OUTPUT.PUT_LINE('Department name '||l_dname ||' for '||l_deptno);
+END;
+/
+
+---
+
+DECLARE
+  cv   SYS_REFCURSOR;
 BEGIN
   OPEN cv FOR 'select * from SYS.dual';
   CLOSE cv;
@@ -253,10 +295,11 @@ END;
 
 -- Single record
 DECLARE
-   l_cv      SYS_REFCURSOR;
+   l_cv  SYS_REFCURSOR;
+
    l_record  employees%ROWTYPE;
 BEGIN
-   EXECUTE IMMEDIATE 'BEGIN OPEN :cv FOR select * from employees where rownum<2; END;'
+   EXECUTE IMMEDIATE 'BEGIN OPEN :cv FOR select * from employees where rownum=1; END;'
      USING IN OUT l_cv;
 
    FETCH l_cv INTO l_record;
@@ -268,13 +311,13 @@ END;
 
 -- Multiple records
 DECLARE
-   l_cv SYS_REFCURSOR;
+   l_cv  SYS_REFCURSOR;
 
    TYPE aa_t IS TABLE of scott.emp%ROWTYPE INDEX BY BINARY_INTEGER;
-   emp_aa aa_t;
+   emp_aa  aa_t;
    
 BEGIN
-   -- Load cursor into associated array
+   -- Load cursor into associative array
    EXECUTE IMMEDIATE 'BEGIN OPEN :cv FOR select * from scott.emp; END;'
      USING IN OUT l_cv;
 

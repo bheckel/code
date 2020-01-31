@@ -26,3 +26,22 @@ from pks_extraction_control
 where rowid='AAB5QNACDAAARalAAo';
 
 COMMIT;
+
+---
+
+-- Find the newest record in a duplicated pair
+/* select opportunity_employee_id, opportunity_id, employee_id */
+delete
+  from opportunity_employee_base
+ where opportunity_id in(
+         select oe.opportunity_id
+           from opportunity_employee_base oe
+          where oe.owner_type = 'P'
+          group by opportunity_id
+         having count(1) > 1
+)
+and owner_type = 'P'
+and rowid in (select max(rowid)
+                from opportunity_employee_base
+               group by opportunity_id, owner_type)
+;

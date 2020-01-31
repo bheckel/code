@@ -20,12 +20,14 @@ where exists (
 ); 
 
 
+-- Setup data to damage
 create table z_emp as select * from emp;
 create table z_dept as select * from dept;
 update z_emp set job=null;
 
+-- For no good reason, update the job description with the user's location if they're new hires
 UPDATE z_emp tb 
-SET  tb.job  = (
+SET tb.job  = (
   select sb.loc  
     from z_dept sb 
    where sb.deptno=tb.deptno
@@ -115,3 +117,18 @@ update retain.fnsh_prod
   where prod_sel_dt > to_date('01-APR-10 01:31:00', 'DD-MON-YY HH24:MI:SS')
 
 commit;
+
+---
+
+-- Update two columns tb=target sb=source
+UPDATE task_base tb 
+SET  (tb.owner_territory_lov_id, tb.updatedby)  = (
+  select sb.territory_lov_id, sb.updatedby
+    from employee_base sb 
+   where sb.employee_id=tb.employee_id
+) 
+WHERE EXISTS ( 
+  select 1
+    from employee_base sb 
+   where sb.employee_id=tb.employee_id   and tb.actual_updated>'19JAN20' and (tb.audit_source='10g279' or tb.actual_updatedby=4488) and tb.current_task=1 and tb.owner_territory_lov_id is null
+);

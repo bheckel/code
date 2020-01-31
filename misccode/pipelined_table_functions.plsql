@@ -299,3 +299,13 @@ CREATE OR REPLACE FORCE VIEW USER_SCHEDULER_JOBS_V3 AS  select * from table(RION
 GRANT SELECT ON USER_SCHEDULER_JOBS_V3 TO kmc;
 
 SELECT * FROM USER_SCHEDULER_JOBS_V3;
+
+---
+
+-- Call function from a select statement 12c+
+WITH FUNCTION fun_with_plsql(p_sal NUMBER) RETURN NUMBER IS
+BEGIN
+  RETURN (p_sal * 12);
+END;
+
+SELECT ename, deptno, fun_with_plsql(sal) "annual_sal" FROM emp
