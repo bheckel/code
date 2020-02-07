@@ -1,5 +1,5 @@
--- Oracle organization chart traversal
--- Created: Thu 25 Oct 2018 11:13:55 (Bob Heckel)
+-- Oracle hierarchy (e.g. organization chart) traversal
+-- Modified: 03-Feb-2020 (Bob Heckel)
 
 create table employees (
   employee_id   integer,
@@ -109,3 +109,18 @@ FOLDER_NAME	DIRECTORY_PATH
 /tmp	      /tmp
 /junk	      /tmp/junk
 */
+
+---
+
+WITH v AS (
+  SELECT line,  col, name, LOWER(type) type, LOWER(usage) usage, usage_id, usage_context_id
+    FROM user_identifiers
+   WHERE object_name = 'AWARD_BONUS'
+     AND object_type = 'PROCEDURE'
+)
+  SELECT line, RPAD(LPAD(' ', 2*(level-1)) ||name, 25, '.')||' '||  RPAD(type, 15)|| RPAD(usage, 15)  IDENTIFIER_USAGE_CONTEXTS
+    FROM v
+   START WITH usage_context_id = 0
+ CONNECT BY PRIOR usage_id = usage_context_id
+  ORDER SIBLINGS BY line, col
+/

@@ -1,5 +1,7 @@
 grant dwrole to unit_test_repos 
 
+alter user scott quota 100M on data
+
 tvL6iXcs@n882!Yp
 
 ---
@@ -58,20 +60,10 @@ SQL> @sqlplus_tmplt.sql
 Password change (from within SQL*Plus):
 PASSW bheckel
 
-
 ---
+
 See if database is reachable, show fq hostname, etc.
 tnsping usdev100
-
----
----
-
-
-sqlplus ods_zeb/ZEBODS_ZB842@ukprd613
-sqlplus pks/dev123dba@usdev388
-sqlplus sasreport/sasreport@usprd259 @wantsampid $1
-sqlplus gist2_stat/stab09stat@usprd117
-sqlplus chemlms/chemlms@usdev259
 
 ---
 
@@ -83,7 +75,6 @@ or
 SQL> connect system/mypassword
 
 ---
-
 
 Save this as ~/tmp/1.sql:
 
@@ -113,7 +104,6 @@ gvim -c "set filetype=sql"
 or use this in _sqlplusrc.sql:
 DEFINE _EDITOR='c:/program files/vim/vim70/gvim -c "set filetype=sql"'
 
-
 ---
 
 SQL*Plus and Vim:
@@ -138,15 +128,12 @@ run the contents of the buffer as usual with the slash (/) or r command.
 
 ---
 
-
 -- Current settings
 SQL> show all
-
 
 -- Change buffer (probably easier to use ed[it] on afiedt.buf)
 SQL> c /meth_spec_nm/meth_var_nm/;
 SQL> run;  <--- or just  r
-
 
 -- Format & query all at once
 column meth_spec_nm format a15;
@@ -163,16 +150,13 @@ column checked_dt format a15;
 select meth_spec_nm,meth_var_nm,meth_peak_nm,lab_tst_desc,meth_rslt_char,meth_rslt_numeric,checked_by_user_id,samp_tst_dt,checked_dt from tst_rslt_summary where meth_spec_nm in(select distinct meth_spec_nm from pks_extraction_control where prod_nm like 'Zan%') and samp_id=174283;
 select meth_spec_nm,meth_var_nm,indvl_tst_rslt_time_pt,indvl_meth_stage_nm,indvl_tst_rslt_device,indvl_tst_rslt_val_num,indvl_tst_rslt_val_char from indvl_tst_rslt where meth_spec_nm in (select distinct meth_spec_nm from pks_extraction_control where prod_nm like 'Zan%') and samp_id=174283;
 
-
 -- if column too wide that truncation occurs in sql*plus window:
 sql> column MFG_SPEC_TXT_A format a15
-
 
 -- Alternative to using afiedt.buf:
 login sql*plus
 edit t.sql in same dir
 type @t to run it in the sql*plus window
-
 
 set termout off;
 set flush on;
@@ -253,13 +237,3 @@ to avoid having to remember all tables and fields.
 
 :wq 
 type r[un] after returning to SQL*Plus
-
-
----
-
-Oracle annoyance note:
-afiedt.buf seems to only be available after you've entered a query so you may
-want to "seed" it with something like t.sql:
-select 1 from dual;
-and run @t as your 1st query
-then use Oracle's ed command

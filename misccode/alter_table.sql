@@ -18,6 +18,8 @@ ALTER TABLE person RENAME TO peoples;
 
 /* Add a hatred column to peoples. */
 ALTER TABLE peoples ADD COLUMN hatred INTEGER;
+-- Oracle
+/* ALTER TABLE peoples ADD hatred NUMBER; */
 
 /* Rename peoples back to person. */
 ALTER TABLE peoples RENAME TO person;
@@ -27,3 +29,6 @@ ALTER TABLE peoples RENAME TO person;
 
 
 ALTER TABLE Customer DROP COLUMN Birth_Date;
+
+
+-- No COMMIT required

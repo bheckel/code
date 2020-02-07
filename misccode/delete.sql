@@ -30,18 +30,42 @@ COMMIT;
 ---
 
 -- Find the newest record in a duplicated pair
-/* select opportunity_employee_id, opportunity_id, employee_id */
-delete
-  from opportunity_employee_base
- where opportunity_id in(
-         select oe.opportunity_id
-           from opportunity_employee_base oe
-          where oe.owner_type = 'P'
-          group by opportunity_id
-         having count(1) > 1
+with v as (        
+	select /*+PARALLEL(4)*/ opportunity_employee_id, opportunity_id, employee_id, actual_updated
+		from opportunity_employee_base
+	 where (opportunity_id, employee_id) in( select oe.opportunity_id, oe.employee_id
+																						 from opportunity_employee_base oe
+																						where oe.owner_type = 'S' and actual_updated > '01JAN20'
+																						group by opportunity_id, employee_id
+																					 having count(1) > 1 )
 )
-and owner_type = 'P'
-and rowid in (select max(rowid)
-                from opportunity_employee_base
-               group by opportunity_id, owner_type)
+select *
+  from v
+ where exists ( select 1
+                  from v v2
+                 where v.opportunity_id = v2.opportunity_id
+                   and v.actual_updated > v2.actual_updated)
 ;
+
+-- or delete the oldest record in a duplicated pair
+delete
+from opportunity_employee_base 
+where opportunity_employee_id in (
+  with v as (        
+        select /*+PARALLEL(4)*/ opportunity_employee_id, opportunity_id, employee_id, actual_updated
+          from opportunity_employee_base
+         where (opportunity_id, employee_id) in(
+                 select oe.opportunity_id, oe.employee_id
+                   from opportunity_employee_base oe
+                  where oe.owner_type = 'S' and actual_updated > '01JAN20'
+                  group by opportunity_id, employee_id
+                 having count(1) > 1
+        )
+  )
+  select opportunity_employee_id
+  from v
+    where exists ( select 1
+                   from v v2
+                   where v.opportunity_id = v2.opportunity_id
+                   and v.actual_updated < v2.actual_updated)
+);

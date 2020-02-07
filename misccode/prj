@@ -8,4 +8,5 @@ cd ~/onedrive &&
 # vim -c "/${1}" ~/tmp/prj.out
 # vim `find . -type f -print0 -not -name '*.dsk*' -a -not -name '*.prj' | xargs -0 grep -i "${1}" | awk -F: '{print $1}' | sort | uniq`
 # find . -type f -not -name '*.dsk*' -a -not -name '*.prj' -print0 | xargs -0 grep -i "${1}" #| awk -F: '{print $1}' | sort | uniq
-find . -type f -not -name '*.dsk*' -a -not -name '*.prj' -print0 | xargs -0 grep -i "${1}" #| awk -F: '{print $1}' | sort | uniq
+# find . -type f -not -name '*.dsk*' -a -not -name '*.prj' -print0 | xargs -0 grep -i "${1}" #| awk -F: '{print $1}' | sort | uniq
+find . -type f -not -name '*.dsk*' -a -not -name '*.prj' -a -not -name '*.log' -a -not -name '*.out' -print0 | xargs -0 grep -i "${1}" #| awk -F: '{print $1}' | sort | uniq
