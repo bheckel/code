@@ -1,9 +1,11 @@
+-- Modified: Fri 14-Feb-2020 (Bob Heckel)
 
 delete target_bricks tb 
-where  exists ( 
-  select * from source_bricks sb 
-  where  sb.brick_id = tb.brick_id 
-  and    sb.colour = 'red' 
+ where  exists ( 
+          select *
+            from source_bricks sb 
+           where sb.brick_id = tb.brick_id 
+             and sb.colour = 'red' 
 );
 
 ---
@@ -27,11 +29,11 @@ where rowid='AAB5QNACDAAARalAAo';
 
 COMMIT;
 
----
+-- better
 
 -- Find the newest record in a duplicated pair
 with v as (        
-	select /*+PARALLEL(4)*/ opportunity_employee_id, opportunity_id, employee_id, actual_updated
+	select opportunity_employee_id, opportunity_id, employee_id, actual_updated
 		from opportunity_employee_base
 	 where (opportunity_id, employee_id) in( select oe.opportunity_id, oe.employee_id
 																						 from opportunity_employee_base oe
@@ -41,31 +43,31 @@ with v as (
 )
 select *
   from v
- where exists ( select 1
+ where exists ( select /*+PARALLEL*/ 1
                   from v v2
                  where v.opportunity_id = v2.opportunity_id
                    and v.actual_updated > v2.actual_updated)
 ;
 
--- or delete the oldest record in a duplicated pair
+-- or delete the older oldest record in a duplicated pair
 delete
-from opportunity_employee_base 
-where opportunity_employee_id in (
-  with v as (        
-        select /*+PARALLEL(4)*/ opportunity_employee_id, opportunity_id, employee_id, actual_updated
-          from opportunity_employee_base
-         where (opportunity_id, employee_id) in(
-                 select oe.opportunity_id, oe.employee_id
-                   from opportunity_employee_base oe
-                  where oe.owner_type = 'S' and actual_updated > '01JAN20'
-                  group by opportunity_id, employee_id
-                 having count(1) > 1
-        )
-  )
-  select opportunity_employee_id
-  from v
-    where exists ( select 1
-                   from v v2
-                   where v.opportunity_id = v2.opportunity_id
-                   and v.actual_updated < v2.actual_updated)
-);
+  from opportunity_employee_base 
+ where opportunity_employee_id in (
+         with v as (        
+               select opportunity_employee_id, opportunity_id, employee_id, actual_updated
+                 from opportunity_employee_base
+                where (opportunity_id, employee_id) in(
+                        select oe.opportunity_id, oe.employee_id
+                          from opportunity_employee_base oe
+                         where oe.owner_type = 'S' and actual_updated > '01JAN20'
+                         group by opportunity_id, employee_id
+                        having count(1) > 1
+                      )
+         )
+         select opportunity_employee_id
+           from v
+          where exists ( select /*+PARALLEL(4)*/ 1
+                         from v v2
+                         where v.opportunity_id = v2.opportunity_id
+                         and v.actual_updated < v2.actual_updated )
+       );

@@ -261,3 +261,5 @@ DBMS_JOB.submit(job_num,
                  NULL);
 COMMIT;                 
 
+SELECT * FROM user_jobs WHERE job=6744;
+

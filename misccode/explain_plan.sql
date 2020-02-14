@@ -114,6 +114,7 @@ drop table robtest purge
 -- - FILTER predicates are applied during the leaf node traversal only. They don't
 --   contribute to the start and stop conditions and do not narrow the scanned range.
 -- 
+-- A- No index
 -- --------------------------------------------------------------
 -- |Id | Operation                   | Name       | Rows | Cost |
 -- --------------------------------------------------------------
@@ -127,22 +128,19 @@ drop table robtest purge
 --    1 - filter(UPPER("LAST_NAME") LIKE '%INA%')
 --    2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
 -- 
--- 
--- CREATE INDEX empsubupnam ON employees (subsidiary_id, UPPER(last_name))
--- 
+-- B- CREATE INDEX empsubupnam ON employees (subsidiary_id, UPPER(last_name))
 -- --------------------------------------------------------------
 -- |Id | Operation                   | Name       | Rows | Cost |
 -- --------------------------------------------------------------
 -- | 0 | SELECT STATEMENT            |            |   17 |   20 |
 -- | 1 |  TABLE ACCESS BY INDEX ROWID| EMPLOYEES  |   17 |   20 |
--- |*2 |   INDEX RANGE SCAN          | EMPSUBUPNAM|   17 |    3 | <--- +1 index is bigger due to adding last_name
+-- |*2 |   INDEX RANGE SCAN          | EMPSUBUPNAM|   17 |    3 | <--- +1 because index is bigger due to adding last_name
 -- --------------------------------------------------------------
 -- 
 -- Predicate Information (identified by operation id):
 -- ---------------------------------------------------
 --    2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
 --        filter(UPPER("LAST_NAME") LIKE '%INA%')
--- 
 -- 
 -- According to the optimizer's estimate, the query ultimately matches 17 records.
 -- The index scan in the first execution plan delivers 333 rows nevertheless. The
@@ -223,3 +221,57 @@ drop table robtest purge
 -- Groups the result using a hash table. This operation needs large amounts of
 -- memory to materialize the intermediate result set (not pipelined). The output
 -- is not ordered in any meaningful way.
+
+---
+
+CREATE INDEX tbl_idx ON tbl (date_column)
+
+--bad
+SELECT COUNT(*)
+  FROM tbl
+ WHERE EXTRACT(YEAR FROM date_column) = 2017;
+
+--good
+SELECT COUNT(*)
+  FROM tbl
+ WHERE date_column >= DATE'2017-01-01'
+   AND date_column <  DATE'2018-01-01';
+
+
+CREATE INDEX tbl_idx ON tbl (a, b)
+
+--bad  - this one can't use the index efficiently because indexes can only be used from left to right
+SELECT *
+  FROM tbl
+ WHERE a = 38
+   AND b = 1;
+SELECT *
+  FROM tbl
+ WHERE b = 1;
+
+--good
+CREATE INDEX tbl_idx ON tbl (b, a)
+SELECT *
+  FROM tbl
+ WHERE a = 38
+   AND b = 1;
+SELECT *
+  FROM tbl
+ WHERE b = 1;
+
+
+CREATE INDEX tbl_idx ON tbl (a, date_column)
+
+--bad - database must look into the actual table
+SELECT date_column, count(*)
+  FROM tbl
+ WHERE a = 38
+   AND b = 1
+ GROUP BY date_column;
+
+--good - index has all the columns so can be run as an index-only scan, no table accesses at all
+SELECT date_column, count(*)
+  FROM tbl
+ WHERE a = 38
+ GROUP BY date_column;
+

@@ -18,8 +18,8 @@
 ---
 
 CREATE OR REPLACE PROCEDURE log_error IS
-	BEGIN
-		 DBMS_OUTPUT.put_line ('Error Trapped: ' || SQLCODE);
+  BEGIN
+     DBMS_OUTPUT.put_line ('Error Trapped: ' || SQLCODE);
 END;
 
 DECLARE
@@ -224,55 +224,55 @@ END;
 ---
 
 CREATE OR REPLACE PROCEDURE update_reference_owner IS
-	TYPE numberTable IS TABLE OF NUMBER;
+  TYPE numberTable IS TABLE OF NUMBER;
 
-	referenceIdTable numberTable;
-	referenceEmployeeIdTable numberTable;
-	v_new_owner number := 9999 ;
+  referenceIdTable numberTable;
+  referenceEmployeeIdTable numberTable;
+  v_new_owner number := 9999 ;
 
-	BEGIN
-		EXECUTE IMMEDIATE 'select r.reference_id, re.reference_employee_id
-													from reference r,
-															 REFERENCE_EMPLOYEE re,
-															 opportunity_employee    oe,
-															 list_of_values          l
-												 where r.reference_id = re.reference_id
-													 and r.opportunity_id = oe.opportunity_id
-													 and re.employee_id ^= :1'
-										BULK COLLECT INTO referenceIdTable, referenceEmployeeIdTable
-										USING v_new_owner;  
+  BEGIN
+    EXECUTE IMMEDIATE 'select r.reference_id, re.reference_employee_id
+                          from reference r,
+                               REFERENCE_EMPLOYEE re,
+                               opportunity_employee    oe,
+                               list_of_values          l
+                         where r.reference_id = re.reference_id
+                           and r.opportunity_id = oe.opportunity_id
+                           and re.employee_id ^= :1'
+                    BULK COLLECT INTO referenceIdTable, referenceEmployeeIdTable
+                    USING v_new_owner;  
 
-		FOR i IN 1 .. referenceIdTable.COUNT LOOP
-			BEGIN 
-			 UPDATE reference_employee_base re2
-					SET re2.EMPLOYEE_ID = v_new_owner,
-							re2.UPDATED     = re2.UPDATED,
-							re2.UPDATEDBY   = re2.UPDATEDBY
-				WHERE re2.REFERENCE_EMPLOYEE_ID = referenceEmployeeIdTable(i);
-					 
-			 EXCEPTION
-				 /* If there is another row with the current reference_id / employee_id, delete it and re-do the update */
-				 WHEN OTHERS THEN
-					 IF (SQLERRM LIKE '%REF_EMP_RE_U_IX%') THEN
-						 
-						 DELETE FROM reference_employee 
-							WHERE reference_id = referenceIdTable(i)
-								AND employee_id = v_new_owner;
-						
-						 UPDATE reference_employee re2
-								SET re2.EMPLOYEE_ID = v_new_owner,
-										re2.territory_lov_id = null,
-										re2.UPDATED     = re2.UPDATED,
-										re2.UPDATEDBY   = re2.UPDATEDBY
-							WHERE re2.REFERENCE_EMPLOYEE_ID = referenceEmployeeIdTable(i);
-							
-							DBMS_OUTPUT.put_line('RE_DO for Ref ID: ' || referenceIdTable(i) );
-			
-					END IF;
-			 END; 
-		END LOOP;
+    FOR i IN 1 .. referenceIdTable.COUNT LOOP
+      BEGIN 
+       UPDATE reference_employee_base re2
+          SET re2.EMPLOYEE_ID = v_new_owner,
+              re2.UPDATED     = re2.UPDATED,
+              re2.UPDATEDBY   = re2.UPDATEDBY
+        WHERE re2.REFERENCE_EMPLOYEE_ID = referenceEmployeeIdTable(i);
+           
+       EXCEPTION
+         /* If there is another row with the current reference_id / employee_id, delete it and re-do the update */
+         WHEN OTHERS THEN
+           IF (SQLERRM LIKE '%REF_EMP_RE_U_IX%') THEN
+             
+             DELETE FROM reference_employee 
+              WHERE reference_id = referenceIdTable(i)
+                AND employee_id = v_new_owner;
+            
+             UPDATE reference_employee re2
+                SET re2.EMPLOYEE_ID = v_new_owner,
+                    re2.territory_lov_id = null,
+                    re2.UPDATED     = re2.UPDATED,
+                    re2.UPDATEDBY   = re2.UPDATEDBY
+              WHERE re2.REFERENCE_EMPLOYEE_ID = referenceEmployeeIdTable(i);
+              
+              DBMS_OUTPUT.put_line('RE_DO for Ref ID: ' || referenceIdTable(i) );
+      
+          END IF;
+       END; 
+    END LOOP;
 
-		COMMIT; 
+    COMMIT; 
 END;
 
 ---
@@ -320,10 +320,10 @@ BEGIN
    proc3;  -- A.
 EXCEPTION
   WHEN OTHERS THEN  --                                                                                    STACK
-		-- ORA-06502: PL/SQL: numeric or value error                                                            3
+    -- ORA-06502: PL/SQL: numeric or value error                                                            3
     dbms_output.put_line(SQLERRM);
     dbms_output.put_line('------');  
- 	 -- ORA-06502: PL/SQL: numeric or value error ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PKG1", line 9  3
+    -- ORA-06502: PL/SQL: numeric or value error ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PKG1", line 9  3
    -- ORA-01403: no data found ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PROC1", line 4                  2
    -- ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PKG1", line 6                                            1
    -- ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PROC3", line 9                                           0
@@ -406,8 +406,8 @@ begin
       
       EXCEPTION
         WHEN NO_DATA_FOUND THEN
-					null;
-		end;
+          null;
+    end;
   end loop;
 
   dbms_output.put_line(i);
@@ -422,14 +422,64 @@ end;
 
 ...
 
-	FORALL i IN 1 .. in_assign_table.COUNT SAVE EXCEPTIONS
-		EXECUTE IMMEDIATE 'DELETE FROM account_team_assign_all t WHERE t.account_team_assignment_id = :1 AND t.assignment_active = 1'
-			USING in_assign_table(i).old_account_team_assignment_id;
+  FORALL i IN 1 .. in_assign_table.COUNT SAVE EXCEPTIONS
+    EXECUTE IMMEDIATE 'DELETE FROM account_team_assign_all t WHERE t.account_team_assignment_id = :1 AND t.assignment_active = 1'
+      USING in_assign_table(i).old_account_team_assignment_id;
 
 ...
 
 EXCEPTION 
   WHEN bulk_dml_error THEN 
- 		FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP 
-		  DBMS_OUTPUT.put_line(SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE))); 
+     FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP 
+      DBMS_OUTPUT.put_line(SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE))); 
     END LOOP; 
+
+---
+
+DECLARE
+  TYPE emp_tbl_t IS TABLE OF z_emp%rowtype;
+  emp_data emp_tbl_t;
+
+  CURSOR c1 IS
+    SELECT * FROM z_emp;
+
+  errorCnt         NUMBER;
+  errString        VARCHAR2(4000);
+  errCode          NUMBER;
+  bulk_dml_errors  EXCEPTION;
+
+  pragma exception_init(bulk_dml_errors, -24381);
+
+BEGIN
+  OPEN c1;
+  LOOP
+    FETCH c1 BULK COLLECT INTO emp_data LIMIT 200;
+    EXIT WHEN emp_data.COUNT = 0;
+    BEGIN
+      DBMS_OUTPUT.PUT_LINE('row count ' || emp_data.COUNT);
+      FORALL i IN 1..emp_data.COUNT SAVE EXCEPTIONS
+        INSERT INTO z_empbad VALUES emp_data(i);
+
+    EXCEPTION
+      WHEN bulk_dml_errors THEN -- now we figure out what failed and why
+        errorCnt := SQL%BULK_EXCEPTIONS.COUNT;
+        errString := 'Number of statements that failed: ' || TO_CHAR(errorCnt);
+        dbms_output.put_line(errString);
+
+        FOR i IN 1..errorCnt LOOP
+          IF SQL%BULK_EXCEPTIONS(i).ERROR_CODE > 0 THEN
+            errString := CHR(10) ||  'Error #' || i || CHR(10) || 'Error message is ' ||  SQLERRM(-SQL%BULK_EXCEPTIONS(i).ERROR_CODE);
+            dbms_output.put_line(errString);
+  --      ELSE
+  --        errString := CHR(10) || 'Error #' || i || CHR(10) || 'Error message is ' ||  SQLERRM(-SQL%BULK_EXCEPTIONS(i).ERROR_CODE);
+  --        dbms_output.put_line(errString);
+  --        RAISE;
+          END IF;
+        END LOOP;  -- exception
+    END;
+  END LOOP;  -- cursor
+END;
+--create table z_emp as select * from emp;
+--create table z_empbad as select * from z_emp;
+-- force a failure to be raised
+--alter table z_empbad add constraint  unique_emps UNIQUE (empno);
