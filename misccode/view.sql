@@ -14,11 +14,11 @@ create or replace view janes_marketing_view as
 
 ---
 
--- Select only the first 30k rows from base table (do no use ROWID)
+-- Select only the first 30k rows from base table (do no use ROWID) to run things in chunks
 CREATE OR REPLACE VIEW rion_42783 AS
   SELECT v.contact_id, v.gender
-    FROM ( select o.*,
+    FROM ( select b.*,
                   row_number() over (order by contact_id) as rnum
-             from orion_42783_base o ) v 
+             from rion_42783_base b ) v 
    WHERE rnum BETWEEN 1 AND 30000;
 

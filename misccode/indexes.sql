@@ -1,6 +1,21 @@
 -- Modified: 16-Jan-2020 (Bob Heckel)
 -- see also explain_plan.sql
 
+-- The database automatically creates an index for the primary key. That means there is an index on the EMPLOYEE_ID column, 
+-- even though there is no CREATE INDEX statement like this one:
+CREATE UNIQUE INDEX employees_pk ON employees (employee_id);
+
+CREATE TABLE employees (
+   employee_id   NUMBER         NOT NULL,
+   first_name    VARCHAR2(1000) NOT NULL,
+   last_name     VARCHAR2(1000) NOT NULL,
+   date_of_birth DATE           NOT NULL,
+   phone_number  VARCHAR2(1000) NOT NULL,
+   CONSTRAINT employees_pk PRIMARY KEY (employee_id)
+);
+
+---
+
 with inds as (    
     select substr(    
              index_name, instr(index_name, '_') + 1,     
@@ -90,3 +105,23 @@ ORDER BY i.table_owner, i.table_name, i.index_name, c.column_position;
 -- Run it
 select DECODE(TO_CHAR("ACCOUNT_SITE_ID"),NULL,'A'||TO_CHAR("ACCOUNT_TEAM_ASSIGNMENT_ID"),'S'||TO_CHAR("ACCOUNT_SITE_ID"))||'-'||TO_CHAR("ASSIGNMENT_ACTIVE")
 from account_team_assign_all;
+
+---
+
+-- Ignore INDEX using a hint:
+SELECT /*+ NO_INDEX(EMPLOYEES EMPLOYEES_PK) */ first_name, last_name, subsidiary_id, phone_number
+  FROM employees
+ WHERE last_name  = 'WINAND'
+   AND subsidiary_id = 30;
+/*
+----------------------------------------------------
+| Id | Operation         | Name      | Rows | Cost |
+----------------------------------------------------
+|  0 | SELECT STATEMENT  |           |    1 |  477 |
+|* 1 |  TABLE ACCESS FULL| EMPLOYEES |    1 |  477 |
+----------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+   1 - filter("LAST_NAME"='WINAND' AND "SUBSIDIARY_ID"=30)
+*/

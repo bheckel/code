@@ -1,8 +1,9 @@
-grant dwrole to unit_test_repos 
+GRANT dwrole TO unit_test_repos 
 
 alter user scott quota 100M on data
 
-tvL6iXcs@n882!Yp
+o.urpxry@tznvy.pbz Junggurs_fhpxf8! 17-Feb-20
+NQZVA vL6iXcs@n882!Yp ??-Jan-20
 
 ---
 
@@ -189,23 +190,26 @@ spool c:/cygwin/home/bheckel/tmp/testing/sqlplus
 --       );
 
 
+---
 
-Vim Tip
+-- Oracle spool (Windows). Save Oracle sqlplus output to file foo.LST:
+sql> spool %TEMP%/foo
+-- ...run qry
+sql> spool off
+SQL> define_editor='c:/program files/vim/vim70/gvim -c "set filetype=sql"'
+SQL> set linesize 1000;  -- avoid truncation of results
+SQL> ed foo  -- sqlplus adds an .sql extension so probably don't need the -c vim stuff
+SQL> @foo
 
-Use Vim as a virtual command line (with tab completion) in SQL*Plus
-===================================================================
+---
 
-There have been a few approaches mentioned in Tips to help overcome SQL*Plus'
-lack of features for editing SQL statements.  Here's my quick 'n' dirty
-approach to hack around the lack of tab completion (and history):
-
+Vim Tip Use Vim as a virtual command line (with tab completion) in SQL*Plus
 
 If you don't already use Vim under SQL*Plus (assuming we're using a GUI):
 Click Edit:Editor:Define Editor
 Then enter this in the text box:
 
 gvim -c "set filetype=sql"
-
 
 Then capture the database elements that you'll want tab completion on:
 
@@ -229,7 +233,6 @@ au GUIEnter afiedt.buf winpos 37 55 | se lines=20 | se columns=170 | se tw=99999
 
 " Poor-man's history:  TODO not working 2006-10-03
 au VimLeavePre afiedt.buf execute "w ~/tmp/afiedt.buf." . strftime("%m_%d-%H_%M_%S")
-
 
 Now from within SQL*Plus, type ed[it] - gvim should open Oracle's default
 afiedt.buf file and (if you've configured Vim for tab completion), allow you

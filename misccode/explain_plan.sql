@@ -1,6 +1,7 @@
 
--- Created:  Thu 30-Jul-2019 (Bob Heckel)
--- Modified: Thu 19-Sep-2019 (Bob Heckel)
+-- Modified: 14-Feb-2020 (Bob Heckel)
+-- Execution plan.  Query plan.
+-- See also indexes.sql
 
 ---
 
@@ -104,15 +105,18 @@ drop table robtest purge
 
 ---
 
--- https://use-the-index-luke.com
+-- Adapted from https://use-the-index-luke.com
 -- 
 -- Attributes of Explain Plan Operations:
 -- 
 -- There are two different ways databases use indexes to apply the WHERE clauses (predicates):
--- - ACCESS predicates express the start and stop conditions for the leaf node traversal.
+-- - ACCESS PREDICATES express the start and stop conditions for the leaf node traversal. They
+--   define the scanned index range, which is hopefully narrow.
 -- 
--- - FILTER predicates are applied during the leaf node traversal only. They don't
---   contribute to the start and stop conditions and do not narrow the scanned range.
+-- - FILTER PREDICATES are applied during the leaf node traversal only. They don't
+--   contribute to the start and stop conditions and do not narrow the scanned index range. It is
+--   possible to modify an index and turn a filter predicate into an access predicate (e.g. by
+--   changing indexed column order, etc.).
 -- 
 -- A- No index
 -- --------------------------------------------------------------
@@ -137,7 +141,7 @@ drop table robtest purge
 -- |*2 |   INDEX RANGE SCAN          | EMPSUBUPNAM|   17 |    3 | <--- +1 because index is bigger due to adding last_name
 -- --------------------------------------------------------------
 -- 
--- Predicate Information (identified by operation id):
+-- Predicate Information (identified by Operation Id):
 -- ---------------------------------------------------
 --    2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
 --        filter(UPPER("LAST_NAME") LIKE '%INA%')
@@ -150,41 +154,47 @@ drop table robtest purge
 -- execute the TABLE ACCESS BY INDEX ROWID operation only 17 times.
 -- 
 --
--- INDEX UNIQUE SCAN 
--- Performs the B-tree traversal only. The database uses this operation if a
+-- INDEX [idx name] UNIQUE SCAN 
+-- Performs the B-tree traversal ONLY. The database uses this operation if a
 -- unique constraint ensures that the search criteria will match no more than one
--- entry.
+-- entry.  The database does not need to follow the index leaf nodes - it is enough to 
+-- traverse the index tree thanks to the primary key or other constraint.  This operation
+-- cannot deliver > 1 entry so it cannot trigger > 1 table access.  Always fast.
 -- 
--- INDEX RANGE SCAN 
--- Performs the B-tree traversal and follows the leaf node chain to find all
+-- INDEX [idx name] RANGE SCAN 
+-- Performs the B-tree traversal AND THEN follows the leaf node chain to find all
 -- matching entries.  The biggest performance risk of an INDEX RANGE SCAN is the
 -- leaf node traversal.  It is therefore the golden rule of indexing to keep the
--- scanned index range as small as possible.  The so-called index filter
--- predicates often cause performance problems for an INDEX RANGE SCAN.
+-- scanned index range as small as possible (i.e. watch your ACCESS PREDICATES).  The so-called index 
+-- FILTER PREDICATES often cause performance problems for an INDEX RANGE SCAN so keep the scanned 
+-- index range as small as possible.  That usually means index for equality first, then for ranges.
+-- Ideally the index "covers" the entire WHERE clause so that all filters are used as access predicates.
 -- 
--- INDEX FULL SCAN
--- Reads the entire index *all rows* in index order. Depending on various system
+-- TABLE ACCESS [tbl name] BY INDEX ROWID
+-- Retrieves a row from the table using the ROWID retrieved from the preceding
+-- index lookup access, e.g. INDEX UNIQUE SCAN.
+-- 
+-- INDEX [idx name] FULL SCAN
+-- Reads the entire index (all rows) in index order. Depending on various system
 -- statistics, the database might perform this operation if it needs all rows in
 -- index order—e.g., because of a corresponding order by clause.  Instead, the
 -- optimizer might also use an INDEX FAST FULL SCAN and perform an additional sort
 -- operation.
 -- 
--- INDEX FAST FULL SCAN
--- Reads the entire index *all rows* as stored on the disk. This operation is
+-- INDEX [idx name] FAST FULL SCAN
+-- Reads the entire index (all rows) as stored on the disk. This operation is
 -- typically performed instead of a full table scan if all required columns are
 -- available in the index. Similar to TABLE ACCESS FULL, the INDEX FAST FULL SCAN
 -- can benefit from multi-block read operations.
 -- 
--- TABLE ACCESS BY INDEX ROWID
--- Retrieves a row from the table using the ROWID retrieved from the preceding
--- index lookup.
--- 
--- TABLE ACCESS FULL
--- Also known as full table scan. Reads the entire table *all rows AND COLUMNS* 
--- as stored on the disk. Although multi-block read operations improve the
--- speed of a full table scan considerably, it is still one of the most expensive
--- operations. Besides high IO rates, a full table scan must inspect all table
--- rows so it can also consume a considerable amount of CPU time.
+-- TABLE ACCESS [tbl name] STORAGE FULL
+-- Also known as "full table scan". Reads the entire table (all rows AND COLUMNS!) as stored on the
+-- disk. Although multi-block read operations improve the speed of a full table scan considerably
+-- (especially if the results involve most of the table since an index lookup reads one block
+-- after the other - the database does not know which block to read next until the current block
+-- has been processed), it is still one of the most expensive operations. Besides high IO rates, a
+-- full table scan must inspect ALL table rows so it can also consume a considerable amount of CPU
+-- time.
 --
 --
 -- NESTED LOOPS JOIN
@@ -226,12 +236,12 @@ drop table robtest purge
 
 CREATE INDEX tbl_idx ON tbl (date_column)
 
---bad
+-- bad
 SELECT COUNT(*)
   FROM tbl
  WHERE EXTRACT(YEAR FROM date_column) = 2017;
 
---good
+-- good
 SELECT COUNT(*)
   FROM tbl
  WHERE date_column >= DATE'2017-01-01'
@@ -240,38 +250,32 @@ SELECT COUNT(*)
 
 CREATE INDEX tbl_idx ON tbl (a, b)
 
---bad  - this one can't use the index efficiently because indexes can only be used from left to right
-SELECT *
-  FROM tbl
- WHERE a = 38
-   AND b = 1;
+-- bad  - this query can't use the index efficiently because indexes can only be used from left to right - it 
+-- is like searching a telephone book by first name then last name
 SELECT *
   FROM tbl
  WHERE b = 1;
 
---good
+-- good
 CREATE INDEX tbl_idx ON tbl (b, a)
 SELECT *
   FROM tbl
- WHERE a = 38
+ WHERE a = 42
    AND b = 1;
-SELECT *
-  FROM tbl
- WHERE b = 1;
 
 
 CREATE INDEX tbl_idx ON tbl (a, date_column)
 
---bad - database must look into the actual table
+-- bad - database must look into the actual table
 SELECT date_column, count(*)
   FROM tbl
- WHERE a = 38
+ WHERE a = 42
    AND b = 1
  GROUP BY date_column;
 
---good - index has all the columns so can be run as an index-only scan, no table accesses at all
+-- good - index has all the columns so can be run as an index-only scan, no table accesses at all
 SELECT date_column, count(*)
   FROM tbl
- WHERE a = 38
+ WHERE a = 42
  GROUP BY date_column;
 
