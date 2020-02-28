@@ -98,7 +98,7 @@ close(TOVIM) || die "Error closing temp file: $!\n";
 my $rc = 0;  # success
 
 if ( $foundflag ) { 
-  printf("Found %d hit%s", $found, $found==1 ? "" : "s");
+  printf("Found %d hit%s ", $found, $found==1 ? "" : "s");
   # Force vim to first occurrance of searchword (-c for execute vim command,
   # \c for case insensitive search).  Assumes hlsearch is au set in .vimrc for
   # .grep files.

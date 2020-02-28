@@ -125,3 +125,17 @@ Predicate Information (identified by operation id):
 ---------------------------------------------------
    1 - filter("LAST_NAME"='WINAND' AND "SUBSIDIARY_ID"=30)
 */
+
+---
+
+-- ALL columns that are a foreign key MUST have an index on them, otherwise, when Oracle validates the value for the 
+-- index, it is a HUGE performance hit
+select uc.constraint_name, ucc.table_name, ucc.column_name--,'CREATE INDEX ' || ucc.table_name || 'XX_IX on ' || ucc.table_name|| '(' || ucc.column_name || ');' index_create
+  from user_constraints uc, user_cons_columns ucc
+ where uc.constraint_name = ucc.constraint_name
+   and uc.constraint_type = 'R' -- FK
+   and NOT exists (select 1
+                     from user_ind_columns uic
+                    where uic.table_name = uc.table_name
+                      and uic.column_name = ucc.column_name);
+

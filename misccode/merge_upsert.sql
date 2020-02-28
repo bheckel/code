@@ -137,12 +137,13 @@ commit;
 
 
 -- Non-merge version:
--- Update-if-exists
+
+-- 1. Update-if-exists in the other table
 update bricks_1 b1
    set ( b1.colour, b1.shape ) = ( select b2.colour, b2.shape 
                                      from bricks_2 b2
                                     where b1.brick_id = b2.brick_id );
--- Insert-if-not-exists
+-- 2. Insert-if-not-exists in the other table
 insert into bricks_1
   select *
   from bricks_2 b2
@@ -160,3 +161,4 @@ merge into bricks_1 b1
 		when not matched then
 			insert ( b1.brick_id, b1.colour, b1.shape )
 			values ( b2.brick_id, b2.colour, b2.shape );
+
