@@ -2,8 +2,9 @@ GRANT dwrole TO unit_test_repos
 
 alter user scott quota 100M on data
 
-o.urpxry@tznvy.pbz Junggurs_fhpxf8! 17-Feb-20
-NQZVA vL6iXcs@n882!Yp ??-Jan-20
+o.urpxry@tznvy.pbz Junggurs_fhpxf8! Feb-20
+
+fdycyhf nqzva/vL6iXcs@n882!Yp@efuqo1 Jan-20
 
 ---
 

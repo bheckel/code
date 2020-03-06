@@ -128,8 +128,8 @@ Predicate Information (identified by operation id):
 
 ---
 
--- ALL columns that are a foreign key MUST have an index on them, otherwise, when Oracle validates the value for the 
--- index, it is a HUGE performance hit
+-- All columns that are a foreign key MUST have an index on them, otherwise, when Oracle validates the value for the 
+-- index, it is a HUGE performance hit(??)
 select uc.constraint_name, ucc.table_name, ucc.column_name--,'CREATE INDEX ' || ucc.table_name || 'XX_IX on ' || ucc.table_name|| '(' || ucc.column_name || ');' index_create
   from user_constraints uc, user_cons_columns ucc
  where uc.constraint_name = ucc.constraint_name
@@ -139,3 +139,11 @@ select uc.constraint_name, ucc.table_name, ucc.column_name--,'CREATE INDEX ' || 
                     where uic.table_name = uc.table_name
                       and uic.column_name = ucc.column_name);
 
+---
+
+-- If you know that there is always a leading wild card, you can obfuscate the
+-- LIKE condition intentionally so that the optimizer can no longer consider the index on LAST_NAME
+SELECT last_name, first_name, employee_id
+  FROM employees
+ WHERE subsidiary_id = ?
+   AND last_name || '' LIKE ?

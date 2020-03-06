@@ -198,8 +198,8 @@ drop table robtest purge
 --
 --
 -- NESTED LOOPS JOIN
--- Joins two tables by fetching the result from one table and querying the other
--- table for each row from the first.
+-- Joins two tables by fetching the result from one table and querying the other table for each 
+-- row from the first. There can be many B-tree traversals when executing the inner query.
 -- 
 -- HASH JOIN
 -- The hash join loads the candidate records from one side of the join into a hash
@@ -273,9 +273,41 @@ SELECT date_column, count(*)
    AND b = 1
  GROUP BY date_column;
 
--- good - index has all the columns so can be run as an index-only scan, no table accesses at all
+-- good - index has all the columns so can be run as an index-only scan, no table accesses at all, the two 
+-- ingredients that make an index lookup slow: (1) the table access, and (2) scanning a wide index range i.e.
+-- not having TABLE ACCESS BY INDEX ROWID
 SELECT date_column, count(*)
   FROM tbl
  WHERE a = 42
  GROUP BY date_column;
 
+---
+
+CREATE INDEX scale_slow ON scale_data (section, id1, id2);
+/*
+------------------------------------------------------
+| Id | Operation         | Name       | Rows  | Cost |
+------------------------------------------------------
+|  0 | SELECT STATEMENT  |            |     1 |  972 |
+|  1 |  SORT AGGREGATE   |            |     1 |      |
+|* 2 |   INDEX RANGE SCAN| SCALE_SLOW |  3000 |  972 |
+------------------------------------------------------
+
+Predicate Information (identified by operation id):
+   2 - access("SECTION"=TO_NUMBER(:A))
+          filter("ID2"=TO_NUMBER(:B))
+*/
+
+CREATE INDEX scale_fast ON scale_data (section, id2, id1);
+/*
+------------------------------------------------------
+| Id   Operation         | Name       | Rows  | Cost |
+------------------------------------------------------
+|  0 | SELECT STATEMENT  |            |     1 |   13 |
+|  1 |  SORT AGGREGATE   |            |     1 |      |
+|* 2 |   INDEX RANGE SCAN| SCALE_FAST |  3000 |   13 |
+------------------------------------------------------
+
+Predicate Information (identified by operation id):
+   2 - access("SECTION"=TO_NUMBER(:A) AND "ID2"=TO_NUMBER(:B))
+*/

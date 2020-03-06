@@ -1,4 +1,17 @@
--- Modified: Thu 06 Jun 2019 09:33:27 (Bob Heckel)
+-- Modified: 04-Mar-2020 (Bob Heckel)
+
+create function rion37678 return NUMBER
+is
+  v_sal number := 0;
+begin
+  return v_sal;
+end;
+
+declare x number; begin x := rion37678(); dbms_output.put_line(x); end;
+
+drop function rion37678;
+
+---
 
 -- Return a nested table.  See also pass_cursor.plsql. Using tables we have to
 -- fetch all of the rows on the PLSQL side. With a ref cursor the client gets the data right away 
