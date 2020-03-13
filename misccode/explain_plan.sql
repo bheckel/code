@@ -202,8 +202,11 @@ drop table robtest purge
 -- row from the first. There can be many B-tree traversals when executing the inner query.
 -- 
 -- HASH JOIN
--- The hash join loads the candidate records from one side of the join into a hash
--- table that is then probed for each row from the other side of the join.
+-- The hash join loads the candidate records from one side (the smaller tbl) of the join into a hash
+-- table that is then probed for each row from the other side of the join. Best to select only
+-- minimal rows/columns from the hash table to keep it's Byte size small. Hash joins do not need indexes 
+-- on the join predicates. They use the hash table instead. A hash join uses indexes only if the index 
+-- supports the independent predicate(s).
 -- 
 -- MERGE JOIN
 -- The merge join combines two sorted lists like a zipper. Both sides of the join

@@ -35,6 +35,22 @@
 
 ---
 
+-- Implicit cursor
+
+CREATE TABLE test_table ( col1 INTEGER, col2 INTEGER );
+
+insert into test_table values (3, 4)
+
+CREATE OR REPLACE PROCEDURE test_proc AS
+	BEGIN
+		FOR x IN ( SELECT col1, col2 FROM test_table )
+		LOOP
+			dbms_output.put_line(x.col1);
+		END LOOP;
+END;
+
+---
+
 -- For queries that return more than one row, you must declare an explicit
 -- cursor and use OPEN, FETCH, CLOSE in a loop
 
@@ -319,21 +335,6 @@ create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN
          -- EXECUTE IMMEDIATE (grantStatement);
     END LOOP;
   CLOSE restore_grants;
-END;
-
----
--- Implicit cursor
-
-CREATE TABLE test_table ( col1 INTEGER, col2 INTEGER );
-
-insert into test_table values (3, 4)
-
-CREATE OR REPLACE PROCEDURE test_proc AS
-	BEGIN
-		FOR x IN ( SELECT col1, col2 FROM test_table )
-		LOOP
-			dbms_output.put_line(x.col1);
-		END LOOP;
 END;
 
 ---

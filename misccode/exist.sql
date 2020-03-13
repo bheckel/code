@@ -174,3 +174,7 @@ where dept.department_id = emp.department_id (+)
 and emp.department_id is null
 order by department_name;
 
+-- On one not on another:
+select a.view_name from all_views a, all_views@seuat b where a.view_name like '%ASP%' and a.view_name=b.view_name(+) and b.view_name is null;
+select b.view_name from all_views a, all_views@seuat b where b.view_name like '%ASP%' and a.view_name(+)=b.view_name and a.view_name is null;
+
