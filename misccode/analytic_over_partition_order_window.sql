@@ -277,3 +277,22 @@ FROM (
 SELECT event_id, eventname , dense_rank() OVER (order by event_id) rownbr FROM event_base e WHERE e.account_name_id=99999
 )
 WHERE rownbr <50
+
+---
+
+SELECT * 
+  FROM emp 
+ ORDER BY sal DESC, hiredate DESC
+OFFSET 2 ROWS FETCH NEXT 3 ROWS ONLY ;
+
+-- Pre-Oracle 12c. The alias RN is used for the lower bound and the ROWNUM pseudo column itself for the upper bound.
+SELECT *
+  FROM ( SELECT v.*, rownum rn
+           FROM ( SELECT *
+                    FROM emp
+                   ORDER BY sal DESC
+                ) v
+          WHERE rownum <= 5
+       )
+ WHERE rn > 2;
+

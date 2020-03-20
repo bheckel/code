@@ -3,6 +3,9 @@
 -- Execution plan.  Query plan.
 -- See also indexes.sql
 
+-- The B-tree traversal is the first power of indexing.
+-- Clustering is the second power of indexing.
+
 ---
 
 -- Oracle indexing
@@ -116,42 +119,49 @@ drop table robtest purge
 -- - FILTER PREDICATES are applied during the leaf node traversal only. They don't
 --   contribute to the start and stop conditions and do not narrow the scanned index range. It is
 --   possible to modify an index and turn a filter predicate into an access predicate (e.g. by
---   changing indexed column order, etc.).
+--   changing indexed column order, etc).
 -- 
--- A- No index
--- --------------------------------------------------------------
--- |Id | Operation                   | Name       | Rows | Cost |
--- --------------------------------------------------------------
--- | 0 | SELECT STATEMENT            |            |   17 |  230 |
--- |*1 |  TABLE ACCESS BY INDEX ROWID| EMPLOYEES  |   17 |  230 |
--- |*2 |   INDEX RANGE SCAN          | EMPLOYEE_PK|  333 |    2 |
--- --------------------------------------------------------------
+--   E.g.
+--   SELECT first_name, last_name, subsidiary_id, phone_number
+--     FROM employees
+--    WHERE subsidiary_id = ?
+--      AND UPPER(last_name) LIKE '%INA%';
+--
+--   A- No index
+--   --------------------------------------------------------------
+--   |Id | Operation                   | Name       | Rows | Cost |
+--   --------------------------------------------------------------
+--   | 0 | SELECT STATEMENT            |            |   17 |  230 |
+--   |*1 |  TABLE ACCESS BY INDEX ROWID| EMPLOYEES  |   17 |  230 |
+--   |*2 |   INDEX RANGE SCAN          | EMPLOYEE_PK|  333 |    2 | <--- high Rows
+--   --------------------------------------------------------------
+--   
+--   Predicate Information (identified by operation id):
+--   ---------------------------------------------------
+--      1 - filter(UPPER("LAST_NAME") LIKE '%INA%')
+--      2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
+--   
+--   B - Cover all columns from the WHERE clause - even if they do not narrow the scanned index range
+--   CREATE INDEX empsubupnam ON employees (subsidiary_id, UPPER(last_name));
+--   --------------------------------------------------------------
+--   |Id | Operation                   | Name       | Rows | Cost |
+--   --------------------------------------------------------------
+--   | 0 | SELECT STATEMENT            |            |   17 |   20 |
+--   | 1 |  TABLE ACCESS BY INDEX ROWID| EMPLOYEES  |   17 |   20 |
+--   |*2 |   INDEX RANGE SCAN          | EMPSUBUPNAM|   17 |    3 | <--- +1 because index is bigger due to adding last_name
+--   --------------------------------------------------------------
+--   
+--   Predicate Information (identified by Operation Id):
+--   ---------------------------------------------------
+--      2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
+--          filter(UPPER("LAST_NAME") LIKE '%INA%')
 -- 
--- Predicate Information (identified by operation id):
--- ---------------------------------------------------
---    1 - filter(UPPER("LAST_NAME") LIKE '%INA%')
---    2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
--- 
--- B- CREATE INDEX empsubupnam ON employees (subsidiary_id, UPPER(last_name))
--- --------------------------------------------------------------
--- |Id | Operation                   | Name       | Rows | Cost |
--- --------------------------------------------------------------
--- | 0 | SELECT STATEMENT            |            |   17 |   20 |
--- | 1 |  TABLE ACCESS BY INDEX ROWID| EMPLOYEES  |   17 |   20 |
--- |*2 |   INDEX RANGE SCAN          | EMPSUBUPNAM|   17 |    3 | <--- +1 because index is bigger due to adding last_name
--- --------------------------------------------------------------
--- 
--- Predicate Information (identified by Operation Id):
--- ---------------------------------------------------
---    2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
---        filter(UPPER("LAST_NAME") LIKE '%INA%')
--- 
--- According to the optimizer's estimate, the query ultimately matches 17 records.
--- The index scan in the first execution plan delivers 333 rows nevertheless. The
--- database must then load these 333 rows from the table to apply the LIKE filter
--- which reduces the result to 17 rows. In the second execution plan, the index
--- access does not deliver those rows in the first place so the database needs to
--- execute the TABLE ACCESS BY INDEX ROWID operation only 17 times.
+--   According to the optimizer's estimate, the query ultimately matches 17 records.
+--   The index scan in the first execution plan delivers 333 rows nevertheless. The
+--   database must then load these 333 rows from the table to apply the LIKE filter
+--   which reduces the result to 17 rows. In the second execution plan, the index
+--   access does NOT deliver those rows in the first place so the database needs to
+--   execute the TABLE ACCESS BY INDEX ROWID operation only 17 times.
 -- 
 --
 -- INDEX [idx name] UNIQUE SCAN 
@@ -202,15 +212,16 @@ drop table robtest purge
 -- row from the first. There can be many B-tree traversals when executing the inner query.
 -- 
 -- HASH JOIN
--- The hash join loads the candidate records from one side (the smaller tbl) of the join into a hash
+-- Loads the candidate records from one side (the smaller tbl) of the join into a hash
 -- table that is then probed for each row from the other side of the join. Best to select only
 -- minimal rows/columns from the hash table to keep it's Byte size small. Hash joins do not need indexes 
 -- on the join predicates. They use the hash table instead. A hash join uses indexes only if the index 
 -- supports the independent predicate(s).
 -- 
--- MERGE JOIN
--- The merge join combines two sorted lists like a zipper. Both sides of the join
--- must be presorted.
+-- SORT MERGE JOIN
+-- Combines two sorted lists like a zipper. If both sides of the join
+-- are presorted it can be efficient. There is absolute symmetry. The join order does not make any 
+-- difference.
 --
 --
 -- SORT ORDER BY
