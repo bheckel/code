@@ -360,3 +360,32 @@ BEGIN
   END LOOP;
   CLOSE cur_revenue;
 END;
+
+---
+
+CREATE OR REPLACE PACKAGE optm_view_mrl2 IS
+   PROCEDURE cast_max_len2(tablename IN VARCHAR2);
+END;
+CREATE OR REPLACE PACKAGE BODY optm_view_mrl2 IS
+  PROCEDURE cast_max_len2(tablename IN VARCHAR2) IS
+    colnm VARCHAR(99);
+    colsz NUMBER;
+    cv    SYS_REFCURSOR;
+  BEGIN
+    OPEN cv FOR 'SELECT column_name, data_length
+                  FROM user_tab_columns
+                 WHERE table_name = :1'
+      USING tablename;
+  
+    LOOP
+      FETCH cv INTO colnm, colsz;
+  
+      EXIT WHEN cv%notfound;
+      
+      dbms_output.put_line('create or replace view ' || tablename || '_mrl as select ' || colnm || ' HOWEVER_YOU_DO_A_CAST(' || colsz || ') from ' || tablename);
+    END LOOP;
+  
+    CLOSE cv;
+  END;
+END;
+exec  Optm_view_mrl2.cast_max_len2('ACCOUNT');

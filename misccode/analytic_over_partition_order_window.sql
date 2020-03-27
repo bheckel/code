@@ -280,19 +280,42 @@ WHERE rownbr <50
 
 ---
 
-SELECT * 
-  FROM emp 
- ORDER BY sal DESC, hiredate DESC
-OFFSET 2 ROWS FETCH NEXT 3 ROWS ONLY ;
+-- Find highest salary for earliest hire date, then just the offset of rows 3 thru 5:
 
 -- Pre-Oracle 12c. The alias RN is used for the lower bound and the ROWNUM pseudo column itself for the upper bound.
 SELECT *
   FROM ( SELECT v.*, rownum rn
            FROM ( SELECT *
                     FROM emp
-                   ORDER BY sal DESC
+                   ORDER BY sal DESC, hiredate
                 ) v
           WHERE rownum <= 5
        )
  WHERE rn > 2;
 
+-- Better but can't use select *
+with v as (
+select empno, sal, deptno, hiredate
+       row_number() over (order by sal desc, hiredate) rn
+       from emp
+)
+select * from v where rn between 3 and 5;
+
+-- Best
+SELECT * 
+  FROM emp 
+ ORDER BY sal DESC, hiredate
+OFFSET 2 ROWS FETCH NEXT 3 ROWS ONLY ;
+
+---
+
+SELECT empno, deptno, sal, 
+       -- Default RANGE, not ROWS, means it includes all rows with the same value as the value in the current row, even if they 
+       -- are further down the result set. As a result, the window may extend beyond the current row, even though you may
+       -- not think this is the case
+       AVG(sal) OVER (PARTITION BY deptno ORDER BY sal) AS avg_dept_sal_running_total,
+       -- same
+       AVG(sal) OVER (PARTITION BY deptno ORDER BY sal RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS range_avg,
+       -- better
+       AVG(sal) OVER (PARTITION BY deptno ORDER BY sal ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS rows_avg
+  FROM emp;

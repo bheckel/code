@@ -289,7 +289,8 @@ SELECT date_column, count(*)
 
 -- good - index has all the columns so can be run as an index-only scan, no table accesses at all, the two 
 -- ingredients that make an index lookup slow: (1) the table access, and (2) scanning a wide index range i.e.
--- not having TABLE ACCESS BY INDEX ROWID
+-- not having TABLE ACCESS BY INDEX ROWID. If you select a single column that isn't in the index, the database 
+-- cannot do an index-only scan. Same if you SELECT *.
 SELECT date_column, count(*)
   FROM tbl
  WHERE a = 42
