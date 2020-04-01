@@ -1,3 +1,4 @@
+-- Modified: 27-Mar-2020 (Bob Heckel) 
 
 -- MINUS implements the set difference operator. This returns all the rows in the first table not in the second. 
 -- MINUS is one of the few operators that consider null values equal.
@@ -37,3 +38,20 @@ where  not exists (
   from   bought_toys boto 
   where  tofs.toy_name = boto.toy_name 
 );
+
+---
+
+-- "MINUS ALL" keep duplicates by using analytic function hack (MINUS removes duplicates of the input sets
+-- first before doing the subtraction)
+select
+   product_id
+ , product_name
+ , row_number() over ( partition by product_id, product_name order by rownum) as rn
+from customer_order_products
+MINUS
+select
+   product_id
+ , product_name
+ , row_number() over ( partition by product_id, product_name order by rownum) as rn
+from customer_order_products
+order by 1;

@@ -147,3 +147,16 @@ SELECT last_name, first_name, employee_id
   FROM employees
  WHERE subsidiary_id = ?
    AND last_name || '' LIKE ?
+
+---
+
+-- Each column's index for most tables:
+select distinct utc.TABLE_NAME, uic.COLUMN_NAME, uic.INDEX_NAME
+	from user_objects ut, user_tab_cols utc, user_ind_columns uic
+ where ut.OBJECT_TYPE = 'TABLE'
+	 and ut.OBJECT_NAME = utc.TABLE_NAME
+	 and utc.COLUMN_NAME = 'AUDIT_SOURCE'
+	 and ut.OBJECT_NAME = uic.TABLE_NAME
+	 and ut.OBJECT_NAME not like '%_OLD'
+	 and uic.INDEX_NAME =  uic.INDEX_NAME;
+

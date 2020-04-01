@@ -363,6 +363,7 @@ END;
 
 ---
 
+-- Dynamic cursor passed in from procedure parameter
 CREATE OR REPLACE PACKAGE optm_view_mrl2 IS
    PROCEDURE cast_max_len2(tablename IN VARCHAR2);
 END;

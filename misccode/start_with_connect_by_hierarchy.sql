@@ -1,5 +1,5 @@
 -- Oracle hierarchy (e.g. organization chart) traversal
--- Modified: 03-Feb-2020 (Bob Heckel)
+-- Modified: 30-Mar-2020 (Bob Heckel)
 
 create table employees (
   employee_id   integer,
@@ -112,6 +112,29 @@ FOLDER_NAME	DIRECTORY_PATH
 
 ---
 
+-- Recursive subquery factoring Practical Oracle SQL - Kim Berg Hansen
+
+-- Fail
+select
+   connect_by_root p.id as p_id
+ , connect_by_root p.name as p_name
+ , c.id as c_id
+ , c.name as c_name
+ , ltrim(sys_connect_by_path(pr.qty, '*'), '*') as qty_expr
+ , qty * prior qty as qty_mult
+from packaging_relations pr
+join packaging p
+   on p.id = pr.packaging_id
+join packaging c
+   on c.id = pr.contains_id
+where connect_by_isleaf = 1
+start with pr.packaging_id not in (
+   select c.contains_id from packaging_relations c
+)
+connect by pr.packaging_id = prior pr.contains_id
+order siblings by pr.contains_id;
+
+-- Success
 WITH v AS (
   SELECT line,  col, name, LOWER(type) type, LOWER(usage) usage, usage_id, usage_context_id
     FROM user_identifiers
@@ -124,3 +147,61 @@ WITH v AS (
  CONNECT BY PRIOR usage_id = usage_context_id
   ORDER SIBLINGS BY line, col
 /
+
+---
+
+with recursive_pr (
+   root_id, packaging_id, contains_id, qty, lvl
+) as (
+   select
+      pr.packaging_id as root_id
+    , pr.packaging_id
+    , pr.contains_id
+    , pr.qty
+    , 1 as lvl
+   from packaging_relations pr
+   where pr.packaging_id not in (
+      select c.contains_id from packaging_relations c
+   )
+   union all
+   select
+      rpr.root_id
+    , pr.packaging_id
+    , pr.contains_id
+    , rpr.qty * pr.qty as qty
+    , rpr.lvl + 1      as lvl
+   from recursive_pr rpr
+   join packaging_relations pr
+      on pr.packaging_id = rpr.contains_id
+)
+   search depth first by contains_id set rpr_order
+select
+   p.id as p_id
+ , p.name as p_name
+ , c.id as c_id
+ , c.name as c_name
+ , leaf.qty
+from (
+   select
+      root_id, contains_id, sum(qty) as qty
+   from (
+      select
+         rpr.*
+       , case
+            when nvl(
+                    lead(rpr.lvl) over (order by rpr.rpr_order)
+                  , 0
+                 ) > rpr.lvl
+            then 0
+            else 1
+         end as is_leaf
+      from recursive_pr rpr
+   )
+   where is_leaf = 1
+   group by root_id, contains_id
+) leaf
+join packaging p
+   on p.id = leaf.root_id
+join packaging c
+   on c.id = leaf.contains_id
+order by p.id, c.id;

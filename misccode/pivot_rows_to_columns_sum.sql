@@ -1,8 +1,8 @@
 /* Convert rows to columns */
 /* See also sum_salary_by_job-matrix.sql */
-/* Modified: 02-Oct-2019 (Bob Heckel) */
+/* Modified: 31-Mar-2020 (Bob Heckel)*/
 
--- Quarter's rows to columns (long to wide)
+-- Quarter's rows to columns (pivot: long to wide)
 /*         _flip_
 QUARTER	PROD_CATEGORY	           COUNT(*)
 JAN	    Electronics	                 6398
@@ -24,7 +24,7 @@ from (
   from sh.sales s, sh.products p
   where s.prod_id = p.prod_id and s.time_Id >= date '2000-01-01'
 )
-PIVOT ( count(*) FOR quarter IN ( 'JAN' as jan,'APR' as apr,'JUL' as jul,'OCT' as oct ) )
+PIVOT ( count(*) FOR quarter IN ( 'JAN' as jan,'APR' as apr,'JUL' as jul,'OCT' as oct ) );
 /*
 PROD_CATEGORY	              JAN	   APR	   JUL	   OCT
 Electronics	                 6398	8709	  10283	   10771
@@ -32,8 +32,27 @@ Hardware	                    944  696	    740	     708
 Peripherals and Accessories	17923	12627	14254	14047
 */
 
--- Columns to rows unpivot
-...( quantity FOR quarter IN (JAN,APR,JUL,OCT) )
+-- Columns to rows (unpivot: wide to long)
+with pivoted as (
+  select prod_category,jan,apr,jul,oct
+  from (
+    select to_char(trunc(s.time_id,'Q'),'MON') quarter, prod_category
+    from sh.sales s, sh.products p
+    where s.prod_id = p.prod_id and s.time_Id >= date '2000-01-01'
+  )
+  PIVOT ( count(*) FOR quarter IN ( 'JAN' as jan,'APR' as apr,'JUL' as jul,'OCT' as oct ) )
+)
+select * 
+from pivoted
+UNPIVOT ( quantity FOR quarter IN (JAN,APR,JUL,OCT) );
+/*
+PROD_CATEGORY                 JAN APR JUL OCT
+Electronics	                  16461	20783	21435	23630
+Photo	                        14505	15621	16177	16529
+Peripherals and Accessories	  34450	28687	32937	33939
+Software/Other	              55416	51739	52051	49870
+Hardware	                    1973	1977	2119	1765
+*/
 
 ---
 
@@ -183,3 +202,143 @@ with weights as (
     sum(weight) tot_weight FOR colour IN ('red' red, 'blue' blue) 
   ) 
   order  by shape;
+
+---
+
+-- Pivot. Adapted from Practical Oracle SQL - Kim Berg Hansen
+-- Pre-pivot (wide)
+select
+   brewery_name
+ , group_name
+ , extract(year from purchased) as yr
+ , sum(qty) as qty
+from purchases_with_dims pwd
+group by 
+   brewery_name
+ , group_name
+ , extract(year from purchased)
+order by
+   brewery_name
+ , group_name
+ , yr;
+
+-- Listing 8-4. Utilizing the implicit group by
+select *
+from (
+   select
+      brewery_name
+    , group_name
+    , extract(year from purchased) as yr
+    , qty
+   from purchases_with_dims pwd
+) PIVOT (
+   sum(qty)
+   for yr
+   in (
+      2016 as y2016
+    , 2017 as y2017
+    , 2018 as y2018
+   )
+)
+order by brewery_name, group_name;
+
+-- Listing 8-5. Manual pivoting without using pivot clause
+
+select
+   brewery_name
+ , group_name
+ , sum(
+      case extract(year from purchased)
+         when 2016 then qty
+      end
+   ) as y2016
+ , sum(
+      case extract(year from purchased)
+         when 2017 then qty
+      end
+   ) as y2017
+ , sum(
+      case extract(year from purchased)
+         when 2018 then qty
+      end
+   ) as y2018
+from purchases_with_dims pwd
+group by 
+   brewery_name
+ , group_name
+order by brewery_name, group_name;
+
+---
+
+-- Dynamic unpivot. Adapted from Practical Oracle SQL - Kim Berg Hansen
+alter session set nls_date_format = 'YYYY-MM-DD';
+variable unpivoted refcursor
+
+declare
+   v_unpivot_sql  varchar2(4000);
+begin
+   for c in (
+      select
+         s.cnt_col, s.qty_col
+       , s.g_id, s.gender
+       , s.ch_id, s.channel
+      from (
+         select
+            lower(
+               g.letter || '_' || c.shortcut || '_cnt'
+            ) as cnt_col
+          , lower(
+               g.letter || '_' || c.shortcut || '_qty'
+            )as qty_col
+          , g.letter as g_id
+          , g.name as gender
+          , c.id as ch_id
+          , c.name as channel
+         from gender_dim g
+         cross join channels_dim c
+      ) s
+      join user_tab_columns cnt_c
+         on cnt_c.column_name = upper(s.cnt_col)
+      join user_tab_columns qty_c
+         on qty_c.column_name = upper(s.cnt_col)
+      where cnt_c.table_name = 'WEB_DEMOGRAPHICS'
+      and   qty_c.table_name = 'WEB_DEMOGRAPHICS'
+      order by gender, channel
+   ) loop
+
+      if v_unpivot_sql is null then
+         v_unpivot_sql := q'[
+            select day, g_id, ch_id, cnt, qty
+            from web_demographics
+            unpivot (
+               ( cnt, qty )
+               for ( g_id, ch_id )
+               in (
+                  ]';
+      else
+         v_unpivot_sql := v_unpivot_sql || q'[
+                , ]';
+      end if;
+
+      v_unpivot_sql := v_unpivot_sql
+                    || '(' || c.cnt_col
+                    || ', ' || c.qty_col
+                    || ') as (''' || c.g_id
+                    || ''', ' || c.ch_id
+                    || ')';
+
+   end loop;
+   
+   v_unpivot_sql := v_unpivot_sql || q'[
+               )
+            )
+            order by day, g_id, ch_id]';
+
+   dbms_output.put_line(v_unpivot_sql);
+   
+   open :unpivoted for v_unpivot_sql;
+end;
+/
+
+print unpivoted
+

@@ -1,10 +1,21 @@
+Sql Developer
+ctrl + shift + n  new unshared window
+ctrl + shift + v  clipboard history
+
+---
+
 GRANT dwrole TO unit_test_repos 
+
+grant select_catalog_role to unit_test_repos;
+grant select any dictionary to unit_test_repos;
 
 alter user scott quota 100M on data
 
 o.urpxry@tznvy.pbz Junggurs_fhpxf8! Feb-20
 
 fdycyhf nqzva/vL6iXcs@n882!Yp@efuqo1 Jan-20
+
+benpyrvqragvglpybhqfreivpr/o.urpxry@tznvy.pbz
 
 ---
 
@@ -25,14 +36,6 @@ HH 	  Hour of day (1-12)
 HH24 	Hour of day (0-23)
 MI 	  Minute (0-59)
 SS 	  Second (0-59)
-
----
-
-2009-02-10
-Determine version v9+:
-
-SQL> SET SERVEROUT ON;
-SQL> EXEC DBMS_OUTPUT.PUT_LINE(DBMS_DB_VERSION.VERSION);
 
 ---
 
