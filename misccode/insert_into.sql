@@ -1,3 +1,9 @@
+
+-- Modified: 02-Apr-2020 (Bob Heckel)
+-- see restore_records_from_hist.sql
+
+---
+
 create table relations
 ( id   number       not null primary key
 , name varchar2(30) not null
@@ -205,4 +211,48 @@ END;
                     .risk_id, in_risk_table(i).new_default_tsr_owner,
                      v_start_time, v_start_time, in_risk_table(i).risk_id, in_risk_table(i)
                     .new_default_tsr_owner, in_risk_table(i).risk_id
-      ;
+    ;
+
+-- better but maybe not identical
+    FORALL i IN 1 .. in_oppt_table.COUNT SAVE EXCEPTIONS EXECUTE IMMEDIATE
+			-- Consider adding the new TSR as a secondary IP
+			'MERGE INTO OPPORTUNITY_EMPLOYEE_BASE
+				USING dual ON (employee_id = :1 and opportunity_id = :2)
+				-- If the new TSR is already on the opp as an S (WHEN MATCHED) then do nothing
+				WHEN NOT MATCHED THEN  
+					-- Otherwide add the new TSR as a secondary (we never adjust the primary)
+					INSERT
+						(opportunity_employee_id,
+						 opportunity_id,
+						 employee_id,
+						 territory_lov_id,
+						 role_lov_id,
+						 owner_type,
+						 founder,
+						 created,
+						 createdby,
+						 updated,
+						 updatedby)
+					Values
+						(uid_opportunity_employee.NEXTVAL,
+						 :3,
+						 :4,
+						 :5,
+						 :6,
+						 ''S'',
+						 0,
+						 :7,
+						 0,
+						 :8,
+						 0
+						 )'
+       USING in_oppt_table(i).new_default_tsr_owner,
+             in_oppt_table(i).opportunity_id,
+             in_oppt_table(i).opportunity_id,
+             in_oppt_table(i).new_default_tsr_owner,
+             in_oppt_table(i).new_default_tsr_territory,
+             in_oppt_table(i).new_ip_role_lov_id,
+             v_start_time,
+             v_start_time
+    ;
+

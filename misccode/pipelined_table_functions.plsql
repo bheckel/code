@@ -1,4 +1,5 @@
 /* Adapted: Fri, Nov 30, 2018  3:57:25 PM (Bob Heckel--devgym.oracle.com) */ 
+/* Modified: 03-Apr-2020 (Bob Heckel)
 /* See also pass_cursor.plsql */
 
 /* Pipelined table functions are something of an oddity in PL/SQL: they pass
@@ -9,22 +10,30 @@
  * then continues to process rows.
  *
  * Efficient: since we no longer declare and populate a nested table to be returned by the
- * function, the amount of PGA needed to run this function goes down
- * dramatically.
+ * function, the amount of PGA needed to run this function goes down dramatically.
  *
  * Only downside: you cannot call a PTF from within PL/SQL itself, it must be in
  * the FROM clause of a SELECT (only normal table functions can be called in PL/SQL) 
+ *
+ * We could have used a regular table function instead of pipelined – then we would have had to build 
+ * the entire output collection before returning it. But if a table function is meant to be used 
+ * strictly from SQL and never from PL/SQL, it is almost always a good idea to make it pipelined.
+ * We get the ability to quit processing if the client SQL stops fetching rows from the function.
  */
 
-/* A PTF can use a schema-level collection type as its return type, as long as
+---
+
+ /*
+ * A PTF can use a schema-level collection type as its return type, as long as
  * it is a nested table or varray.  Associative arrays (INDEX-BY) are not allowed to be
  * used as the return type.
  */
-
 CREATE OR REPLACE TYPE strings_t IS TABLE OF VARCHAR2(100);
 /
 
-/* A pipelined table function returns a row to its invoker (a query) with the PIPE ROW statement and then continues to process rows */
+/* A pipelined table function returns a row to its invoker (a query) with the PIPE ROW statement 
+ * and then continues to process rows
+ */
 CREATE OR REPLACE FUNCTION strings 
    RETURN strings_t
    PIPELINED
@@ -37,7 +46,7 @@ BEGIN
 END;
 /
 
-SELECT COLUMN_VALUE my_string FROM TABLE (strings())
+SELECT COLUMN_VALUE my_string FROM TABLE(strings());
 /
 
 /* ERROR: non-pipelined table functions can be invoked natively in PL/SQL, since
@@ -309,3 +318,55 @@ BEGIN
 END;
 
 SELECT ename, deptno, fun_with_plsql(sal) "annual_sal" FROM emp
+
+---
+
+-- Comma separated list in column to rows
+-- Adapted: 03-Apr-2020 (Bob Heckel -- Practical Oracle SQL Kim Berg Hansen)
+create or replace package bob_pkg as
+  type favorite_coll_type is table of integer;
+end;
+
+create or replace package body bob_pkg as
+  function favorite_list_to_coll_type (
+     p_favorite_list   in customer_favorites.favorite_list%type
+  )
+     return favorite_coll_type PIPELINED
+  is
+     v_from_pos  pls_integer;
+     v_to_pos    pls_integer;
+  begin
+     if p_favorite_list is not null then
+        v_from_pos := 1;
+        loop
+           v_to_pos := instr(p_favorite_list, ',', v_from_pos);
+           PIPE ROW (to_number(
+              substr(
+                 p_favorite_list
+               , v_from_pos
+               , case v_to_pos
+                    when 0 then length(p_favorite_list) + 1
+                           else v_to_pos
+                 end - v_from_pos
+              )
+           ));
+           exit when v_to_pos = 0;
+           v_from_pos := v_to_pos + 1;
+        end loop;
+     end if;
+  end favorite_list_to_coll_type;
+end;
+
+-- as admin: grant create public SYNONYM to unit_test_repos
+create public SYNONYM favorite_list_to_coll_type for  bob_pkg.favorite_list_to_coll_type
+
+select
+   cf.customer_id
+ , fl.column_value as product_id
+from customer_favorites cf
+   , table(
+        favorite_list_to_coll_type(cf.favorite_list)
+     ) fl
+order by cf.customer_id, fl.column_value;
+
+SELECT * FROM favorite_list_to_coll_type('1,2,3');

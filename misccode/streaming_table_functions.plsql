@@ -1,4 +1,5 @@
 /* Adapted: Thu, Nov 29, 2018  2:33:18 PM (Bob Heckel -- https://devgym.oracle.com) */
+/* Modified: 03-Apr-2020 (Bob Heckel) */
 
 /* See also pipelined_table_functions.plsql */
 
@@ -115,7 +116,7 @@ END;
 /******************* Stream *********************/
 INSERT INTO tickers
    SELECT * 
-     FROM TABLE (doubled(CURSOR (SELECT * FROM stocks)))
+     FROM TABLE(doubled(CURSOR(SELECT * FROM stocks)))
 /
 
 select * from tickers;

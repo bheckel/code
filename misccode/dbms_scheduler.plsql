@@ -7,16 +7,15 @@ SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS order by actual_start_date desc
 
 ---
 
--- Details of what's scheduled (in job_action)
+-- Details of what's scheduled (in job_action), find BEGIN ADD_TSR_OWNERS_TO_RISK; END;
 select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments
 from user_scheduler_jobs a
-/* where job_name='FOO' */
-ORDER BY 1
+where lower(job_action) like '%tsr_%'
+order by 1;
 
--- Next run details
-SELECT * from USER_SCHEDULER_JOBS WHERE job_name in ('PERIODIC_LIFE_UPDATE')
 -- Run status log
-SELECT * FROM ALL_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
+SELECT * FROM USER_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
+
 -- Named Schedule details
 select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'PERI%';
 
@@ -26,7 +25,7 @@ BEGIN
  sys.dbms_scheduler.create_job(
    job_name        => 'ASP_TO_ATAA_JOB',
    job_type        => 'PLSQL_BLOCK',
-   --job_action => 'begin null; ASP_PKG.update_ataa_with_asp(p_do_commit => 0); end;',
+   --job_action => 'begin ASP_PKG.update_ataa_with_asp(p_do_commit => 0); end;',
    job_action      => 'begin null; end;',
    repeat_interval => 'FREQ=MINUTELY; INTERVAL=60',
    end_date        => TO_DATE(NULL),
@@ -73,8 +72,8 @@ BEGIN
     job_name => 'SETARS.DAILY_DATA_MAINTENANCE_JOB',
     job_type => 'PLSQL_BLOCK',
     job_action => 'begin DAILY_DATA_MAINTENANCE.DAILY_DATA_CHECKS;end;',
-		--start_date => cast(SYSTIMESTAMP + (.000694 * wait_minutes) AS TIMESTAMP),
-		--start_date => CAST(sysdate + interval '1' minute AS TIMESTAMP),
+    --start_date => cast(SYSTIMESTAMP + (.000694 * wait_minutes) AS TIMESTAMP),
+    --start_date => CAST(sysdate + interval '1' minute AS TIMESTAMP),
     start_date => '09-NOV-08 12.01.00AM EST5EDT',
     /* repeat_interval => 'Freq=Daily;ByHour=00;ByMinute=01', */
     /* repeat_interval => 'SYSTIMESTAMP + INTERVAL '30' MINUTE', */
@@ -86,7 +85,7 @@ BEGIN
     -- auto_drop to FALSE causes the job to persist-note that repeating jobs are
     -- not auto-dropped unless the job end date passes, the maximum number of runs
     -- (max_runs) is reached, or the maximum number of failures is reached (max_failures)
-	  auto_drop  => false,  -- default TRUE
+    auto_drop  => false,  -- default TRUE
     comments => 'Compiling weekly Maintenance');
 END;
 
@@ -117,7 +116,7 @@ CREATE OR REPLACE PACKAGE BODY orion33427 AS
   IS
   
     CURSOR c IS
-      select 'ESTARS.'||a.job_name full_job_name, a.job_name, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, 
+      select 'SETARS.'||a.job_name full_job_name, a.job_name, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, 
              a.JOB_CLASS, a.ENABLED, a.SCHEDULE_NAME, a.SCHEDULE_TYPE, regexp_replace(a.start_date, ' -\d\d:\d\d.*$', ' EST5EDT') new_start_date
         from all_scheduler_jobs a
        WHERE to_char(a.start_date, 'TZR') !='EST5EDT'
@@ -262,4 +261,39 @@ DBMS_JOB.submit(job_num,
 COMMIT;                 
 
 SELECT * FROM user_jobs WHERE job=6744;
+
+---
+
+BEGIN
+   -- Drop the job, if exists
+   BEGIN
+     SYS.DBMS_SCHEDULER.DROP_JOB(
+       job_name  => 'LONG_RUNNING_USER_QUERIES_JOB');
+   EXCEPTION
+     WHEN OTHERS THEN
+       NULL;
+   END;
+
+   -- Drop the schedule, if exists
+   BEGIN
+     SYS.DBMS_SCHEDULER.DROP_SCHEDULE(
+       schedule_name  => 'LONG_RUNNING_USER_QUERIES_SCH');
+   EXCEPTION
+     WHEN OTHERS THEN
+       NULL;
+   END;
+
+   DBMS_SCHEDULER.create_schedule(
+      schedule_name   => 'LONG_RUNNING_USER_QUERIES_SCH',
+      repeat_interval => 'FREQ=DAILY;BYHOUR=6;BYMINUTE=0;BYSECOND=0',
+      comments        => 'Schedule for long running user queries job.');
+
+   DBMS_SCHEDULER.create_job(
+      job_name            => 'LONG_RUNNING_USER_QUERIES_JOB',
+      schedule_name       => 'LONG_RUNNING_USER_QUERIES_SCH',
+      job_type            => 'PLSQL_BLOCK',
+      job_action          => 'BEGIN SETARS.long_running_user_queries(20); END;',
+      enabled             => TRUE,
+      comments            => 'Job to email long running queries to the respective users. Runs every day at 6am.');
+END;
 

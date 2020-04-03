@@ -2,7 +2,7 @@
 -- Adapted: Tue 01 Apr 2019 10:49:35 (Bob Heckel--DevGym)
 -- Modified: Tue 18 Jun 2019 10:49:35 (Bob Heckel)
 
--- See also row.plsql suppress_rowlevel_dml_errors.plsql
+-- See also row.plsql suppress_rowlevel_dml_errors.plsql, restore_records_from_hist.sql
 
 -- The PL/SQL features that comprise bulk SQL are the FORALL statement and the
 -- BULK COLLECT clause.

@@ -162,3 +162,29 @@ merge into bricks_1 b1
 			insert ( b1.brick_id, b1.colour, b1.shape )
 			values ( b2.brick_id, b2.colour, b2.shape );
 
+---
+
+merge into RISK_EMP
+  using dual on ( employee_id = riskRec.employee_id and risk_id = riskRec.risk_id)
+    -- If the new TSR is already on the risk (WHEN MATCHED) then do nothing
+    WHEN NOT MATCHED THEN
+    -- Otherwide add the TSR to the risk
+    INSERT 
+      (risk_employee_id,
+       risk_id,
+       employee_id,
+       owner,
+       created,
+       createdby,
+       updated,
+       updatedby)
+    VALUES
+      (uid_risk_employee.nextval,
+       riskRec.risk_id,
+       riskRec.employee_id,
+       0,
+       sysdate,
+       2,
+       sysdate,
+       2);
+
