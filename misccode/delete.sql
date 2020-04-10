@@ -49,6 +49,19 @@ select *
                    and v.actual_updated > v2.actual_updated)
 ;
 
+-- or delete records with duplicate owners
+delete from risk_employee where risk_employee_id in(
+  with errs as (       
+		select risk_id, employee_id
+		from risk_employee
+		group by risk_id, employee_id
+		having count(1)>1
+  )
+  select risk_employee_id 
+  from risk_employee r, errs e
+  where r.risk_id=e.risk_id
+);
+
 -- or delete the older oldest record in a duplicated pair
 delete
   from opportunity_employee_base 

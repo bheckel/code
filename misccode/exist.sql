@@ -178,3 +178,13 @@ order by department_name;
 select a.view_name from all_views a, all_views@seuat b where a.view_name like '%ASP%' and a.view_name=b.view_name(+) and b.view_name is null;
 select b.view_name from all_views a, all_views@seuat b where b.view_name like '%ASP%' and a.view_name(+)=b.view_name and a.view_name is null;
 
+---
+
+-- Don't need this...
+DELETE FROM OPP_FUN_ACTIVITY G WHERE NOT EXISTS (SELECT 1 FROM OPPORTUNITY_BASE B WHERE B.OPPORTUNITY_ID = G.OPPORTUNITY_ID)
+
+-- ...if have this
+alter table OPP_FUN_ACTIVITY
+  add constraint OPPORTUNITY_OFA_FK foreign key (OPPORTUNITY_ID)
+  references OPPORTUNITY_BASE (OPPORTUNITY_ID) on delete cascade;
+

@@ -14,10 +14,11 @@
  * clause NOT in a predicate.  They can often be used to eliminate potentially 
  * expensive subqueries.
  *
- * P  partition
- * O  order
- * W  window
+ * P  partition: split the data into partitions and apply the function separately to each partition
+ * O  order: apply the function in a specific order and/or provide the ordering that the windowing_clause depends upon
+ * W  window: specify a certain window (fixed or moving) of the ordered data in the partition
  *
+ * Modified: 09-Apr-2020 (Bob Heckel)
  */
 
 -- Aggregate functions vs. Analytic functions:
@@ -30,7 +31,7 @@ DEPT_COUNT
 11
 */
 
---                             _______
+--                             _______ each row
 SELECT empno, deptno, COUNT(*) OVER () DEPT_COUNT
 FROM scott.emp
 WHERE deptno IN (20, 30);
@@ -48,6 +49,12 @@ EMPNO	DEPTNO	DEPT_COUNT
 7876	20	11
 7900	30	11
 */
+
+-- same, the totally unbounded window is the entire partition
+SELECT empno, deptno, COUNT(*) OVER (order by empno ROWS between unbounded preceding and unbounded following) DEPT_COUNT
+FROM scott.emp
+WHERE deptno IN (20, 30);
+
 
 
 SELECT deptno, COUNT(*) COUNT_BY_DEPT
@@ -124,7 +131,7 @@ select empno, ename, job, sal,
 
        -- RANK will skip the next number if there are ties i.e. Olympic ranking
        rank() OVER (order by sal) as sal_rank,  -- 1,2,2,4,5... no #3 
-       rank() OVER (order by sal DESC NULLS LAST ) as hi_sal_rank_with_nulls
+       rank() OVER (order by sal DESC NULLS LAST) as hi_sal_rank_with_nulls
 
        dense_rank() OVER (order by sal) as sal_dense_rank,  -- 1,2,2,3,4... two 2s then normal seq resumes
 from emp
@@ -155,7 +162,7 @@ union all select date '2000-01-05',   14 from dual
 )
 select d
       ,amt
-      ,count(1) OVER (order by d) cnt_cumul_grp  -- 1,2,4,4,5,6
+      ,count(1) OVER (order by d) cnt_cumulative_date_cnt  -- 1,2,4,4,5,6
       ,row_number() OVER (order by d) row_seq_in_dt_order  -- 1,2,3,4,5,6
       ,rank() OVER (order by d) orderbydt -- 1,2,3,3,5,6 Olympic has dups and holes
       ,dense_rank() OVER (order by d) orderbydt_dense -- 1,2,3,3,4,5,6 still has dups like Olympic but fills the holes
@@ -166,6 +173,7 @@ select d
       ,first_value(amt) OVER (partition by d order by d) firstdot  -- 10,11,30,30,10,14
       -- Good for cols where only the first appearance holds empno and rest are blank and need to be padded out (like a report for human consumption)
       ,last_value(amt IGNORE NULLS) OVER (order by d)  lastdot_fillin_the_blank  -- 10,11,30,30,10,14
+      -- -- The value that range will use is the value of the column used in the order by in the analytic function. Therefore, in order to use range windows, the order by column must be a number or a date/timestamp.
       ,last_value(amt) OVER (order by d RANGE between current row and unbounded following) last_from_lastdategrp  -- 14,14,14,14,14,14
       -- The NTH_VALUE clause lets us identify boundary values that are not necessarily the minima and maxima which could be identified by FIRST_VALUE() and LAST_VALUE()
       ,nth_value(amt,2) OVER (order by d) second_highest_skip_outliers  -- , 11, 11, 11, 11, 11
@@ -198,7 +206,8 @@ select d
       ,avg(amt) OVER () grand_avg  -- 17.5,17.5,17.5,17.5,17.5,17.5
       ,count(1) OVER () grand_sum -- 7,7,7,7,7,7
       --, lead(account_id) OVER (partition by account_id order by account_id) endgroup_of_accountids_willbenull
-from v;
+from v
+order by 1;
 
 ---
 

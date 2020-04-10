@@ -362,11 +362,13 @@ create public SYNONYM favorite_list_to_coll_type for  bob_pkg.favorite_list_to_c
 
 select
    cf.customer_id
- , fl.column_value as product_id
+   -- keyword
+ , fl.COLUMN_VALUE as product_id
 from customer_favorites cf
+     -- Takes a collection (nested table) and turns the elements of the collection into rows
    , table(
         favorite_list_to_coll_type(cf.favorite_list)
      ) fl
-order by cf.customer_id, fl.column_value;
+order by cf.customer_id, fl.COLUMN_VALUE;
 
 SELECT * FROM favorite_list_to_coll_type('1,2,3');

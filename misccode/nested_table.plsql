@@ -255,3 +255,53 @@ FOR i IN 1 .. t_assign_table.COUNT LOOP
   END IF;
 END LOOP;
 COMMIT;
+
+---
+
+-- Pass collection to a function
+CREATE OR REPLACE PACKAGE bob2 IS
+  TYPE name_coll_type IS TABLE OF VARCHAR2(32767);
+  
+  FUNCTION name_coll_type_to_varchar2 (
+     p_name_coll    IN name_coll_type
+   , p_delimiter    IN VARCHAR2 DEFAULT ', '
+  ) RETURN VARCHAR2;
+  
+  PROCEDURE do;
+END;
+
+CREATE OR REPLACE PACKAGE BODY bob2 IS
+  FUNCTION name_coll_type_to_varchar2 (
+     p_name_coll    IN name_coll_type
+   , p_delimiter    IN VARCHAR2 DEFAULT ', '
+  ) RETURN VARCHAR2
+  IS
+     v_name_string  VARCHAR2(32767);
+  BEGIN
+     FOR idx IN p_name_coll.first .. p_name_coll.last LOOP
+      IF idx = p_name_coll.first THEN
+         v_name_string := p_name_coll(idx);
+      ELSE
+         v_name_string := v_name_string
+                       || p_delimiter
+                       || p_name_coll(idx);
+      END IF;
+      DBMS_OUTPUT.put_line('loop ' || p_name_coll(idx));
+     END LOOP;
+     
+     RETURN v_name_string;
+  END;
+
+  PROCEDURE do IS    
+    nc name_coll_type := name_coll_type('foo','bar');
+    x VARCHAR2(32767);
+    
+    BEGIN
+      nc(1) := 'baz';
+      
+      x := name_coll_type_to_varchar2(p_name_coll=>nc);
+      DBMS_OUTPUT.put_line('ok2 ' || x);
+  END;
+END;
+
+exec bob2.do;

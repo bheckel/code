@@ -94,13 +94,29 @@ BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 
 ---
 
--- Update job
-BEGIN sys.dbms_scheduler.set_attribute(name => 'SET_CUSTOMER_FLAG_JOB', ATTRIBUTE => 'job_action', VALUE => 'BEGIN SETARS.SET_CUSTOMER_FLAG(inAccount_ID => 0, do_commit =>1); END;'); END;
+-- Modify existing schedule
 
--- Update job (if disabled)
+-- Find NAMED schedule time (START_DATE)
+select * from USER_SCHEDULER_SCHEDULES d where d.schedule_name like 'PERI%';
+
+-- Update job's NAMED schedule
+BEGIN
+  sys.dbms_scheduler.set_attribute(name => 'SET_CUSTOMER_FLAG_JOB',
+                                   attribute => 'job_action',
+                                   value => 'BEGIN SETARS.SET_CUSTOMER_FLAG(inAccount_ID => 0, do_commit =>1); END;');
+END;
+
+-- Update job's NAMED schedule (if job is disabled)
 BEGIN sys.Dbms_Scheduler.enable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;  -- can pass comma-separated list 'foo, bar'
-BEGIN sys.dbms_scheduler.set_attribute(name => 'SETARS.PERIODICLIFECYCLEUPDATE', ATTRIBUTE => 'start_date',VALUE => '15-NOV-18 09.00.00.856890 AM EST5EDT');END;
-BEGIN sys.Dbms_Scheduler.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
+BEGIN sys.dbms_scheduler.set_attribute(name => 'SETARS.PERIODICLIFECYCLEUPDATE',
+                                       attribute => 'START_DATE',
+                                       value => '15-NOV-18 09.00.00.856890 AM EST5EDT');
+END;
+BEGIN sys.dbms_scheduler.set_attribute(name => 'PERIODICLIFECYCLEUPDATE',
+                                       attribute => 'REPEAT_INTERVAL',
+                                       value => 'Freq=Daily;ByHour=19;ByMinute=00;BySecond=00');
+END;
+--BEGIN sys.Dbms_Scheduler.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
 
 ---
 
