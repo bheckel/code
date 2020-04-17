@@ -1,6 +1,6 @@
 
 -- Modified: Tue 03-Mar-2020 (Bob Heckel)
--- See also csv_list_to_table_xmltable.sql
+-- See also csv_list_to_table_xmltable.sql delete.sql
 
 ---
 
@@ -188,3 +188,22 @@ alter table OPP_FUN_ACTIVITY
   add constraint OPPORTUNITY_OFA_FK foreign key (OPPORTUNITY_ID)
   references OPPORTUNITY_BASE (OPPORTUNITY_ID) on delete cascade;
 
+---
+
+-- 51rec total in rion_44642
+
+-- 13rec
+SELECT account_id, input_source
+	FROM account_base 
+ WHERE account_id IN ( select distinct account_id from rion_44642 );
+       
+-- 38rec
+SELECT o.account_id --, input_source
+	FROM rion_44642 o 
+ WHERE not exists ( select 1 from account_base a where o.account_id=a.account_id);
+
+-- 38rec
+SELECT o.account_id--, input_source
+	FROM rion_44642 o, account_base a
+ WHERE o.account_id = a.account_id(+)
+	 AND a.account_id is null;

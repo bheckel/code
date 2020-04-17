@@ -18,7 +18,7 @@ sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 
 echo '--  cd C:\Orion\workspace\data\Source\SQL\xOrionScripts\' >> ${JIRA}.sql
 echo '--  @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
-echo '--  @"C:\Users\boheck\OneDrive - SAS\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
+echo '--  @"C:\Users\boheck\OneDrive - SAS\'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
 echo "--  DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 

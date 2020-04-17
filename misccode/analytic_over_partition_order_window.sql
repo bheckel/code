@@ -1,3 +1,4 @@
+-- Modified: Mon 13-Apr-2020 (Bob Heckel)
 
 /* Analytic functions compute an aggregate value based on a group of rows. They
  * differ from aggregate functions in that they RETURN MULTIPLE ROWS FOR EACH
@@ -17,8 +18,6 @@
  * P  partition: split the data into partitions and apply the function separately to each partition
  * O  order: apply the function in a specific order and/or provide the ordering that the windowing_clause depends upon
  * W  window: specify a certain window (fixed or moving) of the ordered data in the partition
- *
- * Modified: 09-Apr-2020 (Bob Heckel)
  */
 
 -- Aggregate functions vs. Analytic functions:
@@ -50,12 +49,10 @@ EMPNO	DEPTNO	DEPT_COUNT
 7900	30	11
 */
 
--- same, the totally unbounded window is the entire partition
-SELECT empno, deptno, COUNT(*) OVER (order by empno ROWS between unbounded preceding and unbounded following) DEPT_COUNT
+-- same - RANGE is the (unfortunate) default, the totally unbounded window is the entire partition
+SELECT empno, deptno, COUNT(*) OVER (order by empno RANGE between unbounded preceding and unbounded following) DEPT_COUNT
 FROM scott.emp
 WHERE deptno IN (20, 30);
-
-
 
 SELECT deptno, COUNT(*) COUNT_BY_DEPT
 FROM scott.emp
@@ -319,12 +316,41 @@ OFFSET 2 ROWS FETCH NEXT 3 ROWS ONLY ;
 ---
 
 SELECT empno, deptno, sal, 
-       -- Default RANGE, not ROWS, means it includes all rows with the same value as the value in the current row, even if they 
+       -- Default is RANGE, not ROWS, means it includes all rows with the same value as the value in the current row, even if they 
        -- are further down the result set. As a result, the window may extend beyond the current row, even though you may
-       -- not think this is the case
+       -- not think this is the case, beware!
        AVG(sal) OVER (PARTITION BY deptno ORDER BY sal) AS avg_dept_sal_running_total,
        -- same
        AVG(sal) OVER (PARTITION BY deptno ORDER BY sal RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS range_avg,
        -- better
        AVG(sal) OVER (PARTITION BY deptno ORDER BY sal ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS rows_avg
   FROM emp;
+
+---
+
+-- RANGE vs. ROWS
+select
+   ol.product_id as p_id
+ , p.name        as product_name
+ , ol.order_id   as o_id
+ , ol.qty
+ , sum(ol.qty) over (
+      partition by ol.product_id
+      order by ol.qty
+      /* no window - rely on default */
+   ) as def_q
+ , sum(ol.qty) over (
+      partition by ol.product_id
+      order by ol.qty
+      /* same as no window */
+      range between unbounded preceding and current row
+   ) as range_q
+ , sum(ol.qty) over (
+      partition by ol.product_id
+      order by ol.qty
+      ROWS between unbounded preceding and current row
+   ) as rows_q
+from orderlines ol join products p on p.id = ol.product_id
+where ol.product_id in (4280, 6600)
+order by ol.product_id, ol.qty;
+

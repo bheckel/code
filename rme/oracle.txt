@@ -4,8 +4,9 @@ ctrl + shift + v  clipboard history
 
 ---
 
-GRANT dwrole TO unit_test_repos 
+GRANT dwrole TO unit_test_repos;
 
+GRANT execute ON SYS.DBMS_LOCK TO unit_test_repos;
 grant select_catalog_role to unit_test_repos;
 grant select any dictionary to unit_test_repos;
 

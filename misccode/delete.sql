@@ -1,4 +1,4 @@
--- Modified: Fri 14-Feb-2020 (Bob Heckel)
+-- Modified: Wed 15-Apr-2020 (Bob Heckel)
 
 delete target_bricks tb 
  where  exists ( 
@@ -84,3 +84,26 @@ delete
                          where v.opportunity_id = v2.opportunity_id
                          and v.actual_updated < v2.actual_updated )
        );
+
+-- or if more than one column criteria to use for deletions
+delete 
+--SELECT * 
+  from risk_employee re
+ where exists ( 
+        select 1 from (
+          with errs as (       
+            SELECT risk_id, employee_id
+            FROM risk_employee
+            group by risk_id, employee_id
+            having count(1)>1
+          ), dups as (
+            select r.risk_id, r.risk_employee_id, r.employee_id, row_number() OVER (PARTITION BY r.risk_id, trunc(r.employee_id) ORDER BY r.risk_id, r.actual_updated DESC) rownbr
+            from risk_employee r, errs e
+           where r.risk_id=e.risk_id
+          )
+          select d.risk_id, d.risk_employee_id, d.employee_id
+            from dups d
+           where rownbr >= 2
+        )
+        where re.risk_id = risk_id and re.risk_employee_id = risk_employee_id and re.employee_id = employee_id
+);--delete the 2nd, 3rd... oldest dups
