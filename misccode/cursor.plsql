@@ -1,5 +1,5 @@
 -- Modified: Modified: 31-Jan-2020 (Bob Heckel)
--- See also pass_cursor.plsql
+-- See also pass_cursor.plsql and https://github.com/oracle/oracle-db-examples/blob/master/plsql/sql-in-plsql/cursors-in-plsql.sql
 
 -- A cursor is a pointer to a memory location (context area). PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL
@@ -390,3 +390,116 @@ CREATE OR REPLACE PACKAGE BODY optm_view_mrl2 IS
   END;
 END;
 exec  Optm_view_mrl2.cast_max_len2('ACCOUNT');
+
+---
+
+-- http://stevenfeuersteinonplsql.blogspot.com/2016/05/types-of-cursors-available-in-plsql.html
+CREATE OR REPLACE PROCEDURE cursor_expression_demo (location_id_in NUMBER) 
+IS 
+   /* Notes on CURSOR expression: 
+ 
+      1. The query returns only 2 columns, but the second column is 
+         a cursor that lets us traverse a set of related information. 
+ 
+      2. Queries in CURSOR expression that find no rows do NOT raise 
+         NO_DATA_FOUND. 
+   */ 
+   CURSOR all_in_one_cur 
+   IS 
+      SELECT l.city, 
+             CURSOR (SELECT d.department_name, 
+                            CURSOR (SELECT e.last_name 
+                                      FROM hr.employees e 
+                                     WHERE e.department_id = d.department_id) 
+                               AS ename 
+                       FROM hr.departments d 
+                      WHERE l.location_id = d.location_id) 
+                AS dname 
+        FROM hr.locations l 
+       WHERE l.location_id = location_id_in; 
+ 
+   department_cur   SYS_REFCURSOR; 
+   employee_cur     SYS_REFCURSOR; 
+   v_city           hr.locations.city%TYPE; 
+   v_dname          hr.departments.department_name%TYPE; 
+   v_ename          hr.employees.last_name%TYPE; 
+BEGIN 
+   OPEN all_in_one_cur; 
+ 
+   LOOP 
+      FETCH all_in_one_cur INTO v_city, department_cur; 
+ 
+      EXIT WHEN all_in_one_cur%NOTFOUND; 
+ 
+      -- Now I can loop through deartments and I do NOT need to 
+      -- explicitly open that cursor. Oracle did it for me. 
+      LOOP 
+         FETCH department_cur INTO v_dname, employee_cur; 
+ 
+         EXIT WHEN department_cur%NOTFOUND; 
+ 
+         -- Now I can loop through employee for that department. 
+         -- Again, I do need to open the cursor explicitly. 
+         LOOP 
+            FETCH employee_cur INTO v_ename; 
+ 
+            EXIT WHEN employee_cur%NOTFOUND; 
+            DBMS_OUTPUT.put_line (v_city || ' ' || v_dname || ' ' || v_ename); 
+         END LOOP; 
+ 
+         /* Not necessary; automatically closed with CLOSE all_in_one_cur
+         CLOSE employee_cur; */
+      END LOOP; 
+ 
+      /* Not necessary; automatically closed with CLOSE all_in_one_cur.
+      CLOSE department_cur; */
+   END LOOP; 
+ 
+   CLOSE all_in_one_cur; 
+END;
+/
+
+BEGIN
+   cursor_expression_demo (1700);
+END;
+/
+
+---
+
+-- http://stevenfeuersteinonplsql.blogspot.com/2016/05/types-of-cursors-available-in-plsql.html
+-- DBMS_SQL Cursor Handle
+-- Most dynamic SQL requirements can be met with EXECUTE IMMEDIATE (native
+-- dynamic SQL). Some of the more complicated scenarios, however, like
+-- variable number of elements in SELECT list and/or variable number
+-- of bind variables are best implemented by DBMS_SQL. You allocate a cursor
+-- handle and then all subsequent operations reference that cursor handle.
+CREATE OR REPLACE PROCEDURE show_common_names (table_in IN VARCHAR2)  
+IS  
+   l_cursor     PLS_INTEGER := DBMS_SQL.open_cursor ();  
+   l_feedback   PLS_INTEGER;  
+   l_name       endangered_species.common_name%TYPE;  
+BEGIN  
+   DBMS_SQL.parse (l_cursor,  
+                   'select common_name from ' || table_in,  
+                   DBMS_SQL.native);  
+  
+   DBMS_SQL.define_column (l_cursor, 1, 'a', 100);  
+  
+   l_feedback := DBMS_SQL.execute (l_cursor);  
+  
+   DBMS_OUTPUT.put_line ('Result=' || l_feedback);  
+  
+   LOOP  
+      EXIT WHEN DBMS_SQL.fetch_rows (l_cursor) = 0;  
+      DBMS_SQL.COLUMN_VALUE (l_cursor, 1, l_name);  
+      DBMS_OUTPUT.put_line (l_name);  
+   END LOOP;  
+  
+   DBMS_SQL.close_cursor (l_cursor);  
+END;
+/
+
+BEGIN
+   show_common_names ('ENDANGERED_SPECIES');
+END;
+/
