@@ -1,6 +1,32 @@
 -- Created: Mon 01 Feb 2019 10:45:15 (Bob Heckel) 
+-- Modified: 24-Apr-2020 (Bob Heckel)
 
--- see also ZTESTBOB.sql
+CREATE OR REPLACE PACKAGE ztestbob AS
+  
+  PROCEDURE test(in_x number);
+
+END ztestbob;
+/
+
+
+CREATE OR REPLACE PACKAGE BODY ztestbob AS
+
+  PROCEDURE test(in_x number)
+  IS
+    l_now DATE := sysdate;
+
+  BEGIN
+    dbms_output.put_line('ok1 ' || l_now);
+  END;
+
+END ztestbob;
+/
+
+exec ztestbob.test(42);
+
+drop package ztestbob;
+
+---
 
 CREATE OR REPLACE PACKAGE ztestbob AS
   

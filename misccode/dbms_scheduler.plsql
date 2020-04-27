@@ -1,3 +1,6 @@
+# Modified: 24-Apr-2020 (Bob Heckel)
+
+---
 
 SELECT * from USER_SCHEDULER_JOBS order by last_start_date desc
 
@@ -21,24 +24,6 @@ select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'PERI%';
 
 ---
 
-BEGIN
- sys.dbms_scheduler.create_job(
-   job_name        => 'ASP_TO_ATAA_JOB',
-   job_type        => 'PLSQL_BLOCK',
-   --job_action => 'begin ASP_PKG.update_ataa_with_asp(p_do_commit => 0); end;',
-   job_action      => 'begin null; end;',
-   repeat_interval => 'FREQ=MINUTELY; INTERVAL=60',
-   end_date        => TO_DATE(NULL),
-   job_class       => 'DEFAULT_JOB_CLASS',
-   enabled         => TRUE,
-   comments        => 'Stage approved ASP records to ATAA');
-END;
-
-SELECT * from user_scheduler_jobs WHERE job_name='ASP_TO_ATAA_JOB';
-SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME = 'ASP_TO_ATAA_JOB';
-
----
-
 -- ALL_SCHEDULER_JOBS.SCHEDULE_TYPE = 'ONCE' is default
 BEGIN
  sys.dbms_scheduler.create_job(
@@ -49,9 +34,11 @@ BEGIN
    end_date   => TO_DATE(NULL),
    job_class  => 'DEFAULT_JOB_CLASS',
    enabled    => TRUE,
-   comments   => 'One time run, auto drops');
+   comments   => 'Single one time run, auto drops');
 END;
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT
+SELECT * from user_scheduler_jobs WHERE job_name='TEST_JOB';
+SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME = 'TEST_JOB';
 
 ---
 
