@@ -1,3 +1,6 @@
+-- Modified: 01-May-2020 (Bob Heckel)
+
+---
 
 update user_role
 set user_status='I', updated_by_patron_id='sh86800'
