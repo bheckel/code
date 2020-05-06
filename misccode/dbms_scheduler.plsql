@@ -30,7 +30,8 @@ BEGIN
    job_name   => 'TEST_JOB',
    job_type   => 'PLSQL_BLOCK',
    job_action => 'begin null;end;',
-   start_date => CAST(SYSDATE + interval '1' minute AS TIMESTAMP),
+   --start_date => CAST(SYSDATE + interval '1' minute AS TIMESTAMP),
+   start_date => SYSTIMESTAMP + INTERVAL '10' SECOND,
    end_date   => TO_DATE(NULL),
    job_class  => 'DEFAULT_JOB_CLASS',
    enabled    => TRUE,
@@ -104,6 +105,7 @@ BEGIN sys.dbms_scheduler.set_attribute(name => 'PERIODICLIFECYCLEUPDATE',
                                        value => 'Freq=Daily;ByHour=19;ByMinute=00;BySecond=00');
 END;
 --BEGIN sys.Dbms_Scheduler.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
+--exec DBMS_SCHEDULER.STOP_JOB(job_name => 'DEL_JOB_RION44892',force => TRUE);
 
 ---
 

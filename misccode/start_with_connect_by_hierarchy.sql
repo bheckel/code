@@ -1,5 +1,86 @@
 -- Oracle hierarchy (e.g. organization chart) traversal
--- Modified: 30-Mar-2020 (Bob Heckel)
+-- Modified: Wed 06-May-2020 (Bob Heckel)
+
+---
+
+select
+   e.empno
+ , lpad(' ', 2*(level-1)) || e.ename
+ , e.job
+ , e.mgr
+from scott.emp e
+start with e.mgr is null
+connect by e.mgr = prior e.empno
+order siblings by e.ename;
+
+---
+
+-- Adapted from Practical Oracle SQL (unit_test_repos schema)
+select
+   e.id
+ , lpad(' ', 2*(level-1)) || e.name as name
+ , e.title as title
+ , e.supervisor_id as super
+from employees e
+start with e.supervisor_id is null
+connect by e.supervisor_id = prior e.id
+order siblings by e.name;
+/*
+ID   NAME                TITLE              SUPER
+142  Harold King         Managing Director
+144    Axel de Proef     Product Director   142
+151      Jim Kronzki     Sales Manager      144
+150        Laura Jensen  Bulk Salesman      151
+154        Simon Chang   Retail Salesman    151
+148      Maria Juarez    Purchaser          144
+147    Ursula Mwbesi     Operations Chief   142
+146      Lim Tok Lo      Warehouse Manager  147
+152        Evelyn Smith  Forklift Operator  146
+149        Kurt Zollman  Forklift Operator  146
+155        Susanne Hoff  Janitor            146
+143      Mogens Juel     IT Manager         147
+153        Dan Hoeffler  IT Supporter       143
+145        Zoe Thorston  IT Developer       143
+*/
+
+WITH hierarchy AS (
+   select
+      lvl, id, name, rownum as rn
+   from (
+      select
+         level as lvl, e.id, e.name
+      from employees e
+      start with e.supervisor_id is null
+      connect by e.supervisor_id = prior e.id
+      order siblings by e.name
+   )
+)
+SELECT
+   id
+ , lpad(' ', (lvl-1)*2) || name as name
+ , subs
+ , cls
+FROM hierarchy
+MATCH_RECOGNIZE (
+   order by rn
+   MEASURES
+      strt.rn           as rn
+    , strt.lvl          as lvl
+    , strt.id           as id
+    , strt.name         as name
+    , count(higher.lvl) as subordinate_cnt
+    , classifier()      as cls  -- STRT or HIGHER
+   ONE ROW PER MATCH
+   AFTER MATCH SKIP TO NEXT ROW
+   PATTERN (
+      strt higher*  -- higher+ to just get the manager count rows
+   )
+   DEFINE
+      higher as higher.lvl > strt.lvl
+)
+order by rn;
+
+---
 
 create table employees (
   employee_id   integer,
@@ -205,3 +286,54 @@ join packaging p
 join packaging c
    on c.id = leaf.contains_id
 order by p.id, c.id;
+
+---
+
+create table folders (
+  folder_name        varchar2(128),
+  parent_folder_name varchar2(128)
+);
+
+insert into folders values ( 'home', 'junk' );
+insert into folders values ( 'saxon', 'home' );
+insert into folders values ( 'junk', 'saxon' );
+
+commit;
+
+select folder_name,  
+       sys_connect_by_path ( folder_name, '/' ) path 
+from   folders 
+start  with folder_name = 'home' 
+connect by nocycle prior folder_name = parent_folder_name;
+/*
+FOLDER_NAME	PATH
+home				/home
+saxon				/home/saxon
+junk				/home/saxon/junk
+
+*/
+
+/* Same using Recursive With */
+with tree ( folder_name, path ) as ( 
+  select folder_name,  
+         '/' || folder_name path 
+  from   folders 
+  where  folder_name = 'home' 
+  union all 
+  select f.folder_name, 
+         t.path || '/' || f.folder_name 
+  from   tree t 
+  join   folders f 
+  on     f.parent_folder_name = t.folder_name 
+) cycle folder_name set is_loop to 'Y' default 'N' 
+  select folder_name, path  
+  from   tree 
+  where  is_loop = 'N';
+
+drop table folders cascade constraints purge;
+
+/* This fixes the broken table's cycle errors: */
+update folders
+set    parent_folder_name = null
+where  folder_name = 'home';
+
