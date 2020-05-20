@@ -35,6 +35,18 @@
 
 ---
 
+DECLARE
+  CURSOR c IS
+      ;
+    
+BEGIN      
+  FOR r IN c LOOP
+    dbms_output.put_line(r.);
+  END LOOP;
+END;
+
+---
+
 -- Implicit cursor
 
 CREATE TABLE test_table ( col1 INTEGER, col2 INTEGER );
