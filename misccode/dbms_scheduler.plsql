@@ -2,6 +2,25 @@
 
 ---
 
+-- ALL_SCHEDULER_JOBS.SCHEDULE_TYPE = 'ONCE' is default
+BEGIN
+ sys.dbms_scheduler.create_job(
+   job_name   => 'TEST_JOB',
+   job_type   => 'PLSQL_BLOCK',
+   job_action => 'begin null;end;',
+   --start_date => CAST(SYSDATE + interval '1' minute AS TIMESTAMP),
+   start_date => SYSTIMESTAMP + INTERVAL '10' SECOND,
+   end_date   => TO_DATE(NULL),
+   job_class  => 'DEFAULT_JOB_CLASS',
+   enabled    => TRUE,
+   comments   => 'Single one time run, auto drops');
+END;
+-- DBMS_SCHEDULER.create_job does an implicit COMMIT
+SELECT * from user_scheduler_jobs WHERE job_name='TEST_JOB';
+SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME = 'TEST_JOB';
+
+---
+
 SELECT * from USER_SCHEDULER_JOBS order by last_start_date desc
 
 select * from user_scheduler_job_log order by log_date desc
@@ -21,25 +40,6 @@ SELECT * FROM USER_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by
 
 -- Named Schedule details
 select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'PERI%';
-
----
-
--- ALL_SCHEDULER_JOBS.SCHEDULE_TYPE = 'ONCE' is default
-BEGIN
- sys.dbms_scheduler.create_job(
-   job_name   => 'TEST_JOB',
-   job_type   => 'PLSQL_BLOCK',
-   job_action => 'begin null;end;',
-   --start_date => CAST(SYSDATE + interval '1' minute AS TIMESTAMP),
-   start_date => SYSTIMESTAMP + INTERVAL '10' SECOND,
-   end_date   => TO_DATE(NULL),
-   job_class  => 'DEFAULT_JOB_CLASS',
-   enabled    => TRUE,
-   comments   => 'Single one time run, auto drops');
-END;
--- DBMS_SCHEDULER.create_job does an implicit COMMIT
-SELECT * from user_scheduler_jobs WHERE job_name='TEST_JOB';
-SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME = 'TEST_JOB';
 
 ---
 
@@ -104,8 +104,8 @@ BEGIN sys.dbms_scheduler.set_attribute(name => 'PERIODICLIFECYCLEUPDATE',
                                        attribute => 'REPEAT_INTERVAL',
                                        value => 'Freq=Daily;ByHour=19;ByMinute=00;BySecond=00');
 END;
---BEGIN sys.Dbms_Scheduler.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
---exec DBMS_SCHEDULER.STOP_JOB(job_name => 'DEL_JOB_RION44892',force => TRUE);
+--BEGIN sys.DBMS_SCHEDULER.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
+--exec DBMS_SCHEDULER.STOP_JOB(job_name => 'DEL_JOB_RION44892');
 
 ---
 
@@ -259,6 +259,7 @@ SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME  like 'JOB_LOAD_%' o
 
 ---
 
+-- Deprecated
 DBMS_JOB.submit(job_num,
                 'BEGIN SHADOW_INDEX(''ACCOUNT_SEARCH_BING_IX'', 1, 1, 1); END;',
                  SYSDATE,
@@ -302,3 +303,22 @@ BEGIN
       comments            => 'Job to email long running queries to the respective users. Runs every day at 6am.');
 END;
 
+---
+
+-- Turn a call into a delayed job
+PROCEDURE send_cdhub_job_message(in_job_action VARCHAR2,
+                                 in_job_prefix VARCHAR2,
+                                 in_start_date DATE DEFAULT SYSDATE + INTERVAL '3' MINUTE) IS
+  PRAGMA AUTONOMOUS_TRANSACTION;
+
+BEGIN
+  -- Create a unique name for the job
+  DBMS_SCHEDULER.CREATE_JOB(job_name   => DBMS_SCHEDULER.GENERATE_JOB_NAME(in_job_prefix),
+                            job_type   => 'PLSQL_BLOCK',
+                            job_action => 'BEGIN ' || in_job_action || '; END;',
+                            start_date => CAST(in_start_date AS TIMESTAMP),
+                            enabled    => TRUE,
+                            auto_drop  => TRUE);
+END;
+
+send_cdhub_job_message('CDHUB_REST.account_delete_rest(' || acct.account_id || ', ''acrynt\sesppt'', 0, 0)', 'DELETE_ACCOUNT_');

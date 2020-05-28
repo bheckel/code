@@ -1,5 +1,17 @@
--- Modified: Sun 26 May 2019 08:26:18 (Bob Heckel)
+-- Modified: 22-May-2020 (Bob Heckel)
 -- See also bulk_collect_forall.plsql
+
+---
+
+BEGIN
+   FOR rec IN (SELECT contact_id FROM contact WHERE contact_id=9990034351)
+   LOOP
+      -- There is no NO_DATA_FOUND exception
+      DBMS_OUTPUT.put_line (rec.contact_id);
+   END LOOP;
+END;
+
+---
 
 ...
 CURSOR c_dun_nbrs IS

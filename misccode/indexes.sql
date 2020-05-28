@@ -1,9 +1,7 @@
--- Modified: 16-Jan-2020 (Bob Heckel)
+-- Modified: 28-May-2020 (Bob Heckel)
 -- see also explain_plan.sql
 
--- The database automatically creates an index for the primary key. That means there is an index on the EMPLOYEE_ID column, 
--- even though there is no CREATE INDEX statement like this one:
-CREATE UNIQUE INDEX employees_pk ON employees (employee_id);
+---
 
 CREATE TABLE employees (
    employee_id   NUMBER         NOT NULL,
@@ -13,6 +11,10 @@ CREATE TABLE employees (
    phone_number  VARCHAR2(1000) NOT NULL,
    CONSTRAINT employees_pk PRIMARY KEY (employee_id)
 );
+
+-- The database automatically creates an index for the primary key. That means there is an index on the EMPLOYEE_ID column, 
+-- even though there is no CREATE INDEX statement like this one:
+CREATE UNIQUE INDEX employees_pk ON employees (employee_id);
 
 ---
 

@@ -1,6 +1,6 @@
 
 -- Modified: 14-Feb-2020 (Bob Heckel)
--- Execution plan.  Query plan.
+-- Execution plan. Query plan. SQL Tuning.
 -- See also indexes.sql
 
 -- The B-tree traversal is the first power of indexing.
@@ -127,7 +127,7 @@ drop table robtest purge
 --    WHERE subsidiary_id = ?
 --      AND UPPER(last_name) LIKE '%INA%';
 --
---   A- No index
+--   A- Before adding index
 --   --------------------------------------------------------------
 --   |Id | Operation                   | Name       | Rows | Cost |
 --   --------------------------------------------------------------
@@ -142,13 +142,13 @@ drop table robtest purge
 --      2 - access("SUBSIDIARY_ID"=TO_NUMBER(:A))
 --   
 --   B - Cover all columns from the WHERE clause - even if they do not narrow the scanned index range
---   CREATE INDEX empsubupnam ON employees (subsidiary_id, UPPER(last_name));
+--   CREATE INDEX empsubupnIX ON employees (subsidiary_id, UPPER(last_name));
 --   --------------------------------------------------------------
 --   |Id | Operation                   | Name       | Rows | Cost |
 --   --------------------------------------------------------------
 --   | 0 | SELECT STATEMENT            |            |   17 |   20 |
 --   | 1 |  TABLE ACCESS BY INDEX ROWID| EMPLOYEES  |   17 |   20 |
---   |*2 |   INDEX RANGE SCAN          | EMPSUBUPNAM|   17 |    3 | <--- +1 because index is bigger due to adding last_name
+--   |*2 |   INDEX RANGE SCAN          | EMPSUBUPNIX|   17 |    3 | <--- +1 because index is bigger due to adding last_name
 --   --------------------------------------------------------------
 --   
 --   Predicate Information (identified by Operation Id):
@@ -164,14 +164,14 @@ drop table robtest purge
 --   execute the TABLE ACCESS BY INDEX ROWID operation only 17 times.
 -- 
 --
--- INDEX [idx name] UNIQUE SCAN 
+-- INDEX [ix name] UNIQUE SCAN 
 -- Performs the B-tree traversal ONLY. The database uses this operation if a
 -- unique constraint ensures that the search criteria will match no more than one
 -- entry.  The database does not need to follow the index leaf nodes - it is enough to 
 -- traverse the index tree thanks to the primary key or other constraint.  This operation
 -- cannot deliver > 1 entry so it cannot trigger > 1 table access.  Always fast.
 -- 
--- INDEX [idx name] RANGE SCAN 
+-- INDEX [ix name] RANGE SCAN 
 -- Performs the B-tree traversal AND THEN follows the leaf node chain to find all
 -- matching entries.  The biggest performance risk of an INDEX RANGE SCAN is the
 -- leaf node traversal.  It is therefore the golden rule of indexing to keep the
@@ -182,16 +182,16 @@ drop table robtest purge
 -- 
 -- TABLE ACCESS [tbl name] BY INDEX ROWID
 -- Retrieves a row from the table using the ROWID retrieved from the preceding
--- index lookup access, e.g. INDEX UNIQUE SCAN.
+-- index lookup access, e.g. INDEX RANGE SCAN.
 -- 
--- INDEX [idx name] FULL SCAN
+-- INDEX [ix name] FULL SCAN
 -- Reads the entire index (all rows) in index order. Depending on various system
 -- statistics, the database might perform this operation if it needs all rows in
 -- index order—e.g., because of a corresponding order by clause.  Instead, the
 -- optimizer might also use an INDEX FAST FULL SCAN and perform an additional sort
 -- operation.
 -- 
--- INDEX [idx name] FAST FULL SCAN
+-- INDEX [ix name] FAST FULL SCAN
 -- Reads the entire index (all rows) as stored on the disk. This operation is
 -- typically performed instead of a full table scan if all required columns are
 -- available in the index. Similar to TABLE ACCESS FULL, the INDEX FAST FULL SCAN
