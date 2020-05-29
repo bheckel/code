@@ -1,5 +1,6 @@
 
--- Created: 02-Aug-18 (Bob Heckel) 
+-- Created: 02-Aug-2018 (Bob Heckel) 
+-- Modified: 29-May-2020 (Bob Heckel)
 
 -- For auditing, referential integrity/business rules, security/logons, data replication
 
@@ -70,5 +71,19 @@ CREATE OR REPLACE TRIGGER CONTACT_NOTE_IUD
 			INSERT /*+ append */ INTO CONTACT_NOTE_HIST (TASK_ID, UPDATED, CREATED, NOTE_ID, H_VERSION, UPDATEDBY, CREATEDBY, CONTACT_ID, ACTIVITY_ID, AUDIT_SOURCE, RETIRED_TIME, ACTUAL_UPDATED, CONTACT_NOTE_ID, ACTUAL_UPDATEDBY, ORIGINAL_CONTACT_ID,WM_OPTYPE)
       VALUES(:old.TASK_ID, :old.UPDATED, :old.CREATED, :old.NOTE_ID, :old.H_VERSION, :old.UPDATEDBY, :old.CREATEDBY, :old.CONTACT_ID, :old.ACTIVITY_ID, :old.AUDIT_SOURCE, (systimestamp - INTERVAL '0.001' SECOND), :old.ACTUAL_UPDATED, :old.CONTACT_NOTE_ID, :old.ACTUAL_UPDATEDBY, :old.ORIGINAL_CONTACT_ID,decode(:old.H_VERSION,0,'I','U')); end if; if (DELETING) then /*Deleting*/         INSERT /*+ append */ INTO CONTACT_NOTE_HIST (TASK_ID, UPDATED, CREATED, NOTE_ID, H_VERSION, UPDATEDBY, CREATEDBY, CONTACT_ID, ACTIVITY_ID, AUDIT_SOURCE, RETIRED_TIME, ACTUAL_UPDATED, CONTACT_NOTE_ID, ACTUAL_UPDATEDBY, ORIGINAL_CONTACT_ID,WM_OPTYPE) VALUES(:old.TASK_ID, :old.UPDATED, :old.CREATED, :old.NOTE_ID, :old.H_VERSION, :old.UPDATEDBY, :old.CREATEDBY, :old.CONTACT_ID, :old.ACTIVITY_ID, :old.AUDIT_SOURCE, (systimestamp - INTERVAL '0.001' SECOND), :old.ACTUAL_UPDATED, :old.CONTACT_NOTE_ID, :old.ACTUAL_UPDATEDBY, :old.ORIGINAL_CONTACT_ID,decode(:old.H_VERSION,0,'I','U'));         INSERT /*+ append */ INTO CONTACT_NOTE_HIST (TASK_ID, UPDATED, CREATED, NOTE_ID, H_VERSION, UPDATEDBY, CREATEDBY, CONTACT_ID, ACTIVITY_ID, AUDIT_SOURCE, RETIRED_TIME, ACTUAL_UPDATED, CONTACT_NOTE_ID, ACTUAL_UPDATEDBY, ORIGINAL_CONTACT_ID,WM_OPTYPE) VALUES(:old.TASK_ID, sysdate, :old.CREATED, :old.NOTE_ID, :old.H_VERSION, nvl(sys_context('setars_context','employee_id'),0), :old.CREATEDBY, :old.CONTACT_ID, :old.ACTIVITY_ID, nvl(sys_context('USERENV', 'HOST'), 'Unknown'), (systimestamp + INTERVAL '0.001' SECOND), systimestamp, :old.CONTACT_NOTE_ID, nvl(sys_context('setars_context','actual_employee_id'),nvl(sys_context('setars_context','employee_id'),0)), :old.ORIGINAL_CONTACT_ID,'D');
 		end if;
+END;
+
+---
+
+CREATE OR REPLACE TRIGGER lineitems_trigger
+	AFTER INSERT OR UPDATE OR DELETE ON lineitems
+	FOR EACH ROW
+BEGIN
+	IF (INSERTING OR UPDATING) THEN
+		UPDATE orders SET line_items_count = NVL(line_items_count,0)+1 WHERE order_id = :new.order_id;
+	END IF;
+	IF (DELETING OR UPDATING) THEN
+		UPDATE orders SET line_items_count = NVL(line_items_count,0)-1 WHERE order_id = :old.order_id;
+	END IF;
 END;
 
