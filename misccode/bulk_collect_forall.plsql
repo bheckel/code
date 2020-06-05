@@ -1,11 +1,15 @@
 
--- Adapted: Tue 01 Apr 2019 10:49:35 (Bob Heckel--DevGym)
--- Modified: Tue 18 Jun 2019 10:49:35 (Bob Heckel)
+--  Adapted: Tue 01 Apr 2019 10:49:35 (Bob Heckel--DevGym)
+-- Modified: Thu 04-Jun-2020 (Bob Heckel)
 
--- See also row.plsql suppress_rowlevel_dml_errors.plsql, restore_records_from_hist.sql
+-- See also row.plsql suppress_rowlevel_dml_errors.plsql, restore_records_from_hist.sql, execute_immediate.plsql
 
 -- The PL/SQL features that comprise bulk SQL are the FORALL statement and the
 -- BULK COLLECT clause.
+--
+-- SELECT column(s)               BULK COLLECT INTO collection(s)
+-- FETCH cursor                   BULK COLLECT INTO collection(s)
+-- EXECUTE IMMEDIATE query_string BULK COLLECT INTO collection(s)
 --
 -- The FORALL statement *sends* DML statements from PL/SQL to SQL in batches rather 
 -- than one at a time i.e. it binds all the data in a collection into a DML statement.

@@ -13,6 +13,8 @@ END;
 
 ---
 
+-- As long as your PL/SQL optimization level is set to 2 (the default) or higher, the compiler will automatically optimize
+-- cursor FOR loops to retrieve 100 rows with each fetch. You cannot modify this number.
 ...
 CURSOR c_dun_nbrs IS
   SELECT aa.duns_nbr FROM account_base ab;
@@ -21,6 +23,7 @@ BEGIN
 	FOR rec IN c_dun_nbrs LOOP
 		dbms_output.put_line(rec.duns_nbr);
 	END LOOP;
+...
 
 ---
 
@@ -116,7 +119,7 @@ DECLARE
   TYPE NumList IS VARRAY(20) OF NUMBER;
   depts NumList := NumList(10, 30, 70);
 BEGIN
-  FORALL i IN depts.FIRST..depts.LAST  -- no LOOP but only 1 DDL allowed!
+  FORALL i IN depts.FIRST..depts.LAST  -- no LOOP but only 1 statement allowed!
     DELETE FROM employees_temp
     WHERE department_id = depts(i);
 END;
@@ -126,7 +129,7 @@ DECLARE
   TYPE NumList IS VARRAY(20) OF NUMBER;
   depts NumList := NumList(10, 30, 70);
 BEGIN
-  FORALL i IN depts.FIRST..depts.LAST  -- no LOOP but only 1 DDL allowed!
+  FORALL i IN depts.FIRST..depts.LAST  -- no LOOP but only 1 statement allowed!
     DELETE FROM employees_temp
     WHERE department_id = depts(i);
 

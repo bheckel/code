@@ -63,6 +63,9 @@ CREATE BITMAP INDEX sales_idx ON sales_temp(prod_id,cust_id,time_id,amount_sold)
 DROP INDEX sales_idx;
 CREATE INDEX sales_idx ON sales_temp(prod_id) COMPRESS;
 
+-- Create function-based index
+create index note_actupd_fbix on note_base ( trunc(actual_updated) );
+
 ---
 
 alter session set star_transformation_enabled = true;

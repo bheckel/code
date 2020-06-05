@@ -236,3 +236,36 @@ begin
   FORALL i IN 1 .. t_task_id_table.COUNT SAVE EXCEPTIONS EXECUTE IMMEDIATE
     'UPDATE TASK_BASE SET OWNER_TERRITORY_LOV_ID = (select territory_lov_id from employee_base where employee_id = :1)  WHERE task_id = :2'
       USING t_new_lead_owner_id_table(i), t_task_id_table(i);
+
+---
+
+-- Using BULK COLLECT with native dynamic SQL queries that might return more than one row:
+
+DECLARE
+   TYPE ids_t IS TABLE OF employees.employee_id%TYPE;
+   l_ids   ids_t;
+BEGIN
+   EXECUTE IMMEDIATE 'SELECT employee_id FROM employees WHERE department_id = :dept_id'
+      BULK COLLECT INTO l_ids
+      USING 50;
+
+   FOR indx IN 1 .. l_ids.COUNT LOOP
+      DBMS_OUTPUT.put_line('selected employee ' || l_ids(indx));
+   END LOOP;
+END;
+
+-- or
+
+DECLARE
+   TYPE ids_t IS TABLE OF employees.employee_id%TYPE;
+   l_ids ids_t;
+BEGIN
+   EXECUTE IMMEDIATE
+     'UPDATE employees SET last_name = UPPER(last_name) WHERE department_id = 100 RETURNING employee_id INTO :ids'
+		 RETURNING BULK COLLECT INTO l_ids;
+   
+   FOR indx IN 1 .. l_ids.COUNT LOOP
+      DBMS_OUTPUT.PUT_LINE('updated employee ' || l_ids(indx));
+   END LOOP;
+END;
+

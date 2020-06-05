@@ -1,8 +1,9 @@
 
--- Modified: Fri 02 Aug 2019 16:13:37 (Bob Heckel)
+-- nested_table.plsql (symlinked as collections.plsql)
+-- See also associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql, type.plsql
 --
--- nested_table.plsql (symlinked as collections.plsql) see also 
--- associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql
+--  Created: Fri 02 Aug 2019 (Bob Heckel)
+-- Modified: 04-Jun-2020 (Bob Heckel)
 
 -- Associative arrays are particularly good with sparse collections.
 -- Nested tables offer lots of features for set-oriented management of collection contents.

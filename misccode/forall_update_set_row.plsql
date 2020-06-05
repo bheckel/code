@@ -27,7 +27,7 @@ DECLARE
 BEGIN
   EXECUTE IMMEDIATE 'TRUNCATE TABLE forall_test';
 
-  -- Populate collection in a loop
+  -- Populate dummy data into a collection via a loop
   FOR i IN 1 .. l_size LOOP
     l_id_tab.EXTEND;
     l_id_tab(l_id_tab.LAST)       := i;
@@ -41,6 +41,7 @@ BEGIN
   FOR i IN l_tab.FIRST .. l_tab.LAST LOOP
     INSERT /*+ APPEND_VALUES */  INTO forall_test (id, code, description)
     VALUES (l_tab(i).id, l_tab(i).code, l_tab(i).description);
+    commit;
   END LOOP;
 
   l_start := DBMS_UTILITY.get_time;
@@ -79,3 +80,5 @@ EXCEPTION
 END;
 
 select * from forall_test order by 2 DESC -- 3 recs updated successfully thanks to SAVE EXCEPTIONS
+
+drop table forall_test;
