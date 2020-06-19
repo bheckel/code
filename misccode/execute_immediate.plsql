@@ -1,6 +1,6 @@
 -- Modified: 06-Aug-19 (Bob Heckel) 
 -- https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01115
--- See also run_all_procedures.plsql, using.plsql
+-- See also run_all_procedures.plsql, using.plsql bulk_collect_forall.plsql
 
 -- To process dynamic SQL statements, you use EXECUTE IMMEDIATE or OPEN-FOR / FETCH / CLOSE statements.
 -- EXECUTE IMMEDIATE is used for a single-row SELECT statement, all DML statements, and DDL statements,

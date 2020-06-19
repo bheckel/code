@@ -1,4 +1,5 @@
--- Modified: 02-Apr-2020 (Bob Heckel) 
+-- Modified: 02-Apr-2020 (Bob Heckel)
+-- see also insert_new_record_correlated.sql
 
 create table bob as SELECT p.* FROM purchases_with_dims p
 
@@ -18,10 +19,11 @@ BEGIN
   LOOP
     FETCH c1 BULK COLLECT INTO mynt LIMIT 2;
     EXIT WHEN mynt.count = 0;
-    --debug
+
 --    FOR i in 1..mynt.COUNT LOOP 
 --      dbms_output.put_line('i:' || i || mynt(i).id); 
 --    END LOOP;
+
       FORALL i IN 1 .. mynt.count
         INSERT INTO bob (
           purchased, brewery_id, brewery_name, product_id, product_name, group_id, group_name, qty, cost

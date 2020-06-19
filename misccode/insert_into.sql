@@ -1,6 +1,6 @@
 
 -- Modified: 02-Apr-2020 (Bob Heckel)
--- see restore_records_from_hist.sql
+-- see restore_records_from_hist.sql insert_new_record_correlated.sql
 
 ---
 
@@ -256,3 +256,10 @@ END;
              v_start_time
     ;
 
+---
+
+-- Insert the parent row. Unless the parent has already been added
+INSERT INTO xsp_processing_territory (xsp_processing_territory_id, xsp_processing_request_id, territory_lov_id, CREATED, CREATEDBY)
+  SELECT UID_XSP_PROCESSING_TERRITORY.NEXTVAL, process_request_id, terr_id, process_date, employee_id
+    FROM DUAL
+   WHERE terr_id NOT IN (SELECT t.territory_lov_id FROM xsp_processing_territory t);

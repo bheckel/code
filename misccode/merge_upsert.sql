@@ -1,3 +1,6 @@
+-- Modified: 18-Jun-2020 (Bob Heckel)
+-- see also insert_new_record_correlated.sql
+
 /*
 https://www.oratable.com/oracle-merge-command-for-upsert/
 

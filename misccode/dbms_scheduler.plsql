@@ -259,7 +259,7 @@ SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME  like 'JOB_LOAD_%' o
 
 ---
 
--- Deprecated
+-- Deprecated, no implicit commit
 DBMS_JOB.submit(job_num,
                 'BEGIN SHADOW_INDEX(''ACCOUNT_SEARCH_BING_IX'', 1, 1, 1); END;',
                  SYSDATE,
