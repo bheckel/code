@@ -1,8 +1,8 @@
 <%
 ' Run limsgist on the server.  Assumes this file exists in x:/sas_web_pages or 
-' \\kopsawn557\unit_test_files\
-' (accessible via http://rtpsawn321/links/runllg.asp?action=Run+LLG or
-'  $ w3m -no-cookie -dump_head 'http://kopsawn557/sas%20validation/runllg.asp?action=Run+LLG') and
+' \\opsawn557\unit_test_files\
+' (accessible via http://tpsawn321/links/runllg.asp?action=Run+LLG or
+'  $ w3m -no-cookie -dump_head 'http://opsawn557/sas%20validation/runllg.asp?action=Run+LLG') and
 ' that Run_SAS.bat exists and looks something like this: 
 ' "d:\SAS Institute\SAS\V8\SAS.EXE" -config "d:\SAS institute\SAS\V8\LGI.cfg" -autoexec "d:\SAS_Programs\lelimsgist.sas" -altlog "d:\SQL_Loader\Logs\LGI.log" 
 '
@@ -33,7 +33,7 @@ End if
 
 <html>
 <head>
-  <title>Run LLG http://rtpsawn321/links/runllg.asp</title>
+  <title>Run LLG http://tpsawn321/links/runllg.asp</title>
 </head>
 <body>
   <form action="runllg.asp" method="GET">

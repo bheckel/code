@@ -48,7 +48,7 @@ Function MyPing {
   }
 }
 
-###MyPing rtpsawn321
+###MyPing tpsawn321
 ###MyPing
 
 
