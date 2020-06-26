@@ -146,7 +146,7 @@ DECLARE
    ex_invalid_id  EXCEPTION; 
 BEGIN 
    IF c_id <= 0 THEN 
-      RAISE ex_invalid_id;  -- a business rule has been violated
+      RAISE ex_invalid_id;  -- a business rule has been violated, a naked RAISE is a syntax error here
    ELSE 
       SELECT  name, address INTO  c_name, c_addr 
       FROM customers 

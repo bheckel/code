@@ -8,6 +8,8 @@
 #                        http://www.linuxdoc.org/LDP/abs/html/internal.html)
 ##############################################################################
 
+# see also gitall
+
 echo -n "Enter the value of variable 'var1': "
 # Note no '$' in front of var1, since it is only being set.
 read var1
