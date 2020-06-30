@@ -62,3 +62,26 @@ BEGIN
     dbms_output.put_line(sals(i).sal);
   END LOOP;
 END;
+
+---
+
+DECLARE
+  TYPE r_rec IS RECORD (
+    state VARCHAR2(20),
+    job_name VARCHAR2(40),
+    start_date DATE,
+    comments VARCHAR2(100)
+  );
+  l_recs r_rec;
+
+BEGIN
+  SELECT state, job_name, start_date, comments
+    INTO l_recs
+    FROM user_scheduler_jobs 
+  WHERE job_name = 'DEL_JOB_RION45830';
+  
+  dbms_output.put_line(l_recs.state || ' ' || l_recs.job_name || ' ' || l_recs.start_date || ' ' || l_recs.comments);
+  
+  EXCEPTION WHEN no_data_found THEN
+    dbms_output.put_line('ok to run next group');
+END;
