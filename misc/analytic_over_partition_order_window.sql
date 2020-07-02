@@ -18,6 +18,10 @@
  * P  partition: split the data into partitions and apply the function separately to each partition
  * O  order: apply the function in a specific order and/or provide the ordering that the windowing_clause depends upon
  * W  window: specify a certain window (fixed or moving) of the ordered data in the partition
+ *
+ * As soon as you have an ORDER BY in the analytic clause you get the default window clause of
+ * RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW. You need to be sure this is what you need 
+ * or you might get a unexpected result.
  */
 
 -- Aggregate functions vs. Analytic functions:
@@ -173,7 +177,9 @@ select d
       -- -- The value that range will use is the value of the column used in the order by in the analytic function. Therefore, in order to use range windows, the order by column must be a number or a date/timestamp.
       ,last_value(amt) OVER (order by d RANGE between current row and unbounded following) last_from_lastdategrp  -- 14,14,14,14,14,14
       -- The NTH_VALUE clause lets us identify boundary values that are not necessarily the minima and maxima which could be identified by FIRST_VALUE() and LAST_VALUE()
-      ,nth_value(amt,2) OVER (order by d) second_highest_skip_outliers  -- , 11, 11, 11, 11, 11
+      ,nth_value(amt,2) OVER (order by d) second_lowest_wrong  -- , 11, 11, 11, 11, 11
+      ,nth_value(amt,2) FROM FIRST OVER (order by d ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) second_lowest_wrong_fix  -- 11, 11, 11, 11, 11, 11
+      ,nth_value(amt,2) from last OVER (order by d ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) second_highest  -- 10, 10, 10, 10, 10, 10
       ,round(amt/nth_value(amt,2) over (order by d),2)*100 percent_diff  -- , 100, 273, 273, 91, 127
       -- Default windowing clause for ORDER BY is "RANGE between unbounded preceding and current row"
       ,sum(amt) OVER (order by d) running_total0  -- 10,21,51,81,81,91,105

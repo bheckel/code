@@ -269,3 +269,20 @@ BEGIN
    END LOOP;
 END;
 
+---
+
+        EXECUTE IMMEDIATE 'update opportunity_BASE o set (' || tbl_cols ||
+                          ') = (select ' || tbl_cols ||
+                          ' from opportunity_hist o where opportunity_id = :1 and h_version = :2) ' ||
+                          'where opportunity_id = :3'
+          USING ID, source_h_version, ID;
+
+        IF (SQL%ROWCOUNT = 1) THEN
+          DBMS_OUTPUT.put_line('Record ' || ID ||
+                               ' Updated, Current H_VERSION = ' ||
+                               TO_CHAR(l_h_version + 1));
+        ELSE
+          ROLLBACK;
+          DBMS_OUTPUT.put_line('Invalid SQL, incorrect number of records updated');
+        END IF;
+
