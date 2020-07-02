@@ -4,6 +4,19 @@ ctrl + shift + v  clipboard history
 
 ---
 
+SQL Developer preferences location Windows backup:
+C:\Documents and Settings\<user-name>\Application Data\SQL Developer\systemn.n.n.n.n
+cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' ~/onedrive/misc/
+
+--- 
+
+SQL Developer upgrade:
+C:\Users\boheck\Oracle
+Rename existing sqldeveloper\ sqldeveloper20.1\
+Extract zip
+
+---
+
 GRANT dwrole TO unit_test_repos;
 
 GRANT execute ON SYS.DBMS_LOCK TO unit_test_repos;
