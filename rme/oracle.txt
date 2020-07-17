@@ -1,3 +1,4 @@
+
 Sql Developer
 ctrl + shift + n  new unshared window
 ctrl + shift + v  clipboard history
@@ -17,19 +18,31 @@ Extract zip
 
 ---
 
+-- As ADMIN:
+
+-- Same pw as admin
 GRANT dwrole TO unit_test_repos;
-
 GRANT execute ON SYS.DBMS_LOCK TO unit_test_repos;
-grant select_catalog_role to unit_test_repos;
-grant select any dictionary to unit_test_repos;
+GRANT select_catalog_role to unit_test_repos;  -- for explain plan
+GRANT select any dictionary to unit_test_repos;  -- for explain plan
 
-alter user scott quota 100M on data
+ALTER USER scott QUOTA 100M ON data;
 
-o.urpxry@tznvy.pbz Junggurs_fhpxf8! Feb-20
+CREATE USER hr IDENTIFIED BY Wasteoflongpw8;
+ALTER USER hr QUOTA 100M ON data;
+GRANT CREATE SESSION, CREATE VIEW, ALTER SESSION, CREATE SEQUENCE TO hr;
+GRANT CREATE SYNONYM, CREATE DATABASE LINK, RESOURCE , UNLIMITED TABLESPACE TO hr;
+GRANT EXECUTE ON sys.dbms_stats TO hr;
+GRANT select_catalog_role TO hr;  -- for explain plan
+GRANT select any dictionary TO hr;  -- for explain plan
+GRANT EXECUTE ON SYS.DBMS_LOCK TO hr;  -- for ALTER SYSTEM KILL SESSION '671,62164';
+GRANT dwrole TO hr;
 
-fdycyhf nqzva/vL6iXcs@n882!Yp@efuqo1 Jan-20
+---
 
-benpyrvqragvglpybhqfreivpr/o.urpxry@tznvy.pbz
+sqlplus ADMIN/vL6iXcs@n882!Yp@rshdb1
+
+oracleidentitycloudservice/b.heckel@gmail.com
 
 ---
 
@@ -76,6 +89,7 @@ or, better, use ~/code/misccode/sqlplus_tmplt.sql (must end in SQL!)
 SQL> @sqlplus_tmplt.sql
 
 ---
+
 Password change (from within SQL*Plus):
 PASSW bheckel
 

@@ -1,4 +1,4 @@
--- Modified: Mon 13-Apr-2020 (Bob Heckel)
+-- Modified: 16-Jul-2020 (Bob Heckel)
 
 /* Analytic functions compute an aggregate value based on a group of rows. They
  * differ from aggregate functions in that they RETURN MULTIPLE ROWS FOR EACH
@@ -360,3 +360,23 @@ from orderlines ol join products p on p.id = ol.product_id
 where ol.product_id in (4280, 6600)
 order by ol.product_id, ol.qty;
 
+---
+
+-- Calculate difference between previous and current rows:
+with v as (
+            select date '2000-01-01' d, 10 amt from dual
+  union all select date '2000-01-02',   11 from dual
+  union all select date '2000-01-03',   30 from dual
+  union all select date '2000-01-03',   30 from dual
+  union all select date '2000-01-04',   10 from dual
+  union all select date '2000-01-05',   14 from dual
+),
+v2 as (
+  select d
+        ,amt
+        ,lag(amt, 1, 0) OVER (order by d) amt_prev_nonulls
+  from v
+)
+select d, amt, amt_prev_nonulls, amt-amt_prev_nonulls as diff
+  from v2
+ order by 1;

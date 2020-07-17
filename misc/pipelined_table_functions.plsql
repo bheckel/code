@@ -259,55 +259,63 @@ DROP FUNCTION f_search_view
 
 ---
 
-CREATE OR REPLACE PACKAGE rion37368 AUTHID DEFINER IS
-  /* CreatedBy: bheck
-  **   Created: 08-Nov-19 
-  **   Purpose: Allow non-setars access to a job scheduler "PERC alert" view.
-  **            This approach avoids permission failures generated when
-  **            using views to access USER_SCHEDULER_JOBS instead of
-  **            DBA_SCHEDULER_JOBS (RION-37368)
-  **            It leverages AUTHID DEFINER to avoid permission failure
-  */
-  CURSOR c1 IS
-    SELECT job_name,
-           job_action,
-           CASE WHEN (state = 'SCHEDULED' AND last_run_duration IS NOT NULL) THEN 'CLEAR' ELSE 'ALERT' END AS status,
-           last_run_duration,
-           sysdate - last_start_date AS time_since_last_run,
-           last_start_date,
-           next_run_date
-      FROM USER_SCHEDULER_JOBS 
-     WHERE enabled = 'TRUE';
- 
-  TYPE t_scheduler_jobs IS TABLE OF c1%rowtype;
+CREATE OR REPLACE PACKAGE SCHEDULER_PERC_ALERTS_TYPES AUTHID DEFINER IS
+  TYPE rt_perc_alert IS RECORD (
+    job_name             VARCHAR(32767),
+    job_action           VARCHAR(32767),
+    status               VARCHAR(32767),
+    last_run_duration    INTERVAL DAY(9) TO SECOND(6),
+    time_since_last_run  INTERVAL DAY(9) TO SECOND(6),
+    last_start_date      TIMESTAMP(6) WITH TIME ZONE,
+    next_run_date        TIMESTAMP(6) WITH TIME ZONE
+  );
 
-  FUNCTION read_scheduler_jobs RETURN t_scheduler_jobs PIPELINED;
+  TYPE t_perc_alert1 IS TABLE OF rt_perc_alert;
 END;
 /
-CREATE OR REPLACE PACKAGE BODY orion37368 IS
-  FUNCTION read_scheduler_jobs RETURN t_scheduler_jobs PIPELINED AS
-    v_scheduler_jobs c1%rowtype; 
-    
+CREATE OR REPLACE PACKAGE BODY SCHEDULER_PERC_ALERTS_TYPES IS
+END;
+/
+CREATE OR REPLACE PACKAGE SCHEDULER_PERC_ALERTS AUTHID DEFINER IS
+  /* CreatedBy: bheck
+   *   Created: 13-Nov-19
+   *   Purpose: Leverage AUTHID DEFINER and pipelining to allow non-ESTARS
+   *            access to job scheduler views. This approach avoids permission
+   *            failures generated when using views to access USER_SCHEDULER_JOBS
+   *            instead of DBA_SCHEDULER_JOBS. But access to DBA_SCHEDULER_JOBS
+   *            also won't work because ESTARS lacks admin rights on that view
+   *            too (RION-37368)
+   *    Change: 16-Jul-20 bheck - View RION_PERC_ALERT1_V is invalid post-upgrade
+   *            to 18c (RION-45894)
+   */
+  FUNCTION perc_alert1 RETURN SCHEDULER_PERC_ALERTS_TYPES.t_perc_alert1 PIPELINED;
+END SCHEDULER_PERC_ALERTS;
+/
+CREATE OR REPLACE PACKAGE BODY SCHEDULER_PERC_ALERTS IS
+  FUNCTION perc_alert1 RETURN SCHEDULER_PERC_ALERTS_TYPES.t_perc_alert1 PIPELINED AS
+    CURSOR c1 IS
+      SELECT job_name,
+             job_action,
+             CASE WHEN (state = 'SCHEDULED' AND last_run_duration IS NOT NULL) THEN 'CLEAR' ELSE 'ALERT' END AS status,
+             last_run_duration,
+             CAST(SYSDATE - last_start_date AS INTERVAL DAY(9) TO SECOND(6)) AS time_since_last_run,
+             last_start_date,
+             next_run_date
+        FROM USER_SCHEDULER_JOBS 
+       WHERE enabled = 'TRUE';
+
   BEGIN
-    OPEN c1;
-    LOOP
-      FETCH c1 INTO v_scheduler_jobs;
-      EXIT WHEN c1%notfound;
-      PIPE ROW(v_scheduler_jobs);
+    FOR r IN c1 LOOP
+      PIPE ROW(r);
     END LOOP;
-    CLOSE c1;
     RETURN;
   END;
-END;
+END SCHEDULER_PERC_ALERTS;
 /
 
-SELECT * FROM table(RION37368.read_scheduler_jobs);
+select * from table(SCHEDULER_PERC_ALERTS.perc_alert1);
 
-CREATE OR REPLACE FORCE VIEW USER_SCHEDULER_JOBS_V3 AS  select * from table(RION37368.read_scheduler_jobs);
-
-GRANT SELECT ON USER_SCHEDULER_JOBS_V3 TO kmc;
-
-SELECT * FROM USER_SCHEDULER_JOBS_V3;
+create or replace force view ORION_PERC_ALERT1_V as  select * from table(SCHEDULER_PERC_ALERTS.perc_alert1);
 
 ---
 
