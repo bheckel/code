@@ -73,6 +73,18 @@ ALTER TABLE plch_employees MODIFY last_name VARCHAR2(2000)
 create table t1 as
   select date '2010-01-01'+rownum x, rownum y from dual connect by level <= 10;
 
+/*
+-- or if want gaps
+with ints(y) as (
+   select 1 from dual union all
+   select 2 from dual union all
+   select 3 from dual union all
+   select 6 from dual union all
+   select 8 from dual union all
+   select 9 from dual
+) select * from ints
+*/
+
 select * from t1;
 
 drop table t1;

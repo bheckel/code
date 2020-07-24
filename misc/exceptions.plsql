@@ -1,4 +1,4 @@
--- Modified: Tue 11 Jun 2019 09:45:42 (Bob Heckel)
+-- Modified: 20-Jul-2020 (Bob Heckel)
 
 -- Predefined PL/SQL Exceptions: https://docs.oracle.com/cd/A97630_01/appdev.920/a96624/07_errs.htm
 
@@ -113,27 +113,28 @@ END;
 ---
 
 DECLARE 
-   c_id   customers.id%type := 8; 
-   c_name customers.Name%type; 
-   c_addr customers.address%type; 
+  l_id   emp.empno%TYPE := 7369; 
+  l_name emp.ename%TYPE; 
 BEGIN 
-   SELECT name, address
-     INTO  c_name, c_addr 
-     FROM customers 
-    WHERE id = c_id;  
+  SELECT empno, ename
+    INTO l_id, l_name 
+    FROM emp 
+   WHERE empno = l_id;  
 
-   DBMS_OUTPUT.PUT_LINE ('Name: '||  c_name); 
-   DBMS_OUTPUT.PUT_LINE ('Address: ' || c_addr); 
+  DBMS_OUTPUT.put_line('Name: '||  l_name); 
+
+  -- This error will be masked if NO_DATA_FOUND hits first
+  DBMS_OUTPUT.put_line(TO_DATE ('2010 10 10 44:55:66', 'YYYSS'));
 
 EXCEPTION 
-   WHEN NO_DATA_FOUND THEN 
-      dbms_output.put_line('No such customer!'); 
-      -- There is no fall-thru to OTHERS here
+  WHEN NO_DATA_FOUND THEN 
+    dbms_output.put_line('No such emp!'); 
+    -- There is no fall-thru to OTHERS here
 
-   WHEN OTHERS THEN 
-      dbms_output.put_line(SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
-      -- Reraising the exception passes it to the enclosing block, which can handle it further
-      RAISE;
+  WHEN OTHERS THEN 
+    dbms_output.put_line(SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+    -- Reraising the exception passes it to the enclosing block, which can handle it further
+    RAISE;
 END;
 
 ---
@@ -158,9 +159,9 @@ BEGIN
 EXCEPTION 
    WHEN ex_invalid_id THEN 
       dbms_output.put_line('ID must be greater than zero!'); 
-   WHEN no_data_found THEN 
+   WHEN NO_DATA_FOUND THEN 
       dbms_output.put_line('No such customer!'); 
-   WHEN others THEN 
+   WHEN OTHERS THEN 
       dbms_output.put_line('Error!');  
 END; 
 

@@ -1,7 +1,7 @@
 -- Adapted: 04-May-2020 (Bob Heckel--https://learning.oreilly.com/library/view/practical-oracle-sql/9781484256176/html/475066_1_En_18_Chapter.xhtml)
 -- See also start_with_connect_by_hierarchy.sql
 
--- Consider match_recognize as an alternative to group by for cases where you
+-- Consider match_recognize as an alternative to GROUP BY for cases where you
 -- cannot easily specify a grouping value from each row, but the grouping
 -- criteria are relations between rows
 
@@ -13,10 +13,12 @@ with ints(i) as (
    select 6 from dual union all
    select 8 from dual union all
    select 9 from dual
+   -- can't use this, need the gaps
+   /* select rownum i from dual connect by level < 10 */
 )
 select first_int, last_int, ints_in_grp, group_sum
 from ints
-match_recognize (
+match_recognize(
    order by i
    measures
       first(i) as first_int

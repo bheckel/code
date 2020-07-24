@@ -13,7 +13,7 @@ cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippe
 
 SQL Developer upgrade:
 C:\Users\boheck\Oracle
-Rename existing sqldeveloper\ sqldeveloper20.1\
+Rename existing sqldeveloper\ to sqldeveloper20.1\
 Extract zip
 
 ---
@@ -42,7 +42,7 @@ GRANT dwrole TO hr;
 
 sqlplus ADMIN/vL6iXcs@n882!Yp@rshdb1
 
-oracleidentitycloudservice/b.heckel@gmail.com
+benpyrvqragvglpybhqfreivpr/b.heckel@gmail.com
 
 ---
 
@@ -85,7 +85,7 @@ SQL> select table_name from user_tables;
 SQL> select * from iws.employee_data;
 SQL> exit
 
-or, better, use ~/code/misccode/sqlplus_tmplt.sql (must end in SQL!)
+or, better, use ~/code/misc/sqlplus_tmplt.sql (must end in SQL!)
 SQL> @sqlplus_tmplt.sql
 
 ---
@@ -96,7 +96,7 @@ PASSW bheckel
 ---
 
 See if database is reachable, show fq hostname, etc.
-tnsping usdev100
+tnsping usdev10
 
 ---
 
@@ -124,7 +124,7 @@ Run:
 
 @c:/cygwin/home/bheckel/tmp/1
 or
-$ sqlplus sasreport/sasreport@usprd259 @c:\temp\1.sql
+$ sqlplus sasreport/sasreport@usprd25 @c:\temp\1.sql
 
 ---
 
