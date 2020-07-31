@@ -1,6 +1,7 @@
 /* Adapted: Fri, Nov 30, 2018  3:57:25 PM (Bob Heckel--devgym.oracle.com) */ 
 /* Modified: 03-Apr-2020 (Bob Heckel)
 /* See also pass_cursor.plsql */
+/* https://docs.oracle.com/database/121/LNPLS/tuning.htm#LNPLS918 */
 
 /* Pipelined table functions are something of an oddity in PL/SQL: they pass
  * data back to the calling query, even before the function is completed; they

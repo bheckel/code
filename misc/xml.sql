@@ -1,4 +1,5 @@
 -- Adapted https://oracle-base.com/articles/misc/sqlxml-sqlx-generating-xml-content-using-sql
+-- Convert a database table to XML
 SELECT XMLELEMENT("dept_list",
          XMLAGG (
            XMLELEMENT("dept",
@@ -29,3 +30,37 @@ SELECT XMLELEMENT("dept_list",
        ) AS "depts"
 FROM   scott.dept d
 WHERE  d.deptno = 10;
+/*
+<dept_list>
+  <dept deptno="10">
+    <deptno>10</deptno>
+    <dname>ACCOUNTING</dname>
+    <loc>NEW YORK</loc>
+    <emp_list>
+      <emp>
+        <empno>7782</empno>
+        <ename>CLARK</ename>
+        <job>MANAGER</job>
+        <mgr>7839</mgr>
+        <hiredate>1981-06-09</hiredate>
+        <sal>2450</sal>
+      </emp>
+      <emp>
+        <empno>7839</empno>
+        <ename>KING</ename>
+        <job>PRESIDENT</job>
+        <hiredate>1981-11-17</hiredate>
+        <sal>5000</sal>
+      </emp>
+      <emp>
+        <empno>7934</empno>
+        <ename>MILLER</ename>
+        <job>CLERK</job>
+        <mgr>7782</mgr>
+        <hiredate>1982-01-23</hiredate>
+        <sal>1300</sal>
+      </emp>
+    </emp_list>
+  </dept>
+</dept_list>
+*/
