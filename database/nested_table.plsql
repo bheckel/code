@@ -48,6 +48,29 @@
 
 ---
 
+-- Loop a hardcoded list
+DECLARE
+  TYPE vctable_t IS TABLE OF VARCHAR2(3);
+  vctable  vctable_t;
+BEGIN
+  -- References a constructor that takes 3 values as arguments
+  vctable := vctable_t('ABC', 'DEF', 'GHI');
+  FOR i IN 1 .. vctable.COUNT LOOP
+    DBMS_OUTPUT.put_line(vctable(i));
+  END LOOP;
+END;
+
+-- same
+DECLARE
+  vctable SYS.odcivarchar2list := SYS.odcivarchar2list('ABC', 'DEF', 'GHI');
+BEGIN
+  FOR i IN 1 .. vctable.COUNT LOOP
+    DBMS_OUTPUT.put_line(vctable(i));
+  END LOOP;
+END;
+
+---
+
 -- Hardcoded table
 -- Schema-level declaration is ok for nested tables, not associative arrays
 DECLARE
@@ -93,7 +116,7 @@ DECLARE
 BEGIN
   IF last_name_tab IS NULL THEN dbms_output.put_line('ok'); END IF;
 
-  -- Load cursor into our empty collection
+  -- Loop cursor and load it into our empty collection
 	FOR rec IN name_cur LOOP
 		i := i + 1;
 		last_name_tab.EXTEND;
@@ -304,5 +327,4 @@ CREATE OR REPLACE PACKAGE BODY bob2 IS
       DBMS_OUTPUT.put_line('ok2 ' || x);
   END;
 END;
-
 exec bob2.do;

@@ -16,7 +16,7 @@ cp -i ~/onedrive/template_t.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
 # sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 
-echo '--  cd C:\Orion\workspace\data\Source\SQL\xOrionScripts\' >> ${JIRA}.sql
+echo '--  cd C:\Orion\workspace\data\Source\SQL\OrionScripts\' >> ${JIRA}.sql
 echo '--  @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
 echo '--  @"C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
 echo "--  DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql

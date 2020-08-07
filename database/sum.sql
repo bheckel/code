@@ -1,3 +1,17 @@
+-- Modified: 05-Aug-2020 (Bob Heckel)
+
+select count(*),
+       count( distinct job_id ) jobs,
+       count( distinct department_id ) depts,
+       /* count( case when job_id = 'SA_REP' then 1 end ) sa_rep, */
+       -- same
+       sum( case when job_id = 'SA_REP' then 1 end ) sa_rep,
+       count( case when department_id = 80 then 1 end ) dept_80,
+       count( case when job_id = 'SA_REP' and department_id = 80 then 1 end ) sa_rep_dept_80
+from   employees;
+
+---
+
 select (round((tot_count_with_primary / total_count), 4) * 100) percent_contacts_w_primary,
        (round(((tot_count_with_primary - (tot_existing_addresses + tot_existing_emails)) / tot_count_with_primary), 4) * 100) percent_missing_contact_method,
        v.*

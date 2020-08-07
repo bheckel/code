@@ -1,7 +1,7 @@
 
 -- Modified: 14-Feb-2020 (Bob Heckel)
 -- Execution plan. Query plan. SQL Tuning.
--- See also indexes.sql
+-- See also indexes.sql, devgym_create_toy_objects.sql
 
 -- The B-tree traversal is the first power of indexing.
 -- Clustering is the second power of indexing.
