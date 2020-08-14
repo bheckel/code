@@ -4,13 +4,34 @@
 -- MINUS is one of the few operators that consider null values equal.
 -- See also intersect.sql, notexist.sql
 
+---
+
+-- Plan cost 7
+SELECT employee_id FROM employees WHERE employee_id between 145 and 179
+MINUS
+SELECT employee_id FROM employees WHERE first_name LIKE 'A%';
+ 
+-- Plan cost 3
+SELECT employee_id
+  FROM employees e 
+ WHERE employee_id between 145 and 179
+   AND NOT EXISTS ( SELECT employee_id FROM employees t WHERE first_name LIKE 'A%' and e.employee_id = t.employee_id );
+
+-- Plan cost 2
+SELECT e.employee_id 
+  FROM employees e, employees e2
+ WHERE e.employee_id = e2.employee_id 
+   AND e.employee_id between 145 and 179
+   AND e2.first_name not LIKE 'A%';
+
+---
+
 select toy_name from toys_for_sale 
 minus 
 select toy_name from bought_toys 
 order  by toy_name;
 
--- same if no NULLs
-
+-- same if no NULLs (and probably more efficient)
 select toy_name  
 from   toys_for_sale tofs 
 where  not exists ( 
