@@ -1,4 +1,12 @@
 
+$ oci db autonomous-database generate-wallet --generate-type ALL --file mywallet.zip --password Bradybunch --autonomous-database-id ocid1.autonomousdatabase.oc1.iad.abuwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa47j3a
+$ sql /nolog
+set cloudconfig mywallet.zip
+show tns
+connect admin@rshdb_low
+
+---
+
 Sql Developer
 ctrl + shift + n  new unshared window
 ctrl + shift + v  clipboard history
