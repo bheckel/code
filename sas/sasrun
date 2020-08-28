@@ -6,7 +6,12 @@
 #           debugging on the PC by optionally chopping out the JCL from the
 #           first N lines.
 #
+#           vim mapping:
+#           au BufNewFile,BufRead,BufEnter *.sas nmap ;z :!~/code/sas/sasrun "%:p"<CR>
+#
 #           TODO tail -f the log as it runs
+#
+#           28-Aug-20 deprecated - see sasrun2
 #
 #  Created: Fri 17 May 2002 14:14:22 (Bob Heckel)
 # Modified: Tue 07 Aug 2018 13:49:53 (Bob Heckel)

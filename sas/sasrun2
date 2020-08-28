@@ -1,30 +1,30 @@
 #!/bin/bash
 
-# Simplified version
-
-# Modified: Mon 08 Oct 2018 08:34:38 (Bob Heckel)
+#  Created: 08-Oct-2018 (Bob Heckel)
+# Modified: 28-Aug-2020 (Bob Heckel)
+#
+# Simplified version of sasrun
+#
+# vim mapping:
+# au BufNewFile,BufRead,BufEnter *.sas nmap ;z :!~/code/sas/sasrun2 "%:p"<CR>
 
 tmpCODE="c:/temp/tmpsas.$$.sas"
 tmpLOG="c:/temp/tmpsas.$$.log"
 tmpLST="c:/temp/tmpsas.$$.lst"
 
-# SAS94WIN=C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe
 SAS94WIN='C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -config C:\Progra~1\SASHome\SASFoundation\9.4\nls\u8\sasv9.cfg'
 
 cat "$1" >| $tmpCODE
 
 $SAS94WIN -sysin $tmpCODE -log $tmpLOG -print $tmpLST
 
-#TODO
-chmod 777  $tmpLOG 
-
 if [ -e $tmpLST ];then
   $EDITOR -R -n -o -c '/^ERROR.*:/' $tmpLOG $tmpLST
-  mv $tmpLOG c:/temp/tmpsas.lastrun.sasrun.log
-  mv $tmpLST c:/temp/tmpsas.lastrun.sasrun.lst
+  mv -f $tmpLOG c:/temp/tmpsas.lastrun.sasrun.log
+  mv -f $tmpLST c:/temp/tmpsas.lastrun.sasrun.lst
 else
   $EDITOR -R -n -o -c '/^ERROR.*:/' $tmpLOG
-  mv $tmpLOG c:/temp/tmpsas.lastrun.sasrun.log
+  mv -f $tmpLOG c:/temp/tmpsas.lastrun.sasrun.log
 fi
 
 rm $tmpCODE
