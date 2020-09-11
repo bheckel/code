@@ -5,6 +5,14 @@
 
 ---
 
+ SELECT DISTINCT rlc.*,
+                  LISTAGG(rlcc.fullname, ', ' ON OVERFLOW TRUNCATE '...' WITHOUT COUNT) WITHIN GROUP (ORDER BY rlcc.fullname) over ( partition by rlcc.lifecycle_id ) lifecycle_op_owners
+    FROM rlc,
+         rlcc
+    WHERE rlc.lifecycle_id = rlcc.lifecycle_id
+
+---
+
 -- 12345 | prod 1, prod 2, prod3
 -- 45678 | prod 2, prod 9, prod99
 SELECT distinct o.opportunity_id, listagg(offering_name, ', ') WITHIN GROUP (ORDER BY offering_name) OVER ( PARTITION by o.opportunity_id) AS csvlist
