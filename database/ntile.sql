@@ -123,3 +123,28 @@ SELECT account_id
                        'There was a problem deleting',
                        'Unexpected error while running ' || SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
     END do;
+
+
+-- Verify
+declare
+  cnt number := 0;
+  totcnt number := 0;
+  maxntile number := 10;
+begin
+  for x in 1 .. maxntile loop
+      SELECT count(1) into cnt
+        FROM account_bas 
+       WHERE account_id IN (
+                            select distinct account_id
+                              from ( select account_id, ntile(maxntile) OVER (order by account_id) grp from roion_46884@sed ) 
+                             where grp in(x)
+                            )
+          AND account_id not in (
+999999
+         )                            
+       ;
+       DBMS_OUTPUT.put_line(x || ' ' || cnt);
+       totcnt := totcnt + cnt;
+  end loop;
+  DBMS_OUTPUT.put_line(totcnt);
+end;
