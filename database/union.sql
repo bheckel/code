@@ -1,4 +1,15 @@
 
+-- Don't keep dups
+create table rion47175 as select * from (
+  SELECT * FROM rion47175_1
+  union
+  SELECT * FROM rion47175_2
+  union
+  SELECT * FROM rion47175_3
+);
+
+---
+
 -- Keep dups
 select 'SMALL' name, 0 lower_bound, 29 upper_bound from dual
 union all

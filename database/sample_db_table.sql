@@ -1,3 +1,32 @@
+-- Modified: 29-Sep-2020 (Bob Heckel)
+-- Dummy database table
+
+with v(d, t, amt) as (
+          select date '2000-01-01', 'a', 10 from dual
+union all select date '2000-01-02', 'b', 11 from dual
+union all select date '2000-01-03', 'c', 30 from dual
+union all select date '2000-01-03', 'c', 30 from dual
+union all select date '2000-01-04', 'd', 10 from dual
+union all select date '2000-01-05', 'e',  5 from dual
+union all select date '2000-01-05', 'e',  7 from dual
+union all select date '2000-01-05', 'e', NULL from dual
+union all select date '2000-01-05', 'e',  3 from dual
+union all select date '2000-01-05', 'e',  4 from dual
+union all select date '2000-01-05', 'e',  null from dual
+union all select date '2000-01-06', 'f', 10 from dual
+union all select date '2000-01-06', 'f', 11 from dual
+union all select date '2000-01-06', 'f', 12 from dual
+union all select date '2000-01-06', 'f', null from dual
+union all select date '2000-01-06', 'f', 13 from dual
+)
+select d
+       ,t
+       ,amt
+       ,last_value(amt IGNORE NULLS) over (partition by t order by d rows between unbounded preceding and current row) filldown_amt
+from v
+order by 1,2;
+
+---
 
 create table rion39366x as 
   SELECT to_number(column_value) account_id,

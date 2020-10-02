@@ -28,7 +28,7 @@ echo "-- $ git checkout develop && git pull && git checkout -b feature/ORION-${J
 echo "-- $ git add . && git commit -m 'ORION-"${JIRA}: "' && git push" >> ${JIRA}.sql
 echo "-- WITH GITHUB UI: git checkout develop && git pull && git branch -d feature/ORION-${JIRA} && git fetch -p && git branch -a" >> ${JIRA}.sql
 echo "-- WITHOUT GITHUB UI: git checkout develop && git pull && git merge --no-ff feature/ORION-${JIRA} && git push && git branch -d feature/ORION-${JIRA} && git fetch -p && git push origin --delete feature/ORION-${JIRA}" >> ${JIRA}.sql
-echo "-- Pushed and ran ORION-${JIRA}_ddl_change.sql on ESD" >> ${JIRA}.sql
+echo "-- Pushed and ran ORION-${JIRA}_ddl_change.sql on ESD and EST" >> ${JIRA}.sql
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
