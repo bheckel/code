@@ -90,3 +90,29 @@ CREATE OR REPLACE PROCEDURE test_proc AS
 		END LOOP;
 END;
 
+---
+
+DECLARE
+  CURSOR c1 IS
+    SELECT * FROM USER_TABLES WHERE TABLE_NAME LIKE 'MKC%';
+
+  CURSOR indexCursor(in_table_name VARCHAR2) IS
+    select index_name, degree
+      from dba_indexes
+     where table_name = in_table_name;
+BEGIN
+  FOR rec IN c1 LOOP
+    FOR index_rec IN indexCursor(rec.table_name) LOOP
+      DBMS_OUTPUT.put_line(index_rec.index_name || ' ' || index_rec.degree);
+    
+      IF (index_rec.degree != 1) THEN
+        BEGIN
+          EXECUTE IMMEDIATE 'alter index ' || index_rec.index_name || ' NOPARALLEL';
+        EXCEPTION
+          WHEN OTHERS THEN
+            NULL;
+        END;
+      END IF;
+    END LOOP;
+  END LOOP;
+END;
