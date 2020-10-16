@@ -1,3 +1,18 @@
+
+ 8556  2020-10-12 09:26:37 gco
+ 8557  2020-10-12 09:26:41 gpul
+ 8558  2020-10-12 09:50:53 gco 46628
+ 8559  2020-10-12 09:52:30 git merge develop
+ # should i have git push here?
+ 8561  2020-10-12 09:52:54 gco
+ 8562  2020-10-12 09:53:49 git merge --squash feature/RION-46628
+ 8564  2020-10-12 09:55:37 git add . && git commit -m 'RION-46628: RION_LIFECYCLES_DETAILS data request' && git push
+ 8573  2020-10-12 10:10:16 git branch -d feature/ORION-46628
+ 8574  2020-10-12 10:10:30 git fetch -p
+ 8575  2020-10-12 10:10:44 git push origin --delete feature/ORION-46628
+
+---
+
 https://stackoverflow.com/questions/2472254/when-should-i-use-git-pull-rebase
 Alice creates topic branch A, and works on it
 Bob creates unrelated topic branch B, and works on it

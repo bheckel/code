@@ -1,19 +1,13 @@
+
+/storage/emulated/0/Android/data/com.termux/files
+
 ---
 
-.bashrc.project:
+termux-open is used by .bashrc's st to launch android app for a termux pdf etc.
 
-  # Termux additions
-  # Save to ~/termux.txt
+~/bin/termux-file-editor is a symlink (/data/data/com.termux/files/usr/bin/vim) to termux vim used by android to send to termux (opens in termux's vim but the file is auto saved in downloads). Assumes  mkdir ~/downloads already done.
 
-  alias htip='cd ~/storage/external-1/HTipitakaML/ && lynx tipitaka.htm && cd -'
-
-  alias cal=gcal
-
-  rme() {
-    vi ~/code/rme/$1.txt
-  } 
-
-  gcal
+~/bin/termux-url-opener is script to google cache used by termux to open a shared android url (from a browser) - redirects back to an android browser to view cached url
 
 ---
 
@@ -34,10 +28,6 @@ deprecated
 * vol up e /findme
 
 * vol down d  control d
-
----
-
-cd transfer && git add readme.termux.txt && git commit -m'mod' && git push origin master
 
 ---
 
