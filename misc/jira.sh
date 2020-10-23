@@ -18,7 +18,9 @@ sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 
 echo '--  cd C:\Orion\workspace\data\Source\SQL\OrionScripts\' >> ${JIRA}.sql
 echo '--  @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
+echo '--  vi "C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
 echo '--  @"C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
+echo '--  exec ORION'${JIRA}'.do;' >> ${JIRA}.sql
 echo "--  DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
@@ -34,8 +36,8 @@ echo >> ${JIRA}.sql
 
 # vim t.sql -c ':mksession!'
 
-echo "${JIRA} ${DESC}" > ${TAG}.html
-echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
+# echo "${JIRA} ${DESC}" > ${TAG}.html
+# echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
 # cygstart ${TAG}.html
 
 # cp -i ~/onedrive/template_project.prj ~/onedrive/orion-${TAG}/${TAG}.prj && \

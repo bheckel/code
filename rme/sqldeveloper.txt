@@ -1,11 +1,9 @@
 
-sql developer preferences
+Preferences
 
-C:\Users\xxx\AppData\Roaming\SQL Developer\system19.2xxx\o.sqldeveloper\
-~/.sqldeveloper/system18.3.0.277.2354/o.sqldeveloper\
+$ cd /cygdrive/c/Users/bheck/AppData/Roaming/SQL\ Developer/system20.2.0.175.1842/
 
-0 bheck@l10 /cygdrive/c/Users/boheck/AppData/Roaming/SQL Developer/system19.2.0.206.2117/ Fri Sep 06 11:43:22
-$ find . -mmin -5 -type f                                                                                         
+$ find . -not -name '*system_cache*' -mmin -15 -type f
 ./o.ide.13.0.0.1.42.190403.1502/preferences.xml          <--has local db info, don't copy
 ./o.ide.13.0.0.1.42.190403.1502/settings.xml                                                                      
 ./o.ide.ceditor.13.0.0.1.42.190403.1502/preferences.xml                                                           
@@ -13,9 +11,15 @@ $ find . -mmin -5 -type f
 ./o.sqldeveloper/product-preferences.xml                 <--has local db info, don't copy
 ./o.sqldeveloper/custom_syntax.arbori
 
+$ cp -i ./o.ide.12.2.1.5.42.200515.1304/settings.xml ~/onedrive/misc/
+$ cp -i ./o.sqldeveloper/preferences.xml ~/onedrive/misc/
+
+$ cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' ~/onedrive/misc/
+$ cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTemplate.xml' ~/onedrive/misc/
+
 ---
 
-SQL Developer sample dbs
+Sample dbs
 
 hr is already unlocked on Oracle VM:
 TNS

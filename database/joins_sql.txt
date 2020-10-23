@@ -151,6 +151,8 @@ Outer Joins. Outer joins are usually needed when all rows of one side of the
 join equation must be retrieved regardless of how many matches are found
 between the other side of the equation.
 
+LEFT INNER JOIN is a syntax error
+
 Traditional Oracle Syntax:
 
 SELECT

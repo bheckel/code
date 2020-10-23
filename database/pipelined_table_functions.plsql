@@ -280,11 +280,11 @@ END;
 CREATE OR REPLACE PACKAGE SCHEDULER_PERC_ALERTS AUTHID DEFINER IS
   /* CreatedBy: bheck
    *   Created: 13-Nov-19
-   *   Purpose: Leverage AUTHID DEFINER and pipelining to allow non-ESTARS
+   *   Purpose: Leverage AUTHID DEFINER and pipelining to allow non-SETARS
    *            access to job scheduler views. This approach avoids permission
    *            failures generated when using views to access USER_SCHEDULER_JOBS
    *            instead of DBA_SCHEDULER_JOBS. But access to DBA_SCHEDULER_JOBS
-   *            also won't work because ESTARS lacks admin rights on that view
+   *            also won't work because SETARS lacks admin rights on that view
    *            too (RION-37368)
    *    Change: 16-Jul-20 bheck - View RION_PERC_ALERT1_V is invalid post-upgrade
    *            to 18c (RION-45894)
@@ -316,7 +316,7 @@ END SCHEDULER_PERC_ALERTS;
 
 select * from table(SCHEDULER_PERC_ALERTS.perc_alert1);
 
-create or replace force view ORION_PERC_ALERT1_V as  select * from table(SCHEDULER_PERC_ALERTS.perc_alert1);
+create or replace force view RION_PERC_ALERT1_V as  select * from table(SCHEDULER_PERC_ALERTS.perc_alert1);
 
 ---
 
