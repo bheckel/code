@@ -1,52 +1,82 @@
--- Modified: Fri 28 Jun 2019 15:53:59 (Bob Heckel)
+-- Modified: Fri 28 Jun 2019 (Bob Heckel)
 
 -- Nested tables can be manipulated through an integer index, similar to an
--- associative array, or as a multiset with set operators, such as MULTISET UNION.
+-- associative array, or as a multiset with SET operators, such as MULTISET UNION.
 --
 -- MULTISET operators allow you to perform set-level operations on nested
 -- tables, quite similar to the SQL UNION, INTERSECT and MINUS operations.  But
--- with MULTISET, duplicates are preserved unless you specify that want DISTINCT
--- values.
+-- with MULTISET, unlike SQL UNION, duplicates are preserved unless you specify 
+-- that you want DISTINCT values.
 
--- see why fail http://stevenfeuersteinonplsql.blogspot.com/2018/10/why-wont-multiset-work-for-me.html
+-- see why this fails http://stevenfeuersteinonplsql.blogspot.com/2018/10/why-wont-multiset-work-for-me.html
 -- t_task_table := t_task_table multiset union distinct t_task_table
 
 ---
 
 CREATE OR REPLACE TYPE parts_nt IS TABLE OF VARCHAR2 (100);
 
--- Combine two nested tables
+-- Combine stack two collections nested tables
 
 -- The wrong way:
 DECLARE
-   l_parts1   parts_nt := parts_nt('Part1', 'Part2', 'Part3');
-   l_parts2   parts_nt := parts_nt('Part3', 'Part5', 'Part6');
-   l_union    parts_nt;
+   l_parts1  parts_nt := parts_nt('Part1', 'Part2', 'Part3');
+   l_parts2  parts_nt := parts_nt('Part3', 'Part5', 'Part6');
+   l_union   parts_nt;
+   i         VARCHAR2(15);
 BEGIN
    l_union := l_parts1;
    l_union.EXTEND(l_parts2.COUNT);
 
-   FOR indx IN 1 .. l_parts2.COUNT
-   LOOP
-      l_union(indx) := l_parts2(indx);
+   FOR indx IN 1 .. l_parts2.COUNT LOOP
+     l_union(indx) := l_parts2(indx);
    END LOOP;
 
    DBMS_OUTPUT.put_line('Count.Last = ' || l_union.COUNT || '.' || l_union(l_union.LAST));
-END;
 
+   i := l_union.FIRST;
+ 
+   WHILE i IS NOT NULL LOOP
+     DBMS_OUTPUT.PUT_LINE(l_union(i) || '  ' || i);
+     i := l_union.NEXT(i);
+   END LOOP;
+END;
+/*
+Count.Last = 6.
+Part3  1
+Part5  2
+Part6  3
+  4
+  5
+  6
+*/
+/
 -- The right way:
 DECLARE
-   l_parts1   parts_nt := parts_nt('Part1', 'Part2', 'Part3');
-   l_parts2   parts_nt := parts_nt('Part3', 'Part5', 'Part6');
-   l_union    parts_nt;
+   l_parts1  parts_nt := parts_nt('Part1', 'Part2', 'Part3');
+   l_parts2  parts_nt := parts_nt('Part3', 'Part5', 'Part6');
+   l_union   parts_nt;
+   i         VARCHAR2(15);
 BEGIN
-   /* l_union := l_parts1 MULTISET UNION DISTINCT l_parts2; */
    l_union := l_parts1 MULTISET UNION l_parts2;
-   DBMS_OUTPUT.put_line ('Count.Last = ' || l_union.COUNT || '.' || l_union (l_union.LAST));
-END;
+   /* l_union := l_parts1 MULTISET UNION DISTINCT l_parts2; -- Count.Last = 5.Part6 ... */
 
+   DBMS_OUTPUT.put_line ('Count.Last = ' || l_union.COUNT || '.' || l_union(l_union.LAST));
+
+   i := l_union.FIRST;
+ 
+   WHILE i IS NOT NULL LOOP
+     DBMS_OUTPUT.PUT_LINE(l_union(i) || '  ' || i);
+     i := l_union.NEXT(i);
+   END LOOP;
+END;
 /*
 Count.Last = 6.Part6
+Part1  1
+Part2  2
+Part3  3
+Part3  4
+Part5  5
+Part6  6
 */
 
 ---

@@ -1,52 +1,37 @@
--- Created: Mon 01 Feb 2019 10:45:15 (Bob Heckel) 
--- Modified: 24-Apr-2020 (Bob Heckel)
+-- Created: Mon 01-Feb-2019 (Bob Heckel) 
+-- Modified: 27-Oct-2020 (Bob Heckel)
 
-CREATE OR REPLACE PACKAGE ztestbob AS
-  
-  PROCEDURE test(in_x number);
-
-END ztestbob;
+CREATE OR REPLACE PACKAGE testpkg AS
+  PROCEDURE testproc(in_x NUMBER);
+END testpkg;
 /
 
-
-CREATE OR REPLACE PACKAGE BODY ztestbob AS
-
-  PROCEDURE test(in_x number)
-  IS
+CREATE OR REPLACE PACKAGE BODY testpkg AS
+  PROCEDURE testproc(in_x NUMBER) IS
     l_now DATE := sysdate;
 
-  BEGIN
-    dbms_output.put_line('ok1 ' || l_now);
-  END;
-
-END ztestbob;
-/
-
-exec ztestbob.test(42);
-
-drop package ztestbob;
-
----
-
-CREATE OR REPLACE PACKAGE ztestbob AS
-  
-  PROCEDURE delay_buffer_test;
-
-END ztestbob;
-/
-CREATE OR REPLACE PACKAGE BODY ztestbob AS
-
-  PROCEDURE delay_buffer_test
-  IS
-    l_now DATE;
+    CURSOR c IS
+      select dummy from dual;
 
   BEGIN
-    dbms_output.put_line('ok1');
-    SELECT sysdate INTO l_now FROM DUAL; LOOP EXIT WHEN l_now +(10 * (1 / 86400)) = sysdate; END LOOP;
-    dbms_output.put_line('ok2');
-  END;
+    IF in_x = 42 THEN
+      FOR r IN c LOOP
+        dbms_output.put_line('ok1 ' || r.dummy);
+      END LOOP;
+    END IF;
 
-END ztestbob;
+    SELECT sysdate 
+      INTO l_now
+      FROM DUAL;
+
+    dbms_output.put_line('ok2 ' || l_now);
+
+  END;
+END testpkg;
+/
+
+exec testpkg.testproc(42);
+drop package testpkg;
 
 ---
 

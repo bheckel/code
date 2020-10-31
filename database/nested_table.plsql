@@ -14,12 +14,21 @@
 -- Collection Methods:
 --
 -- EXISTS: Returns TRUE if a specified element exists in a collection and can be used to avoid raising 
---         SUBSCRIPT_OUTSIDE_LIMIT exceptions.
---         When you try to get an element at an undefined index value, Oracle raises NO_DATA_FOUND
---         but using EXISTS eliminates that possibility:
+--         SUBSCRIPT_OUTSIDE_LIMIT exceptions. When you try to get an element at an undefined index value,
+--         Oracle raises NO_DATA_FOUND but using EXISTS eliminates that possibility:
 --         e.g. IF sons_t.EXISTS(index_in) THEN...
 --         But you should avoid the FOR loop and instead opt for a WHILE loop and the NEXT or PRIOR methods 
---         to help you navigate from one defined index value to the next.
+--         to help you navigate from one defined index value to the next. E.g.:
+--
+--         DECLARE i VARCHAR2(15);
+--         BEGIN
+--           ...
+--           i := l_union.FIRST;
+--  
+--           WHILE i IS NOT NULL LOOP
+--             DBMS_OUTPUT.PUT_LINE(l_union(i) || '  ' || i);
+--             i := l_union.NEXT(i);
+--           END LOOP;
 --
 -- COUNT: Returns the total number of elements in a collection.
 --
@@ -42,7 +51,7 @@
 -- Methods ONLY allowed with varrays:
 -- LIMIT: Returns the maximum number of elements that a collection can contain
 
--- You can compare nested table variables to the value NULL or to each other see nested_table_multiset.plsql
+-- You can compare nested table variables to the value NULL or to each other
 
 -- https://docs.oracle.com/database/121/LNPLS/composites.htm#LNPLS99981
 
@@ -124,9 +133,9 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE (' loaded last_name('||i||') with '||last_name_tab(i));
   END LOOP;
 
-  /* FOR i IN last_name_tab.FIRST .. last_name_tab.LAST LOOP */
-  -- same
   FOR i IN 1 .. last_name_tab.COUNT LOOP
+  -- same but COULD fail due to sparse collection (VALUE_ERROR)
+  /* FOR i IN last_name_tab.FIRST .. last_name_tab.LAST LOOP */
     DBMS_OUTPUT.PUT_LINE ('last_name is: '||last_name_tab(i));
   END LOOP;
 
@@ -177,8 +186,6 @@ BEGIN
 END;
 
 ---
-
-/* create type numbers_t as table of number; */
 
 declare
   type numbers_t is table of number;

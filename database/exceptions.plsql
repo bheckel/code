@@ -127,7 +127,7 @@ BEGIN
   DBMS_OUTPUT.put_line(TO_DATE ('2010 10 10 44:55:66', 'YYYSS'));
 
 EXCEPTION 
-  WHEN NO_DATA_FOUND THEN 
+  WHEN NO_DATA_FOUND OR VALUE_ERROR THEN 
     dbms_output.put_line('No such emp!'); 
     -- There is no fall-thru to OTHERS here
 

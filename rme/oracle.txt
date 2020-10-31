@@ -1,4 +1,8 @@
 
+ALTER USER unit_test_repos IDENTIFIED BY "ESp5l@whgRS46hY" REPLACE "vL6iXcs@n882!Yp";
+
+---
+
 $ oci db autonomous-database generate-wallet --generate-type ALL --file mywallet.zip --password Bradybunch --autonomous-database-id ocid1.autonomousdatabase.oc1.iad.abuwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa47j3a
 $ sql /nolog
 set cloudconfig mywallet.zip
@@ -13,9 +17,10 @@ ctrl + shift + v  clipboard history
 
 ---
 
-SQL Developer preferences location Windows backup:
+SQL Developer preferences location make Windows backup:
 C:\Documents and Settings\<user-name>\Application Data\SQL Developer\systemn.n.n.n.n
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' ~/onedrive/misc/
+cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTemplate.xml' ~/onedrive/misc/
 
 --- 
 
@@ -46,9 +51,12 @@ GRANT select any dictionary TO hr;  -- for explain plan
 GRANT EXECUTE ON SYS.DBMS_LOCK TO hr;  -- for ALTER SYSTEM KILL SESSION '671,62164';
 GRANT dwrole TO hr;
 
+-- Session to kill
+select s.sid||','||s.serial# sess, s.osuser, s.USERNAME, s.last_call_et, s.status, s.sql_address, s.program from v$session s where ( s.status = 'ACTIVE' );
+
 ---
 
-sqlplus ADMIN/vL6iXcs@n882!Yp@rshdb1
+sqlplus ADMIN/mypw@rshdb1
 
 benpyrvqragvglpybhqfreivpr/b.heckel@gmail.com
 
@@ -95,11 +103,6 @@ SQL> exit
 
 or, better, use ~/code/misc/sqlplus_tmplt.sql (must end in SQL!)
 SQL> @sqlplus_tmplt.sql
-
----
-
-Password change (from within SQL*Plus):
-PASSW bheckel
 
 ---
 

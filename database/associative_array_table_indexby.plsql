@@ -255,3 +255,50 @@ BEGIN
    dbms_output.put_line(l_numbers(ix));
  end loop;
 END;
+
+---
+
+-- https://github.com/oracle/oracle-db-examples/blob/master/plsql/collections/accessing-collection-index-in-sql.sql
+
+CREATE OR REPLACE PACKAGE aa_pkg AUTHID DEFINER IS  
+  TYPE record_t IS RECORD (  
+    nm  VARCHAR2(100), 
+    sal NUMBER
+   );
+  
+  -- Build a collection (hash, associative array) of RECORDs
+  TYPE array_t IS TABLE OF record_t INDEX BY PLS_INTEGER;  
+  
+  FUNCTION my_array RETURN array_t;  
+END;
+
+CREATE OR REPLACE PACKAGE BODY aa_pkg IS  
+  FUNCTION my_array RETURN array_t IS  
+    l_return   array_t;  
+  BEGIN  
+    -- Populate a sparse array
+    l_return(1).nm := 'Me';  
+    l_return(1).sal := 1000;  
+    l_return(200).nm := 'You';  
+    l_return(200).sal := 2;  
+  
+    RETURN l_return;  
+  END my_array;  
+END;
+
+
+-- Use TABLE with Associative Arrays of Records! 12c+
+DECLARE  
+   l_array   aa_pkg.array_t;  
+BEGIN  
+   l_array := aa_pkg.my_array;  
+  
+   -- Fails if l_return index isn't 1, 2, 3 etc -  NO_DATA_FOUND
+   /* FOR ix IN l_array.first .. l_array.last LOOP */  
+     /* DBMS_OUTPUT.put_line(l_array(ix).nm || ' ' || l_array(ix).sal); */  
+   /* END LOOP; */  
+
+   FOR rec IN ( SELECT * FROM TABLE(l_array) ORDER BY nm) LOOP
+     DBMS_OUTPUT.put_line(rec.nm || ' ' || rec.sal);
+   END LOOP;  
+END; 

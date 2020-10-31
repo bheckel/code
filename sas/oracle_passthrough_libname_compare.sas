@@ -1,4 +1,34 @@
 
+
+proc sql;
+  CONNECT TO ORACLE(USER=setars ORAPW=mypw BUFFSIZE=25000 READBUFF=25000 PATH=sed);
+
+  CREATE TABLE t AS SELECT * FROM CONNECTION TO ORACLE 
+  (
+
+    SELECT OBJECT_NAME, PROCEDURE_NAME ,OBJECT_TYPE  
+      FROM dba_procedures --dba_objects
+     WHERE OBJECT_TYPE IN('PROCEDURE' , 'PACKAGE','FUNCTION') AND procedure_name IS NOT NULL
+       AND rownum < 9;
+     ORDER BY object_name, procedure_name
+
+  );
+
+  DISCONNECT FROM ORACLE;
+quit;
+proc print data=_LAST_(obs=max); run;
+
+
+LIBNAME ORION ORACLE PATH=SED SCHEMA=SETARS USER=setars PASSWORD="mypw";
+
+data t;
+  set ORION.account_base(obs=9);
+run;
+
+title "&SYSDSN";proc print data=_LAST_(obs=10) width=minimum heading=H;run;title;
+
+
+
  /****************************************************************************/
  /* Passthrough */
 proc sql;
