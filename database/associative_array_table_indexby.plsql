@@ -272,6 +272,7 @@ CREATE OR REPLACE PACKAGE aa_pkg AUTHID DEFINER IS
   FUNCTION my_array RETURN array_t;  
 END;
 
+
 CREATE OR REPLACE PACKAGE BODY aa_pkg IS  
   FUNCTION my_array RETURN array_t IS  
     l_return   array_t;  
@@ -298,7 +299,82 @@ BEGIN
      /* DBMS_OUTPUT.put_line(l_array(ix).nm || ' ' || l_array(ix).sal); */  
    /* END LOOP; */  
 
-   FOR rec IN ( SELECT * FROM TABLE(l_array) ORDER BY nm) LOOP
+   FOR rec IN ( SELECT * 
+                  FROM TABLE(l_array)
+                 ORDER BY nm ) LOOP
      DBMS_OUTPUT.put_line(rec.nm || ' ' || rec.sal);
    END LOOP;  
 END; 
+
+---
+
+-- Before 18c
+DECLARE   
+   TYPE ints_t IS TABLE OF INTEGER   
+      INDEX BY PLS_INTEGER;   
+   
+   l_ints   ints_t;   
+BEGIN   
+   l_ints(1) := 55;  
+   l_ints(2) := 555;  
+   l_ints(3) := 5555;  
+  
+   FOR indx IN 1 .. l_ints.COUNT   
+   LOOP   
+      DBMS_OUTPUT.put_line (l_ints (indx));   
+   END LOOP;   
+END;
+/
+
+-- 18c+
+DECLARE  
+   TYPE ints_t IS TABLE OF INTEGER  
+      INDEX BY PLS_INTEGER;  
+  
+   l_ints   ints_t := ints_t (1 => 55, 2 => 555, 3 => 5555);  
+BEGIN  
+   FOR indx IN 1 .. l_ints.COUNT  
+   LOOP  
+      DBMS_OUTPUT.put_line(l_ints (indx));  
+   END LOOP;  
+END;
+/
+
+---
+
+CREATE OR REPLACE PACKAGE use_sql_on_aa AS
+  -- Have to use a package, schema-level TYPE then DECLARE won't work for AAs
+  TYPE employees_t IS TABLE OF emp%rowtype INDEX BY PLS_INTEGER;
+
+  PROCEDURE do;
+END;
+/
+CREATE OR REPLACE PACKAGE BODY use_sql_on_aa AS
+  PROCEDURE do IS
+    l_employees employees_t;
+
+  BEGIN
+    SELECT * BULK COLLECT
+      INTO l_employees
+      FROM emp;
+
+    FOR e IN (
+      SELECT *
+        FROM TABLE (l_employees)
+       WHERE job = 'SALESMAN'
+       ORDER BY ename
+    ) LOOP
+      dbms_output.put_line(e.job
+                           || '-'
+                           || e.ename);
+    END LOOP;
+  END do;
+END use_sql_on_aa;
+/
+EXEC use_sql_on_aa.do;
+/*
+SALESMAN-ALLEN
+SALESMAN-MARTIN
+SALESMAN-TURNER
+SALESMAN-WARD
+*/

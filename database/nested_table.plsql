@@ -51,7 +51,7 @@
 -- Methods ONLY allowed with varrays:
 -- LIMIT: Returns the maximum number of elements that a collection can contain
 
--- You can compare nested table variables to the value NULL or to each other
+-- You can compare nested table variables to the value NULL or to each other see compare_nested_tables.plsql
 
 -- https://docs.oracle.com/database/121/LNPLS/composites.htm#LNPLS99981
 

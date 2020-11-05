@@ -3,7 +3,7 @@
  8557  2020-10-12 09:26:41 gpul
  8558  2020-10-12 09:50:53 gco 46628
  8559  2020-10-12 09:52:30 git merge develop
- # should i have git push here?
+ 8570  2020-10-12 09:52:35 gpul
  8561  2020-10-12 09:52:54 gco
  8562  2020-10-12 09:53:49 git merge --squash feature/RION-46628
  8564  2020-10-12 09:55:37 git add . && git commit -m 'RION-46628: RION_LIFECYCLES_DETAILS data request' && git push

@@ -1,5 +1,5 @@
 -- Created: 2009-05-11 (Bob Heckel)
--- Modified: Fri 14 Jun 2019 15:26:13 (Bob Heckel)
+-- Modified: Wed 04-Nov-2020 (Bob Heckel)
 
 -- This file is auto-sourced by Oracle sqlplus if it's in PWD
 --
@@ -33,7 +33,7 @@ DEFINE _EDITOR=vim
 --set autorecovery OFF
 -- good for debugging speed problems - prints an EXPLAIN PLAN and execution
 -- statistics after each SQL statement
---set autotrace OFF
+--set autotrace ON
 --set blockterminator "."
 --set cmdsep ON
 --set colsep " "
@@ -41,6 +41,7 @@ DEFINE _EDITOR=vim
 --set concat "."
 --set copycommit 0
 --set copytypecheck ON
+--set define OFF
 --set define "&"
 --set describe DEPTH 1 LINENUM OFF INDENT ON
 --set echo OFF
@@ -77,8 +78,8 @@ set serveroutput ON
 --set suffix "sql"
 --set tab ON
 --set termout ON
---set time OFF
---set timing OFF
+set time ON
+set timing ON
 --set trimout ON
 --set trimspool OFF
 --set underline "-"
@@ -89,19 +90,19 @@ set serveroutput ON
 -- to make afiedt.buf available immediately
 ---select SYSDATE from dual;
 -- or just rely on this as a side-effect:
--- Build sqlprompt e.g. "pks@usdev100> "
-undefine usr db
-col usr new_value usr
-col db  new_value db
+-- Build sqlprompt e.g. "pks@dev100> "
+UNDEFINE _usr _db
+col _usr new_value _usr
+col _db  new_value _db
 set termout off
-select lower(user) usr,
-       --substr(global_name, 1, instr(global_name, '.')-1) db
-       lower(global_name) db
+select lower(user) _usr,
+       --substr(global_name, 1, instr(global_name, '.')-1) _db
+       lower(global_name) _db
 from   global_name
 /
 
 set termout on
-set sqlprompt '&&usr.@&&db.> '
+set sqlprompt '&&_usr.@&&_db.> '
 
 -- project specific
 --column meth_spec_nm format a15;

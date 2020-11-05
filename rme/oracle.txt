@@ -214,24 +214,9 @@ set pagesize 9999;
 spool c:/cygwin/home/bheckel/tmp/testing/sqlplus
 @c:/cygwin/home/bheckel/tmp/testing/t.sql
 
+---
 
 -- type ed to invoke editor on afiedt.buf then r[un]
-
-
---insert into time_transacts
---values (transaction_number.nextval,
---        sysdate, -
---        (select attribute_value from users
---                   where (user_id = '1005' and attribute = 'employee_id')),
---        '3R123',
---        '1',
---        '1',
---        'sust',
---        to_date('7/7/2000', 'MM/DD/YYYY'),
---        25,
---        'some comments'
---       );
-
 
 ---
 
