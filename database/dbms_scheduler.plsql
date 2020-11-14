@@ -1,4 +1,31 @@
-# Modified: 24-Apr-2020 (Bob Heckel)
+-- Modified: 09-Nov-2020 (Bob Heckel)
+
+---
+
+SELECT uj.last_start_date,
+       uj.last_run_duration,
+       uj.state,
+       uj.job_name,
+       uj.job_type,
+       uj.job_action,
+       uj.start_date,
+       uj.repeat_interval,
+       uj.end_date,
+       uj.job_class,
+       uj.enabled,
+       uj.auto_drop,
+       uj.comments,
+       ud.output,
+       ud.job_name,
+       ud.status,
+       ud.error#,
+       ud.actual_start_date,
+       ud.run_duration
+  FROM user_scheduler_jobs uj,
+       user_scheduler_job_run_details ud
+ WHERE uj.job_name = ud.job_name
+   AND uj.job_name LIKE '%REF%'
+ ORDER BY actual_start_date DESC;
 
 ---
 

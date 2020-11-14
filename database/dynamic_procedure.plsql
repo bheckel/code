@@ -1,6 +1,34 @@
--- Modified: 02-Sep-19 (Bob Heckel)
+-- Modified: 09-Nov-2020 (Bob Heckel)
 
 -- see also cursor.plsql
+
+---
+
+CREATE OR REPLACE PACKAGE RION39939 IS
+ 
+ PROCEDURE bkuptbl(tblnm VARCHAR2);
+
+END;
+/
+
+
+CREATE OR REPLACE PACKAGE BODY RION39939 IS
+
+  PROCEDURE bkuptbl(tblnm VARCHAR2) IS
+    sqlstr VARCHAR2(4000);
+
+    BEGIN
+      dbms_output.put_line(tblnm);
+      
+      sqlstr := 'create table ' || trim(tblnm) || '_2 as select * from ' || tblnm;
+      
+      execute immediate sqlstr;
+  END;
+  
+END;
+/
+
+---
 
 /* Dynamically delete oldest records from a table */
 /* E.g. PRUNE_TBL_GENERIC('EMAIL_MESSAGES', 'ACTUAL_UPDATED', 'EMAIL_MESSAGES_ID', 365); */
