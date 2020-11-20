@@ -1,11 +1,13 @@
 -- Modified: 13-Nov-2020 (Bob Heckel)
--- See also start_with_connect_by_hierarchy.sql
+-- See also start_with_connect_by_hierarchy.sql, row_number_tabibitosan.sql
 
 -- Row pattern matching. Grouping conditions that depend on relations BETWEEN rows IN A CERTAIN ORDER.
 
 -- Consider MATCH_RECOGNIZE as an alternative to GROUP BY for cases where you cannot easily specify a grouping 
 -- value from each row, but the grouping criteria are RELATIONS between rows. Group data that doesn’t have some 
 -- key value to GROUP BY, but instead relates the rows by being consecutive (or not too far apart).
+
+-- Best to read from bottom up
 
 -- Count groups between gaps in sequence
 with ints(i) as (
@@ -34,6 +36,7 @@ from ints MATCH_RECOGNIZE(
        -- true, any row matches it. This way we capture the very first record which would otherwise be skipped. That's because the
        -- row after a strt match will always be one_higher.
        pattern (strt one_higher*)
+       -- Define a classification
        define
           one_higher as i = prev(i) + 1
     )

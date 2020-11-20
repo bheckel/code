@@ -129,7 +129,7 @@ SELECT account_id
 declare
   cnt number := 0;
   totcnt number := 0;
-  maxntile number := 10;
+  maxntile number := 10;  -- set higher for more buckets but spread fewer records per bucket
 begin
   for x in 1 .. maxntile loop
       SELECT count(1) into cnt

@@ -26,14 +26,11 @@ options source replace;
 
  /* Copy From */
 libname OLDL 'd:/_TD2908';
-***libname OLDL 'c:/temp';
 ***libname OLDL 'BQH0.SASLIB';
 ***libname OLDL '/u/bqh0/saslib';
 
  /* Copy To */
-***libname NEWL 'x:/sde/mo07';
 libname NEWL 'n:/mo07';
-***libname NEWL 'd:/arule';
 ***libname NEWL 'c:/temp2';
 ***libname NEWL 'BQH0.SASLIB';
 ***libname NEWL '/u/dwj2/mvds/NAT/2003';
@@ -44,6 +41,5 @@ libname NEWL 'n:/mo07';
   */
 proc copy in=OLDL out=NEWL memtype=data;
   ***select idnew mtnew nynew;
-  ***select backup register;
   ***select UST2003OLDNAT;
 run;
