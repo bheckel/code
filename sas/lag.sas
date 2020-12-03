@@ -7,7 +7,7 @@ options NOsource;
   *           Be careful if you execute a LAG function conditionally.
   *
   *  Created: Thu 10 Sep 2009 12:20:18 (Bob Heckel -- SUGI 354-2009)
-  * Modified: Mon 19 Dec 2016 11:27:15 (Bob Heckel)
+  * Modified: Tue 24-Nov-2020 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source NOcenter;
@@ -148,3 +148,29 @@ data diff;
   ;
 run;
 title "&SYSDSN";proc print data=_LAST_(obs=10) width=minimum heading=H;run;title;
+
+
+ /********************/
+proc sort data=t; by lifecycle_id lifecycle_milestone_group_id step_order;run;
+
+ /* Fill down the previous phase if null */
+data t2(drop= phase0 p q);
+  length phase $100 p $100 q $100;
+  retain phase p q;
+  set t;
+  by lifecycle_id lifecycle_milestone_group_id step_order;
+  
+  p = lag(phase0);
+
+  if custom eq 1 then do;
+    if missing(p) then do;
+     phase = q;
+    end;
+    else do;
+      phase = p;
+      q = p;
+     end;
+  end;
+  else
+    phase = phase0;
+run;
