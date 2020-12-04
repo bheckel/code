@@ -1,5 +1,7 @@
 
--- Modified: Tue 03-Mar-2020 (Bob Heckel)
+-- Created: Tue 03-Mar-2020 (Bob Heckel)
+-- Modified: 04-Dec-2020 (Bob Heckel)
+
 -- See also csv_list_to_table_xmltable.sql delete.sql
 
 ---
@@ -207,3 +209,27 @@ SELECT o.account_id--, input_source
 	FROM rion_44642 o, account_base a
  WHERE o.account_id = a.account_id(+)
 	 AND a.account_id is null;
+
+---
+
+-- Find all stores with no stock for a product
+
+select s.store_name, s.store_id 
+  from stores s
+ where NOT exists (
+   select 1 from inventory i
+    where s.store_id = i.store_id
+      and i.product_id = 9
+      and i.product_inventory > 0
+ ); 
+
+-- Same 
+
+select store_name 
+  from stores 
+ where store_name not in(
+   SELECT s.store_name/*, i.product_id*/ 
+     FROM stores s, inventory i 
+    WHERE s.store_id = i.store_id(+)
+      and i.product_id = 9 and i.product_inventory>0
+ );

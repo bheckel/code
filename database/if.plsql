@@ -42,3 +42,8 @@ END IF;
 
 overdrawn := new_balance < minimum_balance;
 
+---
+
+if x in(1,2,3) then
+  ...
+end if;

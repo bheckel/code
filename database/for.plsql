@@ -1,4 +1,5 @@
--- Modified: 22-May-2020 (Bob Heckel)
+--  Created: 22-May-2020 (Bob Heckel)
+-- Modified: 04-Dec-2020 (Bob Heckel)
 -- See also bulk_collect_forall.plsql
 
 ---
@@ -13,8 +14,9 @@ END;
 
 ---
 
--- As long as your PL/SQL optimization level is set to 2 (the default) or higher, the compiler will automatically optimize
--- cursor FOR loops to retrieve 100 rows with each fetch. You cannot modify this number.
+-- As long as your PL/SQL optimization level is set to 2 (the default) or higher,
+-- the compiler will automatically optimize cursor FOR loops to retrieve 100 rows 
+-- with each fetch. You cannot modify this number.
 ...
 CURSOR c_dun_nbrs IS
   SELECT aa.duns_nbr FROM account_base ab;
@@ -164,3 +166,12 @@ Statement #2 deleted 45 rows.
 Statement #3 deleted 5 rows.
 Total rows deleted: 56
 */
+
+---
+
+  FOR i IN 1 .. CASE p_mom.species
+                  WHEN 'RABBIT' THEN 12
+                  WHEN 'DOG' THEN 4
+                  WHEN 'KANGAROO' THEN 1
+                END
+  LOOP
