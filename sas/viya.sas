@@ -18,7 +18,7 @@ cas sessopts=(caslib=public timeout=1800 locale="en_US");
  /* Show e.g. Path = /opt/sas/viya/config/data/cas/default/public/ */
 caslib public list;
 
- /* Show .sashdat files */
+ /* Show .sashdat files like proc contents */
 proc casutil; list files incaslib="public"; quit;
 proc casutil; list files incaslib="casuser"; quit;
 

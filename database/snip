@@ -1,0 +1,12 @@
+#!/bin/bash
+
+D=$HOME/onedrive/misc/bkup/
+
+if [ $# -eq 0 ];then
+  cp -v 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' $D
+  cp -v 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTemplate.xml' ~/onedrive/misc/
+  cp -v "C:\Users\bheck\AppData\Roaming\SQL Developer\system20.2.0.175.1842\o.sqldeveloper\preferences.xml" ~/onedrive/misc/
+  cp -v "C:\Users\bheck\AppData\Roaming\SQL Developer\system20.2.0.175.1842\o.sqldeveloper\product-preferences.xml" ~/onedrive/misc/
+else
+  vim -R 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml'
+fi

@@ -43,6 +43,12 @@ C:\Documents and Settings\<user-name>\Application Data\SQL Developer\systemn.n.n
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' ~/onedrive/misc/
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTemplate.xml' ~/onedrive/misc/
 
+--or 08-Dec-20
+"C:\Users\bheck\AppData\Roaming\SQL Developer\UserSnippets.xml"
+
+"C:\Users\bheck\AppData\Roaming\SQL Developer\system20.2.0.175.1842\o.sqldeveloper\preferences.xml"
+"C:\Users\bheck\AppData\Roaming\SQL Developer\system20.2.0.175.1842\o.sqldeveloper\product-preferences.xml"
+
 --- 
 
 SQL Developer upgrade:
