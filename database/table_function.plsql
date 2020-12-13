@@ -1,100 +1,82 @@
 
 -- Table operator
 
--- Modified: Thu 06 Jun 2019 10:35:05 (Bob Heckel) 
+-- Adapted: Thu, Nov 29, 2018  2:05:03 PM (Bob Heckel -- https://devgym.oracle.com)
+-- Modified: 04-Dec-2020 (Bob Heckel)
 -- See also call_function_from_sql.plsql
 
-create or replace type myTblType as table of number;
-
-create or replace view v as select * from TABLE( myTblType(1,2,3,4) );
-
-desc v  -- COLUMN_VALUE
-
-select * from table( myTblType(1,2,3,4) );  -- 1 2 3 4
-select sum(column_value) from table( myTblType(1,2,3,4) );  -- 10
-
----
-
-/* Adapted: Thu, Nov 29, 2018  2:05:03 PM (Bob Heckel -- https://devgym.oracle.com) */
 -- To invoke a table function inside a SELECT statement, it must be defined at
 -- the schema level, in the specification of a package or in the WITH clause of a
 -- SELECT. It cannot be defined as a nested subprogram or a private subprogram.
 -- We could have used a varray instead.
 
--- 1. Single columns:
-CREATE OR REPLACE TYPE strings_ntt IS TABLE OF VARCHAR2(100);  /* can't use ...TABLE OF foo%ROWTYPE because we're talking to SQL not PLSQL */
+-- Single column pseudo-table:
+CREATE OR REPLACE TYPE t_str_nt IS TABLE OF VARCHAR2(100);  /* can't use ...TABLE OF foo%ROWTYPE because we're talking to SQL not PLSQL */
 /
-
-CREATE OR REPLACE PACKAGE tf
-IS
-   FUNCTION queryme(count_in IN INTEGER) RETURN strings_ntt;
+CREATE OR REPLACE PACKAGE tf_pkg IS
+  FUNCTION qry(p_cnt IN INTEGER) RETURN t_str_nt;
 END;
 /
-
-CREATE OR REPLACE PACKAGE BODY tf
+CREATE OR REPLACE PACKAGE BODY tf_pkg
 IS
-   FUNCTION queryme(count_in IN INTEGER) RETURN strings_ntt
-   IS
-
-   stringx strings_ntt := strings_ntt();
-   
-   BEGIN
-     for i in 1 .. count_in loop
-       stringx.extend();
-       stringx(i) := 'abc';
-     end loop;
-    
-    RETURN stringx;
-   END;
+  FUNCTION qry(p_cnt IN INTEGER) RETURN t_str_nt IS
+    l_str t_str_nt := t_str_nt();
+  
+    BEGIN
+      for i in 1 .. p_cnt loop
+        l_str.extend();
+        l_str(i) := 'abc';
+      end loop;
+     
+     RETURN l_str;
+    END;
 END;
 /
-
 -- Call the function in SQL
 --     Oracle keyword
-SELECT COLUMN_VALUE  my_string FROM TABLE(tf.queryme(5))
-/
+SELECT COLUMN_VALUE AS my_string FROM TABLE(tf_pkg.qry(5))
+
+select count(COLUMN_VALUE) from table(tf_pkg.qry(5));
+
+create or replace view vw as select * from TABLE(tf_pkg.qry(5));
 
 
--- 2. Multiple columns in a pseudo table:
-CREATE TYPE animal_ot IS OBJECT
-(
-   name VARCHAR2(10),
-   species VARCHAR2(20),
-   date_of_birth DATE
+-- Multiple column pseudo-table:
+CREATE TYPE t_animal_o IS OBJECT (
+  name           VARCHAR2(10),
+  species        VARCHAR2(20),
+  date_of_birth  DATE
 );
 /
-
 -- Can't use foo%ROWTYPE or TYPE RECORD, we need an object
-CREATE TYPE animals_ntt IS TABLE OF animal_ot;
+CREATE TYPE t_animals_nt IS TABLE OF t_animal_o;
 /
-
-CREATE OR REPLACE FUNCTION animal_family(dad_in IN animal_ot, mom_in IN animal_ot)
-   RETURN animals_ntt
-   AUTHID DEFINER
+CREATE OR REPLACE FUNCTION animal_family(p_dad IN t_animal_o, p_mom IN t_animal_o)
+  RETURN t_animals_nt
+  AUTHID DEFINER
 IS
-   l_family   animals_ntt := animals_ntt(dad_in, mom_in);
+  l_family t_animals_nt := t_animals_nt(p_dad, p_mom);
 BEGIN
-   FOR i IN 1 ..
-               CASE mom_in.species
+  FOR i IN 1 .. CASE p_mom.species
                   WHEN 'RABBIT' THEN 12
                   WHEN 'DOG' THEN 4
                   WHEN 'KANGAROO' THEN 1
-               END
-   LOOP
-      l_family.EXTEND;
-      l_family(i) := animal_ot('BABY' || i,
-                               mom_in.species,
-                               ADD_MONTHS(SYSDATE, -1 * DBMS_RANDOM.VALUE(1, 6)));
-   END LOOP;
+                END
+  LOOP
+    l_family.EXTEND;
+    l_family(i) := t_animal_o('BABY' || i,
+                              p_mom.species,
+                              ADD_MONTHS(SYSDATE, -1 * DBMS_RANDOM.VALUE(1, 6)));
+  END LOOP;
 
-   RETURN l_family;
+  RETURN l_family;
 END;
-/
 
+-- Call the table function ANIMAL_FAMILY with a dad & a mom object i.e. 
+-- a T_ANIMAL_O type, as the parameters
 SELECT * --name, species, date_of_birth
-  FROM TABLE(animal_family(animal_ot('Hoppy', 'RABBIT', SYSDATE-500),  -- dad
-                           animal_ot('Hippy', 'RABBIT', SYSDATE-300))) -- mom
-/
+  FROM TABLE(animal_family(t_animal_o('Hoppy', 'RABBIT', SYSDATE-500),  -- dad
+                           t_animal_o('Hippy', 'RABBIT', SYSDATE-300))) -- mom
 /*
 NAME	SPECIES	DATE_OF_BIRTH
 Hoppy	RABBIT	17-JUL-17
@@ -114,6 +96,7 @@ BABY12	RABBIT	29-SEP-18
 */
 
 INSERT INTO animals
-SELECT name, species, date_of_birth
-  FROM TABLE ( animal_family(animal_ot('Hoppy', 'RABBIT', SYSDATE - 500),
-                             animal_ot('Hippy', 'RABBIT', SYSDATE - 300)) )
+  SELECT name, species, date_of_birth
+    FROM TABLE ( animal_family(t_animal_o('Hoppy', 'RABBIT', SYSDATE - 500),
+                               t_animal_o('Hippy', 'RABBIT', SYSDATE - 300)) );
+

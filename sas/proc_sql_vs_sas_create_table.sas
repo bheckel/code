@@ -44,3 +44,24 @@ run;
 proc print data=work.customer;
   title 'Sports Customer Data';
 run;
+
+ /***/
+
+options fullstimer;
+
+data testdata1;
+  do id=1 to 10000000;
+    x = ceil(ranuni(0) * 100);
+    charx = put(x,Z2. -L);
+    output;
+  end;
+run;
+
+data t;
+  set testdata1;
+run;
+
+proc sql;
+  create table t2 as
+    select * from testdata1;
+quit;

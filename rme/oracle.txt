@@ -1,13 +1,34 @@
 
+# Install Customer Orders sample schema 04-Dec-20
+$ git clone https://github.com/oracle/db-sample-schemas.git
+$ cd db-sample-schemas
+$ perl -p -i.bak -e 's#__SUB__CWD__#'$(pwd)'#g' *.sql */*.sql */*.dat
+$ cd customer_orders
+$ sql /nolog
+# Login Cloud shell as admin
+set cloudconfig ../../mywallet.zip
+connect admin@rshdb1_low
+-- Create user CO
+connect co@rshdb1_low
+@co_ddl
+@co_dml
+
+---
+
+-- Password change
 ALTER USER unit_test_repos IDENTIFIED BY "ESp5l@whgRS46hY" REPLACE "vL6iXcs@n882!Yp";
 
 ---
 
+-- Cloud shell
+# 1 time:
 $ oci db autonomous-database generate-wallet --generate-type ALL --file mywallet.zip --password Bradybunch --autonomous-database-id ocid1.autonomousdatabase.oc1.iad.abuwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa47j3a
+# cat readme.txt
 $ sql /nolog
 set cloudconfig mywallet.zip
 show tns
-connect admin@rshdb_low
+connect admin@rshdb1_low
+<enter pw>
 
 ---
 
@@ -22,16 +43,32 @@ C:\Documents and Settings\<user-name>\Application Data\SQL Developer\systemn.n.n
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' ~/onedrive/misc/
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTemplate.xml' ~/onedrive/misc/
 
+--or 08-Dec-20
+"C:\Users\bheck\AppData\Roaming\SQL Developer\UserSnippets.xml"
+
+"C:\Users\bheck\AppData\Roaming\SQL Developer\system20.2.0.175.1842\o.sqldeveloper\preferences.xml"
+"C:\Users\bheck\AppData\Roaming\SQL Developer\system20.2.0.175.1842\o.sqldeveloper\product-preferences.xml"
+
 --- 
 
 SQL Developer upgrade:
-C:\Users\boheck\Oracle
+C:\Users\bheck\Oracle
 Rename existing sqldeveloper\ to sqldeveloper20.1\
 Extract zip
 
 ---
 
 -- As ADMIN:
+
+CREATE USER hr IDENTIFIED BY "Wasteoflongpw8";
+ALTER USER hr QUOTA 100M ON data;
+GRANT CREATE SESSION, CREATE VIEW, ALTER SESSION, CREATE SEQUENCE TO hr;
+GRANT CREATE SYNONYM, CREATE DATABASE LINK, RESOURCE , UNLIMITED TABLESPACE TO hr;
+GRANT EXECUTE ON sys.dbms_stats TO hr;
+GRANT select_catalog_role TO hr;  -- for explain plan
+GRANT select any dictionary TO hr;  -- for explain plan
+GRANT EXECUTE ON SYS.DBMS_LOCK TO hr;  -- for ALTER SYSTEM KILL SESSION '671,62164';
+GRANT dwrole TO hr;
 
 -- Same pw as admin
 GRANT dwrole TO unit_test_repos;
@@ -41,15 +78,7 @@ GRANT select any dictionary to unit_test_repos;  -- for explain plan
 
 ALTER USER scott QUOTA 100M ON data;
 
-CREATE USER hr IDENTIFIED BY Wasteoflongpw8;
-ALTER USER hr QUOTA 100M ON data;
-GRANT CREATE SESSION, CREATE VIEW, ALTER SESSION, CREATE SEQUENCE TO hr;
-GRANT CREATE SYNONYM, CREATE DATABASE LINK, RESOURCE , UNLIMITED TABLESPACE TO hr;
-GRANT EXECUTE ON sys.dbms_stats TO hr;
-GRANT select_catalog_role TO hr;  -- for explain plan
-GRANT select any dictionary TO hr;  -- for explain plan
-GRANT EXECUTE ON SYS.DBMS_LOCK TO hr;  -- for ALTER SYSTEM KILL SESSION '671,62164';
-GRANT dwrole TO hr;
+---
 
 -- Session to kill
 select s.sid||','||s.serial# sess, s.osuser, s.USERNAME, s.last_call_et, s.status, s.sql_address, s.program from v$session s where ( s.status = 'ACTIVE' );
@@ -94,17 +123,6 @@ $ $ORACLE_HOME/bin/sqlplus
   pw:        iws2b
 
 ---
-Test orapro:
-SQL> desc user_tables
-Better, view tables you care about:
-SQL> select table_name from user_tables;
-SQL> select * from iws.employee_data;
-SQL> exit
-
-or, better, use ~/code/misc/sqlplus_tmplt.sql (must end in SQL!)
-SQL> @sqlplus_tmplt.sql
-
----
 
 See if database is reachable, show fq hostname, etc.
 tnsping usdev10
@@ -139,10 +157,6 @@ $ sqlplus sasreport/sasreport@usprd25 @c:\temp\1.sql
 
 ---
 
-See also readme.oracle.txt and _sqlplusrc.sql
-See oracle_sql_tmplt.sas for a Toad-like replacement using SAS as GUI
-
-
 In GUI Edit:Editor:Define Editor
 gvim -c "set filetype=sql"
 or use this in _sqlplusrc.sql:
@@ -172,7 +186,7 @@ run the contents of the buffer as usual with the slash (/) or r command.
 
 ---
 
--- Current settings
+-- sqlplus current settings
 SQL> show all
 
 -- Change buffer (probably easier to use ed[it] on afiedt.buf)
@@ -216,7 +230,7 @@ spool c:/cygwin/home/bheckel/tmp/testing/sqlplus
 
 ---
 
--- type ed to invoke editor on afiedt.buf then r[un]
+-- type ed[itor] to invoke vi on afiedt.buf, :wq then r[un]
 
 ---
 
@@ -252,11 +266,9 @@ SQL> spool off
 If 2 tables hold the same field, uppercase one of them so that both filenames
 are shown during completion (if 3+ you probably don't want to use my approach)
 
-In .vimrc add something like this (change the numbers to accomodate your
-screen size):
+In .vimrc add something like this:
 
-" This places a hidden window in your afiedt.buf session to allow completions.
-" Especially nice with version 7+'s dropdown menus:
+" Place a hidden window in your afiedt.buf session to allow completions.
 au GUIEnter afiedt.buf winpos 37 55 | se lines=20 | se columns=170 | se tw=999999 | :new | silent :e c:/spool/mydb/*.LST | :hide
 
 " Poor-man's history:  TODO not working 2006-10-03

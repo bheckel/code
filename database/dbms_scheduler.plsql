@@ -104,7 +104,7 @@ BEGIN
     comments => 'Compiling weekly Maintenance');
 END;
 
--- Drop job
+-- Cancel scheduled job
 BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 
 ---
@@ -132,6 +132,7 @@ BEGIN sys.dbms_scheduler.set_attribute(name => 'PERIODICLIFECYCLEUPDATE',
                                        value => 'Freq=Daily;ByHour=19;ByMinute=00;BySecond=00');
 END;
 --BEGIN sys.DBMS_SCHEDULER.disable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;
+-- Stop running job
 --exec DBMS_SCHEDULER.STOP_JOB(job_name => 'DEL_JOB_RION44892');
 
 ---

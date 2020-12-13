@@ -1,5 +1,13 @@
--- Modified: 28-May-2020 (Bob Heckel)
+--  Created: 28-May-2020 (Bob Heckel)
+-- Modified: 10-Dec-2020 (Bob Heckel)
 -- see also explain_plan.sql
+
+---
+
+--ORA-08102: index key not found, obj# 5438124, file 5, block 67807674 (2)
+select substr(object_name,1,30), object_type from user_objects where object_id = 5438124;--CONTACT_MIDDLENAME_LIST_IX
+-- rebuild index
+ALTER INDEX CONTACT_MIDDLENAME_LIST_IX rebuild online tablespace SE_01;
 
 ---
 
