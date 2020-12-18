@@ -1,3 +1,9 @@
+
+Chromebooks shortcut keys:
+Ctrl+Alt+/
+
+---
+
 Delete 1 year of unread emails
 Use search for last 1 year then in search box:
 label:unread
