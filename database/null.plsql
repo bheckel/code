@@ -1,5 +1,7 @@
+-----------------------------------------------------
 -- Adapted: 14-Jan-2020 (Bob Heckel -- Oracle DevGym)
--- Modified: 20-Feb-2020 (Bob Heckel)
+-- Modified: Fri 18-Dec-2020 (Bob Heckel)
+-----------------------------------------------------
 
 CREATE OR REPLACE PROCEDURE handle_illness(sneezes_per_hour_in IN PLS_INTEGER)
 IS
@@ -83,3 +85,24 @@ CREATE INDEX demo_null ON employees (subsidiary_id, date_of_birth);
 -- But maybe better to just use this FBI to index nulls:
 CREATE INDEX emp_dob ON employees (date_of_birth, '1');
 
+---
+
+-- Compare RECORDs
+DECLARE
+   first_book summer.reading_list_rt := summer.must_read;
+   second_book summer.reading_list_rt := summer.wifes_favorite;
+BEGIN
+   IF  first_book.favorite_author = second_book.favorite_author
+      AND first_book.title = second_book.title
+      AND first_book.finish_by = second_book.finish_by
+   THEN
+      lots_to_talk_about;
+   END IF;
+END;
+
+-- There is one complication to keep in mind. If your requirements indicate
+-- that two NULL records are equal (equally NULL), you will have to modify each
+-- comparison to something like this:
+
+(first_book.favorite_author = second_book.favorite_author
+   OR( first_book.favorite_author IS NULL AND second_book.favorite_author IS NULL))

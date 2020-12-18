@@ -1,6 +1,6 @@
 
--- Created: Tue 03-Mar-2020 (Bob Heckel)
--- Modified: 04-Dec-2020 (Bob Heckel)
+--  Created: Tue 03-Mar-2020 (Bob Heckel)
+-- Modified: Thu 17-Dec-2020 (Bob Heckel)
 
 -- See also csv_list_to_table_xmltable.sql delete.sql
 
@@ -20,7 +20,6 @@ from emp e1
 where exists (select 1
               from emp e2
               where e2.mgr=e1.empno);
-              
 
 ---
 
@@ -56,21 +55,6 @@ where lov.retired = 0
 connect by prior lov.list_of_values_id = lov.parent_id
 start with lov.list_of_values_id in ( 1234)
 order siblings by lov.value_description
-
----
-
-select user_id, email 
-from users 
-where exists (select 1
-              from classified_ads
-              where classified_ads.user_id = users.user_id)
-;
-
--- But this is probably better:
-select users.user_id, users.email, classified_ads.posted
-from users, classified_ads
-where users.user_id=classified_ads.user_id
-;
 
 ---
 
@@ -172,9 +156,11 @@ where emp.department_id is null
 -- Same
 select dept.department_name
 from plch_departments dept, plch_employees emp
-where dept.department_id = emp.department_id (+)
+where dept.department_id = emp.department_id(+)
 and emp.department_id is null
 order by department_name;
+
+---
 
 -- On one not on another:
 select a.view_name from all_views a, all_views@seuat b where a.view_name like '%ASP%' and a.view_name=b.view_name(+) and b.view_name is null;
@@ -233,3 +219,14 @@ select store_name
     WHERE s.store_id = i.store_id(+)
       and i.product_id = 9 and i.product_inventory>0
  );
+
+ ---
+
+ -- Find missing engagements in opportunity_base
+select distinct b.engagement_id
+  from opportunity_base b
+ where engagement_id is not null 
+   and not exists (select 1
+                     from engagement_base e
+                    where e.engagement_id = b.engagement_id)
+order by b.engagement_id;

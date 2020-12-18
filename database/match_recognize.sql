@@ -409,7 +409,8 @@ BEER                2 04-APR-19 00:00:00 19-APR-19 00:00:00         12   UP
 
 ---
 
- with curs as (
+-- Search through history for a pattern of closing then reopening
+WITH curs as (
   SELECT a.activity_id
     FROM account_name an,
          activity_search s,

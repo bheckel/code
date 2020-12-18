@@ -1,10 +1,14 @@
 
 -- Modified: Thu 25 Apr 2019 11:28:41 (Bob Heckel) 
+
 -- If your program does not require that an OUT or IN OUT parameter retain its
 -- pre-invocation value if the subprogram ends with an unhandled exception, then
 -- include the NOCOPY hint in the parameter declaration. The NOCOPY hint requests
 -- (but does not ensure) that the compiler pass the corresponding actual parameter
 -- by reference instead of value.
+--
+-- The main objective of using NOCOPY is to improve the performance of passing 
+-- large constructs, such as collections, as IN OUT arguments
 DECLARE
   TYPE EmpTabTyp IS TABLE OF hr.employees%ROWTYPE;
   emp_tab EmpTabTyp := EmpTabTyp(NULL);
@@ -12,12 +16,14 @@ DECLARE
   t2 timestamp;
   t3 timestamp;
 
-  PROCEDURE do_nothing1(tab IN OUT EmpTabTyp) IS
+  PROCEDURE do_nothing1(tab IN OUT EmpTabTyp)
+  IS
   BEGIN
     NULL;
   END;
 
-  PROCEDURE do_nothing2(tab IN OUT NOCOPY EmpTabTyp) IS
+  PROCEDURE do_nothing2(tab IN OUT NOCOPY EmpTabTyp)
+  IS
   BEGIN
     NULL;
   END;

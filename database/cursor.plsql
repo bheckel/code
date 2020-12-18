@@ -1,5 +1,5 @@
 -- Modified: Modified: 31-Jan-2020 (Bob Heckel)
--- See also pass_cursor.plsql and https://github.com/oracle/oracle-db-examples/blob/master/plsql/sql-in-plsql/cursors-in-plsql.sql
+-- See also pass_cursor.plsql implicit_cursor_results.plsql and https://github.com/oracle/oracle-db-examples/blob/master/plsql/sql-in-plsql/cursors-in-plsql.sql
 
 -- A cursor is a pointer to a memory location (context area). PL/SQL controls the context area
 -- through a cursor. A cursor holds the rows (one or more) returned by a SQL

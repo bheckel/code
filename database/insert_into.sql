@@ -54,7 +54,7 @@ INSERT ALL
   select * from dual;
 
 
--- Two records from one
+-- Or two records from one table on a pivot
 INSERT ALL
  INTO plch_tickers (ticker, pricetype, price)
 VALUES (ticker, 'O', open_price)

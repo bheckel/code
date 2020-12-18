@@ -1,11 +1,28 @@
+-----------------------------------------
 -- Created: Mon 01-Feb-2019 (Bob Heckel) 
--- Modified: 27-Oct-2020 (Bob Heckel)
+-- Modified: Fri 18-Dec-2020 (Bob Heckel)
+-----------------------------------------
+
+-- Generic package template
+CREATE OR REPLACE PACKAGE mypkg AS
+  PROCEDURE myproc;
+END mypkg;
+/
+CREATE OR REPLACE PACKAGE BODY mypkg AS
+  PROCEDURE myproc
+  IS
+    x NUMBER DEFAULT 0;
+  BEGIN
+    DBMS_OUTPUT.put_line('ok');
+  END;
+END mypkg;
+
+---
 
 CREATE OR REPLACE PACKAGE testpkg AS
   PROCEDURE testproc(in_x NUMBER);
 END testpkg;
 /
-
 CREATE OR REPLACE PACKAGE BODY testpkg AS
   PROCEDURE testproc(in_x NUMBER) IS
     l_now DATE := sysdate;
@@ -36,7 +53,6 @@ drop package testpkg;
 ---
 
 CREATE OR REPLACE PACKAGE manage_students AS
-
   PROCEDURE find_sname(i_student_id IN student.student_id%TYPE,
                        o_first_name OUT student.first_name%TYPE,
                        o_last_name OUT student.last_name%TYPE);
@@ -45,14 +61,11 @@ CREATE OR REPLACE PACKAGE manage_students AS
 
 END manage_students;
 /
-
 CREATE OR REPLACE PACKAGE BODY manage_students AS
-
   PROCEDURE find_sname (i_student_id IN student.student_id%TYPE,
                         o_first_name OUT student.first_name%TYPE,
                         o_last_name OUT student.last_name%TYPE)
   IS
-
     v_student_id student.student_id%TYPE;
 
   BEGIN
@@ -66,10 +79,8 @@ CREATE OR REPLACE PACKAGE BODY manage_students AS
 			DBMS_OUTPUT.PUT_LINE ('Error in finding student_id: '||v_student_id);
   END find_sname;
 
-
    FUNCTION id_is_good(i_student_id IN student.student_id%TYPE) RETURN BOOLEAN
    IS
-
 	 v_id_cnt number;
 
 	 BEGIN

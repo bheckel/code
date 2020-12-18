@@ -1,6 +1,6 @@
 /* Adapted: Fri, Nov 30, 2018  3:57:25 PM (Bob Heckel--devgym.oracle.com) */ 
 /* Modified: 03-Apr-2020 (Bob Heckel)
-/* See also pass_cursor.plsql */
+/* See also pass_cursor.plsql table_function.plsql */
 /* https://docs.oracle.com/database/121/LNPLS/tuning.htm#LNPLS918 */
 
 /* Pipelined table functions are something of an oddity in PL/SQL: they pass
@@ -41,19 +41,21 @@ CREATE OR REPLACE FUNCTION strings
    AUTHID DEFINER
 IS
 BEGIN
-   /* Use PIPE ROW to send the data back to the calling SELECT, instead of adding the data to a local collection */
-   PIPE ROW('abc');
-   RETURN;  /* return nothing but control (no data) */
+   /* Use PIPE ROW to send the data back to the calling SELECT, instead of adding the data to a local collection
+    * (pretend this is in a 1M record fetch loop that populates an object on each iteration).
+    */
+   PIPE ROW ('abc');
+   RETURN;  /* an unqualified RETURN returns nothing but control (no data) */
 END;
 /
 
-SELECT COLUMN_VALUE my_string FROM TABLE(strings());
+SELECT COLUMN_VALUE my_string FROM TABLE(strings()) WHERE rownum < 9;  -- will be done before the PLSQL looping finishes
 /
 
-/* ERROR: non-pipelined table functions can be invoked natively in PL/SQL, since
+/* ERROR: non-pipelined table functions can be invoked natively in PL/SQL because
  * they follow the standard model in PL/SQL: execute all code until hitting the
  * RETURN statement or an exception is raised. But when you go with PIPELINED, you
- * give up the ability to call the function in PL/SQL
+ * give up the ability to call the function in PL/SQL.
  */
 DECLARE
    l_strings strings_t := strings_t();
@@ -222,7 +224,7 @@ BEGIN
 		INTO v_employee_table;
 
 	FOR i IN 1 .. v_employee_table.COUNT LOOP
-		PIPE ROW(v_employee_table(i));
+		PIPE ROW (v_employee_table(i));
 	END LOOP;
 
 	RETURN;
@@ -247,7 +249,7 @@ create or REPLACE function f_search_view (par_string in varchar2)
                   where text_length < 32767)
     loop
       if instr(cur_r.text, par_string) > 0 then
-         pipe row(cur_r.view_name);
+         pipe row (cur_r.view_name);
       end if;
     end loop;
 
@@ -307,7 +309,7 @@ CREATE OR REPLACE PACKAGE BODY SCHEDULER_PERC_ALERTS IS
 
   BEGIN
     FOR r IN c1 LOOP
-      PIPE ROW(r);
+      PIPE ROW (r);
     END LOOP;
     RETURN;
   END;
