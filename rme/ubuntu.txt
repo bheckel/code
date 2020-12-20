@@ -1,3 +1,21 @@
+
+2020-12-19 12:55:12 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
+2020-12-19 12:55:57 cd ~/download
+2020-12-19 12:57:08 sudo apt-get install ./zulu-repo_1.0.0-2_all.deb 
+2020-12-19 12:57:27 sudo apt-get update
+2020-12-19 12:57:50 sudo apt-get install zulu8
+2020-12-19 12:59:32 sh ./thinkorswim_installer.sh
+
+ls /usr/lib/jvm/zulu8-ca-amd64/bin/java
+
+---
+
+/etc/fstab
+
+UUID=b5e2c43c-fb1e-4000-9983-1c9d3d2148de /hdd            ext4    defaults        0       0
+
+---
+
 Setup new printer
 system-config-printer
 
@@ -37,7 +55,6 @@ $ sudo alsactl store
 ---
 
 sudo mount -t vfat /dev/sdb1 /media/brinno/ -o uid=1000,gid=100,utf8,dmask=027,fmask=137
-# Download from Treasury Direct
 wine sbwsetup.exe
 wine ~/.wine/drive_c/Program\ Files\ \(x87\)/Savings\ Bond\ Wizard/SBWizard.exe
 # Save results in an unusual /media/brinno/SAVINGSBONDS.SBW.bak, ok to
