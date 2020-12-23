@@ -1,13 +1,10 @@
 #!/bin/bash
 
 for d in dotfiles code; do
-  cd ~/$d && 
-  git status
-  echo "ok to gitup $d dir (y/N)? " && read yn &&
-  if [ "$yn" = 'y' ];then
-    git add .
-    git commit -m "mod gitall $MACHTYPE"
-    git pull origin master && git push origin master
+  cd $HOME/$d && git status
+  echo "ok to gitup $d dir (Y/n)? " && read yn &&
+  if [ "$yn" != 'n' ];then
+    git add . && git commit -m "mod gitall $MACHTYPE" && git pull origin master && git push origin master
   else
     echo cancelled
   fi
