@@ -1,3 +1,8 @@
+Install RPM:
+
+sudo alien -i sqldeveloper-19.2.1.247.2212.noarch.rpm
+
+---
 
 2020-12-19 12:55:12 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
 2020-12-19 12:55:57 cd ~/download
@@ -7,6 +12,8 @@
 2020-12-19 12:59:32 sh ./thinkorswim_installer.sh
 
 ls /usr/lib/jvm/zulu8-ca-amd64/bin/java
+
+Java JDK path: /usr/lib/jvm/zulu8-ca-amd64
 
 ---
 
