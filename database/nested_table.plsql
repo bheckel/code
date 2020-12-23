@@ -335,3 +335,58 @@ CREATE OR REPLACE PACKAGE BODY bob2 IS
   END;
 END;
 exec bob2.do;
+
+---
+
+-- Compare two approaches to filling a collection using BULK COLLECT:
+
+-- 1.  Execute immediate into specific defined numberTables
+create or REPLACE PACKAGE bob as
+  PROCEDURE cae_auto_assign;
+end;
+/
+create or replace PACKAGE body bob as
+  PROCEDURE cae_auto_assign
+  IS
+    TYPE numberTable IS TABLE OF NUMBER;
+    acctIdTable     numberTable;
+    acctSiteIdTable numberTable;
+    employeeIdTable numberTable;
+
+    BEGIN
+      EXECUTE IMMEDIATE
+        'select account_id, account_site_id, cae_emp_id from nightly_cae_assign where rownum<9'
+        BULK COLLECT INTO acctIdTable, acctSiteIdTable, employeeIdTable;
+
+      FOR i IN 1 .. acctIdTable.count LOOP
+        DBMS_OUTPUT.put_line('assigning CAE ' || employeeIdTable(i) || ' to account site id : ' || acctSiteIdTable(i));
+      END LOOP;
+  END;
+END;
+
+-- 2. Fetch from a cursor variable, allows LIMIT
+create or REPLACE PACKAGE bob as
+  PROCEDURE cae_auto_assign;
+end;
+/
+create or replace PACKAGE body bob as
+  PROCEDURE cae_auto_assign
+  IS
+    cv    sys_refcursor;
+
+    type t is table of nightly_cae_assign%rowtype;
+    mytbl t;
+  BEGIN
+    -- Must use '*'
+    open cv for 'select * from nightly_cae_assign where rownum<9';
+  
+    LOOP
+      fetch cv bulk collect into mytbl limit 50;
+      exit when mytbl.count=0;
+  
+      for i in 1..mytbl.count loop
+        DBMS_OUTPUT.put_line(mytbl(i).account_site_id);
+      end loop;
+    END LOOP;
+  END cae_auto_assign;
+END bob;

@@ -19,3 +19,6 @@ fi
 
 
 [[ $x -lt 0 ]] && echo "${fg_redbold}SERIOUS FAILURE ${normal}" && exit 1
+
+
+val=`id | sed 's/uid=0(.*/ROOT/'`; if [ "$val" != "ROOT" ] ; then ...

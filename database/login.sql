@@ -7,7 +7,7 @@
 -- au GUIEnter afiedt.buf winpos 37 55 | se lines=20 | se columns=170 | se tw=999999 | :new | silent :args c:/spool/links/*.LST | :hide | map :wq :wq! | noremap ZZ :wq!<CR>
 
 DEFINE _EDITOR=vim
--- DEFINE _EDITOR=gvim
+-- DEFINE _EDITOR='C:\Users\bheck\vim\vim81\gvim.exe -u c:\cygwin64\home\bheck\dotfiles\_vimrc'
 
 -- ACCEPT 	Get input from the user
 -- DEFINE 	Declare a variable (short: DEF)
@@ -66,7 +66,8 @@ set pagesize 999
 --set pause OFF
 --set recsep WRAP
 --set recsepchar " "
-set serveroutput ON
+-- Display dbms_output messages:
+set serveroutput ON size unlimited format wrapped
 --set shiftinout invisible
 --set showmode OFF
 --set sqlblanklines OFF

@@ -1,0 +1,62 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<rows>
+   <row>
+      <key>corp</key>
+      <value>CREATE OR REPLACE PACKAGE [(parameter)] AUTHID DEFINER IS</value>
+   </row>
+   <row>
+      <key>corv</key>
+      <value>CREATE OR REPLACE VIEW [(parameter)] AUTHID DEFINER IS</value>
+   </row>
+   <row>
+      <key>cp</key>
+      <value>CREATE PROCEDURE procedure_name
+      [ (parameter]) ]
+      IS
+          [declaration_section]
+      BEGIN
+          ...
+      END procedure_name;
+      </value>
+   </row>
+   <row>
+      <key>ct</key>
+      <value>CREATE TABLE [ (parameter) ] ();</value>
+   </row>
+   <row>
+      <key>dbo</key>
+      <value>DBMS_OUTPUT.put_line();</value>
+   </row>
+   <row>
+      <key>df</key>
+      <value>DELETE FROM [ (parameter)  WHERE </value>
+   </row>
+   <row>
+      <key>ii</key>
+      <value>INSERT INTO [ (parameter)  VALUES ()</value>
+   </row>
+   <row>
+      <key>ob</key>
+      <value>ORDER BY 1 DESC;</value>
+   </row>
+   <row>
+      <key>ss</key>
+      <value>SELECT * FROM [(parameter)]</value>
+   </row>
+   <row>
+      <key>ssc</key>
+      <value>SELECT COUNT(1) FROM [(parameter)]</value>
+   </row>
+   <row>
+      <key>sso</key>
+      <value>set serveroutput on</value>
+   </row>
+   <row>
+      <key>upd</key>
+      <value>UPDATE [ (parameter)  SET WHERE </value>
+   </row>
+   <row>
+      <key>ww</key>
+      <value>WHERE [(parameter)];</value>
+   </row>
+</rows>
