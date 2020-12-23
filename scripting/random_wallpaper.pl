@@ -31,7 +31,7 @@
   "/usr/share/backgrounds/Partitura_by_Vincijun.jpg",
   #"/usr/share/backgrounds/passion_flower_by_Irene_Gr.jpg",
   "/usr/share/backgrounds/Reflections_by_Trenton_Fox.jpg",
-  "/usr/share/backgrounds/Sea_Fury_by_Ian_Worrall.jpg",
+  #%"/usr/share/backgrounds/Sea_Fury_by_Ian_Worrall.jpg",
   "/usr/share/backgrounds/Spring_by_Peter_Apas.jpg",
   "/usr/share/backgrounds/TCP118v1_by_Tiziano_Consonni.jpg",
   "/usr/share/backgrounds/warty-final-ubuntu.png",
