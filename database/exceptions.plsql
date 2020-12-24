@@ -15,25 +15,58 @@
 -- continue.
 
 -- See also suppress_rowlevel_dml_errors.plsql
+
+-- ERROR_CODE is an integer in the range -20999..-20000 and message is a character string of at most 2048 bytes
+-- But watch out! Several built-in packages, including DBMS_OUTPUT and DBMS_DESCRIBE, use error numbers 
+-- between −20005 and −20000.
+
 ---
 
-CREATE OR REPLACE PROCEDURE log_error IS
-  BEGIN
-     DBMS_OUTPUT.put_line ('Error Trapped: ' || SQLCODE);
+CREATE OR REPLACE PROCEDURE log_error
+IS
+BEGIN
+  DBMS_OUTPUT.put_line('Error Trapped: ' || SQLCODE);
 END;
 
 DECLARE
-   my_dream   VARCHAR2(5);
-   -- Unnecessary because it's already a predefined Oracle error:
-   --VALUE_ERROR EXCEPTION;
-   --PRAGMA EXCEPTION_INIT(VALUE_ERROR, -6502);
+  my_dream   VARCHAR2(2);
+  -- Unnecessary because it's already a predefined Oracle error:
+  --VALUE_ERROR EXCEPTION;
+  --PRAGMA EXCEPTION_INIT(VALUE_ERROR, -6502);
 BEGIN
-   my_dream := 'JUSTICE';
+  my_dream := 'JUSTICE';
 EXCEPTION 
-   WHEN VALUE_ERROR THEN log_error();
+  WHEN VALUE_ERROR THEN log_error();
+  -- Same
+  /*WHEN OTHERS THEN log_error();*/
+
+  DBMS_OUTPUT.put_line('logged');
+
+  RAISE;  -- *now* fail and propagate VALUE_ERROR/ORA-06502 unhandled to the enclosing block
+  -- In this way we record where the error occurred in the application but still stop the enclosing 
+  -- block(s) without losing the error information.
 END;
 /*
 Error Trapped: -6502
+logged
+
+Error starting at line : 25 in command -
+DECLARE
+  my_dream   VARCHAR2(2);
+...
+END;
+Error report -
+ORA-06502: PL/SQL: numeric or value error: character string buffer too small
+ORA-06512: at line 15
+ORA-06512: at line 7
+06502. 00000 -  "PL/SQL: numeric or value error%s"
+*Cause:    An arithmetic, numeric, string, conversion, or constraint error
+           occurred. For example, this error occurs if an attempt is made to
+           assign the value NULL to a variable declared NOT NULL, or if an
+           attempt is made to assign an integer larger than 99 to a variable
+           declared NUMBER(2).
+*Action:   Change the data, how it is manipulated, or how it is declared so
+           that values do not violate constraints.
 */
 
 ---
@@ -50,27 +83,27 @@ Error Trapped: -6502
 
 ---
 
--- ERROR_CODE is an integer in the range -20000..-20999 and message is a character string of at most 2048 bytes
-
----
-
 BEGIN
   -- Print code descriptions:
 
   -- Outside the exception handler it returns 0:
-  -- ORA-0000: normal, successful completion
+  -- "ORA-0000: normal, successful completion"
   dbms_output.put_line(SQLERRM);
 
-  -- ORA-0000: normal, successful completion
+  -- "ORA-0000: normal, successful completion"
   dbms_output.put_line(SQLERRM(0));
-  -- User-Defined Exception
+
+  -- "User-Defined Exception"
   dbms_output.put_line(SQLERRM(1));
-  -- ORA-01855: AM/A.M. or PM/P.M. required
+
+  -- "ORA-01855: AM/A.M. or PM/P.M. required"
   dbms_output.put_line(SQLERRM(-1855));
+
   -- Positive code
-  -- -1855: non-ORACLE exception
+  -- "-1855: non-ORACLE exception"
   dbms_output.put_line(SQLERRM(1855));
-  -- ORA-20000: 
+
+  -- "ORA-20000: 
   dbms_output.put_line(SQLERRM(-20000));
 
   RAISE TOO_MANY_ROWS;
@@ -79,13 +112,13 @@ EXCEPTION
   WHEN OTHERS
     -- ORA-01422: exact fetch returns more than requested number of rows
     dbms_output.put_line(SQLERRM);
-    -- Same (except can't use it to lookup errors as you can with SQLERRM), upside is it won't truncate like SQLERRM
+    -- Same (except can't use it to lookup errors as you can with SQLERRM), upside is it won't truncate
+    -- at 512 bytes like SQLERRM, it goes to 1999
     dbms_output.put_line(DBMS_UTILITY.format_error_stack);
 END;
 
 ---
 
--- Execution continues
 DECLARE
   sal_calc NUMBER(8,2);
 BEGIN
@@ -107,6 +140,7 @@ BEGIN
 EXCEPTION
   WHEN ZERO_DIVIDE THEN 
     DBMS_OUTPUT.PUT_LINE('Enclosing block: Division by zero.');
+    -- Execution continues
 END;
 /
 
@@ -123,8 +157,9 @@ BEGIN
 
   DBMS_OUTPUT.put_line('Name: '||  l_name); 
 
-  -- This error will be masked if NO_DATA_FOUND hits first
-  DBMS_OUTPUT.put_line(TO_DATE ('2010 10 10 44:55:66', 'YYYSS'));
+  -- This OTHERS ("ORA-01830: date format picture ends before converting entire input string") error
+  -- will be masked if NO_DATA_FOUND hits first
+  DBMS_OUTPUT.put_line(TO_DATE('2010 10 10 44:55:66', 'YYYSS'));
 
 EXCEPTION 
   WHEN NO_DATA_FOUND OR VALUE_ERROR THEN 
@@ -140,9 +175,9 @@ END;
 ---
 
 DECLARE 
-   c_id customers.id%type := &cc_id; 
-   c_name customerS.Name%type; 
-   c_addr customers.address%type;  
+   c_id           customers.id%type := &cc_id; 
+   c_name         customerS.Name%type; 
+   c_addr         customers.address%type;  
    -- user defined exception 
    ex_invalid_id  EXCEPTION; 
 BEGIN 
@@ -201,7 +236,8 @@ CREATE PROCEDURE account_status (
 IS
 BEGIN
   IF due_date < today THEN  -- explicitly raise exception 
-    -- First argument must be an integer value between -20999 and -20000
+    -- First argument must be an integer value between -20999 and -20000.
+    -- This (vs. RAISE) associates an error message with the exception.
     RAISE_APPLICATION_ERROR(-20000, 'Account past due.');  -- goes unhandled, assumes user can't see DBMS_OUTPUT buffer
   END IF;
 END;
@@ -285,7 +321,6 @@ BEGIN
   RAISE NO_DATA_FOUND;  -- D.       -- "line 4" stack 2
 END;
 /
-
 CREATE OR REPLACE PACKAGE pkg1
 IS
   PROCEDURE proc2;
@@ -303,7 +338,6 @@ IS
   END;
 END pkg1;
 /
-
 CREATE OR REPLACE PROCEDURE proc3
 IS
 BEGIN
@@ -316,22 +350,20 @@ BEGIN
 END;
 /
 
-
 BEGIN
    proc3;  -- A.
 EXCEPTION
-  WHEN OTHERS THEN  --                                                                                    STACK
-    -- ORA-06502: PL/SQL: numeric or value error                                                            3
+  WHEN OTHERS THEN  --                                                                                     STACK
+    -- ORA-06502: PL/SQL: numeric or value error                                                             3
     dbms_output.put_line(SQLERRM);
     dbms_output.put_line('------');  
     -- ORA-06502: PL/SQL: numeric or value error ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PKG1", line 9  3
-   -- ORA-01403: no data found ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PROC1", line 4                  2
-   -- ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PKG1", line 6                                            1
-   -- ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PROC3", line 9                                           0
+    -- ORA-01403: no data found ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PROC1", line 4                  2
+    -- ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PKG1", line 6                                            1
+    -- ORA-06512: at "SQL_DGIOILDNMDPOSHMACAVWVSKLF.PROC3", line 9                                           0
     dbms_output.put_line(DBMS_UTILITY.FORMAT_ERROR_STACK );  
     dbms_output.put_line(ASCII(SUBSTR(DBMS_UTILITY.format_error_stack, -1)));  -- 10 (prove linefeed appended)
 END;
-/
 
 ---
 

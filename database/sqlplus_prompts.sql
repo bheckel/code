@@ -1,3 +1,6 @@
+-------------------------------------
+-- Modified: 24-Dec-2020 (Bob Heckel)
+-------------------------------------
 
 -- Run these by hand first:
 -- SQL> set DEFINE ON
@@ -12,3 +15,17 @@ BEGIN
   end if;
 END;
 /
+
+---
+
+var v1  VARCHAR2(50);
+
+--exec :v1 := 'JUSTICE';
+exec :v1 := '&prompt';
+  
+DECLARE
+  myv   VARCHAR2(50);
+BEGIN
+  myv := :v1;
+  DBMS_OUTPUT.put_line(myv);
+END;

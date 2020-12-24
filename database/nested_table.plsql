@@ -364,7 +364,7 @@ create or replace PACKAGE body bob as
   END;
 END;
 
--- 2. Fetch from a cursor variable, allows LIMIT
+-- 2. Fetch from a cursor variable, allows LIMIT instead of relying on the default limit of 100
 create or REPLACE PACKAGE bob as
   PROCEDURE cae_auto_assign;
 end;
