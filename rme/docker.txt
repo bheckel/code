@@ -1,0 +1,63 @@
+2021-01-04 12:15:14 cd projects/
+2021-01-04 12:15:15 git clone https://github.com/prakhar1989/docker-curriculum.git
+2021-01-04 12:16:56 cd docker-curriculum/flask-app/
+2021-01-04 12:17:00 vi Dockerfile 
+2021-01-04 12:20:47 sudo docker build -t rshdev/catnip .
+2021-01-04 12:44:29 sudo docker run -p 8888:5000 rshdev/catnip
+2021-01-04 12:47:59 sudo docker images
+2021-01-04 12:48:06 sudo docker ps -a
+2021-01-04 12:48:30 docker login --username rshdev
+2021-01-04 12:49:04 sudo docker login --username rshdev
+# enter guid from dockerhub.com
+2021-01-04 12:50:31 sudo docker push rshdev/catnip
+# Now it runs from anywhere
+2021-01-04 12:54:37 sudo docker run -p 8888:5000 rshdev/catnip
+
+---
+
+# Pull the Busybox image from the registry and ask the Docker client to run a
+# container based on that image
+sudo docker pull busybox
+sudo docker run busybox uptime
+sudo docker run -it busybox sh
+exit
+
+sudo docker pull ubuntu:16.04
+# Could just run this to implicitly pull
+sudo docker run -it ubuntu:16.04 bash  # will run 'latest' if no tag like 16.04
+
+sudo docker ps -a
+# Delete all those containers
+sudo docker rm $(sudo docker ps -a -q -f status=exited)
+
+sudo docker images
+# Delete one of those images
+sudo docker rmi 021a1b85e641
+
+docker run --rm prakhar1989/static-site
+Ctr-C
+# Expose port
+sudo docker run -d -P --name static-site prakhar1989/static-site
+sudo docker port static-site
+# http://localhost:49154
+sudo docker stop static-site
+
+# Query Docker Hub
+sudo docker search oracle
+
+---
+
+sudo docker build -t getting-started .
+sudo docker run -dp 3000:3000 getting-started
+
+ ---
+
+ 2021-01-02 11:00:43 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+ 2021-01-02 11:01:03 sudo apt-key fingerprint 0EBFCD88
+ 2021-01-02 11:13:14 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+ 2021-01-02 11:13:42 sudo apt-get update
+ 2021-01-02 11:14:26 sudo apt-get install docker-ce docker-ce-cli containerd.io
+ 2021-01-02 11:16:21 sudo docker run hello-world
+ 2021-01-02 11:34:48 sudo docker images
+ 2021-01-02 11:37:43 sudo docker ps -a
+ 2021-01-02 12:09:00 sudo docker run -it ubuntu bash
