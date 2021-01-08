@@ -20,7 +20,7 @@
   "/usr/share/backgrounds/Cielo_estrellado_by_Eduardo_Diez_Viñuela.jpg",
   #"/usr/share/backgrounds/clock_by_Bernhard_Hanakam.jpg",
   #%"/usr/share/backgrounds/Dans_ma_bulle_by_Christophe_Weibel.jpg",
-  "/usr/share/backgrounds/Flora_by_Marek_Koteluk.jpg",
+  #%"/usr/share/backgrounds/Flora_by_Marek_Koteluk.jpg",
   #%"/usr/share/backgrounds/Foggy_Forest_by_Jake_Stewart.jpg",
   "/usr/share/backgrounds/Forever_by_Shady_S.jpg",
   #"/usr/share/backgrounds/Ibanez_Infinity_by_Jaco_Kok.jpg",
