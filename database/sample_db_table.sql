@@ -1,3 +1,24 @@
+--------------------------------------------
+-- Build dummy tables for testing
+-- Modified: 08-Jan-2021 (Bob Heckel)
+--------------------------------------------
+
+---
+
+-- A mixture of positive and negative numbers that are around zero
+create table pos_neg_around_one as
+  select
+    mod(rownum,10) wtf,
+    owner,
+    decode(mod(rownum,10),
+           0, dbms_random.value(1,1.5),  -- every 10th rec is a 0 so make it a small positive
+           1, -dbms_random.value(1,1.5), -- every 1st rec is a small negative
+              dbms_random.value(0.8,1.1) -- the rest are smaller positives
+    ) x
+  from dba_objects;
+
+---
+
 -- Modified: 29-Sep-2020 (Bob Heckel)
 -- Dummy database table
 
@@ -28,11 +49,13 @@ order by 1,2;
 
 ---
 
-create table rion39366x as 
-  SELECT to_number(column_value) account_id,
+CREATE TABLE rion_48987 AS 
+  SELECT to_number(COLUMN_VALUE) account_id,
          1 to_be_deleted,
          to_date('01DEC1969','DDMONYYYY') created 
-    FROM xmltable(('"' || REPLACE('6190448,6277610', ',', '","') || '"'));
+    FROM xmltable(('"' || REPLACE(
+'6190448,6277610',
+    ',', '","') || '"'));
 
 ---
 

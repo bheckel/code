@@ -34,7 +34,8 @@ BEGIN
  sys.dbms_scheduler.create_job(
    job_name   => 'TEST_JOB',
    job_type   => 'PLSQL_BLOCK',
-   job_action => 'begin null;end;',
+   job_action => 'begin dbms_output.put_line(''ok''); end;',
+   --start_date => '08-JAN-20 04.00.00PM EST5EDT',  -- be careful in January that you've changed the year!!
    --start_date => CAST(SYSDATE + interval '1' minute AS TIMESTAMP),
    start_date => SYSTIMESTAMP + INTERVAL '10' SECOND,
    end_date   => TO_DATE(NULL),
