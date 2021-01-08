@@ -1,3 +1,31 @@
+sudo docker ps  # running
+sudo docker ps -a  # running and exited
+# same
+sudo docker container ls
+sudo docker container ls -a
+
+---
+
+$ sudo docker run -p 8888:5000 rshdev/catnip
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+172.17.0.1 - - [06/Jan/2021 21:20:08] "GET / HTTP/1.1" 200 -
+172.17.0.1 - - [06/Jan/2021 21:20:10] "GET /favicon.ico HTTP/1.1" 404 -
+172.17.0.1 - - [06/Jan/2021 21:20:56] "GET / HTTP/1.1" 200 -
+172.17.0.1 - - [06/Jan/2021 21:21:02] "GET / HTTP/1.1" 200 -
+^C0 bhecke@ppa ~/ Wed Jan 06 16:21:55  
+$ sudo docker ps                                                                                 
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+---
+
+# https://docker-curriculum.com
+
 2021-01-04 12:15:14 cd projects/
 2021-01-04 12:15:15 git clone https://github.com/prakhar1989/docker-curriculum.git
 2021-01-04 12:16:56 cd docker-curriculum/flask-app/
@@ -19,7 +47,7 @@
 # container based on that image
 sudo docker pull busybox
 sudo docker run busybox uptime
-sudo docker run -it busybox sh
+sudo docker run -it busybox sh  # -i for interactive
 exit
 
 sudo docker pull ubuntu:16.04
@@ -34,13 +62,15 @@ sudo docker images
 # Delete one of those images
 sudo docker rmi 021a1b85e641
 
-docker run --rm prakhar1989/static-site
+docker run --rm prakhar1989/static-site  # -rm container gets removed after run
 Ctr-C
-# Expose port
+# Expose port (and use -P for a non-random NAMES like lucid_benz)
 sudo docker run -d -P --name static-site prakhar1989/static-site
 sudo docker port static-site
 # http://localhost:49154
-sudo docker stop static-site
+sudo docker stop static-site  # need this for non-interactive containers that end with Ctr+C
+
+sudo docker container logs 15051871e6d7  # pass CONTAINER ID from ps -a
 
 # Query Docker Hub
 sudo docker search oracle
@@ -52,6 +82,7 @@ sudo docker run -dp 3000:3000 getting-started
 
  ---
 
+# Install docker
  2021-01-02 11:00:43 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
  2021-01-02 11:01:03 sudo apt-key fingerprint 0EBFCD88
  2021-01-02 11:13:14 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
