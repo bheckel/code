@@ -4,8 +4,8 @@
 #
 #  Summary: Quickly force a small file to the clipboard
 #
-#  Created: Thu 25 Aug 2005 11:01:59 (Bob Heckel)
-# Modified: Fri 25 Jan 2013 08:33:20 (Bob Heckel)
+#  Created: Thu 25-Aug 2005 (Bob Heckel)
+# Modified: Tue 05-Jan-2021 (Bob Heckel)
 ##############################################################################
   
 Usage() {
@@ -31,8 +31,11 @@ fi
 # Don't overload RAM
 if [ $filesize -lt 5000000 ]; then
   if [ ${OSTYPE:0:6} = 'cygwin' ]; then
-    cat "$1" | putclip
-    ###echo putclip
+    if [ -e /usr/bin/putclip ]; then
+      cat "$1" | putclip
+    else
+      echo putclip not installed
+    fi
   else
     cat "$1" | xclip
     ###echo xclip

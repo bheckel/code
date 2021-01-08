@@ -19,6 +19,7 @@
 -- ERROR_CODE is an integer in the range -20999..-20000 and message is a character string of at most 2048 bytes
 -- But watch out! Several built-in packages, including DBMS_OUTPUT and DBMS_DESCRIBE, use error numbers 
 -- between −20005 and −20000.
+BEGIN dbms_output.put_line(SQLERRM(0)); END; -- ORA-0000: normal, successful completion
 
 ---
 
@@ -99,7 +100,8 @@ BEGIN
   -- "ORA-01855: AM/A.M. or PM/P.M. required"
   dbms_output.put_line(SQLERRM(-1855));
 
-  -- Positive code
+  -- Positive "user" code. Oracle uses only 1 and 100 on the positive side of the integer range. While it is possible that 
+  -- Oracle will, over time, use other positive numbers, it is very unlikely.
   -- "-1855: non-ORACLE exception"
   dbms_output.put_line(SQLERRM(1855));
 
@@ -162,6 +164,7 @@ BEGIN
   DBMS_OUTPUT.put_line(TO_DATE('2010 10 10 44:55:66', 'YYYSS'));
 
 EXCEPTION 
+  -- Can chain but can't use AND
   WHEN NO_DATA_FOUND OR VALUE_ERROR THEN 
     dbms_output.put_line('No such emp!'); 
     -- There is no fall-thru to OTHERS here
