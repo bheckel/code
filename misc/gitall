@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Modified: 10-Jan-2021 (Bob Heckel)
+
 for d in dotfiles code; do
   cd $HOME/$d && git status
   echo "ok to gitup $d dir (Y/n)? " && read yn &&
