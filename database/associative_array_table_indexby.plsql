@@ -22,7 +22,7 @@ declare
  end;
 
 
--- Load hash with a cursor column.  See also pass_cursor.plsql
+-- Load hash with a cursor column.  See also pass_cursor.plsql.
 DECLARE 
    i integer := 0; 
 

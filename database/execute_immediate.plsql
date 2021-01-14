@@ -12,6 +12,32 @@
 -- SQL is insufficient when the SQL statement has placeholders or select list items that are not known 
 -- at compile time
 
+---
+
+declare
+  l_staged_team  NUMBER;
+
+begin
+  l_staged_team := NULL;
+         
+
+  EXECUTE IMMEDIATE 'SELECT account_team_id FROM ASP_DFLT_TSR_OWN_TEAM WHERE future_tsr_owner_id = :1'
+    INTO l_staged_team
+    USING 28460;
+
+  IF l_staged_team IS NOT NULL THEN
+    dbms_output.put_line('ok');
+  ELSE
+    dbms_output.put_line('unreachable');
+  END IF;
+
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      dbms_output.put_line('NO_DATA_FOUND');
+end;
+
+---
+
 CREATE OR REPLACE PROCEDURE plch_change_table AUTHID DEFINER
 IS
 BEGIN
@@ -144,31 +170,6 @@ BEGIN
           DBMS_OUTPUT.put_line(l_sql || ' FAILED! ' || sqlerrm);
 
 END;
-
----
-
-declare
-
-  l_staged_team  NUMBER;
-
-begin
-  l_staged_team := NULL;
-         
-
-  EXECUTE IMMEDIATE 'SELECT account_team_id FROM ASP_DFLT_TSR_OWN_TEAM WHERE future_tsr_owner_id = :1'
-    INTO l_staged_team
-    USING 28460;
-
-  IF l_staged_team IS NOT NULL THEN
-    dbms_output.put_line('ok');
-  ELSE
-    dbms_output.put_line('unreachable');
-  END IF;
-
-  EXCEPTION
-    WHEN NO_DATA_FOUND THEN
-      dbms_output.put_line('NO_DATA_FOUND');
-end;
 
 ---
 
