@@ -1,3 +1,18 @@
+Chromebook FTW
+
+2021-01-13 17:54:30 sudo apt-get install pcmanfm
+2021-01-13 17:59:42 pcmanfm
+2021-01-13 18:14:13 sudo apt-get install lxappearance
+2021-01-13 18:18:49 cd /usr/share/themes/
+2021-01-13 18:18:56 cd Crux/
+2021-01-13 18:19:06 cd gtk-2.0/
+2021-01-13 18:19:29 sudo cp gtkrc gtkrc.bak
+2021-01-13 18:24:33 sudo ln -s ~/dotfiles/gtkrc
+2021-01-13 18:28:06 lxappearance
+2021-01-13 19:35:38 sudo apt-get install vim-gtk3
+
+---
+
 Install RPM:
 
 sudo alien -i sqldeveloper-19.2.1.247.2212.noarch.rpm
