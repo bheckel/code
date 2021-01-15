@@ -1,12 +1,13 @@
 #!/bin/bash
 
-# Modified: 10-Jan-2021 (Bob Heckel)
+# Modified: Thu 14-Jan-2021 (Bob Heckel)
 
 for d in dotfiles code; do
   cd $HOME/$d && git status
   echo "ok to gitup $d dir (Y/n)? " && read yn &&
   if [ "$yn" != 'n' ];then
-    git add . && git commit -m "mod gitall $MACHTYPE" && git pull origin master && git push origin master
+    # In a paranoid spirit, keep hostname semi-private but distinguish same-OS machines
+    git add . && git commit -m "mod gitall $MACHTYPE-${HOSTNAME:0:4}" && git pull origin master && git push origin master
   else
     echo cancelled
   fi
