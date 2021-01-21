@@ -1,6 +1,7 @@
--- Modified: 09-Nov-2020 (Bob Heckel)
-
----
+-------------------------------------
+--  Created: 09-Nov-2020 (Bob Heckel)
+-- Modified: 21-Jan-2021 (Bob Heckel)
+-------------------------------------
 
 SELECT uj.last_start_date,
        uj.last_run_duration,
@@ -350,4 +351,18 @@ BEGIN
                             auto_drop  => TRUE);
 END;
 
-send_cdhub_job_message('CDHUB_REST.account_delete_rest(' || acct.account_id || ', ''acrynt\sesppt'', 0, 0)', 'DELETE_ACCOUNT_');
+---
+
+-- Null out or modify an existing job's attribute e.g. COMMENTS
+begin
+  sys.dbms_scheduler.set_attribute_null(name      => 'CREATE_REFERENCE_JOB',
+                                        attribute => 'COMMENTS');                                   
+end;
+
+-- Modify an attribute like comment
+begin
+  sys.dbms_scheduler.set_attribute(name      => 'CREATE_REFERENCE_JOB',
+                                   attribute => 'COMMENTS',
+                                   value     => 'Nightly job to auto-create reference records not auto-created via the UI');                                   
+end;
+
