@@ -953,7 +953,7 @@ git branch mynewbranch 2f13ab6  # branch from a specific commit
 $ git checkout master  # branch switch
 $ git merge ccf1
 
-# Merge collision CONFLICT - edit out the git <<< (theirs) >>>(yours) stuff in
+# Merge collision CONFLICT - edit out the git <<< ====== >>> stuff in
 foo.txt, choosing which edit to keep then  git add foo.txt
 
 # View a merge conflict (don't use for binary collisions!):
@@ -963,7 +963,7 @@ git show :3:code/_ADO_LIFT.qry  # theirs
 # Better merge conflict resolution if vim is set as difftool:
 git mergetool
 # Edit/delete lines you don't want
-rmv _bashrc.orig
+rm _bashrc.orig
 
 # Diff a merge collision in vim (if config is setup correctly) but must save
 # as code/_ADO_LIFT.qry when done prior to commit:
