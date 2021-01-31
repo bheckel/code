@@ -32,13 +32,14 @@ fi
 if [ $filesize -lt 5000000 ]; then
   if [ ${OSTYPE:0:6} = 'cygwin' ]; then
     if [ -e /usr/bin/putclip ]; then
+      echo 'putclip...'
       cat "$1" | putclip
     else
       echo putclip not installed
     fi
   else
+    echo 'xclip...'
     cat "$1" | xclip
-    ###echo xclip
   fi
 else
   echo Failed: file too large: $filesize bytes
