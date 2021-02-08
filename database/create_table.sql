@@ -1,3 +1,22 @@
+-----------------------------------
+-- Modified: 04-Feb-2021 (Bob Heckel)
+-----------------------------------
+
+create table bob (
+  OPPORTUNITY_OPT_OUT_ID     NUMBER,
+  H_VERSION                  NUMBER default 0,
+  actual_updated             TIMESTAMP(6)
+);
+
+INSERT INTO bob VALUES (11, 1, sysdate);commit;
+ALTER TABLE bob ADD newcol NUMBER default -99;  -- Oracle goes back and populates the records already existing with -99
+INSERT INTO bob (OPPORTUNITY_OPT_OUT_ID/*, h_version*/, actual_updated) VALUES (44, /*1,*/ sysdate);commit;
+INSERT INTO bob (OPPORTUNITY_OPT_OUT_ID, h_version, actual_updated, newcol) VALUES (54, 1, sysdate, 1000);commit;
+
+SELECT * FROM bob;
+
+---
+
 --DROP TABLE emp PURGE;
 
 CREATE TABLE emp (

@@ -1,6 +1,6 @@
 -----------------------------------------
--- Created: Mon 01-Feb-2019 (Bob Heckel) 
--- Modified: Fri 18-Dec-2020 (Bob Heckel)
+--  Created: Mon 01-Feb-2019 (Bob Heckel) 
+-- Modified: Thu 04-Feb-2021 (Bob Heckel)
 -----------------------------------------
 
 -- Generic package template
@@ -176,3 +176,105 @@ BEGIN
    proc1(1.1);
    proc1(1);
 END;
+
+---
+
+
+CREATE OR REPLACE PACKAGE MKC_BUILD_MAINTENANCE AS
+  PROCEDURE FIX_INDEXES(p_dropcreate IN NUMBER DEFAULT 0);
+END MKC_BUILD_MAINTENANCE;
+/
+CREATE OR REPLACE PACKAGE BODY MKC_BUILD_MAINTENANCE AS
+  /* CreatedBy: bheck
+  ** Date:      02-Feb-21
+  ** Purpose:   Maintain MKC Master Build
+  ** Change:    02-Feb-21 - Defragment indexes when needed (ROION-49311)
+  */
+  PROCEDURE FIX_INDEXES(p_dropcreate IN NUMBER)  -- DEFAULT 0 is optional here!
+  IS
+    CURSOR indexCursor IS
+      select distinct uic.INDEX_NAME
+        from user_objects ut, user_tab_cols utc, user_ind_columns uic
+       where ut.OBJECT_TYPE = 'TABLE'
+         and ut.OBJECT_NAME = utc.TABLE_NAME
+         and utc.COLUMN_NAME = 'AUDIT_SOURCE'
+         and ut.OBJECT_NAME = uic.TABLE_NAME
+         and ut.OBJECT_NAME not like '%_OLD'
+         and ut.OBJECT_NAME = 'MKC_INVOICE_REVENUE'
+and rownum<15
+      ;
+
+    v_ratio   NUMBER;
+    v_height  NUMBER;
+    v_blks    NUMBER;
+    v_rows    NUMBER;
+    v_fix     NUMBER := 0;
+    v_cur     SYS_REFCURSOR;
+    v_sql     VARCHAR2(1000);
+    v_sql2    VARCHAR2(1000);
+    v_keylist VARCHAR2(1000);
+  BEGIN
+    FOR indexRec IN indexCursor LOOP
+      BEGIN
+        DBMS_OUTPUT.put_line('Checking ' || indexRec.index_name || '...');
+      
+        EXECUTE IMMEDIATE 'analyze index ' || indexRec.index_name ||
+                          ' validate structure';
+                          --' validate structure ONLINE';  -- not performant
+                          
+        EXECUTE IMMEDIATE 'select decode(lf_rows, 0, 0, round((del_lf_rows/lf_rows)*100,2)) ratio, height, lf_blks, lf_rows from index_stats i'
+          INTO v_ratio, v_height, v_blks, v_rows;
+      
+        IF (NVL(v_ratio, 0) > .2) THEN
+          DBMS_OUTPUT.put_line('  Ratio of deleted rows to overall exceeds 20% threshold: ' || v_ratio);
+          v_fix := v_fix + 1;
+        ELSIF (v_height >= 4) THEN
+          DBMS_OUTPUT.put_line('  Height is >= 4: ' || v_height);
+          v_fix := v_fix + 1;
+        ELSIF (v_rows < v_blks) THEN
+          DBMS_OUTPUT.put_line('  Number of blocks exceeds number of rows: ' || v_blks || ' > ' || v_rows);
+          v_fix := v_fix + 1;
+        END IF;
+        
+        IF v_fix > 0 THEN
+          v_sql := q'[ SELECT listagg(column_name, ',') within group (order by column_position) x from user_ind_columns WHERE index_name = ]'
+                      || '''' || indexRec.index_name || '''';
+          DBMS_OUTPUT.put_line(' ' || v_sql);
+
+          OPEN v_cur FOR v_sql;
+          LOOP
+            FETCH v_cur INTO v_keylist;
+            EXIT WHEN v_cur%NOTFOUND;
+
+            IF p_dropcreate = 0 THEN
+              DBMS_OUTPUT.put_line('  rebuilding index ' || indexRec.index_name);
+              /*execute immediate 'alter index rebuld online' || indexRec.index_name;*/
+            END IF;
+
+            IF p_dropcreate = 1 THEN
+              DBMS_OUTPUT.put_line('  dropping index ' || indexRec.index_name);
+              /*execute immediate 'drop index ' || indexRec.index_name;*/
+
+              v_sql2 := ' creating index ' || indexRec.index_name || ' on MKC_INVOICE_REVENUE (' || v_keylist || ')';
+              DBMS_OUTPUT.put_line(' ' || v_sql2);
+              /*execute immediate v_sql2;*/
+            END IF;
+          END LOOP;
+        END IF;
+      
+        v_fix := 0;
+        
+      EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+          DBMS_OUTPUT.put_line('  NO_DATA_FOUND for ' || indexRec.index_name || '...');
+        WHEN OTHERS THEN
+          IF SQLCODE = -01418 THEN
+            DBMS_OUTPUT.put_line('  index does not exist for ' || indexRec.index_name || ' ...');
+          ELSE
+            DBMS_OUTPUT.put_line('  unexpected error processing ' || indexRec.index_name || ' ' || SQLCODE || ':' || SQLERRM || ': ' 
+                                 || dbms_utility.FORMAT_ERROR_BACKTRACE);
+          END IF;
+      END;
+    END LOOP;
+  END FIX_INDEXES;
+END MKC_BUILD_MAINTENANCE;

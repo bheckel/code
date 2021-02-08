@@ -1,9 +1,12 @@
 -------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 21-Jan-2021 (Bob Heckel)
+-- Modified: 01-Feb-2021 (Bob Heckel)
 -------------------------------------
 
-SELECT uj.last_start_date,
+SELECT ud.actual_start_date,
+       uj.last_start_date,
+       ud.status,
+       ud.run_duration,
        uj.last_run_duration,
        uj.state,
        uj.job_name,
@@ -18,14 +21,12 @@ SELECT uj.last_start_date,
        uj.comments,
        ud.output,
        ud.job_name,
-       ud.status,
-       ud.error#,
-       ud.actual_start_date,
-       ud.run_duration
+       ud.error#
   FROM user_scheduler_jobs uj,
        user_scheduler_job_run_details ud
  WHERE uj.job_name = ud.job_name
-   AND uj.job_name LIKE '%REF%'
+   AND uj.job_name LIKE '%INVOI%'
+   AND actual_start_date > sysdate - INTERVAL '3' day
  ORDER BY actual_start_date DESC;
 
 ---

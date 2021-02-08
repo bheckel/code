@@ -1,5 +1,7 @@
+--------------------------------------------
 -- Adapted: 04-Jun-2020 (Bob Heckel--DevGym)
 -- See also collections.plsql
+--------------------------------------------
 
 DECLARE
    TYPE t_employee IS TABLE OF emp%ROWTYPE;
@@ -35,3 +37,10 @@ BEGIN
 
    DBMS_OUTPUT.PUT_LINE(l_employees.COUNT);
 END;
+
+---
+
+  TYPE t_varchar2Table IS TABLE OF VARCHAR2(32767);
+  TYPE t_varchar2List IS TABLE OF t_varchar2Table INDEX BY VARCHAR2(200);
+  TYPE t_associativeVarcharTable IS TABLE OF VARCHAR2(32767) INDEX BY VARCHAR2(200);
+  TYPE t_numberTable IS TABLE OF NUMBER;

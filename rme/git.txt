@@ -116,9 +116,9 @@ Continue editing (#5 above) and committing (#6) until the feature is complete.  
 git push --set-upstream origin feature/RION-11111
 Set the upstream feature branch for your local feature branch and push (after this you can just git push)
 
-Go to github.sas.com and select the feature branch you would like to create a pull request for.  It will usually notice new feature branches
+Go to github.as.com and select the feature branch you would like to create a pull request for.  It will usually notice new feature branches
 
-Once reviewed, you can merge and delete the remote feature branch from github.sas.com if there are no conflicts.
+Once reviewed, you can merge and delete the remote feature branch from github.as.com if there are no conflicts.
 
 ---
 
@@ -149,14 +149,14 @@ HEAD: Last commit snapshot, next parent. It’s generally simplest to think of H
 
 ---
 
-bheck@laptop MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
 $ git add . && git commit -m 'RION-35000: Upgrade e_mail_message procedure'
 [develop e5b334a05c2] RION-35000: Upgrade e_mail_message procedure
  2 files changed, 145 insertions(+), 31 deletions(-)
  create mode 100644 Source/SQL/3.53RIONScripts/RION-35000_ddl_change.sql
 
 
-bheck@laptop MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
 $ gpull
 remote: Counting objects: 42, done.
 remote: Compressing objects: 100% (21/21), done.
@@ -165,9 +165,9 @@ Unpacking objects: 100% (42/42), done.
 error: cannot open .git/FETCH_HEAD: Permission denied
 
 
-bheck@laptop MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
 $ gpull
-From github.sas.com:RION/data
+From github.as.com:RION/data
    348396f699f..6302f518da4  develop     -> origin/develop
  * [new branch]              RION-35723 -> origin/RION-35723
 error: Empty commit message.
@@ -177,7 +177,7 @@ Not committing merge; use 'git commit' to complete the merge.
 ABORT, delete all lines in merge git vim popup
 
 
-bheck@laptop MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop|MERGING)
+bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop|MERGING)
 $ gs
 On branch develop
 Your branch and 'origin/develop' have diverged,
@@ -198,12 +198,12 @@ Changes to be committed:
 
 
 
-bheck@laptop MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop|MERGING)
+bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop|MERGING)
 $ git merge --abort
 
 
 
-bheck@laptop MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
 $ gs
 On branch develop
 Your branch and 'origin/develop' have diverged,
@@ -213,11 +213,11 @@ and have 1 and 6 different commits each, respectively.
 nothing to commit, working tree clean
 
 
-bheck@laptop MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
 $ git reset --hard HEAD^
 HEAD is now at 348396f699f Merge pull request #399 from RION/feature/RION-35692
 
-bheck@laptop MINGW64 ~/OneDrive - SAS/workspace/data/Source/SQL (develop)
+bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
 $ gs
 On branch develop
 Your branch is behind 'origin/develop' by 6 commits, and can be fast-forwarded.
@@ -240,7 +240,7 @@ remote: Counting objects: 17, done.
 remote: Compressing objects: 100% (4/4), done.
 remote: Total 17 (delta 13), reused 17 (delta 13), pack-reused 0
 Unpacking objects: 100% (17/17), done.
-From github.sas.com:RION/data
+From github.as.com:RION/data
    8dcbba3a644..07ae678951a  develop    -> origin/develop
 Updating 8dcbba3a644..07ae678951a
 Fast-forward
@@ -272,7 +272,7 @@ Compressing objects: 100% (5/5), done.
 Writing objects: 100% (5/5), 492 bytes | 492.00 KiB/s, done.
 Total 5 (delta 4), reused 0 (delta 0)
 remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
-To github.sas.com:RION/data.git
+To github.as.com:RION/data.git
    07ae678951a..6b7ce657a4d  develop -> develop
 
 bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
@@ -281,14 +281,14 @@ Deleted branch feature/RION-31587 (was ec8d6b73687).
 
 bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
 git fetch -p  # prune other's deleted branches
-From github.sas.com:RION/data
+From github.as.com:RION/data
  - [deleted]                 (none)     -> origin/feature/RION-32026
  - [deleted]                 (none)     -> origin/feature/RION-33853
  - [deleted]                 (none)     -> origin/release/3.50
 
 bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
 git push origin --delete feature/RION-31587
-To github.sas.com:RION/data.git
+To github.as.com:RION/data.git
  - [deleted]                 feature/RION-31587	
 
 ---
@@ -300,7 +300,7 @@ git branch feature/RION-26857 && git checkout feature/RION-26857
 # or just git checkout -b feature/RION-26857
 git push --set-upstream origin feature/RION-26857
 Total 0 (delta 0), reused 0 (delta 0)
-To github.sas.com:RION/data.git
+To github.as.com:RION/data.git
  * [new branch]              feature/RION-26857 -> feature/RION-26857
  Branch 'feature/RION-26857' set up to track remote branch 'feature/RION-26857' from 'origin'.
 
@@ -417,13 +417,13 @@ git push <remote-name> <branch-name>
 ---
 
 cd /cygdrive/c/RION/workspace
-git clone git@github.sas.com:RION/data.git
+git clone git@github.as.com:RION/data.git
 
 xoheck@xxxx523 MINGW64 /c/RION/workspace/data (feature/RION-31044)
 $ git remote show origin
 * remote origin
-  Fetch URL: git@github.sas.com:RION/data.git
-  Push  URL: git@github.sas.com:RION/data.git
+  Fetch URL: git@github.as.com:RION/data.git
+  Push  URL: git@github.as.com:RION/data.git
   HEAD branch: develop
   Remote branches:
     develop             tracked
@@ -495,7 +495,7 @@ git push origin HEAD:feature/RION-31587
 
 # ???
 # one-time setup branch:
-git clone git@github.sas.com:RION/data.git
+git clone git@github.as.com:RION/data.git
 git branch feature/RION-31587
 git checkout feature/RION-31587
 vi .git/info/exclude
@@ -1081,8 +1081,8 @@ $ gb
 
 $ git remote show origin
 * remote origin
-  Fetch URL: git@github.sas.com:rion/data.git
-  Push  URL: git@github.sas.com:rion/data.git
+  Fetch URL: git@github.as.com:rion/data.git
+  Push  URL: git@github.as.com:rion/data.git
   HEAD branch: develop
   Remote branches:
     Interaction_attendee_data_work         tracked
