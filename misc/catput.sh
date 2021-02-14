@@ -7,6 +7,9 @@
 #  Created: Thu 25-Aug 2005 (Bob Heckel)
 # Modified: Tue 05-Jan-2021 (Bob Heckel)
 ##############################################################################
+
+echo 'deprecated, see .bashrc'
+exit
   
 Usage() {
   echo "Usage: `basename $0` FILE

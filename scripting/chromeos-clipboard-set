@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Created: 14-Feb-2021 (Bob Heckel)
+
+# Assumes we only read from STDIN
+buf=$(cat -)
+echo $buf
+
+# Mask for printf
+buf2=$(echo ${buf} | sed 's/%/%%/')
+
+#TODO how to tell if TMUX is running IN THIS TERMINAL
+if [ -n ${TMUX} ];then
+  echo 'tmux printf...'
+  printf "\033]52;c;$(printf "$buf2" "" | base64)\a" >/dev/pts/0
+else
+  echo 'printf...'
+  printf "\033]52;c;$(printf ${buf2} "" | base64)\a"
+fi
