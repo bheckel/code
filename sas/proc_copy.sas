@@ -19,22 +19,24 @@ options NOsource;
   *
   *
   *  Created: Wed 14 May 2003 10:50:55 (Bob Heckel)
-  * Modified: Mon 20 Jun 2005 15:52:18 (Bob Heckel)
+  * Modified: Mon 15-Feb-2021 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
-options source replace;
+options source replace obs=5;  /* can't use obs= on the select */
+
+/*data OLDL.shoes; set sashelp.shoes;run;*/
 
  /* Copy From */
-libname OLDL 'd:/_TD2908';
-***libname OLDL 'BQH0.SASLIB';
-***libname OLDL '/u/bqh0/saslib';
+libname OLDL 'c:/temp';
+*libname OLDL 'BQH0.SASLIB';
+*libname OLDL '/u/bqh0/saslib';
 
  /* Copy To */
-libname NEWL 'n:/mo07';
-***libname NEWL 'c:/temp2';
-***libname NEWL 'BQH0.SASLIB';
-***libname NEWL '/u/dwj2/mvds/NAT/2003';
-***libname NEWL 'DWJ2.MED2003.MVDS.LIBRARY.NEW';
+libname NEWL 'c:/temp/t2';
+*libname NEWL 'c:/temp2';
+*libname NEWL 'BQH0.SASLIB';
+*libname NEWL '/u/dwj2/mvds/NAT/2003';
+*libname NEWL 'DWJ2.MED2003.MVDS.LIBRARY.NEW';
 
  /* Use SELECT to specify dataset(s) to copy to new library.  Comment out all
   * SELECTs to copy *all* datasets to new library.
@@ -42,4 +44,8 @@ libname NEWL 'n:/mo07';
 proc copy in=OLDL out=NEWL memtype=data;
   ***select idnew mtnew nynew;
   ***select UST2003OLDNAT;
+  select shoes;
 run;
+
+title "&SYSDSN";proc print data=NEWL.shoes(obs=10) width=minimum heading=H;run;title;
+
