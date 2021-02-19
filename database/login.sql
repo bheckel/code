@@ -31,8 +31,7 @@ DEFINE _EDITOR=vim
 --set autocommit OFF
 --set autoprint OFF
 --set autorecovery OFF
--- good for debugging speed problems - prints an EXPLAIN PLAN and execution
--- statistics after each SQL statement
+-- good for debugging speed problems - prints an EXPLAIN PLAN and execution statistics after each SQL statement
 --set autotrace ON
 --set blockterminator "."
 --set cmdsep ON
