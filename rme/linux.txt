@@ -1,5 +1,4 @@
-Chromebook FTW
-
+Chromebook
 2021-01-13 17:54:30 sudo apt-get install pcmanfm
 2021-01-13 17:59:42 pcmanfm
 2021-01-13 18:14:13 sudo apt-get install lxappearance
@@ -19,16 +18,20 @@ sudo alien -i sqldeveloper-19.2.1.247.2212.noarch.rpm
 
 ---
 
+Chromebook
 2020-12-19 12:55:12 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
 2020-12-19 12:55:57 cd ~/download
 2020-12-19 12:57:08 sudo apt-get install ./zulu-repo_1.0.0-2_all.deb 
 2020-12-19 12:57:27 sudo apt-get update
-2020-12-19 12:57:50 sudo apt-get install zulu8
+#2020-12-19 12:57:50 sudo apt-get install zulu8
+https://mediaserver.thinkorswim.com/installer/InstFiles/thinkorswim_installer.sh
 2020-12-19 12:59:32 sh ./thinkorswim_installer.sh
 
-ls /usr/lib/jvm/zulu8-ca-amd64/bin/java
+#ls /usr/lib/jvm/zulu8-ca-amd64/bin/java
+java -version
 
-Java JDK path: /usr/lib/jvm/zulu8-ca-amd64
+# https://www.azul.com/downloads/zulu-community/?package=jdk
+#Java JDK path: /usr/lib/jvm/zulu8-ca-amd64
 
 ---
 
