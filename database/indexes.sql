@@ -1,6 +1,34 @@
 --  Created: 28-May-2020 (Bob Heckel)
--- Modified: 10-Dec-2020 (Bob Heckel)
+-- Modified: Fri 26-Feb-2021 (Bob Heckel)
 -- see also explain_plan.sql
+
+---
+
+create index sgix on z_tmp (salesgroup);
+
+alter index sgix monitoring usage;
+
+select index_name, table_name, used from v$object_usage; -- YES
+
+select distinct salesgroup from z_tmp;
+
+alter index sgix nomonitoring usage;
+
+analyze index sgix validate structure online;
+
+select * from index_stats; 
+
+alter index sgix rebuild online;
+
+drop index sgix;
+
+create index sgix on z_tmp (salesgroup) invisible;
+
+select distinct salesgroup from z_tmp;
+
+select index_name, table_name, used from v$object_usage; -- null
+
+alter index sgix visible;
 
 ---
 
