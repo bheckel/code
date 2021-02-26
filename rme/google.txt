@@ -6,7 +6,6 @@ Chromebook
   325  2021-01-13 21:54:05 sudo apt-get install apt-file
   393  2021-01-15 21:28:32 sudo apt-get install bc
   394  2021-01-15 22:49:50 sudo apt-get install wine
-  586  2021-01-23 13:12:02 sudo apt-get install xclip
 
 sudo apt-get install locate
 sudo updatedb
