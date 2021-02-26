@@ -1,6 +1,6 @@
 -------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 01-Feb-2021 (Bob Heckel)
+-- Modified: Thu 25-Feb-2021 (Bob Heckel)
 -------------------------------------
 
 SELECT ud.actual_start_date,
@@ -68,8 +68,8 @@ order by 1;
 -- Run status log
 SELECT * FROM USER_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
 
--- Named Schedule details
-select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'PERI%';
+-- Named Schedule details.  E.g. schedule_name:PURGE_SCHEDULE repeat_interval:freq=daily;byhour=3;byminute=0;bysecond=0
+select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'P%';
 
 ---
 
@@ -78,6 +78,8 @@ BEGIN
   DBMS_SCHEDULER.create_schedule(
     schedule_name   => 'AUTO_ACCEPT_TARGETS_SCHEDULE',
     repeat_interval => 'FREQ=MINUTELY; INTERVAL=5;',
+    --ignored i think:
+    --start_date => systimestamp + INTERVAL '2' MINUTE,
     end_date        => TO_DATE(NULL),
     comments        => 'Schedule for auto_acknowledge_targets job.');
 END;
