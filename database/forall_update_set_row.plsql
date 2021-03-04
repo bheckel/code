@@ -58,7 +58,7 @@ BEGIN
        SET ROW = l_tab(i)  -- magic, update entire row to collection's values
      WHERE id = l_id_tab(i);
 
-  -- Reporting purposes only (and only if 0 errors)
+  -- Reporting purposes only because FORALL is a unit (and only if 0 errors)
   FOR i IN l_tab.FIRST .. l_tab.LAST LOOP
     DBMS_OUTPUT.put_line(l_tab(i).id || ': rows affected ' || SQL%BULK_ROWCOUNT(i));
   END LOOP;

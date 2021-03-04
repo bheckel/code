@@ -369,3 +369,7 @@ begin
                                    value     => 'Nightly job to auto-create reference records not auto-created via the UI');                                   
 end;
 
+---
+
+exec  sys.dbms_scheduler.disable('KMC_REVENUE_LOAD_JOB');
+

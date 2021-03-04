@@ -1,5 +1,20 @@
 
 -- Created: 09-Feb-19 (Bob Heckel)
+-- Modified: 03-Mar-2021 (Bob Heckel)
+
+---
+
+DECLARE
+  BEGIN
+    FOR rec IN ( select gl_date from kmc_override where gl_date is not null and rownum<999 ) LOOP
+      DBMS_OUTPUT.put_line(rec.gl_date);
+      /*update kmc_revenue_full set gl_date_ovr = rec.gl_date where gl_date_ovr is null;*/
+    END LOOP;
+  --COMMIT;
+  rollback;
+END;
+
+---
 
 -- Simple update < 5 records so no bulk collecting
 PROCEDURE SYNC_SG_COUNTRY_NAMES(reportAll NUMBER) IS
