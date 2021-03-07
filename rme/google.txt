@@ -12,7 +12,7 @@ sudo updatedb
 
 ---
 
-Chromebook Linux icon
+Chromebook Linux icon shortcut if not auto installed
 
 2021-01-23 09:42:25 cd .local/share/applications/ 
 2021-01-23 09:52:40 vi tos.desktop
