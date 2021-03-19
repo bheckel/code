@@ -4,9 +4,11 @@
 
 ---
 
-create or replace PROCEDURE zupd(in_table_name      VARCHAR2,
-                                 in_column_name     VARCHAR2,
-                                 in_commit_interval NUMBER DEFAULT 500)
+-- Dynamic update version 1
+
+create or replace PROCEDURE dynamic_update(in_table_name      VARCHAR2,
+                                           in_column_name     VARCHAR2,
+                                           in_commit_interval NUMBER DEFAULT 500)
 IS
   TYPE t_numberTable IS TABLE OF NUMBER;
   v_numtbl  t_numberTable;
@@ -48,59 +50,203 @@ END;
 
 ---
 
+-- Dynamic update version 2
 DECLARE
-    l_limit_group  PLS_INTEGER := 0;
-    l_tab_size     PLS_INTEGER := 0;
-    l_tab_size_tot PLS_INTEGER := 0;
+  TYPE t_numberTable IS TABLE OF NUMBER;
+  TYPE t_varchar2Table IS TABLE OF VARCHAR2(32767);
+  TYPE t_dateTable IS TABLE OF DATE;
+  
+  v_sdmbktbl    t_varchar2Table;
+  v_tortbl      t_numberTable;
+  v_sql         VARCHAR(32767);
+  updateCursor  SYS_REFCURSOR;
+            
+BEGIN
+  v_sql := 'select ''aa'' sdm_business_key, 2 tor_id from dual';
+  
+  OPEN updateCursor FOR v_sql;
+    LOOP
+      FETCH updateCursor BULK COLLECT INTO v_sdmbktbl, v_tortbl LIMIT 500;  
+    
+      EXIT WHEN v_sdmbktbl.COUNT = 0;
+    
+      BEGIN
+        for i in 1 .. v_sdmbktbl.count loop
+          dbms_output.put_line(i || ' ' || v_sdmbktbl(i) || ' ' || v_tortbl(i));
+        end loop;
+      
+--      FORALL i IN 1 .. v_sdmbktbl.COUNT SAVE EXCEPTIONS
+--        EXECUTE IMMEDIATE 'UPDATE MKC_REVENUE_FULL
+--                              SET  = :2,
+--                                   = :3
+--                            WHERE sdm_business_key = :1'
+--         USING v_sdmbktbl(i), v_tortbl(i)
+--        ;
+--      COMMIT;
 
-    CURSOR c1 IS
-      SELECT o.opportunity_id
-        FROM opportunity_base o
-       WHERE 
-AND ROWNUM<9
-      ;
+      EXCEPTION
+        WHEN OTHERS THEN
+          IF SQLCODE = -24381 THEN -- error(s) in array DML
+            DBMS_OUTPUT.put_line(DBMS_UTILITY.format_error_stack);   
+            DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows prior to EXCEPTION');
+    
+            FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
+              DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX ||
+                                    '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
+                                    ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
+              --log(v_main_table, 'ERROR: ' || v_message || ' (AUTO ADJUSTMENTS)');                                  
+            END LOOP;
+          END IF;
+      END;
+    END LOOP;
+END ;
 
-    TYPE t1 IS TABLE OF c1%ROWTYPE;
-    l_recs t1;
+---
+
+-- Static update version 1
+
+DECLARE
+  CURSOR c1 IS
+    SELECT o.opportunity_id
+      FROM opportunity_base o
+     WHERE ROWNUM<9
+    ;
+
+  TYPE t1 IS TABLE OF c1%ROWTYPE;
+  l_recs t1;
             
 BEGIN
   OPEN c1;
   LOOP
     FETCH c1 BULK COLLECT INTO l_recs LIMIT 500;  
     
-    l_limit_group := l_limit_group + 1;
-    l_tab_size := l_recs.COUNT;
-    l_tab_size_tot := l_tab_size_tot + l_tab_size;
-
-    -- Only print every 100K records
-    IF (MOD(l_limit_group, 1000) = 0) THEN
-      dbms_output.put_line(to_char(sysdate, 'DD-Mon-YYYY HH24:MI:SS') || ': iteration ' || l_limit_group || ' processing ' || l_tab_size || ' records' || ' total ' || l_tab_size_tot);
-    END IF;
-    
-    EXIT WHEN l_tab_size = 0;
+    EXIT WHEN l_recs.COUNT = 0;
     
     BEGIN
-      FORALL i IN 1 .. l_tab_size SAVE EXCEPTIONS
-        UPDATE OPPORTUNITY_OPT_OUT
-           SET POOR_CLOSEOUT_OPT_OUT = 1
-         WHERE OPPORTUNITY_ID = l_recs(i).opportunity_id
-        ;
+      for i in 1 .. l_recs.count loop
+        dbms_output.put_line(i || ' ' || l_recs(i).opportunity_id);
+      end loop;
       
-    EXCEPTION
-      WHEN  SQLCODE = -24381 THEN -- error(s) in array DML
-        DBMS_OUTPUT.put_line(DBMS_UTILITY.format_error_stack);   
-        DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows prior to EXCEPTION');
+--      FORALL i IN 1 .. l_tab_size SAVE EXCEPTIONS
+--        UPDATE OPPORTUNITY_OPT_OUT
+--           SET POOR_CLOSEOUT_OPT_OUT = 1
+--         WHERE OPPORTUNITY_ID = l_recs(i).opportunity_id
+--        ;
 
-        FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
-          DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX ||
-                                '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
-                                ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
-        END LOOP;
-        -- Now keep going with the next l_limit_group...
+    EXCEPTION
+      WHEN OTHERS THEN
+        IF SQLCODE = -24381 THEN -- error(s) in array DML
+          DBMS_OUTPUT.put_line(DBMS_UTILITY.format_error_stack);   
+          DBMS_OUTPUT.put_line('Updated ' || SQL%ROWCOUNT || ' rows prior to EXCEPTION');
+  
+          FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP   
+            DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX ||
+                                  '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
+                                  ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
+          END LOOP;
+        END IF;
     END;
     
-    COMMIT;
+    --COMMIT;
   END LOOP;
 
   CLOSE c1;
+END;
+
+---
+
+-- Static update version 2
+
+DECLARE
+  l_cnt PLS_INTEGER := 0;
+
+  CURSOR c1 IS
+    select distinct c.contact_id
+      from contact_base c, 
+           event_contact ec,
+           contact_opportunity co
+     where c.created >= '01JAN2020'
+       and c.contact_ID = ec.contact_ID
+       and c.contact_id = co.contact_id(+)
+       and ec.event_id in (999, 999)
+       and co.opportunity_id is null
+       and ec.contact_id not in ( 
+            select cae.contact_id
+              from contact_activ_event cae, 
+                   activity a 
+             where a.activity_id = cae.activity_id
+               and a.priority_int = 31 -- hot             
+            )
+and rownum<3  
+     ;
+    
+  TYPE t1 IS TABLE OF c1%ROWTYPE;
+  l_recs t1;
+          
+  BEGIN
+    OPEN c1;
+    LOOP
+      FETCH c1 BULK COLLECT INTO l_recs LIMIT 50;  
+
+      l_cnt := l_cnt + l_recs.COUNT;
+      
+      EXIT WHEN l_recs.COUNT = 0;
+      
+--      for i in 1 .. l_recs.count loop
+--        dbms_output.put_line(i || ' ' || l_recs(i).contact_id);
+--      end loop;
+      
+      FORALL i IN 1 .. l_recs.COUNT
+        UPDATE contact_base 
+           SET usedinestars = 0,
+               updated = updated,
+               updatedby = updatedby,
+               audit_source = 'ORION-49860'
+         WHERE contact_id = l_recs(i).contact_id
+         ;
+        
+        --COMMIT;
+rollback;
+    END LOOP;
+    CLOSE c1;
+    
+    dbms_output.put_line(l_cnt);
+END;
+
+---
+
+-- Static update version 3
+
+CREATE OR REPLACE PACKAGE ROION99999
+IS
+  -- ----------------------------------------------------------------------------
+  --    Name: 
+  -- Purpose: 
+  --  Change: 
+  -- ----------------------------------------------------------------------------
+  PROCEDURE do;
+END;
+/
+CREATE OR REPLACE PACKAGE BODY ROION99999
+IS
+  PROCEDURE do
+  IS
+    cv  SYS_REFCURSOR;
+
+    TYPE t IS TABLE OF nightly_cae_assign%ROWTYPE;
+    mytbl t;
+  BEGIN
+    -- Must use '*'
+    OPEN cv FOR 'select * from nightly_cae_assign where rownum<9';
+  
+    LOOP
+      FETCH cv BULK COLLECT INTO mytbl LIMIT 50;
+      EXIT WHEN mytbl.count=0;
+  
+      FOR i IN 1..mytbl.count LOOP
+        DBMS_OUTPUT.put_line(mytbl(i).account_site_id);
+      END LOOP;
+    END LOOP;
+    --rc := SQL%ROWCOUNT; dbms_output.put_line('rows affected: ' || rc);
+  END do;
 END;

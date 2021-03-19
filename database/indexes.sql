@@ -121,13 +121,7 @@ and c.cust_postal_code = 52773;
 -- View contents of an index (including function based indexes)
 
 -- Find it
-SELECT
- i.table_owner,
- i.table_name,
- i.index_name,
- i.uniqueness,
- c.column_name,
- f.column_expression
+SELECT i.table_owner, i.table_name, i.index_name, i.uniqueness, c.column_name, f.column_expression
 FROM      all_indexes i
 LEFT JOIN all_ind_columns c
  ON   i.index_name      = c.index_name
@@ -138,8 +132,7 @@ LEFT JOIN all_ind_expressions f
  AND  c.table_owner     = f.table_owner
  AND  c.table_name      = f.table_name
  AND  c.column_position = f.column_position
-WHERE --i.table_owner LIKE UPPER('%someuserpattern%')
- --AND  i.table_name  LIKE UPPER('%sometablepattern%')
+WHERE --i.table_name  LIKE UPPER('%sometablepattern%')
     i.index_name='ACC_TEAM_ASSIGNMENT_U_ACTIV_IX'
 ORDER BY i.table_owner, i.table_name, i.index_name, c.column_position;
 

@@ -76,3 +76,19 @@ select
  , row_number() over ( partition by product_id, product_name order by rownum) as rn
 from customer_order_products
 order by 1;
+
+---
+
+select sdm_business_key, 
+       tor_ind,
+       0 new_tor_ind,
+       91 new_kmc_exclusion_reason_id, 
+       'SDM_BK no longer in source data' 
+       new_kmc_exclusion_reason, 
+       SYSDATE new_kmc_exclusion_reason_date, 
+       'sdm_revenue' tblsrc
+ from kmc_revenue_full krf
+ where not exists ( select 1 
+                      from ppedw.sdm_revenue@dew src
+                     where krf.sdm_business_key = src.sdm_business_key
+                       and extract(year from src.report_date) >= 2021 )
