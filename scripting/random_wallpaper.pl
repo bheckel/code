@@ -38,13 +38,13 @@
   "/usr/share/backgrounds/Water_web_by_Tom_Kijas.jpg",
   "/usr/share/images/fluxbox/fluxbox.png",
   "/usr/share/images/fluxbox/ubuntu-dark.png",
-  "~/Dropbox/Public/misc/computer/backgrounds/atlantis_nebula_14-wallpaper-1920x1080.jpg",
-  "~/Dropbox/Public/misc/computer/backgrounds/beautiful_autumn_landscape_4-wallpaper-1920x1080.jpg",
-  "~/Dropbox/Public/misc/computer/backgrounds/beautiful_red_betta_siamese_fighting_fish_male-wallpaper-1920x1080.jpg",
-  "~/Dropbox/Public/misc/computer/backgrounds/birch_trees_forest_lake_reflection-wallpaper-1920x1080.jpg",
-  "~/Dropbox/Public/misc/computer/backgrounds/green_code-wallpaper-1920x1080.jpg",
-  "~/Dropbox/Public/misc/computer/backgrounds/sound_2-wallpaper-1920x1080.jpg",
-  "~/Dropbox/Public/misc/computer/backgrounds/strawberry___gold-wallpaper-1920x1080.jpg"
+  "~/Dropbox/computer/backgrounds/atlantis_nebula_14-wallpaper-1920x1080.jpg",
+  "~/Dropbox/computer/backgrounds/beautiful_autumn_landscape_4-wallpaper-1920x1080.jpg",
+  "~/Dropbox/computer/backgrounds/beautiful_red_betta_siamese_fighting_fish_male-wallpaper-1920x1080.jpg",
+  "~/Dropbox/computer/backgrounds/birch_trees_forest_lake_reflection-wallpaper-1920x1080.jpg",
+  "~/Dropbox/computer/backgrounds/green_code-wallpaper-1920x1080.jpg",
+  "~/Dropbox/computer/backgrounds/sound_2-wallpaper-1920x1080.jpg",
+  "~/Dropbox/computer/backgrounds/strawberry___gold-wallpaper-1920x1080.jpg"
 );
 
 $surprise_me = $files[rand @files];
