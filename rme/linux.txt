@@ -22,8 +22,6 @@ Chromebook
 2020-12-19 12:57:08 sudo apt-get install ./zulu-repo_1.0.0-2_all.deb 
 2020-12-19 12:57:27 sudo apt-get update
 #2020-12-19 12:57:50 sudo apt-get install zulu8
-https://mediaserver.thinkorswim.com/installer/InstFiles/thinkorswim_installer.sh
-2020-12-19 12:59:32 sh ./thinkorswim_installer.sh
 
 #ls /usr/lib/jvm/zulu8-ca-amd64/bin/java
 java -version
