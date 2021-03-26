@@ -70,8 +70,7 @@ SELECT * FROM USER_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by
 
 -- Named Schedule details.  E.g. schedule_name:PURGE_SCHEDULE repeat_interval:freq=daily;byhour=3;byminute=0;bysecond=0
 select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'P%';
-
----
+exec DBMS_SCHEDULER.drop_schedule('NIGHTLY_MKC_SCHEDULE');
 
 -- https://docs.oracle.com/cd/B19306_01/server.102/b14231/scheduse.htm#i1019182
 BEGIN  
