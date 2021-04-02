@@ -250,3 +250,75 @@ IS
     --rc := SQL%ROWCOUNT; dbms_output.put_line('rows affected: ' || rc);
   END do;
 END;
+
+---
+
+DECLARE
+  l_cnt PLS_INTEGER := 0;
+
+  CURSOR c1 IS
+    select distinct c.contact_id
+      from contact_base c, 
+           event_contact ec,
+           contact_opportunity co
+     where c.created >= '01JAN2020'  -- "unless [contact] existed in our systems prior to 2020"
+       and c.contact_ID = ec.contact_ID
+       and c.contact_id = co.contact_id(+)
+       and ec.event_id in (4345100, 4358090, 4387790, 4448790)  -- "[delete] contacts associated to Interaction IDs 4345100, 4358090, 4387790, 4448790"
+       and co.opportunity_id is null  -- "or are attached to an opportunity"
+       and ec.contact_id not in (  -- "or a lead with a priority of 'Hot'"
+            select cae.contact_id
+              from contact_activ_event cae, 
+                   activity a 
+             where a.activity_id = cae.activity_id
+               and a.priority_int = 31 -- hot             
+            )
+and rownum<60  
+     ;
+    
+  TYPE t1 IS TABLE OF c1%ROWTYPE;
+  l_recs t1;
+          
+  BEGIN
+    OPEN c1;
+    LOOP
+      FETCH c1 BULK COLLECT INTO l_recs LIMIT 50;  
+
+      l_cnt := l_cnt + l_recs.COUNT;
+      
+      EXIT WHEN l_recs.COUNT = 0;
+      
+--      for i in 1 .. l_recs.count loop
+--        dbms_output.put_line(i || ' ' || l_recs(i).contact_id);
+--      end loop;
+      
+--      FORALL i IN 1 .. l_recs.COUNT
+--        UPDATE contact_base 
+--           SET usedinestars = 0,
+--               updated = updated,
+--               updatedby = updatedby,
+--               audit_source = 'ORION-49860'
+--         WHERE contact_id = l_recs(i).contact_id;
+--        DELETE
+--          FROM contact_base
+--         WHERE contact_id = l_recs(i).contact_id;
+        
+--        COMMIT;
+
+      for i in 1 .. l_recs.count loop
+        dbms_output.put_line(i || ' : ' || l_recs(i).contact_id);
+        --cdhub_jms.contact_drop_xrefs_jms_msg(contactid => l_recs(i).contact_id, remoteUser => 'carynt\essppt', supress_output => 1);
+      end loop;
+      
+      for i in 1 .. l_recs.count loop
+        dbms_output.put_line(i || ' ! ' || l_recs(i).contact_id);
+        --exec set_contact_match_code(l_recs(i).contact_id);
+      end loop;
+      DBMS_OUTPUT.put_line('committing');
+      COMMIT;
+      
+    END LOOP; --cursor
+    CLOSE c1;
+    
+    dbms_output.put_line(l_cnt);
+END;
