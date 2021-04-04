@@ -1,4 +1,11 @@
-Chromebook
+
+ 9275  2021-04-04 11:25:13 sudo mkdir -p /usr/share/themes/Axiom/gtk-2.0
+ 9269  2021-04-04 11:16:21 sudo ln -s ~/dotfiles/gtkrc.axiomd Axiom/gtk-2.0/gtkrc
+ 9278  2021-04-04 11:25:38 lxappearance 
+
+---
+
+
 2021-01-13 17:54:30 sudo apt-get install pcmanfm
 2021-01-13 17:59:42 pcmanfm
 2021-01-13 18:14:13 sudo apt-get install lxappearance
