@@ -133,5 +133,8 @@ SET  (tb.owner_territory_lov_id, tb.updatedby)  = (
 WHERE EXISTS ( 
   select 1
     from employee_base sb 
-   where sb.employee_id=tb.employee_id   and tb.actual_updated>'19JAN20' and (tb.audit_source='10g279' or tb.actual_updatedby=4488) and tb.current_task=1 and tb.owner_territory_lov_id is null
+   where sb.employee_id=tb.employee_id
+     and tb.actual_updated>'19JAN20'
+     and (tb.audit_source='me' or tb.actual_updatedby=4488)
+     and tb.current_task=1 and tb.owner_territory_lov_id is null
 );

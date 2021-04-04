@@ -194,3 +194,8 @@ select distinct utc.TABLE_NAME, uic.COLUMN_NAME, uic.INDEX_NAME
 	 and ut.OBJECT_NAME not like '%_OLD'
 	 and uic.INDEX_NAME =  uic.INDEX_NAME;
 
+---
+
+-- Oracle index NULLs indexed. NULL can be indexed by adding another not nullable column to the index:
+CREATE INDEX ix_with_nulls ON table_name (nullable_column, '1');
+
