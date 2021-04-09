@@ -19,6 +19,7 @@ alter table roion35282 rename column a3 to a4;
 drop table KR27MAR2021170440 purge;
 
 alter trigger MKC_REVENUE_FULL_IUD enable;
+drop trigger MKC_REVENUE_FULL_IUD;
 
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID;
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID drop index;
