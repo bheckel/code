@@ -1,4 +1,4 @@
-# 17-Apr-21
+# 19-Apr-21
 input fastLength = 12;
 input slowLength = 26;
 input MACDLength = 9;
@@ -12,5 +12,8 @@ def crossBelow = Crosses(Diff, 0, CrossingDirection.BELOW);
 def numPositiveBars = Lowest(Diff, numberOfBars - 1) >= 0;
 def numNegativeBars = Highest(Diff, numberOfBars - 1) <= 0;
 
-plot scan = crossAbove[numberOfBars - 1] and numPositiveBars;
+plot scan = 
+crossAbove[numberOfBars - 1] and 
+numPositiveBars and
+SimpleMovingAvg("length" = 200) is less than close;
 #plot scan = crossBelow[numberOfBars - 1] and numNegativeBars;
