@@ -27,7 +27,7 @@ alter table mkc_revenue_full drop constraint KRF_REVENUE_ID drop index;
 alter table JS_INVOICE_BOB_31MAR21 add constraint JS_INVOICE_BOB_31MAR21_PK PRIMARY KEY (INVOICE_NUMBER_SR,INVOICE_SUBSIDIARY_SR)
 
 alter index CONTACT_FIRSTNAME_LIST_IX rebuild online tablespace SE_01;
-
+alter index CONTACT_FIRSTNAME_LIST_IX rename to CONTACT_FIRSTNAME_IX;
 drop index KRF_ACCT_ID_4_JOINS_IX;
 
 truncate table mkc_revenue_full_bob

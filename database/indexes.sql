@@ -1,8 +1,10 @@
 --  Created: 28-May-2020 (Bob Heckel)
 -- Modified: Fri 26-Feb-2021 (Bob Heckel)
--- see also explain_plan.sql
+-- see also explain_plan.sql, ddl.sql
 
 ---
+
+-- Verify index is actually used
 
 create index sgix on z_tmp (salesgroup);
 
