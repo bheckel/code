@@ -949,7 +949,7 @@ BEGIN
   CLOSE updateCursor;
 
   IF v_did_update > 0 THEN
-    e_mail_message('replies-disabled@sas.com',
+    e_mail_message('replies-disabled@s.com',
                    'bob.heckel@s.com',
                    '[MKC] New Build auto_exclude_rows executed',
                    '');
