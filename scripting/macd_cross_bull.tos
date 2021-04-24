@@ -13,7 +13,12 @@ def numPositiveBars = Lowest(Diff, numberOfBars - 1) >= 0;
 def numNegativeBars = Highest(Diff, numberOfBars - 1) <= 0;
 
 plot scan = 
-crossAbove[numberOfBars - 1] and 
-numPositiveBars and
-SimpleMovingAvg("length" = 200) is less than close;
-#plot scan = crossBelow[numberOfBars - 1] and numNegativeBars;
+  crossAbove[numberOfBars - 1]
+  and numPositiveBars
+  and SimpleMovingAvg("length" = 200) is less than close
+  ;
+#plot scan = 
+#  crossBelow[numberOfBars - 1] 
+#  and numNegativeBars
+#  and SimpleMovingAvg("length" = 200) is greater than close
+#  ;
