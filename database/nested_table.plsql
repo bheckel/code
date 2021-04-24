@@ -390,3 +390,24 @@ create or replace PACKAGE body bob as
     END LOOP;
   END cae_auto_assign;
 END bob;
+
+---
+
+declare
+  TYPE t_varchar2Table IS TABLE OF VARCHAR2(32767);
+  TYPE t_varchar2List IS TABLE OF t_varchar2Table INDEX BY VARCHAR2(200);
+  v_columnTable  t_varchar2List;
+  
+  v_set_cols     varchar2(999);
+  v_table_name   varchar2(999) := 'PAPEDW.INVOICE_LINE_SUMMARY_DETAIL@DEW';
+begin
+  v_columnTable('PAPEDW.INVOICE_LINE_SUMMARY_DETAIL@DEW') := t_varchar2Table('INVOICE_LINE_STATUS_COMMENT',
+                                                                             'PAYMENT_LAST_APPLIED_DATE',
+                                                                             'CREDIT_MEMO_LAST_RPT_DATE');
+  FOR i IN 1 .. v_columnTable(v_table_name).COUNT LOOP
+    v_set_cols := v_set_cols || ' ' || v_columnTable(v_table_name)(i) || ' = NULL,';
+  END LOOP;
+  v_set_cols := substr(v_set_cols, 1, length(v_set_cols) - 1);
+  DBMS_OUTPUT.put_line(v_set_cols);
+  --INVOICE_LINE_STATUS_COMMENT = NULL, PAYMENT_LAST_APPLIED_DATE = NULL, CREDIT_MEMO_LAST_RPT_DATE = NULL
+end;
