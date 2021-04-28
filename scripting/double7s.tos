@@ -1,2 +1,0 @@
-(SimpleMovingAvg("length" = 200) is less than close) and
-(close is less than close[7])
