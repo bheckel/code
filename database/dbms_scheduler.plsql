@@ -1,6 +1,6 @@
 -------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: Thu 25-Feb-2021 (Bob Heckel)
+-- Modified: Thu 29 Apr 2021 (Bob Heckel)
 -------------------------------------
 
 SELECT ud.actual_start_date,
@@ -118,7 +118,7 @@ BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 -- Find NAMED schedule time (START_DATE)
 select * from USER_SCHEDULER_SCHEDULES d where d.schedule_name like 'PERI%';
 
--- Update job's NAMED schedule
+-- Update modify job's NAMED schedule
 BEGIN
   sys.dbms_scheduler.set_attribute(name => 'SET_CUSTOMER_FLAG_JOB',
                                    attribute => 'job_action',
@@ -361,7 +361,7 @@ begin
                                         attribute => 'COMMENTS');                                   
 end;
 
--- Modify an attribute like comment
+-- Update modify an attribute like comment
 begin
   sys.dbms_scheduler.set_attribute(name      => 'CREATE_REFERENCE_JOB',
                                    attribute => 'COMMENTS',
@@ -370,5 +370,18 @@ end;
 
 ---
 
-exec  sys.dbms_scheduler.disable('KMC_REVENUE_LOAD_JOB');
+exec DBMS_SCHEDULER.disable(job_name => 'JOB_LOAD_HISTORY');
+exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_LOAD_HISTORY');
+exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_HISTORY');
 
+---
+
+
+      v_start := SYSDATE || ' 10.00.00PM EST5EDT';
+      DBMS_SCHEDULER.CREATE_JOB(job_name   => 'JOB_LOAD_HISTORY',
+                                job_type   => 'PLSQL_BLOCK',
+                                job_action => 'begin MKC_bob.load_history(in_job_start_time => trunc(SYSDATE)); end;',
+                                start_date => v_start,
+                                enabled    => TRUE,
+                                auto_drop  => TRUE,
+                                comments   => 'NEW BUILD HIST ' || v_main_table);
