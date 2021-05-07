@@ -9,10 +9,10 @@ DESC=${2:-untitled}
 TAG=${JIRA}_${DESC}
 
 mkdir -p ~/onedrive/orion-${TAG} && cd ~/onedrive/orion-${TAG} && \
-cp -i ~/onedrive/template_t.sql ~/onedrive/orion-${TAG}/${JIRA}.sql && \
+cp -i ~/onedrive/template_jira.sql ~/onedrive/orion-${TAG}/${JIRA}.sql && \
 
 # cp -i ~/onedrive/template_t.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
-cp -i ~/onedrive/template_t.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
+cp -i ~/onedrive/template_jira.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
 # sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 
