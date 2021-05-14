@@ -94,7 +94,6 @@ BEGIN
               DBMS_OUTPUT.put_line ('Error ' || ix || ' occurred on iteration ' || SQL%BULK_EXCEPTIONS(ix).ERROR_INDEX ||
                                     '  with error code ' || SQL%BULK_EXCEPTIONS(ix).ERROR_CODE ||
                                     ' ' || SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE)));
-              --log(v_main_table, 'ERROR: ' || v_message || ' (AUTO ADJUSTMENTS)');                                  
             END LOOP;
           END IF;
       END;

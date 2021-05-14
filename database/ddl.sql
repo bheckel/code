@@ -22,3 +22,8 @@ create index KRF_ASSIGN_LOV_ID_IX ON MKC_REVENUE_FULL (ASSIGN_TERR_LOV_ID);
 alter index CONTACT_FIRSTNAME_LIST_IX rebuild online tablespace SE_01;
 alter index CONTACT_FIRSTNAME_LIST_IX rename to CONTACT_FIRSTNAME_IX;
 drop index KRF_ACCT_ID_4_JOINS_IX;
+
+select index_name, table_name, used from v$object_usage;--null
+alter index KRB_HC_IN_CIX monitoring usage;
+select index_name, table_name, used from v$object_usage;--not null
+alter index KRB_HC_IN_CIX nomonitoring usage;
