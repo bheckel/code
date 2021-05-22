@@ -1,0 +1,28 @@
+crosh:
+Ctrl+Alt+t
+swap enable 6000
+
+---
+
+Chromebook Linux icon shortcut if not auto installed
+
+2021-01-23 09:42:25 cd .local/share/applications/ 
+2021-01-23 09:52:40 vi tos.desktop
+
+[Desktop Entry]
+Name=ThinkOrSwim
+Comment=ToS
+GenericName=ThinkOrSwim
+X-GNOME-FullName=ThinkOrSwim
+Exec=/home/bheckel/thinkorswim/thinkorswim
+Terminal=false
+Type=Application
+Icon=/home/bheckel/.local/share/icons/thinkorswim.png
+Categories=Linux apps;
+
+2021-01-23 10:05:48 cp /home/bheckel/thinkorswim/.install4j/thinkorswim.png ~/.local/share/icons/                                                                                                       
+
+---
+
+Chromebooks shortcut keys:
+Ctrl+Alt+/
