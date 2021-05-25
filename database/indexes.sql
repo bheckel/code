@@ -16,9 +16,9 @@ select distinct salesgroup from z_tmp;
 
 alter index sgix nomonitoring usage;
 
-analyze index sgix validate structure online;
-
-select * from index_stats; 
+-- Determine index fragmentation - bad if ratio >10
+analyze index sgix validate structure;
+select DECODE(LF_ROWS, 0, 0, ROUND((DEL_LF_ROWS/LF_ROWS)*100,2)) RATIO, HEIGHT, LF_BLKS, LF_ROWS FROM INDEX_STATS I;
 
 alter index sgix rebuild online;
 
