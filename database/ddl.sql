@@ -21,6 +21,7 @@ drop trigger MKC_REVENUE_FULL_IUD;
 create index KRF_ASSIGN_LOV_ID_IX ON MKC_REVENUE_FULL (ASSIGN_TERR_LOV_ID);
 alter index CONTACT_FIRSTNAME_LIST_IX rebuild online tablespace SE_01;
 alter index CONTACT_FIRSTNAME_LIST_IX rename to CONTACT_FIRSTNAME_IX;
+alter index "SETARS"."KRB_9BYTE_CD_IX" nologging;
 drop index KRF_ACCT_ID_4_JOINS_IX;
 
 select index_name, table_name, used from v$object_usage;--null

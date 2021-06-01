@@ -59,4 +59,8 @@
       <key>ww</key>
       <value>WHERE [(parameter)];</value>
    </row>
+   <row>
+      <key>sso</key>
+      <value>--  set serveroutput on</value>
+   </row>
 </rows>

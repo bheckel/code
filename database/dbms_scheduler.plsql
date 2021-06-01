@@ -95,8 +95,9 @@ BEGIN
     --start_date => CAST(sysdate + interval '1' minute AS TIMESTAMP),
     start_date => '09-NOV-08 12.01.00AM EST5EDT',
     /* repeat_interval => 'Freq=Daily;ByHour=00;ByMinute=01', */
+    repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SAT;ByHour=04;ByMinute=30;BySecond=0',
     /* repeat_interval => 'SYSTIMESTAMP + INTERVAL '30' MINUTE', */
-    repeat_interval => 'FREQ=MINUTELY;INTERVAL=6;',
+    /*repeat_interval => 'FREQ=MINUTELY;INTERVAL=6;',*/
     end_date => to_date(null),
     job_class => 'DEFAULT_JOB_CLASS',
     enabled => true,  -- default FALSE

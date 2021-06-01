@@ -12,6 +12,6 @@ for d in dotfiles code; do
     echo cancelled
   fi
   echo
-  # Check for fatals
+  # Check for fatals "master pushes to master (local out of date)"
   git remote show origin
 done
