@@ -95,6 +95,7 @@ BEGIN
     --start_date => CAST(sysdate + interval '1' minute AS TIMESTAMP),
     start_date => '09-NOV-08 12.01.00AM EST5EDT',
     /* repeat_interval => 'Freq=Daily;ByHour=00;ByMinute=01', */
+    --SCHEDULE_TYPE:CALENDAR
     repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SAT;ByHour=04;ByMinute=30;BySecond=0',
     /* repeat_interval => 'SYSTIMESTAMP + INTERVAL '30' MINUTE', */
     /*repeat_interval => 'FREQ=MINUTELY;INTERVAL=6;',*/
@@ -126,7 +127,7 @@ BEGIN
                                    value => 'BEGIN SETARS.SET_CUSTOMER_FLAG(inAccount_ID => 0, do_commit =>1); END;');
 END;
 
--- Update job's NAMED schedule (if job is disabled)
+-- Update change job's NAMED schedule (if job is disabled)
 BEGIN sys.Dbms_Scheduler.enable('SETARS.PERIODIC_LIFECYCLE_UPDATE'); END;  -- can pass comma-separated list 'foo, bar'
 BEGIN sys.dbms_scheduler.set_attribute(name => 'SETARS.PERIODICLIFECYCLEUPDATE',
                                        attribute => 'START_DATE',
@@ -377,7 +378,6 @@ exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_HISTORY');
 
 ---
 
-
       v_start := SYSDATE || ' 10.00.00PM EST5EDT';
       DBMS_SCHEDULER.CREATE_JOB(job_name   => 'JOB_LOAD_HISTORY',
                                 job_type   => 'PLSQL_BLOCK',
@@ -386,3 +386,35 @@ exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_HISTORY');
                                 enabled    => TRUE,
                                 auto_drop  => TRUE,
                                 comments   => 'NEW BUILD HIST ' || v_main_table);
+
+---
+
+BEGIN
+  sys.dbms_scheduler.create_job(
+    job_name => 'JOB_LOAD_NB',
+    job_type => 'PLSQL_BLOCK',
+    job_action => 'BEGIN mkc.load_invoice_revenue(in_wait_for_perc=>0, in_rediff_tables=>1, in_view_name=>''MKC_REVENUE2'', in_delete_daily=>1, in_bypass_history=>0); END;',
+    start_date => '03-JUN-21 04.00.00PM EST5EDT',
+    repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SAT;ByHour=16;ByMinute=00;BySecond=0',
+    end_date => to_date(null),
+    job_class => 'DEFAULT_JOB_CLASS',
+    enabled => true,
+    auto_drop => false,
+    comments => 'Atlas New Build afternoon load - ONLY execute this job via sqlplus or PLSQL Developer');
+END;
+-- exec DBMS_SCHEDULER.disable('JOB_LOAD_NB');
+-- Only To: is filled
+begin
+  dbms_scheduler.add_job_email_notification (
+  job_name=> 'JOB_LOAD_NB',
+  sender => 'noreply@sas.com',
+  recipients=> 'bob@s.com,bruce@s.com',
+  subject => '[MKC] Oracle Scheduler Job Notification - %job_owner%.%job_name%.%job_subname% on SER: %event_type%',
+  events=> 'job_started, job_succeeded, job_failed, job_broken, job_disabled');
+end;
+begin
+  dbms_scheduler.remove_job_email_notification (
+  job_name=> 'JOB_LOAD_NB',
+  recipients=> 'bob@s.com,bruce@s.com',
+  events=> 'job_started, job_succeeded, job_failed, job_broken, job_disabled');
+end;

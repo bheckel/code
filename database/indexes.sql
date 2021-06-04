@@ -201,3 +201,33 @@ select distinct utc.TABLE_NAME, uic.COLUMN_NAME, uic.INDEX_NAME
 -- Oracle index NULLs indexed. NULL can be indexed by adding another not nullable column to the index:
 CREATE INDEX ix_with_nulls ON table_name (nullable_column, '1');
 
+---
+
+-- Adapted: 04-Jun-2021 (Bob Heckel--https://connor-mcdonald.com/2021/05/26/why-indexes-are-so-fast-at-finding-a-key/)
+drop table t;
+
+create table t ( x int );
+
+create unique index ix on t ( x );
+
+declare
+  lev number;
+begin
+  for i in 0 .. 30
+  loop
+    execute immediate 'truncate table t';
+    execute immediate 'drop index ix';
+    insert /*+ APPEND */ into t
+    select rownum
+    from ( select 1 from dual connect by level <= 100 ),
+         ( select 1 from dual connect by level <= 100 ),
+         ( select 1 from dual connect by level <= 100 )
+    where rownum < power(2,i);
+    execute immediate 'create unique index ix on t ( x ) ';
+
+    select blevel into lev from user_indexes
+    where index_name = 'IX';
+    dbms_output.put_line(power(2,i)||' '||lev);
+    exit when lev=3;
+  end loop;
+end;

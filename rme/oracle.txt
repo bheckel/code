@@ -1,4 +1,7 @@
 
+-- Password change                             new
+ALTER USER unit_test_repos IDENTIFIED BY "ESp5l@whgRS46hY" REPLACE "vL6iXcs@n882!Yp";
+
 # Install Customer Orders sample schema 04-Dec-20
 $ git clone https://github.com/oracle/db-sample-schemas.git
 $ cd db-sample-schemas
@@ -12,11 +15,6 @@ connect admin@rshdb1_low
 connect co@rshdb1_low
 @co_ddl
 @co_dml
-
----
-
--- Password change
-ALTER USER unit_test_repos IDENTIFIED BY "ESp5l@whgRS46hY" REPLACE "vL6iXcs@n882!Yp";
 
 ---
 
@@ -81,7 +79,11 @@ ALTER USER scott QUOTA 100M ON data;
 ---
 
 -- Session to kill
+col sess format a50
 select s.sid||','||s.serial# sess, s.osuser, s.USERNAME, s.last_call_et, s.status, s.sql_address, s.program from v$session s where ( s.status = 'ACTIVE' );
+
+-- Kill running session
+select distinct 'ALTER SYSTEM KILL SESSION ''' || sid || ',' || serial# || ''';' x, substr(q.sql_text,1,500) s from v$session s, v$sql q where s.sql_id=q.sql_id(+) and q.sql_text not like 'select distinct ''exec sys%';
 
 ---
 
