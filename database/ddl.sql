@@ -26,5 +26,5 @@ drop index KRF_ACCT_ID_4_JOINS_IX;
 
 select index_name, table_name, used from v$object_usage;--null
 alter index KRB_HC_IN_CIX monitoring usage;
-select index_name, table_name, used from v$object_usage;--not null
+select index_name, table_name, used from v$object_usage;--not null if index is being used
 alter index KRB_HC_IN_CIX nomonitoring usage;
