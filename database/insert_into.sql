@@ -1,6 +1,6 @@
 
 -- Modified: 02-Apr-2020 (Bob Heckel)
--- see restore_records_from_hist.sql insert_new_record_correlated.sql
+-- see restore_records_from_hist.sql insert_new_record_correlated.sql forall_insert.plsql
 
 ---
 
@@ -19,6 +19,7 @@ select level, dbms_random.string('a',30)
 from dual
 connect by level <= 100000
 -- 100000 row(s) inserted.
+commit;
 
 ---
 
@@ -137,16 +138,31 @@ END;
 
 ---
 
--- Without conditions:
-    FORALL i IN 1 .. in_oppt_table.COUNT SAVE EXCEPTIONS EXECUTE IMMEDIATE
-      'INSERT INTO OPPORTUNITY_EMPLOYEE_BASE OEB
+-- See forall_insert.plsql for a better approach
+
+ --  set serveroutput on
+   declare
+     TYPE t_nested_tbl IS TABLE OF number;
+    id_table t_nested_tbl;
+
+     cursor c1 is 
+       select opportunity_id from opportunity where rownum<9;
+   begin
+     open c1; 
+     loop
+         FETCH c1 BULK COLLECT INTO id_table;
+         EXIT WHEN id_table.COUNT = 0;
+         FOR i IN 1 .. id_table.COUNT LOOP
+           DBMS_OUTPUT.put_line('x ' || id_table(i));
+         end loop;
+     
+    FOR i IN 1 .. id_table.COUNT loop
+      DBMS_OUTPUT.put_line('x ' || id_table(i));
+      INSERT /*+ APPEND */  INTO tmpOPPORTUNITY_EMPLOYEE_BASE
         (opportunity_employee_id,
+         employee_id,founder,owner_type,TOTAL_SOFTWARE_REVENUE,MULTINATIONAL_NEG_NOTIFIED,DEAL_STRUCTURE_NEG_NOTIFIED,
          opportunity_id,
-         employee_id,
-         territory_lov_id,
-         role_lov_id,
-         owner_type,
-         founder,
+         h_version,
          created,
          createdby,
          updated,
@@ -154,23 +170,84 @@ END;
       VALUES
         (
         uid_opportunity_employee.NEXTVAL,
-         :1,
-         :2,
-         :3,
-         :4,
-         ''S'',
+        88901,1,'S',0,1,1,
+         id_table(i),
+         1,
+         sysdate,
          0,
-         :5,
-         0,
-         :6,
+         sysdate,
          0
-        )'
-       USING in_oppt_table(i).opportunity_id,
-             in_oppt_table(i).new_default_tsr_owner,
-             in_oppt_table(i).new_default_tsr_territory,
-             in_oppt_table(i).new_ip_role_lov_id,
-             v_start_time,
-             v_start_time;
+        );
+        
+      IF mod(i, 10000) = 0 THEN
+        commit;
+      end if;
+
+    end loop;
+  end loop;    
+  commit;     
+  
+    EXCEPTION
+      WHEN OTHERS THEN
+      rollback;
+      DBMS_OUTPUT.put_line(SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+end;
+
+--or loading a cursor into a collection
+ --  set serveroutput on
+   declare
+     cursor c1 is 
+       select opportunity_id from opportunity where rownum<9;
+       
+      TYPE t_idtbl IS TABLE OF c1%ROWTYPE;
+      id_table t_idtbl;
+   begin
+     open c1; 
+     loop
+         FETCH c1 BULK COLLECT INTO id_table;
+         EXIT WHEN id_table.COUNT = 0;
+--         FOR i IN 1 .. id_table.COUNT LOOP
+--           DBMS_OUTPUT.put_line('x ' || id_table(i).opportunity_id);
+--         end loop;
+     
+    FOR i IN 1 .. id_table.COUNT loop
+      DBMS_OUTPUT.put_line('x ' || id_table(i).opportunity_id);
+      INSERT /*+ APPEND */  INTO tmpOPPORTUNITY_EMPLOYEE_BASE
+        (opportunity_employee_id,
+         employee_id,founder,owner_type,TOTAL_SOFTWARE_REVENUE,MULTINATIONAL_NEG_NOTIFIED,DEAL_STRUCTURE_NEG_NOTIFIED,
+         opportunity_id,
+         h_version,
+         created,
+         createdby,
+         updated,
+         updatedby)
+      VALUES
+        (
+        uid_opportunity_employee.NEXTVAL,
+        88901,1,'S',0,1,1,
+         id_table(i).opportunity_id,
+         1,
+         sysdate,
+         0,
+         sysdate,
+         0
+        );
+        
+      IF mod(i, 10000) = 0 THEN
+        commit;
+      end if;
+
+    end loop;
+  end loop;    
+  commit;     
+  
+    EXCEPTION
+      WHEN OTHERS THEN
+      rollback;
+      DBMS_OUTPUT.put_line(SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+end;
+
+---
 
 -- With conditions:
     FORALL i IN 1 .. in_risk_table.COUNT SAVE EXCEPTIONS EXECUTE IMMEDIATE
@@ -263,3 +340,4 @@ INSERT INTO xsp_processing_territory (xsp_processing_territory_id, xsp_processin
   SELECT UID_XSP_PROCESSING_TERRITORY.NEXTVAL, process_request_id, terr_id, process_date, employee_id
     FROM DUAL
    WHERE terr_id NOT IN (SELECT t.territory_lov_id FROM xsp_processing_territory t);
+
