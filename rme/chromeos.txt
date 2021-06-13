@@ -24,5 +24,6 @@ Categories=Linux apps;
 
 ---
 
-Chromebooks shortcut keys:
+Chromebooks Help shortcut keys:
 Ctrl+Alt+/
+
