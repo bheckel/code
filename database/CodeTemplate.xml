@@ -49,7 +49,7 @@
    </row>
    <row>
       <key>sso</key>
-      <value>--  set serveroutput on size unl</value>
+      <value>--  set serveroutput on</value>
    </row>
    <row>
       <key>upd</key>
@@ -60,7 +60,7 @@
       <value>WHERE [(parameter)];</value>
    </row>
    <row>
-      <key>sso</key>
-      <value>--  set serveroutput on</value>
+      <key>kkk</key>
+      <value>from kmc_revenue_full</value>
    </row>
 </rows>

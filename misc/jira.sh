@@ -8,8 +8,9 @@ DESC=${2:-untitled}
 
 TAG=${JIRA}_${DESC}
 
-echo 'already exists?'
-cd ~/onedrive && find . -maxdepth 1 "*${JIRA}*"
+echo 'checking if already exists...'
+cd ~/onedrive && find . -maxdepth 1 -name "*${JIRA}*"
+echo '...done'
 
 mkdir -p ~/onedrive/orion-${TAG} && cd ~/onedrive/orion-${TAG} && \
 cp -i ~/onedrive/template_jira.sql ~/onedrive/orion-${TAG}/${JIRA}.sql && \
