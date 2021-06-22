@@ -6,10 +6,13 @@ alter table mkc_revenue_full add USD_CC_RATE_XRC number;
 alter table mkc_revenue modify "PRODUCT" VARCHAR(15) COLLATE "USING_NLS_COMP" GENERATED ALWAYS AS (CAST(UPPER(COALESCE("PRODUCT_OVR","PRODUCT_NAME_CODE_ADJ","PRODUCT_IDZ","PRODUCT_NAME_CODE_SR","PRODUCT_9BYTE_ID")) AS CHAR(15))) VIRTUAL;
 alter table user_role1 rename to user_role2;
 alter table roion35282 rename column a3 to a4;
+
 alter table js_invoice_bob_31mar21 add constraint JS_INVOICE_BOB_31MAR21_PK PRIMARY KEY (INVOICE_NUMBER_SR,INVOICE_SUBSIDIARY_SR)
+alter table mkc_revenue_adj add constraint NN_SDM_BUSINESS_KEY CHECK (SDM_BUSINESS_KEY IS NOT NULL);
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID;
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID drop index;
-drop table kr27mar2021170440 purge;
+
+drop table kr27mar2021170440 PURGE;
 truncate table mkc_revenue_full_bob
 
 create or replace trigger mkc_revenue_full_iud before INSERT OR UPDATE OR DELETE ON MKC_REVENUE_FULL FOR EACH ROW
@@ -28,3 +31,5 @@ select index_name, table_name, used from v$object_usage;--null
 alter index KRB_HC_IN_CIX monitoring usage;
 select index_name, table_name, used from v$object_usage;--not null if index is being used
 alter index KRB_HC_IN_CIX nomonitoring usage;
+
+create sequence UID_RION_37551 MINVALUE 2 MAXVALUE 999999999999999999999999999 INCREMENT BY 10  START WITH 12 CACHE 20 NOORDER NOCYCLE;
