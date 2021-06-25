@@ -3,31 +3,29 @@
 -- Modified: Thu 29 Apr 2021 (Bob Heckel)
 -------------------------------------
 
-SELECT ud.actual_start_date,
-       uj.last_start_date,
-       ud.status,
-       ud.run_duration,
-       uj.last_run_duration,
-       uj.state,
-       uj.job_name,
-       uj.job_type,
-       uj.job_action,
-       uj.start_date,
-       uj.repeat_interval,
-       uj.end_date,
-       uj.job_class,
-       uj.enabled,
-       uj.auto_drop,
-       uj.comments,
-       ud.output,
-       ud.job_name,
-       ud.error#
-  FROM user_scheduler_jobs uj,
-       user_scheduler_job_run_details ud
+exec DBMS_SCHEDULER.disable(job_name => 'JOB_LOAD_HISTORY');
+exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_LOAD_HISTORY');
+exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_HISTORY');
+
+---
+
+-- What is scheduled
+select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments from user_scheduler_jobs a where job_name = 'DEL_JOB_NEWBUILD_DUPS' order by 1;
+
+-- History of job
+SELECT uj.job_name, uj.job_action,  uj.last_run_duration, ud.status, ud.output, uj.state, uj.next_run_date, uj.repeat_interval, ud.actual_start_date, uj.last_start_date, uj.comments, uj.job_type, uj.start_date, uj.end_date, uj.job_class, uj.enabled, uj.auto_drop, ud.error#
+  FROM user_scheduler_jobs uj, user_scheduler_job_run_details ud
  WHERE uj.job_name = ud.job_name
-   AND uj.job_name LIKE '%INVOI%'
+   --AND uj.job_name LIKE '%INVOI%'
    AND actual_start_date > sysdate - INTERVAL '3' day
  ORDER BY actual_start_date DESC;
+
+SELECT uj.job_name, uj.job_action, uj.last_run_duration, ud.status, ud.output, uj.state, uj.next_run_date, uj.repeat_interval, ud.actual_start_date, uj.last_start_date, uj.comments, uj.job_type, uj.start_date, uj.end_date, uj.job_class, uj.enabled, uj.auto_drop, ud.error# FROM user_scheduler_jobs uj, user_scheduler_job_run_details ud WHERE uj.job_name = ud.job_name
+AND uj.job_name = 'DEL_JOB_NEWBUILD_DUPS'
+AND actual_start_date > sysdate - INTERVAL '3' day
+ORDER BY actual_start_date DESC;
+
+select * from user_scheduler_job_log order by log_date desc
 
 ---
 
@@ -37,9 +35,9 @@ BEGIN
    job_name   => 'TEST_JOB',
    job_type   => 'PLSQL_BLOCK',
    job_action => 'begin dbms_output.put_line(''ok''); end;',
-   --start_date => '08-JAN-20 04.00.00PM EST5EDT',  -- be careful in January that you've changed the year!!
-   --start_date => CAST(SYSDATE + interval '1' minute AS TIMESTAMP),
+   --start_date => '08-JAN-20 04.00.00PM EST5EDT',  -- be careful in January that you've changed the year or it'll run immediately
    start_date => SYSTIMESTAMP + INTERVAL '10' SECOND,
+   --start_date => SYSDATE + INTERVAL '1' MINUTE
    end_date   => TO_DATE(NULL),
    job_class  => 'DEFAULT_JOB_CLASS',
    enabled    => TRUE,
@@ -48,14 +46,6 @@ END;
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT
 SELECT * from user_scheduler_jobs WHERE job_name='TEST_JOB';
 SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME = 'TEST_JOB';
-
----
-
-SELECT * from USER_SCHEDULER_JOBS order by last_start_date desc
-
-select * from user_scheduler_job_log order by log_date desc
-
-SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS order by actual_start_date desc
 
 ---
 
@@ -143,13 +133,13 @@ END;
 
 ---
 
-CREATE OR REPLACE PACKAGE orion33427 AS
+CREATE OR REPLACE PACKAGE update_several_jobs AS
   
   PROCEDURE t;
 
 END;
 /
-CREATE OR REPLACE PACKAGE BODY orion33427 AS
+CREATE OR REPLACE PACKAGE BODY update_several_jobs AS
 
   PROCEDURE t
   IS
@@ -363,18 +353,12 @@ begin
                                         attribute => 'COMMENTS');                                   
 end;
 
--- Update modify an attribute like comment
+-- Update modify an attribute e.g. COMMENTS
 begin
   sys.dbms_scheduler.set_attribute(name      => 'CREATE_REFERENCE_JOB',
                                    attribute => 'COMMENTS',
                                    value     => 'Nightly job to auto-create reference records not auto-created via the UI');                                   
 end;
-
----
-
-exec DBMS_SCHEDULER.disable(job_name => 'JOB_LOAD_HISTORY');
-exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_LOAD_HISTORY');
-exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_HISTORY');
 
 ---
 
@@ -386,23 +370,26 @@ exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_HISTORY');
                                 enabled    => TRUE,
                                 auto_drop  => TRUE,
                                 comments   => 'NEW BUILD HIST ' || v_main_table);
-
 ---
 
+-- Weekly schedule
 BEGIN
   sys.dbms_scheduler.create_job(
-    job_name => 'JOB_LOAD_NB',
+    job_name => 'JOB_LOAD_NB_TEST',
     job_type => 'PLSQL_BLOCK',
-    job_action => 'BEGIN mkc.load_invoice_revenue(in_wait_for_perc=>0, in_rediff_tables=>1, in_view_name=>''MKC_REVENUE2'', in_delete_daily=>1, in_bypass_history=>0); END;',
-    start_date => '03-JUN-21 04.00.00PM EST5EDT',
+    --job_action => 'BEGIN mkc.load_invoice_revenue(in_wait_for_perc=>0, in_rediff_tables=>1, in_view_name=>''MKC_REVENUE2'', in_delete_daily=>1, in_bypass_history=>0); END;',
+    job_action => 'BEGIN null; END;',
+    --start_date => '03-JUN-21 04.00.00PM EST5EDT',
     repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SAT;ByHour=16;ByMinute=00;BySecond=0',
     end_date => to_date(null),
     job_class => 'DEFAULT_JOB_CLASS',
     enabled => true,
     auto_drop => false,
-    comments => 'Atlas New Build afternoon load - ONLY execute this job via sqlplus or PLSQL Developer');
+    comments => 'testing');
 END;
--- exec DBMS_SCHEDULER.disable('JOB_LOAD_NB');
+exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_NB');
+exec DBMS_SCHEDULER.disable('JOB_LOAD_NB');
+exec DBMS_SCHEDULER.enable('JOB_LOAD_NB');
 -- Only To: is filled
 begin
   dbms_scheduler.add_job_email_notification (

@@ -36,6 +36,36 @@ select sum(email_messages_id) from email_messages;  -- FULL SCAN but no table ac
 
 ---
 
+-- Use ALTER SESSION SET statistics_level = all; if not using hint
+
+select /*+ gather_plan_statistics */
+       colour, count(*) 
+from   bricks
+group  by colour
+order  by colour;
+
+select *
+/*from   table(dbms_xplan.display_cursor(format => 'IOSTATS LAST'));*/
+from   table(dbms_xplan.display_cursor(format => 'ALLSTATS LAST'));
+/*
+SQL_ID  f3z2z7vk5fj1d, child number 1
+-------------------------------------
+select         colour, count(*)  from   bricks group  by colour order  
+by colour
+ 
+Plan hash value: 2025330397
+ 
+--------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                  | Name   | Starts | E-Rows | A-Rows |   A-Time   | Buffers |  OMem |  1Mem | Used-Mem |
+--------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT           |        |      1 |        |      9 |00:00:00.01 |      42 |       |       |          |
+|   1 |  SORT GROUP BY             |        |      1 |      9 |      9 |00:00:00.01 |      42 |  2048 |  2048 | 2048  (0)|
+|   2 |   TABLE ACCESS STORAGE FULL| BRICKS |      1 |   2250 |   2250 |00:00:00.01 |      42 |  1025K|  1025K|          |
+--------------------------------------------------------------------------------------------------------------------------
+*/
+
+---
+
 EXPLAIN PLAN FOR
   SELECT *
   FROM email_messages t 
@@ -114,12 +144,14 @@ drop table robtest purge
 -- 
 -- There are two different ways databases use indexes to apply the WHERE clauses (predicates):
 -- - ACCESS PREDICATES express the start and stop conditions for the leaf node traversal. They
---   define the scanned index range, which is hopefully narrow.
+--   define the scanned index range, which is hopefully narrow. An access predicate only reads 
+--   rows where the condition is true.
 -- 
 -- - FILTER PREDICATES are applied during the leaf node traversal only. They don't
 --   contribute to the start and stop conditions and do not narrow the scanned index range. It is
 --   possible to modify an index and turn a filter predicate into an access predicate (e.g. by
---   changing indexed column order, etc).
+--   changing indexed column order, etc). A filter predicate reads ALL the rows from the input, 
+--   discarding those where the condition is false.
 -- 
 --   E.g.
 --   SELECT first_name, last_name, subsidiary_id, phone_number
@@ -180,6 +212,13 @@ drop table robtest purge
 -- index range as small as possible.  That usually means index for equality first, then for ranges.
 -- Ideally the index "covers" the entire WHERE clause so that all filters are used as access predicates.
 -- 
+-- Notice that the table doesn't appear in the execution plan! This is also called a covering index.
+-- For the optimizer to do this, at least one column must be NOT NULL. This is because Oracle excludes 
+-- rows where all columns are NULL from (BTree) indexes. If all the columns allow nulls, the query 
+-- could give incorrect results using an index as it would not return wholly NULL rows! E.g. WHERE color=...
+-- AND weight=... so you'd have to do ALTER TABLE bricks MODIFY colour NOT NULL; (or weight) for Oracle 
+-- to use the index.
+-- 
 -- TABLE ACCESS [tbl name] BY INDEX ROWID
 -- Retrieves a row from the table using the ROWID retrieved from the preceding
 -- index lookup access, e.g. INDEX RANGE SCAN.
@@ -188,15 +227,14 @@ drop table robtest purge
 -- Reads the entire index (all rows) in index order. Depending on various system
 -- statistics, the database might perform this operation if it needs all rows in
 -- index order—e.g., because of a corresponding order by clause.  Instead, the
--- optimizer might also use an INDEX FAST FULL SCAN and perform an additional sort
--- operation.
+-- optimizer might also use an INDEX FAST FULL SCAN and perform an additional sort operation.
 -- 
 -- INDEX [ix name] FAST FULL SCAN
 -- Reads the entire index (all rows) as stored on the disk. This operation is
 -- typically performed instead of a full table scan if all required columns are
 -- available in the index. Similar to TABLE ACCESS FULL, the INDEX FAST FULL SCAN
 -- can benefit from multi-block read operations.
--- 
+
 -- TABLE ACCESS [tbl name] STORAGE FULL
 -- Also known as "full table scan". Reads the entire table (all rows AND COLUMNS!) as stored on the
 -- disk. Although multi-block read operations improve the speed of a full table scan considerably
