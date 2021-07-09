@@ -1,6 +1,15 @@
--- sqlplus -S tars/pw@sed <check_db.sql
-PROMPT Checking for invalids...
-select object_name from user_objects o where object_type != 'JAVA CLASS' and status = 'INVALID' ORDER BY 1;
-
-PROMPT Checking for locks l10e523...
-select s.sid ,s.serial# ,s.username ,s.machine ,s.status ,s.lockwait ,t.used_ublk ,t.used_urec ,t.start_time from v$transaction t inner join v$session s on t.addr = s.taddr where upper(machine) like '%L10E523';
+--  set serveroutput on
+declare 
+  oldhsh number;
+  newhsh number;
+begin
+  SELECT sum(ora_hash(rate)) into oldhsh from currency_exchange_rates_master;
+  execute immediate 'drop table z_cerm_check purge';
+  execute immediate 'create table z_cerm_check as SELECT sum(ora_hash(rate)) sumhsh from currency_exchange_rates_master';
+  SELECT sum(ora_hash(rate)) into newhsh from currency_exchange_rates_master;
+  if oldhsh != newhsh then
+    DBMS_OUTPUT.put_line('change');
+  else
+    DBMS_OUTPUT.put_line('no change');
+  end if;
+end;

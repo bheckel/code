@@ -67,10 +67,11 @@ BEGIN
   DBMS_SCHEDULER.create_schedule(
     schedule_name   => 'AUTO_ACCEPT_TARGETS_SCHEDULE',
     repeat_interval => 'FREQ=MINUTELY; INTERVAL=5;',
-    --ignored i think:
+    --repeat_interval => 'FREQ=hourly; INTERVAL=1;',
+    --ignored in this example, job runs immediately then again in x minutes/hours:
     --start_date => systimestamp + INTERVAL '2' MINUTE,
     end_date        => TO_DATE(NULL),
-    comments        => 'Schedule for auto_acknowledge_targets job.');
+    comments        => 'foo bar');
 END;
 
 ---
