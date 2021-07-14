@@ -349,6 +349,60 @@ create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN
   CLOSE restore_grants;
 END;
 
+--or maybe
+create or replace PROCEDURE z_bob_proc(table_name VARCHAR2 DEFAULT NULL, IN_DB IN VARCHAR2 DEFAULT NULL) IS
+    CURSOR c_object_grants(cursor_db VARCHAR2) IS
+      SELECT OBJECT_NAME,
+             'GRANT ' || OBJECT_PRIVILEGES || ' ON ' || OBJECT_NAME ||
+             ' TO ' || SCHEMA_NAME AS GRANT_SQL
+        FROM RION_OBJECT_GRANTS
+       WHERE DB=cursor_db;
+
+    TYPE OBJECT_GRANTS_TAB IS TABLE OF c_object_grants%ROWTYPE INDEX BY PLS_INTEGER;
+    t_object_grants OBJECT_GRANTS_TAB;
+
+    count_records NUMBER := 0;
+    l_record_count NUMBER := 0;
+    l_error_count  NUMBER := 0;
+    this_cursor_db VARCHAR2(100);
+
+  BEGIN
+    this_cursor_db := IN_DB;
+    OPEN c_object_grants(this_cursor_db);
+    count_records := 0;
+
+    LOOP
+      FETCH c_object_grants BULK COLLECT
+        INTO t_object_grants LIMIT 100;
+
+      l_record_count := t_object_grants.COUNT;
+      EXIT WHEN l_record_count = 0;
+
+      FOR i IN 1 .. l_record_count LOOP
+        BEGIN
+          IF ((table_name IS NULL) OR (table_name = t_object_grants(i).OBJECT_NAME)) THEN
+            DBMS_OUTPUT.put_line('ok ' || t_object_grants(i).OBJECT_NAME);
+            EXECUTE IMMEDIATE t_object_grants(i).GRANT_SQL;
+            count_records := count_records + 1;
+          END IF;
+
+        EXCEPTION
+          WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('GRANT failed for object: ' || t_object_grants(i)
+                                 .OBJECT_NAME);
+            l_error_count := l_error_count + 1;
+        END;
+
+      END LOOP;
+    END LOOP;
+    CLOSE c_object_grants;
+
+    DBMS_OUTPUT.PUT_LINE((count_records - l_error_count) || ' of ' ||
+                         count_records || ' GRANTs Succeeded.');
+  END;
+--  set serveroutput on
+exec z_bob_proc('RULE_BONUS','SED');
+
 ---
 
 -- Parameterized cursor (with defaults)

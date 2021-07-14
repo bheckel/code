@@ -9,10 +9,10 @@ CREATE OR REPLACE PROCEDURE test_cursor_performance(approach IN VARCHAR2) IS
   one_row cur%ROWTYPE;
 
   TYPE t IS TABLE OF cur%ROWTYPE INDEX BY PLS_INTEGER;
+  many_rows    t;
 
-  many_rows     t;
-  last_timing   NUMBER;
-  cntr number := 0;
+  last_timing  NUMBER;
+  cntr         NUMBER := 0;
 
   PROCEDURE start_timer IS
     BEGIN
@@ -34,9 +34,9 @@ CREATE OR REPLACE PROCEDURE test_cursor_performance(approach IN VARCHAR2) IS
 
      CASE approach
         /* 1. */
-        WHEN 'implicit cursor for loop' THEN
+        WHEN 'implicit cursor FOR loop' THEN
            FOR j IN cur LOOP
-              cntr := cntr + 1;
+             cntr := cntr + 1;
            END LOOP;
 
            DBMS_OUTPUT.put_line(cntr);
@@ -44,7 +44,6 @@ CREATE OR REPLACE PROCEDURE test_cursor_performance(approach IN VARCHAR2) IS
         /* 2. */
         WHEN 'explicit open, fetch, close' THEN
            OPEN cur;
-
            LOOP
               FETCH cur INTO one_row;
               EXIT WHEN cur%NOTFOUND;  -- <~~~~~~~~~~~~~
@@ -59,13 +58,12 @@ CREATE OR REPLACE PROCEDURE test_cursor_performance(approach IN VARCHAR2) IS
         /* 3. */
         WHEN 'bulk fetch' THEN
            OPEN cur;
-
            LOOP
               FETCH cur BULK COLLECT INTO many_rows LIMIT 100;
               EXIT WHEN many_rows.COUNT() = 0;  -- <~~~~~~~~~~~~~
 
               FOR indx IN 1 .. many_rows.COUNT LOOP
-                 cntr := cntr + 1;
+                cntr := cntr + 1;
               END LOOP;
            END LOOP;
 
@@ -85,7 +83,7 @@ BEGIN
   --execute immediate 'ALTER PROCEDURE test_cursor_performance COMPILE plsql_optimize_level=0';
    
   /* 1. */
-  test_cursor_performance('implicit cursor for loop');
+  test_cursor_performance('implicit cursor FOR loop');
   /* 2. */
   test_cursor_performance('explicit open, fetch, close');
   /* 3. */

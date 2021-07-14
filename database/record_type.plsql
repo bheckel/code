@@ -82,7 +82,7 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE(course_rec3.course_no||' - '||course_rec3.description);
 
   -- Or implicitly, with a cursor FOR loop
-   FOR course_rec4 IN (SELECT * FROM course WHERE course_no = 10) LOOP
+   FOR course_rec4 IN ( SELECT * FROM course WHERE course_no = 10 ) LOOP
      DBMS_OUTPUT.PUT_LINE(course_rec4.course_no||' - '||course_rec4.description);
    END LOOP;
 END;

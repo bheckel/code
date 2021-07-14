@@ -1,5 +1,22 @@
 
--- See also nested_table.plsql, varray.plsql
+-- See also other collections: nested_table.plsql, varray.plsql, record_type.plsql
+-- Modified: 13-Jul-2021 (Bob Heckel)
+
+---
+
+DECLARE
+  TYPE NUM_TYPE IS TABLE OF NUMBER INDEX BY BINARY_INTEGER;
+
+  nums   NUM_TYPE;
+  total  number;
+BEGIN
+  nums(1) := 127.56;
+  nums(2) := 56.79;
+  nums(3) := 295.34;
+  DBMS_OUTPUT.put_line(nums(3));
+END;
+
+---
 
 CREATE TABLE my_family (str VARCHAR2(100),name VARCHAR2 (100));
 INSERT INTO my_family VALUES ('foo1','Veva'); 
@@ -8,10 +25,10 @@ INSERT INTO my_family VALUES ('foo3','Eli');
 INSERT INTO my_family VALUES (null,'xEli'); 
 COMMIT; 
 
--- Load a string-keyed hash of strings
+-- Load a string-keyed hash of strings from a table
 declare
-  type myaa_t is table of varchar2(99) index by varchar2(99);
-  myaa myaa_t;
+  type MYAA_T is table of varchar2(99) index by varchar2(99);
+  myaa MYAA_T;
   
   begin
 		for r in ( select * from my_family ) loop
@@ -24,29 +41,29 @@ declare
 
 -- Load hash with a cursor column.  See also pass_cursor.plsql.
 DECLARE 
-   i integer := 0; 
+  i integer := 0;   -- must initialize to avoid NULL index error
 
-   CURSOR c is select name from my_family; 
+  CURSOR c is select name from my_family; 
 
-   TYPE myaa_t IS TABLE of my_family.Name%TYPE INDEX BY binary_integer; 
-   myaa myaa_t; 
+  TYPE MYAA_T IS TABLE of my_family.Name%TYPE INDEX BY binary_integer; 
+  myaa MYAA_T; 
 BEGIN 
   FOR rec IN c LOOP 
     i := i + 1; 
     myaa(i) := rec.name; 
-    dbms_output.put_line('Name('||i||'):' || myaa(i)); 
+    dbms_output.put_line('Name(' || i || '):' || myaa(i)); 
   END LOOP; 
 END;
 
 
--- Load hash with a db table
+-- Load associative array hash with a db table
 DECLARE 
    i integer := 0; 
 
    --CURSOR c is select name, str from my_family; 
 
-   TYPE myaa_t IS TABLE of my_family%ROWTYPE INDEX BY binary_integer; 
-   myaa myaa_t; 
+   TYPE MYAA_T IS TABLE of my_family%ROWTYPE INDEX BY binary_integer; 
+   myaa MYAA_T; 
 BEGIN 
    --FOR rec IN c LOOP 
   FOR rec IN ( select name, str from my_family ) LOOP 
@@ -60,7 +77,7 @@ BEGIN
   END LOOP; 
 END;
 
--- Compare (better only if small result set): load nested table with a db table
+-- Compare (better only if small result set) load nested table with a db table:
 DECLARE 
   TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
   mynt mynt_t; 
@@ -74,7 +91,7 @@ BEGIN
   END LOOP; 
 END;
 
--- Compare (better for loading large amounts of data) load nested table with a db table
+-- Compare (better for loading large amounts of data) load nested table with a db table:
 DECLARE 
   TYPE mynt_t IS TABLE of my_family%ROWTYPE; 
   mynt mynt_t; 
@@ -93,7 +110,7 @@ END;
 
 ---
 
--- Load hash with a query:
+-- Load associative array hash with a query:
 PROCEDURE do IS
 	TYPE numtbl IS TABLE OF VARCHAR2(4000) INDEX BY PLS_INTEGER;
 	mytbl numtbl;
@@ -203,34 +220,6 @@ END;
 ---
 
 DECLARE
-  TYPE R_TARGET IS RECORD(
-    COMP_EMP_TARGET_ID            COMP_EMP_TARGET_BASE.COMP_EMP_TARGET_ID%TYPE,
-    EMPLOYEE_ID                   COMP_EMP_TARGET_BASE.EMPLOYEE_ID%TYPE,
-    PERCENT_ATTAINMENT_DATE       CHAR(6));
-
-  TYPE T_TARGET_TABLE IS TABLE OF R_TARGET INDEX BY PLS_INTEGER;
-BEGIN
-  target R_TARGET; 
-
-  select COMP_EMP_TARGET_ID, EMPLOYEE_ID, PERCENT_ATTAINMENT_DATE
-  into target
-  from foo;
-
-  targettbl T_TARGET_TABLE;
-
-  select 1234 COMP_EMP_TARGET_ID, EMPLOYEE_ID, PERCENT_ATTAINMENT_DATE
-  into targettbl(1)
-  from foo;
-
-  select 5678 COMP_EMP_TARGET_ID, EMPLOYEE_ID, PERCENT_ATTAINMENT_DATE
-  into targettbl(2)
-  from foo;
-
-END:
-
----
-
-DECLARE
   i binary_integer := 0;
   --type aa_t is table of scott.emp.deptno%type index by binary_integer;
   type aa_t is table of scott.emp%rowtype index by binary_integer;
@@ -255,6 +244,34 @@ BEGIN
    dbms_output.put_line(l_numbers(ix));
  end loop;
 END;
+
+---
+
+DECLARE
+  TYPE R_TARGET IS RECORD(
+    COMP_EMP_TARGET_ID            COMP_EMP_TARGET_BASE.COMP_EMP_TARGET_ID%TYPE,
+    EMPLOYEE_ID                   COMP_EMP_TARGET_BASE.EMPLOYEE_ID%TYPE,
+    PERCENT_ATTAINMENT_DATE       CHAR(6));
+
+  TYPE T_TARGET_TABLE IS TABLE OF R_TARGET INDEX BY PLS_INTEGER;
+BEGIN
+  target R_TARGET; 
+
+  select COMP_EMP_TARGET_ID, EMPLOYEE_ID, PERCENT_ATTAINMENT_DATE
+  into target
+  from foo;
+
+  targettbl T_TARGET_TABLE;
+
+  select COMP_EMP_TARGET_ID, EMPLOYEE_ID, PERCENT_ATTAINMENT_DATE
+  into targettbl(1)
+  from foo;
+
+  select COMP_EMP_TARGET_ID, EMPLOYEE_ID, PERCENT_ATTAINMENT_DATE
+  into targettbl(2)
+  from foo;
+
+END:
 
 ---
 
@@ -288,7 +305,7 @@ CREATE OR REPLACE PACKAGE BODY aa_pkg IS
 END;
 
 
--- Use TABLE with Associative Arrays of Records! 12c+
+-- Use TABLE with Associative Arrays of RECORDs! 12c+
 DECLARE  
    l_array   aa_pkg.array_t;  
 BEGIN  
@@ -377,4 +394,120 @@ SALESMAN-ALLEN
 SALESMAN-MARTIN
 SALESMAN-TURNER
 SALESMAN-WARD
+*/
+
+---
+
+DECLARE
+  CURSOR cur IS
+    SELECT ee.employee_id, ee.first_name, ee.last_name, ee.salary, d.department_name
+      FROM departments d,
+           employees ee
+     WHERE d.department_id = ee.department_id;
+
+  TYPE TOTAL_T IS TABLE OF NUMBER INDEX BY departments.department_name%TYPE;
+  -- A collection of numbers that is indexed by the department name. Indexing by department name has
+  -- the advantage of automatically sorting the results by department name.
+  totals TOTAL_T;
+
+  dept departments.department_name%TYPE;
+BEGIN
+  FOR rec IN cur LOOP
+    -- process paycheck
+    if NOT totals.EXISTS(rec.department_name) then  -- create element in the array
+      totals(rec.department_name) := 0; -- initialize to zero
+    end if;
+
+    totals(rec.department_name) := totals(rec.department_name) + nvl (rec.salary, 0);
+  END LOOP;
+
+  dept := totals.FIRST;
+  LOOP
+     EXIT WHEN dept IS NULL;
+     DBMS_OUTPUT.PUT_LINE(to_char(totals(dept),  '999,999.00') || ' ' || dept);
+     dept := totals.NEXT(dept);
+  END LOOP;
+
+END;
+
+---
+
+-- Complex collection to traverse manager / employee hierarchy using both associative array and RECORD types
+-- Adapted https://learning.oreilly.com/library/view/oracle-and-plsql/9781430232070/creating_and_accessing_complex_collections.html
+DECLARE
+  TYPE    person_type IS RECORD (
+                  employee_id     hr.employees.employee_id%TYPE,
+                  first_name      hr.employees.first_name%TYPE,
+                  last_name       hr.employees.last_name%TYPE);
+
+    -- a collection of people
+  TYPE    direct_reports_type IS TABLE OF person_type INDEX BY BINARY_INTEGER;
+
+    -- the main record definition, which contains a collection of records
+  TYPE    rec_type IS RECORD (
+                  mgr             person_type,
+                  emps            direct_reports_type);
+
+  TYPE    recs_type IS TABLE OF rec_type INDEX BY BINARY_INTEGER;
+  recs    recs_type;
+
+  CURSOR  mgr_cursor IS  -- finds all managers
+    SELECT  employee_id, first_name, last_name
+    FROM    hr.employees
+    WHERE   employee_id IN
+            (       SELECT  distinct manager_id
+                    FROM    hr.employees)
+    ORDER BY last_name, first_name;
+
+  CURSOR  emp_cursor (mgr_id integer) IS  -- finds all direct reports for a manager
+    SELECT  employee_id, first_name, last_name
+    FROM    hr.employees
+    WHERE   manager_id = mgr_id
+    ORDER BY last_name, first_name;
+
+    -- temporary collection of records to hold the managers.
+  TYPE            mgr_recs_type IS TABLE OF emp_cursor%ROWTYPE INDEX BY BINARY_INTEGER;
+  mgr_recs        mgr_recs_type;
+
+BEGIN
+   OPEN mgr_cursor;
+   FETCH mgr_cursor BULK COLLECT INTO mgr_recs;
+   CLOSE mgr_cursor;
+
+   FOR i IN 1..mgr_recs.COUNT LOOP
+      recs(i).mgr := mgr_recs(i);  -- move the manager record into the final structure
+
+        -- moves direct reports directly into the final structure
+      OPEN emp_cursor (recs(i).mgr.employee_id);
+      FETCH emp_cursor BULK COLLECT INTO recs(i).emps;
+      CLOSE emp_cursor;
+   END LOOP;
+
+   -- traverse the data structure to display the manager and direct reports
+   -- note the use of dot notation within the data structure
+   FOR i IN 1..recs.COUNT LOOP
+      DBMS_OUTPUT.PUT_LINE ('Manager: ' || recs(i).mgr.last_name);
+      FOR j IN 1..recs(i).emps.count LOOP
+         DBMS_OUTPUT.PUT_LINE ('***   Employee: ' || recs(i).emps(j).last_name);
+      END LOOP;
+   END LOOP;
+
+END;
+/*
+Manager: Cambrault
+***   Employee: Bates
+***   Employee: Bloom
+***   Employee: Fox
+***   Employee: Kumar
+***   Employee: Ozer
+***   Employee: Smith
+Manager: De Haan
+***   Employee: Hunold
+Manager: Errazuriz
+***   Employee: Ande
+***   Employee: Banda
+***   Employee: Greene
+***   Employee: Lee
+***   Employee: Marvins
+***   Employee: Vishney
 */

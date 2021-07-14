@@ -1,7 +1,21 @@
 -- See also associative_array_table_indexby.plsql, nested_table.plsql
+-- Modified: 13-Jul-2021 (Bob Heckel)
+
+---
 
 DECLARE
-  -- Must know max size
+  TYPE DOW_TYPE IS VARRAY(7) OF VARCHAR2(3);
+  dow DOW_TYPE := dow_type ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+BEGIN
+  FOR i IN 1..dow.COUNT LOOP
+     DBMS_OUTPUT.PUT_LINE (dow(i));
+  END LOOP;
+END
+
+---
+
+DECLARE
+  -- Must know max size and that it will never exceed that size
 	TYPE last_name_type IS VARRAY(10) OF student.last_name%TYPE;
   -- Initialized at the time of declaration, it's empty but not NULL
 	last_name_varr last_name_type := last_name_type();
