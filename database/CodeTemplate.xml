@@ -36,6 +36,10 @@
       <value>INSERT INTO [ (parameter)  VALUES ()</value>
    </row>
    <row>
+      <key>kkk</key>
+      <value>from kmc_revenue_full</value>
+   </row>
+   <row>
       <key>ob</key>
       <value>ORDER BY 1 DESC;</value>
    </row>
@@ -58,9 +62,5 @@
    <row>
       <key>ww</key>
       <value>WHERE [(parameter)];</value>
-   </row>
-   <row>
-      <key>kkk</key>
-      <value>from kmc_revenue_full</value>
    </row>
 </rows>

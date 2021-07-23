@@ -8,9 +8,25 @@ exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_LOAD_HISTORY');
 exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_HISTORY');
 
 ---
-
--- What is scheduled
-select a.job_name, a.JOB_TYPE, a.JOB_ACTION, a.start_date, a.REPEAT_INTERVAL, a.end_date, a.JOB_CLASS, a.ENABLED, a.AUTO_DROP, a.comments from user_scheduler_jobs a where job_name = 'DEL_JOB_NEWBUILD_DUPS' order by 1;
+BEGIN
+  DBMS_SCHEDULER.create_job(
+    job_name   => 'JOB_RION48384',
+    job_type   => 'PLSQL_BLOCK',
+    job_action=>'begin null;end;',
+    --job_action => 'begin rion48384.del; end;',
+    --start_date => systimestamp + INTERVAL '1' MINUTE,
+    start_date => '08-DEC-20 04.51.00PM EST5EDT',
+    repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SAT;ByHour=09;ByMinute=00;BySecond=0',
+    end_date   => to_date(NULL),
+    job_class  => 'DEFAULT_JOB_CLASS',
+    enabled    => true,
+    comments   => 'see job_name for Jira');
+END;
+--  exec DBMS_SCHEDULER.disable(job_name => 'JOB_RION48384'); exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_RION48384');  exec sys.DBMS_SCHEDULER.drop_job('JOB_RION48384');
+--scheduled/running?
+SELECT state, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments FROM user_scheduler_jobs WHERE job_name = 'JOB_RION48384';
+--job finished status
+SELECT output,job_name, status, error#, actual_start_date, run_duration FROM user_scheduler_job_run_details WHERE job_name = 'JOB_RION48384' ORDER BY actual_start_date DESC;
 
 -- History of job
 SELECT uj.job_name, uj.job_action,  uj.last_run_duration, ud.status, ud.output, uj.state, uj.next_run_date, uj.repeat_interval, ud.actual_start_date, uj.last_start_date, uj.comments, uj.job_type, uj.start_date, uj.end_date, uj.job_class, uj.enabled, uj.auto_drop, ud.error#

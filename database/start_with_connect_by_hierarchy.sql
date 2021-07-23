@@ -10,6 +10,7 @@ select
  , e.mgr
 from scott.emp e
 start with e.mgr is null
+--where foo=42
 connect by e.mgr = prior e.empno
 order siblings by e.ename;
 
@@ -82,31 +83,31 @@ order by rn;
 
 ---
 
-create table employees (
+create table employeesx (
   employee_id   integer,
   employee_name varchar2(30),
   manager_id    integer
 );
 
-insert into employees values ( 1, 'Big Boss', null );
-insert into employees values ( 2, 'Stressed Manager', 1 );
-insert into employees values ( 3, 'Lowly Worker', 2 );
-insert into employees values ( 4, 'Aspiring Junior', 2 );
-insert into employees values ( 5, 'The Newbie', 2 );
-insert into employees values ( 6, 'Master Senior Consultant', 1 );
+insert into employeesx values ( 1, 'Big Boss', null );
+insert into employeesx values ( 2, 'Stressed Manager', 1 );
+insert into employeesx values ( 3, 'Lowly Worker', 2 );
+insert into employeesx values ( 4, 'Aspiring Junior', 2 );
+insert into employeesx values ( 5, 'The Newbie', 2 );
+insert into employeesx values ( 6, 'Master Senior Consultant', 1 );
 
 commit;
 
 select level,
        lpad ( ' ', level, ' ' ) || employee_name employee
-from   employees
+from   employeesx
 start  with manager_id = 1
 connect by prior employee_id = manager_id;  -- place PRIOR before the column with the values you're accessing from the parent 
 
 select level,  
        lpad ( ' ', level, ' ' ) || employee_name employee,
        prior employee_name manager
-from   employees 
+from   employeesx
 start  with employee_name = 'Big Boss' 
 connect by prior employee_id = manager_id;
 -- Only sorts rows with the same parent
