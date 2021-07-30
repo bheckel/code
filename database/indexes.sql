@@ -16,6 +16,18 @@ select distinct salesgroup from z_tmp;
 
 alter index sgix nomonitoring usage;
 
+---
+
+--  set serveroutput on
+BEGIN 
+  FOR r IN ( select index_name from user_indexes where TABLE_NAME = 'MKC_REVENUE_FULL_BOB' and index_name not like 'SYS_%' ) LOOP 
+    dbms_output.put_line(r.index_name);
+    execute immediate 'alter index "' || r.index_name || '" nomonitoring usage';
+  END LOOP; 
+END;
+
+---
+
 -- Determine index fragmentation - bad if ratio >10
 analyze index sgix validate structure;
 select DECODE(LF_ROWS, 0, 0, ROUND((DEL_LF_ROWS/LF_ROWS)*100,2)) RATIO, HEIGHT, LF_BLKS, LF_ROWS FROM INDEX_STATS I;
