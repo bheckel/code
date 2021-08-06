@@ -309,6 +309,26 @@ END;
 
 ---
 
+DECLARE
+  CURSOR c1 is 
+    select ucc.table_name, ucc.column_name from user_constraints uc, user_cons_columns ucc, user_indexes ui where replace(ui.table_name,'_BASE','') = 'ACCOUNT' and uc.constraint_type = 'R'and uc.constraint_name = ucc.constraint_name and ui.index_name = uc.r_constraint_name and r_constraint_name like '%\_PK' escape '\' ORDER BY 1 ;
+  TYPE curtbl IS TABLE OF c1%rowtype;
+  mytbl curtbl;
+
+BEGIN 
+  OPEN c1;
+  LOOP
+    FETCH c1 bulk collect INTO mytbl;
+    EXIT WHEN mytbl.COUNT = 0;
+    
+    for i in 1..mytbl.count loop
+			dbms_output.put_line(mytbl(i).table_name || ' ' || mytbl(i).column_name);
+    end loop;
+  END LOOP;
+END;
+
+---
+
 -- See also dynamic_procedure.plsql
 
 create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN NUMBER DEFAULT 1) IS

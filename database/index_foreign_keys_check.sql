@@ -1,3 +1,14 @@
+/*
+If:
+
+o you do NOT delete from the parent table. (especially with cascade delete -- it is a double whammy)
+
+o you do NOT update the parent tables unique/primary key value.
+
+o you do NOT join from the PARENT to the CHILD (like DEPT->EMP).
+
+then you do not need to index foreign key
+*/
 
 -- https://asktom.oracle.com/pls/apex/asktom.search?tag=indexes-on-foreign-keys-200006
 select decode( b.table_name, NULL, '****', 'ok' ) Status,
