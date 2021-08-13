@@ -108,7 +108,7 @@ quit;
 title;
 
 
-proc sql NOPRINT;
+proc sql NOPRINT; /* don't apply labels */
   select max(foo), max(bar) into :maxf, :maxb
   from jobcost
   ;

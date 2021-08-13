@@ -17,6 +17,7 @@ BEGIN
     --start_date => systimestamp + INTERVAL '1' MINUTE,
     start_date => '08-DEC-20 04.51.00PM EST5EDT',
     repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SAT;ByHour=09;ByMinute=00;BySecond=0',
+    --end_date   => SYSDATE+3,
     end_date   => to_date(NULL),
     job_class  => 'DEFAULT_JOB_CLASS',
     enabled    => true,
