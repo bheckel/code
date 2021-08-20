@@ -1,3 +1,14 @@
+-- Change remote
+14093  2021-08-17 12:01:10 exec ssh-agent bash
+14094  2021-08-17 12:01:31 git remote remove origin
+14096  2021-08-17 12:01:45 ssh-add ~/.ssh/id_rsa2
+14097  2021-08-17 12:02:00 git remote add origin git@github.com:as-institute-corp/rion-data.git
+14098  2021-08-17 12:02:04 git remote show origin
+                           git remote -v
+                           git branch --set-upstream-to=origin/rion-data develop
+alias ss 'exec ssh-agent bash; ssh-add ~/.ssh/id_rsa2'
+
+---
 
  8556  2020-10-12 09:26:37 gco
  8557  2020-10-12 09:26:41 gpul
@@ -7,9 +18,9 @@
  8561  2020-10-12 09:52:54 gco
  8562  2020-10-12 09:53:49 git merge --squash feature/RION-46628
  8564  2020-10-12 09:55:37 git add . && git commit -m 'RION-46628: RION_LIFECYCLES_DETAILS data request' && git push
- 8573  2020-10-12 10:10:16 git branch -d feature/ORION-46628
+ 8573  2020-10-12 10:10:16 git branch -d feature/RION-46628
  8574  2020-10-12 10:10:30 git fetch -p
- 8575  2020-10-12 10:10:44 git push origin --delete feature/ORION-46628
+ 8575  2020-10-12 10:10:44 git push origin --delete feature/RION-46628
 
 ---
 

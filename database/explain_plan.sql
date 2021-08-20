@@ -364,3 +364,32 @@ CREATE INDEX scale_fast ON scale_data (section, id2, id1);
 Predicate Information (identified by operation id):
    2 - access("SECTION"=TO_NUMBER(:A) AND "ID2"=TO_NUMBER(:B))
 */
+
+---
+
+
+create table x (a number(10) not null);
+
+insert into x select level from dual connect by level < 500;
+
+create index ix_x on x(a) compute statistics;
+
+explain plan for select /*+ INDEX (x ix_x) */ * from x;
+
+select * from table(dbms_xplan.display());
+
+/*
+-------------------------------------------------------------------------
+| Id  | Operation        | Name | Rows  | Bytes | Cost (%CPU)| Time     |
+-------------------------------------------------------------------------
+|   0 | SELECT STATEMENT |      |   499 |  6487 |     1   (0)| 00:00:01 |
+|   1 |  INDEX FULL SCAN | IX_X |   499 |  6487 |     1   (0)| 00:00:01 |
+-------------------------------------------------------------------------
+
+Note
+-----
+   - dynamic statistics used: dynamic sampling (level=2)
+   - automatic DOP: Computed Degree of Parallelism is 1 because of parallel threshold
+
+13 rows selected.
+*/
