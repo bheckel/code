@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Modified: 22 May 2021 (Bob Heckel)
+# Modified: 20-Aug-2021 (Bob Heckel)
 
 for d in dotfiles code; do
   cd $HOME/$d && git status
@@ -8,10 +8,10 @@ for d in dotfiles code; do
   if [ "$yn" != 'n' ];then
     # In a paranoid spirit, keep hostname semi-private but distinguish same-OS machines
     git add . && git commit -m "mod gitall $MACHTYPE-${HOSTNAME:0:4}"; git pull origin master && git push origin master
+  # Check for fatals "master pushes to master (local out of date)"
+    git remote show origin | grep 'local out of date'
   else
     echo cancelled
   fi
   echo
-  # Check for fatals "master pushes to master (local out of date)"
-  git remote show origin
 done
