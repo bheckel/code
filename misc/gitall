@@ -9,7 +9,7 @@ for d in dotfiles code; do
     # In a paranoid spirit, keep hostname semi-private but distinguish same-OS machines
     git add . && git commit -m "mod gitall $MACHTYPE-${HOSTNAME:0:4}"; git pull origin master && git push origin master
   # Check for fatals "master pushes to master (local out of date)"
-    git remote show origin | grep 'local out of date'
+    git remote show origin | grep --color=always 'local out of date'
   else
     echo cancelled
   fi
