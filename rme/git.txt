@@ -5,7 +5,8 @@
 14097  2021-08-17 12:02:00 git remote add origin git@github.com:as-institute-corp/rion-data.git
 14098  2021-08-17 12:02:04 git remote show origin
                            git remote -v
-                           git branch --set-upstream-to=origin/rion-data develop
+                           ??git branch --set-upstream-to=origin/rion-data develop
+                           ??git branch --set-upstream-to=origin/develop develop
 alias ss 'exec ssh-agent bash; ssh-add ~/.ssh/id_rsa2'
 
 ---

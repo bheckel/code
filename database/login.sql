@@ -1,5 +1,5 @@
--- Created: 2009-05-11 (Bob Heckel)
--- Modified: Wed 04-Nov-2020 (Bob Heckel)
+--  Created: 11-May-2009 (Bob Heckel)
+-- Modified: 02-Sep-2021 (Bob Heckel)
 
 -- This file is auto-sourced by Oracle sqlplus if it's in PWD
 --
@@ -33,6 +33,7 @@ DEFINE _EDITOR=vim
 --set autorecovery OFF
 -- good for debugging speed problems - prints an EXPLAIN PLAN and execution statistics after each SQL statement
 --set autotrace ON
+--set autotrace traceonly explain
 --set blockterminator "."
 --set cmdsep ON
 --set colsep " "

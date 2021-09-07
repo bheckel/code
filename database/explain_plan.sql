@@ -45,8 +45,8 @@ group  by colour
 order  by colour;
 
 select *
-/*from   table(dbms_xplan.display_cursor(format => 'IOSTATS LAST'));*/
 from   table(dbms_xplan.display_cursor(format => 'ALLSTATS LAST'));
+/*from   table(dbms_xplan.display_cursor(format => 'IOSTATS LAST'));*/
 /*
 SQL_ID  f3z2z7vk5fj1d, child number 1
 -------------------------------------

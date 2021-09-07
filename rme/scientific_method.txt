@@ -1,0 +1,7 @@
+
+OBSERVATION - steps taken, expected result, what actually happened
+RESEARCH    - read logs, manual, specs, app code (inverse with domain knowledge)
+HYPOTHESIS  - app code or libraries or app server or db or OS, "X wasn't Y", "foo missing"...
+TEST        - driven by hypo it is small repeatable with minimal assumptions
+ANALYZE     - understand outputs, irrelevant may be relevant
+REPORT      - in writing per iteration or communicate to user if done
