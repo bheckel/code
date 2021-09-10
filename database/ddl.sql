@@ -1,4 +1,5 @@
 -- Oracle DDL
+-- Modified: 08-Sep-2021 (Bob Heckel)
 
 alter table mkc_revenue_full drop column ACCOUNT_ID;
 --                               !!no COLUMN!!
@@ -35,3 +36,6 @@ select index_name, table_name, used from v$object_usage;--not null if index is b
 alter index KRB_HC_IN_CIX nomonitoring usage;
 
 create sequence UID_RION_37551 MINVALUE 2 MAXVALUE 999999999999999999999999999 INCREMENT BY 10  START WITH 12 CACHE 20 NOORDER NOCYCLE;
+
+alter table mkc_revenue_full DISABLE ROW MOVEMENT;
+alter table mkc_revenue_full PARALLEL 16;
