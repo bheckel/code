@@ -44,7 +44,7 @@ END;
 
 ---
 
--- see also insert_into.sql
+-- Bulk collect large insert see also insert_into.sql
 
 declare
   ex_dml_errors EXCEPTION;
@@ -53,6 +53,10 @@ declare
 
   CURSOR c1 IS 
     SELECT 
+-- Partial inserts based on a predicate:
+--UID_MKC_INVOICE.NEXTVAL mkc_revenue_id, 
+-- Full inserts, no collision possible:
+--KMC_REVENUE_ID,
 CREATED,
 CREATEDBY,
 UPDATED,
@@ -82,6 +86,7 @@ CLOUD_PROVIDER_SR
      FORALL i IN 1 .. id_table.COUNT SAVE EXCEPTIONS
        INSERT  INTO zz_tmp
        (
+--MKC_REVENUE_ID,
 CREATED,
 CREATEDBY,
 UPDATED,
@@ -96,6 +101,7 @@ CLOUD_PROVIDER_SR
        )
        VALUES
         (
+--id_table(i).MKC_REVENUE_ID,
 id_table(i).CREATED,
 id_table(i).CREATEDBY,
 id_table(i).UPDATED,
