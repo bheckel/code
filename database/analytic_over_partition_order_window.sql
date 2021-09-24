@@ -1,4 +1,5 @@
--- Modified: 16-Jul-2020 (Bob Heckel)
+-- Created: 16-Jul-2019 (Bob Heckel)
+-- Modified: 21-Sep-2021 (Bob Heckel)
 
 /* Analytic functions compute an aggregate value based on a group of rows. They
  * differ from aggregate functions in that they RETURN MULTIPLE ROWS FOR EACH
@@ -193,10 +194,11 @@ select d
       ,sum(amt) OVER (order by d RANGE between interval '2' day preceding and current row) running_total_2day  -- 10,21,81,81,81,84
       ,avg(amt) OVER (order by d RANGE between interval '2' day preceding and current row) moving_average_2day  -- 10,10.5,20.25,20.25,20.25,21
       -- Always need an ORDER BY for LAG() & LEAD()
-      ,lag(amt) OVER (order by d) amt_before  -- NULL,10,11,30,30,10
-      ,lag(amt, 1, 0) OVER (order by d) amt_before_nonulls  -- 0,10,11,30,30,10
-      ,lag(amt, 2, 0) OVER (order by d) amt_2before_nonulls  -- 0,0,10,11,30,30
-      ,lead(amt) OVER (partition by d order by d) amt_after  -- NULL,NULL,30,NULL,NULL,  good for finding a change in status when you have daily data
+      ,lag(amt) OVER (order by d) lag_amt_before                 -- NULL,10,11,30,30,10
+      ,lag(amt, 1, amt) OVER (order by d) lag_amt_before2        -- 10,10,11,30,30,10      
+      ,lag(amt, 1, 0) OVER (order by d) lag_amt_before_nonulls   -- 0,10,11,30,30,10
+      ,lag(amt, 2, 0) OVER (order by d) lag_amt_before_nonulls2  -- 0,0,10,11,30,30
+      ,lead(amt) OVER (partition by d order by d) lead_amt_after  -- NULL,NULL,30,NULL,NULL,  good for finding a change in status when you have daily data
       -- Want only first date in a contiguous series otherwise leave blank
       ,case when nvl(lag(d) over (order by d), d) != d-1 then d end lowval_of_range  -- 01jan,NULL,NULL,03jan,NULL,NULL
       ,nvl(amt, lag(amt IGNORE NULLS) OVER (partition by d order by d)) fillin_the_blank_handle_nulls  -- 10,11,30,30,10,14

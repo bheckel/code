@@ -1,68 +1,29 @@
 -------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: Thu 29 Apr 2021 (Bob Heckel)
+-- Modified: 20-Sep-2021 (Bob Heckel)
 -------------------------------------
 
-exec DBMS_SCHEDULER.disable(job_name => 'JOB_LOAD_HISTORY');
-exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_LOAD_HISTORY');
-exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_HISTORY');
-
----
-BEGIN
-  DBMS_SCHEDULER.create_job(
-    job_name   => 'JOB_RION48384',
-    job_type   => 'PLSQL_BLOCK',
-    job_action=>'begin null;end;',
-    --job_action => 'begin rion48384.del; end;',
-    --start_date => systimestamp + INTERVAL '1' MINUTE,
-    start_date => '08-DEC-20 04.51.00PM EST5EDT',
-    repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SAT;ByHour=09;ByMinute=00;BySecond=0',
-    --end_date   => SYSDATE+3,
-    end_date   => to_date(NULL),
-    job_class  => 'DEFAULT_JOB_CLASS',
-    enabled    => true,
-    comments   => 'see job_name for Jira');
-END;
---  exec DBMS_SCHEDULER.disable(job_name => 'JOB_RION48384'); exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_RION48384');  exec sys.DBMS_SCHEDULER.drop_job('JOB_RION48384');
---scheduled/running?
-SELECT state, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments FROM user_scheduler_jobs WHERE job_name = 'JOB_RION48384';
---job finished status
-SELECT output,job_name, status, error#, actual_start_date, run_duration FROM user_scheduler_job_run_details WHERE job_name = 'JOB_RION48384' ORDER BY actual_start_date DESC;
-
--- History of job
-SELECT uj.job_name, uj.job_action,  uj.last_run_duration, ud.status, ud.output, uj.state, uj.next_run_date, uj.repeat_interval, ud.actual_start_date, uj.last_start_date, uj.comments, uj.job_type, uj.start_date, uj.end_date, uj.job_class, uj.enabled, uj.auto_drop, ud.error#
-  FROM user_scheduler_jobs uj, user_scheduler_job_run_details ud
- WHERE uj.job_name = ud.job_name
-   --AND uj.job_name LIKE '%INVOI%'
-   AND actual_start_date > sysdate - INTERVAL '3' day
- ORDER BY actual_start_date DESC;
-
-SELECT uj.job_name, uj.job_action, uj.last_run_duration, ud.status, ud.output, uj.state, uj.next_run_date, uj.repeat_interval, ud.actual_start_date, uj.last_start_date, uj.comments, uj.job_type, uj.start_date, uj.end_date, uj.job_class, uj.enabled, uj.auto_drop, ud.error# FROM user_scheduler_jobs uj, user_scheduler_job_run_details ud WHERE uj.job_name = ud.job_name
-AND uj.job_name = 'DEL_JOB_NEWBUILD_DUPS'
-AND actual_start_date > sysdate - INTERVAL '3' day
-ORDER BY actual_start_date DESC;
-
-select * from user_scheduler_job_log order by log_date desc
-
----
-
--- ALL_SCHEDULER_JOBS.SCHEDULE_TYPE = 'ONCE' is default
-BEGIN
- sys.dbms_scheduler.create_job(
-   job_name   => 'TEST_JOB',
-   job_type   => 'PLSQL_BLOCK',
-   job_action => 'begin dbms_output.put_line(''ok''); end;',
-   --start_date => '08-JAN-20 04.00.00PM EST5EDT',  -- be careful in January that you've changed the year or it'll run immediately
-   start_date => SYSTIMESTAMP + INTERVAL '10' SECOND,
-   --start_date => SYSDATE + INTERVAL '1' MINUTE
-   end_date   => TO_DATE(NULL),
-   job_class  => 'DEFAULT_JOB_CLASS',
-   enabled    => TRUE,
-   comments   => 'Single one time run, auto drops');
-END;
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT
-SELECT * from user_scheduler_jobs WHERE job_name='TEST_JOB';
-SELECT * FROM user_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME = 'TEST_JOB';
+BEGIN
+  sys.dbms_scheduler.create_job(
+    job_name => 'TESTJOB1',
+    job_type => 'PLSQL_BLOCK',
+    job_action => 'BEGIN dbms_output.put_line(''ok''); END;',
+    repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SUN;ByHour=10;ByMinute=10;BySecond=0',
+    --start_date => systimestamp + INTERVAL '1' MINUTE,
+    end_date => to_date(null),
+    job_class => 'DEFAULT_JOB_CLASS',
+    enabled => true,
+    auto_drop => false,
+    comment => 'test'
+    );
+END;
+SELECT state, NEXT_RUN_DATE, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments FROM user_scheduler_jobs WHERE job_name like 'TESTJOB1';
+SELECT errors,output,job_name, status, error#, actual_start_date, run_duration FROM user_scheduler_job_run_details WHERE job_name like 'TESTJOB1' ORDER BY actual_start_date DESC;
+
+exec DBMS_SCHEDULER.disable('TESTJOB1'); 
+exec DBMS_SCHEDULER.enable('TESTJOB1');
+exec DBMS_SCHEDULER.drop_job('TESTJOB1'); 
 
 ---
 
@@ -72,24 +33,9 @@ from user_scheduler_jobs a
 where lower(job_action) like '%tsr_%'
 order by 1;
 
--- Run status log
-SELECT * FROM USER_SCHEDULER_JOB_RUN_DETAILS WHERE JOB_NAME LIKE 'PTG%' order by log_id desc
-
 -- Named Schedule details.  E.g. schedule_name:PURGE_SCHEDULE repeat_interval:freq=daily;byhour=3;byminute=0;bysecond=0
 select * from DBA_SCHEDULER_SCHEDULES d where d.schedule_name like 'P%';
 exec DBMS_SCHEDULER.drop_schedule('NIGHTLY_MKC_SCHEDULE');
-
--- https://docs.oracle.com/cd/B19306_01/server.102/b14231/scheduse.htm#i1019182
-BEGIN  
-  DBMS_SCHEDULER.create_schedule(
-    schedule_name   => 'AUTO_ACCEPT_TARGETS_SCHEDULE',
-    repeat_interval => 'FREQ=MINUTELY; INTERVAL=5;',
-    --repeat_interval => 'FREQ=hourly; INTERVAL=1;',
-    --ignored in this example, job runs immediately then again in x minutes/hours:
-    --start_date => systimestamp + INTERVAL '2' MINUTE,
-    end_date        => TO_DATE(NULL),
-    comments        => 'foo bar');
-END;
 
 ---
 

@@ -369,7 +369,7 @@ create or REPLACE PROCEDURE zrestore_grants (table_name IN VARCHAR, back_date IN
   CLOSE restore_grants;
 END;
 
---or maybe
+--or maybe parameterized cursor
 create or replace PROCEDURE z_bob_proc(table_name VARCHAR2 DEFAULT NULL, IN_DB IN VARCHAR2 DEFAULT NULL) IS
     CURSOR c_object_grants(cursor_db VARCHAR2) IS
       SELECT OBJECT_NAME,

@@ -129,3 +129,20 @@ BEGIN
          END;  -- not 'END CASE' so it's an expression, not statement
 END;
 /
+
+---
+
+-- SQL
+
+SELECT DB_LINK, USERNAME, HOST, 
+  decode(db_link,
+        'GIDBDATA.VSP.S.COM','KMC_MIDBP',
+        'SCDM.VSP.S.COM','SCDM',
+        'CDST.VSP.S.COM','CDST' 
+        ) new_db_link,
+      case when db_link ='GIDBDATA.VSP.S.COM' then 'MKC_MIDBP'
+           when  db_link='SCDM.VSP.S.COM' then 'SCDM'
+           when  db_link='CDST.VSP.S.COM' then 'CDST'
+      end new_db_link
+FROM user_DB_LINKS
+;
