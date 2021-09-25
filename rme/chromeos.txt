@@ -1,3 +1,11 @@
+crosh> vmc start termina
+(termina) chronos@localhost ~ $ lxc start penguin
+(termina) chronos@localhost ~ $ ls
+(termina) chronos@localhost ~ $ lxc stop penguin
+(termina) chronos@localhost ~ $ 
+
+---
+
 crosh:
 Ctrl+Alt+t
 swap enable 6000
