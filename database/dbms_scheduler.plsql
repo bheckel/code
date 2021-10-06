@@ -1,7 +1,18 @@
 -------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 20-Sep-2021 (Bob Heckel)
+-- Modified: 05-Oct-2021 (Bob Heckel)
 -------------------------------------
+
+BEGIN
+  DBMS_SCHEDULER.create_job(
+    job_name   => 'JOB_RION54143',
+    job_type   => 'PLSQL_BLOCK',
+    job_action => q'[ declare x number; begin select count(1) into x from account; DBMS_OUTPUT.put_line('sysdate: ' || x); end; ]',
+    start_date => systimestamp + INTERVAL '1' MINUTE,
+    job_class  => 'DEFAULT_JOB_CLASS',
+    enabled    => true,
+    comments   => 'run by bheck');
+END;
 
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT
 BEGIN
