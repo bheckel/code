@@ -63,4 +63,8 @@
       <key>ww</key>
       <value>WHERE [(parameter)];</value>
    </row>
+   <row>
+      <key>sdo</key>
+      <value>--  SET DEFINE OFF</value>
+   </row>
 </rows>
