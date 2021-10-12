@@ -16,6 +16,7 @@ Chromebook Linux icon shortcut if not auto installed
 
 2021-01-23 09:42:25 cd .local/share/applications/ 
 2021-01-23 09:52:40 vi tos.desktop
+2021-01-23 10:05:48 cp /home/bheckel/thinkorswim/.install4j/tosbanner_en ~/.local/share/applications/
 
 [Desktop Entry]
 Name=ThinkOrSwim
@@ -25,11 +26,8 @@ X-GNOME-FullName=ThinkOrSwim
 Exec=/home/bheckel/thinkorswim/thinkorswim
 Terminal=false
 Type=Application
-Icon=/home/bheckel/.local/share/icons/thinkorswim.png
+Icon=/home/bheckel/.local/share/applications/tosbanner_en.png
 Categories=Linux apps;
-
-2021-01-23 10:05:48 cp /home/bheckel/thinkorswim/.install4j/thinkorswim.png ~/.local/share/icons/                                                                                                       
-
 ---
 
 Chromebooks Help shortcut keys:
