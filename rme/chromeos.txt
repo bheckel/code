@@ -26,8 +26,9 @@ X-GNOME-FullName=ThinkOrSwim
 Exec=/home/bheckel/thinkorswim/thinkorswim
 Terminal=false
 Type=Application
-Icon=/home/bheckel/.local/share/applications/tosbanner_en.png
+Icon=/home/bheckel/.local/share/icons/thinkorswim.png
 Categories=Linux apps;
+
 ---
 
 Chromebooks Help shortcut keys:
