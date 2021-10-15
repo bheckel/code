@@ -1,6 +1,6 @@
 -------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 05-Oct-2021 (Bob Heckel)
+-- Modified: 14-Oct-2021 (Bob Heckel)
 -------------------------------------
 
 BEGIN
@@ -13,6 +13,30 @@ BEGIN
     enabled    => true,
     comments   => 'run by bheck');
 END;
+
+---
+
+BEGIN
+  DBMS_SCHEDULER.create_job(
+    job_name   => 'JOB_RIONX',
+    job_type   => 'PLSQL_BLOCK',
+    job_action => q'[ begin 
+                        execute immediate 'create table kmc_revenue_full_TST as select * from kmc_revenue_full_TST@ests';
+                        execute immediate 'create table kmc_revenue_full_POC as select * from kmc_revenue_full_POC@ests';
+                      end;
+                  ]',
+    start_date => systimestamp + INTERVAL '30' second,
+    job_class  => 'DEFAULT_JOB_CLASS',
+    enabled    => TRUE,
+    comments   => 'One-time run by bheck');
+END;
+--  exec DBMS_SCHEDULER.disable(job_name => 'JOB_RIONX'); exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_RIONX');  exec sys.DBMS_SCHEDULER.drop_job('JOB_RIONX');
+--scheduled/running?
+SELECT state, NEXT_RUN_DATE, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments FROM user_scheduler_jobs WHERE job_name like 'JOB_RIONX%';
+--finished status
+SELECT job_name, status, error#, errors, actual_start_date, run_duration, output, errors FROM user_scheduler_job_run_details WHERE job_name like 'JOB_RIONX%' ORDER BY actual_start_date DESC;
+
+---
 
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT
 BEGIN

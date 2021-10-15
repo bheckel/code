@@ -26,7 +26,7 @@ begin
       else -- it is null
         y := 1;
         -- TODO send email
-        DBMS_OUTPUT.put_line('active again, done at ' || sysdate);
+        DBMS_OUTPUT.put_line('active again, done at ' || SYSTIMESTAMP);
       end if;
     end loop;
   else
