@@ -1,16 +1,17 @@
 -------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 14-Oct-2021 (Bob Heckel)
+-- Modified: 21-Oct-2021 (Bob Heckel)
 -------------------------------------
 
 BEGIN
   DBMS_SCHEDULER.create_job(
     job_name   => 'JOB_RION54143',
     job_type   => 'PLSQL_BLOCK',
-    job_action => q'[ declare x number; begin select count(1) into x from account; DBMS_OUTPUT.put_line('sysdate: ' || x); end; ]',
-    start_date => systimestamp + INTERVAL '1' MINUTE,
+    job_action => q'[ declare x number; begin select count(1) into x from account; DBMS_OUTPUT.put_line('cnt: ' || x); end; ]',
+    --start_date => systimestamp + INTERVAL '1' MINUTE,
+    start_date => TO_DATE('10/19/2021 03:18:00 PM', 'mm/dd/yyyy hh:mi:ss PM'),
     job_class  => 'DEFAULT_JOB_CLASS',
-    enabled    => true,
+    enabled    => true,  -- if false it just sits there DISABLED
     comments   => 'run by bheck');
 END;
 
@@ -393,7 +394,7 @@ exec DBMS_SCHEDULER.enable('JOB_LOAD_NB');
 begin
   dbms_scheduler.add_job_email_notification (
   job_name=> 'JOB_LOAD_NB',
-  sender => 'noreply@sas.com',
+  sender => 'noreply@s.com',
   recipients=> 'bob@s.com,bruce@s.com',
   subject => '[MKC] Oracle Scheduler Job Notification - %job_owner%.%job_name%.%job_subname% on SER: %event_type%',
   events=> 'job_started, job_succeeded, job_failed, job_broken, job_disabled');
@@ -404,3 +405,6 @@ begin
   recipients=> 'bob@s.com,bruce@s.com',
   events=> 'job_started, job_succeeded, job_failed, job_broken, job_disabled');
 end;
+
+SELECT * FROM user_scheduler_notifications WHERE job_name = 'JOB_LOAD_NB' and event='JOB_STARTED';
+
