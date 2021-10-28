@@ -24,7 +24,7 @@ $ oci db autonomous-database generate-wallet --generate-type ALL --file mywallet
 # cat readme.txt
 $ sql /nolog
 set cloudconfig mywallet.zip
-show tns
+#show tns
 connect admin@rshdb1_low
 <enter pw>
 
