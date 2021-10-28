@@ -336,8 +336,8 @@ PROCEDURE send_cdhub_job_message(in_job_action VARCHAR2,
   PRAGMA AUTONOMOUS_TRANSACTION;
 
 BEGIN
-  -- Create a unique name for the job
-  DBMS_SCHEDULER.CREATE_JOB(job_name   => DBMS_SCHEDULER.GENERATE_JOB_NAME(in_job_prefix),
+  -- Create a unique name for the job e.g. FOO_12345
+  DBMS_SCHEDULER.CREATE_JOB(job_name   => DBMS_SCHEDULER.GENERATE_JOB_NAME('foo_'),
                             job_type   => 'PLSQL_BLOCK',
                             job_action => 'BEGIN ' || in_job_action || '; END;',
                             start_date => CAST(in_start_date AS TIMESTAMP),
