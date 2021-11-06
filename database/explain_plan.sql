@@ -16,7 +16,6 @@
 -- Use bitmap where cardinality is low (e.g. skewed grade scores at Harvard) and DML
 -- is very infrequent (because it locks).
 CREATE INDEX CONTACT_EMP_EVENT_CE_IX on CONTACT_EMPLOYEE_EVENT(CONTACT_EMPLOYEE_ID);
-CREATE INDEX CONTACT_EMP_EVENT_EV_IX on CONTACT_EMPLOYEE_EVENT(EVENT_ID);
 CREATE BITMAP INDEX CONTACT_EMP_EVENT_NE_IX on CONTACT_EMPLOYEE_EVENT(NEW_EVENT);
 create index M_SUBCOMPGRP_FUNCTION_IX on M_SUBCOMP (LOWER(M_SUBCOMP_GROUP_NAME));
 
@@ -28,7 +27,6 @@ SELECT * FROM SYS.user_ind_statistics where table_name='EMAIL_MESSAGES';
 SELECT * FROM email_messages WHERE created>sysdate-1;
 
 SELECT * FROM v$sql WHERE sql_text like 'SELECT * FROM email_messages WHERE created%';  -- 5ax1juqfgxhnw
-
 -- Explain Plan is hypothetical, this is actual:
 SELECT * FROM v$sql_plan WHERE sql_id = '5ax1juqfgxhnw';  -- did index get used?: BY INDEX ROWID or RANGE SCAN etc.
 
