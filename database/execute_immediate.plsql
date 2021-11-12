@@ -1,4 +1,4 @@
--- Modified: 06-Aug-19 (Bob Heckel) 
+-- Modified: 10-Nov-2021 (Bob Heckel)
 -- https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01115
 -- See also run_all_procedures.plsql, using.plsql bulk_collect_forall.plsql
 
@@ -23,16 +23,14 @@ end;
 
 ---
 
+-- Prove that NO_DATA_FOUND is triggered when using EXECUTE IMMEDIATE
 declare
   l_staged_team  NUMBER;
 
 begin
-  l_staged_team := NULL;
-         
-
   EXECUTE IMMEDIATE 'SELECT account_team_id FROM ASP_DFLT_TSR_OWN_TEAM WHERE future_tsr_owner_id = :1'
     INTO l_staged_team
-    USING 28460;
+    USING 1234;
 
   IF l_staged_team IS NOT NULL THEN
     dbms_output.put_line('ok');
@@ -128,20 +126,9 @@ BEGIN
 							' WHERE student_id = :1';
 
 	EXECUTE IMMEDIATE sql_stmt
-		INTO v_first_name, v_last_name
+     INTO v_first_name, v_last_name
 		USING v_student_id;
 END;
-
----
-
-declare
-  d date;
-begin
-  for i in ( select high_value from user_tab_partitions where table_name = 'T1' ) loop
-    execute immediate 'select '||i.high_value||' from dual' into d;
-    dbms_output.put_line(d);
-  end loop;
-end;
 
 ---
 
@@ -156,8 +143,6 @@ DECLARE
   l_sql       VARCHAR2(4000);
 
   CURSOR aspCursor IS
-    select 'CREATE INDEX ZSTAGED_CONTACTXX_IX on ZSTAGED_CONTACT(CONTACT_STAGING_ITEM_ID)' index_create from dual;
-  /*
     select 'CREATE INDEX ' || ucc.table_name || 'XX_IX on ' || ucc.table_name || '(' || ucc.column_name || ')' index_create
 	    from user_constraints uc, user_cons_columns ucc
      where uc.constraint_name = ucc.constraint_name
@@ -166,18 +151,16 @@ DECLARE
                          from user_ind_columns uic
                         where uic.TABLE_NAME = uc.table_name
                           and uic.COLUMN_NAME = ucc.column_name);
-   */ 
 BEGIN
-    FOR aspRec IN aspCursor LOOP
-        l_sql := aspRec.index_create;
+  FOR aspRec IN aspCursor LOOP
+    l_sql := aspRec.index_create;
 
-        EXECUTE IMMEDIATE l_sql;
-    END LOOP;
-   
-      EXCEPTION
-        WHEN OTHERS THEN
-          DBMS_OUTPUT.put_line(l_sql || ' FAILED! ' || sqlerrm);
-
+    EXECUTE IMMEDIATE l_sql;
+  END LOOP;
+ 
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.put_line(l_sql || ' FAILED! ' || sqlerrm);
 END;
 
 ---
@@ -257,7 +240,7 @@ DECLARE
 BEGIN
    EXECUTE IMMEDIATE 'SELECT employee_id FROM employees WHERE department_id = :dept_id'
       BULK COLLECT INTO l_ids
-      USING 50;
+      USING 123;
 
    FOR indx IN 1 .. l_ids.COUNT LOOP
       DBMS_OUTPUT.put_line('selected employee ' || l_ids(indx));

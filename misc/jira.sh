@@ -24,8 +24,8 @@ echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\OrionScripts\' >> ${JIRA}.
 echo '--  @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
 echo '--  vi "C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
 echo '--  @"C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
-echo '--  exec ORION'${JIRA}'.do;' >> ${JIRA}.sql
-echo "--  DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
+echo "DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
+echo "ALTER SESSION SET recyclebin = ON;" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
 echo "-- ${DESC} https://esapps.sas.com/jira/browse/ORION-${JIRA}" >> ${JIRA}.sql

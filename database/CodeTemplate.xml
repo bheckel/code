@@ -37,11 +37,15 @@
    </row>
    <row>
       <key>kkk</key>
-      <value>from kmc_revenue_full</value>
+      <value>kmc_revenue_full</value>
    </row>
    <row>
       <key>ob</key>
       <value>ORDER BY 1 DESC;</value>
+   </row>
+   <row>
+      <key>sdo</key>
+      <value>--  SET DEFINE OFF</value>
    </row>
    <row>
       <key>ss</key>
@@ -62,9 +66,5 @@
    <row>
       <key>ww</key>
       <value>WHERE [(parameter)];</value>
-   </row>
-   <row>
-      <key>sdo</key>
-      <value>--  SET DEFINE OFF</value>
    </row>
 </rows>
