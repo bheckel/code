@@ -1,4 +1,21 @@
--- Modified: Mon 06 May 2019 10:57:23 (Bob Heckel) 
+--  Created: 06-May-2019 (Bob Heckel) 
+-- Modified: 19-Nov-2021 (Bob Heckel)
+
+---
+
+with v as (
+  select MSG, REQUEST_ID, EXECUTE_TIME, EXECUTE_USER, lag(execute_time,1,execute_time) over (partition by 1 order by user_oncall_results_id) as prev_execute_time
+  from user_oncall_results
+  where 1=1
+  and request_id like 'MKC_REVENUE_%'
+  and execute_time > sysdate - interval '12' hour
+  order by execute_time desc, user_oncall_results_id desc
+)
+select MSG, REQUEST_ID, EXECUTE_TIME, case when (msg not like 'CREATE TIME:%') then round((EXECUTE_TIME-PREV_EXECUTE_TIME)* 1440, 2) else NULL end as runtime_min
+from v;
+
+---
+
 -- Determine history changes for a 3 month period
 
 WITH AP_Salesgroups AS (

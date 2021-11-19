@@ -1,4 +1,4 @@
--- Modified: 20-Jul-2020 (Bob Heckel)
+-- Modified: 18-Nov-2021 (Bob Heckel)
 
 -- Predefined PL/SQL Exceptions: https://docs.oracle.com/cd/A97630_01/appdev.920/a96624/07_errs.htm
 
@@ -15,6 +15,14 @@
 -- continue.
 
 -- See also suppress_rowlevel_dml_errors.plsql
+
+---
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.put_line('ERROR: ' || SQLERRM || ':' || DBMS_UTILITY.format_error_backtrace || ' (LOAD_HISTORY)');
+
+---
 
 -- ERROR_CODE is an integer in the range -20999..-20000 and message is a character string of at most 2048 bytes
 -- But watch out! Several built-in packages, including DBMS_OUTPUT and DBMS_DESCRIBE, use error numbers 

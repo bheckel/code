@@ -1,6 +1,10 @@
 
 -- Created: 25-Jan-2021 (Bob Heckel)
 
+select salesgroup_id, updatedby, ORA_HASH(CONCAT(salesgroup_id, updatedby)) checksum from salesgroup;
+
+---
+
 -- admin@rshdb1
 
 -- ORA_HASH as a checksum comparison
