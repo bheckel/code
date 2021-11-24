@@ -2,7 +2,7 @@
 -- Modified: 08-Sep-2021 (Bob Heckel)
 
 alter table mkc_revenue_full drop column ACCOUNT_ID;
---                               !!no COLUMN!!
+--                               !!no COLUMN keyword!!
 alter table mkc_revenue_full add ACCOUNT_ID NUMBER GENERATED ALWAYS AS (COALESCE("ACCOUNT_ID_ADJ",TO_NUMBER("ACCOUNT_ID_CW"),"ACCOUNT_ID_AS")) VIRTUAL;
 alter table mkc_revenue_full add USD_CC_RATE_XRC number;
 alter table mkc_revenue modify "PRODUCT" VARCHAR(15) COLLATE "USING_NLS_COMP" GENERATED ALWAYS AS (CAST(UPPER(COALESCE("PRODUCT_OVR","PRODUCT_NAME_CODE_ADJ","PRODUCT_IDZ","PRODUCT_NAME_CODE_SR","PRODUCT_9BYTE_ID")) AS CHAR(15))) VIRTUAL;
