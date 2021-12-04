@@ -27,15 +27,18 @@ drop trigger MKC_REVENUE_FULL_IUD;
 create index KRF_ASSIGN_LOV_ID_IX ON MKC_REVENUE_FULL (ASSIGN_TERR_LOV_ID);
 alter index CONTACT_FIRSTNAME_LIST_IX rebuild online tablespace SE_01;
 alter index CONTACT_FIRSTNAME_LIST_IX rename to CONTACT_FIRSTNAME_IX;
-alter index "SETARS"."KRB_9BYTE_CD_IX" nologging;  -- not advisable
+alter index "SETARS"."KRB_9BYTE_CD_IX" nologging;  -- won't be able to use from backup after media failure
 drop index KRF_ACCT_ID_4_JOINS_IX;
-
-select index_name, table_name, used from v$object_usage;--null
-alter index KRB_HC_IN_CIX monitoring usage;
-select index_name, table_name, used from v$object_usage;--not null if index is being used
-alter index KRB_HC_IN_CIX nomonitoring usage;
 
 create sequence UID_RION_37551 MINVALUE 2 MAXVALUE 999999999999999999999999999 INCREMENT BY 10  START WITH 12 CACHE 20 NOORDER NOCYCLE;
 
 alter table mkc_revenue_full DISABLE ROW MOVEMENT;
 alter table mkc_revenue_full PARALLEL 16;
+
+EXECUTE IMMEDIATE 'CREATE INDEX KRB_HC_XR_CIX ON MKC_REVENUE_FULL(KMC_REVENUE_ID,HASH_COLUMN_xr) PARALLEL 16 NOLOGGING';
+EXECUTE IMMEDIATE 'ALTER INDEX KRB_HC_XR_CIX NOPARALLEL';      
+
+alter index KRH_KMC_REVENUE_ID_IX shrink space;
+-- did it work to reduce BYTES?:
+select * from user_segments where SEGMENT_NAME not like 'BIN$%';
+

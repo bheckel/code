@@ -1,0 +1,8 @@
+" Modified: 29-Nov-2021 (Bob Heckel)
+" Usually goes in C:\Users\mememe\vim\_vimrc after gvim is installed there
+" (replace installer's _vimrc) and Cygwin is installed to C:\cygwin64
+if has('unix')
+  source /c/cygwin64/home/mememe/dotfiles/_vimrc
+else
+  source c:/cygwin64/home/mememe/dotfiles/_vimrc
+endif
