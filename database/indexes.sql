@@ -18,11 +18,19 @@ alter index sgix nomonitoring usage;
 
 ---
 
+select index_name, table_name, used from v$object_usage;--null
+alter index KRB_HC_IN_CIX monitoring usage;
+select index_name, table_name, used from v$object_usage;--not null if index is being used
+alter index KRB_HC_IN_CIX nomonitoring usage;
+
+--or 
+
 --  set serveroutput on
 BEGIN 
   FOR r IN ( select index_name from user_indexes where TABLE_NAME = 'MKC_REVENUE_FULL_BOB' and index_name not like 'SYS_%' ) LOOP 
     dbms_output.put_line(r.index_name);
     execute immediate 'alter index "' || r.index_name || '" nomonitoring usage';
+    /*execute immediate 'alter index "' || r.index_name || '" monitoring usage';*/
   END LOOP; 
 END;
 
