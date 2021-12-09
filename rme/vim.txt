@@ -1,5 +1,7 @@
-sudo make distclean  # if you built Vim before
+
 # 05-Dec-21 https://gist.github.com/Pompeu/c711b6e35f3ae5deb5e81a938c3cc507
+
+sudo make distclean  # if you built Vim before
   307  2021-12-05 20:55:29 sudo apt-get remove vim vim-runtime vim-nox
   309  2021-12-05 20:58:40 git clone https://github.com/vim/vim.git
   310  2021-12-05 21:03:56 cd vim
@@ -11,6 +13,8 @@ sudo make distclean  # if you built Vim before
   317  2021-12-05 21:10:52 sudo update-alternatives --install /usr/bin/editor editor  /usr/local/bin/vim 1
   318  2021-12-05 21:11:05 sudo update-alternatives --set editor /usr/bin/vim editor  /usr/local/bin/vim
   319  2021-12-05 21:11:18 sudo update-alternatives --install /usr/bin/vi vi  /usr/local/bin/vim 1
+
+$ rm -rf vim/
 
 ---
 
