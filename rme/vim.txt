@@ -1,3 +1,23 @@
+
+# 05-Dec-21 https://gist.github.com/Pompeu/c711b6e35f3ae5deb5e81a938c3cc507
+
+sudo make distclean  # if you built Vim before
+  307  2021-12-05 20:55:29 sudo apt-get remove vim vim-runtime vim-nox
+  309  2021-12-05 20:58:40 git clone https://github.com/vim/vim.git
+  310  2021-12-05 21:03:56 cd vim
+  312  2021-12-05 21:06:04 sudo apt install make
+  313  2021-12-05 21:06:14 sudo apt install gcc
+  314  2021-12-05 21:07:03 ./configure --with-features=huge --enable-multibyte --prefix=/usr/local --with-compiledby="Bob Heckel <b.heckel@gmail.com>"
+  315  2021-12-05 21:08:31 make VIMRUNTIMEDIR=/usr/local/share/vim/vim82
+  316  2021-12-05 21:09:56 sudo make install
+  317  2021-12-05 21:10:52 sudo update-alternatives --install /usr/bin/editor editor  /usr/local/bin/vim 1
+  318  2021-12-05 21:11:05 sudo update-alternatives --set editor /usr/bin/vim editor  /usr/local/bin/vim
+  319  2021-12-05 21:11:18 sudo update-alternatives --install /usr/bin/vi vi  /usr/local/bin/vim 1
+
+$ rm -rf vim/
+
+---
+
 16-Jul-19
 https://github.com/vim/vim-win32-installer/releases
 Unzip to C:\Users\bheck\vim, no PATH edits, probably ran "C:\Users\bheck\vim\vim81\install.exe"
