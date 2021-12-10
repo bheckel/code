@@ -1,7 +1,13 @@
 
 -- Modified: Fri 21 Jun 2019 14:54:19 (Bob Heckel)
 
--- See also analytic_over_partition_order_window.sql
+-- Select as a comma separated list value. See also analytic_over_partition_order_window.sql
+
+---
+
+ SELECT DISTINCT NOTIFICATION_OWNER, JOB_NAME, RECIPIENT,
+                  LISTAGG(event, ', ' ON OVERFLOW TRUNCATE '...' WITHOUT COUNT) WITHIN GROUP (ORDER BY recipient) over ( partition by recipient ) event_list
+FROM user_scheduler_notifications  WHERE job_name = 'JOB_LOAD_NB_POC';
 
 ---
 

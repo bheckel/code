@@ -1,6 +1,6 @@
 -------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 21-Oct-2021 (Bob Heckel)
+-- Modified: 09-Dec-2021 (Bob Heckel)
 -------------------------------------
 
 BEGIN
@@ -390,7 +390,7 @@ END;
 exec sys.DBMS_SCHEDULER.drop_job('JOB_LOAD_NB');
 exec DBMS_SCHEDULER.disable('JOB_LOAD_NB');
 exec DBMS_SCHEDULER.enable('JOB_LOAD_NB');
--- Only To: is filled
+-- Only To: is filled. Notifs autodrop when BEGIN dbms_scheduler.drop_job('JOB_LOAD_NB'); END;
 begin
   dbms_scheduler.add_job_email_notification (
   job_name=> 'JOB_LOAD_NB',
@@ -407,4 +407,8 @@ begin
 end;
 
 SELECT * FROM user_scheduler_notifications WHERE job_name = 'JOB_LOAD_NB' and event='JOB_STARTED';
-
+-- or
+SELECT DISTINCT NOTIFICATION_OWNER, JOB_NAME, RECIPIENT,
+                LISTAGG(event, ', ' ON OVERFLOW TRUNCATE '...' WITHOUT COUNT) WITHIN GROUP (ORDER BY recipient) over ( partition by recipient ) event_list
+FROM user_scheduler_notifications
+WHERE job_name = 'JOB_LOAD_NB_POC';

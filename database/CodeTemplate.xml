@@ -57,7 +57,7 @@
    </row>
    <row>
       <key>sso</key>
-      <value>--  set serveroutput on</value>
+      <value>--  set serverout on size unl</value>
    </row>
    <row>
       <key>upd</key>

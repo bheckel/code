@@ -107,3 +107,56 @@ delete
         )
         where re.risk_id = risk_id and re.risk_employee_id = risk_employee_id and re.employee_id = employee_id
 );--delete the 2nd, 3rd... oldest dups
+
+---
+
+-- Using a list of account ids, delete using two disconnected predicates
+--  set serverout on size unl
+DECLARE
+  TYPE varcharTable IS TABLE OF VARCHAR2(30);
+  column_table varcharTable := varcharTable('TRADESTYLE',
+                                            'SECOND_TRADESTYLE',
+                                            'THIRD_TRADESTYLE',
+                                            'FOURTH_TRADESTYLE',
+                                            'FIFTH_TRADESTYLE');
+  type_table   varcharTable := varcharTable('1', '2', '3', '4', '5');
+
+  fix_cursor   SYS_REFCURSOR;
+  v_id         NUMBER;
+  v_sql        VARCHAR2(32767);
+
+BEGIN
+  FOR i IN 1 .. column_table.COUNT LOOP
+    -- Want this run 5 times to do 5 rounds of deleting
+    v_sql := 'with problems as
+                ( select distinct duns_nbr
+                   from rpt_account
+                  where account_id in (select account_id
+                                         from rpt_account
+                                        group by account_id
+                                       having count(account_id) > 1) )
+              select ana.account_name_attribute_id
+                from di_site_data           dsd,
+                     account_attribute      aa,
+                     account_name_attribute ana,
+                     account_name           an
+               where dsd.duns_nbr in (select p.duns_nbr from problems p)
+                 and dsd.duns_nbr = aa.duns_nbr
+                 and ana.account_name_type = ''' || type_table(i) || '''
+                 and aa.account_attribute_id = ana.account_attribute_id
+                 and ana.account_name_id = an.account_name_id
+                 and dsd.' || column_table(i) || ' != an.account_name';
+  
+    DBMS_OUTPUT.put_line('Running cursor using ' || v_sql);
+    OPEN fix_cursor FOR v_sql;
+  
+    LOOP
+      FETCH fix_cursor INTO v_id;
+      EXIT WHEN fix_cursor%NOTFOUND;
+      DBMS_OUTPUT.put_line('DELETE FROM ACCOUNT_NAME_ATTRIBUTE WHERE ACCOUNT_NAME_ATTRIBUTE_ID = ' || v_id);
+    END LOOP;
+  
+    CLOSE fix_cursor;
+  END LOOP;  -- column_table: TRADESTYLE, SECOND_TRADESTYLE...
+END;
+
