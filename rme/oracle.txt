@@ -49,10 +49,13 @@ cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTempla
 
 --- 
 
-SQL Developer upgrade:
-C:\Users\bheck\Oracle
-Rename existing sqldeveloper\ to sqldeveloper20.1\
-Extract zip
+17-Dec-21
+SQL Developer installation upgrade:
+Extract downloaded sqldeveloper-21.4.1.349.1822-x64.zip to C:\Users\bheck\Oracle\ (using their suggested name)
+Run c:\Users\bheck\Oracle\sqldeveloper-21.4.1.349.1822-x64\sqldeveloper\sqldeveloper.exe 
+
+Remove blurry small font:
+Icon Properties: override dpi handle by System (Enhanced)
 
 ---
 
@@ -123,11 +126,6 @@ $ export ORACLE_HOME=/d01/home/oracle/dist/8.1.5
 $ $ORACLE_HOME/bin/sqlplus
   username:  iws@oradev        <---good for testing
   pw:        iws2b
-
----
-
-See if database is reachable, show fq hostname, etc.
-tnsping usdev10
 
 ---
 

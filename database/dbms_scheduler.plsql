@@ -31,7 +31,6 @@ BEGIN
     enabled    => TRUE,
     comments   => 'One-time run by bheck');
 END;
---  exec DBMS_SCHEDULER.disable(job_name => 'JOB_RIONX'); exec DBMS_SCHEDULER.stop_job(job_name => 'JOB_RIONX');  exec sys.DBMS_SCHEDULER.drop_job('JOB_RIONX');
 --scheduled/running?
 SELECT state, NEXT_RUN_DATE, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments FROM user_scheduler_jobs WHERE job_name like 'JOB_RIONX%';
 --finished status
@@ -39,7 +38,7 @@ SELECT job_name, status, error#, errors, actual_start_date, run_duration, output
 
 ---
 
--- DBMS_SCHEDULER.create_job does an implicit COMMIT
+-- DBMS_SCHEDULER.create_job does an implicit COMMIT!
 BEGIN
   sys.dbms_scheduler.create_job(
     job_name => 'TESTJOB1',
@@ -59,6 +58,7 @@ SELECT errors,output,job_name, status, error#, actual_start_date, run_duration F
 
 exec DBMS_SCHEDULER.disable('TESTJOB1'); 
 exec DBMS_SCHEDULER.enable('TESTJOB1');
+exec DBMS_SCHEDULER.stop_job('TESTJOB1'); 
 exec DBMS_SCHEDULER.drop_job('TESTJOB1'); 
 
 ---
@@ -336,7 +336,7 @@ PROCEDURE send_cdhub_job_message(in_job_action VARCHAR2,
   PRAGMA AUTONOMOUS_TRANSACTION;
 
 BEGIN
-  -- Create a unique name for the job e.g. FOO_12345
+  -- Create a unique job name for the job e.g. FOO_12345
   DBMS_SCHEDULER.CREATE_JOB(job_name   => DBMS_SCHEDULER.GENERATE_JOB_NAME('foo_'),
                             job_type   => 'PLSQL_BLOCK',
                             job_action => 'BEGIN ' || in_job_action || '; END;',

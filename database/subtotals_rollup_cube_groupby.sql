@@ -1,6 +1,7 @@
 
 -- Use Oracle's ROLLUP, CUBE & SETS to group and subtotal more complicated queries
--- 28-Feb-19 Adapted from https://livesql.oracle.com/apex/livesql/s/evs32p79qszgvjfinqlh1iftw
+-- Adapted: 17-Dec-2021 (Bob Heckel-https://livesql.oracle.com/apex/livesql/s/evs32p79qszgvjfinqlh1iftw)
+-- Performance - take a single trip to the database
 
 /* Useless */
 with v as (
@@ -25,7 +26,7 @@ red	rectangular cuboid	1
 yellow	rectangular cuboid	1
 */
 
-/* Add a grand total record for color */
+/* Add a grand total record for color instead of unioning two queries */
 with v as (
           select 'blue' COLOR, 'cube' SHAPE from dual
 union all select 'blue', 'cylinder' from dual
@@ -35,15 +36,15 @@ union all select 'red', 'rectangular cuboid' from dual
 union all select 'yellow', 'rectangular cuboid' from dual
 )
 select color, count(*) from v
-group  by rollup(color)
+group  by ROLLUP(color)
 order by 1
 /*
 COLOR	COUNT(*)
-blue	2
-green	1
-red	2
+blue	  2
+green	  1
+red	    2
 yellow	1
- - 	6
+(null) 	6
 */
 
 /* Rollup calculates the subtotals for the columns in it, working from right to
@@ -59,7 +60,7 @@ union all select 'yellow', 'rectangular cuboid' from dual
 )
 select color, shape, count(*) 
 from v  
-group  by rollup(color, shape)
+group  by ROLLUP(color, shape)
 order by 1
 /*
 COLOR	SHAPE	COUNT(*)
@@ -86,7 +87,7 @@ union all select 'yellow', 'rectangular cuboid' from dual
 )
 select color, shape, count(*)
 from v
-group  by rollup(color), shape
+group  by ROLLUP(color), shape
 order by 2,1
 /*
 COLOR	SHAPE	COUNT(*)
@@ -113,24 +114,24 @@ union all select 'yellow', 'rectangular cuboid' from dual
 )
 select color, shape, count(*) 
 from v
-group  by cube(color, shape)
+group  by CUBE(color, shape)
 order by 1
 /*
 COLOR	SHAPE	COUNT(*)
-blue	cube	    1
-blue	cylinder	1
-blue	 - 	      2
-green	cube	 1
-green	 - 	   1
-red	cylinder            1
-red	rectangular cuboid	1
-red	 - 	                2
-yellow	rectangular cuboid	1
-yellow	 - 	                1
+blue	cube	    1             <--same as ROLLUP
+blue	cylinder	1             <--same as ROLLUP
+blue	 - 	      2             <--same as ROLLUP
+green	cube	 1                <--same as ROLLUP
+green	 - 	   1                <--same as ROLLUP
+red	cylinder            1     <--same as ROLLUP
+red	rectangular cuboid	1     <--same as ROLLUP
+red	 - 	                2     <--same as ROLLUP
+yellow	rectangular cuboid	1 <--same as ROLLUP
+yellow	 - 	                1 <--same as ROLLUP
  - 	cube	              2
  - 	cylinder	          2
  - 	rectangular cuboid	2
- - 	 - 	6
+ - 	 - 	6                     <--same as ROLLUP
 */
 
 
@@ -144,7 +145,8 @@ union all select 'yellow', 'rectangular cuboid' from dual
 )
 select color, shape, count(*) 
 from v
-group  by grouping sets(color, shape)
+group  by GROUPING SETS(color, shape)
+--group  by GROUPING SETS(color, shape, () )  -- want grand total of 6 too
 order by 1,2
 /*
 COLOR	SHAPE	COUNT(*)
