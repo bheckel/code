@@ -21,7 +21,6 @@ for d in dotfiles code; do
     # Check for fatals "master pushes to master (local out of date)"
     git remote show origin | grep --color=always 'local out of date'
   fi
-  echo ...done
 done
 
-echo run gfatal if needed
+echo ...done, do gfatal if needed
