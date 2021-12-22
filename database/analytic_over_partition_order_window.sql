@@ -408,3 +408,21 @@ select d, t ,amt
 from v
 order by 1,2;
 
+---
+
+-- Where would a new player averaging 13 points per game be ordered in the existing team rankings?:
+select rank(13) within group ( order by ppg ) ranking
+  from ( select player, sum(points) ppg
+           from basketball
+          group by player
+       );
+
+-- or if he gets 4 points per quarter?:
+select quarter,
+       rank(4) within group ( order by ppq )  ranking
+ from ( select player, quarter, sum(points) ppq
+          from basketball
+         group by player, quarter
+      )
+group by quarter
+order by 1;

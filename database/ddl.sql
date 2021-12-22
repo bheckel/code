@@ -10,7 +10,7 @@ alter table bricks modify ( colour NULL, weight NULL );
 alter table user_role1 rename to user_role2;
 alter table roion35282 rename column a3 to a4;
 
-alter table js_invoice_bob_31mar21 add constraint JS_INVOICE_BOB_31MAR21_PK PRIMARY KEY (INVOICE_NUMBER_SR,INVOICE_SUBSIDIARY_SR)
+alter table js_invoice add constraint JS_INVOICE_PK PRIMARY KEY (INVOICE_NUMBER_SR,INVOICE_SUBSIDIARY_SR)
 alter table mkc_revenue_adj add constraint NN_SDM_BUSINESS_KEY CHECK (SDM_BUSINESS_KEY IS NOT NULL);
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID;
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID drop index;
