@@ -1,6 +1,7 @@
 
 -- See also other collections: nested_table.plsql, varray.plsql, record_type.plsql
--- Modified: 13-Jul-2021 (Bob Heckel)
+--  Created: 13-Jul-2021 (Bob Heckel)
+-- Modified: 24-Dec-2021 (Bob Heckel)
 
 ---
 
@@ -15,6 +16,29 @@ BEGIN
   nums(3) := 295.34;
   DBMS_OUTPUT.put_line(nums(3));
 END;
+
+---
+
+ --  set serverout on size unl
+ declare
+   TYPE t_varchar2Table IS TABLE OF VARCHAR2(200);
+   TYPE t_varchar2List IS TABLE OF t_varchar2Table INDEX BY VARCHAR2(200);
+  
+   v_columnTable  t_varchar2List;
+   v_column_name  varchar2(50);
+   v_csv          varchar2(32767);
+begin
+   -- Load an associative array with a list of chars
+   v_columnTable('MKC_ACCT_23DEC21') := t_varchar2Table('INDUSTRY', 'SUP_ACCOUNT_ID', 'SUP_ACCOUNT_NAME');
+  
+  for i in 1 .. v_columntable('KMC_ACCT_23DEC21').count loop
+    v_column_name := v_columntable('KMC_ACCT_23DEC21')(i);
+    v_csv := v_csv || ', ' || v_column_name;
+  end loop;
+  
+  -- Output a CSV list
+  DBMS_OUTPUT.put_line(v_csv);
+end;
 
 ---
 

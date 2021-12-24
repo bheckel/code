@@ -1,4 +1,5 @@
--- Modified: 13-Nov-2020 (Bob Heckel)
+--  Created: 13-Nov-2020 (Bob Heckel)
+-- Modified: 23-Dec-2021 (Bob Heckel)
 -- See also start_with_connect_by_hierarchy.sql, row_number_tabibitosan.sql
 
 -- Row pattern matching. Grouping conditions that depend on relations BETWEEN rows IN A CERTAIN ORDER.
@@ -469,3 +470,151 @@ SELECT *
            DINGDONGS AS DINGDONGS.status2='In Progress'
        ) MR
  ORDER BY MR.activity_id, MR.updated desc;
+
+---
+
+-- https://github.com/connormcd/misc-scripts/blob/master/database_world_2021.sql
+-- Evenly balance disburse weight across 4 shopping bags
+/*
+ITEM      WEIGHT 
+--------- ------ 
+milk        1000 
+bread        650 
+...
+gin         2100
+*/
+select *
+    from shopping
+    match_recognize (
+     order by weight desc
+     measures
+        classifier() bag#,
+        sum(bag1.weight) bag1,
+        sum(bag2.weight) bag2,
+        sum(bag3.weight) bag3,
+       sum(bag4.weight) bag4
+   all rows per match
+   pattern ( (bag1|bag2|bag3|bag4)* )
+   define
+      bag1 as count(bag1.*) = 1 or
+        sum(bag1.weight)-bag1.weight <=
+           least(sum(bag2.weight),sum(bag3.weight),sum(bag4.weight))
+    , bag2 as count(bag2.*) = 1 or
+        sum(bag2.weight)-bag2.weight <=
+           least(sum(bag3.weight),sum(bag4.weight))
+    , bag3 as count(bag3.*) = 1 or
+        sum(bag3.weight)-bag3.weight <= sum(bag4.weight)
+   );
+/*
+WEIGHT BAG# BAG1 BAG2 BAG3 BAG4 ITEM      
+------ ---- ---- ---- ---- ---- --------- 
+  2100 BAG1 2100                gin       
+  1500 BAG2 2100 1500           soda      
+  1240 BAG3 2100 1500 1240      icecream  
+  1200 BAG4 2100 1500 1240 1200 bananas   
+  1000 BAG4 2100 1500 1240 2200 milk      
+   950 BAG3 2100 1500 2190 2200 detergent 
+   900 BAG2 2100 2400 2190 2200 apples    
+   800 BAG1 2900 2400 2190 2200 eggs      
+   650 BAG3 2900 2400 2840 2200 carrots   
+   650 BAG4 2900 2400 2840 2850 bread     
+   550 BAG2 2900 2950 2840 2850 steak     
+   540 BAG3 2900 2950 3380 2850 vegemite  
+   490 BAG4 2900 2950 3380 3340 dogfood   
+   450 BAG1 3350 2950 3380 3340 butter    
+   370 BAG2 3350 3320 3380 3340 honey     
+   290 BAG2 3350 3610 3380 3340 ketchup   
+   250 BAG4 3350 3610 3380 3590 biscuits  
+   220 BAG1 3570 3610 3380 3590 deodrant  
+*/
+
+-- or fancy, what to put in each bag:
+with portions as (
+  select *
+    from shopping
+    match_recognize (
+     order by weight desc
+     measures
+        classifier() bag#,
+        sum(bag1.weight) bag1,
+        sum(bag2.weight) bag2,
+        sum(bag3.weight) bag3,
+        sum(bag4.weight) bag4
+   all rows per match
+   pattern ( (bag1|bag2|bag3|bag4)* )
+   define
+      bag1 as count(bag1.*) = 1 or
+        sum(bag1.weight)-bag1.weight <= least(sum(bag2.weight),sum(bag3.weight),sum(bag4.weight))
+    , bag2 as count(bag2.*) = 1 or
+        sum(bag2.weight)-bag2.weight <= least(sum(bag3.weight),sum(bag4.weight))
+    , bag3 as count(bag3.*) = 1 or
+        sum(bag3.weight)-bag3.weight <= sum(bag4.weight)
+  )
+)
+select bag#, listagg(item,',') within group ( order by item ) as items, sum(weight)/1000 kg
+from portions
+group by bag#;
+/*
+BAG# ITEMS                                 KG 
+---- ----------------------------------- ---- 
+BAG1 butter,deodrant,eggs,gin            3.57 
+BAG2 apples,honey,ketchup,soda,steak     3.61 
+BAG3 carrots,detergent,icecream,vegemite 3.38 
+BAG4 bananas,biscuits,bread,dogfood,milk 3.59 
+*/
+
+-- or make it dynamic using SQL Macro:
+create or replace
+function pack_and_carry(p_tab dbms_tf.table_t,
+                        p_bags dbms_tf.columns_t) return clob sql_macro is
+  l_sql clob;
+  l_bag varchar2(1000);
+  l_sum varchar2(4000);
+  l_pattern varchar2(4000);
+  l_cnt int := to_number(trim('"' from p_bags(1)));
+begin
+ for i in 1 .. l_cnt loop
+   l_bag := l_bag || 'bag'||i||'|';
+   l_sum := l_sum || replace('sum(bag@.weight) bag@,','@',i)||chr(10);
+    if i < l_cnt then
+     if i < l_cnt-1 then
+       l_pattern := l_pattern || replace(',bag@ as count(bag@.*) = 1
+         or sum(bag@.weight)-bag@.weight <= least(','@',i);
+     else
+       l_pattern := l_pattern || replace(',bag@ as count(bag@.*) = 1
+         or sum(bag@.weight)-bag@.weight <= ','@',i);
+     end if;
+     for j in i+1 .. l_cnt loop
+       l_pattern := l_pattern ||replace('sum(bag@.weight),','@',j);
+     end loop;
+     l_pattern := rtrim(l_pattern,',')||')'||chr(10);
+   end if;
+ end loop;
+
+ l_sql := q'{
+select *
+from p_tab
+match_recognize (
+ order by weight desc
+ measures
+    classifier() bag#,
+    ~~~
+all rows per match
+pattern ( (###)* )
+define
+   $$$
+}';
+
+  l_sql := replace(l_sql,'###',rtrim(l_bag,'|'));
+  l_sql := replace(l_sql,'~~~',rtrim(l_sum,','||chr(10)));
+  l_sql := replace(l_sql,'$$$',ltrim(l_pattern,','));
+
+  return l_sql;
+end;
+/
+
+select bag#,
+       listagg(item,',') within group ( order by item ) as items,
+       sum(weight)/1000 kg
+  from pack_and_carry(shopping,columns("4"))
+ group by bag#;
