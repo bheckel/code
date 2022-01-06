@@ -56,7 +56,7 @@ END;
 SELECT state, NEXT_RUN_DATE, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments FROM user_scheduler_jobs WHERE job_name like 'TESTJOB1';
 SELECT errors,output,job_name, status, error#, actual_start_date, run_duration FROM user_scheduler_job_run_details WHERE job_name like 'TESTJOB1' ORDER BY actual_start_date DESC;
 
-exec DBMS_SCHEDULER.disable('TESTJOB1'); 
+begin DBMS_SCHEDULER.disable('TESTJOB1'); end;
 exec DBMS_SCHEDULER.enable('TESTJOB1');
 exec DBMS_SCHEDULER.stop_job('TESTJOB1'); 
 exec DBMS_SCHEDULER.drop_job('TESTJOB1'); 
