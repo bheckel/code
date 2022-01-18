@@ -1,7 +1,11 @@
--------------------------------------
+--------------------------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
 -- Modified: 09-Dec-2021 (Bob Heckel)
--------------------------------------
+--
+-- DBMS_SCHEDULER.create_job does an implicit COMMIT!
+--------------------------------------------------------
+
+---
 
 BEGIN
   DBMS_SCHEDULER.create_job(
@@ -38,28 +42,27 @@ SELECT job_name, status, error#, errors, actual_start_date, run_duration, output
 
 ---
 
--- DBMS_SCHEDULER.create_job does an implicit COMMIT!
 BEGIN
   sys.dbms_scheduler.create_job(
     job_name => 'TESTJOB1',
     job_type => 'PLSQL_BLOCK',
-    job_action => 'BEGIN dbms_output.put_line(''ok''); END;',
-    repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SUN;ByHour=10;ByMinute=10;BySecond=0',
-    --start_date => systimestamp + INTERVAL '1' MINUTE,
-    end_date => to_date(null),
+    job_action => q'[ 
+                      BEGIN dbms_output.put_line('ok'); END;
+                    ]',
+    repeat_interval => 'Freq=Daily;ByDay=MON,TUE,WED,THU,FRI,SUN;ByHour=10;ByMinute=11;BySecond=0',
     job_class => 'DEFAULT_JOB_CLASS',
     enabled => true,
     auto_drop => false,
-    comment => 'test'
-    );
+    comments => 'adhoc');
 END;
+
 SELECT state, NEXT_RUN_DATE, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments FROM user_scheduler_jobs WHERE job_name like 'TESTJOB1';
 SELECT errors,output,job_name, status, error#, actual_start_date, run_duration FROM user_scheduler_job_run_details WHERE job_name like 'TESTJOB1' ORDER BY actual_start_date DESC;
 
-begin DBMS_SCHEDULER.disable('TESTJOB1'); end;
-exec DBMS_SCHEDULER.enable('TESTJOB1');
+exec DBMS_SCHEDULER.disable('TESTJOB1');
+exec DBMS_SCHEDULER.enable('TESTJOB1'); -- this will NOT "catch-up" and run a missed repeat_interval!
 exec DBMS_SCHEDULER.stop_job('TESTJOB1'); 
-exec DBMS_SCHEDULER.drop_job('TESTJOB1'); 
+exec DBMS_SCHEDULER.drop_job('TESTJOB1');
 
 ---
 
