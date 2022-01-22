@@ -1,4 +1,21 @@
 
+with v as( 
+  select 't' x,column_name
+    from user_tab_cols
+    where table_name='MKC_REVENUE_FULL'
+   union all 
+   select 'p' x,column_name
+    from user_tab_cols@tlas_prod_rw
+    where table_name='MKC_REVENUE_FULL'
+)
+select column_name 
+  from v
+ group by column_name
+having count(1)=1
+ order by 1;
+
+---
+
 -- Compare virtual columns on two tables
 DECLARE
   TYPE varcharTable IS TABLE OF VARCHAR2(32767);

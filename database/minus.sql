@@ -6,6 +6,22 @@
 
 ---
 
+select sdm_business_key
+from kmc_revenue_full
+minus
+select sdm_business_key
+from kmc_revenue_full@roion_prod_ro
+;--2k on prw not on roion
+
+select sdm_business_key
+from kmc_revenue_full@roion_prod_ro
+minus
+select sdm_business_key
+from kmc_revenue_full
+;--on roion not prw01
+
+---
+
 -- Plan cost 7
 SELECT employee_id FROM employees WHERE employee_id between 145 and 179
 MINUS

@@ -18,9 +18,12 @@ done
 for d in dotfiles code; do
   if [ "$yn" != 'n' ];then
     echo Checking for fatals...
+    cd $HOME/$d && \
     # Check for fatals "master pushes to master (local out of date)"
-    git remote show origin | grep --color=always 'local out of date'
+    git remote show origin | grep --color=always 'local out of date' && \
+    cd -
   fi
 done
 
-echo ...done, do gfatal if needed
+#echo ...done, do gfatal if needed
+echo '...done, if needed do cd ~/dotfiles && git merge && git push; cd ~/code && git merge && git push; git remote show origin'
