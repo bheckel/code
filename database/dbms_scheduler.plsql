@@ -1,6 +1,6 @@
 --------------------------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 09-Dec-2021 (Bob Heckel)
+-- Modified: 26-Jan-2022 (Bob Heckel)
 --
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT!
 --------------------------------------------------------
@@ -9,15 +9,20 @@
 
 BEGIN
   DBMS_SCHEDULER.create_job(
-    job_name   => 'JOB_RION54143',
+    job_name   => 'JOB_TESTING',
     job_type   => 'PLSQL_BLOCK',
-    job_action => q'[ declare x number; begin select count(1) into x from account; DBMS_OUTPUT.put_line('cnt: ' || x); end; ]',
-    --start_date => systimestamp + INTERVAL '1' MINUTE,
-    start_date => TO_DATE('10/19/2021 03:18:00 PM', 'mm/dd/yyyy hh:mi:ss PM'),
-    job_class  => 'DEFAULT_JOB_CLASS',
-    enabled    => true,  -- if false it just sits there DISABLED
-    comments   => 'run by bheck');
+    job_action => q'[ declare x number; begin select 1 into x from dual; DBMS_OUTPUT.put_line('x: ' || x); end; ]',
+    start_date => systimestamp + INTERVAL '3' second,  -- if missing runs immediately
+    enabled    => true  -- if false it just sits there DISABLED
+  );
 END;
+SELECT state, NEXT_RUN_DATE, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments FROM user_scheduler_jobs WHERE job_name = 'JOB_TESTING';
+SELECT errors,output,job_name, status, error#, actual_start_date, run_duration FROM user_scheduler_job_run_details WHERE job_name = 'JOB_TESTING' ORDER BY actual_start_date DESC;
+
+-- If create_job has no start_date:
+--26-JAN-22 02.52.02.064495000 PM AMERICA/NEW_YORK
+-- If it does:
+--26-JAN-22 02.53.19.070618000 PM -05:00
 
 ---
 
@@ -25,11 +30,14 @@ BEGIN
   DBMS_SCHEDULER.create_job(
     job_name   => 'JOB_RIONX',
     job_type   => 'PLSQL_BLOCK',
+    --job_action => q'[ declare x number; begin select count(1) into x from account; DBMS_OUTPUT.put_line('cnt: ' || x); end; ]',
     job_action => q'[ begin 
                         execute immediate 'create table kmc_revenue_full_TST as select * from kmc_revenue_full_TST@ests';
                         execute immediate 'create table kmc_revenue_full_POC as select * from kmc_revenue_full_POC@ests';
                       end;
                   ]',
+    --start_date => systimestamp + INTERVAL '1' MINUTE,
+    --start_date => TO_DATE('10/19/2021 03:18:00 PM', 'mm/dd/yyyy hh:mi:ss PM'),
     start_date => systimestamp + INTERVAL '30' second,
     job_class  => 'DEFAULT_JOB_CLASS',
     enabled    => TRUE,
@@ -63,6 +71,14 @@ exec DBMS_SCHEDULER.disable('TESTJOB1');
 exec DBMS_SCHEDULER.enable('TESTJOB1'); -- this will NOT "catch-up" and run a missed repeat_interval!
 exec DBMS_SCHEDULER.stop_job('TESTJOB1'); 
 exec DBMS_SCHEDULER.drop_job('TESTJOB1');
+
+---
+
+BEGIN
+  -- Run job synchronously. But OUTPUT column is null if use_current_session is TRUE!
+  DBMS_SCHEDULER.run_job (job_name            => 'TESTJOB1',
+                          use_current_session => FALSE);
+END;  
 
 ---
 
@@ -300,8 +316,7 @@ SELECT * FROM user_jobs WHERE job=6744;
 BEGIN
    -- Drop the job, if exists
    BEGIN
-     SYS.DBMS_SCHEDULER.DROP_JOB(
-       job_name  => 'LONG_RUNNING_USER_QUERIES_JOB');
+     SYS.DBMS_SCHEDULER.DROP_JOB(job_name  => 'LONG_RUNNING_USER_QUERIES_JOB');
    EXCEPTION
      WHEN OTHERS THEN
        NULL;
