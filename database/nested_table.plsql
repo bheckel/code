@@ -3,7 +3,7 @@
 -- See also associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql, type.plsql
 --
 --  Created: Fri 02 Aug 2019 (Bob Heckel)
--- Modified: 04-Jun-2020 (Bob Heckel)
+-- Modified: 31-Jan-2022 (Bob Heckel)
 
 -- Associative arrays are particularly good with sparse collections.
 -- Nested tables offer lots of features for set-oriented management of collection contents.
@@ -187,6 +187,7 @@ END;
 
 ---
 
+-- Load a collection using a table
 declare
   type numbers_t is table of number;
   l_nums numbers_t;  -- no initialization required for bulk collect!
@@ -338,7 +339,7 @@ exec bob2.do;
 
 ---
 
--- Compare two approaches to filling a collection using BULK COLLECT:
+-- Compare two approaches to load populate fill a collection using BULK COLLECT:
 
 -- 1.  Execute immediate into specific defined numberTables
 create or REPLACE PACKAGE bob as
@@ -390,6 +391,27 @@ create or replace PACKAGE body bob as
     END LOOP;
   END cae_auto_assign;
 END bob;
+
+-- 3. Use a RECORD
+create or replace function get_eoy_date(in_year NUMBER) return number deterministic as
+  type days_table_rec is record(
+    year      mkc_years.year%type,
+    start_day mkc_years.start_day%type,
+    end_day   mkc_years.end_day%type
+    );
+  type days_table is table of days_table_rec;
+
+  l_days_table days_table;
+  
+  --x number := EXTRACT(YEAR FROM SYSDATE);
+begin
+  --x:=in_year;
+  select year, start_day, end_day
+    bulk collect into l_days_table
+    from kmc_years;
+  
+  return(l_days_table(2).start_day);
+end;
 
 ---
 

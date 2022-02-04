@@ -42,3 +42,5 @@ alter index KRH_KMC_REVENUE_ID_IX shrink space;
 -- did it work to reduce BYTES?:
 select * from user_segments where SEGMENT_NAME not like 'BIN$%';
 
+create table mkc_years ( year number, start_day number, end_day number);
+insert into mkc_years values (2019, 1, 31);

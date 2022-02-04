@@ -35,7 +35,6 @@ select sum(email_messages_id) from email_messages;  -- FULL SCAN but no table ac
 ---
 
 -- Use ALTER SESSION SET statistics_level = all; if not using hint
-
 select /*+ gather_plan_statistics */
        colour, count(*) 
 from   bricks
@@ -45,6 +44,8 @@ order  by colour;
 select *
 from   table(dbms_xplan.display_cursor(format => 'ALLSTATS LAST'));
 /*from   table(dbms_xplan.display_cursor(format => 'IOSTATS LAST'));*/
+-- Probably best:
+/*from   table(dbms_xplan.display_cursor(format => 'ALLSTATS +cost +bytes'));*/
 /*
 SQL_ID  f3z2z7vk5fj1d, child number 1
 -------------------------------------

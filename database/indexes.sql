@@ -22,17 +22,22 @@ select index_name, table_name, used from v$object_usage;--null
 alter index KRB_HC_IN_CIX monitoring usage;
 select index_name, table_name, used from v$object_usage;--not null if index is being used
 alter index KRB_HC_IN_CIX nomonitoring usage;
+...
 
 --or 
+
+select index_name, table_name, used from v$object_usage;--not null if index is being used
 
 --  set serveroutput on
 BEGIN 
   FOR r IN ( select index_name from user_indexes where TABLE_NAME = 'MKC_REVENUE_FULL_BOB' and index_name not like 'SYS_%' ) LOOP 
     dbms_output.put_line(r.index_name);
-    execute immediate 'alter index "' || r.index_name || '" nomonitoring usage';
-    /*execute immediate 'alter index "' || r.index_name || '" monitoring usage';*/
+    execute immediate 'alter index "' || r.index_name || '" monitoring usage';
+    /*execute immediate 'alter index "' || r.index_name || '" nomonitoring usage';*/
   END LOOP; 
 END;
+
+select index_name, table_name, used from v$object_usage;--not null if index is being used
 
 ---
 
@@ -154,7 +159,6 @@ LEFT JOIN all_ind_expressions f
  AND  c.table_owner     = f.table_owner
  AND  c.table_name      = f.table_name
  AND  c.column_position = f.column_position
-WHERE --i.table_name  LIKE UPPER('%sometablepattern%')
     i.index_name='ACC_TEAM_ASSIGNMENT_U_ACTIV_IX'
 ORDER BY i.table_owner, i.table_name, i.index_name, c.column_position;
 
@@ -185,7 +189,7 @@ Predicate Information (identified by operation id):
 ---
 
 -- All columns that are a foreign key MUST have an index on them, otherwise, when Oracle validates the value for the 
--- index, it is a HUGE performance hit(??)
+-- index, it is a HUGE performance hit(still true in 2022??)
 select uc.constraint_name, ucc.table_name, ucc.column_name--,'CREATE INDEX ' || ucc.table_name || 'XX_IX on ' || ucc.table_name|| '(' || ucc.column_name || ');' index_create
   from user_constraints uc, user_cons_columns ucc
  where uc.constraint_name = ucc.constraint_name

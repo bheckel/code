@@ -49,7 +49,7 @@ DEFINE _EDITOR=vim
 --set embedded OFF
 --set endbuftoken ""
 --set escape OFF
---set feedback 6
+--set feedback ON
 --set flagger OFF
 --set flush ON
 --set heading ON

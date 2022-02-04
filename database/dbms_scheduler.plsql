@@ -5,6 +5,10 @@
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT!
 --------------------------------------------------------
 
+-- If the scheduler default_timezone is not specified, it attempts to
+-- determine it from the OS. If that isn't possible it is set to NULL. 
+SELECT DBMS_SCHEDULER.STIME FROM DUAL;
+
 ---
 
 BEGIN
