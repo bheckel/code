@@ -1,10 +1,20 @@
 
--- Modified: 14-Feb-2020 (Bob Heckel)
--- Execution plan. Query plan. SQL Tuning.
+-- Modified: 08-Feb-2022 (Bob Heckel)
+-- Execution plan. Query plan. SQL Tuning. Autotrace.
 -- See also indexes.sql, devgym_create_toy_objects.sql
 
 -- The B-tree traversal is the first power of indexing.
 -- Clustering is the second power of indexing.
+
+---
+
+--  set pagesize 0
+ALTER SESSION SET statistics_level = all;
+select SID, SERIAL#, USERNAME, STATUS, OSUSER, MACHINE, PROGRAM, SQL_ID, SQL_EXEC_START, PREV_SQL_ID, PREV_EXEC_START, LOGON_TIME, LAST_CALL_ET, CLIENT_IDENTIFIER, STATE, SERVICE_NAME, trunc(last_call_et/ 3600) as Hours from v$session where username is not null order by SQL_EXEC_START desc nulls last;
+SELECT * FROM v$sql WHERE sql_id='gvhhm0q3n6n2k';
+SELECT * FROM v$sql WHERE lower(sql_text) like '%photo%';
+Select plan_table_output From table(dbms_xplan.display_cursor(null,null,'allstats +cost +bytes'));
+Select plan_table_output From table(dbms_xplan.display_cursor('gvhhm0q3n6n2k',null,'allstats +cost +bytes'));
 
 ---
 
@@ -195,12 +205,16 @@ drop table robtest purge
 --   execute the TABLE ACCESS BY INDEX ROWID operation only 17 times.
 -- 
 --
+-- Access Methods:
+--
 -- INDEX [ix name] UNIQUE SCAN 
 -- Performs the B-tree traversal ONLY. The database uses this operation if a
 -- unique constraint ensures that the search criteria will match no more than one
 -- entry.  The database does not need to follow the index leaf nodes - it is enough to 
 -- traverse the index tree thanks to the primary key or other constraint.  This operation
 -- cannot deliver > 1 entry so it cannot trigger > 1 table access.  Always fast.
+-- Only one row will be returned from the scan of a unique index. It will be used when there is an
+-- equality predicate on a unique (B-tree) index or an index created as a result of a primary key constraint.
 -- 
 -- INDEX [ix name] RANGE SCAN 
 -- Performs the B-tree traversal AND THEN follows the leaf node chain to find all
@@ -210,6 +224,10 @@ drop table robtest purge
 -- FILTER PREDICATES often cause performance problems for an INDEX RANGE SCAN so keep the scanned 
 -- index range as small as possible.  That usually means index for equality first, then for ranges.
 -- Ideally the index "covers" the entire WHERE clause so that all filters are used as access predicates.
+-- Oracle accesses adjacent index entries and then uses the ROWID values in the index to
+-- retrieve the corresponding rows from the table. An index range scan can be bounded or unbounded. It will be used
+-- when a statement has an equality predicate on a non-unique index key, or a non-equality or range predicate on a
+-- unique index key. (=, <, >,LIKE if not on leading edge). Data is returned in the ascending order of index columns.
 -- 
 -- Notice that the table doesn't appear in the execution plan! This is also called a covering index.
 -- For the optimizer to do this, at least one column must be NOT NULL. This is because Oracle excludes 
@@ -221,18 +239,37 @@ drop table robtest purge
 -- TABLE ACCESS [tbl name] BY INDEX ROWID
 -- Retrieves a row from the table using the ROWID retrieved from the preceding
 -- index lookup access, e.g. INDEX RANGE SCAN.
+-- The rowid of a row specifies the data file, the data block within that file, and the location
+-- of the row within that block. Oracle first obtains the rowids either from a WHERE clause predicate or through an
+-- index scan of one or more of the table's indexes. Oracle then locates each selected row in the table based on its
+-- rowid and does a row-by-row access.
 -- 
 -- INDEX [ix name] FULL SCAN
 -- Reads the entire index (all rows) in index order. Depending on various system
 -- statistics, the database might perform this operation if it needs all rows in
 -- index order—e.g., because of a corresponding order by clause.  Instead, the
 -- optimizer might also use an INDEX FAST FULL SCAN and perform an additional sort operation.
+-- A full index scan does not read every block in the index structure, contrary to what its name
+-- suggests. An index full scan processes all of the leaf blocks of an index, but only enough of the branch blocks to find
+-- the first leaf block. It is used when all of the columns necessary to satisfy the statement are in the index and it is
+-- cheaper than scanning the table. It uses single block IOs.
+--
+-- INDEX SKIP SCAN 
+-- Normally, in order for an index to be used, the prefix of the index key (leading edge of the index)
+-- would be referenced in the query. However, if all the other columns in the index are referenced in the statement
+-- except the first column, Oracle can do an index skip scan, to skip the first column of the index and use the rest of it.
+-- This can be advantageous if there are few distinct values in the leading column of a concatenated index and many
+-- distinct values in the non-leading key of the index.
 -- 
 -- INDEX [ix name] FAST FULL SCAN
 -- Reads the entire index (all rows) as stored on the disk. This operation is
 -- typically performed instead of a full table scan if all required columns are
 -- available in the index. Similar to TABLE ACCESS FULL, the INDEX FAST FULL SCAN
 -- can benefit from multi-block read operations.
+-- This is an alternative to a full table scan when the index contains all the columns that are
+-- needed for the query, and at least one column in the index key has the NOT NULL constraint. It cannot be used to
+-- eliminate a sort operation, because the data access does not follow the index key. It will also read all of the blocks in
+-- the index using multiblock reads, unlike a full index scan.
 
 -- TABLE ACCESS [tbl name] STORAGE FULL
 -- Also known as "full table scan". Reads the entire table (all rows AND COLUMNS!) as stored on the
@@ -242,7 +279,13 @@ drop table robtest purge
 -- has been processed), it is still one of the most expensive operations. Besides high IO rates, a
 -- full table scan must inspect ALL table rows so it can also consume a considerable amount of CPU
 -- time.
+-- Reads all rows from a table and filters out those that do not meet the where clause predicates. A
+-- full table scan will use multi block IO (typically 1MB IOs). A full table scan is selected if a large 
+-- portion of the rows in the table must be accessed, no indexes exist or the ones present can’t be 
+-- used or if the cost is the lowest
 --
+--
+-- Joins:
 --
 -- NESTED LOOPS JOIN
 -- Joins two tables by fetching the result from one table and querying the other table for each 

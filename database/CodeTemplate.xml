@@ -28,6 +28,10 @@
       <value>DBMS_OUTPUT.put_line();</value>
    </row>
    <row>
+      <key>ddd</key>
+      <value>select 1 from dual;</value>
+   </row>
+   <row>
       <key>df</key>
       <value>DELETE FROM [ (parameter)  WHERE </value>
    </row>
@@ -57,7 +61,7 @@
    </row>
    <row>
       <key>sso</key>
-      <value>--  set serverout on size unl</value>
+      <value>--  set serverout on size 100000</value>
    </row>
    <row>
       <key>upd</key>

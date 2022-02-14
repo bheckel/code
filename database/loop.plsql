@@ -1,3 +1,4 @@
+-- Modified: 10-Feb-2022 (Bob Heckel)
 -- The loop statements are the basic LOOP, FOR LOOP, and WHILE LOOP.
 --
 -- The EXIT statement transfers control to the end of a loop. The CONTINUE
@@ -6,6 +7,8 @@
 -- can specify a condition.
 
 -- See also for.plsql
+
+---
 
 -- Basic loop ------------
 LOOP
@@ -117,3 +120,33 @@ BEGIN
   END LOOP;
 END;
 
+---
+
+DECLARE
+  TYPE dow_tab_t IS TABLE OF VARCHAR2(10);
+  dow_tab dow_tab_t := dow_tab_t('Sunday' ,'Monday','Tuesday','Wednesday','Thursday' ,'Friday','Saturday');
+BEGIN
+  FOR counter IN 2 .. 6 LOOP
+    --Skip Wednesdays
+    CONTINUE day_loop 
+      WHEN dow_tab(counter)='Wednesday';
+    DBMS_OUTPUT.PUT_LINE(dow_tab(counter));
+  END LOOP;
+END;
+
+---
+
+-- An actual use of loop tags
+BEGIN
+  <<outer_loop>>
+  FOR outer_counter IN 1 .. 3 LOOP
+    DBMS_OUTPUT.PUT_LINE(outer_counter);
+    <<inner_loop>>
+    FOR inner_counter IN 10 .. 15 LOOP
+      CONTINUE outer_loop 
+         WHEN outer_counter > 1 
+              AND inner_counter = 12;
+      DBMS_OUTPUT.PUT_LINE('...'||inner_counter);
+    END LOOP;
+  END LOOP;
+END;

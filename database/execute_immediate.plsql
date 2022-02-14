@@ -1,6 +1,9 @@
--- Modified: 10-Nov-2021 (Bob Heckel)
+-- Modified: 10-Feb-2022 (Bob Heckel)
 -- https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01115
 -- See also run_all_procedures.plsql, using.plsql bulk_collect_forall.plsql
+
+-- The EXECUTE IMMEDIATE statement is typically used for DDL, single-row SELECTs, and other DML.
+-- The OPEN FOR, FETCH, and CLOSE statements support dynamic multirow queries.
 
 -- To process dynamic SQL statements, you use EXECUTE IMMEDIATE or OPEN-FOR / FETCH / CLOSE statements.
 -- EXECUTE IMMEDIATE is used for a single-row SELECT statement, all DML statements, and DDL statements,
@@ -10,7 +13,12 @@
 -- For dynamic SQL, always use native dynamic SQL except when its functionality is insufficient; only 
 -- then, use the DBMS_Sql API. For select, insert, update, delete, and merge statements, native dynamic 
 -- SQL is insufficient when the SQL statement has placeholders or select list items that are not known 
--- at compile time
+-- at compile time.
+
+---
+
+-- When designing your programs, keep in mind that executing DDL like this will automatically commit any pending transaction
+begin EXECUTE IMMEDIATE 'TRUNCATE TABLE foo'; end;
 
 ---
 
@@ -247,14 +255,13 @@ BEGIN
    END LOOP;
 END;
 
--- or
+-- compare
 
 DECLARE
    TYPE ids_t IS TABLE OF employees.employee_id%TYPE;
    l_ids ids_t;
 BEGIN
-   EXECUTE IMMEDIATE
-     'UPDATE employees SET last_name = UPPER(last_name) WHERE department_id = 100 RETURNING employee_id INTO :ids'
+   EXECUTE IMMEDIATE 'UPDATE employees SET last_name = UPPER(last_name) WHERE department_id = 100 RETURNING employee_id INTO :ids'
 		 RETURNING BULK COLLECT INTO l_ids;
    
    FOR indx IN 1 .. l_ids.COUNT LOOP
@@ -264,18 +271,35 @@ END;
 
 ---
 
-        EXECUTE IMMEDIATE 'update opportunity_BASE o set (' || tbl_cols ||
-                          ') = (select ' || tbl_cols ||
-                          ' from opportunity_hist o where opportunity_id = :1 and h_version = :2) ' ||
-                          'where opportunity_id = :3'
-          USING ID, source_h_version, ID;
+    EXECUTE IMMEDIATE 'update opportunity_BASE o set (' || tbl_cols ||
+                      ') = (select ' || tbl_cols ||
+                      ' from opportunity_hist o where opportunity_id = :1 and h_version = :2) ' ||
+                      'where opportunity_id = :3'
+      USING ID, source_h_version, ID;
 
-        IF (SQL%ROWCOUNT = 1) THEN
-          DBMS_OUTPUT.put_line('Record ' || ID ||
-                               ' Updated, Current H_VERSION = ' ||
-                               TO_CHAR(l_h_version + 1));
-        ELSE
-          ROLLBACK;
-          DBMS_OUTPUT.put_line('Invalid SQL, incorrect number of records updated');
-        END IF;
+    IF (SQL%ROWCOUNT = 1) THEN
+      DBMS_OUTPUT.put_line('Record ' || ID ||
+                           ' Updated, Current H_VERSION = ' ||
+                           TO_CHAR(l_h_version + 1));
+    ELSE
+      ROLLBACK;
+      DBMS_OUTPUT.put_line('Invalid SQL, incorrect number of records updated');
+    END IF;
+
+---
+
+DECLARE
+  new_sal NUMBER := 75000;
+BEGIN
+  sql_stmt := 'UPDATE emp SET salary = :new_sal WHERE emp_id = :empno';
+
+  EXECUTE IMMEDIATE sql_stmt USING new_sal, 123;
+...
+
+-- same
+DECLARE
+  new_sal NUMBER := 75000;
+BEGIN
+  UPDATE emp SET salary = new_sal WHERE emp_id = 123;
+...
 

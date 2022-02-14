@@ -1,5 +1,5 @@
-/* Adapted: Fri, Nov 30, 2018  3:57:25 PM (Bob Heckel--devgym.oracle.com) */ 
-/* Modified: 03-Apr-2020 (Bob Heckel)
+-- Adapted: Fri, Nov 30, 2018  3:57:25 PM (Bob Heckel--devgym.oracle.com)
+-- Modified: 10-Feb-2022 (Bob Heckel)
 /* See also pass_cursor.plsql table_function.plsql */
 /* https://docs.oracle.com/database/121/LNPLS/tuning.htm#LNPLS918 */
 
@@ -21,6 +21,24 @@
  * strictly from SQL and never from PL/SQL, it is almost always a good idea to make it pipelined.
  * We get the ability to quit processing if the client SQL stops fetching rows from the function.
  */
+
+---
+
+CREATE OR REPLACE TYPE num_tab_typ AS TABLE OF NUMBER;
+/
+CREATE OR REPLACE FUNCTION piped_func(factor IN NUMBER)
+  RETURN num_tab_typ PIPELINED
+AS
+BEGIN
+  FOR counter IN 1..1000 LOOP
+    PIPE ROW (counter*factor);
+  END LOOP;
+  RETURN;
+END piped_func;
+/
+SELECT COLUMN_VALUE 
+  FROM TABLE(piped_func(2))
+ WHERE rownum < 5;
 
 ---
 

@@ -7,7 +7,7 @@
 
 -- Associative arrays are particularly good with sparse collections.
 -- Nested tables offer lots of features for set-oriented management of collection contents.
--- Varrays - doubt you'll ever use a array, intended more for usage as nested columns in relational tables,
+-- Varrays - doubt you'll ever use a varray, intended more for usage as nested columns in relational tables,
 -- offering some performance advantages.
 -- Nested & varrays can be created in a schema object, unlike AA which can be created in a PLSQL block only
 
@@ -432,4 +432,69 @@ begin
   v_set_cols := substr(v_set_cols, 1, length(v_set_cols) - 1);
   DBMS_OUTPUT.put_line(v_set_cols);
   --INVOICE_LINE_STATUS_COMMENT = NULL, PAYMENT_LAST_APPLIED_DATE = NULL, CREDIT_MEMO_LAST_RPT_DATE = NULL
+end;
+
+---
+
+create or replace package rion56370 as
+  type days_table_t_rec is record(
+    year      kmc_years.year%type,
+    start_day kmc_years.start_day%type,
+    end_day   kmc_years.end_day%type
+  );
+  type days_table_t is table of days_table_t_rec;
+  
+  l_days_table days_table_t := days_table_t();
+
+  function get_eoy_date(in_year NUMBER DEFAULT NULL) return date;  
+end;
+/
+create or replace package body rion56370 as
+  function get_eoy_date(in_year NUMBER DEFAULT NULL) return date is
+    l_dt_str varchar2(99);
+    l_yr   number;
+  begin
+--    select year, start_day, end_day
+--      bulk collect into l_days_table
+--      from kmc_years;
+    l_days_table.extend;
+    l_days_table(1).year := 2020;
+    l_days_table(1).start_day := 1;
+    l_days_table(1).end_day := 10;
+    l_days_table.extend;
+    l_days_table(2).year := 2021;
+    l_days_table(2).start_day := 1;
+    l_days_table(2).end_day := 11;
+    
+    if in_year is null then
+      l_yr := l_days_table(l_days_table.COUNT).year;
+    else
+      l_yr := in_year;
+    end if;
+    
+    for i in 1 .. l_days_table.COUNT loop
+      if l_days_table(i).year = l_yr then
+        l_dt_str := l_days_table(1).start_day || '/' || l_days_table(1).end_day || '/' || l_yr;
+      end if;
+    end loop;
+    --DBMS_OUTPUT.put_line(l_dt_str);
+    
+    return to_date(l_dt_str, 'MM/fmDD/YYYY'); 
+  end;
+end;
+
+--  set serverout on size 100000
+declare 
+  x date; 
+  y number; 
+begin 
+--  x:= rion56370.get_eoy_date(2019);
+--  DBMS_OUTPUT.put_line('normal version ' || x);
+--  y:=extract(year from x); 
+--  DBMS_OUTPUT.put_line('get_current_reporting_year version ' || y);
+  
+  x:= rion56370.get_eoy_date();
+  DBMS_OUTPUT.put_line('normal version ' || x);
+  y:=extract(year from x); 
+  DBMS_OUTPUT.put_line('get_current_reporting_year version ' || y);
 end;

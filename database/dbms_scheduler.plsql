@@ -1,6 +1,6 @@
 --------------------------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 26-Jan-2022 (Bob Heckel)
+-- Modified: 09-Feb-2022 (Bob Heckel)
 --
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT!
 --------------------------------------------------------
@@ -371,7 +371,7 @@ END;
 
 -- Null out or modify an existing job's attribute e.g. COMMENTS
 begin
-  sys.dbms_scheduler.set_attribute_null(name      => 'CREATE_REFERENCE_JOB',
+  sys.dbms_scheduler.set_attribute_NULL(name      => 'CREATE_REFERENCE_JOB',
                                         attribute => 'COMMENTS');                                   
 end;
 
@@ -434,3 +434,13 @@ SELECT DISTINCT NOTIFICATION_OWNER, JOB_NAME, RECIPIENT,
                 LISTAGG(event, ', ' ON OVERFLOW TRUNCATE '...' WITHOUT COUNT) WITHIN GROUP (ORDER BY recipient) over ( partition by recipient ) event_list
 FROM user_scheduler_notifications
 WHERE job_name = 'JOB_LOAD_NB_POC';
+
+---
+
+-- Will run when DB is restarted
+begin
+  DBMS_SCHEDULER.set_attribute (
+     name           => 'TEST56564',
+     attribute      => 'restart_on_recovery',
+     value          => true);
+end;

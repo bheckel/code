@@ -9,6 +9,7 @@ alter table mkc_revenue modify "PRODUCT" VARCHAR(15) COLLATE "USING_NLS_COMP" GE
 alter table bricks modify ( colour NULL, weight NULL );
 alter table user_role1 rename to user_role2;
 alter table roion35282 rename column a3 to a4;
+rename mkc_revenue_vw to mkc_revenue_old;
 
 alter table js_invoice add constraint JS_INVOICE_PK PRIMARY KEY (INVOICE_NUMBER_SR,INVOICE_SUBSIDIARY_SR)
 alter table mkc_revenue_adj add constraint NN_SDM_BUSINESS_KEY CHECK (SDM_BUSINESS_KEY IS NOT NULL);

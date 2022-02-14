@@ -1,6 +1,6 @@
 
--- Created: 02-Aug-2018 (Bob Heckel) 
--- Modified: 29-May-2020 (Bob Heckel)
+--  Created: 02-Aug-2018 (Bob Heckel) 
+-- Modified: 10-Feb-2022 (Bob Heckel)
 
 -- For auditing, referential integrity/business rules, security/logons, data replication
 
@@ -87,3 +87,13 @@ BEGIN
 	END IF;
 END;
 
+---
+
+create or replace trigger shutting before shutdown on database
+begin
+  e_mail_message@RION_PROD_RW('replies-disabled@as.com',
+                              'bob.heckel@as.com',
+                               get_db_name || ' is shutting down',
+                               '');
+end;
+select * from user_triggers;
