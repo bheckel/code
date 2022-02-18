@@ -57,6 +57,22 @@ select index_name, table_name, used from v$object_usage; -- null
 
 alter index sgix visible;
 
+--  set serverout on size 100000
+declare
+  a number; b number; c number; d number;
+begin
+  for r in ( select distinct uic.INDEX_NAME ix from user_ind_columns uic where uic.TABLE_NAME = 'MKC_REVENUE_FULL' ) loop
+     --DBMS_OUTPUT.put_line(r.ix); 
+    execute immediate 'ANALYZE index ' || r.ix || ' VALIDATE STRUCTURE';
+    
+    SELECT DECODE(LF_ROWS, 0, 0, ROUND((DEL_LF_ROWS/LF_ROWS)*100,2)) RATIO, HEIGHT, LF_BLKS, LF_ROWS
+      into a, b, c, d
+      FROM INDEX_STATS I;
+    
+    DBMS_OUTPUT.put_line(r.ix || ' a:'||a || ' b:'||b || ' c:'||c || ' d:'||d);
+  end loop;
+end;
+
 ---
 
 --ORA-08102: index key not found, obj# 5438124, file 5, block 67807674 (2)

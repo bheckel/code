@@ -535,3 +535,62 @@ Manager: Errazuriz
 ***   Employee: Marvins
 ***   Employee: Vishney
 */
+
+---
+
+create or replace package rion56370 as
+  type days_table_t_rec is record(
+    closeout_yr  NUMBER,
+    closeout_mo  NUMBER,
+    closeout_dy  NUMBER
+  );
+  type days_table_t is table of days_table_t_rec index by binary_integer;
+  l_days_table days_table_t := days_table_t();
+
+  function get_eoy_date(in_year NUMBER DEFAULT NULL) return date RESULT_CACHE;  
+end;
+/
+create or replace package body orion56370 as
+  function get_eoy_date(in_year NUMBER DEFAULT NULL) return date RESULT_CACHE is
+    l_dt_str varchar2(20);
+    l_yr   number;
+  begin
+    l_days_table(2019).closeout_yr := 2020;
+    l_days_table(2019).closeout_mo := 01;
+    l_days_table(2019).closeout_dy := 18;
+
+    l_days_table(2020).closeout_yr := 2021;
+    l_days_table(2020).closeout_mo := 01;
+    l_days_table(2020).closeout_dy := 15;
+
+    l_days_table(2021).closeout_yr := 2022;
+    l_days_table(2021).closeout_mo := 01;
+    l_days_table(2021).closeout_dy := 15;
+    
+    l_days_table(2022).closeout_yr := 2022;
+    l_days_table(2022).closeout_mo := null;
+    l_days_table(2022).closeout_dy := null;
+    
+    if in_year is null then
+      l_yr := extract(year from sysdate);
+    else
+      l_yr := in_year;
+    end if;
+
+    l_dt_str := nvl(l_days_table(l_yr).closeout_mo, '01') || '/' || nvl(l_days_table(l_yr).closeout_dy, '01') || '/' || l_days_table(l_yr).closeout_yr;
+
+    return to_date(l_dt_str, 'MM/DD/YYYY'); 
+  end;
+end;
+/
+alter package orion56370 compile debug;
+--  set serverout on size 100000
+declare 
+  x date; 
+  y number;
+begin 
+  x:= rion56370.get_eoy_date(2014);
+  DBMS_OUTPUT.put_line(x);
+  y:= extract(year from rion56370.get_eoy_date());
+  DBMS_OUTPUT.put_line('get_current_reporting_year version: ' || y);
+end;

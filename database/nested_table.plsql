@@ -3,7 +3,7 @@
 -- See also associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql, type.plsql
 --
 --  Created: Fri 02 Aug 2019 (Bob Heckel)
--- Modified: 31-Jan-2022 (Bob Heckel)
+-- Modified: 14-Feb-2022 (Bob Heckel)
 
 -- Associative arrays are particularly good with sparse collections.
 -- Nested tables offer lots of features for set-oriented management of collection contents.
@@ -415,86 +415,101 @@ end;
 
 ---
 
-declare
-  TYPE t_varchar2Table IS TABLE OF VARCHAR2(32767);
-  TYPE t_varchar2List IS TABLE OF t_varchar2Table INDEX BY VARCHAR2(200);
-  v_columnTable  t_varchar2List;
-  
-  v_set_cols     varchar2(999);
-  v_table_name   varchar2(999) := 'PAPEDW.INVOICE_LINE_SUMMARY_DETAIL@DEW';
-begin
-  v_columnTable('PAPEDW.INVOICE_LINE_SUMMARY_DETAIL@DEW') := t_varchar2Table('INVOICE_LINE_STATUS_COMMENT',
-                                                                             'PAYMENT_LAST_APPLIED_DATE',
-                                                                             'CREDIT_MEMO_LAST_RPT_DATE');
-  FOR i IN 1 .. v_columnTable(v_table_name).COUNT LOOP
-    v_set_cols := v_set_cols || ' ' || v_columnTable(v_table_name)(i) || ' = NULL,';
-  END LOOP;
-  v_set_cols := substr(v_set_cols, 1, length(v_set_cols) - 1);
-  DBMS_OUTPUT.put_line(v_set_cols);
-  --INVOICE_LINE_STATUS_COMMENT = NULL, PAYMENT_LAST_APPLIED_DATE = NULL, CREDIT_MEMO_LAST_RPT_DATE = NULL
-end;
-
----
-
 create or replace package rion56370 as
-  type days_table_t_rec is record(
-    year      kmc_years.year%type,
-    start_day kmc_years.start_day%type,
-    end_day   kmc_years.end_day%type
+  type closeout_rec is record(
+    closeout_yr  NUMBER,
+    closeout_mo  NUMBER,
+    closeout_dy  NUMBER
   );
-  type days_table_t is table of days_table_t_rec;
-  
-  l_days_table days_table_t := days_table_t();
+  type closeout_table_t is table of closeout_rec index by binary_integer;
+  closeout_table closeout_table_t := closeout_table_t();
 
-  function get_eoy_date(in_year NUMBER DEFAULT NULL) return date;  
+  function get_eoy_date(in_year NUMBER DEFAULT NULL) return date RESULT_CACHE;  
 end;
 /
 create or replace package body rion56370 as
-  function get_eoy_date(in_year NUMBER DEFAULT NULL) return date is
-    l_dt_str varchar2(99);
+  /* CreatedBy: Bob Heckel
+  **   Created: 14-Feb-22
+  **   Purpose: Get EOY date calculator
+  **  Modified: 14-Feb-22 (boheck) Initial version - RION-56370
+  */
+  function get_eoy_date(in_year NUMBER DEFAULT NULL) return date RESULT_CACHE is
+    l_dt_str varchar2(20);
     l_yr   number;
   begin
---    select year, start_day, end_day
---      bulk collect into l_days_table
---      from kmc_years;
-    l_days_table.extend;
-    l_days_table(1).year := 2020;
-    l_days_table(1).start_day := 1;
-    l_days_table(1).end_day := 10;
-    l_days_table.extend;
-    l_days_table(2).year := 2021;
-    l_days_table(2).start_day := 1;
-    l_days_table(2).end_day := 11;
+    closeout_table(2010).closeout_yr := 2011;
+    closeout_table(2010).closeout_mo := 01;
+    closeout_table(2010).closeout_dy := 14;
+
+    closeout_table(2011).closeout_yr := 2012;
+    closeout_table(2011).closeout_mo := 01;
+    closeout_table(2011).closeout_dy := 13;
+
+    closeout_table(2012).closeout_yr := 2013;
+    closeout_table(2012).closeout_mo := 01;
+    closeout_table(2012).closeout_dy := 17;
+
+    closeout_table(2013).closeout_yr := 2014;
+    closeout_table(2013).closeout_mo := 01;
+    closeout_table(2013).closeout_dy := 17;
+
+    closeout_table(2014).closeout_yr := 2015;
+    closeout_table(2014).closeout_mo := 01;
+    closeout_table(2014).closeout_dy := 20;
+
+    closeout_table(2015).closeout_yr := 2016;
+    closeout_table(2015).closeout_mo := 01;
+    closeout_table(2015).closeout_dy := 20;
+
+    closeout_table(2016).closeout_yr := 2017;
+    closeout_table(2016).closeout_mo := 01;
+    closeout_table(2016).closeout_dy := 13;
+
+    closeout_table(2017).closeout_yr := 2018;
+    closeout_table(2017).closeout_mo := 01;
+    closeout_table(2017).closeout_dy := 12;
+
+    closeout_table(2019).closeout_yr := 2020;
+    closeout_table(2018).closeout_yr := 2019;
+    closeout_table(2018).closeout_mo := 01;
+    closeout_table(2018).closeout_dy := 18;
+
+    closeout_table(2019).closeout_yr := 2020;
+    closeout_table(2019).closeout_mo := 01;
+    closeout_table(2019).closeout_dy := 18;
+
+    closeout_table(2020).closeout_yr := 2021;
+    closeout_table(2020).closeout_mo := 01;
+    closeout_table(2020).closeout_dy := 15;
+
+    closeout_table(2021).closeout_yr := 2022;
+    closeout_table(2021).closeout_mo := 01;
+    closeout_table(2021).closeout_dy := 15;
+    
+    closeout_table(2022).closeout_yr := 2022;
+    closeout_table(2022).closeout_mo := null;
+    closeout_table(2022).closeout_dy := null;
     
     if in_year is null then
-      l_yr := l_days_table(l_days_table.COUNT).year;
+      l_yr := extract(year from sysdate);
     else
       l_yr := in_year;
     end if;
-    
-    for i in 1 .. l_days_table.COUNT loop
-      if l_days_table(i).year = l_yr then
-        l_dt_str := l_days_table(1).start_day || '/' || l_days_table(1).end_day || '/' || l_yr;
-      end if;
-    end loop;
-    --DBMS_OUTPUT.put_line(l_dt_str);
-    
-    return to_date(l_dt_str, 'MM/fmDD/YYYY'); 
+
+    l_dt_str := nvl(closeout_table(l_yr).closeout_mo, '01') || '/' || nvl(closeout_table(l_yr).closeout_dy, '01') || '/' || closeout_table(l_yr).closeout_yr;
+
+    return to_date(l_dt_str, 'MM/DD/YYYY'); 
   end;
 end;
-
+/
+alter package rion56370 compile debug;
 --  set serverout on size 100000
 declare 
   x date; 
-  y number; 
+  y number;
 begin 
---  x:= rion56370.get_eoy_date(2019);
---  DBMS_OUTPUT.put_line('normal version ' || x);
---  y:=extract(year from x); 
---  DBMS_OUTPUT.put_line('get_current_reporting_year version ' || y);
-  
-  x:= rion56370.get_eoy_date();
-  DBMS_OUTPUT.put_line('normal version ' || x);
-  y:=extract(year from x); 
-  DBMS_OUTPUT.put_line('get_current_reporting_year version ' || y);
+  x:= rion56370.get_eoy_date(2014);
+  DBMS_OUTPUT.put_line(x);
+  y:= extract(year from rion56370.get_eoy_date());
+  DBMS_OUTPUT.put_line('get_current_reporting_year version: ' || y);
 end;
