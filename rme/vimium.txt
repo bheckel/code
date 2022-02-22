@@ -1,7 +1,4 @@
-http*://mail.google.com/*
-http*://www.google.com/reader/*
-http://vig.orous.org/*
-
+# Modified: 21-Feb-2022 (Bob Heckel)
 map l goForward
 map h goBack
 map d removeTab
@@ -14,3 +11,6 @@ map <C-b> scrollPageUp
 map <C-f> scrollPageDown
 map <C-e> scrollPageUp
 map <C-y> scrollPageDown
+# Use ' instead of ` for go to mark
+map m Marks.activateCreateMode  #  same as the existing mapping
+map ' Marks.activateGotoMode    #  ` still works too
