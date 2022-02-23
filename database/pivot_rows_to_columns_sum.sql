@@ -56,7 +56,6 @@ Hardware	                    1973	1977	2119	1765
 
 ---
 
-
 create table bricks (
   brick_id integer,
   colour   varchar2(10),
