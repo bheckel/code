@@ -1,6 +1,6 @@
 
 --  Adapted: Tue 01 Apr 2019 10:49:35 (Bob Heckel--DevGym)
--- Modified: Thu 04-Jun-2020 (Bob Heckel)
+-- Modified: 22-Feb-2022 (Bob Heckel)
 
 -- See also row.plsql suppress_rowlevel_dml_errors.plsql, restore_records_from_hist.sql, execute_immediate.plsql
 
@@ -955,3 +955,35 @@ BEGIN
                    '');
   END IF;
 END auto_exclude_rows;
+
+---
+
+declare
+  cursor c1 is 
+    SELECT UID_MKC_REVENUE_ID.NEXTVAL MKC_revenue_id, ACCOUNT_ID_ADJ,ACCOUNT_ID_AS,ACCOUNT_ID_CW,ACCOUNT_ID_HB,created,createdby
+      FROM MKC_REVENUE_FULL
+     WHERE rownum<10000;
+
+  type idtbl_t is table of c1%ROWTYPE;
+  id_table idtbl_t;
+
+begin
+  open c1; 
+  loop
+    fetch c1 BULK COLLECT into id_table limit 1000;
+    exit when id_table.COUNT = 0;
+
+    forall i IN 1 .. id_table.COUNT
+      INSERT  INTO MKC_REVENUE_FULL_BOB ( mkc_revenue_id,account_id_adj,account_id_as,account_id_cw,account_id_hb,created,createdby )
+      VALUES ( id_table(i).mkc_revenue_id,id_table(i).account_id_adj,id_table(i).account_id_as,id_table(i).account_id_cw,id_table(i).account_id_hb,id_table(i).created,id_table(i).createdby );
+    --COMMIT;
+    rollback;
+  end loop;      
+  rollback;
+  --COMMIT;
+
+exception
+  when OTHERS then
+    rollback;
+    DBMS_OUTPUT.put_line(SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+end;
