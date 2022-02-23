@@ -1,7 +1,7 @@
 # Modified: 21-Feb-2022 (Bob Heckel)
 map l goForward
 map h goBack
-map d removeTab
+map q removeTab
 map u restoreTab
 map <Left> previousTab
 map <Right> nextTab
