@@ -1,10 +1,10 @@
-# Modified: 21-Feb-2022 (Bob Heckel)
+# Modified: 23-Feb-2022 (Bob Heckel)
 map l goForward
 map h goBack
 map q removeTab
 map u restoreTab
-map <Left> previousTab
-map <Right> nextTab
+#map <Left> previousTab
+#map <Right> nextTab
 map zl scrollLeft
 map zr scrollRight
 map <C-b> scrollPageUp
