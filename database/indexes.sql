@@ -1,5 +1,5 @@
 --  Created: 28-May-2020 (Bob Heckel)
--- Modified: Fri 26-Feb-2021 (Bob Heckel)
+-- Modified: 04-Mar-2022 (Bob Heckel)
 -- see also explain_plan.sql, ddl.sql
 
 ---
@@ -271,3 +271,32 @@ begin
     exit when lev=3;
   end loop;
 end;
+
+---
+
+--https://stackoverflow.com/questions/6702367/oracle-function-based-index-selective-uniqueness
+create table table1 (
+  id number,
+  name varchar2(10),
+  type varchar2(10),
+  is_deleted varchar2(1)
+);
+
+CREATE UNIQUE INDEX fn_unique_idx
+    ON table1 (CASE WHEN is_deleted='N' THEN id ELSE null END,
+               CASE WHEN is_deleted='N' THEN name ELSE null END,
+               CASE WHEN is_deleted='N' THEN type ELSE null END);
+
+insert into table1 values( 1, 'Foo', 'Bar', 'N' );
+insert into table1 values( 1, 'Foo', 'Bar', 'Y' );
+insert into table1 values( 1, 'Foo', 'Bar', 'Y' );
+insert into table1 values( 1, 'Foo', 'Bar', 'N' );--ORA-00001: unique constraint (ADMIN.FN_UNIQUE_IDX) violated
+insert into table1 values( 1, 'Foo', 'Zee', 'N' );
+
+SELECT COUNT(1) FROM table1;--4
+
+truncate table table1;
+
+drop index fn_unique_idx;
+
+CREATE UNIQUE INDEX fn_unique_idx ON table1 (CASE WHEN is_deleted='N' then (id||','|| name||','|| type) end);

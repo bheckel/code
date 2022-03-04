@@ -36,8 +36,8 @@ BEGIN
     job_type   => 'PLSQL_BLOCK',
     --job_action => q'[ declare x number; begin select count(1) into x from account; DBMS_OUTPUT.put_line('cnt: ' || x); end; ]',
     job_action => q'[ begin 
-                        execute immediate 'create table kmc_revenue_full_TST as select * from kmc_revenue_full_TST@ests';
-                        execute immediate 'create table kmc_revenue_full_POC as select * from kmc_revenue_full_POC@ests';
+                        execute immediate 'create table mkc_revenue_full_TST as select * from mkc_revenue_full_TST@ests';
+                        execute immediate 'create table mkc_revenue_full_POC as select * from mkc_revenue_full_POC@ests';
                       end;
                   ]',
     --start_date => systimestamp + INTERVAL '1' MINUTE,
@@ -127,6 +127,25 @@ END;
 BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 
 ---
+
+-- Null out or modify an existing job's attribute e.g. COMMENTS
+begin
+  sys.dbms_scheduler.set_attribute_NULL(name      => 'CREATE_REFERENCE_JOB',
+                                        attribute => 'COMMENTS');                                   
+end;
+
+-- Update modify an attribute e.g. COMMENTS
+begin
+  sys.dbms_scheduler.set_attribute(name      => 'CREATE_REFERENCE_JOB',
+                                   attribute => 'COMMENTS',
+                                   value     => 'Nightly job to auto-create reference records not auto-created via the UI');                                   
+end;
+
+begin
+  sys.dbms_scheduler.set_attribute(name      => 'MKC_REVENUE_LOAD_DAVESIM',
+                                   attribute => 'JOB_ACTION',
+                                   value     => q'[ BEGIN mkc.load_invoice_revenue(in_rediff_tables=>1, in_view_name=>'MKC_REVENUE', in_delete_daily=>1, in_bypass_history=>0); END; ]');                               
+end;
 
 -- Modify existing schedule
 
@@ -366,21 +385,6 @@ BEGIN
                             enabled    => TRUE,
                             auto_drop  => TRUE);
 END;
-
----
-
--- Null out or modify an existing job's attribute e.g. COMMENTS
-begin
-  sys.dbms_scheduler.set_attribute_NULL(name      => 'CREATE_REFERENCE_JOB',
-                                        attribute => 'COMMENTS');                                   
-end;
-
--- Update modify an attribute e.g. COMMENTS
-begin
-  sys.dbms_scheduler.set_attribute(name      => 'CREATE_REFERENCE_JOB',
-                                   attribute => 'COMMENTS',
-                                   value     => 'Nightly job to auto-create reference records not auto-created via the UI');                                   
-end;
 
 ---
 

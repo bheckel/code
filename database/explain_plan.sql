@@ -13,7 +13,8 @@ ALTER SESSION SET statistics_level = all;
 select SID, SERIAL#, USERNAME, STATUS, OSUSER, MACHINE, PROGRAM, SQL_ID, SQL_EXEC_START, PREV_SQL_ID, PREV_EXEC_START, LOGON_TIME, LAST_CALL_ET, CLIENT_IDENTIFIER, STATE, SERVICE_NAME, trunc(last_call_et/ 3600) as Hours from v$session where username is not null order by SQL_EXEC_START desc nulls last;
 SELECT * FROM v$sql WHERE sql_id='gvhhm0q3n6n2k';
 SELECT * FROM v$sql WHERE lower(sql_text) like '%photo%';
-Select plan_table_output From table(dbms_xplan.display_cursor(null,null,'allstats +cost +bytes'));
+select * from table(dbms_xplan.display_cursor(format => 'IOSTATS LAST  +cost +bytes'));
+select * from table(dbms_xplan.display_cursor(format => 'IOSTATS LAST  +cost +bytes'));
 Select plan_table_output From table(dbms_xplan.display_cursor('gvhhm0q3n6n2k',null,'allstats +cost +bytes'));
 
 ---
@@ -435,3 +436,63 @@ Note
 
 13 rows selected.
 */
+
+---
+
+-- Adapted: 04-Mar-2022 (Bob Heckel--Oracle Dev Gym)
+create table flights (
+  flight_id integer NOT NULL PRIMARY KEY,
+  departure_airport_code varchar2(3) NOT NULL,
+  destination_airport_code varchar2(3) NOT NULL,
+  flight_datetime timestamp NOT NULL,
+  airline varchar2(30) NOT NULL
+);
+
+create index flig_date_i on flights ( flight_datetime ); -- doesn' get used below
+
+insert into flights
+  with airports as (
+    select 0 id, 'LHR' code from dual 
+    union all
+    select level id, dbms_random.string ( 'U', 3 ) code from dual
+    CONNECT BY LEVEL <= 25
+  ), dates as (
+    select timestamp'2021-01-01 00:00:00' + numtodsinterval(level, 'day') dt
+    --select sysdate + numtodsinterval(level, 'day') dt
+      from   dual
+   CONNECT BY LEVEL <= 365
+  )
+    select rownum, dep.code, dest.code, dt + numtodsinterval(mod(rownum, 24), 'hour'), 'SpeedyAir'
+    from   airports dep
+    join   airports dest
+    on     dep.code <> dest.code
+    join   dates
+    on     ( mod(dep.id, 5) = mod(extract(day from dt ), 5) or
+             mod(dest.id, 13) = mod(extract(day from dt), 13)
+           )
+    order  by dt;--62k rec
+
+commit;
+
+select /*+ gather_plan_statistics */destination_airport_code
+  from  flights
+ where  departure_airport_code = 'LHR'
+   and  flight_datetime < timestamp '2021-01-05 00:00:00';
+ 
+select * from table(dbms_xplan.display_cursor(format => 'IOSTATS LAST  +cost +bytes'));
+
+create index fli1_i on flights ( departure_airport_code );--no effect
+create index fli2_i on flights ( destination_airport_code );--no effect
+create index fli3_i on flights ( departure_airport_code, flight_datetime );--ok
+-- Including all the columns in your WHERE clause in an index can make your
+-- queries faster. This is because it can find all the values it's looking for
+-- in the index and only read these rows from the table.
+--
+-- Including all the columns in a query in an index can make it faster still.
+-- This is because it enables the database to bypass the table entirely
+create index fli4_i on flights ( departure_airport_code, flight_datetime, destination_airport_code );--BEST - a covering index
+-- But in most cases it's better to stick with the two-column index. The
+-- covering index only gives marginal gains over this. And the index is closely
+-- tied to the query.  Selecting more columns, such as airline, means the
+-- database has to read the table again. This erases the gains from the
+-- covering index!

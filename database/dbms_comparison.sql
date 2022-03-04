@@ -137,3 +137,132 @@ BEGIN
   DBMS_OUTPUT.put_line('rmt_rows_deleted = ' || l_scan_info.rmt_rows_deleted);
 END;
 /
+
+---
+
+create table table2 (
+  id number   PRIMARY KEY,
+  name varchar2(10),
+  type varchar2(10),
+  is_deleted varchar2(1)
+);
+
+insert into table2 values( 1, 'Foo', 'Bar', 'N' );
+insert into table2 values( 2, 'Foo', 'Bar', 'Y' );
+insert into table2 values( 3, 'Foo', 'Bar', 'Y' );
+insert into table2 values( 4, 'Foo', 'Bar', 'N' );
+insert into table2 values( 5, 'Foo', 'Zee', 'N' );
+
+create  table unit_test_repos.table2 (
+  id number PRIMARY KEY,
+  name varchar2(10),
+  type varchar2(10),
+  is_deleted varchar2(1)
+);
+
+insert into unit_test_repos.table2 values( 1, 'Foo', 'Bar', 'N' );
+insert into unit_test_repos.table2 values( 2, 'Foo', 'Bar', 'Y' );
+insert into unit_test_repos.table2 values( 3, 'Foo', 'Bar', 'Y' );
+insert into unit_test_repos.table2 values( 4, 'Foo', 'Bar', 'N' );
+insert into unit_test_repos.table2 values( 5, 'Foo', 'Z', 'N' );
+insert into unit_test_repos.table2 values( 6, 'Foo', 'Zplus', 'N' );
+
+SELECT * FROM unit_test_repos.table2;
+
+--  set serverout on size 100000
+BEGIN
+  DBMS_COMPARISON.create_comparison (
+    comparison_name    => 'test_cmp_1',
+    schema_name        => 'ADMIN',
+    object_name        => 'table2',
+    dblink_name        => NULL,
+    remote_schema_name => 'UNIT_TEST_REPOS',
+    remote_object_name => 'table2');
+END;
+/
+
+DECLARE
+  l_scan_info  DBMS_COMPARISON.comparison_type;
+  l_result     BOOLEAN;
+BEGIN
+  l_result := DBMS_COMPARISON.compare (
+                comparison_name => 'test_cmp_1',
+                scan_info       => l_scan_info,
+                perform_row_dif => TRUE
+              );
+
+  IF NOT l_result THEN
+    DBMS_OUTPUT.put_line('Differences found. scan_id=' || l_scan_info.scan_id);
+  ELSE
+    DBMS_OUTPUT.put_line('No differences found.');
+  END IF;
+END;
+/
+--Differences found. scan_id=21
+
+SELECT *
+FROM   user_comparison_scan
+WHERE  comparison_name = 'TEST_CMP_1'
+AND    parent_scan_id IS NULL;
+
+SELECT comparison_name,
+       scan_id,
+       status,
+       current_dif_count,
+       count_rows
+FROM   user_comparison_scan_summary
+WHERE  scan_id = 21;--test_cmp_1
+
+-- Confirm we looked at all the columns
+SELECT comparison_name,
+       column_position,
+       column_name,
+       index_column
+FROM   user_comparison_columns
+WHERE  comparison_name = 'TEST_CMP_1'
+ORDER BY column_position;
+
+-- Show the diff records
+SELECT comparison_name,
+       local_rowid,
+       remote_rowid,
+       status
+FROM   user_comparison_row_dif
+WHERE  comparison_name = 'TEST_CMP_1';
+--SELECT * FROM ADMIN.table1 where rowid='AAAiR5AAAAABAbcAAF';
+
+-- Repair by making remote_user.table1 look like ADMIN.table1:
+DECLARE
+  l_scan_info  DBMS_COMPARISON.comparison_type;
+  l_result     BOOLEAN;
+BEGIN
+  DBMS_COMPARISON.converge (
+    comparison_name  => 'test_cmp_1',
+    scan_id          => 21,
+    scan_info        => l_scan_info,
+    converge_options => DBMS_COMPARISON.cmp_converge_local_wins, -- Default
+    perform_commit   => FALSE  -- ?why always commits?
+  );
+
+  DBMS_OUTPUT.put_line('scan_id          = ' || l_scan_info.scan_id);
+  DBMS_OUTPUT.put_line('loc_rows_merged  = ' || l_scan_info.loc_rows_merged);
+  DBMS_OUTPUT.put_line('rmt_rows_merged  = ' || l_scan_info.rmt_rows_merged);
+  DBMS_OUTPUT.put_line('loc_rows_deleted = ' || l_scan_info.loc_rows_deleted);
+  DBMS_OUTPUT.put_line('rmt_rows_deleted = ' || l_scan_info.rmt_rows_deleted);
+END;
+/
+/*
+scan_id          = 21
+loc_rows_merged  = 0
+rmt_rows_merged  = 1
+loc_rows_deleted = 0
+rmt_rows_deleted = 1
+*/
+
+SELECT * FROM unit_test_repos.table2;
+
+BEGIN
+  DBMS_COMPARISON.drop_comparison(
+    comparison_name => 'test_cmp_1');
+END;
+
