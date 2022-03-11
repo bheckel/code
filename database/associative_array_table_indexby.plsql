@@ -195,6 +195,7 @@ BEGIN
  
   mykey := city_population.FIRST;  -- get first element of array
  
+  -- Loop AA with a non-numeric index keys
   WHILE mykey IS NOT NULL LOOP
     DBMS_Output.PUT_LINE('Population of ' || mykey || ' is ' || city_population(mykey));
     mykey := city_population.NEXT(mykey);  -- get next element of array

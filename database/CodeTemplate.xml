@@ -1,12 +1,14 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <rows>
    <row>
-      <key>corp</key>
-      <value>CREATE OR REPLACE PACKAGE [(parameter)] AUTHID DEFINER IS</value>
-   </row>
-   <row>
-      <key>corv</key>
-      <value>CREATE OR REPLACE VIEW [(parameter)] AUTHID DEFINER IS</value>
+      <key>ab</key>
+      <value>-- set serverout on size unl
+declare
+  x number;
+  y varchar2(99);
+begin
+  [(parameter)]
+end;</value>
    </row>
    <row>
       <key>cp</key>
@@ -20,28 +22,32 @@
       </value>
    </row>
    <row>
+      <key>cpkg</key>
+      <value>CREATE OR REPLACE PACKAGE [(parameter)] AUTHID DEFINER IS</value>
+   </row>
+   <row>
       <key>ct</key>
-      <value>CREATE TABLE [ (parameter) ] ();</value>
+      <value>CREATE TABLE [(parameter)] ( [(parameter)] );</value>
+   </row>
+   <row>
+      <key>cv</key>
+      <value>CREATE OR REPLACE VIEW [(parameter)] AUTHID DEFINER IS</value>
    </row>
    <row>
       <key>dbo</key>
       <value>DBMS_OUTPUT.put_line();</value>
    </row>
    <row>
-      <key>ddd</key>
-      <value>select 1 from dual;</value>
-   </row>
-   <row>
-      <key>df</key>
-      <value>DELETE FROM [ (parameter)  WHERE </value>
+      <key>del</key>
+      <value>DELETE FROM  [(parameter)]  WHERE  [(parameter)]</value>
    </row>
    <row>
       <key>ii</key>
-      <value>INSERT INTO [ (parameter)  VALUES ()</value>
+      <value>INSERT INTO [(parameter)] ( )  VALUES ( )</value>
    </row>
    <row>
       <key>kkk</key>
-      <value>kmc_revenue_full</value>
+      <value>KMC_REVENUE_FULL</value>
    </row>
    <row>
       <key>ob</key>
@@ -53,11 +59,11 @@
    </row>
    <row>
       <key>ss</key>
-      <value>SELECT * FROM [(parameter)]</value>
+      <value>SELECT * FROM [(parameter)];</value>
    </row>
    <row>
       <key>ssc</key>
-      <value>SELECT COUNT(1) FROM [(parameter)]</value>
+      <value>SELECT COUNT(1) FROM [(parameter)];</value>
    </row>
    <row>
       <key>sso</key>
@@ -65,7 +71,7 @@
    </row>
    <row>
       <key>upd</key>
-      <value>UPDATE [ (parameter)  SET WHERE </value>
+      <value>UPDATE [(parameter)] SET [(parameter)] WHERE [(parameter)];</value>
    </row>
    <row>
       <key>ww</key>

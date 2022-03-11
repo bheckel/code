@@ -1,10 +1,32 @@
 
+
+-- Compare column names and data lengths
+with v as (
+  select 'f' src,COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'mkc_revenue_full'
+  union
+  select 'h' src,COLUMN_NAME, DATA_LENGTH FROM all_tab_columns@atlas_test_rw WHERE lower(table_name) = 'mkc_revenue_full'
+  order by 2,1
+)
+select distinct column_name,count(column_name)
+  from v
+ group by column_name, data_length
+having count(1)=1
+ORDER BY 1 ;
+
+-- Better - on curr db, not on remote
+select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'mkc_revenue_full'
+minus
+select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns@rion_prod_rw WHERE lower(table_name) = 'mkc_revenue_full'
+;
+
+---
+
 with v as( 
-  select 't' x,column_name
+  select 'a' x,column_name
     from user_tab_cols
     where table_name='MKC_REVENUE_FULL'
    union all 
-   select 'p' x,column_name
+   select 'b' x,column_name
     from user_tab_cols@tlas_prod_rw
     where table_name='MKC_REVENUE_FULL'
 )
@@ -13,6 +35,26 @@ select column_name
  group by column_name
 having count(1)=1
  order by 1;
+
+---
+
+--ORA-02070: database  does not support  in this context
+  select 'a' x, column_name, data_default
+  from user_tab_cols 
+ where TABLE_NAME = 'MKC_REVENUE_FULL'
+   and VIRTUAL_COLUMN = 'YES'
+union all
+  select 'b' x, column_name, data_default
+  from user_tab_cols@atlas_test_rw 
+ where TABLE_NAME = 'MKC_REVENUE_FULL'
+   and VIRTUAL_COLUMN = 'YES'
+   ;
+
+--same problem
+select 'a' x, column_name, data_default from user_tab_cols where TABLE_NAME = 'MKC_REVENUE_FULL' and VIRTUAL_COLUMN = 'YES'
+MINUS
+select 'b' x, column_name, data_default from user_tab_cols@atlas_test_rw where TABLE_NAME = 'MKC_REVENUE_FULL' and VIRTUAL_COLUMN = 'YES'
+;
 
 ---
 

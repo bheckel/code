@@ -431,7 +431,7 @@ create or replace package body rion56370 as
   /* CreatedBy: Bob Heckel
   **   Created: 14-Feb-22
   **   Purpose: Get EOY date calculator
-  **  Modified: 14-Feb-22 (boheck) Initial version - RION-56370
+  **  Modified: 14-Feb-22 (bheck) Initial version - RION-56370
   */
   function get_eoy_date(in_year NUMBER DEFAULT NULL) return date RESULT_CACHE is
     l_dt_str varchar2(20);
@@ -445,38 +445,7 @@ create or replace package body rion56370 as
     closeout_table(2011).closeout_mo := 01;
     closeout_table(2011).closeout_dy := 13;
 
-    closeout_table(2012).closeout_yr := 2013;
-    closeout_table(2012).closeout_mo := 01;
-    closeout_table(2012).closeout_dy := 17;
-
-    closeout_table(2013).closeout_yr := 2014;
-    closeout_table(2013).closeout_mo := 01;
-    closeout_table(2013).closeout_dy := 17;
-
-    closeout_table(2014).closeout_yr := 2015;
-    closeout_table(2014).closeout_mo := 01;
-    closeout_table(2014).closeout_dy := 20;
-
-    closeout_table(2015).closeout_yr := 2016;
-    closeout_table(2015).closeout_mo := 01;
-    closeout_table(2015).closeout_dy := 20;
-
-    closeout_table(2016).closeout_yr := 2017;
-    closeout_table(2016).closeout_mo := 01;
-    closeout_table(2016).closeout_dy := 13;
-
-    closeout_table(2017).closeout_yr := 2018;
-    closeout_table(2017).closeout_mo := 01;
-    closeout_table(2017).closeout_dy := 12;
-
-    closeout_table(2019).closeout_yr := 2020;
-    closeout_table(2018).closeout_yr := 2019;
-    closeout_table(2018).closeout_mo := 01;
-    closeout_table(2018).closeout_dy := 18;
-
-    closeout_table(2019).closeout_yr := 2020;
-    closeout_table(2019).closeout_mo := 01;
-    closeout_table(2019).closeout_dy := 18;
+    ...
 
     closeout_table(2020).closeout_yr := 2021;
     closeout_table(2020).closeout_mo := 01;
@@ -513,3 +482,4 @@ begin
   y:= extract(year from rion56370.get_eoy_date());
   DBMS_OUTPUT.put_line('get_current_reporting_year version: ' || y);
 end;
+

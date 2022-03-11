@@ -9,13 +9,13 @@
 ---
 
 --  set pagesize 0
-ALTER SESSION SET statistics_level = all;
+--ALTER SESSION SET statistics_level = all;  --not sure it matters
+--SELECT s.osuser, O.OBJECT_NAME, S.SID, S.SERIAL#, P.SPID, S.PROGRAM, SQ.SQL_FULLTEXT, S.LOGON_TIME FROM V$LOCKED_OBJECT L, DBA_OBJECTS O, V$SESSION S, V$PROCESS P, V$SQL SQ WHERE L.OBJECT_ID = O.OBJECT_ID AND L.SESSION_ID = S.SID AND S.PADDR = P.ADDR AND S.SQL_ADDRESS = SQ.ADDRESS and osuser in('oradba','bheck','oracle','ecott') /* and SQL_FULLTEXT like 'UPDATE%_SS FIN%' ;-- 'UPDATE GIDB_COUNTRY_ISO_SS%'*/ order by 1; 
 select SID, SERIAL#, USERNAME, STATUS, OSUSER, MACHINE, PROGRAM, SQL_ID, SQL_EXEC_START, PREV_SQL_ID, PREV_EXEC_START, LOGON_TIME, LAST_CALL_ET, CLIENT_IDENTIFIER, STATE, SERVICE_NAME, trunc(last_call_et/ 3600) as Hours from v$session where username is not null order by SQL_EXEC_START desc nulls last;
-SELECT * FROM v$sql WHERE sql_id='gvhhm0q3n6n2k';
-SELECT * FROM v$sql WHERE lower(sql_text) like '%photo%';
-select * from table(dbms_xplan.display_cursor(format => 'IOSTATS LAST  +cost +bytes'));
-select * from table(dbms_xplan.display_cursor(format => 'IOSTATS LAST  +cost +bytes'));
-Select plan_table_output From table(dbms_xplan.display_cursor('gvhhm0q3n6n2k',null,'allstats +cost +bytes'));
+--SELECT * FROM v$sql WHERE sql_id='gvhhm0q3n6n2k';
+--SELECT * FROM v$sql WHERE lower(sql_text) like '%photo%';
+--Select plan_table_output From table(dbms_xplan.display_cursor('gvhhm0q3n6n2k',null,'allstats +cost +bytes'));
+select * from table(dbms_xplan.display_cursor('gvhhm0q3n6n2k',format => 'IOSTATS LAST  +cost +bytes'));
 
 ---
 

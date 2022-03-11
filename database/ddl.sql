@@ -15,6 +15,7 @@ alter table js_invoice add constraint JS_INVOICE_PK PRIMARY KEY (INVOICE_NUMBER_
 alter table mkc_revenue_adj add constraint NN_SDM_BUSINESS_KEY CHECK (SDM_BUSINESS_KEY IS NOT NULL);
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID;
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID drop index;
+alter table mkc_revenue_full modify task_desc_pb invisible;--hide hidden column
 
 drop table kr27mar2021170440 PURGE;
 truncate table mkc_revenue_full_bob
