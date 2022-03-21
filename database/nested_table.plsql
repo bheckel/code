@@ -339,7 +339,7 @@ exec bob2.do;
 
 ---
 
--- Compare two approaches to load populate fill a collection using BULK COLLECT:
+-- Compare three approaches to load populate fill a collection using BULK COLLECT:
 
 -- 1.  Execute immediate into specific defined numberTables
 create or REPLACE PACKAGE bob as
@@ -383,9 +383,9 @@ create or replace PACKAGE body bob as
   
     LOOP
       fetch cv bulk collect into mytbl limit 50;
-      exit when mytbl.count=0;
+      exit when mytbl.COUNT=0;
   
-      for i in 1..mytbl.count loop
+      for i in 1..mytbl.COUNT loop
         DBMS_OUTPUT.put_line(mytbl(i).account_site_id);
       end loop;
     END LOOP;
