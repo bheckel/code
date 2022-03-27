@@ -21,7 +21,11 @@ for d in dotfiles code; do
     cd $HOME/$d && \
     # Check for fatals "master pushes to master (local out of date)"
     #git remote show origin | grep --color=always 'local out of date' && \
-    if test git remote show origin | grep -c 'local out of date' -eq 0; then
+    if test git remote show origin | grep -c 'local out of date' -eq 1; then
+      printerrmsg=1
+      echo '[FAIL]'
+      echo printerrmsg
+    else
       echo '[OK]'
     fi
     cd -
