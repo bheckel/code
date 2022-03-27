@@ -17,10 +17,13 @@ done
 
 for d in dotfiles code; do
   if [ "$yn" != 'n' ];then
-    echo "Checking for $d fatals..."
+    echo "Checking for $d fatals................"
     cd $HOME/$d && \
     # Check for fatals "master pushes to master (local out of date)"
-    git remote show origin | grep --color=always 'local out of date' && \
+    #git remote show origin | grep --color=always 'local out of date' && \
+    if test git remote show origin | grep -c 'local out of date' -eq 0; then
+      echo '[OK]'
+    fi
     cd -
   fi
 done
