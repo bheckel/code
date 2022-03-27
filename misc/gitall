@@ -1,7 +1,8 @@
 #!/bin/bash
 
+#  Purpose: Quickly checkin common code locations
 #  Created: 20-Aug-2020 (Bob Heckel)
-# Modified: 22-Jan-2022 (Bob Heckel)
+# Modified: 27-Mar-2022 (Bob Heckel)
 
 for d in dotfiles code; do
   cd $HOME/$d && git status
@@ -17,11 +18,11 @@ done
 
 for d in dotfiles code; do
   if [ "$yn" != 'n' ];then
-    echo "Checking for $d fatals................"
-    cd $HOME/$d && \
+    echo "Checking for ${d} fatals................"
+    cd $HOME/${d} && \
     # Check for fatals "master pushes to master (local out of date)"
     #git remote show origin | grep --color=always 'local out of date' && \
-    if [ `git remote show origin | grep -c 'local out of date'` -ge 0 ]; then
+    if [ `git remote show origin | grep -c 'local out of date'` -ge 1 ]; then
       echo "${fg_redbold}[FAIL]"${normal}
       echo "hint: cd ~/${d} && git merge && git push; git remote show origin"
     else
