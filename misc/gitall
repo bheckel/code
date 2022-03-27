@@ -21,10 +21,9 @@ for d in dotfiles code; do
     cd $HOME/$d && \
     # Check for fatals "master pushes to master (local out of date)"
     #git remote show origin | grep --color=always 'local out of date' && \
-    if test git remote show origin | grep -c 'local out of date' -eq 1; then
-      printerrmsg=1
+    if [ `git remote show origin | grep -c 'Local'` -ge 1 ]; then
       echo '[FAIL]'
-      echo printerrmsg
+      echo "hint: cd ~/${d} && git merge && git push; git remote show origin"
     else
       echo '[OK]'
     fi
@@ -32,5 +31,4 @@ for d in dotfiles code; do
   fi
 done
 
-#echo ...done, do gfatal if needed
-echo '...done, if needed do cd ~/dotfiles && git merge && git push; cd ~/code && git merge && git push; git remote show origin'
+echo ...done
