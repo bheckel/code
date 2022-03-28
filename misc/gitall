@@ -18,7 +18,7 @@ done
 
 for d in dotfiles code; do
   if [ "$yn" != 'n' ];then
-    if [ $d = $dotfiles ]; then
+    if [ $d = dotfiles ]; then
       echo -n "Checking for ${d} fatals................"
     else
       echo -n "Checking for ${d} fatals...................."
