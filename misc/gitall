@@ -18,15 +18,15 @@ done
 
 for d in dotfiles code; do
   if [ "$yn" != 'n' ];then
-    echo -n "Checking for ${d} fatals................"
+    echo -n "Checking for ${d} fatals...................."
     cd $HOME/${d} && \
     # Check for fatals "master pushes to master (local out of date)"
     #git remote show origin | grep --color=always 'local out of date' && \
     if [ `git remote show origin | grep -c 'local out of date'` -ge 1 ]; then
-      echo "${fg_redbold}[FAIL]"${normal}
+      echo "${fg_redbold}[  FAILED  ]"${normal}
       echo "hint: cd ~/${d} && git merge && git push; git remote show origin"
     else
-      echo "${fg_green}[OK]${normal}"
+      echo "${fg_green}[  OK  ]${normal}"
     fi
     cd -
   fi
