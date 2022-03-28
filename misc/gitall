@@ -18,7 +18,11 @@ done
 
 for d in dotfiles code; do
   if [ "$yn" != 'n' ];then
-    echo -n "Checking for ${d} fatals...................."
+    if [ $d = $dotfiles ]; then
+      echo -n "Checking for ${d} fatals................"
+    else
+      echo -n "Checking for ${d} fatals...................."
+    fi
     cd $HOME/${d} && \
     # Check for fatals "master pushes to master (local out of date)"
     #git remote show origin | grep --color=always 'local out of date' && \
