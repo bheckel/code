@@ -32,7 +32,7 @@ for d in dotfiles code; do
     else
       echo "${fg_green}[  OK  ]${normal}"
     fi
-    cd -
+    # cd -
   fi
 done
 
