@@ -2,7 +2,9 @@
 
 #  Purpose: Quickly checkin common code locations
 #  Created: 20-Aug-2020 (Bob Heckel)
-# Modified: 27-Mar-2022 (Bob Heckel)
+# Modified: 29-Mar-2022 (Bob Heckel)
+
+currdir=`pwd`
 
 for d in dotfiles code; do
   cd $HOME/$d && git status
@@ -18,7 +20,7 @@ done
 
 for d in dotfiles code; do
   if [ "$yn" != 'n' ];then
-    if [ $d = dotfiles ]; then
+    if [ ${d} = dotfiles ]; then
       echo -n "Checking for ${d} fatals................ "
     else
       echo -n "Checking for ${d} fatals.................... "
@@ -32,8 +34,9 @@ for d in dotfiles code; do
     else
       echo "${fg_green}[  OK  ]${normal}"
     fi
-    # cd -
   fi
 done
+
+cd ${currdir}
 
 echo ...done
