@@ -32,7 +32,7 @@ for d in dotfiles code; do
       echo "${fg_redbold}[  FAILED  ]"${normal}
       echo "hint: cd ~/${d} && git merge && git push; git remote show origin"
     else
-      echo "${fg_green}[  OK  ]${normal}"
+      echo "[${fg_green}  OK  ${normal}]"
     fi
   fi
 done
