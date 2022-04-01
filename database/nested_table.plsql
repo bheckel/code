@@ -2,8 +2,8 @@
 -- nested_table.plsql (symlinked as collections.plsql)
 -- See also associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql, type.plsql
 --
---  Created: Fri 02 Aug 2019 (Bob Heckel)
--- Modified: 14-Feb-2022 (Bob Heckel)
+--  Created: 02 Aug 2019 (Bob Heckel)
+-- Modified: 01-Apr-2022 (Bob Heckel)
 
 -- Associative arrays are particularly good with sparse collections.
 -- Nested tables offer lots of features for set-oriented management of collection contents.
@@ -57,7 +57,7 @@
 
 ---
 
--- Loop a hardcoded list
+-- Loop a hardcoded list of strings
 DECLARE
   TYPE vctable_t IS TABLE OF VARCHAR2(3);
   vctable  vctable_t;
@@ -80,27 +80,26 @@ END;
 
 ---
 
--- Hardcoded table
+-- Query a db table looping a hardcoded list of numbers
 -- Schema-level declaration is ok for nested tables, not associative arrays
 DECLARE
   TYPE my_ntt IS TABLE OF INTEGER;
   -- Initialized with constructor:
-  names my_ntt := my_ntt(1,2,3,4);
+  my_nt my_ntt := my_ntt(1,2,3,4);
   
-	foo VARCHAR2(50);
- 
+	foo NUMBER;
 BEGIN 
-  names(3) := 9;  -- change 1 value
-	dbms_output.put_line('change value of one element: ' || names(3));
+  my_nt(3) := 9;  -- change a value
+	dbms_output.put_line('change value of one element: ' || my_nt(3));
  
-  names := my_ntt(5,6,7,7499);  -- change whole table
-	dbms_output.put_line('change entire table: ' || names(3));
+  my_nt := my_ntt(5,6,7,7499);  -- change whole table
+	dbms_output.put_line('change entire table: ' || my_nt(3));
 
 	select ename
 		into foo
-	 from emp
-	--where empno in (select column_value from table(names));  -- fail
-	where empno = names(4);
+    from emp
+	--where empno in (select column_value from table(my_nt));  -- fail
+	 where empno = my_nt(4);
 
 	dbms_output.put_line(foo);
 END;
@@ -121,11 +120,10 @@ DECLARE
 
 	CURSOR name_cur IS
 		SELECT ename FROM emp WHERE rownum < 10;
-
 BEGIN
   IF last_name_tab IS NULL THEN dbms_output.put_line('ok'); END IF;
 
-  -- Loop cursor and load it into our empty collection
+  -- Loop cursor and load it into our empty nested table collection
 	FOR rec IN name_cur LOOP
 		i := i + 1;
 		last_name_tab.EXTEND;
@@ -134,7 +132,7 @@ BEGIN
   END LOOP;
 
   FOR i IN 1 .. last_name_tab.COUNT LOOP
-  -- same but COULD fail due to sparse collection (VALUE_ERROR)
+  -- same but COULD fail due to sparse collection (VALUE_ERROR):
   /* FOR i IN last_name_tab.FIRST .. last_name_tab.LAST LOOP */
     DBMS_OUTPUT.PUT_LINE ('last_name is: '||last_name_tab(i));
   END LOOP;
@@ -168,8 +166,6 @@ BEGIN
 
   EXECUTE IMMEDIATE 'TRUNCATE TABLE forall_test';
 
-  DBMS_OUTPUT.put_line('Start FORALL');
-
   -- This will fail due to sparse collection
  /*FORALL i IN l_tab.FIRST .. l_tab.LAST SAVE EXCEPTIONS
       INSERT INTO forall_test VALUES l_tab(i);
@@ -178,11 +174,11 @@ BEGIN
   FORALL i IN INDICES OF l_tab SAVE EXCEPTIONS
     INSERT INTO forall_test VALUES l_tab(i);
 
-  EXCEPTION
-		WHEN bulk_dml_error THEN 
-			FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP 
-				DBMS_OUTPUT.put_line(SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE))); 
-			END LOOP; 
+EXCEPTION
+	WHEN bulk_dml_error THEN 
+		FOR ix IN 1 .. SQL%BULK_EXCEPTIONS.COUNT LOOP 
+			DBMS_OUTPUT.put_line(SQLERRM(-(SQL%BULK_EXCEPTIONS(ix).ERROR_CODE))); 
+		END LOOP; 
 END;
 
 ---
@@ -339,82 +335,6 @@ exec bob2.do;
 
 ---
 
--- Compare three approaches to load populate fill a collection using BULK COLLECT:
-
--- 1.  Execute immediate into specific defined numberTables
-create or REPLACE PACKAGE bob as
-  PROCEDURE cae_auto_assign;
-end;
-/
-create or replace PACKAGE body bob as
-  PROCEDURE cae_auto_assign
-  IS
-    TYPE numberTable IS TABLE OF NUMBER;
-    acctIdTable     numberTable;
-    acctSiteIdTable numberTable;
-    employeeIdTable numberTable;
-
-    BEGIN
-      EXECUTE IMMEDIATE
-        'select account_id, account_site_id, cae_emp_id from nightly_cae_assign where rownum<9'
-        BULK COLLECT INTO acctIdTable, acctSiteIdTable, employeeIdTable;
-
-      FOR i IN 1 .. acctIdTable.count LOOP
-        DBMS_OUTPUT.put_line('assigning CAE ' || employeeIdTable(i) || ' to account site id : ' || acctSiteIdTable(i));
-      END LOOP;
-  END;
-END;
-
--- 2. Fetch from a cursor variable, allows LIMIT instead of relying on the default limit of 100
-create or REPLACE PACKAGE bob as
-  PROCEDURE cae_auto_assign;
-end;
-/
-create or replace PACKAGE body bob as
-  PROCEDURE cae_auto_assign
-  IS
-    cv    sys_refcursor;
-
-    type t is table of nightly_cae_assign%rowtype;
-    mytbl t;
-  BEGIN
-    -- Must use '*'
-    open cv for 'select * from nightly_cae_assign where rownum<9';
-  
-    LOOP
-      fetch cv bulk collect into mytbl limit 50;
-      exit when mytbl.COUNT=0;
-  
-      for i in 1..mytbl.COUNT loop
-        DBMS_OUTPUT.put_line(mytbl(i).account_site_id);
-      end loop;
-    END LOOP;
-  END cae_auto_assign;
-END bob;
-
--- 3. Use a RECORD
-create or replace function get_eoy_date(in_year NUMBER) return number deterministic as
-  type days_table_rec is record(
-    year      mkc_years.year%type,
-    start_day mkc_years.start_day%type,
-    end_day   mkc_years.end_day%type
-    );
-  type days_table is table of days_table_rec;
-
-  l_days_table days_table;
-  
-  --x number := EXTRACT(YEAR FROM SYSDATE);
-begin
-  --x:=in_year;
-  select year, start_day, end_day
-    bulk collect into l_days_table
-    from kmc_years;
-  
-  return(l_days_table(2).start_day);
-end;
-
----
-
 create or replace package rion56370 as
   type closeout_rec is record(
     closeout_yr  NUMBER,
@@ -481,5 +401,80 @@ begin
   DBMS_OUTPUT.put_line(x);
   y:= extract(year from rion56370.get_eoy_date());
   DBMS_OUTPUT.put_line('get_current_reporting_year version: ' || y);
+end;
+
+---
+
+-- Compare three approaches to load populate fill a collection using BULK COLLECT:
+
+-- 1.  EXECUTE IMMEDIATE BULK COLLEC INTO specific defined numberTables
+create or REPLACE PACKAGE bob as
+  PROCEDURE cae_auto_assign;
+end;
+/
+create or replace PACKAGE body bob as
+  PROCEDURE cae_auto_assign
+  IS
+    TYPE numberTable IS TABLE OF NUMBER;
+    acctIdTable     numberTable;
+    acctSiteIdTable numberTable;
+    employeeIdTable numberTable;
+
+    BEGIN
+      EXECUTE IMMEDIATE 'select account_id, account_site_id, cae_emp_id from nightly_cae_assign where rownum<9'
+        BULK COLLECT INTO acctIdTable, acctSiteIdTable, employeeIdTable;
+
+      FOR i IN 1 .. acctIdTable.count LOOP
+        DBMS_OUTPUT.put_line('assigning CAE ' || employeeIdTable(i) || ' to account site id : ' || acctSiteIdTable(i));
+      END LOOP;
+  END;
+END;
+
+-- 2. Fetch from a cursor variable, allows LIMIT instead of relying on the default limit of 100
+create or REPLACE PACKAGE bob as
+  PROCEDURE cae_auto_assign;
+end;
+/
+create or replace PACKAGE body bob as
+  PROCEDURE cae_auto_assign
+  IS
+    cv  SYS_REFCURSOR;
+
+    TYPE t IS TABLE OF nightly_cae_assign%ROWTYPE;
+    mytbl t;
+  BEGIN
+    -- Must use "*"
+    open cv for 'select * from nightly_cae_assign where rownum<9';
+  
+    LOOP
+      fetch cv bulk collect into mytbl LIMIT 50;
+      exit when mytbl.COUNT=0;
+  
+      for i in 1..mytbl.COUNT loop
+        DBMS_OUTPUT.put_line(mytbl(i).account_site_id);
+      end loop;
+    END LOOP;
+  END cae_auto_assign;
+END bob;
+
+-- 3. Use a TABLE of type RECORD
+create or replace function get_eoy_date(in_year NUMBER) return number deterministic as
+  type days_table_rec is record(
+    year      mkc_years.year%type,
+    start_day mkc_years.start_day%type,
+    end_day   mkc_years.end_day%type
+    );
+  type days_table is table of days_table_rec;
+
+  l_days_table days_table;
+  
+  --x number := EXTRACT(YEAR FROM SYSDATE);
+begin
+  --x:=in_year;
+  select year, start_day, end_day
+    BULK COLLECT into l_days_table
+    from kmc_years;
+  
+  return(l_days_table(2).start_day);
 end;
 
