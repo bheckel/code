@@ -2,7 +2,7 @@
 
 #  Purpose: Quickly checkin common code locations
 #  Created: 20-Aug-2020 (Bob Heckel)
-# Modified: 29-Mar-2022 (Bob Heckel)
+# Modified: 01-Apr-2022 (Bob Heckel)
 
 currdir=`pwd`
 
@@ -29,7 +29,7 @@ for d in dotfiles code; do
     # Check for fatals "master pushes to master (local out of date)"
     #git remote show origin | grep --color=always 'local out of date' && \
     if [ `git remote show origin | grep -c 'local out of date'` -ge 1 ]; then
-      echo "${fg_redbold}[  FAILED  ]"${normal}
+      echo "[${fg_redbold}  FAILED  ${normal}]"
       echo "hint: cd ~/${d} && git merge && git push; git remote show origin"
     else
       echo "[${fg_green}  OK  ${normal}]"
