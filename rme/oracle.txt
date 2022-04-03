@@ -1,3 +1,16 @@
+VM Linux 03-Apr-22
+export ORACLE_BASE=/u01/app/oracle
+export ORACLE_HOME=/u01/app/oracle/product/version/db_1/
+/u01/app/oracle/product/version/db_1/bin/sqlplus
+
+As system:
+create user dev identified by oracle;
+select username from dba_users;
+grant create session to dev;
+select tablespace_name from dba_tablespaces;
+create tablespace dev_tblspc datafile 'dev_tblspc.dat' size 10M autoextend on;
+
+---
 
 -- Password change                             new
 ALTER USER unit_test_repos IDENTIFIED BY "ESp5l@whgRS46hY" REPLACE "vL6iXcs@n882!Yp";
