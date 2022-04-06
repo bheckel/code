@@ -303,3 +303,50 @@ BEGIN
   UPDATE emp SET salary = new_sal WHERE emp_id = 123;
 ...
 
+---
+
+declare
+  l_id   number;
+  l_cnt  number default 0;
+  
+  cursor c1 is 
+    with v as (
+      select
+      ra.account_id as account_id_for_joins,
+      ra.industry,
+      ra.sup_account_id,
+      ra.sup_account_name
+      ,decode(rsa.account_id, NULL, 0, 1) as strategic_account
+      ,rsa.account_name as strategic_account_name
+      ,rsa.rollup_name as strategic_rollup_name
+      , re.sas_empno as tsr_owner_empno
+      , CASE WHEN re.sas_empno is not null THEN re.last_name||', '||re.first_name END AS tsr_owner
+      , ra.global_duns_nbr
+      , ra.duns_nbr
+      from rpt_account ra
+      left join rpt_strategic_accounts rsa
+      on ra.account_id = rsa.account_id
+      left join (select distinct account_id, tsr_owner_id from
+      rs_assign_team_assignments_v where account_site_id is null) rst
+      on ra.account_id = rst.account_id
+      left join rpt_employee re
+      on rst.tsr_owner_id = re.employee_id
+    )
+    select account_id_for_joins from v group by account_id_for_joins having count(1)>1; 
+begin
+  for r in c1 loop
+    l_cnt := l_cnt + 1;
+    --DBMS_OUTPUT.put_line(l_cnt || ' ' || r.account_id_for_joins);
+    
+    if l_cnt < 3 then
+      execute immediate q'[
+        select account_id from account_base where account_id=:1 
+      ]'
+        into l_id
+        using r.account_id_for_joins;
+      
+      DBMS_OUTPUT.put_line(l_cnt || ' ' || l_id);
+      rollback;
+    end if;
+  end loop;
+end;

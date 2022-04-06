@@ -38,5 +38,3 @@ for d in dotfiles code; do
 done
 
 cd ${currdir}
-
-echo ...done

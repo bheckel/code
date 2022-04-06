@@ -166,7 +166,7 @@ Synopsis:
   Returns results in vi.
     -h    this usage message
     -c    search case sensitively
-    -r    recursive from PWD ($ENV{PWD} in this case)
+    -r    recursive from PWD ($ENV{PWD})
           Do not specify a directory if using this switch
  
  Won't accept wildcarding for textfile names, use this in Vim instead--
