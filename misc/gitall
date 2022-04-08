@@ -6,20 +6,26 @@
 
 currdir=`pwd`
 
+echo "ok to gitup $d dir (Y/n)? " && read yn &&
+if [ "$yn" = 'n' ];then
+  echo cancelled
+  exit
+fi
+
 for d in dotfiles code; do
   cd $HOME/$d && git status
-  echo "ok to gitup $d dir (Y/n)? " && read yn &&
-  if [ "$yn" != 'n' ];then
+  #echo "ok to gitup $d dir (Y/n)? " && read yn &&
+  #if [ "$yn" != 'n' ];then
     # In a paranoid spirit, keep hostname semi-private but distinguish same-OS machines
     git add . && git commit -m "mod gitall $MACHTYPE-${HOSTNAME:0:4}"; git pull origin master && git push origin master
-  else
-    echo cancelled
-  fi
-  echo
+  #else
+  #  echo cancelled
+  #fi
+  #echo
 done
 
 for d in dotfiles code; do
-  if [ "$yn" != 'n' ];then
+  #if [ "$yn" != 'n' ];then
     if [ ${d} = dotfiles ]; then
       echo -n "Checking for ${d} fatals................ "
     else
@@ -34,7 +40,7 @@ for d in dotfiles code; do
     else
       echo "[${fg_green}  OK  ${normal}]"
     fi
-  fi
+  #fi
 done
 
 cd ${currdir}
