@@ -2,7 +2,7 @@
 <rows>
    <row>
       <key>ab</key>
-      <value>-- set serverout on size unl
+      <value>-- set serveroutput on size 10000
 declare
   x number;
   y varchar2(99);
@@ -51,7 +51,7 @@ end;</value>
    </row>
    <row>
       <key>ob</key>
-      <value>ORDER BY 1 DESC;</value>
+      <value>ORDER BY 1 DESC</value>
    </row>
    <row>
       <key>sdo</key>
@@ -66,8 +66,8 @@ end;</value>
       <value>SELECT COUNT(1) FROM [(parameter)];</value>
    </row>
    <row>
-      <key>sso</key>
-      <value>--  set serverout on size 100000</value>
+      <key>svo</key>
+      <value>--  set serveroutput on size 100000</value>
    </row>
    <row>
       <key>upd</key>
@@ -75,6 +75,10 @@ end;</value>
    </row>
    <row>
       <key>ww</key>
-      <value>WHERE [(parameter)];</value>
+      <value>WHERE [(parameter)]</value>
+   </row>
+   <row>
+      <key>col</key>
+      <value>column [(parameter)] format a13</value>
    </row>
 </rows>
