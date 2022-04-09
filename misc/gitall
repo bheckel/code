@@ -2,7 +2,7 @@
 
 #  Purpose: Quickly checkin common code locations
 #  Created: 20-Aug-2020 (Bob Heckel)
-# Modified: 01-Apr-2022 (Bob Heckel)
+# Modified: 08-Apr-2022 (Bob Heckel)
 
 currdir=`pwd`
 

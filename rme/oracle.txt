@@ -4,12 +4,17 @@ export ORACLE_HOME=/u01/app/oracle/product/version/db_1/
 /u01/app/oracle/product/version/db_1/bin/sqlplus
 
 As system:
-select tablespace_name from dba_tablespaces;
 create tablespace dev_tblspc datafile 'dev_tblspc.dat' size 10M autoextend on;
-create temporary tablespace dev_tblspc_temp tempfile 'dev_tabspace_temp.dat' size 5M autoextend on;
-create user dev identified by oracle default tablespace dev_tblspc temporary tablespace dev_tblspc_temp;
+create TEMPORARY tablespace dev_tblspc_temp tempfile 'dev_tabspace_temp.dat' size 5M autoextend on;
+select tablespace_name from dba_tablespaces;
+create user dev identified by oracle default tablespace dev_tblspc TEMPORARY tablespace dev_tblspc_temp;
 select username from dba_users;
 grant create session to dev;
+grant create table to dev;
+grant create view to dev;
+grant create sequence to dev;
+grant unlimited tablespace to dev;
+select * from session_privs;
 
 ---
 
