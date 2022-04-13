@@ -1,3 +1,8 @@
+In Powershell:
+wsl --install
+
+---
+
 Windows Defender Exlusions
 Skip itself C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2110.6-0\MsMpEng.exe
 
