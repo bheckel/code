@@ -6,7 +6,7 @@
 
 currdir=`pwd`
 
-echo "ok to gitup $d dir (Y/n)? " && read yn &&
+echo -n "ok to gitup $d dir (Y/n)? " && read yn &&
 if [ "$yn" = 'n' ];then
   echo cancelled
   exit
