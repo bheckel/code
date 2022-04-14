@@ -6,7 +6,7 @@
 
 currdir=`pwd`
 
-echo 'ok to synch dotfiles and code (Y/n)? ' && read yn &&
+echo -n 'ok to synch dotfiles and code (Y/n)? ' && read yn &&
 if [ "$yn" = 'n' ];then
   echo cancelled
   exit
