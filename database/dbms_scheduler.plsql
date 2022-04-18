@@ -128,19 +128,19 @@ BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 
 ---
 
--- Null out or modify an existing job's attribute e.g. COMMENTS
+-- Null out or modify an existing job's attribute
 begin
   sys.dbms_scheduler.set_attribute_NULL(name      => 'CREATE_REFERENCE_JOB',
                                         attribute => 'COMMENTS');                                   
 end;
 
--- Update modify an attribute e.g. COMMENTS
+-- Update modify an attribute
 begin
   sys.dbms_scheduler.set_attribute(name      => 'CREATE_REFERENCE_JOB',
                                    attribute => 'COMMENTS',
                                    value     => 'Nightly job to auto-create reference records not auto-created via the UI');                                   
 end;
-
+-- Modify without dropping job and redoing all of it to modify only one attribute
 begin
   sys.dbms_scheduler.set_attribute(name      => 'MKC_REVENUE_LOAD_DAVESIM',
                                    attribute => 'JOB_ACTION',
