@@ -40,3 +40,9 @@ data _null_;
     call execute("libname l '/Drugs/TMMEligibility/BRStores/Dashboard/&bom_previous' access=readonly;");
   end;
 run;
+
+---
+
+libname mirror  server=mkcdata.shr1 access=readonly;
+/* List all datasets in libname */
+proc contents data = mirror._ALL_ NODS; run;

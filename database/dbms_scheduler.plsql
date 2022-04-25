@@ -448,3 +448,36 @@ begin
      attribute      => 'restart_on_recovery',
      value          => true);
 end;
+
+---
+
+BEGIN
+  sys.dbms_scheduler.create_job(
+    job_name => 'JOB_FAILED_LOGINS_' || get_db_name,
+    job_type => 'PLSQL_BLOCK',
+    job_action => q'[
+                      declare
+                        l_cnt number := 0;
+                      begin
+                        select count(1)
+                          into l_cnt
+                          from dba_audit_trail
+                         where returncode=1017 and timestamp > sysdate - interval '20' minute;
+                      
+                        dbms_output.put_line(l_cnt);
+                        
+                        if l_cnt > 0 then
+                          e_mail_message@RION_PROD_RW('replies-disabled@sas.com',
+                                                       'Bob.Heckel@as.com,Bru',
+                                                       'Job JOB_FAILED_LOGINS_' || get_db_name || ': Failed login attempts on ' || get_db_name,
+                                                       l_cnt || ' tries so far');
+                        end if;
+                      end; 
+                    ]',
+    --start_date => systimestamp + INTERVAL '9' SECOND,
+    start_date => SYSTIMESTAMP,
+    repeat_interval => 'Freq=Minutely;Interval=20',
+    enabled => true,
+    auto_drop  => false,
+    comments => 'bheck');
+END;
