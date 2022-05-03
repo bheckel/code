@@ -1,5 +1,5 @@
 -- Created: 16-Jul-2019 (Bob Heckel)
--- Modified: 21-Sep-2021 (Bob Heckel)
+-- Modified: 27-Apr-2022 (Bob Heckel)
 
 /* Analytic functions compute an aggregate value based on a group of rows. They
  * differ from aggregate functions in that they RETURN MULTIPLE ROWS FOR EACH
@@ -156,11 +156,11 @@ where deptno != 10;
 
 with v as (
           select date '2000-01-01' d, 10 amt from dual
-union all select date '2000-01-02',   11 from dual
-union all select date '2000-01-03',   30 from dual
-union all select date '2000-01-03',   30 from dual
-union all select date '2000-01-04',   10 from dual
-union all select date '2000-01-05',   14 from dual
+union all select date '2000-01-02',   11     from dual
+union all select date '2000-01-03',   30     from dual
+union all select date '2000-01-03',   30     from dual
+union all select date '2000-01-04',   10     from dual
+union all select date '2000-01-05',   14     from dual
 )
 select d
       ,amt
@@ -189,6 +189,7 @@ select d
       ,sum(amt) OVER (order by d ROWS between unbounded preceding and 1 preceding) balance  -- NULL, 10,21,51,81,91
 --      ,sum(amt) OVER (order by d ROWS between MYFUNC(foo) preceding and 0 following) running_total2
 --      ,sum(amt) OVER (order by d ROWS between MYSEQ-MYTRAILING_SEQ preceding and 0 following) running_total3
+      ,avg(amt) OVER (partition by d) simple_average  -- 10,11,30,30,10,14
       ,avg(amt) OVER (order by d ROWS between 1 preceding and 1 following) moving_average  -- 10.5,17,23.6666666,23.333333,18,12
       -- Use time RANGE not physical ROWS to avoid missing data
       ,sum(amt) OVER (order by d RANGE between interval '2' day preceding and current row) running_total_2day  -- 10,21,81,81,81,84

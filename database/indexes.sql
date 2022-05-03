@@ -20,13 +20,13 @@ alter index sgix nomonitoring usage;
 
 select index_name, table_name, used from v$object_usage;--null
 alter index KRB_HC_IN_CIX monitoring usage;
-select index_name, table_name, used from v$object_usage;--not null if index is being used
+select index_name, table_name, used from v$object_usage;--not null if index being used
 alter index KRB_HC_IN_CIX nomonitoring usage;
 ...
 
 --or 
 
-select index_name, table_name, used from v$object_usage;--not null if index is being used
+select index_name, table_name, used from v$object_usage;--not null if index being used
 
 --  set serveroutput on
 BEGIN 
@@ -300,3 +300,21 @@ truncate table table1;
 drop index fn_unique_idx;
 
 CREATE UNIQUE INDEX fn_unique_idx ON table1 (CASE WHEN is_deleted='N' then (id||','|| name||','|| type) end);
+
+---
+
+-- Columns used by an index, one row per ix each CSV list of columns
+with v as(
+  SELECT i.table_owner, i.table_name, i.index_name, i.uniqueness, c.column_name, c.column_position
+  FROM      all_indexes i
+  LEFT JOIN all_ind_columns c
+   ON   i.index_name      = c.index_name
+   AND  i.owner           = c.index_owner
+  WHERE i.table_name  ='MKC_REVENUE_FULL'
+  ORDER BY i.table_owner, i.table_name, i.index_name, c.column_position
+)
+select INDEX_NAME, listagg(COLUMN_NAME, ', ') within group (order by column_position) indexed_col_list
+from v
+--where index_name='UAT_HC_F_CIX'
+group by index_name
+order by 1;
