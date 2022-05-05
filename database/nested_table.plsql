@@ -495,7 +495,7 @@ begin
   --x:=in_year;
   select year, start_day, end_day
     BULK COLLECT into l_days_table
-    from kmc_years;
+    from mkc_years;
   
   return(l_days_table(2).start_day);
 end;
