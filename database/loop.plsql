@@ -6,7 +6,7 @@
 -- next iteration. Both EXIT and CONTINUE have an optional WHEN clause, where you
 -- can specify a condition.
 
--- See also for.plsql
+-- See also for.plsql, loop_select_statement_execute_imm_to_alter.plsql
 
 ---
 

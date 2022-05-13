@@ -1,5 +1,7 @@
 -- Adapted: 01-Sep-2021 (Bob Heckel--https://www.orafaq.com/wiki/Unusable_indexes)
 
+-- Loop a command
+
 -- set serveroutput on size unlimited
 BEGIN
 	FOR x IN (

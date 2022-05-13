@@ -79,7 +79,7 @@ exec DBMS_SCHEDULER.drop_job('TESTJOB1');
 ---
 
 BEGIN
-  -- Run job synchronously. But OUTPUT column is null if use_current_session is TRUE!
+  -- Run an existing job synchronously. OUTPUT column is null if use_current_session is TRUE!
   DBMS_SCHEDULER.run_job (job_name            => 'TESTJOB1',
                           use_current_session => FALSE);
 END;  

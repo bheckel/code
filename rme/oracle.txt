@@ -18,6 +18,11 @@ select * from session_privs;
 
 ---
 
+OCI 
+
+12-May-22 ADMIN Shpxvatfuvg8!
+12-May-22 entity Abgntvafuvg8!
+
 -- Password change                             new
 ALTER USER unit_test_repos IDENTIFIED BY "ESp5l@whgRS46hY" REPLACE "vL6iXcs@n882!Yp";
 
@@ -37,9 +42,9 @@ connect co@rshdb1_low
 
 ---
 
--- Cloud shell for Cloud Tenant rshdev
+-- OCI Cloud shell for Cloud Tenant rshdev
 # 1 time:
-$ oci db autonomous-database generate-wallet --generate-type ALL --file mywallet.zip --password Bradybunch --autonomous-database-id ocid1.autonomousdatabase.oc1.iad.abuwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa47j3a
+$ oci db autonomous-database generate-wallet --generate-type ALL --file mywallet.zip --password Notaginshit8! --autonomous-database-id ocid1.autonomousdatabase.oc1.iad.abuwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa47j3a
 # cat readme.txt
 $ sql /nolog
 set cloudconfig mywallet.zip
