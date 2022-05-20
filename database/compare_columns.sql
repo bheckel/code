@@ -1,4 +1,17 @@
+-- Modified: 16-May-2022 (Bob Heckel)
 
+---
+
+select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'asp'
+minus
+select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'asp_2021'
+; --col only on asp
+select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'asp_2021'
+minus
+select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'asp'
+; --col only on asp_2021
+
+---
 
 -- Compare column names and data lengths
 with v as (
