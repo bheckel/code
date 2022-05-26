@@ -20,12 +20,11 @@ cp -i ~/onedrive/template_jira.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
 # sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 
-echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\OrionScripts\' >> ${JIRA}.sql
+echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\2022OrionScripts\' >> ${JIRA}.sql
 echo '--  @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
 echo '--  vi "C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
 echo '--  @"C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
 echo "DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
-#echo "ALTER SESSION SET recyclebin = ON;" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
 echo "-- ${DESC} https://esapps.sas.com/jira/browse/ORION-${JIRA}" >> ${JIRA}.sql
