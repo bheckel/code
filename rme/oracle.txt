@@ -1,4 +1,4 @@
-VM Linux 03-Apr-22
+VM Oracle Linux 03-Apr-22
 export ORACLE_BASE=/u01/app/oracle
 export ORACLE_HOME=/u01/app/oracle/product/version/db_1/
 /u01/app/oracle/product/version/db_1/bin/sqlplus
@@ -15,6 +15,8 @@ grant create view to dev;
 grant create sequence to dev;
 grant unlimited tablespace to dev;
 select * from session_privs;
+
+con_name ORCL
 
 ---
 
@@ -64,6 +66,9 @@ SQL Developer preferences location make Windows backup:
 C:\Documents and Settings\<user-name>\Application Data\SQL Developer\systemn.n.n.n.n
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' ~/onedrive/misc/
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTemplate.xml' ~/onedrive/misc/
+
+-- Use mine:
+cp CodeTemplate.xml ~/.sqldeveloper
 
 --or 08-Dec-20
 "C:\Users\bheck\AppData\Roaming\SQL Developer\UserSnippets.xml"
