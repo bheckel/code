@@ -496,3 +496,12 @@ create index fli4_i on flights ( departure_airport_code, flight_datetime, destin
 -- tied to the query.  Selecting more columns, such as airline, means the
 -- database has to read the table again. This erases the gains from the
 -- covering index!
+
+---
+
+--  set pagesize 0
+ALTER SESSION SET statistics_level = all;
+select SID, SERIAL#, USERNAME, STATUS, OSUSER, MACHINE, PROGRAM, SQL_ID, SQL_EXEC_START, PREV_SQL_ID, PREV_EXEC_START, LOGON_TIME, LAST_CALL_ET, CLIENT_IDENTIFIER, STATE, SERVICE_NAME, trunc(last_call_et/ 3600) as Hours from v$session where username is not null order by SQL_EXEC_START desc nulls last;
+SELECT * FROM v$sql WHERE sql_id='gvhhm0q3n6n2k';
+SELECT * FROM v$sql WHERE lower(sql_text) like '%kmc%';
+Select plan_table_output From table(dbms_xplan.display_cursor(null,null,'allstats +cost +bytes'));
