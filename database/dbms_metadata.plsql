@@ -13,3 +13,19 @@ END;
 
 -- set long 10000
 SELECT dbms_metadata.get_ddl('TABLE','EMP','ADMIN') FROM DUAL;
+
+---
+
+--https://connor-mcdonald.com/2022/06/08/comparing-two-database-objects-for-differences/
+-- set long 99999
+with t as(
+  select dbms_metadata_diff.compare_alter_xml('TABLE','KMC_REVENUE_FULL_BOB','KMC_REVENUE_FULL_PART') xml
+    from dual
+)
+select xt.txt||';'
+  from t,
+     xmltable(xmlnamespaces(default 'http://xmlns.oracle.com/ku'), '/ALTER_XML/ALTER_LIST/ALTER_LIST_ITEM/SQL_LIST/SQL_LIST_ITEM'
+              passing xmltype(t.xml)
+              columns
+              txt     varchar2(255)  path 'TEXT'
+     ) xt;
