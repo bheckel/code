@@ -11,6 +11,10 @@ begin
 end;</value>
    </row>
    <row>
+      <key>col</key>
+      <value>column [(parameter)] format a13</value>
+   </row>
+   <row>
       <key>cp</key>
       <value>CREATE PROCEDURE procedure_name
       [ (parameter]) ]
@@ -76,9 +80,5 @@ end;</value>
    <row>
       <key>ww</key>
       <value>WHERE [(parameter)]</value>
-   </row>
-   <row>
-      <key>col</key>
-      <value>column [(parameter)] format a13</value>
    </row>
 </rows>
