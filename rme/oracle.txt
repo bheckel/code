@@ -69,6 +69,8 @@ cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTempla
 
 -- Use mine:
 cp CodeTemplate.xml ~/.sqldeveloper
+or
+"C:\Users\bheck\AppData\Roaming\SQL Developer\CodeTemplate.xml"
 
 --or 08-Dec-20
 "C:\Users\bheck\AppData\Roaming\SQL Developer\UserSnippets.xml"

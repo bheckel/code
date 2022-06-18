@@ -1,0 +1,17 @@
+
+2022-06-15 03:59:57 qemu-system-x86_64 -boot d -cdrom lubuntu-22.04-desktop-amd64.iso -m 4096
+2022-06-15 04:09:07 sudo apt-get install qemu-kvm
+2022-06-15 04:10:22 qemu-img create Puppy.vdi 10G
+2022-06-15 04:10:51 qemu-img create -f qcow2 Puppy.qcow 10G
+2022-06-15 04:30:55 sudo chmod +666 /dev/kvm
+2022-06-15 04:31:06 qemu-system-x86_64 -boot d -cdrom lubuntu-22.04-desktop-amd64.iso -m 4096 -hda Puppy.vdi -enable-kvm
+ 1459  2022-06-15 04:58:50 qemu-system-x86_64 -hda Puppy.vdi
+ 1460  2022-06-15 04:59:44 qemu-system-x86_64 -hda Puppy.vdi -m 4096
+
+---
+
+"C:\Program Files\qemu\qemu-system-x86_64w.exe" -boot d -cdrom lubuntu-22.04-desktop-amd64.iso -m 4096
+
+c:\Users\bheck\Downloads>"C:\Program Files\qemu\qemu-system-x86_64w.exe" -boot d -cdrom alpine-standard-3.16.0-x86_64.iso -hda alpine.vdi -m 4096
+
+c:\Users\bheck\Downloads>"C:\Program Files\qemu\qemu-system-x86_64w.exe" -hda alpine.vdi -m 4096
