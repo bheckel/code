@@ -22,9 +22,6 @@ con_name ORCL
 
 OCI 
 
-12-May-22 ADMIN Shpxvatfuvg8!
-12-May-22 entity Abgntvafuvg8!
-
 -- Password change                             new
 ALTER USER unit_test_repos IDENTIFIED BY "ESp5l@whgRS46hY" REPLACE "vL6iXcs@n882!Yp";
 
@@ -46,7 +43,7 @@ connect co@rshdb1_low
 
 -- OCI Cloud shell for Cloud Tenant rshdev
 # 1 time:
-$ oci db autonomous-database generate-wallet --generate-type ALL --file mywallet.zip --password Notaginshit8! --autonomous-database-id ocid1.autonomousdatabase.oc1.iad.abuwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa47j3a
+$ oci db autonomous-database generate-wallet --generate-type ALL --file mywallet.zip --password mypw --autonomous-database-id ocid1.autonomousdatabase.oc1.iad.abuwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa47j3a
 # cat readme.txt
 $ sql /nolog
 set cloudconfig mywallet.zip
@@ -66,6 +63,9 @@ SQL Developer preferences location make Windows backup:
 C:\Documents and Settings\<user-name>\Application Data\SQL Developer\systemn.n.n.n.n
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' ~/onedrive/misc/
 cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTemplate.xml' ~/onedrive/misc/
+
+above may be obsolete - see ~/code/scripting/snip.sh e.g.:
+cp -v 'C:\Users\bheck\AppData\Roaming\SQL Developer\UserSnippets.xml' $D
 
 -- Use mine:
 cp CodeTemplate.xml ~/.sqldeveloper
@@ -123,7 +123,7 @@ select distinct 'ALTER SYSTEM KILL SESSION ''' || sid || ',' || serial# || ''';'
 
 sqlplus ADMIN/mypw@rshdb1
 
-benpyrvqragvglpybhqfreivpr/b.heckel@gmail.com
+benpyrvqragvglpybhqfreivpr/bobheckel@gmail.com
 
 ---
 
