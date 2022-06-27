@@ -1,3 +1,49 @@
+23-Jun-22 on WSL2 https://dev.to/bowmanjd/install-docker-on-windows-wsl-without-docker-desktop-34m9
+
+sudo apt install --no-install-recommends apt-transport-https ca-certificates curl gnupg2
+cat /etc/os-release  # ID=ubuntu, VERSION_CODENAME=focal
+# Make apt trust the repo
+#                                              ID
+#                                            ______
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/trusted.gpg.d/docker.asc
+# Add the repo
+#                                                               VERSION_CODENAME
+#                                                               _____
+echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" | sudo tee
+sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove
+sudo apt install docker-ce docker-ce-cli containerd.io
+sudo usermod -aG docker $USER  # avoid using sudo (didn't work)
+sudo dockerd
+docker help run
+sudo docker run hello-world
+sudo docker run --rm hello-world
+sudo docker run -it ubuntu bash  # interactive terminal
+sudo docker images
+sudo docker ps  # any running containers?
+sudo docker ps -a  # IMAGE:27941809078c
+sudo docker run 27941809078c uname -a  # single command
+sudo docker run -it 27941809078c  # interactive terminal
+sudo docker network ls  # all containers can communicate
+sudo docker network create my-network  # limited, use -net my-network
+
+---
+
+sudo docker run --name myfoo hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+2db29710123e: Pull complete
+Digest: sha256:13e367d31ae85359f42d637adf6da428f76d75dc9afeb3c21faea0d976f5c651
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+...
+sudo docker ps -a
+CONTAINER ID   IMAGE          COMMAND      CREATED          STATUS                      PORTS     NAMES
+102b3ce18b6e   hello-world    "/hello"     36 seconds ago   Exited (0) 35 seconds ago             myfoo
+
+
+---
+
 sudo docker ps  # running
 sudo docker ps -a  # running and exited
 # same
@@ -55,6 +101,8 @@ sudo docker pull ubuntu:16.04
 sudo docker run -it ubuntu:16.04 bash  # will run 'latest' if no tag like 16.04
 
 sudo docker ps -a
+sudo docker rm hopeful_brown
+sudo docker rm 75880a5d204f 8aed4f809b41
 # Delete all those containers
 sudo docker rm $(sudo docker ps -a -q -f status=exited)
 
