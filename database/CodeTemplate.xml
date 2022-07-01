@@ -46,6 +46,10 @@ end;</value>
       <value>DELETE FROM  [(parameter)]  WHERE  [(parameter)]</value>
    </row>
    <row>
+      <key>eee</key>
+      <value>select first_last_name from employee_base where employee_id = [(parameter)];</value>
+   </row>
+   <row>
       <key>ii</key>
       <value>INSERT INTO [(parameter)] ( )  VALUES ( )</value>
    </row>
