@@ -26,6 +26,10 @@ sudo docker run -it 27941809078c  # interactive terminal
 sudo docker network ls  # all containers can communicate
 sudo docker network create my-network  # limited, use -net my-network
 
+# Persist a container:
+sudo docker images
+
+
 ---
 
 sudo docker run --name myfoo hello-world
@@ -128,7 +132,7 @@ sudo docker search oracle
 sudo docker build -t getting-started .
 sudo docker run -dp 3000:3000 getting-started
 
- ---
+---
 
 # Install docker
  2021-01-02 11:00:43 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
