@@ -1,3 +1,9 @@
+Help -> Check for Updates
+Install from Local File
+"C:\cygwin64\home\bheck\transfer\keepalive.zip"
+
+---
+
 VM Oracle Linux 03-Apr-22
 export ORACLE_BASE=/u01/app/oracle
 export ORACLE_HOME=/u01/app/oracle/product/version/db_1/
