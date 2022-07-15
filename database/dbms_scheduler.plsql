@@ -1,6 +1,6 @@
 --------------------------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 09-Feb-2022 (Bob Heckel)
+-- Modified: 12-Jul-2022 (Bob Heckel)
 --
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT!
 --------------------------------------------------------
@@ -127,6 +127,8 @@ END;
 BEGIN dbms_scheduler.drop_job('SETARS.DAILY_DATA_MAINTENANCE_JOB'); END;
 
 ---
+
+-- Avoid dropping the whole job: 
 
 -- Null out or modify an existing job's attribute
 begin

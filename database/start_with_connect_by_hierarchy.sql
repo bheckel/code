@@ -4,16 +4,16 @@
 ---
 
 with v as (            
-select e.employee_id, e.full_name, e.last_name, e.sas_empno, e.MANAGER_SAS_EMPNO, e.gone, e.hire_date
-  from employee_base e start with e.manager_sas_empno is null
- connect by e.manager_sas_empno=prior e.sas_empno
-order siblings by e.full_name
+  select e.employee_id, e.full_name, e.last_name, e.sas_empno, e.manager_sas_empno, e.gone, e.hire_date
+    from employee_base e start with e.manager_sas_empno is null
+  connect by e.manager_sas_empno=prior e.sas_empno
+   order siblings by e.full_name
 )
 select v.*, e.full_name mgr
   from v, employee_base e
  where v.manager_sas_empno = e.sas_empno
-  --and lower(v.full_name) like '%donna trice%' and e.gone = 'N'  --search as emp
-  and lower(e.full_name) like '%donna trice%' and v.gone = 'N'  --search as mgr
+   --and lower(v.full_name) like '%livermo%' and e.gone = 'N' --search as emp
+   and lower(e.full_name) like '%groce%' and v.gone = 'N' --search as mgr
  order by v.last_name;
 
 ---

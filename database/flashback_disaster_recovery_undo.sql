@@ -2,13 +2,7 @@
 
 ---
 
-SELECT account_team_assignment_id, actual_updated, actual_updatedby
-from account_team_assign_all
-where actual_updated = ( select max(actual_updated) FROM account_team_assign_all);
-
----
-
--- Recover update
+-- Restore undo a table update
 
 create table ztest as select 1 x from dual;
 

@@ -28,6 +28,8 @@ BEGIN
                         exception
                           when NO_DATA_FOUND then
                             NULL;
+                          when OTHERS then
+                            dbms_output.put_line(SQLCODE || ': ' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
                       end;
                     ]',
     repeat_interval =>'Freq=Minutely;Interval=30',
