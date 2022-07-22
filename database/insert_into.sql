@@ -1,5 +1,6 @@
 
--- Modified: 02-Apr-2020 (Bob Heckel)
+--  Created: 02-Apr-2020 (Bob Heckel)
+-- Modified: 22-Jul-2022 (Bob Heckel)
 -- see restore_records_from_hist.sql insert_new_record_correlated.sql forall_insert.plsql
 
 ---
@@ -7,18 +8,22 @@
 create table relations
 ( id   number       not null primary key
 , name varchar2(30) not null
-)
+);
 
 insert into relations
-select 1, 'Oracle Nederland' from dual union all
-select 2, 'Ciber Nederland' from dual
+  select 1, 'Oracle Nederland' from dual 
+  union all
+  select 2, 'Ciber Nederland' from dual
+;
 
 -- or
 insert into relations
-select level, dbms_random.string('a',30)
-from dual
-connect by level <= 100000
--- 100000 row(s) inserted.
+  select level, dbms_random.string('a',30)
+    from dual
+ connect by level <= 100000
+;
+
+-- 100,000 row(s) inserted.
 commit;
 
 ---
@@ -44,6 +49,7 @@ insert into rating
   select 207, mid, 5, NULL
   from movie
   where mid in(select distinct mid from movie)
+;
 
 ---
 
