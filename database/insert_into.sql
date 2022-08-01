@@ -347,3 +347,47 @@ INSERT INTO xsp_processing_territory (xsp_processing_territory_id, xsp_processin
     FROM DUAL
    WHERE terr_id NOT IN (SELECT t.territory_lov_id FROM xsp_processing_territory t);
 
+---
+
+ INSERT INTO TASK_BASE TB
+        (TASK_ID,
+         ACTIVITY_ID,
+         EMPLOYEE_ID,
+         --DUE_DATE,
+         --NUMBER_OF_HOURS,
+         --STATUS,
+         CREATED,
+         CREATEDBY,
+         UPDATED,
+         UPDATEDBY,
+         NEW_TASK,
+--                 OUTCOME,
+--                 CATEGORY,
+--                 ORIGIN_TASK_ID,
+--                 CURRENT_TASK,
+--                 OUTCOME_LOV_ID,
+--                 CONTACT_ID,
+--                 START_DATE,
+         OWNER_TERRITORY_LOV_ID)
+      VALUES
+        (UID_TASK.NEXTVAL,
+         9617970,--t_activity_id_table(i),
+         58936,--t_new_lead_owner_id_table(i),  -- new TSR or LO if we're in this procedure
+         --t_due_date_table(i),
+         --t_number_of_hours_table(i),
+         --t_status_table(i),
+         sysdate,--v_start_time,
+         0,
+         sysdate,--v_start_time,
+         0,
+         1,
+--                 t_outcome_table(i),
+--                 t_category_table(i),
+--                 t_task_id_table(i),
+--                 1,
+--                 t_outcome_lov_id_table(i),
+--                 t_contact_id_table(i),
+--                 t_start_date_table(i),
+         ( select e.territory_lov_id from employee_base e where e.employee_id = 258520 ))
+;
+
