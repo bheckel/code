@@ -1,0 +1,7 @@
+with v as (
+select '10003-7465-2-05/26/202210003-7465-2-20-0-05/26/2022002' x from dual
+union all select '10003-7473-2-05/26/202210003-7473-2-20-0-05/26/2022002' x from dual
+union all select '10003-7473-2-05/26/202210003-7473-2-40-0-05/26/2022002' x from dual
+union all select 'PI00015778-22.06.24563755545512349640543006' x from dual
+)
+select * from v;

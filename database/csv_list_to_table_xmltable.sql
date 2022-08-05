@@ -1,18 +1,30 @@
--- Modified: Wed 19 Jun 2019 13:55:54 (Bob Heckel) 
--- Use a CSV comma-separated list like a table
+--  Created: 19-Jun-2019 (Bob Heckel) 
+-- Modified: 04-Aug-2022 (Bob Heckel)
+-- Use a CSV comma-separated list of numbers like a table
+
+---
+
+with v as (
+  SELECT to_number(column_value) ids
+    FROM xmltable(('"' || REPLACE('432803,434768,8888', ',', '","') || '"'))
+), v2 as (
+  SELECT to_number(column_value) ids
+    FROM xmltable(('"' || REPLACE('432803,434768,9999', ',', '","') || '"'))
+)
+--select * from v, v2 where v.ids = v2.ids(+) and v2.ids is null;--8888 is only on v
+select * from v, v2 where v.ids(+) = v2.ids and v.ids is null;--999 is only on v2
 
 ---
 
 -- Find records in list that are not in table.  See better example on_one_table_missing_from_other.sql
 SELECT a.interaction_id, b.ids
-FROM rpt_caeinteractions a,
-(
-WITH DATA AS (
-SELECT '9999999, 318387999, 320438999, 321588999' ids FROM dual
-)
-SELECT trim(COLUMN_VALUE) ids
-FROM DATA, xmltable(('"' || REPLACE(ids, ',', '","') || '"'))
-) b
+  FROM rpt_caeinteractions a, (
+                                WITH DATA AS (
+                                SELECT '9999999, 318387999, 320438999, 321588999' ids FROM dual
+                                )
+                                SELECT trim(COLUMN_VALUE) ids
+                                FROM DATA, xmltable(('"' || REPLACE(ids, ',', '","') || '"'))
+                              ) b
 WHERE a.interaction_id(+)=b.ids AND a.interaction_id is NULL
 
 ---

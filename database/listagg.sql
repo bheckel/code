@@ -1,5 +1,6 @@
 
--- Modified: Fri 21 Jun 2019 14:54:19 (Bob Heckel)
+--  Created: Fri 21 Jun 2019 14:54:19 (Bob Heckel)
+-- Modified: 04-Aug-2022 (Bob Heckel)
 
 -- Select as a comma separated list value. See also analytic_over_partition_order_window.sql
 
@@ -56,3 +57,54 @@ FROM (
              and c.offering_id    = ofname.offering_id
 ) x
 WHERE rownbr<4
+
+---
+
+-- Avoid using a collection and looping it to append an email message based on multiple rows:
+-- Make sure ASP and Orion agree on number of current sites to avoid update mismatch failures
+WITH asp_list AS (
+  SELECT DISTINCT a.account_id, account_site_id
+    FROM asp a,
+         asp_processing_territory asp_pt,
+         asp_territory_placeholder atp
+   WHERE a.future_territory_lov_id = asp_pt.territory_lov_id
+     AND asp_pt.asp_processing_request_id = in_asp_processing_request_id
+     AND a.future_tsr_owner_id * - 1 = atp.asp_territory_placeholder_id (+)
+     AND a.future_tsr_owner_id IS NOT NULL
+     AND a.future_territory_lov_id IS NOT NULL
+     AND a.future_tsr_owner_gone != 'Y'
+     AND a.account_site_id IS NOT NULL
+), orion_list AS (
+  SELECT account_id,
+         account_site_id
+    FROM account_name an,
+         account_site ast,
+         site s
+   WHERE an.account_name_id = ast.account_name_id
+     AND ast.site_id = s.site_id
+     AND an.account_id IN (
+    SELECT account_id
+      FROM asp_list
+  )
+), moreorion AS (
+  SELECT account_id, account_site_id FROM orion_list
+  MINUS
+  SELECT account_id, account_site_id FROM asp_list
+), moreasp AS (
+  SELECT account_id, account_site_id FROM asp_list
+  MINUS
+  SELECT account_id, account_site_id FROM orion_list
+), problems AS (
+  SELECT 'acct:' || account_id || ' site:' || account_site_id || ' only on Orion' x
+    FROM moreorion
+  UNION
+  SELECT 'acct:' || account_id || ' site:' || account_site_id || ' only on ASP' x
+    FROM moreasp
+)
+SELECT LISTAGG(x, '<BR>' ON OVERFLOW TRUNCATE '...')
+  INTO l_site_mismatch
+  FROM problems
+;
+
+IF l_site_mismatch is not null THEN
+...
