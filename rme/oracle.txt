@@ -1,3 +1,4 @@
+SQL Developer
 Help -> Check for Updates
 Install from Local File
 "C:\cygwin64\home\bheck\transfer\keepalive.zip"
@@ -56,6 +57,10 @@ set cloudconfig mywallet.zip
 #show tns
 connect admin@rshdb1_low
 <enter pw>
+
+create user ogb identified by "Mandatorylongpwcrap!1";
+grant resource, connect, unlimited tablespace to ogb;
+drop user ogb cascade;
 
 ---
 
