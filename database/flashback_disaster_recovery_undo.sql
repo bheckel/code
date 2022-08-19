@@ -1,9 +1,11 @@
--- Created: 12-Nov-2021 (Bob Heckel)
+--  Created: 12-Nov-2021 (Bob Heckel)
+-- Modified: 17-Aug-2022 (Bob Heckel)
 
 ---
 
 -- Restore undo a table update
 
+ALTER SESSION SET recyclebin = ON;
 create table ztest as select 1 x from dual;
 
 update ztest set x=2; commit;
@@ -21,7 +23,6 @@ SELECT * FROM ztest;--1
 -- Recover drop
 
 ALTER SESSION SET recyclebin = ON;
-
 drop table JS_INVOICE_16FEB21;
 
 show recyclebin
@@ -32,12 +33,5 @@ flashback table JS_INVOICE_16FEB21 to before drop;
 --or
 flashback table JS_INVOICE_16FEB21 to before drop rename to JS_INVOICE_16FEB21_OLD;
 
----
-
 PURGE RECYCLEBIN;
-ALTER SESSION SET recyclebin = ON;
-create table t as select * from salesgroup;
-ALTER TABLE t ENABLE ROW MOVEMENT;
-update t set salesgroup='XX' where salesgroup='SA'; commit;
-FLASHBACK TABLE t TO TIMESTAMP (SYSTIMESTAMP - INTERVAL '2' minute);
-SELECT * FROM t WHERE salesgroup='XX'; --no rows selected
+
