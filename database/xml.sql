@@ -64,3 +64,23 @@ WHERE  d.deptno = 10;
   </dept>
 </dept_list>
 */
+
+---
+
+ --  set serveroutput on size 100000
+declare
+  l_xml xmltype:= xmltype('<set><tag>abc</tag></set>');
+
+  cursor c_xmltab is
+    select col1
+    from xmltable('/set' passing l_xml
+            columns col1 path 'tag' 
+            ) x;
+
+  l_rows c_xmltab%rowtype;
+begin
+  open c_xmltab;
+  fetch c_xmltab into l_rows;
+  dbms_output.put_line('l_rows.col1: '||l_rows.col1);
+  close c_xmltab;
+end;
