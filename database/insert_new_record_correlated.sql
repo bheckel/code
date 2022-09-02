@@ -1,14 +1,14 @@
--- Modified: 04-Feb-2020 (Bob Heckel)
+-- Modified: 29-Aug-2022 (Bob Heckel)
 -- see also restore_records_from_hist.sql
 
--- Insert data from a query
-
+-- Insert new data from a query
 insert into target_bricks ( brick_id, colour, shape ) 
   select sb.brick_id, sb.colour, sb.shape  
-  from   source_bricks sb 
-  where  not exists ( 
-    select * from target_bricks tb 
-    where  sb.brick_id = tb.brick_id 
+    from source_bricks sb 
+   where not exists ( 
+    select * 
+      from target_bricks tb 
+     where sb.brick_id = tb.brick_id 
   );  
 
 ---
@@ -16,7 +16,7 @@ insert into target_bricks ( brick_id, colour, shape )
 insert into EVENT_CONTACT_BASE (event_contact_ID,        contact_ID,   event_ID, current_status,status_date) 
 select                          d_event_contact.nextval, t.contact_ID, 2606480,  to_date('05/07/2018','mm/dd/yyyy')
 from orion_28746_contacts t
-where not exists(select 1 from event_contact ec where ec.contact_id = t.contact_id and ec.EVENT_ID=2606480);
+where not exists (select 1 from EVENT_CONTACT_BASE ec where ec.contact_id = t.contact_id and ec.EVENT_ID=2606480);
 
 ---
 
@@ -33,18 +33,18 @@ insert into scott.emp select * from admin.emp;
 
 -- Restore from history put it back
 insert into contact_base (
-TYPE, DEPT, PREFIX, GENDER, SUFFIX, CREATED, UPDATED, DATEGONE, NICKNAME, UPDATEDBY, CREATEDBY, PDBSOURCE, LAST_NAME
+TYPE, DEPT, PREFIX, GENDER, SUFFIX, WM_OPTYPE
 )
 (select
-TYPE, DEPT, PREFIX, GENDER, SUFFIX, CREATED, UPDATED, DATEGONE, NICKNAME, UPDATEDBY, CREATEDBY, PDBSOURCE, LAST_NAME
+TYPE, DEPT, PREFIX, GENDER, SUFFIX, 'DR'
 from contact_hist
 where contact_id=9999999 and wm_optype='D'
 );
 
 ---
 
--- Insert the parent row. Unless the parent has already been added.
-INSERT INTO xsp_processing_territory (xsp_processing_territory_id, xsp_processing_request_id, territory_lov_id, CREATED, CREATEDBY)
-     SELECT UID_XSP_PROCESSING_TERRITORY.NEXTVAL, process_request_id, terr_id, process_date, employee_id
-       FROM DUAL
-      WHERE terr_id NOT IN (SELECT t.territory_lov_id FROM xsp_processing_territory t);
+-- Add a new INC record for each existing matching subsidiary
+insert into zbob ( SALESGROUP, SUBSIDIARY_NAME, ADMINISTERING_COUNTRY_CD, STATUS, REVSTATE, SUBSIDIARY ) 
+  select s.SALESGROUP, s.SUBSIDIARY_NAME, s.ADMINISTERING_COUNTRY_CD, s.STATUS, s.REVSTATE, o.SUBSIDIARYINC
+  from zbob s, rion_60387 o  -- o has the extra INCs
+ where s.subsidiary = o.subsidiary
