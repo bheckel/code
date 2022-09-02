@@ -45,7 +45,6 @@ sudo docker ps -a
 CONTAINER ID   IMAGE          COMMAND      CREATED          STATUS                      PORTS     NAMES
 102b3ce18b6e   hello-world    "/hello"     36 seconds ago   Exited (0) 35 seconds ago             myfoo
 
-
 ---
 
 sudo docker ps  # running
