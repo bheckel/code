@@ -528,3 +528,14 @@ END;
 --create table z_empbad as select * from z_emp;
 -- force a failure to be raised
 --alter table z_empbad add constraint  unique_emps UNIQUE (empno);
+
+---
+
+CREATE OR REPLACE TRIGGER zbob_trig
+	AFTER UPDATE OR INSERT ON zbob
+	FOR EACH ROW
+BEGIN
+  raise_application_error(-20900,'cannot insert or update row');
+  --Unnecessary:
+  --rollback;
+END;

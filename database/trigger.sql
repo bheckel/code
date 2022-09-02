@@ -97,3 +97,71 @@ begin
                                '');
 end;
 select * from user_triggers;
+
+---
+
+CREATE OR REPLACE TRIGGER KMC_ALLOCATED_PIT_UD
+  BEFORE UPDATE OR DELETE ON KMC_ALLOCATED_PIT
+  FOR EACH ROW
+  /* CreatedBy: Bob Heckel
+  **   Created: 26-Aug-22
+  **   Purpose: Block attempts to update or delete point-in-time table records
+  **  Modified: 26-Aug-22 (bheck) Initial version - RION-60834
+  */
+BEGIN
+  if (UPDATING) Then
+    e_mail_message@orion_prod_rw('replies-disabled@as.com',
+                                 'orionoc@wnt.as.com',
+                                 'Attempt to modify table on ' || GET_DB_NAME(),
+                                 nvl(SYS_CONTEXT('eStars_context', 'actual_employee_id'),
+                                     SYS_CONTEXT('USERENV', 'OS_USER')) ||
+                                 ' Attempted an UPDATE on KMC_ALLOCATED_PIT');
+  else
+    e_mail_message@orion_prod_rw('replies-disabled@as.com',
+                                 'orionoc@wnt.as.com',
+                                 'Attempt to modify table on ' ||
+                                 GET_DB_NAME(),
+                                 nvl(SYS_CONTEXT('eStars_context', 'actual_employee_id'),
+                                     SYS_CONTEXT('USERENV', 'OS_USER')) ||
+                                 ' Attempted a DELETE on KMC_ALLOCATED_PIT');
+  end if;
+  RAISE_APPLICATION_ERROR(-20101,
+                          'Modifications to existing records in KMC_ALLOCATED_PIT are not permitted');
+END KMC_ALLOCATED_PIT_UD;
+
+---
+
+CREATE OR REPLACE TRIGGER zbob_iu
+  BEFORE UPDATE OR insert ON zbob
+  FOR EACH ROW
+  /* CreatedBy: Bob Heckel
+  **   Created: 
+  **   Purpose: Assure only existing subsidiaries are used in REPORTING_SUBSIDIARY column
+  **  Modified: 26-Aug-22 (bheck) Initial version - RION-
+  */
+DECLARE
+  PRAGMA AUTONOMOUS_TRANSACTION;
+  l_found number := 0;
+BEGIN
+  if (INSERTING) then
+    for rec in ( select distinct subsidiary from zbob ) loop
+      if rec.subsidiary = :new.reporting_subsidiary then 
+        l_found := 1;
+      end if;
+    end loop;
+      
+    e_mail_message@orion_prod_rw('replies-disabled@as.com', 'bob.heckel@as.com', 'ins', l_found);
+  elsif (UPDATING) then
+    if :old.reporting_subsidiary != :new.reporting_subsidiary then
+      for rec in ( select distinct subsidiary from zbob ) loop
+        if rec.subsidiary = :new.reporting_subsidiary then 
+          l_found := 1;
+        end if;
+      end loop;
+      rollback;
+      e_mail_message@orion_prod_rw('replies-disabled@as.com', 'bob.heckel@as.com', 'upd', l_found);
+    end if;
+    -- Mandatory for AUTONOMOUS_TRANSACTION - downside is no way to rollback
+    commit;
+  end if;
+END;

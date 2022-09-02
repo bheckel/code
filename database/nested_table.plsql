@@ -3,7 +3,7 @@
 -- See also associative_array_table_indexby.plsql, varray.plsql, nested_table_multiset.plsql, type.plsql
 --
 --  Created: 02 Aug 2019 (Bob Heckel)
--- Modified: 01-Apr-2022 (Bob Heckel)
+-- Modified: 31-Aug-2022 (Bob Heckel)
 
 -- Associative arrays are particularly good with sparse collections.
 -- Nested tables offer lots of features for set-oriented management of collection contents.
@@ -498,5 +498,43 @@ begin
     from mkc_years;
   
   return(l_days_table(2).start_day);
+end;
+
+-- A double loop version of #1:
+declare
+  TYPE t_varchar2Table IS TABLE OF VARCHAR2(32767);
+  siteTbl t_varchar2Table;
+  sdmbkTbl t_varchar2Table;
+begin
+  execute immediate q'[ 
+                        select '960227' siten from dual
+                        union
+                        select '914689' siten from dual
+                      ]' bulk collect into siteTbl
+  ;
+
+  for i in 1 .. siteTbl.count loop
+    DBMS_OUTPUT.put_line(siteTbl(i));
+
+    execute immediate q'[
+                          select sdm_business_key
+                            from MC_REVENUE_FULL
+                           where site_id=:1
+                           and nvl(account_id_for_joins,0) not in ( 
+                                 select account_id
+                                from account_name an, account_site ast, site s
+                               where an.account_name_id = ast.account_name_id
+                                 and ast.site_id = s.site_id
+                                 and s.site_number=:2
+                            )
+                        ]' bulk collect into sdmbkTbl
+                           using siteTbl(i), siteTbl(i)
+      ;
+     
+    for j in 1 .. sdmbkTbl.count loop
+      DBMS_OUTPUT.put_line(sdmbkTbl(j));
+    --delete from mc_revenue_full where
+    end loop;
+  end loop;
 end;
 

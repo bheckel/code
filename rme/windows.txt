@@ -1,5 +1,9 @@
-In Powershell:
-wsl --install
+In admin cmd:
+wsl.exe --install
+reboot
+Open Ubuntu (if it doesn't open by itself)
+reboot
+apt update && apt upgrade
 
 ---
 

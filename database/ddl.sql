@@ -1,5 +1,5 @@
 -- Oracle DDL
--- Modified: 08-Sep-2021 (Bob Heckel)
+-- Modified: 01-Sep-2022 (Bob Heckel)
 
 alter table mkc_revenue_full drop column ACCOUNT_ID;
 --                               !!no COLUMN keyword!!
@@ -46,3 +46,10 @@ select * from user_segments where SEGMENT_NAME not like 'BIN$%';
 
 create table mkc_years ( year number, start_day number, end_day number);
 insert into mkc_years values (2019, 1, 31);
+
+-- Add a primary key
+alter table zbob add SALESGROUP_SUBSIDIARY_id number;
+create sequence uid_salesgroup_subsidiary minvalue 10 maxvalue 999999999999999999 increment by 10 cache 20 nocycle noorder;
+update zbob set SALESGROUP_SUBSIDIARY_id=uid_salesgroup_subsidiary.nextval;
+alter table zbob  add constraint SALESGROUP_SUBSIDIARY_pk primary key (SALESGROUP_SUBSIDIARY_id);
+
