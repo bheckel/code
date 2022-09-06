@@ -15,24 +15,28 @@ sudo apt install docker-ce docker-ce-cli containerd.io
 sudo usermod -aG docker $USER  # avoid using sudo (didn't work)
 sudo dockerd # or sudo dockerd& if don't care about viewing logging
 docker help run
-sudo docker run hello-world
-sudo docker run --rm hello-world
-sudo docker run -it ubuntu bash  # interactive terminal
+# or
+man docker-run
+sudo docker version  # will show if Docker Engine is running as well as Client
 sudo docker images
 sudo docker ps  # any running containers?
+sudo docker run hello-world
+sudo docker run --rm hello-world
+sudo docker pull ubuntu  # (optional) get newest image from Docker
+sudo docker run ubuntu  # does nothing but start and finish
+sudo docker run ubuntu uptime  # single command
+sudo docker run -it ubuntu bash  # interactive terminal
 sudo docker ps -a  # IMAGE:27941809078c
-sudo docker run 27941809078c uname -a  # single command
+sudo docker run 27941809078c uname -a  # single command using image id
+sudo docker run -i ubuntu cat /etc/*-release  # single command using repository name
 sudo docker run -it 27941809078c  # interactive terminal
 sudo docker network ls  # all containers can communicate
 sudo docker network create my-network  # limited, use -net my-network
-
-# Persist a container:
-sudo docker images
-TODO
+sudo docker container prune  # cleanup remove all containers
 
 ---
 
-sudo docker run --name myfoo hello-world
+sudo docker run --name myimgfoo hello-world
 Unable to find image 'hello-world:latest' locally
 latest: Pulling from library/hello-world
 2db29710123e: Pull complete
@@ -43,15 +47,36 @@ Hello from Docker!
 ...
 sudo docker ps -a
 CONTAINER ID   IMAGE          COMMAND      CREATED          STATUS                      PORTS     NAMES
-102b3ce18b6e   hello-world    "/hello"     36 seconds ago   Exited (0) 35 seconds ago             myfoo
+102b3ce18b6e   hello-world    "/hello"     36 seconds ago   Exited (0) 35 seconds ago             myimgfoo
 
 ---
 
-sudo docker ps  # running
-sudo docker ps -a  # running and exited
-# same
-sudo docker container ls
-sudo docker container ls -a
+# Named volumes for persistence:
+sudo docker volume create myvol
+sudo docker volume ls
+sudo docker volume inspect myvol  # it's in /var
+sudo docker image ls  # find 27941809078c image
+sudo docker run -it --mount source=myvol,target=/mnt/bob --name cntr_persistu 27941809078c  # first time only
+# root@54541ef80431:/# cat sdlkf > /mnt/bob/foo
+sudo docker container ls -a  # cntr_persistu is there now
+sudo docker run -it --mount source=myvol,target=/mnt 27941809078c  # subsequent
+sudo docker rm cntr_persistu  # container is gone...
+sudo vi /var/lib/docker/volumes/myvol/_data/foo  # ...but we saved the file created in the container
+
+---
+
+# Save container state
+
+2022-09-03 01:00:50 sudo docker run -it ubuntu bash
+2022-09-03 01:03:54 sudo docker ps -a |head
+2022-09-03 01:04:50 sudo docker commit 205c55d3de6f ubuntu-bob
+2022-09-03 01:05:03 sudo docker images
+2022-09-03 01:05:34 sudo docker run -it ubuntu-bob bash
+
+---
+
+# Open last container
+docker start -a -i `docker ps -q -l`
 
 ---
 
@@ -70,7 +95,6 @@ $ sudo docker run -p 8888:5000 rshdev/catnip
 $ sudo docker ps                                                                                 
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 
-
 ---
 
 # https://docker-curriculum.com
@@ -83,7 +107,6 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 2021-01-04 12:44:29 sudo docker run -p 8888:5000 rshdev/catnip
 2021-01-04 12:47:59 sudo docker images
 2021-01-04 12:48:06 sudo docker ps -a
-2021-01-04 12:48:30 docker login --username rshdev
 2021-01-04 12:49:04 sudo docker login --username rshdev
 # enter guid from dockerhub.com
 2021-01-04 12:50:31 sudo docker push rshdev/catnip
@@ -143,3 +166,4 @@ sudo docker run -dp 3000:3000 getting-started
  2021-01-02 11:34:48 sudo docker images
  2021-01-02 11:37:43 sudo docker ps -a
  2021-01-02 12:09:00 sudo docker run -it ubuntu bash
+
