@@ -1,4 +1,4 @@
-23-Jun-22 on WSL2 https://dev.to/bowmanjd/install-docker-on-windows-wsl-without-docker-desktop-34m9
+23-Jun-22 on metta WSL2 https://dev.to/bowmanjd/install-docker-on-windows-wsl-without-docker-desktop-34m9
 
 sudo apt install --no-install-recommends apt-transport-https ca-certificates curl gnupg2
 cat /etc/os-release  # ID=ubuntu, VERSION_CODENAME=focal
@@ -29,9 +29,10 @@ sudo docker run -it ubuntu bash  # interactive terminal
 sudo docker ps -a  # IMAGE:27941809078c
 sudo docker run 27941809078c uname -a  # single command using image id
 sudo docker run -i ubuntu cat /etc/*-release  # single command using repository name
-sudo docker run -it 27941809078c  # interactive terminal
+sudo docker run -it 27941809078c  # interactive terminal using image id
 sudo docker network ls  # all containers can communicate
 sudo docker network create my-network  # limited, use -net my-network
+sudo docker rm vibrant_tu  # remove container by name
 sudo docker container prune  # cleanup remove all containers
 
 ---
@@ -148,11 +149,6 @@ sudo docker container logs 15051871e6d7  # pass CONTAINER ID from ps -a
 
 # Query Docker Hub
 sudo docker search oracle
-
----
-
-sudo docker build -t getting-started .
-sudo docker run -dp 3000:3000 getting-started
 
 ---
 
