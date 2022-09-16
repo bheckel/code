@@ -34,6 +34,10 @@ end;</value>
       <value>CREATE TABLE [(parameter)] ( [(parameter)] );</value>
    </row>
    <row>
+      <key>ctas</key>
+      <value>CREATE TABLE zbob AS SELECT * FROM [(parameter)]</value>
+   </row>
+   <row>
       <key>cv</key>
       <value>CREATE OR REPLACE VIEW [(parameter)] AUTHID DEFINER IS</value>
    </row>
@@ -44,14 +48,6 @@ end;</value>
    <row>
       <key>del</key>
       <value>DELETE FROM  [(parameter)]  WHERE  [(parameter)]</value>
-   </row>
-   <row>
-      <key>eee</key>
-      <value>select first_last_name from employee_base where employee_id = [(parameter)];</value>
-   </row>
-   <row>
-      <key>ii</key>
-      <value>INSERT INTO [(parameter)] ( )  VALUES ( )</value>
    </row>
    <row>
       <key>kkk</key>
@@ -75,7 +71,7 @@ end;</value>
    </row>
    <row>
       <key>svo</key>
-      <value>--  set serveroutput on size 100000</value>
+      <value>--  set serveroutput on size 500000</value>
    </row>
    <row>
       <key>upd</key>
