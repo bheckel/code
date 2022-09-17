@@ -2,45 +2,45 @@
 
 #  Purpose: Quickly checkin common code locations
 #  Created: 20-Aug-2020 (Bob Heckel)
-# Modified: 02-Sep-2022 (Bob Heckel)
+# Modified: 16-Sep-2022 (Bob Heckel)
 
 currdir=`pwd`
 
-echo -n 'ok to synch dotfiles and code (Y/n)? ' && read yn &&
-if [ "$yn" = 'n' ];then
-  echo cancelled
-  exit
-fi
+#echo -n 'ok to synch dotfiles and code (Y/n)? ' && read yn &&
+#if [ "$yn" = 'n' ];then
+#  echo cancelled
+#  exit
+#fi
 
 for d in dotfiles code; do
   cd $HOME/$d && git status
-  #echo "ok to gitup $d dir (Y/n)? " && read yn &&
-  #if [ "$yn" != 'n' ];then
+  echo "ok to push $d dir (Y/n)? " && read yn &&
+  if [ "$yn" != 'n' ];then
     # In a paranoid spirit, keep hostname semi-private but distinguish same-OS machines
     git add . && git commit -m "mod gitall $MACHTYPE-${HOSTNAME:0:4}"; git pull origin master && git push origin master
-  #else
-  #  echo cancelled
-  #fi
-  #echo
+  else
+    echo cancelled
+    exit
+  fi
+  echo
 done
 
 for d in dotfiles code; do
-  #if [ "$yn" != 'n' ];then
-    if [ ${d} = dotfiles ]; then
-      echo -n "Checking for ${d} fatals................ "
-    else
-      echo -n "Checking for ${d} fatals.................... "
-    fi
-    cd $HOME/${d} && \
-    # Check for fatals "master pushes to master (local out of date)"
-    #git remote show origin | grep --color=always 'local out of date' && \
-    if [ `git remote show origin | grep -c 'local out of date'` -ge 1 ]; then
-      echo "[${fg_redbold}  FAILED  ${normal}]"
-      echo "hint: cd ~/${d} && git merge && git push; git remote show origin; cd -"
-    else
-      echo "[${fg_green}  OK  ${normal}]"
-    fi
-  #fi
+  if [ ${d} = dotfiles ]; then
+    echo -n "Checking for ${d} fatals................ "
+  else
+    echo -n "Checking for ${d} fatals.................... "
+  fi
+  cd $HOME/${d} && \
+  # Check for fatals "master pushes to master (local out of date)"
+  #git remote show origin | grep --color=always 'local out of date' && \
+  if [ `git remote show origin | grep -c 'local out of date'` -ge 1 ]; then
+    echo "[${fg_redbold}  FAILED  ${normal}]"
+    echo "hint: cd ~/${d} && git merge && git push; git remote show origin; cd -"
+  else
+    echo "[${fg_green}  OK  ${normal}]"
+  fi
 done
 
 cd ${currdir}
+
