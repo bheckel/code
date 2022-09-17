@@ -74,6 +74,14 @@ sudo vi /var/lib/docker/volumes/myvol/_data/foo  # ...but we saved the file crea
 2022-09-03 01:05:03 sudo docker images
 2022-09-03 01:05:34 sudo docker run -it ubuntu-bob bash
 
+# Has git etc installed after  sudo docker run -it ubuntu bash
+2022-09-13 21:50:54 sudo docker start -a -i peaceful_wilson
+2022-09-13 21:54:56 sudo docker commit peaceful_wilson
+2022-09-13 21:55:04 sudo docker images  # REPOSITORY:<none>  TAG:<none>  IMAGE ID:8d7ec8de6c83
+2022-09-13 21:55:05 sudo docker login --username rshdev
+2022-09-13 21:56:29 sudo docker tag 8d7ec8de6c83 rshdev/bob_peaceful_wilson
+2022-09-13 21:56:29 sudo docker run -it rshdev/bob_peaceful_wilson
+
 ---
 
 # Restart last container
@@ -110,7 +118,6 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 2021-01-04 12:47:59 sudo docker images
 2021-01-04 12:48:06 sudo docker ps -a
 2021-01-04 12:49:04 sudo docker login --username rshdev
-# enter guid from dockerhub.com
 2021-01-04 12:50:31 sudo docker push rshdev/catnip
 # Now it runs from anywhere
 2021-01-04 12:54:37 sudo docker run -p 8888:5000 rshdev/catnip
