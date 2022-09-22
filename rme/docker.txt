@@ -78,9 +78,11 @@ sudo vi /var/lib/docker/volumes/myvol/_data/foo  # ...but we saved the file crea
 2022-09-13 21:50:54 sudo docker start -a -i peaceful_wilson
 2022-09-13 21:54:56 sudo docker commit peaceful_wilson
 2022-09-13 21:55:04 sudo docker images  # REPOSITORY:<none>  TAG:<none>  IMAGE ID:8d7ec8de6c83
-2022-09-13 21:55:05 sudo docker login --username rshdev
 2022-09-13 21:56:29 sudo docker tag 8d7ec8de6c83 rshdev/bob_peaceful_wilson
-2022-09-13 21:56:29 sudo docker run -it rshdev/bob_peaceful_wilson
+2022-09-13 21:55:05 sudo docker login --username rshdev
+2022-09-13 21:55:06 sudo docker push rshdev/bob_peaceful_wilson 
+# go to https://labs.play-with-docker.com/
+docker run -it rshdev/bob_peaceful_wilson
 
 ---
 
