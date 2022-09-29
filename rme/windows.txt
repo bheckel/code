@@ -1,3 +1,12 @@
+/mnt/c/Users/bheck/.wslconfig
+[wsl2]
+guiApplications=false
+
+in cmd:
+wsl --reboot
+
+---
+
 In admin cmd:
 wsl.exe --install
 reboot
