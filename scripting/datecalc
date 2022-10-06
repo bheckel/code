@@ -6,12 +6,13 @@
 #           start date.
 #
 #  Created: Fri 10 Sep 1999 14:58:24 (Bob Heckel)
-# Modified: Tue 10 Jul 2012 08:44:00 (Bob Heckel)
+# Modified: 04-Oct-2022 (Bob Heckel)
 ##############################################################################
 use Time::Local;  # for timelocal()
 
 use constant SECSPERDAY =>  24 * 60 * 60;
 
+print "\nDEPRECATED: use e.g. date --date='-900 days'\n\n";
 Usage() if ( !@ARGV || $ARGV[0] =~ /-+h.*/ );
 
 # Start date or days into future, if any.

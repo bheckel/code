@@ -57,7 +57,8 @@
 
 ---
 
-create or replace PROCEDURE xremoved IS
+--  set serveroutput on size 100000
+declare
   TYPE t_associativeVarcharTable IS TABLE OF VARCHAR2(32767) INDEX BY VARCHAR2(200);
   v_columnSuffixTable  t_associativeVarcharTable;
 
@@ -65,18 +66,15 @@ create or replace PROCEDURE xremoved IS
   TYPE t_varchar2List IS TABLE OF t_varchar2Table INDEX BY VARCHAR2(200);
   v_joinColumnTable  t_varchar2List;
 
-  v_today              VARCHAR2(11) := TO_CHAR(SYSDATE, 'DDMONYY');
+  v_today  VARCHAR2(11) := TO_CHAR(SYSDATE, 'DDMONYY');
 begin
   v_columnSuffixTable('PRODUCT_RELEASE_' || v_today) := 'pr';    
   DBMS_OUTPUT.put_line(v_columnSuffixTable('PRODUCT_RELEASE_' || v_today));  -- pr
   
+  -- Loop a hardcoded list of strings
   v_joinColumnTable('PRODUCT_RELEASE_' || v_today) := t_varchar2Table('SOFTWARE_PRODUCT_ID','FOO');  
   DBMS_OUTPUT.put_line(v_joinColumnTable('PRODUCT_RELEASE_' || v_today)(2));  -- FOO
 end;
---  set serveroutput on size 100000
--- exec xremoved;
--- drop procedure xremoved
--- Loop a hardcoded list of strings
 
 ---
 
@@ -429,7 +427,7 @@ end;
 
 -- Compare three approaches to load populate fill a collection using BULK COLLECT:
 
--- 1.  EXECUTE IMMEDIATE BULK COLLEC INTO specific defined numberTables
+-- 1.  EXECUTE IMMEDIATE BULK COLLECT INTO specific defined numberTables
 create or REPLACE PACKAGE bob as
   PROCEDURE cae_auto_assign;
 end;
