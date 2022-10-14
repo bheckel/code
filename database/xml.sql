@@ -84,3 +84,25 @@ begin
   dbms_output.put_line('l_rows.col1: '||l_rows.col1);
   close c_xmltab;
 end;
+
+---
+
+--  set serverout on size 100000
+DECLARE
+  in_ids  varchar2(999) := '123,456';
+  in_id   number;
+  
+  CURSOR ids_c IS
+    SELECT in_id
+      FROM ( SELECT TO_NUMBER(COLUMN_VALUE) in_id FROM XMLTABLE(TRIM(in_ids)) );
+
+BEGIN
+  for r in ids_c loop
+   dbms_output.put_line(r.in_id);
+  end loop;
+  
+EXCEPTION
+  WHEN OTHERS THEN
+    dbms_output.put_line(SQLCODE || ':' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+END;
+

@@ -1,7 +1,8 @@
 #!/bin/bash
 
+# Modified: 14-Oct-2022 (Bob Heckel)
 # ln -s ~/code/misccode/jira.sh ~/bin
-# jira.sh 33479 existingcust_flaginout
+# jira.sh 33479 my_description
 
 JIRA=${1:-99999999}
 DESC=${2:-untitled}
@@ -9,8 +10,13 @@ DESC=${2:-untitled}
 TAG=${JIRA}_${DESC}
 
 echo 'checking if already exists...'
-cd ~/onedrive && find . -maxdepth 1 -name "*${JIRA}*"
-echo '...done'
+#cd ~/onedrive && find . -maxdepth 1 -name "*${JIRA}*"
+if [ `find -L $HOME/onedrive -maxdepth 1 -name "*${JIRA}*" | wc -l` -gt 0 ];then
+  echo "${JIRA} already exists. Exiting."
+  exit
+else
+  echo '...done'
+fi
 
 mkdir -p ~/onedrive/orion-${TAG} && cd ~/onedrive/orion-${TAG} && \
 cp -i ~/onedrive/template_jira.sql ~/onedrive/orion-${TAG}/${JIRA}.sql && \
