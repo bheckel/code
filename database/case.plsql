@@ -146,3 +146,12 @@ SELECT DB_LINK, USERNAME, HOST,
       end new_db_link
 FROM user_DB_LINKS
 ;
+
+---
+
+    CASE functionid
+      WHEN ACCOUNT_ASSIGNMENTS_TYPES.err_manager THEN dto_content := dto_content || ',"errManager":true';
+      WHEN ACCOUNT_ASSIGNMENTS_TYPES.acct_IP_owner THEN dto_content := dto_content || ',"accountIpOwner":true';
+      WHEN ACCOUNT_ASSIGNMENTS_TYPES.acct_IP_non_owner THEN dto_content := dto_content || ',"accountIpNonOwner":true';
+    END CASE;
+
