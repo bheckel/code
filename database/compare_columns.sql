@@ -1,7 +1,9 @@
--- Modified: 16-May-2022 (Bob Heckel)
+--  Created: 16-May-2022 (Bob Heckel)
+-- Modified: 04-Nov-2022 (Bob Heckel)
 
 ---
 
+-- What differs?
 select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'asp'
 minus
 select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'asp_2021'
@@ -10,6 +12,10 @@ select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = '
 minus
 select COLUMN_NAME, DATA_LENGTH FROM all_tab_columns WHERE lower(table_name) = 'asp'
 ; --col only on asp_2021
+
+-- Better, gives DDL to run
+-- set long 99999
+select DBMS_METADATA_DIFF.compare_alter('TABLE','MKC_REVENUE_FULL','MKC_REVENUE_FULL',network_link2=>'ATLAS_TEST_RW') x from dual;
 
 ---
 
@@ -102,3 +108,4 @@ BEGIN
     END IF;
   END LOOP;
 END;
+

@@ -1,5 +1,5 @@
 
--- Modified: 08-Feb-2022 (Bob Heckel)
+-- Modified: 01-Nov-2022 (Bob Heckel)
 -- Execution plan. Query plan. SQL Tuning. Autotrace.
 -- See also indexes.sql, devgym_create_toy_objects.sql
 
@@ -11,7 +11,8 @@
 --  set pagesize 0
 --ALTER SESSION SET statistics_level = all;  --not sure it matters
 --SELECT s.osuser, O.OBJECT_NAME, S.SID, S.SERIAL#, P.SPID, S.PROGRAM, SQ.SQL_FULLTEXT, S.LOGON_TIME FROM V$LOCKED_OBJECT L, DBA_OBJECTS O, V$SESSION S, V$PROCESS P, V$SQL SQ WHERE L.OBJECT_ID = O.OBJECT_ID AND L.SESSION_ID = S.SID AND S.PADDR = P.ADDR AND S.SQL_ADDRESS = SQ.ADDRESS and osuser in('oradba','bheck','oracle','ecott') /* and SQL_FULLTEXT like 'UPDATE%_SS FIN%' ;-- 'UPDATE GIDB_COUNTRY_ISO_SS%'*/ order by 1; 
-select SID, SERIAL#, USERNAME, STATUS, OSUSER, MACHINE, PROGRAM, SQL_ID, SQL_EXEC_START, PREV_SQL_ID, PREV_EXEC_START, LOGON_TIME, LAST_CALL_ET, CLIENT_IDENTIFIER, STATE, SERVICE_NAME, trunc(last_call_et/ 3600) as Hours from v$session where username is not null order by SQL_EXEC_START desc nulls last;
+select SID, SERIAL#, USERNAME, STATUS, OSUSER, MACHINE, PROGRAM, SQL_ID, SQL_EXEC_START, PREV_SQL_ID, PREV_EXEC_START, LOGON_TIME, LAST_CALL_ET, CLIENT_IDENTIFIER, STATE, SERVICE_NAME, trunc(last_call_et/ 3600) as Hours
+  from v$session where username is not null order by SQL_EXEC_START desc nulls last;
 --SELECT * FROM v$sql WHERE sql_id='gvhhm0q3n6n2k';
 --SELECT * FROM v$sql WHERE lower(sql_text) like '%photo%';
 --Select plan_table_output From table(dbms_xplan.display_cursor('gvhhm0q3n6n2k',null,'allstats +cost +bytes'));
@@ -28,8 +29,9 @@ select * from table(dbms_xplan.display_cursor('gvhhm0q3n6n2k',format => 'IOSTATS
 -- is very infrequent (because it locks).
 CREATE INDEX CONTACT_EMP_EVENT_CE_IX on CONTACT_EMPLOYEE_EVENT(CONTACT_EMPLOYEE_ID);
 CREATE BITMAP INDEX CONTACT_EMP_EVENT_NE_IX on CONTACT_EMPLOYEE_EVENT(NEW_EVENT);
-create index M_SUBCOMPGRP_FUNCTION_IX on M_SUBCOMP (LOWER(M_SUBCOMP_GROUP_NAME));
+CREATE INDEX M_SUBCOMPGRP_FUNCTION_IX on M_SUBCOMP (LOWER(M_SUBCOMP_GROUP_NAME));
 
+---
 
 SELECT * FROM SYS.user_indexes WHERE table_name = 'EMAIL_MESSAGES';  -- does a B-tree (NORMAL) index exist for this table?
 
@@ -45,7 +47,7 @@ select sum(email_messages_id) from email_messages;  -- FULL SCAN but no table ac
 
 ---
 
--- Use ALTER SESSION SET statistics_level = all; if not using hint
+-- Use ALTER SESSION SET statistics_level = all; if not using this hint
 select /*+ gather_plan_statistics */
        colour, count(*) 
 from   bricks
@@ -73,21 +75,6 @@ Plan hash value: 2025330397
 |   2 |   TABLE ACCESS STORAGE FULL| BRICKS |      1 |   2250 |   2250 |00:00:00.01 |      42 |  1025K|  1025K|          |
 --------------------------------------------------------------------------------------------------------------------------
 */
-
----
-
-EXPLAIN PLAN FOR
-  SELECT *
-  FROM email_messages t 
---WHERE  t.execute_time BETWEEN to_date('2019-01-16:09:00','YYYY-MM-DD:HH24:MI') AND to_date('2019-01-16:11:00','YYYY-MM-DD:HH24:MI'); --debug 
-  WHERE t.actual_updated > (SYSTIMESTAMP - INTERVAL '444' minute);
- 
-select plan_table_output
---from table(dbms_xplan.display('plan_table',null,'basic'));
---from table(dbms_xplan.display('plan_table',null,'basic +predicate +cost'));
-from table(dbms_xplan.display('plan_table',null,'typical'));
-
-ROLLBACK;
 
 ---
 
@@ -410,7 +397,7 @@ Predicate Information (identified by operation id):
 
 ---
 
-
+--DEPRECATED
 create table x (a number(10) not null);
 
 insert into x select level from dual connect by level < 500;
@@ -479,7 +466,8 @@ select /*+ gather_plan_statistics */destination_airport_code
  where  departure_airport_code = 'LHR'
    and  flight_datetime < timestamp '2021-01-05 00:00:00';
  
-select * from table(dbms_xplan.display_cursor(format => 'IOSTATS LAST  +cost +bytes'));
+--select * from table(dbms_xplan.display_cursor(NULL, NULL, 'ALLSTATS LAST'));
+select * from table(DBMS_XPLAN.display_cursor(format => 'IOSTATS LAST  +cost +bytes'));
 
 create index fli1_i on flights ( departure_airport_code );--no effect
 create index fli2_i on flights ( destination_airport_code );--no effect
@@ -499,9 +487,8 @@ create index fli4_i on flights ( departure_airport_code, flight_datetime, destin
 
 ---
 
---  set pagesize 0
-ALTER SESSION SET statistics_level = all;
-select SID, SERIAL#, USERNAME, STATUS, OSUSER, MACHINE, PROGRAM, SQL_ID, SQL_EXEC_START, PREV_SQL_ID, PREV_EXEC_START, LOGON_TIME, LAST_CALL_ET, CLIENT_IDENTIFIER, STATE, SERVICE_NAME, trunc(last_call_et/ 3600) as Hours from v$session where username is not null order by SQL_EXEC_START desc nulls last;
-SELECT * FROM v$sql WHERE sql_id='gvhhm0q3n6n2k';
-SELECT * FROM v$sql WHERE lower(sql_text) like '%kmc%';
-Select plan_table_output From table(dbms_xplan.display_cursor(null,null,'allstats +cost +bytes'));
+-- set pagesize 0
+select  /*+ gather_plan_statistics */ count(1) from rpt_strategic_accounts;
+SELECT * FROM v$sqlstats WHERE lower(sql_text) like '%count(1) from rpt_strategic%' and last_active_time > sysdate-interval '1' minute;--57fa0bfh942nu
+SELECT * From table(dbms_xplan.display_cursor('57fa0bfh942nu',null,'allstats last +cost'));
+
