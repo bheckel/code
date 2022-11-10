@@ -8,6 +8,22 @@
 
 ---
 
+create table mytable (mycolumn) as
+ select nullif(level,10000)
+   from dual
+connect by level <= 10000
+/
+create index i1 on mytable(mycolumn,1)
+/
+exec dbms_stats.gather_table_stats(user,'mytable',cascade=>true);
+
+select /*+ gather_plan_statistics */ * from mytable where mycolumn is null;
+
+select * from table(dbms_xplan.display_cursor(null,null,'allstats last'));
+--or set autotrace traceonly prior to the query execution
+
+---
+
 --  set pagesize 0
 --ALTER SESSION SET statistics_level = all;  --not sure it matters
 --SELECT s.osuser, O.OBJECT_NAME, S.SID, S.SERIAL#, P.SPID, S.PROGRAM, SQ.SQL_FULLTEXT, S.LOGON_TIME FROM V$LOCKED_OBJECT L, DBA_OBJECTS O, V$SESSION S, V$PROCESS P, V$SQL SQ WHERE L.OBJECT_ID = O.OBJECT_ID AND L.SESSION_ID = S.SID AND S.PADDR = P.ADDR AND S.SQL_ADDRESS = SQ.ADDRESS and osuser in('oradba','bheck','oracle','ecott') /* and SQL_FULLTEXT like 'UPDATE%_SS FIN%' ;-- 'UPDATE GIDB_COUNTRY_ISO_SS%'*/ order by 1; 

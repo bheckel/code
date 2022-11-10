@@ -1,3 +1,4 @@
+
 SQL Developer
 Help -> Check for Updates
 Install from Local File
@@ -45,6 +46,15 @@ connect admin@rshdb1_low
 connect co@rshdb1_low
 @co_ddl
 @co_dml
+
+---
+
+09-Nov-22
+$ sql /nolog 
+set cloudconfig wallet.zip
+--show tns   
+connect admin@rshdb1_low
+nqzvaShpxvatfuvg8!
 
 ---
 

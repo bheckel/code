@@ -1,3 +1,10 @@
+-- Make only the 100th row (of 100 rows) NULL
+ select nullif(level,100)
+   from dual
+connect by level <= 100;
+
+---
+
 select level x, 
        case ceil( level / 25 )
          when 1 then 'blue'

@@ -1,16 +1,6 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <rows>
    <row>
-      <key>ab</key>
-      <value>-- set serveroutput on size 10000
-declare
-  x number;
-  y varchar2(99);
-begin
-  [(parameter)]
-end;</value>
-   </row>
-   <row>
       <key>col</key>
       <value>column [(parameter)] format a13</value>
    </row>
@@ -30,10 +20,6 @@ end;</value>
       <value>CREATE OR REPLACE PACKAGE [(parameter)] AUTHID DEFINER IS</value>
    </row>
    <row>
-      <key>ct</key>
-      <value>CREATE TABLE [(parameter)] ( [(parameter)] );</value>
-   </row>
-   <row>
       <key>ctas</key>
       <value>CREATE TABLE zbob AS SELECT * FROM [(parameter)]</value>
    </row>
@@ -48,6 +34,10 @@ end;</value>
    <row>
       <key>del</key>
       <value>DELETE FROM  [(parameter)]  WHERE  [(parameter)]</value>
+   </row>
+   <row>
+      <key>ff</key>
+      <value>FETCH FIRST 5 ROWS ONLY</value>
    </row>
    <row>
       <key>kkk</key>

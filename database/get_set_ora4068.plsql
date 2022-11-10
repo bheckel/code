@@ -1,4 +1,94 @@
 -- Modified: 11-Oct-2022 (Bob Heckel)
+
+---
+
+-- Adapted: 09-Nov-2022 (Bob Heckel-- https://connor-mcdonald.com/2022/11/09/from-stateful-to-stateless-pl-sql/)
+
+--
+-- Session 1
+--
+-- set serveroutput on size 500000
+create or replace package PKG is
+  procedure P;
+end;
+/
+create or replace package body PKG is
+  my_global_var int;  -- must be located here to hold the state (the count) across calls to pkg.p
+  
+  procedure P is
+    begin
+      my_global_var := nvl(my_global_var,0) + 1;
+      dbms_output.put_line('value='||my_global_var);
+    end;
+end;
+/
+exec pkg.p;
+exec pkg.p;
+exec pkg.p;
+
+--
+-- Session 2 makes a code change
+--
+-- set serveroutput on size 500000
+create or replace package body PKG is
+  my_global_var int;
+  
+  procedure P is
+    begin
+      my_global_var := nvl(my_global_var,0) + 1;
+      dbms_output.put_line('variable='||my_global_var);
+    end;
+end;
+/
+--
+-- Session 1 gets a shock!
+--
+exec pkg.p; 
+--ORA-04068: existing state of packages has been discarded
+
+--FIXED:
+
+--
+-- Session 1
+--
+create or replace package PKG_TYPES is
+    my_global_var int;
+end;
+/
+create or replace package PKG is
+  procedure P;
+end;
+/
+create or replace package body PKG is
+  procedure P is
+    begin
+      PKG_TYPES.my_global_var := nvl(PKG_TYPES.my_global_var,0) + 1;
+      dbms_output.put_line('value='||PKG_TYPES.my_global_var);
+    end;
+end;
+/
+exec pkg.p;
+exec pkg.p;
+exec pkg.p;
+
+--
+-- Session 2 makes a code change
+--
+create or replace package body PKG is
+  procedure P is
+    begin
+      PKG_TYPES.my_global_var := nvl(PKG_TYPES.my_global_var,0) + 1;
+      dbms_output.put_line('variable='||PKG_TYPES.my_global_var);
+    end;
+end;
+/
+--
+-- Session 1 is unaffected
+--
+exec pkg.p; 
+
+---
+
 -- https://markhoxey.wordpress.com/2013/09/17/avoiding-ora-04068-existing-state-of-packages-has-been-discarded/ 
 
 -- Example failure:
