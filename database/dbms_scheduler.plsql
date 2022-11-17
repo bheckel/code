@@ -483,3 +483,60 @@ BEGIN
     auto_drop  => false,
     comments => 'bheck');
 END;
+
+---
+
+-- Run only one job at a time, no overlapping (which could cause deadlocks)
+--  set serveroutput on size 500000
+DECLARE
+  l_jobs_running_count NUMBER;
+  l_dbms_job_action    VARCHAR2(500);
+  l_dbms_job_name      VARCHAR2(500);
+  l_dbms_job_comment   VARCHAR2(1000);
+  l_dbms_job_prefix    VARCHAR2(30) := 'ASP_REFRESH_';
+  l_refresh_sp_name    VARCHAR2(50) := 'ASP_PKG.MERGE_ASP_TERRITORY_PER_EMP';
+
+  lRequestId VARCHAR2(500) := 'ASP_PKG.MERGE_ASP_TERRITORY_PER_EMP - ' ||
+                             TO_CHAR(sysdate, 'YYYYMMDD HH24:MI:SS');
+  PRAGMA AUTONOMOUS_TRANSACTION;
+
+  BEGIN
+    SELECT COUNT(1)
+      INTO l_jobs_running_count
+      FROM USER_SCHEDULER_RUNNING_JOBS
+     WHERE JOB_NAME LIKE l_dbms_job_prefix || '%';
+
+    IF (l_jobs_running_count > 0) THEN
+      -- A refresh jobs is already running. No need to add one more.
+      RETURN;
+    END IF;
+
+    l_dbms_job_name    := DBMS_SCHEDULER.generate_job_name(l_dbms_job_prefix);
+    l_dbms_job_comment := 'Job (' || l_dbms_job_name ||
+                          ') for refresh of  ASP_TERRITORY_PER_EMPLOYEE Table.';
+    l_dbms_job_action  := 'begin dbms_session.sleep(30); dbms_output.put_line(''ok''); end;';
+
+    DBMS_SCHEDULER.create_job(job_name   => l_dbms_job_name,
+                              job_type   => 'PLSQL_BLOCK',
+                              job_action => l_dbms_job_action,
+                              end_date   => NULL,
+                              enabled    => TRUE,
+                              auto_drop  => TRUE,
+                              job_class  => MAINT_TYPES.ROION_JOB_CLASS,
+                              comments   => l_dbms_job_comment);
+
+    dbms_output.put_line('x'||l_jobs_running_count); 
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      e_mail_message('replies-disabled@as.com',
+                     'bob.heckel@as.com',
+                     '[SP] Error in ' || l_refresh_sp_name,
+                     'Error running ' || l_refresh_sp_name || SQLCODE || ':' ||
+                     SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+
+      RAISE_APPLICATION_ERROR(-20700,
+                              l_refresh_sp_name || SQLCODE || ':' ||
+                              SQLERRM || ': ' ||
+                              DBMS_UTILITY.format_error_backtrace);
+END;

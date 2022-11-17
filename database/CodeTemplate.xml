@@ -24,10 +24,6 @@
       <value>CREATE TABLE zbob AS SELECT * FROM [(parameter)]</value>
    </row>
    <row>
-      <key>cv</key>
-      <value>CREATE OR REPLACE VIEW [(parameter)] AUTHID DEFINER IS</value>
-   </row>
-   <row>
       <key>dbo</key>
       <value>DBMS_OUTPUT.put_line();</value>
    </row>
@@ -36,7 +32,7 @@
       <value>DELETE FROM  [(parameter)]  WHERE  [(parameter)]</value>
    </row>
    <row>
-      <key>ff</key>
+      <key>fff</key>
       <value>FETCH FIRST 5 ROWS ONLY</value>
    </row>
    <row>
@@ -44,7 +40,7 @@
       <value>KMC_REVENUE_FULL</value>
    </row>
    <row>
-      <key>ob</key>
+      <key>obb</key>
       <value>ORDER BY 1 DESC</value>
    </row>
    <row>
@@ -52,15 +48,15 @@
       <value>--  SET DEFINE OFF</value>
    </row>
    <row>
-      <key>ss</key>
-      <value>SELECT * FROM [(parameter)];</value>
-   </row>
-   <row>
-      <key>ssc</key>
+      <key>scc</key>
       <value>SELECT COUNT(1) FROM [(parameter)];</value>
    </row>
    <row>
-      <key>svo</key>
+      <key>sss</key>
+      <value>SELECT * FROM [(parameter)];</value>
+   </row>
+   <row>
+      <key>svv</key>
       <value>--  set serveroutput on size 500000</value>
    </row>
    <row>
@@ -68,7 +64,7 @@
       <value>UPDATE [(parameter)] SET [(parameter)] WHERE [(parameter)];</value>
    </row>
    <row>
-      <key>ww</key>
+      <key>www</key>
       <value>WHERE [(parameter)]</value>
    </row>
 </rows>

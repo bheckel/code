@@ -1,10 +1,43 @@
 
--- Modified: 01-Nov-2022 (Bob Heckel)
+-- Modified: 16-Nov-2022 (Bob Heckel)
 -- Execution plan. Query plan. SQL Tuning. Autotrace.
--- See also indexes.sql, devgym_create_toy_objects.sql
+-- See also indexes.sql, devgym_create_toy_objects.sql,
+-- https://blogs.oracle.com/connect/post/a-higher-level-perspective-on-sql-tuning-part-3
 
 -- The B-tree traversal is the first power of indexing.
 -- Clustering is the second power of indexing.
+
+---
+
+-- You will need SELECT or READ privilege on views V$SQL_PLAN_STATISTICS_ALL, V$SQL, and V$SQL_PLAN
+
+sElEcT /*+gather_plan_statistics*/ count(1) from rpt_account where account_id=436139;
+select sql_id FROM v$sql WHERE sql_text like 'sElEcT %' ORDER BY LAST_LOAD_TIME DESC;
+select * from   table(dbms_xplan.display_cursor('2pv5ufk1w1g00', format => 'ALLSTATS LAST +cost +bytes'));
+
+-- What if all the lines in the execution plan are nicely aligned in terms of
+-- estimated versus actual? This would indicate that the statistics provided to
+-- the optimizer closely aligned with the reality of the data in the tables
+-- within the query and that the plan is very likely the best plan possible for
+-- that SQL statement. That is little comfort to the database developer who is
+-- still faced with the task of tuning the SQL statement. But knowing that the
+-- plan is optimal means that the tuning focus can switch to influencing the
+-- performance of the SQL statement outside the sphere of the optimizer. This
+-- is the time to consider structural changes to the physical database, and the
+-- changes could include options such as:
+-- * Adding (or removing) indexes to change access methods for tables
+-- * Compressing data to make it more efficient to scan
+-- * Changing the table structure—for example, via partitioning
+-- * Adding resources to the query via parallel slaves
+-- * Making more existing resources available—for example, running the query at a different time
+-- * Adding resources to the entire database machine
+-- So even when the optimizer plan is optimal, there is still value in the
+-- DBMS_XPLAN.DISPLAY_CURSOR or Real-Time SQL Monitoring output. The other
+-- reporting columns, such as “Database Time” and “IO Requests,” can help you
+-- make decisions on where structural changes will decrease the execution time
+-- the most.
+-- For example, if most of the execution time is spent scanning the JOB_HISTORY
+-- table, there will be little possible benefit to compressing the EMPLOYEE table.
 
 ---
 
@@ -55,7 +88,7 @@ SELECT * FROM SYS.user_ind_statistics where table_name='EMAIL_MESSAGES';
 
 SELECT * FROM email_messages WHERE created>sysdate-1;
 
-SELECT * FROM v$sql WHERE sql_text like 'SELECT * FROM email_messages WHERE created%';  -- 5ax1juqfgxhnw
+SELECT sql_id FROM v$sql WHERE sql_text like 'SELECT * FROM email_messages WHERE created%';  -- 5ax1juqfgxhnw
 -- Explain Plan is hypothetical, this is actual:
 SELECT * FROM v$sql_plan WHERE sql_id = '5ax1juqfgxhnw';  -- did index get used?: BY INDEX ROWID or RANGE SCAN etc.
 
