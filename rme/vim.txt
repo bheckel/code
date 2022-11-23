@@ -1,3 +1,11 @@
+12-Nov-22 Gvim on Win11 running Cygwin:
+
+$ vi /cygdrive/c/Users/bheck/vim/_vimrc
+
+"source \\wsl.localhost\Ubuntu\home\bheckel\dotfiles\_vimrc
+source c:\cygwin64\home\bheck\dotfiles\_vimrc
+
+---
 
 # 05-Dec-21 https://gist.github.com/Pompeu/c711b6e35f3ae5deb5e81a938c3cc507
 
