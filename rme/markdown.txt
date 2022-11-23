@@ -1,3 +1,30 @@
+Quick Reference Sample
+========================
+
+This is a title.
+-------------------
+Ordered list:
+
+1. Ordered list item one.
+2. Ordered list item two.
+
+Unordered list:
+
+- **Text in bold style**.
+- *Italicized text* and some text with a [link].
+- *~Italicized, strike through text~*.
+- <Hidden comment> Text with a hidden comment.
+
+Formatted section:
+
+> The design goal for formatting syntax is to make it as readable as possible.
+> The idea is that a formatted document should be publishable as plain text,
+> without looking like it's been marked up with tags or formatting instructions.
+
+ [link]: https://oracle.com
+
+..........................................................................................................................................................
+
 # Typography 
 
 ## Headings

@@ -1,5 +1,16 @@
 --  Created: 16-May-2022 (Bob Heckel)
--- Modified: 04-Nov-2022 (Bob Heckel)
+-- Modified: 21-Nov-2022 (Bob Heckel)
+
+---
+
+--only here
+SELECT * FROM  mkc_dates
+minus
+SELECT * FROM  mkc_dates@tlas_prod_rw;
+--only there
+SELECT * FROM  mkc_dates@tlas_prod_rw
+minus
+SELECT * FROM  mkc_dates;
 
 ---
 

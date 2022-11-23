@@ -81,7 +81,7 @@ sudo vi /var/lib/docker/volumes/myvol/_data/foo  # ...but we saved the file crea
 2022-09-13 21:56:29 sudo docker tag 8d7ec8de6c83 rshdev/bob_peaceful_wilson
 2022-09-13 21:55:05 sudo docker login --username rshdev
 2022-09-13 21:55:06 sudo docker push rshdev/bob_peaceful_wilson 
-# go to https://labs.play-with-docker.com/
+# test sandbox online go to https://labs.play-with-docker.com/
 docker run -it rshdev/bob_peaceful_wilson
 
 ---

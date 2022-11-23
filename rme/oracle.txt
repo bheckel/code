@@ -1,3 +1,27 @@
+chmod 600 .ssh/ssh-key-2022-11-21.key
+ssh -i .ssh/ssh-key-2022-11-21.key opc@129.158.230.148
+export TERM=xterm
+sudo yum install httpd -y
+sudo apachectl start
+sudo systemctl enable httpd
+sudo apachectl configtest
+sudo firewall-cmd --permanent --zone=public --add-service=http
+sudo firewall-cmd --reload
+sudo firewall-cmd --zone=public --list-services  # should also see http
+sudo netstat -tulnp | grep httpd  # should see httpd
+sudo vi /var/www/html/index.htm
+
+VCN -> Public Subnet SpeC -> Default Security List for rshn -> Add Ingress
+Source Type: CIDR
+Source CIDR: 0.0.0.0/0
+IP Protocol: TCP
+Source Port Range: All
+Destination Port Range: 80
+
+webserver
+http://129.158.230.148/
+
+---
 
 SQL Developer
 Help -> Check for Updates
@@ -31,7 +55,7 @@ con_name ORCL
 OCI 
 
 -- Password change                             new
-ALTER USER unit_test_repos IDENTIFIED BY "ESp5l@whgRS46hY" REPLACE "vL6iXcs@n882!Yp";
+ALTER USER unit_test_repos IDENTIFIED BY "Sbe2aqhfre8!" REPLACE "RFc5y@jutEF46uL";
 
 # Install Customer Orders sample schema 04-Dec-20
 $ git clone https://github.com/oracle/db-sample-schemas.git
@@ -49,12 +73,12 @@ connect co@rshdb1_low
 
 ---
 
-09-Nov-22
+22-Nov-22
 $ sql /nolog 
 set cloudconfig wallet.zip
 --show tns   
 connect admin@rshdb1_low
-nqzvaShpxvatfuvg8!
+GuvfBar4znva!
 
 ---
 
