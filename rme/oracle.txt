@@ -11,6 +11,8 @@ sudo firewall-cmd --zone=public --list-services  # should also see http
 sudo netstat -tulnp | grep httpd  # should see httpd
 sudo vi /var/www/html/index.htm
 
+sudo httpd -v
+
 VCN -> Public Subnet SpeC -> Default Security List for rshn -> Add Ingress
 Source Type: CIDR
 Source CIDR: 0.0.0.0/0
@@ -20,6 +22,21 @@ Destination Port Range: 80
 
 webserver
 http://129.158.230.148/
+
+sudo vim -u .vimrc index.html
+scp -i ~/.ssh/ssh-key-2022-11-21.key opc@129.158.230.148:index.html .
+
+sudo dnf update
+sudo systemctl restart httpd
+
+# metta
+cat .ssh/id_rsa.pub | ssh -i ~/.ssh/ssh-key-2022-11-21.key opc@129.158.230.148 'cat - >> ~/.ssh/authorized_keys'
+
+sudo vim -u /home/opc/.vimrc /etc/httpd/conf/httpd.conf
+sudo vim -u /home/opc/.vimrc /etc/httpd/logs/error_log
+sudo vim -u /home/opc/.vimrc /var/www/cgi-bin/printenv.pl
+
+scp opc@129.158.230.148:/etc/httpd/conf/httpd.conf .
 
 ---
 

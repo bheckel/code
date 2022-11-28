@@ -1,4 +1,5 @@
-# Modified: 23-Feb-2022 (Bob Heckel)
+# Modified: 27-Nov-2022 (Bob Heckel)
+# add https?://docs.google.com/*
 map l goForward
 map h goBack
 map q removeTab
