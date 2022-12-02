@@ -85,3 +85,11 @@ FROM dba_lock_internal
 WHERE    
    mode_requested <> 'None'    
    and mode_requested <> mode_held
+
+---
+
+CREATE OR REPLACE PROCEDURE "UNIT_TEST_REPOS"."UNLOCKME" as 
+BEGIN
+  execute immediate 'alter user unit_test_repos account unlock';
+END;
+
