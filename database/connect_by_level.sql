@@ -28,3 +28,10 @@ connect by level <= 10
          9 blue  
         10 blue 
 */        
+
+---
+
+-- Want two columns with 10 of each number from 1 to 10. I.e. 1K rows.
+select t.*
+  from ( select level x, level y from dual connect by level <= 100 ) t,
+       ( select level from dual connect by level <= 10 );

@@ -1,4 +1,5 @@
--- Adapted: 11-Feb-2022 (Bob Heckel--https://connor-mcdonald.com/2022/02/11/vsession_longops-and-parallel-query/) 
+--  Adapted: 11-Feb-2022 (Bob Heckel--https://connor-mcdonald.com/2022/02/11/vsession_longops-and-parallel-query/) 
+-- Modified: 30-Nov-2022 (Bob Heckel)
 
 create table bigtab as select d.* from dba_objects d, ( select 1 from dual connect by level <= 1000 );
 
@@ -70,3 +71,13 @@ alter table user_likes add constraint user_likes_pk primary key ( user_id, post_
 
 CREATE INDEX user_likes_ix on user_likes ( post_id, user_id , dt) PARALLEL 16 NOLOGGING;
 ALTER INDEX user_likes_ix NOPARALLEL LOGGING; 
+
+---
+
+-- create 1 billion record table
+create table tx nologging pctfree 0 tablespace demo as
+  select d.*
+    from ( select rownum x, rownum y from dual connect by level <= 100000 ) d,
+         ( select 1 from dual connect by level <= 10000 )
+;
+
