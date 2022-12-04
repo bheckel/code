@@ -1,3 +1,26 @@
+
+Install docker on Oracle Linux 8 
+2022-12-04 19:56:36 dnf install -y dnf-utils zip unzip
+2022-12-04 19:56:41 sudo dnf install -y dnf-utils zip unzip
+2022-12-04 19:58:23 sudo dnf update
+2022-12-04 20:01:30 sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+2022-12-04 20:01:46 sudo dnf remove -y runc
+2022-12-04 20:02:06 sudo dnf install -y docker-ce --nobest
+2022-12-04 20:16:29 sudo systemctl enable docker.service
+2022-12-04 20:16:41 sudo systemctl start docker.service
+2022-12-04 20:17:04 sudo systemctl status docker.service
+2022-12-04 20:17:52 sudo docker info
+2022-12-04 20:18:06 sudo docker version
+2022-12-04 20:19:18 sudo useradd docker_user
+2022-12-04 20:21:37 echo "alias docker=\"sudo /usr/bin/docker\"" #>> /home/docker_user/.bash_profile
+2022-12-04 20:21:47 alias docker="sudo /usr/bin/docker"
+2022-12-04 20:26:54 sudo vi /etc/sudoers
+2022-12-04 20:27:45 su - docker_user
+2022-12-04 20:28:24 sudo docker ps
+2022-12-04 20:28:33 docker ps
+
+---
+
 23-Jun-22 on metta WSL2 https://dev.to/bowmanjd/install-docker-on-windows-wsl-without-docker-desktop-34m9
 
 sudo apt install --no-install-recommends apt-transport-https ca-certificates curl gnupg2
@@ -162,7 +185,7 @@ sudo docker search oracle
 
 ---
 
-# Install docker
+# Install docker Ubuntu
  2021-01-02 11:00:43 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
  2021-01-02 11:01:03 sudo apt-key fingerprint 0EBFCD88
  2021-01-02 11:13:14 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
