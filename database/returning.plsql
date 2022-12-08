@@ -1,4 +1,7 @@
--- Modified: Tue, Apr 23, 2019 12:47:11 PM (Bob Heckel) 
+--  Created: 23-Apr-2019 (Bob Heckel) 
+-- Modified: 08-Dec-2022 (Bob Heckel)
+--
+-- See also insert_new_record_correlated.sql
 
 -- When you need to get info back after a DML operation without an extra context switch like this:
 DECLARE 
@@ -114,19 +117,18 @@ END;
 
 ---
 
--- Aggregates
+-- Aggregated return value
 DECLARE
    l_num   PLS_INTEGER;
 BEGIN
-      UPDATE plch_parts
-         SET partname = UPPER (partname)
-       WHERE partname LIKE 'M%'
+  UPDATE plch_parts
+     SET partname = UPPER (partname)
+   WHERE partname LIKE 'M%'
    --RETURNING count(1) INTO l_num;
    RETURNING sum(partnum) INTO l_num;
 
    DBMS_OUTPUT.put_line (l_num) ;
-
-	rollback;
+	commit;
 END;
 
 ---
@@ -160,3 +162,22 @@ BEGIN
       DBMS_OUTPUT.put_line(l_part_numbers(i));  
    END LOOP;  
 END;
+
+---
+
+declare
+  x number;
+begin
+  INSERT INTO note_base (note_id, subject, type, note, created, createdby, updatedby) 
+                 VALUES (uid_note.NEXTVAL , 'Person Left Company', 'Status', 'Set to GONE on December 1, 2022', SYSDATE, 0, 0) 
+  returning note_id into x
+  ;
+
+  dbms_output.put_line(x);
+
+  INSERT INTO contact_note (contact_note_id, contact_id, note_id, created, createdby, updatedby, original_contact_id)
+                    VALUES (uid_contact_note.NEXTVAL, 860664, x, SYSDATE, 0, 0, 860664)
+  ;
+
+  commit;
+end;
