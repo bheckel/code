@@ -1,3 +1,9 @@
+hostname -f
+webserver.sub10261308121.rshnet.oraclevcn.com
+sudo hostnamectl set-hostname rshdev.com
+
+---
+
 chmod 600 .ssh/ssh-key-2022-11-21.key
 ssh -i .ssh/ssh-key-2022-11-21.key opc@129.158.230.148
 export TERM=xterm

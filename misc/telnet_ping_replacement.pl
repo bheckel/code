@@ -5,8 +5,10 @@ $| = 1;
 my $socket = new IO::Socket::INET(
   #PeerHost => 'plcm05.foo.com',
   #PeerPort => '6500',
-  PeerHost => 'yahoo.com',
-  PeerPort => '443',
+  #PeerHost => 'yahoo.com',
+  #PeerPort => '443',
+  PeerHost => '129.158.230.148',
+  PeerPort => '80',
   Proto => 'tcp',
 );
 die "cannot connect to the server: $!\n" unless $socket;

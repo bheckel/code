@@ -82,7 +82,8 @@ sudo docker volume inspect myvol  # it's in /var
 sudo docker image ls  # find 27941809078c image
 sudo docker run -it --mount source=myvol,target=/mnt/bob --name cntr_persistu 27941809078c  # first time only
 # root@54541ef80431:/# cat sdlkf > /mnt/bob/foo
-sudo docker container ls -a  # cntr_persistu is there now
+sudo docker container ps -a  # cntr_persistu is there now
+sudo docker container ls -a  # SAME cntr_persistu is there now
 sudo docker run -it --mount source=myvol,target=/mnt 27941809078c  # subsequent
 sudo docker rm cntr_persistu  # container is gone...
 sudo vi /var/lib/docker/volumes/myvol/_data/foo  # ...but we saved the file created in the container
