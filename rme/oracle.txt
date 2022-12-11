@@ -26,9 +26,10 @@ or
   mynetworks = 192.168.1.0/24, 127.0.0.0/8 10.0.0.0/24
   home_mailbox = mail/
   EOF
+
 2022-12-10 18:12:35 sudo systemctl restart postfix
 2022-12-10 18:12:54 sudo dnf install -y mailx
-2022-12-10 18:16:45 sudo mailq
+2022-12-10 18:16:45 sudo mailq  # is anything in queue?
 2022-12-10 18:17:30 echo "External email" | mailx -r opc@rshdev.com -s "Test email subject" bheckel@mail.com
 2022-12-10 18:17:35 sudo tail -f /var/log/maillog
 2022-12-10 18:20:10 dig -x 129.158.230.148
@@ -60,6 +61,29 @@ or
 2022-12-11 21:18:53 ls /home/opc/Mail
 still fails to receive email
 
+VCN -> Public Subnet SpeC -> Default Security List for rshn -> Add Ingress
+Source Type: CIDR
+Source CIDR: 0.0.0.0/0
+IP Protocol: TCP
+Source Port Range: All
+Destination Port Range: 25
+
+
+sudo vi /etc/postfix/main.cf
+myhostname = rshdev.com
+myorigin = $myhostname
+inet_interfaces = all
+inet_protocols = all
+mydestination = rshdev.com, localhost.localdomain, localhost
+mynetworks = 192.168.1.0/24, 127.0.0.0/8 10.0.0.0/24
+home_mailbox = mail/
+recipient_delimiter = +
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination
+
+sudo vi /etc/aliases
+add to bottom:
+root: opc
+rsh: opc
 ---
 
 hostname -f
