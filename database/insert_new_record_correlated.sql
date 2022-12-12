@@ -1,5 +1,5 @@
 -- Modified: 29-Aug-2022 (Bob Heckel)
--- see also restore_records_from_hist.sql
+-- see also restore_records_from_hist.sql returning_into.plsql
 
 -- Insert new data from a query
 insert into target_bricks ( brick_id, colour, shape ) 
