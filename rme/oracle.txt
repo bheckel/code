@@ -1,3 +1,97 @@
+
+Godaddy:
+Add MX:  @  rshdev.com  Pri 0  1 hr
+Add TXT: @  v=spf1 a mx a:rshdev.com -all  1/2 hr
+
+2022-12-10 17:23:04 sudo dnf update
+2022-12-10 17:38:41 sudo dnf install postfix
+2022-12-10 17:53:08 postconf mail_version
+2022-12-10 17:55:22 sudo firewall-cmd --zone=public --add-service=smtp --permanent
+2022-12-10 17:55:42 sudo firewall-cmd --reload
+2022-12-10 17:55:54 sudo dnf remove -y sendmail
+2022-12-10 17:56:08 sudo alternatives --set mta /usr/sbin/sendmail.postfix
+2022-12-10 17:56:17 sudo systemctl enable --now postfix
+2022-12-10 17:56:31 sudo mv /etc/postfix/main.cf /etc/postfix/main.cf.bak
+2022-12-10 18:03:16 systemctl status postfix.service
+2022-12-10 18:04:44 hostname -f
+2022-12-10 18:05:56 journalctl -xe
+2022-12-10 18:12:09 sudo vi /etc/postfix/main.cf
+or
+2022-12-10 18:00:53 sudo tee -a t.txt > /dev/null <<EOF
+  myhostname = rshdev.com
+  myorigin = \$myhostname
+  inet_interfaces = all
+  inet_protocols = all
+  mydestination = \$myhostname, localhost
+  mynetworks = 192.168.1.0/24, 127.0.0.0/8 10.0.0.0/24
+  home_mailbox = mail/
+  EOF
+
+2022-12-10 18:12:35 sudo systemctl restart postfix
+2022-12-10 18:12:54 sudo dnf install -y mailx
+2022-12-10 18:16:45 sudo mailq  # is anything in queue?
+2022-12-10 18:17:30 echo "External email" | mailx -r opc@rshdev.com -s "Test email subject" bheckel@mail.com
+2022-12-10 18:17:35 sudo tail -f /var/log/maillog
+2022-12-10 18:20:10 dig -x 129.158.230.148
+2022-12-10 18:20:47 host 129.158.230.148
+2022-12-10 18:26:04 echo "External email" | mailx -r opc@rshdev.com -s "Test email subject" bheckel@sfd.org
+2022-12-10 18:47:39 mailx
+
+
+2022-12-11 20:20:31 firewall-cmd --state
+2022-12-11 20:20:39 sudo firewall-cmd --state
+2022-12-11 20:22:50 sudo firewall-cmd --get-active-zones
+2022-12-11 20:23:27 sudo firewall-cmd --get-services
+2022-12-11 20:25:25 sudo firewall-cmd --get-services --permanent
+2022-12-11 20:27:41 sudo ls /etc/firewalld/
+2022-12-11 20:27:47 sudo ls /etc/firewalld/services
+2022-12-11 20:30:04 sudo firewall-cmd --zone=public --list-services
+2022-12-11 20:40:27 sudo firewall-cmd --permanent --zone=public --add-port=25/tcp
+2022-12-11 20:57:31 sudo systemctl restart firewalld
+2022-12-11 21:10:31 sudo firewall-cmd --zone=public --remove-port=25/tcp
+2022-12-11 21:11:14 sudo firewall-cmd --zone=public --permanent --remove-port=25/tcp
+2022-12-11 21:11:19 sudo firewall-cmd --reload
+2022-12-11 21:11:23 sudo firewall-cmd --permanent --zone=public --list-ports  # says it worked but still can't telnet 
+2022-12-11 21:13:14 sudo postconf -e "mydestination = rshdev.com, localhost.localdomain, localhost"
+2022-12-11 21:14:14 sudo postconf -e "inet_interfaces = all"
+2022-12-11 21:14:29 sudo postconf -e "recipient_delimiter = +"
+2022-12-11 21:14:34 sudo service postfix restart
+2022-12-11 21:16:15 sudo tail -f /var/log/maillog
+2022-12-11 21:17:22 echo "External email" | mailx -r opc@rshdev.com -s "Test2 email subject" opc@localhost
+2022-12-11 21:18:53 ls /home/opc/Mail
+still fails to receive email
+
+VCN -> Public Subnet SpeC -> Default Security List for rshn -> Add Ingress
+Source Type: CIDR
+Source CIDR: 0.0.0.0/0
+IP Protocol: TCP
+Source Port Range: All
+Destination Port Range: 25
+
+
+sudo vi /etc/postfix/main.cf
+myhostname = rshdev.com
+myorigin = $myhostname
+inet_interfaces = all
+inet_protocols = all
+mydestination = rshdev.com, localhost.localdomain, localhost
+mynetworks = 192.168.1.0/24, 127.0.0.0/8 10.0.0.0/24
+home_mailbox = mail/
+recipient_delimiter = +
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination
+
+sudo vi /etc/aliases
+add to bottom:
+root: opc
+rsh: opc
+---
+
+hostname -f
+webserver.sub10261308121.rshnet.oraclevcn.com
+sudo hostnamectl set-hostname rshdev.com
+
+---
+
 chmod 600 .ssh/ssh-key-2022-11-21.key
 ssh -i .ssh/ssh-key-2022-11-21.key opc@129.158.230.148
 export TERM=xterm
@@ -10,8 +104,8 @@ sudo firewall-cmd --reload
 sudo firewall-cmd --zone=public --list-services  # should also see http
 sudo netstat -tulnp | grep httpd  # should see httpd
 sudo vi /var/www/html/index.htm
-
 sudo httpd -v
+curl localhost
 
 VCN -> Public Subnet SpeC -> Default Security List for rshn -> Add Ingress
 Source Type: CIDR
@@ -20,7 +114,7 @@ IP Protocol: TCP
 Source Port Range: All
 Destination Port Range: 80
 
-webserver
+webserver instance
 http://129.158.230.148/
 
 sudo vim -u .vimrc index.html
