@@ -1,4 +1,12 @@
--- Modified: 11-Jun-2021 (Bob Heckel)
+--  Created: 11-Jun-2021 (Bob Heckel)
+-- Modified: 13-Dec-2022 (Bob Heckel)
+
+-- The FORALL basically means "perform the following DML on this collection" and it expects a single SQL statement 
+-- with DML that will be executed server-side once for each record in the collection.  You can use IF/THEN/ELSE/ 
+-- before or after your FORALL statement, but not in the middle of it.  You can manipulate your cursor query or 
+-- manipulate the collection until you are ready to use the FORALL to perform one single dml statement affecting 
+-- all rows in the collection. Or, if you cannot get this to work, you can always use a normal loop with conventional
+-- (not bulk) dml operations.
 
 ---
 

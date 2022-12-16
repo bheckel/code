@@ -1,5 +1,5 @@
 --  Created: 18-Jun-2020 (Bob Heckel)
--- Modified: 09-Dec-2022 (Bob Heckel)
+-- Modified: 16-Dec-2022 (Bob Heckel)
 -- see also insert_new_record_correlated.sql
 
 ---
@@ -125,7 +125,7 @@ SQL> select * from student;
 
   MERGE INTO activity_search
     USING dual ON (activity_search_id = inActiv_ID)
-    --If ACTIVITY_SEARCH already exists
+    --If activity_search_id already exists
     WHEN MATCHED THEN
       UPDATE
          set updated         = AS_UPDATE_DATE,
@@ -133,7 +133,7 @@ SQL> select * from student;
              account_name    = AS_ACCOUNT_NAME,
              account_name_id = AS_ACCOUNT_NAME_ID,
              badabingle      = to_char(sysdate, 'DDMONYYYY HH24:MI:SS')
-       where ACTIVITY_search_id = inActiv_ID
+       where activity_search_id = inActiv_ID
     WHEN NOT MATCHED THEN  
       --If ACTIVITY_SEARCH does NOT exist
       INSERT
@@ -184,7 +184,7 @@ insert into bricks_2 values ( 2, 'blue', 'cube' );
 commit;
 
 
--- Non-merge version:
+-- Two-step non-merge version:
 
 -- 1. Update-if-exists in the other table
 update bricks_1 b1
@@ -201,7 +201,7 @@ insert into bricks_1
   );
 
 
--- Merge version:
+-- One-step merge version:
 merge into bricks_1 b1
 	using bricks_2 b2 on (b1.brick_id=b2.brick_id)
 		when matched then
@@ -213,7 +213,7 @@ merge into bricks_1 b1
 ---
 
 merge into RISK_EMP
-  using dual on ( employee_id = riskRec.employee_id and risk_id = riskRec.risk_id)
+  using dual on ( employee_id = riskRec.employee_id and risk_id = riskRec.risk_id )
     -- If the new TSR is already on the risk (WHEN MATCHED) then do nothing
     WHEN NOT MATCHED THEN
     -- Otherwide add the TSR to the risk

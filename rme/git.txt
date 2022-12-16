@@ -1,3 +1,74 @@
+# Adapted https://think-like-a-git.net/sections/rebase-from-the-ground-up/a-helpful-mnemonic-for-git-rebase-arguments.html
+
+        F <-- G <-- H foo
+       /
+ A <-- B <-- C <-- D <-- E bar
+             \
+              I <-- J <-- K baz
+
+git checkout foo
+git checkout -b newbar
+git cherry-pick C D E
+
+        F <-- G <-- H <-- C' <-- D' <-- E' newbar
+       /
+ A <-- B <-- C <-- D <-- E bar
+             \
+              I <-- J <-- K baz
+
+git checkout bar
+git reset --hard newbar
+git branch -d newbar
+
+        F <-- G <-- H <-- C' <-- D' <-- E' foo
+       /
+ A <-- B <-- C
+             \
+              I <-- J <-- K baz
+
+All that is equivalent to this:
+
+git rebase foo bar
+
+---
+
+# Adapted https://think-like-a-git.net/sections/testing-out-merges/the-savepoint-pattern.html
+You're on the master branch and you want the changes from the
+spiffy_new_feature branch to be incorporated into master. You're reasonably
+confident that you'll want to keep the changes, but you want to be able to abort it.
+
+$ git status
+# On branch master
+nothing to commit (working directory clean)
+
+Create a new branch to use as a savepoint, but don't switch to it:
+$ git branch savepoint
+
+Do the merge:
+$ git merge spiffy_new_feature
+
+If you're lucky, there won't be any merge conflicts you can't resolve.
+But if you want to abort the merge at this point, just type git reset --hard savepoint
+
+* After a merge, you should see a new commit.
+* The new commit should have a message like "Merge branch 'spiffy_new_feature' into master".
+* Your master branch label should have moved to this new commit, while the spiffy_new_feature branch label should still be in the same place.
+
+Are you happy with the result?
+If YES: Delete the savepoint:
+$ git branch -d savepoint
+If NO: Reset your branch to the savepoint:
+$ git reset --hard savepoint
+
+If you want to clean up, you can now delete the savepoint with git branch -d savepoint.
+
+BUT NOW THAT YOU KNOW THAT...:
+Skip the savepoint branch since git doesn't care what you call your branches.  After the whoops:
+$ git log  # find the previous sha1 that you merged into
+$ git reset --hard 4ce7e40
+
+---
+
 -- Change remote
 14093  2021-08-17 12:01:10 exec ssh-agent bash
 14094  2021-08-17 12:01:31 git remote remove origin
