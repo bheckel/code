@@ -28,6 +28,7 @@ or
   EOF
 
 2022-12-10 18:12:35 sudo systemctl restart postfix
+2022-12-10 18:12:35 sudo postfix check
 2022-12-10 18:12:54 sudo dnf install -y mailx
 2022-12-10 18:16:45 sudo mailq  # is anything in queue?
 2022-12-10 18:17:30 echo "External email" | mailx -r opc@rshdev.com -s "Test email subject" bheckel@mail.com
@@ -84,6 +85,7 @@ sudo vi /etc/aliases
 add to bottom:
 root: opc
 rsh: opc
+
 ---
 
 hostname -f

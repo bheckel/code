@@ -1,10 +1,63 @@
-#!/usr/bin/perl -w
-use v5.10;
-###$h = { one => [ 'a', 'b', 'c' ], two => [ 'd', 'e', 'f' ] }; print $$h{two}->[1];
+#!/usr/bin/perl
 
-@y = qw( a b c);
-@z = qw (d e f g);
-@x = ( \@y, \@z );
+use IO::Socket::INET;
 
-say $x->[0][1];
-###require Data::Dumper; print STDERR "DEBUG: ", Data::Dumper::Dumper( @x ),"\n";
+$| = 1;
+my $socket = new IO::Socket::INET(
+  #PeerHost => 'plcm05.foo.com',
+  #PeerPort => '6500',
+  #PeerHost => 'yahoo.com',
+  #PeerPort => '443',
+  #PeerHost => '129.158.230.148',
+  PeerHost => 'rshdev.com',
+  PeerPort => '25',
+  Proto => 'tcp',
+);
+die "cannot connect to the server: $!\n" unless $socket;
+print "connected to the server\n";
+
+$data = <$socket>;
+print "$data";
+
+print $socket "EHLO rshdev.com\n";
+#while ( $data = <$socket> ) {
+  print "$data";
+#}
+
+print $socket "MAIL FROM:<bheckel@sdf.org>\n";
+#while ( $data = <$socket> ) {
+#  print "$data";
+#}
+
+print $socket "RCPT TO<opc@rshdev.com>\n";
+#while ( $data = <$socket> ) {
+#  print "$data";
+#}
+
+print $socket "ETRN rshdev.com\n";
+print $socket "DATA\n";
+print $socket "just a test\n";
+print $socket ".\n";
+print $socket "QUIT\n";
+
+print "$data";
+
+#
+##print $socket "DATA\n";
+#$data = <$socket>;
+#print "Received from Server : $data\n";
+#
+##print $socket "just a test\n";
+#$data = <$socket>;
+#print "Received from Server : $data\n";
+#
+##print $socket ".\n";
+#$data = <$socket>;
+#print "Received from Server : $data\n";
+#
+##print $socket "QUIT\n";
+#$data = <$socket>;
+#print "Received from Server : $data\n";
+
+#sleep (5);
+$socket->close();
