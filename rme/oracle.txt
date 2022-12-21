@@ -31,11 +31,11 @@ or
 2022-12-10 18:12:35 sudo postfix check
 2022-12-10 18:12:54 sudo dnf install -y mailx
 2022-12-10 18:16:45 sudo mailq  # is anything in queue?
-2022-12-10 18:17:30 echo "External email" | mailx -r opc@rshdev.com -s "Test email subject" bheckel@mail.com
+2022-12-10 18:17:30 echo "External email" | mailx -r pc@rshdev.com -s "Test email subject" bheckel@mail.com
 2022-12-10 18:17:35 sudo tail -f /var/log/maillog
 2022-12-10 18:20:10 dig -x 129.158.230.148
 2022-12-10 18:20:47 host 129.158.230.148
-2022-12-10 18:26:04 echo "External email" | mailx -r opc@rshdev.com -s "Test email subject" bheckel@sfd.org
+2022-12-10 18:26:04 echo "External email" | mailx -r pc@rshdev.com -s "Test email subject" bheckel@sfd.org
 2022-12-10 18:47:39 mailx
 
 2022-12-11 20:20:31 firewall-cmd --state
@@ -57,8 +57,8 @@ or
 2022-12-11 21:14:29 sudo postconf -e "recipient_delimiter = +"
 2022-12-11 21:14:34 sudo service postfix restart
 2022-12-11 21:16:15 sudo tail -f /var/log/maillog
-2022-12-11 21:17:22 echo "External email" | mailx -r opc@rshdev.com -s "Test2 email subject" opc@localhost
-2022-12-11 21:18:53 ls /home/opc/Mail
+2022-12-11 21:17:22 echo "External email" | mailx -r pc@rshdev.com -s "Test2 email subject" pc@localhost
+2022-12-11 21:18:53 ls /home/pc/Mail
 still fails to receive email
 
 VCN -> Public Subnet SpeC -> Default Security List for rshn -> Add Ingress
@@ -101,7 +101,7 @@ sudo hostnamectl set-hostname rshdev.com
 ---
 
 chmod 600 .ssh/ssh-key-2022-11-21.key
-ssh -i .ssh/ssh-key-2022-11-21.key opc@129.158.230.148
+ssh -i .ssh/ssh-key-2022-11-21.key pc@129.158.230.148
 export TERM=xterm
 sudo yum install httpd -y
 sudo apachectl start
@@ -126,19 +126,19 @@ webserver instance
 http://129.158.230.148/
 
 sudo vim -u .vimrc index.html
-scp -i ~/.ssh/ssh-key-2022-11-21.key opc@129.158.230.148:index.html .
+scp -i ~/.ssh/ssh-key-2022-11-21.key pc@129.158.230.148:index.html .
 
 sudo dnf update
 sudo systemctl restart httpd
 
 # metta
-cat .ssh/id_rsa.pub | ssh -i ~/.ssh/ssh-key-2022-11-21.key opc@129.158.230.148 'cat - >> ~/.ssh/authorized_keys'
+cat .ssh/id_rsa.pub | ssh -i ~/.ssh/ssh-key-2022-11-21.key pc@129.158.230.148 'cat - >> ~/.ssh/authorized_keys'
 
-sudo vim -u /home/opc/.vimrc /etc/httpd/conf/httpd.conf
-sudo vim -u /home/opc/.vimrc /etc/httpd/logs/error_log
-sudo vim -u /home/opc/.vimrc /var/www/cgi-bin/printenv.pl
+sudo vim -u /home/pc/.vimrc /etc/httpd/conf/httpd.conf
+sudo vim -u /home/pc/.vimrc /etc/httpd/logs/error_log
+sudo vim -u /home/pc/.vimrc /var/www/cgi-bin/printenv.pl
 
-scp opc@129.158.230.148:/etc/httpd/conf/httpd.conf .
+scp pc@129.158.230.148:/etc/httpd/conf/httpd.conf .
 
 ---
 
