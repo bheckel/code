@@ -38,7 +38,6 @@ or
 2022-12-10 18:26:04 echo "External email" | mailx -r opc@rshdev.com -s "Test email subject" bheckel@sfd.org
 2022-12-10 18:47:39 mailx
 
-
 2022-12-11 20:20:31 firewall-cmd --state
 2022-12-11 20:20:39 sudo firewall-cmd --state
 2022-12-11 20:22:50 sudo firewall-cmd --get-active-zones
@@ -69,7 +68,6 @@ IP Protocol: TCP
 Source Port Range: All
 Destination Port Range: 25
 
-
 sudo vi /etc/postfix/main.cf
 myhostname = rshdev.com
 myorigin = $myhostname
@@ -85,6 +83,14 @@ sudo vi /etc/aliases
 add to bottom:
 root: opc
 rsh: opc
+
+sudo timedatectl set-timezone America/New_York
+
+sudo dnf search java
+sudo dnf install jdk-11.x86_64
+java -version
+export JAVA_HOME=/usr/bin/java
+sql /nolog
 
 ---
 
