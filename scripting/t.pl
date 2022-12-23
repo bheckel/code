@@ -24,12 +24,12 @@ print $socket "EHLO rshdev.com\n";
   print "$data";
 #}
 
-print $socket "MAIL FROM:<bheckel@sdf.org>\n";
+print $socket "MAIL FROM:<heckel@sdf.org>\n";
 #while ( $data = <$socket> ) {
 #  print "$data";
 #}
 
-print $socket "RCPT TO<opc@rshdev.com>\n";
+print $socket "RCPT TO<pc@rshdev.com>\n";
 #while ( $data = <$socket> ) {
 #  print "$data";
 #}
