@@ -1,4 +1,30 @@
+---
 
+2022-12-24 13:05:01 cd libgc/
+2022-12-24 13:06:45 cd libgc-8.2.2-1.src/
+2022-12-24 13:07:03 cd gc-8.2.2/
+2022-12-27 14:34:20 sudo dnf search ncurses
+2022-12-27 15:50:44 cd ~/projects/w3m/
+2022-12-27 15:54:28 sudo dnf search openssl
+2022-12-27 15:56:36 sudo dnf install openssl-devel.x86_64
+2022-12-27 16:00:38 sudo dnf search gdk-pixbuf
+2022-12-27 16:01:16 sudo dnf install gdk-pixbuf2-devel.x86_64
+2022-12-27 16:02:13 ./conf
+2022-12-27 16:03:42 sudo dnf search imlib2
+2022-12-27 16:04:05 sudo dnf search imlib
+2022-12-27 16:04:46 ./configure
+2022-12-27 16:09:24 sudo dnf search glib
+2022-12-27 16:10:59 sudo dnf install glib2-devel.x86_64
+2022-12-27 16:11:55 sudo dnf search libjson
+2022-12-27 16:15:46 make clean
+2022-12-27 16:15:54 ./configure --with-imagelib=imlib2
+2022-12-27 16:16:13 make
+2022-12-27 16:17:21 ./w3m slashdot.org
+2022-12-27 16:18:14 sudo make install
+
+---
+
+Dec 2022
 Godaddy:
 Add MX:  @  rshdev.com  Pri 0  1 hr
 Add TXT: @  v=spf1 a mx a:rshdev.com -all  1/2 hr
@@ -24,13 +50,13 @@ or
   inet_protocols = all
   mydestination = \$myhostname, localhost
   mynetworks = 192.168.1.0/24, 127.0.0.0/8 10.0.0.0/24
-  home_mailbox = mail/
+  home_mailbox = Mail/
   EOF
 
 2022-12-10 18:12:35 sudo systemctl restart postfix
 2022-12-10 18:12:35 sudo postfix check
 2022-12-10 18:12:54 sudo dnf install -y mailx
-2022-12-10 18:16:45 sudo mailq  # is anything in queue?
+2022-12-10 18:16:45 mailq  # is anything in queue that the recipient won't accept?
 2022-12-10 18:17:30 echo "External email" | mailx -r pc@rshdev.com -s "Test email subject" bheckel@mail.com
 2022-12-10 18:17:35 sudo tail -f /var/log/maillog
 2022-12-10 18:20:10 dig -x 129.158.230.148
@@ -83,6 +109,22 @@ sudo vi /etc/aliases
 add to bottom:
 root: opc
 rsh: opc
+
+# TODO cannot restart
+0 opc@rshdev.com[master]  Tue Dec 27 16:24:05
+$ ps -ef |grep postf
+postfix  2718327 3762849  0 16:12 ?        00:00:00 pickup -l -t unix -u
+postfix  2723554 3762849  0 16:23 ?        00:00:00 smtpd -n smtp -t inet -u -o stress= -s 2
+postfix  2723555 3762849  0 16:23 ?        00:00:00 proxymap -t unix -u
+postfix  2723556 3762849  0 16:23 ?        00:00:00 anvil -l -t unix -u
+postfix  2723558 3762849  0 16:23 ?        00:00:00 trivial-rewrite -n rewrite -t unix -u
+postfix  2723568 3762849  0 16:23 ?        00:00:00 cleanup -z -t unix -u
+postfix  2723569 3762849  0 16:23 ?        00:00:00 local -t unix
+opc      2723700 2673105  0 16:24 pts/0    00:00:00 grep --color=auto postf
+root     3762849       1  0 Dec17 ?        00:00:05 /usr/libexec/postfix/master -w
+postfix  3762851 3762849  0 Dec17 ?        00:00:01 qmgr -l -t unix -u
+
+---
 
 sudo timedatectl set-timezone America/New_York
 
