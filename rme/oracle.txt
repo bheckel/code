@@ -49,7 +49,7 @@ or
   inet_interfaces = all
   inet_protocols = all
   mydestination = \$myhostname, localhost
-  mynetworks = 192.168.1.0/24, 127.0.0.0/8 10.0.0.0/24
+  mynetworks = 192.168.1.0/24, 127.0.0.0/8, 10.0.0.0/24
   home_mailbox = Mail/
   EOF
 
@@ -81,6 +81,7 @@ or
 2022-12-11 21:13:14 sudo postconf -e "mydestination = rshdev.com, localhost.localdomain, localhost"
 2022-12-11 21:14:14 sudo postconf -e "inet_interfaces = all"
 2022-12-11 21:14:29 sudo postconf -e "recipient_delimiter = +"
+sudo postconf -e disable_vrfy_command=yes
 2022-12-11 21:14:34 sudo service postfix restart
 2022-12-11 21:16:15 sudo tail -f /var/log/maillog
 2022-12-11 21:17:22 echo "External email" | mailx -r pc@rshdev.com -s "Test2 email subject" pc@localhost
@@ -123,6 +124,11 @@ postfix  2723569 3762849  0 16:23 ?        00:00:00 local -t unix
 opc      2723700 2673105  0 16:24 pts/0    00:00:00 grep --color=auto postf
 root     3762849       1  0 Dec17 ?        00:00:05 /usr/libexec/postfix/master -w
 postfix  3762851 3762849  0 Dec17 ?        00:00:01 qmgr -l -t unix -u
+
+---
+
+$ sudo dnf install dnf-automatic
+$ sudo systemctl enable --now dnf-automatic.timer
 
 ---
 
