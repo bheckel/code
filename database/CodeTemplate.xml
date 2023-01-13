@@ -1,6 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <rows>
    <row>
+      <key>ansi</key>
+      <value>-- set sqlformat ansiconsole</value>
+   </row>
+   <row>
       <key>col</key>
       <value>column [(parameter)] format a13</value>
    </row>
@@ -44,12 +48,12 @@
       <value>ORDER BY 1 DESC</value>
    </row>
    <row>
-      <key>sdo</key>
-      <value>--  SET DEFINE OFF</value>
-   </row>
-   <row>
       <key>scc</key>
       <value>SELECT COUNT(1) FROM [(parameter)];</value>
+   </row>
+   <row>
+      <key>sdo</key>
+      <value>--  SET DEFINE OFF</value>
    </row>
    <row>
       <key>sss</key>
