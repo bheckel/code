@@ -8,8 +8,11 @@ my $socket = new IO::Socket::INET(
   #PeerHost => 'yahoo.com',
   #PeerPort => '443',
   #PeerHost => '129.158.230.148',
-  PeerHost => 'rshdev.com',
-  PeerPort => '25',
+  #PeerHost => 'rshdev.com',
+  #PeerPort => '25',
+  #Proto => 'tcp',
+  PeerHost => '129.159.87.55',
+  PeerPort => '80',
   Proto => 'tcp',
 );
 die "cannot connect to the server: $!\n" unless $socket;

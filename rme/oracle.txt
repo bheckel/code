@@ -1,3 +1,33 @@
+# 14-Jan-23 
+$ lsblk
+NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT  
+sda                  8:0    0 46.6G  0 disk             
+├─sda1               8:1    0  100M  0 part /boot/efi   
+├─sda2               8:2    0    1G  0 part /boot       
+└─sda3               8:3    0 45.5G  0 part             
+  ├─ocivolume-root 252:0    0 35.5G  0 lvm  /           
+  └─ocivolume-oled 252:1    0   10G  0 lvm  /var/oled 
+sdb                  8:16   0   50G  0 disk 
+
+$ sudo fdisk /dev/sdb -l
+Disk /dev/sdb: 50 GiB, 53687091200 bytes, 104857600 sectors
+Units: sectors of 1 * 512 = 512 bytes                      
+Sector size (logical/physical): 512 bytes / 4096 bytes     
+I/O size (minimum/optimal): 4096 bytes / 1048576 bytes
+
+$ sudo mkfs.ext4 -L data /dev/sdb
+$ sudo mkdir -p /mnt/www/html
+$ sudo mount /dev/sdb /mnt/www/html
+$ lsblk
+NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                  8:0    0 46.6G  0 disk
+├─sda1               8:1    0  100M  0 part /boot/efi
+├─sda2               8:2    0    1G  0 part /boot
+└─sda3               8:3    0 45.5G  0 part
+  ├─ocivolume-root 252:0    0 35.5G  0 lvm  /
+  └─ocivolume-oled 252:1    0   10G  0 lvm  /var/oled
+sdb                  8:16   0   50G  0 disk /mnt/www/html
+
 ---
 
 2022-12-24 13:05:01 cd libgc/
