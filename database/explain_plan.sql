@@ -473,6 +473,37 @@ Note
 13 rows selected.
 */
 
+create table t as select * from dba_objects;
+create index ix on t ( owner, object_name, created, object_type, object_id, status );
+explain plan for
+select t.*, rowid
+from t
+where owner = :b1
+and object_name = :b2
+and object_type= :b9;
+/*
+PLAN_TABLE_OUTPUT
+_______________________________________________________________________________________________
+Plan hash value: 3947747388
+
+--------------------------------------------------------------------------------------------
+| Id  | Operation                           | Name | Rows  | Bytes | Cost (%CPU)| Time     |
+--------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                    |      |     1 |   132 |     4   (0)| 00:00:01 |
+|   1 |  TABLE ACCESS BY INDEX ROWID BATCHED| T    |     1 |   132 |     4   (0)| 00:00:01 |
+|*  2 |   INDEX RANGE SCAN                  | IX   |     1 |       |     3   (0)| 00:00:01 |
+--------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("OWNER"=:B1 AND "OBJECT_NAME"=:B2 AND "OBJECT_TYPE"=:B9)
+
+PLAN_TABLE_OUTPUT
+___________________________________
+       filter("OBJECT_TYPE"=:B9)
+*/
+
 ---
 
 -- Adapted: 04-Mar-2022 (Bob Heckel--Oracle Dev Gym)
@@ -540,4 +571,11 @@ create index fli4_i on flights ( departure_airport_code, flight_datetime, destin
 select  /*+ gather_plan_statistics */ count(1) from rpt_strategic_accounts;
 SELECT * FROM v$sqlstats WHERE lower(sql_text) like '%count(1) from rpt_strategic%' and last_active_time > sysdate-interval '1' minute;--57fa0bfh942nu
 SELECT * From table(dbms_xplan.display_cursor('57fa0bfh942nu',null,'allstats last +cost'));
+
+---
+
+--Sometimes more efficient to save function result in a variable
+select count(1) from account_base where extract(year from created)>= mkc.get_first_reporting_year;
+--same
+with d as (select /*materialize*/ mkc.get_first_reporting_year dt from dual ) select count(1) from account_base a, d where extract(year from a.created) >= d.dt ;
 

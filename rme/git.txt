@@ -1196,3 +1196,99 @@ $ git remote show origin
     feature/RION-39366 pushes to feature/RION-39366 (up to date)
     feature/RION-39939 pushes to feature/RION-39939 (up to date)
     what-if             pushes to what-if           (up to date)
+
+---
+
+$ stash && git pull && git stash pop   && git add  . && git commit -m 'rion-63193: Update Primary DNB Number:  Creative Educ Prep Inst 1(SA #3835468)' && git push #stashit
+Saved working directory and index state On develop: saved Thu, Feb  2, 2023  3:39:17 PM
+remote: Enumerating objects: 18, done.
+remote: Counting objects: 100% (18/18), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 18 (delta 10), reused 12 (delta 10), pack-reused 0
+Unpacking objects: 100% (18/18), 33.11 KiB | 210.00 KiB/s, done.
+From github.com:sintitute-corp/rion-data
+   77ead2b5925..63a8a33a7ce  develop    -> origin/develop
+Updating 77ead2b5925..63a8a33a7ce
+Fast-forward
+ Source/SQL/2023rionScripts/23.02rionScripts/23.02_GoLive_Script.sql    | 11 +++++++++++
+ Source/SQL/2023rionScripts/23.02rionScripts/rion-60247_ddl_change.sql | 29 +++++++++++++++++++++++++++++
+ Source/SQL/SALES_COMP_MACRO.pck                                          | 24 ++++++++++--------------
+ 3 files changed, 50 insertions(+), 14 deletions(-)
+ create mode 100644 Source/SQL/2023rionScripts/23.02rionScripts/rion-60247_ddl_change.sql
+On branch develop
+Your branch is up to date with 'origin/develop'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   USER_ON_CALL.pck
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped refs/stash@{0} (fa90119528d6dc79cc653d680a12def495373ac5)
+[develop 82cc5e35740] rion-63193: Update Primary DNB Number:  Creative Educ Prep Inst 1(SA #3835468)
+ 1 file changed, 22 insertions(+), 11 deletions(-)
+To github.com:sintitute-corp/rion-data.git
+ ! [rejected]                develop -> develop (fetch first)
+error: failed to push some refs to 'git@github.com:sintitute-corp/rion-data.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+4 bheck@l10g[develop] /cygdrive/c/rion/workspace/rion-data/Source/SQL/ Thu Feb 02 15:39:36
+$ git pull
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Total 7 (delta 6), reused 7 (delta 6), pack-reused 0
+Unpacking objects: 100% (7/7), 562 bytes | 5.00 KiB/s, done.
+From github.com:sintitute-corp/rion-data
+   63a8a33a7ce..c9808a5f6a4  develop    -> origin/develop
+fatal: Not possible to fast-forward, aborting.
+4 bheck@l10g[develop] /cygdrive/c/rion/workspace/rion-data/Source/SQL/ Thu Feb 02 15:39:58
+$ gs
+On branch develop
+Your branch and 'origin/develop' have diverged,
+and have 1 and 1 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+
+nothing to commit, working tree clean
+4 bheck@l10g[develop] /cygdrive/c/rion/workspace/rion-data/Source/SQL/ Thu Feb 02 15:41:03
+$ git pull
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Total 7 (delta 6), reused 7 (delta 6), pack-reused 0
+Unpacking objects: 100% (7/7), 533 bytes | 2.00 KiB/s, done.
+From github.com:sintitute-corp/rion-data
+   c9808a5f6a4..78a497f9582  develop    -> origin/develop
+fatal: Not possible to fast-forward, aborting.
+4 bheck@l10g[develop] /cygdrive/c/rion/workspace/rion-data/Source/SQL/ Thu Feb 02 15:41:20
+$ git push
+To github.com:sintitute-corp/rion-data.git
+ ! [rejected]                develop -> develop (non-fast-forward)
+error: failed to push some refs to 'git@github.com:sintitute-corp/rion-data.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+4 bheck@l10g[develop] /cygdrive/c/rion/workspace/rion-data/Source/SQL/ Thu Feb 02 15:51:33
+$ git pull --rebase
+Successfully rebased and updated refs/heads/develop.
+4 bheck@l10g[develop] /cygdrive/c/rion/workspace/rion-data/Source/SQL/ Thu Feb 02 15:55:30
+$ gs
+On branch develop
+Your branch is ahead of 'origin/develop' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+4 bheck@l10g[develop] /cygdrive/c/rion/workspace/rion-data/Source/SQL/ Thu Feb 02 15:55:36
+$  git push
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 847 bytes | 65.00 KiB/s, done.
+Total 5 (delta 4), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To github.com:sintitute-corp/rion-data.git
+   78a497f9582..d53879b86a1  develop -> develop
+
