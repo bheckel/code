@@ -1,3 +1,30 @@
+09-Feb-23
+SQL Developer 21.4.3 final not java-impaired version
+gray DBMS_OUTPUT.put_line
+set Plsqllogger to Default color
+
+SQL Developer
+Help -> Check for Updates
+Install from Local File
+"C:\cygwin64\home\bheck\transfer\keepalive.zip"
+Don't let it restart, do it yourself later so it doesn't override - MAYBE DO THIS BEFORE ANY CUSTOMIZATIONS??
+
+SQL Developer 21.4.3.063.0100-x64
+gvim integration 
+Path
+C:\Users\boheck\vim\vim82\gvim.exe
+Arguments
+"${file.path}"
+
+NLS Date Format
+DD-MON-RR HH.MI.SS
+
+---
+
+"C:\Users\boheck\AppData\Roaming\SQL Developer\system22.2.1.234.1810\system_cache"
+
+---
+
 # 14-Jan-23 
 $ lsblk
 NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT  
@@ -220,13 +247,6 @@ scp pc@129.158.230.148:/etc/httpd/conf/httpd.conf .
 
 ---
 
-SQL Developer
-Help -> Check for Updates
-Install from Local File
-"C:\cygwin64\home\bheck\transfer\keepalive.zip"
-
----
-
 VM Oracle Linux 03-Apr-22
 export ORACLE_BASE=/u01/app/oracle
 export ORACLE_HOME=/u01/app/oracle/product/version/db_1/
@@ -307,11 +327,7 @@ ctrl + shift + v  clipboard history
 ---
 
 SQL Developer preferences location make Windows backup:
-C:\Documents and Settings\<user-name>\Application Data\SQL Developer\systemn.n.n.n.n
-cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\UserSnippets.xml' ~/onedrive/misc/
-cp -i 'C:\Documents and Settings\bheck\Application Data\SQL Developer\CodeTemplate.xml' ~/onedrive/misc/
-
-above may be obsolete - see ~/code/scripting/snip.sh e.g.:
+see ~/code/scripting/snip.sh e.g.:
 cp -v 'C:\Users\bheck\AppData\Roaming\SQL Developer\UserSnippets.xml' $D
 
 -- Use mine:
@@ -329,7 +345,7 @@ or
 
 17-Dec-21
 SQL Developer installation upgrade:
-Extract downloaded sqldeveloper-21.4.1.349.1822-x64.zip to C:\Users\bheck\Oracle\ (using their suggested name)
+Extract downloaded sqldeveloper-21.4.1.349.1822-x64.zip to C:\Users\bheck\Oracle\ (using their suggested name Unzip to Here)
 Run c:\Users\bheck\Oracle\sqldeveloper-21.4.1.349.1822-x64\sqldeveloper\sqldeveloper.exe 
 
 Remove blurry small font:
