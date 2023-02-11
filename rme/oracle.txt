@@ -67,6 +67,7 @@ Add TXT: @  v=spf1 a mx a:rshdev.com -all  1/2 hr
 2022-12-10 17:55:54 sudo dnf remove -y sendmail
 2022-12-10 17:56:08 sudo alternatives --set mta /usr/sbin/sendmail.postfix
 2022-12-10 17:56:17 sudo systemctl enable --now postfix
+# optional: sudo systemctl restart crond.service
 2022-12-10 17:56:31 sudo mv /etc/postfix/main.cf /etc/postfix/main.cf.bak
 2022-12-10 18:03:16 systemctl status postfix.service
 2022-12-10 18:04:44 hostname -f
