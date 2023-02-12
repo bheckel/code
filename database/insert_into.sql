@@ -391,3 +391,13 @@ INSERT INTO xsp_processing_territory (xsp_processing_territory_id, xsp_processin
          ( select e.territory_lov_id from employee_base e where e.employee_id = 258520 ))
 ;
 
+---
+
+begin  
+  for r in ( select distinct territory_lov_id from rs_asp_territory_employee_v where territory_lov_id_path like '%|' || 39583 || '|%') loop
+    dbms_output.put_line(r.territory_lov_id);
+    insert into asp_processing_territory (ASP_PROCESSING_TERRITORY_ID,          ASP_PROCESSING_REQUEST_ID,          TERRITORY_LOV_ID, UPDATED, UPDATEDBY, CREATED, CREATEDBY)
+                                  values (uid_ASP_PROCESSING_TERRITORY.nextval, 422,                                 r.territory_lov_id,          sysdate, 0,         sysdate, 0);
+  end loop;
+  commit;
+end;

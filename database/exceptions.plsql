@@ -1,4 +1,4 @@
--- Modified: 18-Nov-2021 (Bob Heckel)
+-- Modified: 09-Feb-2023 (Bob Heckel)
 
 -- Predefined PL/SQL Exceptions: https://docs.oracle.com/cd/A97630_01/appdev.920/a96624/07_errs.htm
 
@@ -382,8 +382,9 @@ BEGIN
   EXECUTE IMMEDIATE 'CREATE SEQUENCE S_TEST START WITH 1 INCREMENT BY 1';
 EXCEPTION
   WHEN OTHERS THEN
+--TODO ? :=
     IF SQLCODE = -955 THEN
-      NULL; -- suppress ORA-00955 exception, keep going
+      NULL; -- suppress specific exception ORA-00955 then keep going
     ELSE
       RAISE;
     END IF;
@@ -538,4 +539,37 @@ BEGIN
   raise_application_error(-20900,'cannot insert or update row');
   --Unnecessary:
   --rollback;
+END;
+
+---
+
+DECLARE
+    l_first_name  members.first_name%TYPE := 'Flor';
+    l_last_name   members.last_name%TYPE := 'Stone';
+    l_rank       members.rank%TYPE := 'Gold';
+BEGIN
+  INSERT INTO members(first_name, last_name, rank, member_id)
+  VALUES(l_first_name, l_last_name, l_rank, l_member_id);
+  
+  rollback;
+  
+  EXCEPTION 
+    WHEN OTHERS THEN
+      DECLARE
+          l_error PLS_INTEGER := SQLCODE;
+          l_msg VARCHAR2(255) := sqlerrm;
+      BEGIN
+        CASE l_error 
+          WHEN -1 THEN
+              -- duplicate rank
+              dbms_output.put_line('duplicate rank found ' || l_rank);
+              dbms_output.put_line(l_msg);
+          WHEN -2291 THEN
+              -- parent key not found
+              dbms_output.put_line('Invalid customer id ' || l_member_id);
+              dbms_output.put_line(l_msg);
+        END CASE;
+        -- reraise the current exception
+        RAISE;
+      END;
 END;

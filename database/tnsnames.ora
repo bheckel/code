@@ -1,0 +1,22 @@
+xrndbdrw01.vsp.example.com=
+(DESCRIPTION =
+  (LOAD_BALANCE=on)
+  (FAILOVER=on)
+  (ADDRESS_LIST =
+    (SOURCE_ROUTE=yes)
+    (ADDRESS = (PROTOCOL=TCP)(HOST=aplcm05.unx.example.com)(PORT=6500))
+  )
+  (ADDRESS_LIST =
+    (SOURCE_ROUTE=yes)
+    (ADDRESS = (PROTOCOL=TCP)(HOST=aplcm06.unx.example.com)(PORT=6500))
+  )
+  (ADDRESS_LIST =
+    (SOURCE_ROUTE=yes)
+    (ADDRESS = (PROTOCOL=TCP)(HOST=aplcm07.unx.example.com)(PORT=6500))
+  )
+  (ADDRESS_LIST =
+    (SOURCE_ROUTE=yes)
+    (ADDRESS = (PROTOCOL=TCP)(HOST=aplcm08.unx.example.com)(PORT=6500))
+  )
+  (CONNECT_DATA = (SERVICE_NAME = xrndbdrw01.vsp.example.com))
+)
