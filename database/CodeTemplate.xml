@@ -6,11 +6,11 @@
    </row>
    <row>
       <key>col</key>
-      <value>column [(parameter)] format a13</value>
+      <value>ALTER TABLE [(parameter)] ADD [(parameter)] VARCHAR2(32767);</value>
    </row>
    <row>
       <key>cp</key>
-      <value>CREATE PROCEDURE procedure_name
+      <value>CREATE OR REPLACE PROCEDURE procedure_name
       [ (parameter]) ]
       IS
           [declaration_section]
@@ -25,7 +25,7 @@
    </row>
    <row>
       <key>ctas</key>
-      <value>CREATE TABLE zbob AS SELECT * FROM [(parameter)]</value>
+      <value>CREATE TABLE t AS SELECT * FROM [(parameter)]</value>
    </row>
    <row>
       <key>dbo</key>
@@ -70,5 +70,9 @@
    <row>
       <key>www</key>
       <value>WHERE [(parameter)]</value>
+   </row>
+   <row>
+      <key>sau</key>
+      <value>--  SET AUTOTRACE TRACE EXPLAIN</value>
    </row>
 </rows>
