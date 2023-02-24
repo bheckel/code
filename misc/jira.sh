@@ -21,16 +21,14 @@ fi
 mkdir -p ~/onedrive/orion-${TAG} && cd ~/onedrive/orion-${TAG} && \
 cp -i ~/onedrive/template_jira.sql ~/onedrive/orion-${TAG}/${JIRA}.sql && \
 
-# cp -i ~/onedrive/template_t.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
-cp -i ~/onedrive/template_jira.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
-# sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
-sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
+#cp -i ~/onedrive/template_jira.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
+#sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 
 echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\2023OrionScripts\23.xOrionScripts' >> ${JIRA}.sql
 echo '--  @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
 echo '--  vi "C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
 echo '--  @"C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
-echo "DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
+#echo "DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
 echo "-- ${DESC} https://esapps.sas.com/jira/browse/ORION-${JIRA}" >> ${JIRA}.sql
@@ -43,14 +41,7 @@ echo "-- Pushed and ran ORION-${JIRA}_ddl_change.sql on ORNDBDEV01RW and ORNDBTS
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
-# vim t.sql -c ':mksession!'
-
 echo "${JIRA} ${DESC}" > ${TAG}.html
 echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
-# cygstart ${TAG}.html
 
-# cp -i ~/onedrive/template_project.prj ~/onedrive/orion-${TAG}/${TAG}.prj && \
-# cp -i ~/onedrive/template_project.dsk ~/onedrive/orion-${TAG}/${TAG}.dsk && \
-# cygstart "C:\Users\boheck\OneDrive - SAS\orion-${TAG}\\${TAG}.prj"
 cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/orion-${TAG}
-# cygstart "C:\Users\boheck\Oracle\sqldeveloper\sqldeveloper\bin\sqldeveloper64W.exe"
