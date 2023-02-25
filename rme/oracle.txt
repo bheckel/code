@@ -1,3 +1,9 @@
+
+Transitory test instance:
+ssh -i ~/Downloads/ssh-key-2023-01-14.key opc@129.80.234.20
+
+---
+
 09-Feb-23
 SQL Developer 21.4.3 final not java-impaired version
 gray DBMS_OUTPUT.put_line
