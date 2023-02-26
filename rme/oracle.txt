@@ -1,9 +1,4 @@
 
-Transitory test instance:
-ssh -i ~/Downloads/ssh-key-2023-01-14.key opc@129.80.234.20
-
----
-
 09-Feb-23
 SQL Developer 21.4.3 final not java-impaired version
 gray DBMS_OUTPUT.put_line
@@ -31,7 +26,7 @@ DD-MON-RR HH.MI.SS
 
 ---
 
-# 14-Jan-23 
+# 14-Jan-23 opc@oci-basics-instance2
 $ lsblk
 NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT  
 sda                  8:0    0 46.6G  0 disk             
@@ -61,6 +56,10 @@ sda                  8:0    0 46.6G  0 disk
   └─ocivolume-oled 252:1    0   10G  0 lvm  /var/oled
 sdb                  8:16   0   50G  0 disk /mnt/www/html
 
+# unmounted, detached then reattached
+# 26-Feb-23 opc@oci-basics-instance2
+
+
 ---
 
 2022-12-24 13:05:01 cd libgc/
@@ -87,7 +86,7 @@ sdb                  8:16   0   50G  0 disk /mnt/www/html
 
 ---
 
-Dec 2022
+Dec 2022 "webserver"
 Godaddy:
 Add MX:  @  rshdev.com  Pri 0  1 hr
 Add TXT: @  v=spf1 a mx a:rshdev.com -all  1/2 hr
