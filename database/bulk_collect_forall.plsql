@@ -1,4 +1,4 @@
---  Adapted: Tue 01 Apr 2019 10:49:35 (Bob Heckel--DevGym)
+--  Adapted: 01-Apr-2019 (Bob Heckel--DevGym)
 -- Modified: 23-Feb-2022 (Bob Heckel)
 
 -- See also row.plsql suppress_rowlevel_dml_errors.plsql, restore_records_from_hist.sql, execute_immediate.plsql
@@ -18,7 +18,7 @@
 -- If a query or DML statement affects four or more database rows, then bulk SQL can
 -- significantly improve performance but reducing context switches.
 --
--- If the query does not return any rows, then NO_DATA_FOUND is NOT raised.
+-- If the query does not return any rows, then NO_DATA_FOUND is !!!!NOT!!!! raised.
 -- Instead, the collection is emptied.  Like FETCH inside a LOOP PL/SQL does
 -- not raise an exception when a statement with a BULK COLLECT clause returns no
 -- rows. You must check the target collection for emptiness.
@@ -79,6 +79,7 @@
 
 ---
 
+--~~~~~~~~~~~~~~~~ If table is known:
 DECLARE
   l_cnt PLS_INTEGER := 0;
 
@@ -104,12 +105,53 @@ DECLARE
           FROM account_team_assign_all
          WHERE account_team_assignment_id = l_recs(i).account_team_assignment_id;
         
-        --COMMIT;
-        ROLLBACK;
+        COMMIT;
     END LOOP;
     CLOSE c1;
     dbms_output.put_line(l_cnt);
 END;
+
+--~~~~~~~~~~~~~~~~ If table is NOT known:
+  PROCEDURE PRUNE_TABLE(tblnm    VARCHAR2,
+                        idcol    NUMBER,
+                        datecol  VARCHAR2,
+                        daysback NUMBER
+                       ) IS
+    l_cnt  PLS_INTEGER := 0;
+    l_sql  VARCHAR(500);
+    l_msg  VARCHAR(32767);
+    l_cur  SYS_REFCURSOR;
+
+    TYPE t_numtable IS TABLE OF NUMBER;
+    l_delrecs  t_numtable;
+  BEGIN
+    -- Build an expired records cursor
+    l_sql := 'SELECT ' || idcol ||
+             ' FROM ' || tblnm ||
+             ' WHERE ' || datecol || '<' || chr(39) || to_char(SYSDATE - daysback, 'DDMONYY') || chr(39);
+
+    OPEN l_cur FOR l_sql;
+    LOOP
+      FETCH l_cur BULK COLLECT INTO l_delrecs LIMIT 500;
+      EXIT WHEN l_delrecs.COUNT = 0;
+      FOR i IN 1..l_delrecs.COUNT LOOP
+        EXECUTE IMMEDIATE 'DELETE FROM ' || tblnm || ' WHERE ' || idcol || ' = :1'
+          USING l_delrecs(i);
+      END LOOP;
+    END LOOP;
+    CLOSE l_cur;
+
+    l_cnt := SQL%BULK_ROWCOUNT;
+    COMMIT;
+
+    l_msg := l_cnt || ' rows deleted from ' || tblnm || ' using criteria ' || l_sql;
+    INSERT INTO DAILY_DATA_MAINTENANCE VALUES (sysdate, l_msg, 'PRUNE_TABLE');
+    COMMIT;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.put_line('Error: ' || SQLERRM || ' - ' || DBMS_UTILITY.format_error_backtrace);
+  END PRUNE_TABLE;
 
 ---
 
@@ -164,8 +206,8 @@ DECLARE
   CURSOR c is select * from my_family;
 
 BEGIN 
-  open c;
-  loop
+  OPEN c;
+  LOOP
     FETCH c BULK COLLECT into mynt limit 2;
     EXIT WHEN mynt.count = 0;
     FOR i in 1..mynt.COUNT LOOP 
@@ -176,8 +218,6 @@ BEGIN
 END;
 
 ---
-
-dbms_output.enable(NULL);
 
 CREATE OR REPLACE PACKAGE ORION34136 IS
  failure_in_forall EXCEPTION;  
@@ -676,9 +716,9 @@ DECLARE
 
   BEGIN
     SELECT data_type
-    INTO l_dtype 
-    FROM user_tab_columns 
-   WHERE table_name='ASP' AND column_name = 'FUTURE_SUP_ACCOUNT_ID';
+      INTO l_dtype 
+      FROM user_tab_columns 
+     WHERE table_name='ASP' AND column_name = 'FUTURE_SUP_ACCOUNT_ID';
 
     -- 1) Change data type
     IF l_dtype = 'BINARY_DOUBLE' THEN  

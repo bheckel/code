@@ -25,6 +25,8 @@ D	AMT
 */
 
 
+--same
+
 with v as (
           select date '2000-01-01' d, 10 amt from dual
 union all select date '2000-01-02', 11 from dual
@@ -53,7 +55,7 @@ D	AMT	r
 */
 
 
-/* Add a younger amt of 30 and keep only that i.e. the most recent of the dups */
+/* Add a younger amt of 30 and keep only that i.e. keep the most recent of the dups */
 with v as (
           select date '2000-01-01' d, 10 amt from dual
 union all select date '2000-01-04', 10 from dual
@@ -83,7 +85,6 @@ D	AMT	r
 ---
 
 -- Dedup deduplicate by timestamp - where there are multiple event ids, take the latest tstamp:  
-
 with tbl as (
           select 1 as num, TIMESTAMP '2000-01-01 08:26:50' tstamp, 10 event from dual
 union all select 2, TIMESTAMP '2000-01-02 08:26:51', 11 from dual
@@ -93,13 +94,13 @@ union all select 5, TIMESTAMP '2000-01-03 08:26:54', 31 from dual
 union all select 1, TIMESTAMP '2000-01-04 08:26:55', 10 from dual
 union all select 7, TIMESTAMP '2000-01-05 08:26:56', 14 from dual
 )
-select a.num,                    -- 2. get latest event value
+select a.num,                 -- 2. get latest event value
        a.tstamp,
-       max(a.event)               -- 3. only want 1 rec per tstamp so keep only the highest one if find >1
-from tbl a JOIN (select num as mynum,    -- 1. get latest tstamp for all num recs
+       max(a.event)           -- 3. only want 1 rec per tstamp so keep only the highest one if find >1
+from tbl a JOIN (select num,  -- 1. get latest tstamp for all num recs
                         max(tstamp) as mytstamp
                         from tbl
-                        group by num) b ON a.num=b.mynum and a.tstamp=b.mytstamp
+                        group by num) b ON a.num=b.num and a.tstamp=b.mytstamp
 group by a.num, a.tstamp
 
 -- same
@@ -118,7 +119,7 @@ from (
   select num, 
          tstamp,
          event,
-         row_number() OVER (PARTITION BY num ORDER BY tstamp DESC) r
+         row_number() OVER (partition by num order by tstamp DESC) r
   from tbl 
 )
 where r=1
