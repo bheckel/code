@@ -18,30 +18,30 @@ else
   echo '...done'
 fi
 
-mkdir -p ~/onedrive/orion-${TAG} && cd ~/onedrive/orion-${TAG} && \
-cp -i ~/onedrive/template_jira.sql ~/onedrive/orion-${TAG}/${JIRA}.sql && \
+mkdir -p ~/onedrive/dma-${TAG} && cd ~/onedrive/dma-${TAG} && \
+cp -i ~/onedrive/template_jira.sql ~/onedrive/dma-${TAG}/${JIRA}.sql && \
 
 #cp -i ~/onedrive/template_jira.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
 #sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 
 echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\2023OrionScripts\23.xOrionScripts' >> ${JIRA}.sql
-echo '--  @ORION-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
-echo '--  vi "C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
-echo '--  @"C:\Users\boheck\OneDrive - SAS\orion-'${JIRA}'_'${DESC}'\ORION'${JIRA}'.pck"' >> ${JIRA}.sql
+echo '--  @DMA-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
+echo '--  vi "C:\Users\boheck\OneDrive - SAS\dma-'${JIRA}'_'${DESC}'\DMA'${JIRA}'.pck"' >> ${JIRA}.sql
+echo '--  @"C:\Users\boheck\OneDrive - SAS\dma-'${JIRA}'_'${DESC}'\DMA'${JIRA}'.pck"' >> ${JIRA}.sql
 #echo "DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
-echo "-- ${DESC} https://esapps.sas.com/jira/browse/ORION-${JIRA}" >> ${JIRA}.sql
+echo "-- ${DESC} https://esapps.sas.com/jira/browse/DMA-${JIRA}" >> ${JIRA}.sql
 echo '' >> ${JIRA}.sql
-echo "-- $ git checkout develop && git pull && git checkout -b feature/ORION-${JIRA} && git push --set-upstream origin feature/ORION-${JIRA} && git checkout feature/ORION-${JIRA}" >> ${JIRA}.sql
-echo "-- $ git add . && git commit -m 'ORION-"${JIRA}: "' && git push" >> ${JIRA}.sql
-echo "-- AFTER GITHUB PR/UI: git checkout develop && git pull && git branch -d feature/ORION-${JIRA} && git fetch -p && git branch -a" >> ${JIRA}.sql
-echo "-- WITHOUT GITHUB PR/UI: gco && gpul && gco ${JIRA} && git merge develop && gpul && gco && git merge --squash feature/ORION-${JIRA} && git add . && git commit -m 'ORION-${JIRA}: XXXXXXXXXX' && git push && git branch -D feature/ORION-${JIRA} && git fetch -p && git push origin --delete feature/ORION-${JIRA}" >> ${JIRA}.sql
-echo "-- Pushed and ran ORION-${JIRA}_ddl_change.sql on ORNDBDEV01RW and ORNDBTST01RW" >> ${JIRA}.sql
+echo "-- $ git checkout develop && git pull && git checkout -b feature/DMA-${JIRA} && git push --set-upstream origin feature/DMA-${JIRA} && git checkout feature/DMA-${JIRA}" >> ${JIRA}.sql
+echo "-- $ git add . && git commit -m 'DMA-"${JIRA}: "' && git push" >> ${JIRA}.sql
+echo "-- AFTER GITHUB PR/UI: git checkout develop && git pull && git branch -d feature/DMA-${JIRA} && git fetch -p && git branch -a" >> ${JIRA}.sql
+echo "-- WITHOUT GITHUB PR/UI: gco && gpul && gco ${JIRA} && git merge develop && gpul && gco && git merge --squash feature/DMA-${JIRA} && git add . && git commit -m 'DMA-${JIRA}: XXXXXXXXXX' && git push && git branch -D feature/DMA-${JIRA} && git fetch -p && git push origin --delete feature/DMA-${JIRA}" >> ${JIRA}.sql
+echo "-- Pushed and ran DMA-${JIRA}_ddl_change.sql on ORNDBDEV01RW and ORNDBTST01RW" >> ${JIRA}.sql
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
 echo "${JIRA} ${DESC}" > ${TAG}.html
-echo "<a href=https://esapps.sas.com/jira/browse/ORION-${JIRA}>jira</a>" >> ${TAG}.html
+echo "<a href=https://esapps.sas.com/jira/browse/DMA-${JIRA}>jira</a>" >> ${TAG}.html
 
-cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/orion-${TAG}
+cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/dma-${TAG}

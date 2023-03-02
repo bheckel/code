@@ -25,6 +25,7 @@ create or replace trigger mkc_revenue_full_iud before INSERT OR UPDATE OR DELETE
   declare bypass_flag varchar2(6); constantSystimestamp TIMESTAMP(6) := systimestamp; begin ... end;
 
 alter trigger MKC_REVENUE_FULL_IUD enable;
+alter trigger MKC_REVENUE_FULL_IUD disable;
 drop trigger MKC_REVENUE_FULL_IUD;
 
 create index KRF_ASSIGN_LOV_ID_IX ON MKC_REVENUE_FULL (ASSIGN_TERR_LOV_ID);
