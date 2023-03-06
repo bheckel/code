@@ -11,7 +11,7 @@ TAG=${JIRA}_${DESC}
 
 echo 'checking if already exists...'
 #cd ~/onedrive && find . -maxdepth 1 -name "*${JIRA}*"
-if [ `find -L $HOME/onedrive -maxdepth 1 -name "*${JIRA}*" | wc -l` -gt 0 ];then
+if [ `find -L $HOME/onedrive -maxdepth 1 -name "${JIRA}*" | wc -l` -gt 0 ];then
   echo "${JIRA} already exists. Exiting."
   exit
 else

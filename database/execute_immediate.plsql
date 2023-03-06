@@ -1,4 +1,4 @@
--- Modified: 10-Feb-2022 (Bob Heckel)
+-- Modified: 06-Mar-2023 (Bob Heckel)
 -- https://docs.oracle.com/database/121/LNPLS/dynamic.htm#LNPLS01115
 -- See also run_all_procedures.plsql, using.plsql bulk_collect_forall.plsql
 
@@ -350,3 +350,16 @@ begin
     end if;
   end loop;
 end;
+
+---
+
+  PROCEDURE CHECK_MKC_REV_TOTALS(tblnm VARCHAR2) IS
+    l_cnt  NUMBER := 0;
+  BEGIN
+    EXECUTE IMMEDIATE 'select count(1) from ' || tblnm
+      INTO l_cnt;
+
+    IF l_cnt >1 THEN
+      DBMS_OUTPUT.put_line('sysdate: ' || SYSDATE);
+    END IF;
+  END CHECK_MKC_REV_TOTALS;
