@@ -240,8 +240,9 @@ begin
 
 ---
 
--- Using BULK COLLECT with native dynamic SQL queries that might return more than one row:
+-- BULK COLLECT with native dynamic SQL queries that might return more than one row:
 
+-- USING
 DECLARE
    TYPE ids_t IS TABLE OF employees.employee_id%TYPE;
    l_ids   ids_t;
@@ -255,8 +256,7 @@ BEGIN
    END LOOP;
 END;
 
--- compare
-
+-- RETURNING
 DECLARE
    TYPE ids_t IS TABLE OF employees.employee_id%TYPE;
    l_ids ids_t;
