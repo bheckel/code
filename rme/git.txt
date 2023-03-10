@@ -26,6 +26,7 @@ git branch -d newbar
              \
               I <-- J <-- K baz
 
+BUT NOW THAT YOU KNOW THAT...
 All that is equivalent to this:
 
 git rebase foo bar
@@ -62,8 +63,8 @@ $ git reset --hard savepoint
 
 If you want to clean up, you can now delete the savepoint with git branch -d savepoint.
 
-BUT NOW THAT YOU KNOW THAT...:
-Skip the savepoint branch since git doesn't care what you call your branches.  After the whoops:
+BUT NOW THAT YOU KNOW THAT...
+Just skip the savepoint branch since git doesn't care what you call your branches.  Then after the whoops:
 $ git log  # find the previous sha1 that you merged into
 $ git reset --hard 4ce7e40
 
@@ -124,6 +125,10 @@ remote:
 To github.as.com:rion/data.git
  * [new branch]              feature/RION-40225 -> feature/RION-40225
 Branch 'feature/RION-40225' set up to track remote branch 'feature/RION-40225' from 'origin'.
+
+...do commits on your feature...
+
+WITHOUT GITHUB PR/UI: gco && gpul && gco 39 && git merge develop && gpul && gco && git merge --squash feature/DMA-39 && git add . && git commit -m 'DMA-39: SP Issue #8 - Prevent ORA-04065 UI Errors' && git push && git branch -D feature/DMA-39 && git fetch -p && git push origin --delete feature/DMA-39
 
 ---
 
@@ -232,151 +237,7 @@ HEAD: Last commit snapshot, next parent. It’s generally simplest to think of H
 
 ---
 
-bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
-$ git add . && git commit -m 'RION-35000: Upgrade e_mail_message procedure'
-[develop e5b334a05c2] RION-35000: Upgrade e_mail_message procedure
- 2 files changed, 145 insertions(+), 31 deletions(-)
- create mode 100644 Source/SQL/3.53RIONScripts/RION-35000_ddl_change.sql
-
-
-bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
-$ gpull
-remote: Counting objects: 42, done.
-remote: Compressing objects: 100% (21/21), done.
-remote: Total 42 (delta 29), reused 34 (delta 21), pack-reused 0
-Unpacking objects: 100% (42/42), done.
-error: cannot open .git/FETCH_HEAD: Permission denied
-
-
-bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
-$ gpull
-From github.as.com:RION/data
-   348396f699f..6302f518da4  develop     -> origin/develop
- * [new branch]              RION-35723 -> origin/RION-35723
-error: Empty commit message.
-Not committing merge; use 'git commit' to complete the merge.
-
-
-ABORT, delete all lines in merge git vim popup
-
-
-bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop|MERGING)
-$ gs
-On branch develop
-Your branch and 'origin/develop' have diverged,
-and have 1 and 6 different commits each, respectively.
-  (use "git pull" to merge the remote branch into yours)
-
-All conflicts fixed but you are still merging.
-  (use "git commit" to conclude merge)
-
-Changes to be committed:
-
-        modified:   3.53RIONScripts/3.53_GoLive_Script.sql
-        new file:   3.53RIONScripts/RION-35145_ddl_change.sql
-        modified:   3.53RIONScripts/RION-35347_data_change.sql
-        modified:   MIGRATION.pck
-        modified:   RECOVERY.pck
-        modified:   kill_old_sessions.prc
-
-
-
-bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop|MERGING)
-$ git merge --abort
-
-
-
-bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
-$ gs
-On branch develop
-Your branch and 'origin/develop' have diverged,
-and have 1 and 6 different commits each, respectively.
-  (use "git pull" to merge the remote branch into yours)
-
-nothing to commit, working tree clean
-
-
-bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
-$ git reset --hard HEAD^
-HEAD is now at 348396f699f Merge pull request #399 from RION/feature/RION-35692
-
-bheck@laptop MINGW64 ~/OneDrive - AS/workspace/data/Source/SQL (develop)
-$ gs
-On branch develop
-Your branch is behind 'origin/develop' by 6 commits, and can be fast-forwarded.
-  (use "git pull" to update your local branch)
-
-nothing to commit, working tree clean
-
----
-
-Post PR approval manual push CANONICAL:
-
-bob@host MINGW64 /c/RION/workspace/data/Source/SQL (feature/RION-31587)
-$ git checkout develop
-Switched to branch 'develop'
-Your branch is up to date with 'origin/develop'.
-
-bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
-$ git pull
-remote: Counting objects: 17, done.
-remote: Compressing objects: 100% (4/4), done.
-remote: Total 17 (delta 13), reused 17 (delta 13), pack-reused 0
-Unpacking objects: 100% (17/17), done.
-From github.as.com:RION/data
-   8dcbba3a644..07ae678951a  develop    -> origin/develop
-Updating 8dcbba3a644..07ae678951a
-Fast-forward
- Source/SQL/3.48RIONScripts/3.48_GoLive_Script.sql |  3 +
- .../3.48RIONScripts/RION-30739_data_change.sql   | 72 ++++++++++++++++++++++
- Source/SQL_Views/RPT_OATS_OPP_ACTIVITY.sql         | 26 +++++---
- 3 files changed, 107 insertions(+), 16 deletions(-)
- create mode 100644 Source/SQL/3.48RIONScripts/RION-30739_data_change.sql
-
-bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
-$ git merge --no-ff feature/RION-31587
-Merge made by the 'recursive' strategy.
- .../3.48RIONScripts/RION-31587_ddl_change.sql    |  12 +
- Source/SQL/SALES_CREDITS.pck                       | 521 +++++++++------------
- Source/SQL/SALES_CREDITS_TYPES.pck                 |  86 ++++
- Source/SQL/USER_ON_CALL.pck                        |  20 +-
- Source/SQL/USER_ON_CALL_TYPES.pck                  |  19 +
- 5 files changed, 344 insertions(+), 314 deletions(-)
- create mode 100644 Source/SQL/SALES_CREDITS_TYPES.pck
- create mode 100644 Source/SQL/USER_ON_CALL_TYPES.pck
-
-bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
-#$ git push origin develop
-$ git push
-Enumerating objects: 13, done.
-Counting objects: 100% (13/13), done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (5/5), done.
-Writing objects: 100% (5/5), 492 bytes | 492.00 KiB/s, done.
-Total 5 (delta 4), reused 0 (delta 0)
-remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
-To github.as.com:RION/data.git
-   07ae678951a..6b7ce657a4d  develop -> develop
-
-bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
-git branch -d feature/RION-31587
-Deleted branch feature/RION-31587 (was ec8d6b73687).
-
-bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
-git fetch -p  # prune other's deleted branches
-From github.as.com:RION/data
- - [deleted]                 (none)     -> origin/feature/RION-32026
- - [deleted]                 (none)     -> origin/feature/RION-33853
- - [deleted]                 (none)     -> origin/release/3.50
-
-bob@host MINGW64 /c/RION/workspace/data/Source/SQL (develop)
-git push origin --delete feature/RION-31587
-To github.as.com:RION/data.git
- - [deleted]                 feature/RION-31587	
-
----
-
-# New feature branch CANONICAL
+# New feature branch
 git checkout develop
 git pull
 git branch feature/RION-26857 && git checkout feature/RION-26857
@@ -531,122 +392,6 @@ git push origin develop  =  PUSH TO   o from d
 
 ---
 
-04-Sep-18 https://gist.github.com/blackfalcon/8428401
-
-git checkout develop
-git pull  # or git pull origin develop
-git checkout -b feature/RION-31044
-vi Source/SQL_Views/rpt_account_address.sql
-git add . && git commit -m 'RION-31044: Add View to Include Addresses for Accounts Not Used in RION'
-git push --set-upstream origin feature/RION-31044  # first time only then just  git push OR  git branch --set-upstream-to=origin feature/RION-31044
-# click button for approval ...
-# ... approved
-???git pull origin develop
-git checkout develop
-git pull origin develop
-git merge --no-ff feature/RION-31044
-# Take my develop and make it the remote's develop
-git push origin develop  # or same: git push origin develop:develop or same git push
-git branch -d feature/RION-31044
-git push origin --delete feature/RION-31044  # if not using github del button
-git branch -r  # or  git ls-remote origin  to confirm
-git fetch -p  # prune other's deleted branches
-
----
-
-WRONG??
-
-# Ready to send but prior to any committing:
-git stash
-
-# Update the branch to the latest code:
-git pull
-
-# Running git merge with non-trivial uncommitted changes is discouraged i.e. git merge --abort may fail
-# Merge your local changes into the latest code:
-git stash apply
-
-# Add, commit your changes:
-git add . && git commit -m 'RION-31587: Modify packages to avoid ORA-04068'
-
-# Push local commits:
-git push origin HEAD:feature/RION-31587
-
-# Click pull request button
-
-# After approval Click 'Merge pull request' button
-
-# ???
-# one-time setup branch:
-git clone git@github.as.com:RION/data.git
-git branch feature/RION-31587
-git checkout feature/RION-31587
-vi .git/info/exclude
-git add . && git commit -m 'RION-31587: Modify packages to avoid ORA-04068'
-# confirm
-git config --local -e
-git branch --set-upstream-to=origin/develop feature/RION-31587
-git pull
-git push origin HEAD:feature/RION-31587
-
----
-
-Use .git/info/exclude instead of .gitignore
-
----
-
-28-Aug-18 feature branch workflow
-  737  2018-08-28 09:33:09 rm -rf misc
-  738  2018-08-28 09:33:14 git clone git@github.com:bheckel/misc.git
-  739  2018-08-28 09:33:17 cd misc/
-  740  2018-08-28 09:33:40 git branch test4
-  741  2018-08-28 09:33:50 git checkout test4
-  742  2018-08-28 09:33:54 vi README.md
-  743  2018-08-28 09:35:03 git add . && git commit -m 'test4 with branch'
-  744  2018-08-28 09:35:06 gs
-  747  2018-08-28 09:41:29 git branch --set-upstream-to=origin/master test4
-  748  2018-08-28 09:41:32 git config --local -e
-  749  2018-08-28 09:42:51 git ls-remote origin
-  750  2018-08-28 09:43:39 git pull
-  752  2018-08-28 09:48:46 git push origin HEAD:test4
-  753  2018-08-28 09:48:59 git ls-remote origin
-  754  2018-08-28 09:58:13 vi README.md
-  755  2018-08-28 09:58:51 git add . && git commit -m 'test4 branch postpullrequest'
-  757  2018-08-28 09:59:04 git pull
-  758  2018-08-28 09:59:13 git push origin HEAD:test4
-
-
-27-Aug-18 bad
-  675  2018-08-27 15:53:04 git clone git://github.com/bheckel/misc.git
-  677  2018-08-27 15:53:31 cd misc
-  git remote -v
-  678  2018-08-27 15:53:36 git branch test2
-  679  2018-08-27 15:53:42 git checkout test2
-  681  2018-08-27 15:55:25 cat .git/config
-  685  2018-08-27 15:57:04 git push -u origin test2
-# 'you cant push'
-git config --local -e
-change to:
-url = git@github.com:bheckel/misc.git
-  686  2018-08-27 15:57:36 git remote add originx git@github.com:bheckel/misc.git
-  688  2018-08-27 15:57:52 git push -u originx test2
-  689  2018-08-27 15:58:23 vi README.md
-  691  2018-08-27 15:58:50 git add .
-  690  2018-08-27 15:58:43 git commit -m 'test2 hack'
-  693  2018-08-27 15:59:43 git push -u originx test2
-  696  2018-08-27 16:00:41 git push
-  697  2018-08-27 16:02:46 git checkout master
-  698  2018-08-27 16:02:53 git fetch origin
-  699  2018-08-27 16:03:18 git checkout -b test originx/test2
-  ??701  2018-08-27 16:03:38 git merge master
-  702  2018-08-27 16:03:55 git checkout master
-  703  2018-08-27 16:04:07 git merge test2
-  705  2018-08-27 16:04:24 git push originx master
-  706  2018-08-27 16:05:57 git pull
-  708  2018-08-27 16:06:25 git branch -a
-
----
-
 git config --local -e
 
 edit .git/config:
@@ -689,11 +434,6 @@ git difftool  # vimdiff one file at a time
 
 Which files were affected in each commit:
 git log --date=short --name-only
-
----
-
-# Restore a single deleted file
-wget https://raw.githubusercontent.com/bheckel/transfer/master/whoops.txt
 
 ---
 
@@ -752,36 +492,6 @@ git push origin master
 
 ---
 
-cd ~/Downloads
-echo '*' > .gitignore
-git init 
-git remote add origin git@github.com:bheckel/transfer.git
-git add -f c.NEW
-git commit -m 'initial'
-git push origin master  # spews ERROR b/c i created repo on appa then did the github.com clicks
-git pull origin master  # so do this (README.md downloads)
-git push origin master  # c.NEW uploads
-
----
-
-# Onetime setup edits ~/.gitconfig:
-git config --global user.name "Robert S. Heckel Jr."
-git config --global user.email rsh@rshdev.com
-git config --global color.status auto
-git config --global color.diff auto
-# Optional:
-git config --global core.editor vim
-git config --global merge.tool vimdiff
-git config --safecrlf yes
-git config --global color.ui true
-# F=quit if 1 screen, S=make less wrap, X=handle control chars
-git config --global --replace-all core.pager 'less -+F -+S -+X'
-###git config --autocrlf yes  # Windows
-###git config --autocrlf no  # Unix
-git config -l
-# or all at once:
-git config --global user.name "Robert S. Heckel Jr." && git config --global user.email rsh@rshdev.com && git config --global color.status auto && git config --global color.diff auto && git config --global core.editor vim && git config --global merge.tool vimdiff
-
 # Current project (only edits .git/config):
 git config color.ui false
 
@@ -800,7 +510,8 @@ build/    # ignore all files in the build/ directory
 doc/*.txt # ignore doc/notes.txt, but not doc/server/arch.txt
 *~
 
-=======
+---
+
 $ cd datapost/
 $ git init
 $ git add .  # all files & subdirectories in pwd
@@ -843,7 +554,8 @@ $ git count-objects
 $ git gc  # compress to save space
 $ git count-objects
 $ git reflog  # log of where your HEAD and branch references have been for the last few months
-=======
+
+---
 
 # Rename move local (current) branch:
 git branch -m mynewbranchname
@@ -937,6 +649,8 @@ git checkout master  # ok to drop july13 branch i think
 git fetch upstream
 git merge upstream/master  # syncronized with my recent hacks
 
+---
+
 # Are you working on a project that uses some other version control system, and
 # you sorely miss Git? Then initialize a Git repository in your working directory:
 $ git init
@@ -953,6 +667,8 @@ $ git pull  # their changes to your private
 # pull (don't use push from private):
 $ git pull /some/new/private/directory
 # Then use their SCM to merge that change
+
+---
 
 # Instructions - create new project (master) after all the ssh setup work is done on github.com
 # https://github.com/new to name it
@@ -997,6 +713,8 @@ git log --all --pretty=format:"%h %cd %s (%an)" --since='7 days ago'
 git log --since='6 weeks ago' --grep='LADD'
 # best
 git log --pretty=format:"%h %ad | %s%d [%an]" --graph --date=short
+
+---
 
 # Unstage a new file:
 git reset HEAD oops.txt

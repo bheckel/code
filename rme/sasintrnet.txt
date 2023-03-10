@@ -101,13 +101,6 @@ Start SAS Load Mgr Service
 put helloworld.intrnet.sas in e:\...
 http://rtpsawn321/sasweb/cgi-bin/broker.exe?_service=default&_program=dp.t.sas
 
-----
-
-2010-05-04
-
-See readme.apache2.txt for installing on Cygwin
-
-
 -----
 
 Note: no numbers allowed in filename e.g. this won't work!:
