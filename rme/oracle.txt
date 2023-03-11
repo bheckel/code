@@ -1,3 +1,10 @@
+sudo dnf install gcc-c++
+sudo dnf install ncurses-devel
+sudo dnf install openssl-devel
+wget https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgc/1:8.2.2-3/libgc_8.2.2.orig.tar.gz
+git clone https://github.com/tats/w3m.git
+
+---
 
 09-Feb-23
 SQL Developer 21.4.3 final not java-impaired version
