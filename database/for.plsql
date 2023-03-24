@@ -1,15 +1,15 @@
 --  Created: 22-May-2020 (Bob Heckel)
--- Modified: 04-Dec-2020 (Bob Heckel)
+-- Modified: 23-Mar-2023 (Bob Heckel)
 -- See also bulk_collect_forall.plsql
 
 ---
 
 BEGIN
-   FOR rec IN (SELECT contact_id FROM contact WHERE contact_id=9990034351)
-   LOOP
-      -- There is no NO_DATA_FOUND exception
-      DBMS_OUTPUT.put_line (rec.contact_id);
-   END LOOP;
+  FOR rec IN (SELECT contact_id FROM contact WHERE contact_id=9990034351)
+  LOOP
+     -- There is no NO_DATA_FOUND exception
+     DBMS_OUTPUT.put_line (rec.contact_id);
+  END LOOP;
 END;
 
 ---
@@ -175,3 +175,106 @@ Total rows deleted: 56
                   WHEN 'KANGAROO' THEN 1
                 END
   LOOP
+
+---
+
+-- Use hardcoded temporary table. Toggle BULK/no BULK loop.
+--  set serveroutput on size 500000
+declare
+  cnt number := 0;
+
+  cursor c1 is
+    with v as (
+    select 4193628 aid, 11825450 actid from dual
+    union
+    select 10660140 aid, 12965780 actid from dual
+--    union
+--    select 3491687 aid,  12999780 actid from dual
+--    union
+--    select 3491687 aid,  12999800 actid from dual
+  ), v2 as ( 
+     select a.account_id,t.activity_id, t.employee_id, t.due_date, t.number_of_hours, t.status, t.task_id, t.contact_id, t.start_date,t.end_date,
+            t.employee_id oldlead,ate.employee_id newleadandtsr, t.outcome_lov_id
+       from task t
+       join activity_search act_s on t.activity_id = act_s.activity_search_id
+       left join ACTIVITY ACT on T.ACTIVITY_ID = ACT.ACTIVITY_ID
+       left join contact c on act.contact_id = c.contact_id
+       left join account_name a_n on c.account_name_id = a_n.account_name_id
+       left join account a on a_n.account_id = a.account_id
+       left join contact_search cs on c.CONTACT_ID = cs.contact_search_id
+       left join account_team_assign_all ata on a.account_id= ata.account_id
+       left join account_team_employee ate on ata.account_team_id=ate.account_team_id and ate.function_lov_id = 2750
+     where T.CURRENT_TASK = 1 and (c.USEDINESTARS = 1 or c.type = 'S')
+  )
+  select distinct v2.*
+    from v, v2
+   where v.aid=v2.account_id and v.actid=v2.activity_id;
+ 
+  type t_c1 is table of c1%rowtype;
+  c1table t_c1;
+begin
+  open c1;
+  --LOOP
+    fetch c1 bulk collect into c1table;--LIMIT 5;
+    --EXIT WHEN c1table.COUNT = 0;
+    for i in 1 .. c1table.count loop
+      DBMS_OUTPUT.put_line(c1table(i).account_id);
+      
+      UPDATE TASK_BASE T
+         SET T.end_date = sysdate,
+             T.current_task = 0,
+             T.new_task = 0,
+             T.outcome = NULL,
+             T.updatedby = 0,
+             T.updated = sysdate,
+             T.audit_source = 'RION-63332'
+       WHERE T.task_id = c1table(i).task_id
+         AND T.employee_id = c1table(i).oldlead;
+         
+      INSERT INTO TASK_BASE
+        (TASK_ID,
+         ACTIVITY_ID,
+         EMPLOYEE_ID,
+         DUE_DATE,
+         NUMBER_OF_HOURS,
+         STATUS,
+         CREATED,
+         CREATEDBY,
+         UPDATED,
+         UPDATEDBY,
+         NEW_TASK,
+         ORIGIN_TASK_ID,
+         CURRENT_TASK,
+         OUTCOME_LOV_ID,
+         CONTACT_ID,
+         START_DATE,end_date,
+         OWNER_TERRITORY_LOV_ID,
+         AUDIT_SOURCE)
+      VALUES
+        (UID_TASK.NEXTVAL,
+         c1table(i).activity_id,
+         c1table(i).newleadandtsr,
+         c1table(i).due_date,
+         c1table(i).number_of_hours,
+         c1table(i).status,
+         sysdate,--created
+         0,
+         sysdate,--updated
+         0,
+         1, --new_task
+         c1table(i).task_id, -- old tid (origin)
+         1, --current task
+         c1table(i).outcome_lov_id,
+         c1table(i).contact_id,
+         c1table(i).start_date,
+         c1table(i).end_date,
+         (select territory_lov_id from employee_base e where e.employee_id = 213000 ),
+         'RION-63332'
+      );
+      cnt := cnt + sql%rowcount;
+      rollback;
+    end loop;  -- DML loop
+  --END LOOP;  -- LIMIT loop
+  DBMS_OUTPUT.put_line('cnt:'||cnt);
+  close c1;
+end;

@@ -8,6 +8,8 @@
 -- all rows in the collection. Or, if you cannot get this to work, you can always use a normal loop with conventional
 -- (not bulk) dml operations.
 
+-- See also for.plsql
+
 ---
 
 -- Insert records in another table where the cursor key matches
