@@ -12,11 +12,14 @@ tmpCODE="c:/temp/tmpsas.$$.sas"
 tmpLOG="c:/temp/tmpsas.$$.log"
 tmpLST="c:/temp/tmpsas.$$.lst"
 
-SAS94WIN='C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -config C:\Progra~1\SASHome\SASFoundation\9.4\nls\u8\sasv9.cfg'
+#SAS94WIN='C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -config C:\Progra~1\SASHome\SASFoundation\9.4\nls\u8\sasv9.cfg'
+#TODO
+SAS94WIN='C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_sas94_boheck.cfg"'
 
 cat "$1" >| $tmpCODE
 
-$SAS94WIN -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+#$SAS94WIN -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_sas94_boheck.cfg" -sysin $tmpCODE -log $tmpLOG -print $tmpLST
 
 if [ -e $tmpLST ];then
   $EDITOR -R -n -o -c '/^ERROR.*:/' $tmpLOG $tmpLST
