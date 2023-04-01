@@ -207,8 +207,7 @@ merge into bricks_1 b1
 		when matched then
 			update set b1.colour = b2.colour, b1.shape = b2.shape;
 		when not matched then
-			insert ( b1.brick_id, b1.colour, b1.shape )
-			values ( b2.brick_id, b2.colour, b2.shape );
+			insert ( b1.brick_id, b1.colour, b1.shape ) values ( b2.brick_id, b2.colour, b2.shape );
 
 ---
 
@@ -235,4 +234,36 @@ merge into RISK_EMP
        2,
        sysdate,
        2);
+
+---
+
+MERGE INTO mkc_revenue_adj kra
+     USING jmpcsv jmp
+ON ( kra.sdm_business_key = jmp.sdm_business_key )
+WHEN MATCHED THEN UPDATE
+SET 
+    kra.mkc_revenue_adj_id = jmp.mkc_revenue_adj_id,
+    kra.account_id = jmp.account_id,
+    kra.adjust = jmp.adjust,
+    kra.adjust_inserted = jmp.adjust_inserted,
+    kra.adjust_notes = jmp.adjust_notes,
+    kra.rate_date = jmp.rate_date
+WHEN NOT MATCHED THEN
+INSERT (
+  kra.mkc_revenue_adj_id,
+  kra.account_id,
+  kra.adjust,
+  kra.adjust_inserted,
+  kra.adjust_notes,
+  kra.rate_date
+  )
+VALUES ( 
+  uid_mkc_revenue_adj_id.NEXTVAL,
+  jmp.account_id,
+  jmp.adjust,
+  jmp.adjust_inserted,
+  jmp.adjust_notes,
+  jmp.rate_date
+  )
+;
 

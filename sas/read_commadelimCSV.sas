@@ -13,8 +13,8 @@ options NOsource;
   *
   *           See build_material_mapping_ds.sas
   *
-  *  Created: Mon 17 Mar 2003 13:33:37 (Bob Heckel)
-  * Modified: Thu 19 Jul 2012 10:44:04 (Bob Heckel)
+  *  Created: Mon 17 Mar 2003 (Bob Heckel)
+  * Modified: Wed 29-Mar-2023 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
@@ -28,14 +28,15 @@ data work.commadelimited;
   ***informat state $2.  mo $2.  type $4.  ship $2.  extension $2.;
   /* Better, don't need an INFORMAT and an INPUT line */
   /* Numbers indicate the max widths (beyond that is ignored) */
-  input state :$2.  mo :$2.  type :$80.  ship :$2.  extension :$200.  num;
+  /*input state :$2.  mo :$2.  type :$80.  ship :$2.  extension :$200.  num  mydt :DATE.;*/
+  input state :$2.  mo :$2.  type :$80.  ship :$2.  extension :$200.  num  mydt :DATE.;
   ***input state $  mo $  type $  ship $  extension $  num;
   list;
   cards;
-State,Month, Type, Ship, Ext
-nd,03,mor mer,01,,99
-nm,03,mor mer,01,a,88,
-nm,03,nat mer,01,a,77
+State,Month, Type, Ship, Ext, dt
+nd,03,mor mer,01,,99, 01mar2023
+nm,03,mor mer,01,a,88, 3/2/23
+nm,03,nat mer,01,a,77, 03mar2023
   ;
 run;
 proc print; run;

@@ -11,7 +11,7 @@ git clone https://github.com/tats/w3m.git
 ---
 
 09-Feb-23
-SQL Developer 21.4.3 final not java-impaired version
+SQL Developer 21.4.3 the final not java-impaired version
 gray DBMS_OUTPUT.put_line
 set Plsqllogger to Default color
 
@@ -28,8 +28,8 @@ C:\Users\boheck\vim\vim82\gvim.exe
 Arguments
 "${file.path}"
 
-NLS Date Format
-DD-MON-RR HH.MI.SS
+-- Best NLS date format for SQL Developer options:
+DD-MON-RR HH24:MI:SS
 
 ---
 

@@ -57,3 +57,5 @@ create sequence uid_salesgroup_subsidiary minvalue 10 maxvalue 99999999999999999
 update zbob set SALESGROUP_SUBSIDIARY_id=uid_salesgroup_subsidiary.nextval;
 alter table zbob  add constraint SALESGROUP_SUBSIDIARY_pk primary key (SALESGROUP_SUBSIDIARY_id);
 
+comment on column t.account_id is 'foo';
+

@@ -48,6 +48,10 @@
       <value>ORDER BY 1 DESC</value>
    </row>
    <row>
+      <key>sau</key>
+      <value>--  SET AUTOTRACE TRACE EXPLAIN</value>
+   </row>
+   <row>
       <key>scc</key>
       <value>SELECT COUNT(1) FROM [(parameter)];</value>
    </row>
@@ -70,9 +74,5 @@
    <row>
       <key>www</key>
       <value>WHERE [(parameter)]</value>
-   </row>
-   <row>
-      <key>sau</key>
-      <value>--  SET AUTOTRACE TRACE EXPLAIN</value>
    </row>
 </rows>

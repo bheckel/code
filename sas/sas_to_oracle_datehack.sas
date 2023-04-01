@@ -22,3 +22,25 @@ QUIT;
 %let HSQLXRC = &SQLXRC;
 %let HSQLXMSG = &SQLXMSG;
 proc print data=_LAST_(obs=max); run;
+
+---
+
+libname ora oracle user='SETARS' password='pw' path='rondbdrw01';
+
+/*
+data ora.KMC_REVENUE_ADJ_bobx;
+  set ora.KMC_REVENUE_ADJ_bob;
+run;
+*/
+
+data _null_;
+  set ora.MKC_REVENUE_ADJ_bobx;
+  if kmc_revenue_adj_id=6789;
+  begin_date = '01jan23:00:00:00'd;
+  begin_date = '01jan23:00:00:00'dt;
+  put begin_date=;
+run;
+/*
+BEGIN_DATE=01JAN1960:06:23:31
+BEGIN_DATE=01JAN2023:00:00:00
+*/
