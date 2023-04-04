@@ -1,3 +1,4 @@
+-- Modified: 03-Apr-2023 (Bob Heckel)
 
 PROCEDURE auto_exclude_rows IS
   TYPE t_numberTable IS TABLE OF NUMBER;
@@ -168,3 +169,47 @@ BEGIN
                    '');
   END IF;
 END auto_exclude_rows;
+
+---
+
+create or replace package zbob is
+  procedure p1;
+  procedure p2;
+end;
+/
+create or replace package body zbob is
+  procedure p1 is
+    rcur_qry  SYS_REFCURSOR;
+    l_sql     VARCHAR2(32767);
+    
+    type t_numtbl is table of number;
+    l_cnttbl t_numtbl;
+  begin
+    l_sql := q'[
+      select 1 from dual
+    ]';
+    
+    open rcur_qry for l_sql;
+      loop
+        fetch rcur_qry bulk collect into l_cnttbl;
+        exit when l_cnttbl.count = 0;
+        begin
+          for i in 1..l_cnttbl.count loop
+            DBMS_OUTPUT.put_line('ok:'||l_cnttbl(i));
+          end loop;
+        exception
+          when others then
+            DBMS_OUTPUT.put_line(SQLCODE || ': ' || SQLERRM || ': ' || DBMS_UTILITY.format_error_backtrace);
+        end;
+      end loop;
+    close rcur_qry;
+  end;
+  
+  procedure p2 is
+    oid number;
+  begin
+    DBMS_OUTPUT.put_line('ok');
+  end;
+end;
+--  set serveroutput on size 500000
+--  exec zbob.p1;
