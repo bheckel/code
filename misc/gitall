@@ -36,7 +36,8 @@ for d in dotfiles code; do
   #git remote show origin | grep --color=always 'local out of date' && \
   if [ `git remote show origin | grep -c 'local out of date'` -ge 1 ]; then
     echo "[${fg_redbold}  FAILED  ${normal}]"
-    echo "hint: cd ~/${d} && git merge && git push; git remote show origin; cd -"
+    #echo "hint: cd ~/${d} && git merge && git push; git remote show origin; cd -"
+    # TODO automatically prompt/use gafix
   else
     echo "[${fg_green}  OK  ${normal}]"
   fi
