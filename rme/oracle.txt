@@ -1,3 +1,36 @@
+
+https://docs.oracle.com/en/learn/system_logging_linux8/index.html#use-rsyslog-templates
+ 1382  2023-04-08 15:36:22 sudo vi /etc/rsyslog.conf
+ # Add line:  *.debug             /var/log/debug
+ 1383  2023-04-08 15:37:34 systemctl restart rsyslog
+ 1384  2023-04-08 15:37:49 sudo systemctl restart rsyslog
+ 1385  2023-04-08 15:38:18 logger -p info "This is an info-priority message"
+ 1386  2023-04-08 15:38:25 tail /var/log/messages
+ 1387  2023-04-08 15:40:27 logger -p debug "This is an debug-priority message"
+ 1388  2023-04-08 15:40:34 sudo tail /var/log/messages
+ 1389  2023-04-08 15:40:39 sudo tail /var/log/debug
+ 1375  2023-04-08 16:18:44 ls /var/log/messages*
+ 1376  2023-04-08 16:19:06 ls /var/log/maillog*
+ 1377  2023-04-08 16:19:33 ls /var/log/cron*
+ 1378  2023-04-08 16:20:27 vi /var/log/cron-20230402
+ 1379  2023-04-08 16:20:33 sudo vi /var/log/cron-20230402
+ 1380  2023-04-08 16:22:15 sudo vi /etc/logrotate.conf
+ 1381  2023-04-08 16:23:14 ls /etc/logrotate.d/
+ 1385  2023-04-08 16:27:37 cat /etc/logrotate.d/chrony
+
+dnf install logwatch -y
+sudo logwatch --range today
+
+sudo journalctl -n50 -p warning
+sudo journalctl -p crit
+sudo journalctl --since  "5 minutes ago"
+
+---
+
+~/code/rme/docker.txt
+
+---
+
 ocid1.alarm.oc1.iad.aaaaaaaafbm67ozdm65rhkqpn22bmqmgvd3k6kfuyylclf2q4amvx5s5lujq
 
 ---
