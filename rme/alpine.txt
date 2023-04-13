@@ -1,0 +1,13 @@
+13-Apr-23
+https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package
+apk add bash
+apk add git
+apk add tmux
+apk add openssl
+apk add openssh
+ssh-keygen
+apk add w3m
+git clone https://github.com/bheckel/dotfiles && dotfiles/dotfiles.sh
+
+vi ~/.profile
+add /bin/bash
