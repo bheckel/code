@@ -1,20 +1,3 @@
-/mnt/c/Users/bheck/.wslconfig
-[wsl2]
-guiApplications=false
-
-in cmd:
-wsl --reboot
-
----
-
-In admin cmd:
-wsl.exe --install
-reboot
-Open Ubuntu (if it doesn't open by itself)
-reboot
-apt update && apt upgrade
-
----
 
 Windows Defender Exlusions
 Skip itself C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2110.6-0\MsMpEng.exe

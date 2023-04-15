@@ -1,0 +1,38 @@
+
+wsl --list --verbose
+
+---
+
+13-Apr-23
+https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package
+
+In Powershell 7.3
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+Then reboot
+
+In Powershell 7.3
+wsl --set-default-version 2
+
+From MS Store install Alpine (& Windows Terminal if not using wsltty)
+
+---
+
+/mnt/c/Users/bheck/.wslconfig
+[wsl2]
+guiApplications=false
+
+in cmd:
+wsl --reboot
+
+---
+
+In admin cmd:
+wsl.exe --install
+reboot
+Open Ubuntu (if it doesn't open by itself)
+reboot
+apt update && apt upgrade
+

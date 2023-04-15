@@ -1,5 +1,30 @@
-13-Apr-23
-https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package
+FAIL 15-Apr-23
+Type bheck (technically root) when prompted
+exit
+
+In wsltty:
+
+metta:~$ sudo -l root
+-ash: sudo: not found
+metta:~$ su -l root
+Password:
+metta:~# whoami
+root
+metta:~# adduser -h /home/bheckel -s /bin/ash bheckel
+New password:
+Retype new password:
+passwd: password updated successfully
+metta:~# apk add sudo
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.17/main/x86_64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.17/community/x86_64/APKINDEX.tar.gz
+(1/1) Installing sudo (1.9.12_p2-r1)
+Executing busybox-1.35.0-r29.trigger
+OK: 14 MiB in 28 packages
+metta:~# echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheel
+metta:~# adduser bheckel wheel
+sudo apk update
+exit
+#TODO dumps back at bheck
 apk add bash
 apk add git
 apk add tmux
