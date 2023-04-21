@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #  Created: 08-Oct-2018 (Bob Heckel)
-# Modified: 28-Aug-2020 (Bob Heckel)
+# Modified: Wed 19-Apr-2023 (Bob Heckel)
 #
 # Simplified version of sasrun
 #
@@ -16,11 +16,11 @@ cat "$1" >| $tmpCODE
 
 #GUI properties:
 #"C:\Program Files\SASHome\SASFoundation\9.4\sas.exe" -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg"
-#C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg" -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg" -sysin $tmpCODE -log $tmpLOG -print $tmpLST
 
 #GUI properties:
 #"C:\Program Files\SASHome\SASFoundation\9.4\sas.exe" -CONFIG \\sashq\root\dept\orion\sasdev\estrsad\sas94\sas94.cfg -NOMEMLIB -MEMCACHE 0 -CATCACHE 0 -MEMMAXSZ 8G -MEMSIZE 6G -MEMBLKSZ 4M
-C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\orion_batch\orion_sas94_boheck.cfg" -NOMEMLIB -MEMCACHE 0 -CATCACHE 0 -MEMMAXSZ 8G -MEMSIZE 6G -MEMBLKSZ 4M -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+#C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\orion_batch\orion_sas94_boheck.cfg" -NOMEMLIB -MEMCACHE 0 -CATCACHE 0 -MEMMAXSZ 8G -MEMSIZE 6G -MEMBLKSZ 4M -sysin $tmpCODE -log $tmpLOG -print $tmpLST
 
 if [ -e $tmpLST ];then
   $EDITOR -R -n -o -c '/^ERROR.*:/' $tmpLOG $tmpLST

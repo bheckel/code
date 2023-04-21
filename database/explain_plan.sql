@@ -9,6 +9,14 @@
 
 ---
 
+-- Suppress throw away sqlplus SQL output just display calculate execution plan explain plan cost explain execution plan cost optimizer E-Rows A-Rows:
+set pagesize 0
+select foo from bar;
+select sql_id FROM v$sql WHERE sql_text like 'select foo%' ORDER BY last_load_time desc; -- 223zcj56p82ca
+select * from table(dbms_xplan.display_cursor('223zcj56p82ca', format => 'ALLSTATS LAST +cost +bytes +outline'));
+
+---
+
 -- You will need SELECT or READ privilege on views V$SQL_PLAN_STATISTICS_ALL, V$SQL, and V$SQL_PLAN
 
 sElEcT /*+gather_plan_statistics*/ count(1) from rpt_account where account_id=436139;
@@ -103,8 +111,7 @@ from   bricks
 group  by colour
 order  by colour;
 
-select *
-from   table(dbms_xplan.display_cursor(format => 'ALLSTATS LAST'));
+select * from   table(dbms_xplan.display_cursor(format => 'ALLSTATS LAST'));
 /*from   table(dbms_xplan.display_cursor(format => 'IOSTATS LAST'));*/
 -- Probably best:
 /*from   table(dbms_xplan.display_cursor(format => 'ALLSTATS +cost +bytes'));*/
