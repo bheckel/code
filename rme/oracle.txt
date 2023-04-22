@@ -1,3 +1,11 @@
+sudo dnf -y install oraclelinux-developer-release-el8
+sudo dnf install python36-oci-cli
+
+oci config setup
+cat .oci/oci_api_key_public.pem  # paste to GUI Identity->Users->User Details->API Keys
+
+---
+
 dnf repolist ol8_developer_EPEL  # disabled
 sudo dnf config-manager --enable ol8_developer_EPEL
 sudo dnf install stress -y
