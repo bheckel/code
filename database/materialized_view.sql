@@ -12,6 +12,7 @@ SELECT owner, mview_name, last_refresh_date
 select owner, name, last_refresh, error, status, refresh_mode  
   from all_snapshots 
  where owner ='SETARS';
+
 ---
 
 --https://oracle-base.com/articles/misc/materialized-views

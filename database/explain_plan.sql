@@ -9,6 +9,12 @@
 
 ---
 
+SELECT /*+ gather_plan_statistics */   * FROM zzkmc_allocated;
+SELECT sql_id FROM v$sqlstats WHERE lower(sql_text) like '%k.acc%' and last_active_time > sysdate-interval '10' second ORDER BY 1 DESC;--661m0fcwq7b51
+SELECT * From table(dbms_xplan.display_cursor('661m0fcwq7b51',null,'allstats last +cost'));
+
+---
+
 -- Suppress throw away sqlplus SQL output just display calculate execution plan explain plan cost explain execution plan cost optimizer E-Rows A-Rows:
 set pagesize 0
 select foo from bar;
