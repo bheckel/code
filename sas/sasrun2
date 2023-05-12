@@ -14,12 +14,12 @@ tmpLST="c:/temp/tmpsas.$$.lst"
 
 cat "$1" >| $tmpCODE
 
-C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+#C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -sysin $tmpCODE -log $tmpLOG -print $tmpLST
 
 #GUI Properties:
 #"C:\Program Files\SASHome\SASFoundation\9.4\sas.exe" -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg"
 #sasrun2 for ATLAS
-#C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg" -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg" -sysin $tmpCODE -log $tmpLOG -print $tmpLST
 
 #GUI Properties:
 #"C:\Program Files\SASHome\SASFoundation\9.4\sas.exe" -CONFIG \\sashq\root\dept\orion\sasdev\estrsad\sas94\sas94.cfg -NOMEMLIB -MEMCACHE 0 -CATCACHE 0 -MEMMAXSZ 8G -MEMSIZE 6G -MEMBLKSZ 4M

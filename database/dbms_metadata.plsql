@@ -29,3 +29,9 @@ select xt.txt||';'
               columns
               txt     varchar2(255)  path 'TEXT'
      ) xt;
+
+---
+
+select DBMS_METADATA_DIFF.compare_alter('TABLE','JMPCSV','JMPCSV',network_link2=>'ATLAS_TEST_RW') x from dual;
+
+SELECT dbms_metadata.get_ddl('TABLE','JMPCSV','ESTARS') FROM DUAL;
