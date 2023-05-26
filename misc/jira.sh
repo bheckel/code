@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Modified: 23-Jan-2023 (Bob Heckel)
+# Modified: 25-May-2023 (Bob Heckel)
 # ln -s ~/code/misccode/jira.sh ~/bin
 # jira.sh 33479 my_description
 
@@ -10,7 +10,6 @@ DESC=${2:-untitled}
 TAG=${JIRA}_${DESC}
 
 echo 'checking if already exists...'
-#cd ~/onedrive && find . -maxdepth 1 -name "*${JIRA}*"
 if [ `find -L $HOME/onedrive -maxdepth 1 -name "${JIRA}*" | wc -l` -gt 0 ];then
   echo "${JIRA} already exists. Exiting."
   exit
@@ -20,9 +19,6 @@ fi
 
 mkdir -p ~/onedrive/dma-${TAG} && cd ~/onedrive/dma-${TAG} && \
 cp -i ~/onedrive/template_jira.sql ~/onedrive/dma-${TAG}/${JIRA}.sql && \
-
-#cp -i ~/onedrive/template_jira.pck ~/onedrive/orion-${TAG}/ORION${JIRA}.pck && \
-#sed -i "s/99999/${JIRA}/" ORION${JIRA}.pck && \
 
 echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\2023OrionScripts\23.xOrionScripts' >> ${JIRA}.sql
 echo '--  @DMA-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql

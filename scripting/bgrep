@@ -22,15 +22,15 @@
 #          that would require -maxdepth:
 #           $ vim `find . -type f -print0 | xargs -0 grep -i 'Ht.p' | awk -F: '{print $1}' | sort | uniq`
 #
-#  Created: Sun 26 Dec 1999 21:44:34 (Bob Heckel)
-# Modified: 20-Sep-2019 (Bob Heckel)
+#  Created: 26-Dec-1999 (Bob Heckel)
+# Modified: 26-May-2023 (Bob Heckel)
 ##############################################################################
 use File::Find;     # used only for recursion
 use Getopt::Std;
 
 $VER = 2.3;
 # Temp file used by vi to display results.
-$DATFILE = "$ENV{TMP}/bgrep$$.grep";
+$DATFILE = "$ENV{HOME}/tmp/bgrep$$.grep";
 
 #if ( $ENV{EDITOR} !~ /vi/ ) {
 #  print STDERR "ERROR: vi(m) is required.  Must set env variable EDITOR=vi(m)\n";
