@@ -1,3 +1,11 @@
+sudo systemctl restart oracle-cloud-agent
+
+---
+
+29-May-23 /cygdrive/c/Users/bheck/OneDrive/OCI_backups/readme.txt
+
+---
+
 sudo dnf -y install oraclelinux-developer-release-el8
 sudo dnf install python36-oci-cli
 
@@ -18,11 +26,9 @@ sudo vi /usr/share/logwatch/default.conf/services/sshd.conf
 
 ---
 
-
 https://docs.oracle.com/en/learn/system_logging_linux8/index.html#use-rsyslog-templates
  1382  2023-04-08 15:36:22 sudo vi /etc/rsyslog.conf
  # Add line:  *.debug             /var/log/debug
- 1383  2023-04-08 15:37:34 systemctl restart rsyslog
  1384  2023-04-08 15:37:49 sudo systemctl restart rsyslog
  1385  2023-04-08 15:38:18 logger -p info "This is an info-priority message"
  1386  2023-04-08 15:38:25 tail /var/log/messages
@@ -366,6 +372,9 @@ set cloudconfig wallet.zip
 --show tns   
 connect admin@rshdb1_low
 GuvfBar4znva!
+
+--saved Wallet_rshdb1_may23.zip as result of TLS email
+JnyyrgEbgn8!
 
 ---
 
