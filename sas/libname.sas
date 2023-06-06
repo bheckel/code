@@ -6,8 +6,8 @@ options NOsource;
   *
   *           See dictionary_proc_sql.sas for interrogating libnames
   *
-  *  Created: Mon 22 Mar 2004 14:12:35 (Bob Heckel)
-  * Modified: Wed 16 May 2018 14:09:32 (Bob Heckel)
+  *  Created: 22-Mar-2004 (Bob Heckel)
+  * Modified: 02-Jun-2023 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
@@ -46,3 +46,12 @@ run;
 libname mirror  server=mkcdata.shr1 access=readonly;
 /* List all datasets in libname */
 proc contents data = mirror._ALL_ NODS; run;
+
+---
+
+/* Which database are we connected to */
+PROC SQL;
+  SELECT *
+  FROM DICTIONARY.LIBNAMES
+  WHERE LIBNAME = 'MYLIB';
+QUIT;
