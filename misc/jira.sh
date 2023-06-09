@@ -2,7 +2,7 @@
 
 # Modified: 25-May-2023 (Bob Heckel)
 # ln -s ~/code/misccode/jira.sh ~/bin
-# jira.sh 33479 my_description
+# jira.sh dma-33479 my_description
 
 JIRA=${1:-99999999}
 DESC=${2:-untitled}
@@ -17,8 +17,8 @@ else
   echo '...done'
 fi
 
-mkdir -p ~/onedrive/dma-${TAG} && cd ~/onedrive/dma-${TAG} && \
-cp -i ~/onedrive/template_jira.sql ~/onedrive/dma-${TAG}/${JIRA}.sql && \
+mkdir -p ~/onedrive/${TAG} && cd ~/onedrive/${TAG} && \
+cp -i ~/onedrive/template_jira.sql ~/onedrive/${TAG}/${JIRA}.sql && \
 
 echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\2023OrionScripts\23.xOrionScripts' >> ${JIRA}.sql
 echo '--  @DMA-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
@@ -37,7 +37,8 @@ echo "-- Pushed and ran DMA-${JIRA}_ddl_change.sql on ORNDBDEV01RW and ORNDBTST0
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
-echo "${JIRA} ${DESC}" > ${TAG}.html
-echo "<a href=https://esapps.sas.com/jira/browse/DMA-${JIRA}>jira</a>" >> ${TAG}.html
+# echo "${JIRA} ${DESC}" > ${TAG}.html
+# echo "<a href=https://esapps.sas.com/jira/browse/DMA-${JIRA}>jira</a>" >> ${TAG}.html
 
-cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/dma-${TAG}
+#TODO escape slash in eg mdmt-999 for this to work
+# cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/${TAG}

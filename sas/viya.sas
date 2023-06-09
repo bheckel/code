@@ -1,4 +1,5 @@
- /* Modified: 16-Oct-2020 (Bob Heckel) */
+ /*  Created: 16-Oct-2020 (Bob Heckel) */
+ /* Modified: 07-Jun-2023 (Bob Heckel) */
 
 %put Active caslib=%sysfunc(GETSESSOPT(casauto, caslib));
  /* Active caslib=CASUSER(bheck) */
@@ -10,7 +11,7 @@ cas myses listsessions;
  /* Show e.g. Path = /casuserlibraries/bheck/ */
 caslib casuser list;
  /* same */
-caslib casuser(boheck) list;
+caslib casuser(bheck) list;
 
  /* Make the Public caslib the active caslib */
 cas sessopts=(caslib=public timeout=1800 locale="en_US");
@@ -83,4 +84,19 @@ cas myses terminate;
 ---
 
 libname atlas cas caslib="MKC - Atlas (DNFS)" datalimit=ALL; proc print data=atlas.diball(obs=10);run;
+
+---
+
+cas bheck;
+caslib _all_ assign sessref=bheck;
+
+/*Read data from cas-shared-main*/
+%let cashost = sas-cas-server-shared-finance-client;
+
+options cashost="&cashost" casport=5570;
+cas casMain sessopts=(caslib=casuser timeout=1800 locale="en_US");
+
+libname forecast cas caslib='DMA - Forecast (DNFS)';
+
+proc contents data=forecast._all_;run;
 

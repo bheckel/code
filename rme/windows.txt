@@ -3,7 +3,7 @@ Speed up taskbar hover
 HKEY_CURRENT_USER\Control Panel\Mouse
 In the right pane, right-click on MouseHoverTime.  Select Modify. The default
 value is 400 ms. Set the new value at, say, 100.
-Click OK-exit regedit. Reboot
+Reboot
 
 ---
 
