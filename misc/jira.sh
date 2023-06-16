@@ -21,19 +21,19 @@ mkdir -p ~/onedrive/${TAG} && cd ~/onedrive/${TAG} && \
 cp -i ~/onedrive/template_jira.sql ~/onedrive/${TAG}/${JIRA}.sql && \
 
 echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\2023OrionScripts\23.xOrionScripts' >> ${JIRA}.sql
-echo '--  @DMA-'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
-echo '--  vi "C:\Users\boheck\OneDrive - SAS\dma-'${JIRA}'_'${DESC}'\DMA'${JIRA}'.pck"' >> ${JIRA}.sql
-echo '--  @"C:\Users\boheck\OneDrive - SAS\dma-'${JIRA}'_'${DESC}'\DMA'${JIRA}'.pck"' >> ${JIRA}.sql
+echo '--  @'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
+echo '--  vi "C:\Users\boheck\OneDrive - SAS\'${JIRA}'_'${DESC}'\'${JIRA}'.pck"' >> ${JIRA}.sql
+echo '--  @"C:\Users\boheck\OneDrive - SAS\'${JIRA}'_'${DESC}'\'${JIRA}'.pck"' >> ${JIRA}.sql
 #echo "DROP PACKAGE ORION${JIRA};" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
-echo "-- ${DESC} https://esapps.sas.com/jira/browse/DMA-${JIRA}" >> ${JIRA}.sql
+echo "-- ${DESC} https://esapps.sas.com/jira/browse/${JIRA}" >> ${JIRA}.sql
 echo '' >> ${JIRA}.sql
-echo "-- $ git checkout develop && git pull && git checkout -b feature/DMA-${JIRA} && git push --set-upstream origin feature/DMA-${JIRA} && git checkout feature/DMA-${JIRA}" >> ${JIRA}.sql
-echo "-- $ git add . && git commit -m 'DMA-"${JIRA}: "' && git push" >> ${JIRA}.sql
-echo "-- AFTER GITHUB PR/UI: git checkout develop && git pull && git branch -d feature/DMA-${JIRA} && git fetch -p && git branch -a" >> ${JIRA}.sql
-echo "-- WITHOUT GITHUB PR/UI: gco && gpul && gco ${JIRA} && git merge develop && gpul && gco && git merge --squash feature/DMA-${JIRA} && git add . && git commit -m 'DMA-${JIRA}: XXXXXXXXXX' && git push && git branch -D feature/DMA-${JIRA} && git fetch -p && git push origin --delete feature/DMA-${JIRA}" >> ${JIRA}.sql
-echo "-- Pushed and ran DMA-${JIRA}_ddl_change.sql on ORNDBDEV01RW and ORNDBTST01RW" >> ${JIRA}.sql
+echo "-- $ git checkout develop && git pull && git checkout -b feature/${JIRA} && git push --set-upstream origin feature/${JIRA} && git checkout feature/${JIRA}" >> ${JIRA}.sql
+echo "-- $ git add . && git commit -m '"${JIRA}: "' && git push" >> ${JIRA}.sql
+echo "-- AFTER GITHUB PR/UI: git checkout develop && git pull && git branch -d feature/${JIRA} && git fetch -p && git branch -a" >> ${JIRA}.sql
+echo "-- WITHOUT GITHUB PR/UI: gco && gpul && gco ${JIRA} && git merge develop && gpul && gco && git merge --squash feature/${JIRA} && git add . && git commit -m '${JIRA}: XXXXXXXXXX' && git push && git branch -D feature/${JIRA} && git fetch -p && git push origin --delete feature/${JIRA}" >> ${JIRA}.sql
+echo "-- Pushed and ran ${JIRA}_ddl_change.sql on ORNDBDEV01RW and ORNDBTST01RW" >> ${JIRA}.sql
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
 
@@ -41,4 +41,5 @@ echo >> ${JIRA}.sql
 # echo "<a href=https://esapps.sas.com/jira/browse/DMA-${JIRA}>jira</a>" >> ${TAG}.html
 
 #TODO escape slash in eg mdmt-999 for this to work
-# cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/${TAG}
+TAG2=FOO2=${TAG//-}
+cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/${TAG2}
