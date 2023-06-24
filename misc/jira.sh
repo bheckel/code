@@ -40,6 +40,5 @@ echo >> ${JIRA}.sql
 # echo "${JIRA} ${DESC}" > ${TAG}.html
 # echo "<a href=https://esapps.sas.com/jira/browse/DMA-${JIRA}>jira</a>" >> ${TAG}.html
 
-#TODO escape slash in eg mdmt-999 for this to work
-TAG2=FOO2=${TAG//-}
-cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/${TAG2}
+# TAG2=${TAG//-}
+cygstart -x /cygdrive/c/Users/boheck/OneDrive\ -\ SAS/${TAG}
