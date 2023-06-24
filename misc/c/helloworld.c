@@ -1,5 +1,9 @@
-/* Created: Sat 04 Aug 2001 23:32:57 (Bob Heckel) */
-/* Compiler flag  $ gcc -DDEBUG_ME helloworld2.c   to see foo's value). */
+/*  Created: 04-Aug-2001 (Bob Heckel) */
+/* Modified: 21-Jun-2023 (Bob Heckel)*/
+
+/* Compiler flag  $ gcc -DDEBUG_ME helloworld.c   to see foo's value). */
+
+#include <stdio.h>
 
 #define FORMAT "%s"
 #define HELLO "Hello C world\n"
