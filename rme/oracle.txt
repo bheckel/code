@@ -1,3 +1,17 @@
+Postfix forwarding support & contact emails to gmail 25-Jun-23
+
+sudo vi /etc/postfix/main.cf
+sudo vi /etc/postfix/virtual
+sudo postmap /etc/postfix/virtual
+sudo systemctl reload postfix
+
+---
+
+Identity Cloud Service
+https://idcs-feafb....identity.oraclecloud.com/ui/v1/adminconsole?root=security&security=mfa-settings
+
+---
+
 sudo systemctl restart oracle-cloud-agent
 
 ---
@@ -366,7 +380,16 @@ connect co@rshdb1_low
 
 ---
 
-22-Nov-22
+login.sql on opc:
+  set cloudconfig wallet.zip
+  set define off
+  -- Do not autocommit on Ctl-C crashouts
+  set exitcommit OFF
+  set sqlformat ANSICONSOLE
+  set timing ON
+  set serveroutput ON size 500000
+  set sqlprompt "@|white _USER|@@@|green _CONNECT_IDENTIFIER|@@|white > |@"
+
 $ sql /nolog 
 set cloudconfig wallet.zip
 --show tns   
@@ -374,6 +397,9 @@ connect admin@rshdb1_low
 GuvfBar4znva!
 
 --saved Wallet_rshdb1_may23.zip as result of TLS email
+JnyyrgEbgn8!
+--saved Wallet_rshdb1.zip on 25-Jun-23 (cloud.oracle.com Overview -> Autonomous Database -> Autonomous Database details -> Database connection button) 
+  when may23 one failed.  Saved to onedrive/OCI_backups as Wallet_rshdb1.zip and opc: scp Wallet_rshdb1.zip opc@rshdev.com:wallet.zip
 JnyyrgEbgn8!
 
 ---
