@@ -1,4 +1,5 @@
--- Modified: 21-Feb-2023 (Bob Heckel)
+--  Created: 21-Feb-2023 (Bob Heckel)
+-- Modified: 07-Jul-2023 (Bob Heckel)
 
 with raw_data as (
   select qtr, player, pts
@@ -49,4 +50,47 @@ select json_arrayagg(json_object(key player value pts ) order by qtr ) as result
         }
             ]
 }
+
+---
+
+/*
+{
+  "colState": [
+    {
+      "colId": "_permissions",
+      "width": 84,
+      "hide": false,
+      "pinned": "left",
+      "sort": null,
+      "sortIndex": null,
+      "aggFunc": null,
+      "rowGroup": false,
+      "rowGroupIndex": null,
+      "pivot": false,
+      "pivotIndex": null,
+      "flex": null
+    },
+...
+*/
+
+SELECT *
+FROM GRID_PREFERENCE t,
+     JSON_TABLE(
+       t.grid_pref_json,
+       '$.colState[*]'
+       COLUMNS (
+         colId VARCHAR2(100) PATH '$.colId',
+         hide VARCHAR2(5) PATH '$.hide'
+       )
+     ) jt
+WHERE (
+       (jt.colId = 'dealType' AND jt.hide = 'false')
+       or
+       (jt.colid = 'revenueStreams' and jt.hide = 'false')
+      )
+      and not
+      (
+       (jt.colid like 'err%' and jt.hide = 'false')
+      )
+;
 

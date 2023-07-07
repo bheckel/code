@@ -7,6 +7,9 @@
 -- The B-tree traversal is the first power of indexing.
 -- Clustering is the second power of indexing.
 
+--set autotrace ON
+--set autotrace traceonly explain
+
 ---
 
 SELECT /*+ gather_plan_statistics */   * FROM zzkmc_allocated;

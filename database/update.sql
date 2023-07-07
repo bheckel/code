@@ -1,4 +1,20 @@
--- Modified: 01-May-2020 (Bob Heckel)
+--  Created: 01-May-2020 (Bob Heckel)
+-- Modified: 03-Jul-2023 (Bob Heckel)
+
+---
+
+update account_name
+   set account_name = 'M-Team BV',
+       updated = updated,
+       updatedby = updatedby, 
+       audit_source = 'MDMT-241'
+ where account_name_id = (
+    select distinct an.account_name_id
+      from account_name an, account_name_attribute ana
+     where an.account_name_id =10215333
+       and ana.account_name_type = 'L'
+    )
+;
 
 ---
 
