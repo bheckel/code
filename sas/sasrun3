@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#  Created: 08-Oct-2018 (Bob Heckel)
+# Modified: 11-Jul-2023 (Bob Heckel)
+#
+# Simplified version of sasrun
+#
+# vim mapping:
+# au BufNewFile,BufRead,BufEnter *.sas nmap ;z :!~/code/sas/sasrun2 "%:p"<CR>
+
+#tmpCODE="c:/temp/tmpsas.sas"
+#tmpLOG="c:/temp/tmpsas.log"
+#tmpLST="c:/temp/tmpsas.lst"
+
+# This fails to handle scp://me@there//my/path/foo.sas files so use vi -c
+# cat "$1" >| $tmpCODE
+
+#sasrun2 for local PC
+#vi -c "wq! $tmpCODE" ${1} && C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+
+#GUI Properties:
+#"C:\Program Files\SASHome\SASFoundation\9.4\sas.exe" -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg"
+#sasrun2 for ATLAS
+# echo "wtf " ${1}
+#vim -c "wq! c:/temp/tmpsas.sas" ${1} && sleep 4s && C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg" -sysin c:/temp/tmpsas.sas -log c:/temp/tmpsas.log -print c:/temp/tmpsas.lst && vim c:/temp/tmpsas.sas c:/temp/tmpsas.log c:/temp/tmpsas.lst
+C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg" -sysin c:/temp/tmpsas.sas -log c:/temp/tmpsas.log -print c:/temp/tmpsas.lst && vim c:/temp/tmpsas.sas c:/temp/tmpsas.log c:/temp/tmpsas.lst
+#GUI Properties:
+#"C:\Program Files\SASHome\SASFoundation\9.4\sas.exe" -CONFIG \\sashq\root\dept\orion\sasdev\estrsad\sas94\sas94.cfg -NOMEMLIB -MEMCACHE 0 -CATCACHE 0 -MEMMAXSZ 8G -MEMSIZE 6G -MEMBLKSZ 4M
+#sasrun2 for ORION
+#vi -c "wq! $tmpCODE" ${1} && C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\orion_batch\orion_sas94_boheck.cfg" -NOMEMLIB -MEMCACHE 0 -CATCACHE 0 -MEMMAXSZ 8G -MEMSIZE 6G -MEMBLKSZ 4M -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+
+#if [ -e $tmpLST ];then
+#  $EDITOR -R -n -o -c '/^ERROR.*:/' $tmpLOG $tmpLST
+#  mv -f $tmpLOG c:/temp/tmpsas.lastrun.sasrun.log
+#  mv -f $tmpLST c:/temp/tmpsas.lastrun.sasrun.lst
+#else
+#  $EDITOR -R -n -o -c '/^ERROR.*:/' $tmpLOG
+#  mv -f $tmpLOG c:/temp/tmpsas.lastrun.sasrun.log
+#fi
+#
+#rm c:/temp/tmpsas.sas c:/temp/tmpsas.log 
+
+#echo 'View previous run: vi -R c:/temp/tmpsas.lastrun.sasrun.lst c:/temp/tmpsas.lastrun.sasrun.log'
+
