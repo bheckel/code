@@ -16,6 +16,7 @@ cat "$1" >| $tmpCODE
 
 #sasrun2 for local PC
 #vi -c "wq! $tmpCODE" ${1} && C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -sysin $tmpCODE -log $tmpLOG -print $tmpLST
+#C:/Progra~1/SASHome/SASFoundation/9.4/sas.exe -sysin $tmpCODE -log $tmpLOG -print $tmpLST
 
 #GUI Properties:
 #"C:\Program Files\SASHome\SASFoundation\9.4\sas.exe" -CONFIG "C:\Users\boheck\OneDrive - SAS\misc\atlas_batch\atlas_sas94_boheck.cfg"

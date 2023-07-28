@@ -1,5 +1,5 @@
--- Created: 16-Jul-2019 (Bob Heckel)
--- Modified: 27-Apr-2022 (Bob Heckel)
+--  Created: 16-Jul-2019 (Bob Heckel)
+-- Modified: 25-Jul-2023 (Bob Heckel)
 
 /* Analytic functions compute an aggregate value based on a group of rows. They
  * differ from aggregate functions in that they RETURN MULTIPLE ROWS FOR EACH
@@ -427,3 +427,57 @@ select quarter,
       )
 group by quarter
 order by 1;
+
+---
+
+-- Group multiple emails by employee
+    WITH v AS (
+      SELECT row_number() over (partition by eb.employee_id order by eb.employee_id, ob.status_achieved_date) rnum,
+             count(*) OVER (partition by eb.employee_id) AS group_cnt,
+             ataa.account_id,
+             ob.opportunity_id,
+             ob.status_achieved_date,
+             ob.opportunity_name,
+             eb.email csm_ip_email,
+             eb.employee_id csm_ip_employee_id,
+             ob.status,
+             (CASE WHEN (ob.status = 'W') THEN 'Won' ELSE 'Lost' END) status_label,
+             os.account_name,
+             ob.forecasted_sale_amount,
+             ate.function_lov_id
+        FROM OPPORTUNITY ob,
+             EMPLOYEE eb,
+             OPPORTUNITY_SEARCH os,
+             ACCOUNT_TEAM_ASSIGN_ALL ataa,
+             ACCOUNT_TEAM_EMPLOYEE ate
+       WHERE ob.status = 'W'
+         AND os.opportunity_search_id = ob.opportunity_id
+         AND os.account_id = ataa.account_id
+         AND ataa.account_team_id = ate.account_team_id
+         AND ate.employee_id = eb.employee_id
+         AND ob.status_achieved_date >= sysdate - interval '1' year
+         AND ob.forecasted_sale_amount > 1
+         AND NOT EXISTS ( SELECT 1
+                           FROM OPPORTUNITY_OPT_OUT ooo
+                          WHERE ooo.opportunity_id = ob.opportunity_id
+                            AND ooo.poor_closeout_opt_out = 1 )
+        AND eb.gone != 'N'
+        AND ate.function_lov_id = 2749 -- CSM
+and ((eb.employee_id=20900 and trunc(ob.status_achieved_date) between '16-SEP-22' and '28-OCT-22') or (eb.employee_id=2163 and trunc(ob.status_achieved_date)='16-SEP-22'))
+       ORDER BY eb.employee_id     
+    )
+      SELECT v.*,
+             CASE WHEN rnum = 1 THEN 'first'
+                  WHEN rnum = group_cnt THEN 'last'
+                  ELSE 'middle' END
+               AS indicator
+        FROM v
+    ;
+
+---
+
+--                                                                                            0 or 1
+select distinct first_value(an.account_name) over(partition by ab.account_id order by an.override_account_name DESC) as primary_account_name
+  from account ab, account_name an
+ where ab.account_id = an.account_id
+   and ab.account_id = 34526;
