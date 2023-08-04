@@ -1,5 +1,5 @@
 --  Created: 11-May-2009 (Bob Heckel)
--- Modified: 02-Sep-2021 (Bob Heckel)
+-- Modified: 02-Aug-2023 (Bob Heckel)
 
 -- This file is auto-sourced by Oracle sqlplus if it's in PWD
 --
@@ -67,7 +67,8 @@ set pagesize 999
 --set recsep WRAP
 --set recsepchar " "
 -- Display dbms_output messages:
-set serveroutput ON size unlimited format wrapped
+--set serveroutput ON size unlimited format wrapped
+set serveroutput ON size 100000 format wrapped
 --set shiftinout invisible
 --set showmode OFF
 --set sqlblanklines OFF
@@ -79,8 +80,8 @@ set serveroutput ON size unlimited format wrapped
 --set suffix "sql"
 --set tab ON
 --set termout ON
-set time ON
-set timing ON
+--set time ON
+--set timing ON
 --set trimout ON
 --set trimspool OFF
 --set underline "-"
@@ -92,19 +93,41 @@ set timing ON
 ---select SYSDATE from dual;
 -- or just rely on this as a side-effect:
 -- Build sqlprompt e.g. "pks@dev100> "
-UNDEFINE _usr _db
-col _usr new_value _usr
-col _db  new_value _db
-set termout off
-select lower(user) _usr,
-       --substr(global_name, 1, instr(global_name, '.')-1) _db
-       lower(global_name) _db
-from   global_name
-/
+--UNDEFINE _usr _db
+--col _usr new_value _usr
+--col _db  new_value _db
+--set termout off
+--select lower(user) _usr,
+--       --substr(global_name, 1, instr(global_name, '.')-1) _db
+--       lower(global_name) _db
+--from   global_name
+--/
+--
+--set termout on
+--set sqlprompt '&&_usr.@&&_db.> '
 
-set termout on
-set sqlprompt '&&_usr.@&&_db.> '
+set statusbar ON
+set statusbar ADD editmode 
+set statusbar ADD txn
+set statusbar ADD timing
+set highlighting ON
+set highlighting keyword foreground green
+set highlighting identifier foreground magenta
+set highlighting string foreground yellow
+set highlighting NUMBER foreground cyan
+set highlighting comment background white
+set highlighting comment foreground black
 
+--set linesize 250
+--set pagesize 0
+set serveroutput on size 500000
+--set time on
+--set timing on
+--set autotrace ON
+--set autotrace traceonly explain
+set sqlformat ansiconsole
+
+set exitcommit OFF
 -- project specific
 --column meth_spec_nm format a15;
 --column meth_rslt_numeric format 99999.999;
