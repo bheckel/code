@@ -13,6 +13,7 @@ https://idcs-feafb....identity.oraclecloud.com/ui/v1/adminconsole?root=security&
 ---
 
 sudo systemctl restart oracle-cloud-agent
+sudo systemctl stop oracle-cloud-agent
 
 ---
 
