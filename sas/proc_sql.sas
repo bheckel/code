@@ -16,8 +16,8 @@ options nosource;
   *
   *           Practical Problem-Solving http://support.sas.com/documentation/cdl/en/sqlproc/62086/HTML/default/viewer.htm#a002536887.htm
   *
-  *  Created: Sun 23 Feb 2003 12:45:12 (Bob Heckel)
-  * Modified: Wed 21 Dec 2016 09:59:33 (Bob Heckel)
+  *  Created: 23-Feb-2003 (Bob Heckel)
+  * Modified: 15-Aug-2023 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
  /* proc sql default is to use labels instead of ds varnames */
@@ -360,4 +360,20 @@ proc sql;
   from learn.health
   ;
 quit;
+
+
+ proc sql;
+   connect to Oracle (user='SETARS' password="pw" path='RONDBTST01RW');
+
+   create table work.t as select * from connection to Oracle (
+     /*select * from salesgroup*/
+     SELECT  SYS_CONTEXT('userenv', 'SESSION_USER') as x from dual
+   );
+
+  disconnect from oracle;
+quit;
+proc sql;
+  select x into :x from t;
+quit;
+%put !!!&x;
 
