@@ -26,6 +26,8 @@ options nosource;
   *           %mend;
   *           %foo();  <---error
   *
+  *           See also autocall.sas
+  *
   *  Created: Tue 24 Sep 2002 09:18:00 (Bob Heckel)
   * Modified: Fri 10 Oct 2008 11:37:08 (Bob Heckel)
   *---------------------------------------------------------------------

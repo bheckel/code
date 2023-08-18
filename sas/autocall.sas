@@ -32,10 +32,11 @@ options NOsource;
   *           E.g.  options mautosource sasautos='.';
   *
   *
-  *  Created: Sat 14 Jan 2006 08:58:58 (Bob Heckel)
-  * Modified: Wed 07 Jun 2006 15:38:02 (Bob Heckel)
+  *  Created: 14-Jan-2006 (Bob Heckel)
+  * Modified: 03-Aug-2023 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source NOcenter;
+options sasautos=('\\hq\root\dept\kmc\roion\test\src\macros' '\\hq\root\dept\kmc\roion\prod\src\macros' SASAUTOS);
 
 %Test

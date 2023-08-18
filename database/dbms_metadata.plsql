@@ -35,3 +35,15 @@ select xt.txt||';'
 select DBMS_METADATA_DIFF.compare_alter('TABLE','JMPCSV','JMPCSV',network_link2=>'ATLAS_TEST_RW') x from dual;
 
 SELECT dbms_metadata.get_ddl('TABLE','JMPCSV','ESTARS') FROM DUAL;
+
+---
+
+-- same as ddl
+SET SERVEROUTPUT ON
+DECLARE
+  ddl_statement CLOB;
+BEGIN
+  ddl_statement := DBMS_METADATA.GET_DDL('VIEW', 'RPT_ACCOUNT', 'ESTARS');
+  DBMS_OUTPUT.put_line(ddl_statement);
+END;
+/

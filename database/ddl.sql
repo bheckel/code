@@ -17,6 +17,7 @@ alter table mkc_revenue_full drop constraint KRF_REVENUE_ID;
 alter table mkc_revenue_full drop constraint KRF_REVENUE_ID drop index;
 alter table mkc_revenue_full modify task_desc_pb invisible;--hide hidden column
 ALTER TABLE SETARS.ASP_DETAILS MODIFY CONSTRAINT NN_SUP_SW_PIPELINE_AMOUNT_YR_C disable;
+ALTER TABLE LOG_MASTER add INIT_FORECAST_LIKELY_FINISH NUMBER(1) default ON NULL 0;
 
 drop table kr27mar2021170440 PURGE;
 truncate table mkc_revenue_full_bob
