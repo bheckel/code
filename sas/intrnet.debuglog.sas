@@ -13,3 +13,4 @@ ods html body=_WEBOUT (dynamic title='browser titlebar') style=brick rs=none;
 proc print data=_LAST_(obs=max); run;
 ods html close;
 
+%put "&SYSDSN"; options ls=max;data _NULL_; set _LAST_(obs=100 where=(myid in:('foo'))); put '!!!wtf '(_ALL_)(=);run;
