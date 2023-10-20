@@ -377,3 +377,23 @@ proc sql;
 quit;
 %put !!!&x;
 
+
+/* Run PLSQL from SAS */
+proc sql;
+  connect to Oracle (user='SETARS' password="pw" path='rndbdrw01');
+  execute ( BEGIN repoint_synonym('DL_APPEDW_SDM_REVENUE', '@KMC_CDSP', 'SDM_REVENUE_TEMP');
+                  repoint_synonym('DL_WWMAPP_REV_CLS_SDM_TO_SUBSUB', '@OT.US.ORACLE.COM', 'REV_CLS_SDM_TO_SUBSUB_STAGING');
+                  repoint_synonym('DL_WWMAPP_REV_CLS_SUBSUB_TO_SUB', '@OT.US.ORACLE.COM', 'REV_CLS_SUBSUB_TO_SUB_STAGING');
+                  repoint_synonym('DL_WWMAPP_REV_CLS_SUBCATEGORY', '@OT.US.ORACLE.COM', 'REV_CLS_SUBCATEGORY_STAGING');
+
+                  KMC_dummy.load_invoice_revenue(in_rediff_tables=>1, in_view_name=>'KMC_REVENUE', in_delete_daily=>1, in_bypass_history=>0);
+
+                  repoint_synonym('DL_APPEDW_SDM_REVENUE', '@KMC_CDSP', 'SDM_REVENUE');
+                  repoint_synonym('DL_WWMAPP_REV_CLS_SDM_TO_SUBSUB', '@OT.US.ORACLE.COM');
+                  repoint_synonym('DL_WWMAPP_REV_CLS_SUBSUB_TO_SUB', '@OT.US.ORACLE.COM');
+                  repoint_synonym('DL_WWMAPP_REV_CLS_SUBCATEGORY', '@OT.US.ORACLE.COM');
+             END;
+          ) by oracle;
+  disconnect from oracle;
+quit;
+run;
