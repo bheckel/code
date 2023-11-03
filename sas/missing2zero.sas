@@ -5,8 +5,8 @@ options nosource;
   *  Summary: Convert missings to zeros to avoid 'nulls missings propagate'
   *           problems.
   *
-  *  Created: Wed 30 Oct 2002 13:00:15 (Bob Heckel)
-  * Modified: Mon 27 Feb 2012 10:20:49 (Bob Heckel)
+  *  Created: 30-Oct-2002 (Bob Heckel)
+  * Modified: 30-Oct-2023 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
@@ -24,6 +24,11 @@ richard       feynman        678
   ;
 run;
 
+data _null_;
+  set sample;
+  x=missing(numb);  /* 1 means missing, 0 means not */
+  put x=;
+run;
 
 data work.converted;
   set work.sample;
