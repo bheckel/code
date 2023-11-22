@@ -131,3 +131,27 @@ set exitcommit OFF
 -- project specific
 --column meth_spec_nm format a15;
 --column meth_rslt_numeric format 99999.999;
+
+
+
+--OR
+SET FEEDBACK OFF
+SET TERMOUT OFF
+
+COLUMN X NEW_VALUE Y
+SELECT LOWER(USER || '@' || 
+             SYS_CONTEXT('userenv', 'con_name') || ':' || 
+             SYS_CONTEXT('userenv', 'instance_name')) X
+FROM dual;
+SET SQLPROMPT '&Y> '
+
+ALTER SESSION SET NLS_DATE_FORMAT='DD-MON-YYYY HH24:MI:SS'; 
+ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS.FF'; 
+
+SET TERMOUT ON
+SET FEEDBACK ON
+SET LINESIZE 100
+SET TAB OFF
+SET TRIM ON
+SET TRIMSPOOL ON
+
