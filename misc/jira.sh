@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Modified: 25-May-2023 (Bob Heckel)
+# Modified: 28-Nov-2023 (Bob Heckel)
 # ln -s ~/code/misccode/jira.sh ~/bin
 # jira.sh dma-33479 my_description
 
@@ -30,9 +30,9 @@ echo >> ${JIRA}.sql
 echo "-- ${DESC} https://esapps.sas.com/jira/browse/${JIRA}" >> ${JIRA}.sql
 echo '' >> ${JIRA}.sql
 echo "-- $ git checkout develop && git pull && git checkout -b feature/${JIRA} && git push --set-upstream origin feature/${JIRA} && git checkout feature/${JIRA}" >> ${JIRA}.sql
-echo "-- $ git add . && git commit -m '"${JIRA}: "' && git push" >> ${JIRA}.sql
+echo "-- $ git add . && git commit -m '"${JIRA}"' && git push" >> ${JIRA}.sql
 echo "-- AFTER GITHUB PR/UI: git checkout develop && git pull && git branch -d feature/${JIRA} && git fetch -p && git branch -a" >> ${JIRA}.sql
-echo "-- WITHOUT GITHUB PR/UI: gco && gpul && gco ${JIRA} && git merge develop && gpul && gco && git merge --squash feature/${JIRA} && git add . && git commit -m '${JIRA}: XXXXXXXXXX' && git push && git branch -D feature/${JIRA} && git fetch -p && git push origin --delete feature/${JIRA}" >> ${JIRA}.sql
+echo "-- WITHOUT GITHUB PR/UI: gco && gpul && git checkout feature/${JIRA} && git merge develop && gpul && gco && git merge --squash feature/${JIRA} && git add . && git commit -m '${JIRA}: XXXXXXXXXX' && git push && git branch -D feature/${JIRA} && git fetch -p && git push origin --delete feature/${JIRA}" >> ${JIRA}.sql
 echo "-- Pushed and ran ${JIRA}_ddl_change.sql on ORNDBDEV01RW and ORNDBTST01RW" >> ${JIRA}.sql
 echo "--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> ${JIRA}.sql
 echo >> ${JIRA}.sql
