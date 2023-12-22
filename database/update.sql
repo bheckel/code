@@ -26,7 +26,7 @@ commit;
 
 ---
 
--- Update target tbl (tb) using source tbl (sb). CTEs won't work here.
+-- Update target tbl (tb) using another source tbl (sb). CTEs won't work here.
 update target_bricks tb 
 set ( tb.colour, tb.shape ) = ( 
   select sb.colour, sb.shape  

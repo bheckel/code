@@ -7,8 +7,6 @@ options NOsource;
   *           See file:///C:/Bookshelf_SAS/lgref/z0245860.htm for all date
   *           functions
   *
-  *           See oracle.passthru.createtbl.sas for Oracle date conversion
-  *
   * Adapted: Wed Apr 16 15:49:00 2003 (Bob Heckel -- SUGI 28 Date Handling In
   *                                    the SAS System)
   * Modified: Tue 02 Jul 2013 16:11:50 (Bob Heckel)
@@ -188,3 +186,6 @@ data _null_;
   d2 = input('01/01/2009', MMDDYY10.);
   put _all_;
 run;
+
+
+  /*format actual_updated datetime27.3; */       /* -- this will create a timestamp type in ORACLE -- */
