@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Modified: 28-Nov-2023 (Bob Heckel)
+# Modified: 02-Jan-2024 (Bob Heckel)
 # ln -s ~/code/misccode/jira.sh ~/bin
 # jira.sh dma-33479 my_description
 
@@ -20,7 +20,7 @@ fi
 mkdir -p ~/onedrive/${TAG} && cd ~/onedrive/${TAG} && \
 cp -i ~/onedrive/template_jira.sql ~/onedrive/${TAG}/${JIRA}.sql && \
 
-echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\2023OrionScripts\23.xOrionScripts' >> ${JIRA}.sql
+echo '--  cd C:\Orion\workspace\orion-data\Source\SQL\2024OrionScripts\24.xOrionScripts' >> ${JIRA}.sql
 echo '--  @'${JIRA}'_ddl_change.sql' >> ${JIRA}.sql
 echo '--  vi "C:\Users\boheck\OneDrive - SAS\'${JIRA}'_'${DESC}'\'${JIRA}'.pck"' >> ${JIRA}.sql
 echo '--  @"C:\Users\boheck\OneDrive - SAS\'${JIRA}'_'${DESC}'\'${JIRA}'.pck"' >> ${JIRA}.sql
