@@ -9,10 +9,37 @@ options NOsource;
   *           overflows.
   *
   *  Created: Tue 23 Nov 2004 10:22:07 (Bob Heckel)
-  * Modified: Thu 03 Apr 2008 10:44:52 (Bob Heckel)
+  * Modified: 06-Feb-2024 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source NOcenter;
+
+%global quoted_list;
+%let request_status = item1+item2+item3;
+
+%macro parselist(s);
+  data work.tmplist;
+    %do i = 1 %to %sysfunc(countw(&s,"+"));
+      %let word = %scan(&s,&i,"+");
+      x="&word";
+      output;
+    %end;
+  run;
+
+  proc sql NOprint;
+    select quote(trim(x),"'") into :quoted_list separated by ', ' from tmplist;
+  quit;
+%mend;
+
+%macro main();
+  %if "X&request_status." ne "X" %then %do;
+    %parselist(&request_status.);
+    %put &quoted_list;
+  %end;
+%mend;
+%main;
+
+/***************/
 
 proc sql NOprint;
   select distinct stores into :STOR separated by '","'
