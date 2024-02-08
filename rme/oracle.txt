@@ -1,9 +1,12 @@
-Postfix forwarding support & contact emails to gmail 25-Jun-23
+Postfix forwarding support & contact emails to gmail 09-Jan-24
 
 sudo vi /etc/postfix/main.cf
+
 sudo vi /etc/postfix/virtual
-sudo postmap /etc/postfix/virtual
-sudo systemctl reload postfix
+  support@rshdev.com heckel@gmail.com
+  contact@rshdev.com heckel@gmail.com
+
+sudo postmap /etc/postfix/virtual && sudo systemctl reload postfix
 
 ---
 
