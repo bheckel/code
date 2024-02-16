@@ -21,3 +21,6 @@ TO_DATE(substr( collection_started,1,12),'DD-MON-YY HH24')
 TO_DATE('2004/10/14 21', 'yyyy/mm/dd hh24')
 
 TO_DATE(First_Load_Time, 'yyyy-mm-dd/hh24:mi:ss'))*24*60)
+
+select TO_TIMESTAMP('1960-01-01 00:00:00.0','YYYY-MM-DD HH24:MI:SS.FF') + NUMTODSINTERVAL(mrstart, 'DAY') from IPD_LGCY;
+
