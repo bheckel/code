@@ -2,7 +2,8 @@
 # add https?://docs.google.com/*
 map l goForward
 map h goBack
-map q removeTab
+map d removeTab
+#map q removeTab
 map u restoreTab
 #map <Left> previousTab
 #map <Right> nextTab
