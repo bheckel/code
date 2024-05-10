@@ -26,7 +26,7 @@ options nosource;
   *            See also zerorecs.sas
   *
   *  Adapted: Thu 07 Nov 2002 13:41:27 (Bob Heckel -- SAS OnlineDoc v8.2)
-  * Modified: Wed 10 Aug 2016 10:15:13 (Bob Heckel)
+  * Modified: 09-May-2024 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
@@ -205,7 +205,7 @@ data _null_;
     put "Please be aware that store closures & other removals of the eligible population should show up too.";
   end;
   put '<IMG SRC="logo.png" height="40" width="160">';
-  put '</HTML></BODY></PRE>';
+  put '</PRE></BODY></HTML>';
 run;
 
 
