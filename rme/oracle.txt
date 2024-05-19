@@ -1,3 +1,13 @@
+https://mailmum.io/posts/howto-block-entire-tlds-in-postfix/
+
+ 1858  2024-05-15 06:55:46 sudo vi /etc/postfix/reject_domains
+/.*joebiden.com$/ REJECT We reject all mail from joebiden.com
+ 1859  2024-05-15 06:56:19 sudo vi /etc/postfix/main.cf
+smtpd_sender_restrictions = check_sender_access regexp:/etc/postfix/reject_domains
+sudo postmap /etc/postfix/reject_domains && sudo systemctl reload postfix
+
+---
+
 Postfix forwarding support & contact emails to gmail 09-Jan-24
 
 sudo vi /etc/postfix/main.cf
@@ -338,6 +348,8 @@ sudo vim -u /home/pc/.vimrc /etc/httpd/logs/error_log
 sudo vim -u /home/pc/.vimrc /var/www/cgi-bin/printenv.pl
 
 scp pc@129.158.230.148:/etc/httpd/conf/httpd.conf .
+
+sudo vi /etc/httpd/logs/access_log
 
 ---
 
