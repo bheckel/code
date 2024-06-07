@@ -40,6 +40,10 @@
       <value>FETCH FIRST 5 ROWS ONLY</value>
    </row>
    <row>
+      <key>hav</key>
+      <value>select [(parameter)], count(1) from [(parameter)] group by [(parameter)] having count(1)>1 order by 2 desc;</value>
+   </row>
+   <row>
       <key>kkk</key>
       <value>KMC_REVENUE_FULL</value>
    </row>
