@@ -1,4 +1,15 @@
--- Modified: 05-Aug-2020 (Bob Heckel)
+--  Created: 05-Aug-2020 (Bob Heckel)
+-- Modified: 12-Jun-2024 (Bob Heckel)
+
+---
+
+SELECT
+  (SUM(CASE WHEN saleid IS NULL THEN 1 ELSE 0 END)) AS null_count,
+  COUNT(CASE WHEN saleid = '.' THEN 1 END) AS x_count,
+  (SUM(CASE WHEN saleid = '.' THEN 1 ELSE 0 END)) AS x_count_same
+FROM kmc_allocated;
+
+---
 
 select count(*),
        count( distinct job_id ) jobs,
