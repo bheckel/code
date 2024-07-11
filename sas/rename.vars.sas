@@ -4,8 +4,8 @@ options NOsource;
   *
   *  Summary: Demo of renaming variables.  Compare with using AS in SQL
   *
-  *  Created: Wed 21 May 2003 14:25:02 (Bob Heckel)
-  * Modified: Thu 19 Jan 2012 15:11:33 (Bob Heckel)
+  *  Created: 21-May-2003 (Bob Heckel)
+  * Modified: 05-Jul-2024 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source;
@@ -48,4 +48,12 @@ data MIPatients(drop= Field2 Field3 Field4 Field5);
     
   label Field1='ID_Number'
         Field6='Sex' ;
+run;
+
+/***/
+
+data forecast.kmc_renewal_forecast_alloc(drop=acct_id);
+  set forecast.kmc_renewal_forecast_alloc;
+  acct_id2 = input(acct_id, ?? 8.);
+  rename acct_id2=acct_id;
 run;
