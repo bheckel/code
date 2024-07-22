@@ -285,3 +285,16 @@ run;
 proc print data=work.invest;
   format capital dollar12.2;
 run;
+
+
+data x;
+  set sashelp.shoes;
+  if product='Sandal' then do;
+  paidnew=1;
+  lbdinvnew=1;
+  end;
+else if product='R' then do;
+  paidrenewal=2;
+  lbdinvren=2;
+  end;
+run;

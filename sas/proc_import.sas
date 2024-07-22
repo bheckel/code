@@ -42,6 +42,7 @@ run;
     this to view w/o exponentiation:
       proc sql;
         select distinct mrp_mat_id format=BEST16.
+        /*or select distinct mrp_mat_id format=DOLLAR16.2*/
         from tmp1.tmp2;
       quit;
   */

@@ -1,9 +1,16 @@
 --------------------------------------------------------
 --  Created: 09-Nov-2020 (Bob Heckel)
--- Modified: 12-Jul-2022 (Bob Heckel)
+-- Modified: 18-Jul-2024 (Bob Heckel)
 --
 -- DBMS_SCHEDULER.create_job does an implicit COMMIT!
 --------------------------------------------------------
+
+SELECT state, NEXT_RUN_DATE, job_name, job_type, job_action, start_date, repeat_interval, end_date, job_class, enabled, auto_drop, comments 
+  FROM dba_scheduler_jobs 
+ WHERE state='SCHEDULED' 
+ ORDER BY next_run_date DESC nulls last;
+
+---
 
 -- If the scheduler default_timezone is not specified, it attempts to
 -- determine it from the OS. If that isn't possible it is set to NULL. 

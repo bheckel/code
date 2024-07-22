@@ -11,8 +11,10 @@ options NOsource;
   *   INPUT(agechar, $4.);   ‘30’       ‘  30’
   *   INPUT(cost, comma7.);  ‘100,541’  100541
   *
-  *  Created: Mon 18 Nov 2013 14:20:20 (Bob Heckel)
-  * Modified: Fri 29 Jul 2016 11:01:51 (Bob Heckel)
+  *   See also char2num.sas
+  *
+  *  Created: 18-Nov-2013 (Bob Heckel)
+  * Modified: 11-Jul-2024 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source NOcenter dsoptions=note2err;
@@ -32,3 +34,10 @@ data t(drop=TMP:);
 run;
 title 'after'; proc print data=_LAST_(obs=max) width=minimum; run;
 proc contents; run;
+
+
+data forecast.kmc_renewal_forecast_alloc(drop=acct_id);
+  set forecast.kmc_renewal_forecast_alloc;
+  acct_id2 = put(acct_id, BEST. -L);
+  rename acct_id2=acct_id;
+run;

@@ -12,8 +12,10 @@ options NOsource;
   *   PUT(age, 4.);          30         ‘  30’
   *   PUT(name, $nickname.); ‘Richard’  ‘Rick’
   *
-  *  Created: Mon 18 Nov 2013 14:19:58 (Bob Heckel)
-  * Modified: Mon 19 Dec 2016 10:51:08 (Bob Heckel)
+  *   See also num2char.sas
+  *
+  *  Created: 18-Nov-2013 (Bob Heckel)
+  * Modified: 11-Jul-2024 (Bob Heckel)
   *---------------------------------------------------------------------------
   */
 options source NOcenter dsoptions=note2err;
@@ -28,4 +30,11 @@ data nums;
   Date   = input(Char_Date,mmddyy10.);
 
   drop Char_:;
+run;
+
+
+data forecast.kmc_renewal_forecast_alloc(drop=acct_id);
+  set forecast.kmc_renewal_forecast_alloc;
+  acct_id2 = input(acct_id, ?? 8.);
+  rename acct_id2=acct_id;
 run;

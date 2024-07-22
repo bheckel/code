@@ -108,3 +108,11 @@ SELECT LISTAGG(x, '<BR>' ON OVERFLOW TRUNCATE '...')
 
 IF l_site_mismatch is not null THEN
 ...
+
+---
+
+-- Alternative if LISTAGG isn't available:
+select od.job
+       , rtrim(xmlagg(xmlelement(d,od.deptno,',').extract('//text()') order by od.deptno),',') deptnos
+  from orig_data od
+ group by od.job
