@@ -1,4 +1,31 @@
 
+with v as(
+  select sys_connect_by_path (email, ' ') email_path
+    from employee where gone='N'
+   start with MANAGER_SAS_EMPNO is null
+ connect by prior sas_empno = MANAGER_SAS_EMPNO 
+)
+select distinct email_path from v where lower(email_path) like '%bob.hecke%' --'%groce%'
+;
+
+--Only the manager and director
+with v as(
+  select email, SYS_CONNECT_BY_PATH(email, ' ') email_path
+    from employee 
+   where gone='N'
+   start with manager_sas_empno is null
+ connect by prior sas_empno = MANAGER_SAS_EMPNO 
+)
+select distinct 
+       email,
+       instr(email_path, ' ', -1, 3) email_list,
+       substr(email_path, instr(email_path, ' ', -1, 3)) x
+  from v 
+ where lower(email) like /*'%shannon.conn%'*/ '%bob.hecke%' --'%groce%'
+;
+
+---
+
 /*
 https://www.oratable.com/flatten-hierarchical-data/
 
