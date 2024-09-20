@@ -1,6 +1,17 @@
 --  Created: 19-Jun-2019 (Bob Heckel) 
--- Modified: 04-Aug-2022 (Bob Heckel)
+-- Modified: 12-Sep-2024 (Bob Heckel)
 -- Use a CSV comma-separated list of numbers like a table
+
+---
+
+WITH invoice_nums AS (
+    SELECT to_number(TRIM(COLUMN_VALUE)) AS invoice_number
+    FROM TABLE(SYS.ODCIVARCHAR2LIST(
+        '4620000', '7490349', '16367480'
+    ))
+)
+SELECT * 
+from invoice_nums;
 
 ---
 
