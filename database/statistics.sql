@@ -21,3 +21,9 @@ and    utc.column_name = utcs.column_name
 where ut.table_name in('BRICKS','COLOURS')
 order  by ut.table_name, utcs.column_name
 ;
+
+---
+
+--ORA-01723: zero-length columns are not allowed
+--find the offenders - they're 0
+SELECT data_length FROM user_tab_cols where table_name='SALES_CREDIT_VIEW';
