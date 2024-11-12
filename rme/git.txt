@@ -1010,3 +1010,14 @@ remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
 To github.com:sintitute-corp/rion-data.git
    78a497f9582..d53879b86a1  develop -> develop
 
+---
+
+git checkout develop
+git pull
+git log --oneline
+git checkout release/24.11
+git pull origin release/24.11
+git cherry-pick <commit-hash>
+git cherry-pick --continue
+git push origin release/24.11
+

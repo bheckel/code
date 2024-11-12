@@ -1,5 +1,15 @@
 /* Remove delete duplicate rows keeping just the newest */
 
+--Best
+DELETE FROM kmc_deal_summary_full_prod_17oct24 a
+WHERE a.ROWID > (
+    SELECT MIN(b.ROWID)
+    FROM kmc_deal_summary_full_prod_17oct24 b
+    WHERE a.kmc_deal_summary_id = b.kmc_deal_summary_id
+);
+
+---
+
 /* Fail, we lost both of the 30s: */
 with v as (
           select date '2000-01-01' d, 10 amt from dual
