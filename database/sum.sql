@@ -1,5 +1,11 @@
 --  Created: 05-Aug-2020 (Bob Heckel)
--- Modified: 12-Jun-2024 (Bob Heckel)
+-- Modified: 11-Dec-2024 (Bob Heckel)
+
+---
+
+   sum(kr.lbdamt) over(partition by kr.invoice, kr.newren) as invoice_total,
+   sum(decode(kr.NEWREN, 'N', kr.lbdamt, 0)) over(partition by kr.INVOICE, kr.newren) as invoice_total_new,
+   sum(decode(kr.NEWREN, 'N', 0, kr.lbdamt)) over(partition by kr.INVOICE, kr.newren) as invoice_total_renewal,
 
 ---
 
