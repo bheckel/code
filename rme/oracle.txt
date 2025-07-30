@@ -346,10 +346,14 @@ cat .ssh/id_rsa.pub | ssh -i ~/.ssh/ssh-key-2022-11-21.key pc@129.158.230.148 'c
 sudo vim -u /home/pc/.vimrc /etc/httpd/conf/httpd.conf
 sudo vim -u /home/pc/.vimrc /etc/httpd/logs/error_log
 sudo vim -u /home/pc/.vimrc /var/www/cgi-bin/printenv.pl
+sudo vim -u ~/.vimrc /etc/httpd/logs/access_log
 
 scp pc@129.158.230.148:/etc/httpd/conf/httpd.conf .
+sudo vim -u ~/.vimrc /etc/httpd/conf/httpd.conf
 
 sudo vi /etc/httpd/logs/access_log
+
+sudo chcon -t httpd_sys_rw_content_t /var/www/data
 
 ---
 
