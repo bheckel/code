@@ -1,15 +1,18 @@
 #!/usr/bin/perl -w
 
-# Modified: 25-Jun-2025 (Bob Heckel)
+# Modified: 06-Aug-2025 (Bob Heckel)
+
+# sudo chcon -t httpd_sys_rw_content_t /var/www/html/favicon-32x32.png
+# sudo vim -u ~/.vimrc  /etc/httpd/logs/error_log
+
 my $DEBUG = 0;
+# Edit to cleanup then delete entire contents of np.htm
 my $TMPF = '/var/www/data/npTMP.htm';
-my $WEBPG = '<a href="http://rshdev.com/np.htm">NP.htm</a>';
+my $LINK = '<a href="http://rshdev.com/np.htm">NP.htm</a><br><br>';
 my $F = '/var/www/data/np.htm';
 
 # ----------------------- Begin Standard Header ---------------------------
-# Trap errors.  Send to browser.
 BEGIN {
-  # Print out a content-type for HTTP/1.0 compatibility.
   print "Content-type: text/html\n\n";
   open(STDERR, ">&" . STDOUT) or die "Cannot Redirect STDERR: $!";
 }
@@ -38,13 +41,10 @@ foreach $pair ( @pairs ) {
   $FORM{$name} = $value;
   $argc_pairs++;
 }
-
 # ------------------------ End Standard Header ----------------------------
-
 
 # TODO fix untaint to avoid "Use of uninitialized value $1 in concatenation (.) or string at np.pl line 50. Use of uninitialized value $1 in concatenation (.) or string at np.pl line 50. "
 # Print table of name/value pairs if any have been passed in.
-print $WEBPG;
 if ( $argc_pairs ) {
   open FILE, ">>$TMPF" || die "$0: can't open file: $!\n";
   ###$FORM{myposttextbox} =~ /(.*)/;  # untaint
@@ -61,7 +61,7 @@ if ( $argc_pairs ) {
   if ( length $cleaninput < 50000 ) {
     print FILE $cleaninput;
   } else {
-    print 'error: exceeded max input';
+    print 'ERROR: exceeded max input';
   }
   close FILE;
 }
@@ -69,8 +69,8 @@ if ( $argc_pairs ) {
 open FILE, "$TMPF" || die "$0: can't open file: $!\n";
 open FILEREVERSE, "+<$F" or die "Error: $0: $!";
 
-print FILEREVERSE "<HTML><HEAD><TITLE>np.htm</TITLE></HEAD><BODY>";
-print FILEREVERSE q!<LINK REL=stylesheet TYPE="text/css" HREF="np.css"> <BODY background="a_Cakka.gif">!;
+print FILEREVERSE "<HTML><HEAD><TITLE>NP.htm</TITLE></HEAD><BODY>";
+print FILEREVERSE q!<LINK REL=stylesheet TYPE="text/css" HREF="np.css"> <BODY bgcolor="#c7cdd6">!;
 print FILEREVERSE q!<style type="text/css" media="screen">body { background-attachment: fixed; } </style>!;
 print FILEREVERSE reverse <FILE>;
 
@@ -81,11 +81,16 @@ print "<BR><BR><B>Environment Variables<BR>" if $DEBUG;
 MakeTbl(\%ENV) if $DEBUG;
 
 print <<"EOT";
-<HTML><HEAD><TITLE>np.pl</TITLE></HEAD><BODY><LINK REL=stylesheet TYPE="text/css" HREF="np.css"> <BODY background="a_Cakka.gif"><style type="text/css" media="screen">body { background-attachment: fixed; } </style>
+<HTML>
+<HEAD>
+  <TITLE>np.pl</TITLE>
+  <LINK rel="icon" type="image/png" href="/favicon-32x32.png"></HEAD>
+<BODY bgcolor="#c7cdd6"><style type="text/css" media="screen">body { background-attachment: fixed; }</style>
+$LINK
 <FORM ACTION="http://rshdev.com/cgi-bin/np.pl" METHOD="POST" NAME="mypostform">
-   <INPUT NAME="myposttextbox" TYPE="text" SIZE=80 VALUE="" autofocus>
-<!--   <TEXTAREA NAME="myposttextbox" rows=10 cols=80></TEXTAREA><BR> -->
-  <INPUT NAME="mypostsubmit" TYPE="submit">
+  <INPUT NAME="myposttextbox" TYPE="text" SIZE=180 VALUE="" autofocus> 
+<!--   <TEXTAREA NAME="myposttextbox" rows=1 cols=200 autofocus></TEXTAREA><BR><BR> -->
+<!--  <INPUT NAME="mypostsubmit" TYPE="submit"> -->
 </FORM>
 <BR>
 <BR>
@@ -94,7 +99,6 @@ print <<"EOT";
 EOT
 
 exit 0;
-
 
 
 # Produce an HTML table from a hash.
