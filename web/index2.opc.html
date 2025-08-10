@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSH Dev</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --text-color: #ffffff;
+            --font: 'Inter', sans-serif;
+        }
+        body {
+            margin: 0;
+            font-family: var(--font);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column; /* Stack vertically */
+            min-height: 100vh; /* Full viewport height */
+            background: linear-gradient(-45deg, #0f172a, #1e293b, #2563eb, #0ea5e9);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+            margin: auto; /* Centers the content block vertically */
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        svg {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 0.5rem;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        footer a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a15.06 15.06 0 002.83-4.79c.26-.69-.4-1.35-1.09-1.09a15.06 15.06 0 00-4.79 2.83l-1.05.88a48.1 48.1 0 00-3.12-2.02l-.38-.22c-.41-.24-.88.1-.79.55a47.85 47.85 0 002.58 7.25l-2.91 2.91a1.5 1.5 0 102.12 2.12l2.91-2.91a47.85 47.85 0 007.25 2.58c.45.09.79-.38.55-.79l-.22-.38a48.1 48.1 0 00-2.02-3.12l.88-1.05z" />
+        </svg>
+        <h1>Welcome</h1>
+        <p>RSH Development</p>
+    </div>
+
+<!--
+<form action="/cgi-bin/contact.pl" method="post">
+  <label for="email">Email:</label><br>
+  <input type="email" id="email" name="email" required><br><br>
+
+  <label for="message">Message:</label><br>
+  <textarea id="message" name="message" rows="5" required></textarea><br><br>
+
+  <input type="submit" value="Send">
+</form>
+-->
+</body>
+</html>
+

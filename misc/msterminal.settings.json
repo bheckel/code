@@ -1,4 +1,4 @@
-{
+
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
     "actions": 
@@ -27,11 +27,29 @@
         {
             "command": "find",
             "id": "User.find"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "down",
+                "splitMode": "duplicate"
+            },
+            "id": "User.splitPane.10B260D2"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "right",
+                "splitMode": "duplicate"
+            },
+            "id": "User.splitPane.FEF0D40B"
         }
     ],
     "copyFormatting": "none",
     "copyOnSelect": true,
-    "defaultProfile": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+    "defaultProfile": "{51855cb2-8cce-5362-8f54-464b92b32386}",
     "firstWindowPreference": "persistedWindowLayout",
     "keybindings": 
     [
@@ -52,8 +70,16 @@
             "keys": "alt+shift+d"
         },
         {
+            "id": "User.splitPane.FEF0D40B",
+            "keys": "ctrl+shift+5"
+        },
+        {
             "id": null,
             "keys": "ctrl+alt+left"
+        },
+        {
+            "id": "User.splitPane.10B260D2",
+            "keys": "ctrl+shift+plus"
         },
         {
             "id": "Terminal.MoveFocusPrevious",
