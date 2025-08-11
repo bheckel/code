@@ -12,17 +12,21 @@
             --text-color: #ffffff;
             --font: 'Inter', sans-serif;
         }
-        body {
-            margin: 0;
-            font-family: var(--font);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column; /* Stack vertically */
-            min-height: 100vh; /* Full viewport height */
-            background: linear-gradient(-45deg, #0f172a, #1e293b, #2563eb, #0ea5e9);
-            background-size: 400% 400%;
-            animation: gradientMove 15s ease infinite;
-        }
+
+				body {
+					margin: 0;
+					font-family: var(--font);
+					color: var(--text-color);
+					display: flex;
+					flex-direction: column;
+					justify-content: center; /* vertical center */
+					align-items: center;     /* horizontal center */
+					min-height: 100vh;
+					background: linear-gradient(-45deg, #0f172a, #1e293b, #2563eb, #0ea5e9);
+					background-size: 600% 600%;
+					animation: gradientMove 15s ease infinite;
+				}
+
         @keyframes gradientMove {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -40,6 +44,7 @@
         h1 {
             font-size: 3rem;
             margin-bottom: 0.5rem;
+            color: #9faba2;
         }
         p {
             font-size: 1.2rem;
@@ -50,43 +55,105 @@
             height: 40px;
             margin-bottom: 0.5rem;
         }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            backdrop-filter: blur(5px);
-            background: rgba(0, 0, 0, 0.2);
-        }
-        footer a {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        footer a:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
-        }
+
+		 form {
+				background: rgba(255, 255, 255, 0.2); /* translucent white */
+				padding: 25px;
+				border-radius: 15px;
+				backdrop-filter: blur(10px); /* frosted glass effect */
+				-webkit-backdrop-filter: blur(10px); /* Safari support */
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+				width: 320px;
+				color: #fff; /* white text for contrast */
+			}
+
+			input, textarea {
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 16px;
+				border: none;
+				border-radius: 6px;
+				background: rgba(255, 255, 255, 0.7);
+				color: #000; /* black text inside fields */
+			}
+
+			input[type="submit"] {
+				background-color: rgba(0, 123, 255, 0.8);
+				color: white;
+				border: none;
+				cursor: pointer;
+				font-size: 15px;
+				transition: background-color 0.2s ease-in-out;
+			}
+
+			input[type="submit"]:hover {
+				background-color: rgba(0, 123, 255, 1);
+			}
+a {
+  color: white;
+  text-decoration: underline dashed gray 2px;
+}
+
     </style>
+
 </head>
 <body>
     <div class="container">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a15.06 15.06 0 002.83-4.79c.26-.69-.4-1.35-1.09-1.09a15.06 15.06 0 00-4.79 2.83l-1.05.88a48.1 48.1 0 00-3.12-2.02l-.38-.22c-.41-.24-.88.1-.79.55a47.85 47.85 0 002.58 7.25l-2.91 2.91a1.5 1.5 0 102.12 2.12l2.91-2.91a47.85 47.85 0 007.25 2.58c.45.09.79-.38.55-.79l-.22-.38a48.1 48.1 0 00-2.02-3.12l.88-1.05z" />
         </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a15.06 15.06 0 002.83-4.79c.26-.69-.4-1.35-1.09-1.09a15.06 15.06 0 00-4.79 2.83l-1.05.88a48.1 48.1 0 00-3.12-2.02l-.38-.22c-.41-.24-.88.1-.79.55a47.85 47.85 0 002.58 7.25l-2.91 2.91a1.5 1.5 0 102.12 2.12l2.91-2.91a47.85 47.85 0 007.25 2.58c.45.09.79-.38.55-.79l-.22-.38a48.1 48.1 0 00-2.02-3.12l.88-1.05z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a15.06 15.06 0 002.83-4.79c.26-.69-.4-1.35-1.09-1.09a15.06 15.06 0 00-4.79 2.83l-1.05.88a48.1 48.1 0 00-3.12-2.02l-.38-.22c-.41-.24-.88.1-.79.55a47.85 47.85 0 002.58 7.25l-2.91 2.91a1.5 1.5 0 102.12 2.12l2.91-2.91a47.85 47.85 0 007.25 2.58c.45.09.79-.38.55-.79l-.22-.38a48.1 48.1 0 00-2.02-3.12l.88-1.05z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a15.06 15.06 0 002.83-4.79c.26-.69-.4-1.35-1.09-1.09a15.06 15.06 0 00-4.79 2.83l-1.05.88a48.1 48.1 0 00-3.12-2.02l-.38-.22c-.41-.24-.88.1-.79.55a47.85 47.85 0 002.58 7.25l-2.91 2.91a1.5 1.5 0 102.12 2.12l2.91-2.91a47.85 47.85 0 007.25 2.58c.45.09.79-.38.55-.79l-.22-.38a48.1 48.1 0 00-2.02-3.12l.88-1.05z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a15.06 15.06 0 002.83-4.79c.26-.69-.4-1.35-1.09-1.09a15.06 15.06 0 00-4.79 2.83l-1.05.88a48.1 48.1 0 00-3.12-2.02l-.38-.22c-.41-.24-.88.1-.79.55a47.85 47.85 0 002.58 7.25l-2.91 2.91a1.5 1.5 0 102.12 2.12l2.91-2.91a47.85 47.85 0 007.25 2.58c.45.09.79-.38.55-.79l-.22-.38a48.1 48.1 0 00-2.02-3.12l.88-1.05z" />
+        </svg>
         <h1>Welcome</h1>
         <p>RSH Development</p>
+        <p>IT professional with <a href="https://linkedin.com/in/rshdev">decades of experience.</a><br>
+        Currently available to help with your part or full-time Linux system admin needs.</p>
     </div>
 
-<!--
-<form action="/cgi-bin/contact.pl" method="post">
-  <label for="email">Email:</label><br>
-  <input type="email" id="email" name="email" required><br><br>
+<style>
+	#toggleForm {
+		background-color: #888;
+		color: white;
+		border: none;
+		padding: 10px 18px;
+		border-radius: 6px;
+		cursor: pointer;
+		font-size: 16px;
+		transition: background-color 0.3s ease;
+	}
 
-  <label for="message">Message:</label><br>
-  <textarea id="message" name="message" rows="5" required></textarea><br><br>
+	#toggleForm:hover {
+		background-color: #aaa; /* lighter grey on hover */
+	}
+</style>
 
+<form id="contactForm" action="/cgi-bin/contact.pl" method="post" style="display: none">
+  <input type="email" id="email" name="email" placeholder="Email" required>
+  <textarea id="message" name="message" rows="3" placeholder="Message" required></textarea>
   <input type="submit" value="Send">
 </form>
--->
-</body>
-</html>
+<button id="toggleForm">Contact Us</button>
+
+<script>
+	document.getElementById("toggleForm").addEventListener("click", function() {
+		const form = document.getElementById("contactForm");
+		if (form.style.display === "none" || form.style.display === "") {
+			form.style.display = "block";
+			this.textContent = "Hide Form";
+		} else {
+			form.style.display = "none";
+			this.textContent = "Contact Us";
+		}
+	});
+</script>
 

@@ -1,3 +1,9 @@
+-------------------------------------------------
+29-May-23 /cygdrive/c/Users/heck/OneDrive/OCI_backups/readme.txt
+-------------------------------------------------
+
+
+
 https://mailmum.io/posts/howto-block-entire-tlds-in-postfix/
 
  1858  2024-05-15 06:55:46 sudo vi /etc/postfix/reject_domains
@@ -20,17 +26,8 @@ sudo postmap /etc/postfix/virtual && sudo systemctl reload postfix
 
 ---
 
-Identity Cloud Service
-https://idcs-feafb....identity.oraclecloud.com/ui/v1/adminconsole?root=security&security=mfa-settings
-
----
-
 sudo systemctl restart oracle-cloud-agent
 sudo systemctl stop oracle-cloud-agent
-
----
-
-29-May-23 /cygdrive/c/Users/bheck/OneDrive/OCI_backups/readme.txt
 
 ---
 
