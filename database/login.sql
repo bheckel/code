@@ -1,5 +1,5 @@
 --  Created: 11-May-2009 (Bob Heckel)
--- Modified: 02-Aug-2023 (Bob Heckel)
+-- Modified: 13-Aug-2025 (Bob Heckel)
 
 -- This file is auto-sourced by Oracle sqlplus if it's in PWD
 --
@@ -122,36 +122,33 @@ set highlighting comment foreground black
 --set pagesize 0
 set serveroutput on size 500000
 --set time on
---set timing on
+set timing on
 --set autotrace ON
 --set autotrace traceonly explain
 set sqlformat ansiconsole
-
+--set cloudconfig wallet.zip
 set exitcommit OFF
 -- project specific
 --column meth_spec_nm format a15;
 --column meth_rslt_numeric format 99999.999;
 
+   --- SET FEEDBACK OFF
+   --- SET TERMOUT OFF
 
+   --- COLUMN X NEW_VALUE Y
+   --- SELECT LOWER(USER || '@' || 
+   ---              SYS_CONTEXT('userenv', 'con_name') || ':' || 
+   ---              SYS_CONTEXT('userenv', 'instance_name')) X
+   --- FROM dual;
+   --- SET SQLPROMPT '&Y> '
 
---OR
-SET FEEDBACK OFF
-SET TERMOUT OFF
+   --- ALTER SESSION SET NLS_DATE_FORMAT='DD-MON-YYYY HH24:MI:SS'; 
+   --- ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS.FF'; 
 
-COLUMN X NEW_VALUE Y
-SELECT LOWER(USER || '@' || 
-             SYS_CONTEXT('userenv', 'con_name') || ':' || 
-             SYS_CONTEXT('userenv', 'instance_name')) X
-FROM dual;
-SET SQLPROMPT '&Y> '
-
-ALTER SESSION SET NLS_DATE_FORMAT='DD-MON-YYYY HH24:MI:SS'; 
-ALTER SESSION SET NLS_TIMESTAMP_FORMAT='DD-MON-YYYY HH24:MI:SS.FF'; 
-
-SET TERMOUT ON
-SET FEEDBACK ON
-SET LINESIZE 100
-SET TAB OFF
-SET TRIM ON
-SET TRIMSPOOL ON
+   --- SET TERMOUT ON
+   --- SET FEEDBACK ON
+   --- SET LINESIZE 100
+   --- SET TAB OFF
+   --- SET TRIM ON
+   --- SET TRIMSPOOL ON
 
