@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<!--Modified: 12-Aug-2025 (Bob Heckel)-->
+<!--Modified: 13-Aug-2025 (Bob Heckel)-->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RSH Development</title>
+  <link rel="icon" type="image/png" href="/main_favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -34,8 +35,8 @@
         100% { background-position: 0% 50%; }
     }
     .container {
-        max-width: 600px;
-        padding: 2rem;
+        max-width: 750px;
+        padding: 3rem;
         margin: auto; /* Centers the content block vertically */
         backdrop-filter: blur(10px);
         background: rgba(0, 0, 0, 0.3);
@@ -145,14 +146,15 @@
 				<h1>Welcome</h1>
 				<p>RSH Development</p>
 				<p>
-					IT professional with
+					US east coast based IT professional with
 					<a href="https://linkedin.com/in/rshdev">decades of experience.</a>
 				</p>
+				<p>Focus: OCI Linux system admin, DBA and web dev work.</p>
         <br>
 				<p id="dev-text"></p>
-				<p class="status">✅ Currently available for part-time OCI Linux system admin or web dev work</p>
-				<!--<p class="status">✅ Currently available for full-time OCI Linux system admin work</p>-->
-				<p class="status">❌ Not currently available for full-time OCI Linux system admin or web dev work</p>
+				<p class="status">✅ Currently available part-time</p>
+				<!--<p class="status">✅ Currently available for full-time OCI Linux system admin, DBA or web dev work</p>-->
+				<p class="status">❌ Not currently available full-time</p>
     </div>
 
     <form id="contactForm" action="/cgi-bin/contact.pl" method="post" style="display: none">
@@ -170,7 +172,7 @@
       const month = monthAbbr[now.getMonth()];
       const year = String(now.getFullYear());
 
-      document.getElementById("dev-text").textContent = `As of ${month}-${year}:`;
+      document.getElementById("dev-text").textContent = `Status as of ${month}-${year}:`;
 
       document.getElementById("toggleForm").addEventListener("click", function() {
         const form = document.getElementById("contactForm");

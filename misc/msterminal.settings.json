@@ -1,4 +1,3 @@
-
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
@@ -25,6 +24,10 @@
             "id": "User.moveFocus.F747588A"
         },
         {
+            "command": "find",
+            "id": "User.find"
+        },
+        {
             "command": 
             {
                 "action": "splitPane",
@@ -34,12 +37,12 @@
             "id": "User.splitPane.A6751878"
         },
         {
-            "command": "find",
-            "id": "User.find"
-        },
-        {
-            "command": "togglePaneZoom",
-            "id": "User.togglePaneZoom"
+            "command": 
+            {
+                "action": "moveFocus",
+                "direction": "up"
+            },
+            "id": "User.moveFocus.6CD791B"
         },
         {
             "command": 
@@ -51,6 +54,10 @@
             "id": "User.splitPane.10B260D2"
         },
         {
+            "command": "togglePaneZoom",
+            "id": "User.togglePaneZoom"
+        },
+        {
             "command": 
             {
                 "action": "splitPane",
@@ -58,14 +65,6 @@
                 "splitMode": "duplicate"
             },
             "id": "User.splitPane.FEF0D40B"
-        },
-        {
-            "command": 
-            {
-                "action": "moveFocus",
-                "direction": "up"
-            },
-            "id": "User.moveFocus.6CD791B"
         },
         {
             "command": 
@@ -95,28 +94,28 @@
             "keys": "ctrl+c"
         },
         {
-            "id": "User.togglePaneZoom",
-            "keys": "ctrl+shift+z"
-        },
-        {
-            "id": "User.paste",
-            "keys": "ctrl+v"
-        },
-        {
             "id": "User.find",
             "keys": "ctrl+shift+f"
+        },
+        {
+            "id": "User.togglePaneZoom",
+            "keys": "ctrl+shift+z"
         },
         {
             "id": "User.splitPane.A6751878",
             "keys": "alt+shift+d"
         },
         {
-            "id": "User.splitPane.FEF0D40B",
-            "keys": "ctrl+shift+5"
+            "id": null,
+            "keys": "ctrl+alt+left"
         },
         {
             "id": null,
-            "keys": "ctrl+alt+left"
+            "keys": "ctrl+0"
+        },
+        {
+            "id": "User.splitPane.FEF0D40B",
+            "keys": "ctrl+shift+5"
         },
         {
             "id": "User.splitPane.10B260D2",
@@ -202,3 +201,4 @@
     "schemes": [],
     "themes": []
 }
+
