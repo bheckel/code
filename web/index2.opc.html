@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<!--Modified: 13-Aug-2025 (Bob Heckel)-->
+ <!--Modified: 18-Aug-2025 (Bob Heckel)-->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -157,9 +157,10 @@
 				<p class="status">❌ Not currently available full-time</p>
     </div>
 
-    <form id="contactForm" action="/cgi-bin/contact.pl" method="post" style="display: none">
+    <form id="contactForm" action="/cgi-bin/contact.pl" method="POST" style="display: none">
       <input type="email" id="email" name="email" placeholder="Email" required>
-      <textarea id="message" name="message" rows="3" placeholder="Message" required></textarea>
+      <!--Typo to discourage bots-->
+      <textarea id="message" name="emssage" rows="3" placeholder="Message" required></textarea>
       <input type="submit" value="Send">
     </form>
     <button id="toggleForm">Contact Us</button><br>
