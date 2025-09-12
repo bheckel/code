@@ -283,6 +283,8 @@ opc      2723700 2673105  0 16:24 pts/0    00:00:00 grep --color=auto postf
 root     3762849       1  0 Dec17 ?        00:00:05 /usr/libexec/postfix/master -w
 postfix  3762851 3762849  0 Dec17 ?        00:00:01 qmgr -l -t unix -u
 
+
+svim /var/log/maillog
 ---
 
 $ sudo dnf install dnf-automatic
