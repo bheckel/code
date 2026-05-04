@@ -1,3 +1,9 @@
+c?    open saved folders
+z     toggle HTML
+Ctl-t forward as HTML
+
+---
+
 03-Feb-13 http://swmcc.wordpress.com/2012/10/06/mutt-for-gmail/
 
 apt-get install mutt 
@@ -22,7 +28,7 @@ mutt -y
 
 See also mutt_search_quickref.txt
 
------
+---
 
 To send binary:
 $ uuncode junkpad.exe junkpad.exe > junkpad.uue
@@ -31,7 +37,7 @@ Select junkpad.uue
 Ctrl-T to change MIME type to uuencode
 'y' to send
 
------
+---
 
 To modify Vim's .signature default (no adjustment to Mutt required) to be the
 same as Mutt's (i.e. dark blue):
@@ -39,13 +45,7 @@ Edit $VIM/syntax/mail.vim:
 ###hi link mailSignature         PreProc
 hi link mailSignature         Comment
 
------
-
-POP'ing mail from freeshell assumes a ssh tunnel has been setup:
-$ ssh -f -L 110:localhost:110 -l bheckel mail.freeshell.org \
-> sleep 500
-
------
+---
 
 Mark all new messages as read in mutt:
 
@@ -56,9 +56,3 @@ N     <---make them read
 l ~T  <---optionally only show (limit) the tagged ones
 l !~T <---optionally do not show (limit) the tagged ones
 
------
-
-Wouldn't need this section if mutt had good documentation:
-
-T toggles quoted text, removes lines starting with common characters like > 
-$ writes out ("commits") the current state of the mailbox, incl. purging deleted messages Useful when reading mail on a shaky connection: annoying to reconnect and see big pile of 'unread' messages.
