@@ -1,0 +1,14 @@
+{
+  "_captured_at": "2026-07-11T10:10:00Z",
+  "_captured_run_id": "r_df216154e0424859b5046f990edb02be",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "NOTE: DATA _NULL_",
+    "99bottles of beer on the wall,99bottles of beer,",
+    "no more bottles of beer on the wall.",
+    "NOTE: Wrote _NULL_ (0 rows, 0 columns)."
+  ],
+  "log_does_not_contain": ["ERROR:", "[JENNER-ERROR"],
+  "diagnostics": {"parse_warnings": [], "runtime_warnings": []}
+}

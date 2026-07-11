@@ -1,0 +1,7 @@
+{
+  "bundle": "t005_date_interval_calc",
+  "source_file": "sas/date_interval_calc.sas",
+  "source_blob_sha": "f13941d94bfedd9344484adc495609351095f4fa",
+  "source_commit": "aded7683097a92d368d930267cdf55e3460de03a",
+  "notes": "Byte-identical copy of the author's date-math snippet (INTCK for rounded age, YRDIF for fractional age, DATDIF with a 30/360 basis for a day count between two literal dates). Fully self-contained -- no data dependency, no edits needed beyond the standard obs=100 autoexec cap. Only the DATDIF-derived daycnt=3 line (independent of today()) is pinned in expected.json to avoid brittleness against the age calculations, which depend on the current date."
+}

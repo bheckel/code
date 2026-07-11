@@ -1,0 +1,7 @@
+{
+  "bundle": "t004_has_low_num_obs",
+  "source_file": "sas/has_low_num_obs.mcr.sas",
+  "source_blob_sha": "9900761d109cc299299a1c19731d7614e21c6f2f",
+  "source_commit": "aded7683097a92d368d930267cdf55e3460de03a",
+  "notes": "The author's %HasLowNumObs macro (open/attrn(NOBS)/close low-row-count check) is copied verbatim. Their example caller used sashelp.shoes as the dataset arg; substituted with a small inline WORK dataset (small_ds, 3 rows) built via a caller we wrote, since sashelp.shoes is not available in Jenner. Macro logic and its %if/%put branching are exercised exactly as written."
+}

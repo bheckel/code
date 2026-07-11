@@ -1,0 +1,52 @@
+
+NOTE: Option OBS changed to 100.
+NOTE: Option DSOPTIONS changed to NOTE2ERR.
+NOTE: DATA large
+
+NOTE: Processing inline DATALINES (10 lines)
+
+NOTE: Read 10 rows from DATALINES.
+NOTE: Wrote large (10 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: Option TITLE changed to WORK    LARGE   .
+NOTE: PROC PRINT data=large
+
+NOTE: PROC PRINT completed: 10 observations printed, 4 variables
+NOTE: DATA small
+
+NOTE: Processing inline DATALINES (5 lines)
+
+NOTE: Read 5 rows from DATALINES.
+NOTE: Wrote small (5 rows, 4 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: Option TITLE changed to WORK    SMALL   .
+NOTE: PROC PRINT data=small
+
+NOTE: PROC PRINT completed: 5 observations printed, 4 variables
+NOTE: DATA innerjoin
+
+
+NOTE: Wrote innerjoin (4 rows, 7 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: DATA innerjoin
+
+
+NOTE: Read 4 rows from innerjoin.
+NOTE: Wrote innerjoin (4 rows, 7 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: Option TITLE changed to Inner join WORK    INNERJOIN.
+NOTE: PROC PRINT data=innerjoin
+
+NOTE: PROC PRINT completed: 4 observations printed, 7 variables
+NOTE: Option TITLE changed to compare proc sql.
+NOTE: PROC SQL 
+
+NOTE: PROC SQL statement used.

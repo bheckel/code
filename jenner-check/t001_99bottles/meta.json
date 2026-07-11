@@ -1,0 +1,7 @@
+{
+  "bundle": "t001_99bottles",
+  "source_file": "sas/99bottles.sas",
+  "source_blob_sha": "f758a39d698179a55b063bd8e65b5aa4984640cb",
+  "source_commit": "aded7683097a92d368d930267cdf55e3460de03a",
+  "notes": "Byte-identical copy of the author's 99-bottles-of-beer DATA _NULL_ loop (attributed to Whitey, 06/05/95, in the header comment). Fully self-contained -- no data dependency, no edits needed beyond the standard obs=100 autoexec cap."
+}

@@ -1,0 +1,7 @@
+{
+  "bundle": "t002_hash_inner_join",
+  "source_file": "sas/hash_inner_join.sas",
+  "source_blob_sha": "82c565910516e2459a1ea8259f0f651005e19897",
+  "source_commit": "aded7683097a92d368d930267cdf55e3460de03a",
+  "notes": "Author's DATA step HASH object inner-join demo (built to compare hash-based joins against PROC SQL, with inline cards data for both sides). All join logic, hash key/data definitions, and the PROC SQL comparison query are unchanged. Three 'proc print data=_LAST_(obs=max)' calls were rewritten to name the dataset directly (data=large / data=small / data=innerjoin) -- unrelated Jenner parser gaps on explicit _LAST_ dataset references and the OBS=MAX data set option value (see PR notes) would otherwise abort those steps; the hash join and SQL logic are exercised exactly as written."
+}

@@ -1,0 +1,6 @@
+
+  Obs  Q1  Q2  Q3  Q4  Q5      c  num
+-----  --  --  --  --  --  -----  ---
+    1  y   y   n   n   Y   yynnY    3
+    2  n   n   n   n   n   nnnnn    0
+

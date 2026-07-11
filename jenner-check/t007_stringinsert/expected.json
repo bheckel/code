@@ -1,0 +1,13 @@
+{
+  "_captured_at": "2026-07-11T10:38:00Z",
+  "_captured_run_id": "r_d53ad68b3fda480b9e7af9ba4fe99180",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "NOTE: DATA _null_",
+    "x=TrXXXacheo-esophageal Fistula/Esophageal Atresia",
+    "NOTE: Wrote _null_ (0 rows, 0 columns)."
+  ],
+  "log_does_not_contain": ["ERROR:", "[JENNER-ERROR"],
+  "diagnostics": {"parse_warnings": [], "runtime_warnings": []}
+}

@@ -1,0 +1,13 @@
+{
+  "_captured_at": "2026-07-11T10:40:00Z",
+  "_captured_run_id": "r_6f0c9c1d28454a689fcabe5aaa8489a1",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "NOTE: DATA hidesocialsecurity",
+    "ssn=123-##-6789",
+    "NOTE: Wrote hidesocialsecurity (1 rows, 1 columns)."
+  ],
+  "log_does_not_contain": ["ERROR:", "[JENNER-ERROR"],
+  "diagnostics": {"parse_warnings": [], "runtime_warnings": []}
+}
