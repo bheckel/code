@@ -1,0 +1,7 @@
+{
+  "bundle": "t006_countynyesno",
+  "source_file": "sas/countYNYesNo.sas",
+  "source_blob_sha": "6829e00f6c6ecc4ea734855c60dc5141d227fa24",
+  "source_commit": "aded7683097a92d368d930267cdf55e3460de03a",
+  "notes": "Author's Yes/No survey-response counter (CATC + COUNTC case-insensitive 'y' counting across Q1-Q5) copied verbatim, inline datalines unchanged. Only edit: the closing 'proc print data=_LAST_(obs=max)' was rewritten to 'proc print data=survey' -- an unrelated Jenner parser gap on the OBS=MAX data set option value (see PR notes) would otherwise abort this step; the print logic and all counting/concatenation logic are untouched."
+}

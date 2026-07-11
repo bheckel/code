@@ -1,0 +1,14 @@
+
+NOTE: Option OBS changed to 100.
+NOTE: DATA survey
+
+NOTE: Processing inline DATALINES (2 lines)
+
+NOTE: Read 2 rows from DATALINES.
+NOTE: Wrote survey (2 rows, 7 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC PRINT data=survey
+
+NOTE: PROC PRINT completed: 2 observations printed, 7 variables
