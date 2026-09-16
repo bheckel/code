@@ -1,3 +1,12 @@
+# Only 8.2 is in Ubuntu repo, get 9.2
+sudo apt install git build-essential ncurses-dev
+md ~/projects/vim && git clone https://github.com/vim/vim.git && cd vim
+make
+src/vim --version
+sudo make install
+
+---
+
 12-Nov-22 Gvim on Win11 running Cygwin:
 
 $ vi /cygdrive/c/Users/bheck/vim/_vimrc
