@@ -4,6 +4,7 @@ md ~/projects/vim && git clone https://github.com/vim/vim.git && cd vim
 make
 src/vim --version
 sudo make install
+# alias vi=/usr/local/bin/vim
 
 ---
 
