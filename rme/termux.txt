@@ -24,6 +24,21 @@ termux-open is used by .bashrc's st to launch android app for a termux pdf etc.
 
 ---
 
+$ cat ~/bin/termux-url-opener
+#!/data/data/com.termux/files/usr/bin/bash
+
+url="$1"
+
+if [ -z "$url" ]; then
+    echo "Usage: termux-url-opener URL"
+    exit 1
+fi
+
+#termux-open-url "$url"
+vim "$url"
+
+---
+
 $ apt-get install termux-api
 
 --
