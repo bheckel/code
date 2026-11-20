@@ -1,5 +1,14 @@
 
-wsl --list --verbose
+---
+
+20-Nov-26 
+sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove --purge && sudo apt clean && sudo apt -f install
+
+---
+
+PS C:\Windows\System32> wsl --list --verbose
+NAME      STATE           VERSION
+* Ubuntu    Running         2
 
 ---
 
